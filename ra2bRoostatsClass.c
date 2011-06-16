@@ -20,6 +20,7 @@
 #include "TFile.h"
 #include "TTree.h"
 #include "TRandom1.h"
+#include "TH2F.h"
 
 #include "RooArgSet.h"
 #include "RooConstVar.h"
@@ -334,7 +335,7 @@
 
   //==================================================================================================
 
-     bool ra2bRoostatsClass::profileSusySig( float& susySigLow, float& susySigHigh ) {
+     bool ra2bRoostatsClass::profileSusySig( float& susySigLow, float& susySigHigh, bool makePlot ) {
 
          if ( ! initialized ) {
             printf("\n\n *** Call initialize first.\n\n") ;
@@ -350,11 +351,14 @@
          susySigHigh = ((LikelihoodInterval*) plinterval_susy_sig)->UpperLimit(*rv_mu_susy_sig) ;
          printf("\n\n") ;
          printf("    susy, SIG 95%% CL interval  [%5.1f, %5.1f]\n\n", susySigLow, susySigHigh ) ;
-         TCanvas* plcplot_susy_sig = new TCanvas("plcplot_susy_sig", "susy sig, Profile likelihood", 500, 400 ) ;
-         LikelihoodIntervalPlot plotInt_susy_sig((LikelihoodInterval*)plinterval_susy_sig);
-         plotInt_susy_sig.Draw() ;
-         plcplot_susy_sig->SaveAs("plscan_susy_sig.pdf") ;
-         plcplot_susy_sig->SaveAs("plscan_susy_sig.png") ;
+
+         if ( makePlot ) {
+            TCanvas* plcplot_susy_sig = new TCanvas("plcplot_susy_sig", "susy sig, Profile likelihood", 500, 400 ) ;
+            LikelihoodIntervalPlot plotInt_susy_sig((LikelihoodInterval*)plinterval_susy_sig);
+            plotInt_susy_sig.Draw() ;
+            plcplot_susy_sig->SaveAs("plscan_susy_sig.pdf") ;
+            plcplot_susy_sig->SaveAs("plscan_susy_sig.png") ;
+         }
 
          varsAtFitVals = false ;
 
@@ -1151,6 +1155,8 @@
        int Nslsb1(0), Nslsb2(0), Nslsb3(0), Nslsb4(0), Nslsb5(0) ; ; //-- data counts in 5 3-jet mass bins of SL, SB.
        int Nslmsb1(0), Nslmsb2(0), Nslmsb3(0), Nslmsb4(0), Nslmsb5(0) ; //-- data counts in 5 3-jet mass bins of SL, MSB.
 
+       float EffScaleFactor(0.), EffScaleFactorErr(0.) ;
+
        float Nqcdmcsig(0.), Nqcdmcsb(0.), Nqcdmca(0.), Nqcdmcd(0.) ; //-- QCD MC counts in SIG, SB, A, and D.
        float Nqcdmcsigerr(0.), Nqcdmcsberr(0.), Nqcdmcaerr(0.), Nqcdmcderr(0.) ; //-- QCD MC uncertainties in SIG, SB, A, and D.
        float Nqcdmcslsig(0.), Nqcdmcslsb(0.), Nqcdmcslmsb(0.) ; //-- QCD MC counts in SL; SIG, LSB, and MSB.
@@ -1181,6 +1187,8 @@
       //    The order here must be consistent with the order there!
 
        fscanf( infp, "%s %d", label, &N3jmBins ) ;             printf( "%s %d\n", label, N3jmBins ) ;                
+       fscanf( infp, "%s %g", label, &EffScaleFactor ) ;       printf( "%s %g\n", label, EffScaleFactor ) ;         
+       fscanf( infp, "%s %g", label, &EffScaleFactorErr ) ;    printf( "%s %g\n", label, EffScaleFactorErr ) ;         
        fscanf( infp, "%s %d", label, &Nsig ) ;                 printf( "%s %d\n", label, Nsig ) ;         
        fscanf( infp, "%s %d", label, &Na ) ;                   printf( "%s %d\n", label, Na ) ;           
        fscanf( infp, "%s %d", label, &Nd ) ;                   printf( "%s %d\n", label, Nd ) ;           
@@ -1494,7 +1502,7 @@
      //-- Use these lines to define things in terms of the SIG parameters.
       if ( useSigBgVars ) {
 
-         rv_mu_ttbar_sig = new RooRealVar( "mu_ttbar_sig", "mu_ttbar_sig", 0.0, 100. ) ;
+         rv_mu_ttbar_sig = new RooRealVar( "mu_ttbar_sig", "mu_ttbar_sig", 0.0, 200. ) ;
          rv_mu_qcd_sig   = new RooRealVar( "mu_qcd_sig"  , "mu_qcd_sig"  , 0.0, 100. ) ;
 
          rrv_mu_ttbar_sig = ((RooRealVar*) rv_mu_ttbar_sig) ;
@@ -1523,10 +1531,12 @@
      //-- Counts in SIG, signal selection
 
       rv_mu_ew_sig    = new RooRealVar( "mu_ew_sig"   , "mu_ew_sig"   , 0.0, 10000. ) ;
-      rv_mu_susy_sig  = new RooRealVar( "mu_susy_sig" , "mu_susy_sig" , 0.0, 100. ) ;
+      rv_mu_susy_sig  = new RooRealVar( "mu_susy_sig" , "mu_susy_sig" , 0.0, 200. ) ;
+      rv_eff_sf       = new RooRealVar( "eff_sf"      , "eff_sf"      , 0.0, 4.0 ) ;
 
       rv_mu_ew_sig    -> setVal( Newmcsig ) ;
       rv_mu_susy_sig  -> setVal( 0. ) ;  //-- this is a starting value only.
+      rv_eff_sf       -> setVal( EffScaleFactor ) ;
 
       rv_mu_ew_sig -> setConstant(kTRUE) ;
 
@@ -2010,10 +2020,15 @@
        printf(" --- Defining expected counts in terms of parameters.\n" ) ;
 
 
+////  rv_n_sig = new RooFormulaVar( "n_sig",
+////                                 "mu_ttbar_sig + mu_qcd_sig + mu_ew_sig + mu_susy_sig",
+////                                 RooArgSet( *rv_mu_ttbar_sig, *rv_mu_qcd_sig,
+////                                 *rv_mu_ew_sig, *rv_mu_susy_sig ) ) ;
+
       rv_n_sig = new RooFormulaVar( "n_sig",
-                                     "mu_ttbar_sig + mu_qcd_sig + mu_ew_sig + mu_susy_sig",
+                                     "mu_ttbar_sig + mu_qcd_sig + mu_ew_sig + eff_sf*mu_susy_sig",
                                      RooArgSet( *rv_mu_ttbar_sig, *rv_mu_qcd_sig,
-                                     *rv_mu_ew_sig, *rv_mu_susy_sig ) ) ;
+                                     *rv_mu_ew_sig, *rv_eff_sf, *rv_mu_susy_sig ) ) ;
 
 
 
@@ -2200,14 +2215,6 @@
       pdf_Nsl_msb4 = new RooPoisson( "pdf_Nsl_msb4", "Nsl,msb4 Poisson PDF", *rv_Nslmsb4, *rv_n_sl_msb4 ) ;
       pdf_Nsl_msb5 = new RooPoisson( "pdf_Nsl_msb5", "Nsl,msb5 Poisson PDF", *rv_Nslmsb5, *rv_n_sl_msb5 ) ;
 
-////  pdf_Nqcdmc_sig  = new RooGaussian( "pdf_Nqcdmc_sig", "Gaussian pdf for Nqcdmc,sig",
-////                                      *rv_mu_qcdmc_sig, RooConst( Nqcdmcsig ), RooConst( Nqcdmcsigerr ) ) ;
-////  pdf_Nqcdmc_sb  = new RooGaussian( "pdf_Nqcdmc_sb", "Gaussian pdf for Nqcdmc,sb",
-////                                      *rv_mu_qcdmc_sb, RooConst( Nqcdmcsb ), RooConst( Nqcdmcsberr ) ) ;
-////  pdf_Nqcdmc_a   = new RooGaussian( "pdf_Nqcdmc_a", "Gaussian pdf for Nqcdmc,a",
-////                                      *rv_mu_qcdmc_a, RooConst( Nqcdmca ), RooConst( Nqcdmcaerr ) ) ;
-////  pdf_Nqcdmc_d   = new RooGaussian( "pdf_Nqcdmc_d", "Gaussian pdf for Nqcdmc,d",
-////                                      *rv_mu_qcdmc_d, RooConst( Nqcdmcd ), RooConst( Nqcdmcderr ) ) ;
 
       pdf_Nqcdmc_sig  = new RooGaussian( "pdf_Nqcdmc_sig", "Gaussian pdf for Nqcdmc,sig",
                                           *rv_mu_qcdmc_sig, *rv_Nqcdmcsig, RooConst( Nqcdmcsigerr ) ) ;
@@ -2217,6 +2224,9 @@
                                           *rv_mu_qcdmc_a, *rv_Nqcdmca, RooConst( Nqcdmcaerr ) ) ;
       pdf_Nqcdmc_d   = new RooGaussian( "pdf_Nqcdmc_d", "Gaussian pdf for Nqcdmc,d",
                                           *rv_mu_qcdmc_d, *rv_Nqcdmcd, RooConst( Nqcdmcderr ) ) ;
+
+      pdf_Eff_sf     = new RooGaussian( "pdf_Eff_sf", "Gaussian pdf for Efficiency scale factor",
+                                          *rv_eff_sf, RooConst( EffScaleFactor ) , RooConst( EffScaleFactorErr ) ) ;
 
       {
          RooArgSet pdflist ;
@@ -2252,6 +2262,7 @@
          pdflist.add( *pdf_Nqcdmc_sb ) ;
          pdflist.add( *pdf_Nqcdmc_a ) ;
          pdflist.add( *pdf_Nqcdmc_d ) ;
+         pdflist.add( *pdf_Eff_sf ) ;
          likelihood = new RooProdPdf( "likelihood", "ra2b likelihood", pdflist ) ;
       }
 
@@ -2332,6 +2343,8 @@
        int Nslsb1(0), Nslsb2(0), Nslsb3(0), Nslsb4(0), Nslsb5(0) ; ; //-- data counts in 5 3-jet mass bins of SL, SB.
        int Nslmsb1(0), Nslmsb2(0), Nslmsb3(0), Nslmsb4(0), Nslmsb5(0) ; //-- data counts in 5 3-jet mass bins of SL, MSB.
 
+       float EffScaleFactor(0.), EffScaleFactorErr(0.) ;
+
        float Nqcdmcsig(0.), Nqcdmcsb(0.), Nqcdmca(0.), Nqcdmcd(0.) ; //-- QCD MC counts in SIG, SB, A, and D.
        float Nqcdmcsigerr(0.), Nqcdmcsberr(0.), Nqcdmcaerr(0.), Nqcdmcderr(0.) ; //-- QCD MC uncertainties in SIG, SB, A, and D.
        float Nqcdmcslsig(0.), Nqcdmcslsb(0.), Nqcdmcslmsb(0.) ; //-- QCD MC counts in SL; SIG, LSB, and MSB.
@@ -2362,6 +2375,8 @@
       //    The order here must be consistent with the order there!
 
        fscanf( infp, "%s %d", label, &N3jmBins ) ;             printf( "%s %d\n", label, N3jmBins ) ;                
+       fscanf( infp, "%s %g", label, &EffScaleFactor ) ;       printf( "%s %g\n", label, EffScaleFactor ) ;         
+       fscanf( infp, "%s %g", label, &EffScaleFactorErr ) ;    printf( "%s %g\n", label, EffScaleFactorErr ) ;         
        fscanf( infp, "%s %d", label, &Nsig ) ;                 printf( "%s %d\n", label, Nsig ) ;         
        fscanf( infp, "%s %d", label, &Na ) ;                   printf( "%s %d\n", label, Na ) ;           
        fscanf( infp, "%s %d", label, &Nd ) ;                   printf( "%s %d\n", label, Nd ) ;           
@@ -2654,6 +2669,7 @@
 
       rv_mu_ew_sig    -> setVal( Newmcsig ) ;
       rv_mu_susy_sig  -> setVal( 0. ) ;  //-- this is a starting value only.
+      rv_eff_sf       -> setVal( EffScaleFactor ) ;
 
       rv_mu_ew_sig -> setConstant(kTRUE) ;
 
@@ -3313,19 +3329,128 @@
 
     } // doToyStudy
 
+
+
+
+
+
+
+
+
+
+
+
   //===================================================================
 
+    bool ra2bRoostatsClass::susyScanNoContam( const char* inputScanFile, double dataLumi ) {
+
+
+       //-- First, (re)do the fit and susy signal profile scan.
+
+       reinitialize() ;
+       doFit() ;
+       float susySigLow, susySigHigh ;
+       profileSusySig( susySigLow, susySigHigh, false ) ;
+
+       printf("  Upper limit on SUSY SIG yield : %6.1f\n\n", susySigHigh ) ;
 
 
 
 
+       printf("\n\n Opening SUSY scan input file : %s\n", inputScanFile ) ;
+
+       FILE* infp ;
+       if ( (infp=fopen( inputScanFile,"r"))==NULL ) {
+          printf("\n\n *** Problem opening input file: %s.\n\n", inputScanFile ) ;
+          return false ;
+       }
+
+       int nm3jbins ;
+       int nM0bins ;
+       float minM0 ;
+       float maxM0 ;
+       float deltaM0 ;
+       int nM12bins ;
+       float minM12 ;
+       float maxM12 ;
+       float deltaM12 ;
+       int nScanPoints ;
+
+       char label[1000] ;
+
+       fscanf( infp, "%s %d", label, &nm3jbins ) ;
+       fscanf( infp, "%s %d %f %f %f", label, &nM0bins, &minM0, &maxM0, &deltaM0 ) ;
+       fscanf( infp, "%s %d %f %f %f", label, &nM12bins, &minM12, &maxM12, &deltaM12 ) ;
+       fscanf( infp, "%s %d", label, &nScanPoints ) ;
+
+       printf( "\n\n" ) ;
+       printf( "  M0   :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM0bins, minM0, maxM0 ) ;
+       printf( "  M1/2 :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM12bins, minM12, maxM12 ) ;
+       printf( "\n\n" ) ;
+
+       TH2F* hsusyscanExcluded = new TH2F("hsusyscanExcluded", "SUSY m0 vs m1/2 parameter scan",
+            nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
+            nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
 
 
+       //--- read in the column headers line.
+       char c(0) ;
+       c = fgetc( infp ) ;
+       c = 0 ;
+       while ( c!=10  ) { c = fgetc( infp ) ; }
+
+       //--- Loop over the scan points.
+       for ( int pi = 0 ; pi < nScanPoints ; pi++ ) {
+
+          float pointM0 ;
+          float pointM12 ;
+          float pointXsec ;
+          int    nsel ;
+          int    n_a ;
+          int    n_d ;
+          int    n_sb_m3j1, n_sb_m3j2, n_sb_m3j3, n_sb_m3j4, n_sb_m3j5 ;
+          int    n_sl_msb_m3j1, n_sl_msb_m3j2, n_sl_msb_m3j3, n_sl_msb_m3j4, n_sl_msb_m3j5 ;
+          int    n_sl_sb_m3j1, n_sl_sb_m3j2, n_sl_sb_m3j3, n_sl_sb_m3j4, n_sl_sb_m3j5 ;
+          int    n_sl_sig_m3j1, n_sl_sig_m3j2, n_sl_sig_m3j3, n_sl_sig_m3j4, n_sl_sig_m3j5 ;
+
+          fscanf( infp, "%f %f %f   %d %d %d   %d %d %d %d %d       %d %d %d %d %d      %d %d %d %d %d      %d %d %d %d %d",
+            &pointM0, &pointM12, &pointXsec,
+            &nsel, &n_a, &n_d,
+            &n_sb_m3j1, &n_sb_m3j2, &n_sb_m3j3, &n_sb_m3j4, &n_sb_m3j5,
+            &n_sl_msb_m3j1, &n_sl_msb_m3j2, &n_sl_msb_m3j3, &n_sl_msb_m3j4, &n_sl_msb_m3j5,
+            &n_sl_sb_m3j1, &n_sl_sb_m3j2, &n_sl_sb_m3j3, &n_sl_sb_m3j4, &n_sl_sb_m3j5,
+            &n_sl_sig_m3j1, &n_sl_sig_m3j2, &n_sl_sig_m3j3, &n_sl_sig_m3j4, &n_sl_sig_m3j5 ) ;
 
 
+          int nGenPerPoint(10000) ;
+          float nselWeighted = ( nsel * pointXsec * dataLumi ) / ( 1.0*nGenPerPoint ) ;
 
 
+          int m0bin  = hsusyscanExcluded->GetXaxis()->FindBin( pointM0 ) ;
+          int m12bin = hsusyscanExcluded->GetYaxis()->FindBin( pointM12 ) ;
 
+    //    printf(" m0 = %4.0f (%d),  m1/2 = %4.0f (%d),  Npred = %7.1f", pointM0, m0bin, pointM12, m12bin, nselWeighted ) ;
+
+          if ( nselWeighted > susySigHigh ) {
+    //       printf(" Excluded\n") ;
+             hsusyscanExcluded->SetBinContent( m0bin, m12bin, 1. ) ;
+          } else {
+    //       printf("\n") ;
+          }
+
+
+       } // pi .
+
+       TCanvas* csusy = new TCanvas("csusy","SUSY m0 vs m1/2 scan") ;
+       hsusyscanExcluded->Draw("col") ;
+       csusy->SaveAs("susyScan.png") ;
+
+       return true ;
+
+    } // susyScanNoContam.
+
+
+  //===================================================================
 
 
 

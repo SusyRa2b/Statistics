@@ -41,11 +41,13 @@
 
        bool doToyStudy( const char* inputRootFile, const char* outputRootFile, int dsFirst, int nToys ) ;
 
+       bool susyScanNoContam( const char* inputScanFile, double dataLumi ) ;
+
 
        bool sbPlotsUniformBins( const char* plotBaseName ) ;
        bool sbPlotsVariableBins( const char* plotBaseName ) ;
 
-       bool profileSusySig( float& susySigLow, float& susySigHigh ) ;
+       bool profileSusySig( float& susySigLow, float& susySigHigh, bool makePlot=true ) ;
        bool profileTtbarSig( float& ttbarSigLow, float& ttbarSigHigh ) ;
        bool profileQcdSig( float& qcdSigLow, float& qcdSigHigh ) ;
        bool profileTtbarSb( float& ttbarSbLow, float& ttbarSbHigh ) ;
@@ -159,6 +161,8 @@
 
        RooRealVar* rv_mu_ew_sig ;
        RooRealVar* rv_mu_susy_sig ;
+
+       RooRealVar* rv_eff_sf ;
 
 
        //-- Counts in SB, bins of 3-jet mass, EW, signal selection.
@@ -418,6 +422,8 @@
        RooGaussian* pdf_Nqcdmc_sb ;
        RooGaussian* pdf_Nqcdmc_a ;
        RooGaussian* pdf_Nqcdmc_d ;
+
+       RooGaussian* pdf_Eff_sf ;
 
        RooProdPdf* likelihood ;
 
