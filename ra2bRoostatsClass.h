@@ -42,6 +42,8 @@
        bool doToyStudy( const char* inputRootFile, const char* outputRootFile, int dsFirst, int nToys ) ;
 
        bool susyScanNoContam( const char* inputScanFile, double dataLumi ) ;
+       bool susyScanWithContam( const char* inputScanFile, double dataLumi ) ;
+       bool setSusyScanPoint( const char* inputScanFile, double dataLumi, double m0, double m12 ) ;
 
 
        bool sbPlotsUniformBins( const char* plotBaseName ) ;
@@ -53,8 +55,12 @@
        bool profileTtbarSb( float& ttbarSbLow, float& ttbarSbHigh ) ;
        bool profileQcdSb( float& qcdSbLow, float& qcdSbHigh ) ;
 
+       void parameterSnapshot() ;
 
+       bool fitQualityPlot( bool doNorm=false, double hmax=1.5 ) ;
 
+       void setAndFixSusySig( double setVal = 0. ) ;
+       void freeSusySig() ;
 
 
      private :
@@ -161,6 +167,7 @@
 
        RooRealVar* rv_mu_ew_sig ;
        RooRealVar* rv_mu_susy_sig ;
+       RooRealVar* rv_mu_susymc_sig ;
 
        RooRealVar* rv_eff_sf ;
 
@@ -176,11 +183,11 @@
 
        //-- Counts in SB, bins of 3-jet mass, SUSY, signal selection.
 
-       RooRealVar* rv_mu_susy_sb1 ;
-       RooRealVar* rv_mu_susy_sb2 ;
-       RooRealVar* rv_mu_susy_sb3 ;
-       RooRealVar* rv_mu_susy_sb4 ;
-       RooRealVar* rv_mu_susy_sb5 ;
+       RooRealVar* rv_mu_susymc_sb1 ;
+       RooRealVar* rv_mu_susymc_sb2 ;
+       RooRealVar* rv_mu_susymc_sb3 ;
+       RooRealVar* rv_mu_susymc_sb4 ;
+       RooRealVar* rv_mu_susymc_sb5 ;
 
 
        //-- Counts in A, signal selection
@@ -188,7 +195,7 @@
        RooRealVar* rv_mu_ttbar_a ;
        RooRealVar* rv_mu_qcd_a ;
        RooRealVar* rv_mu_ew_a ;
-       RooRealVar* rv_mu_susy_a ;
+       RooRealVar* rv_mu_susymc_a ;
 
 
        //-- Counts in D, signal selection
@@ -196,7 +203,7 @@
        RooRealVar* rv_mu_ttbar_d ;
        RooRealVar* rv_mu_qcd_d ;
        RooRealVar* rv_mu_ew_d ;
-       RooRealVar* rv_mu_susy_d ;
+       RooRealVar* rv_mu_susymc_d ;
 
 
        //-- Counts in LSB, bins of 3-jet mass, qcd, signal selection
@@ -273,29 +280,29 @@
 
        //-- Single Lepton (SL) counts, susy, SIG region, bins of 3-jet mass
 
-       RooRealVar* rv_mu_sl_susy_sig1 ;
-       RooRealVar* rv_mu_sl_susy_sig2 ;
-       RooRealVar* rv_mu_sl_susy_sig3 ;
-       RooRealVar* rv_mu_sl_susy_sig4 ;
-       RooRealVar* rv_mu_sl_susy_sig5 ;
+       RooRealVar* rv_mu_sl_susymc_sig1 ;
+       RooRealVar* rv_mu_sl_susymc_sig2 ;
+       RooRealVar* rv_mu_sl_susymc_sig3 ;
+       RooRealVar* rv_mu_sl_susymc_sig4 ;
+       RooRealVar* rv_mu_sl_susymc_sig5 ;
 
 
        //-- Single Lepton (SL) counts, susy, SB region, bins of 3-jet mass
 
-       RooRealVar* rv_mu_sl_susy_sb1 ;
-       RooRealVar* rv_mu_sl_susy_sb2 ;
-       RooRealVar* rv_mu_sl_susy_sb3 ;
-       RooRealVar* rv_mu_sl_susy_sb4 ;
-       RooRealVar* rv_mu_sl_susy_sb5 ;
+       RooRealVar* rv_mu_sl_susymc_sb1 ;
+       RooRealVar* rv_mu_sl_susymc_sb2 ;
+       RooRealVar* rv_mu_sl_susymc_sb3 ;
+       RooRealVar* rv_mu_sl_susymc_sb4 ;
+       RooRealVar* rv_mu_sl_susymc_sb5 ;
 
 
        //-- Single Lepton (SL) counts, susy, MSB region, bins of 3-jet mass
 
-       RooRealVar* rv_mu_sl_susy_msb1 ;
-       RooRealVar* rv_mu_sl_susy_msb2 ;
-       RooRealVar* rv_mu_sl_susy_msb3 ;
-       RooRealVar* rv_mu_sl_susy_msb4 ;
-       RooRealVar* rv_mu_sl_susy_msb5 ;
+       RooRealVar* rv_mu_sl_susymc_msb1 ;
+       RooRealVar* rv_mu_sl_susymc_msb2 ;
+       RooRealVar* rv_mu_sl_susymc_msb3 ;
+       RooRealVar* rv_mu_sl_susymc_msb4 ;
+       RooRealVar* rv_mu_sl_susymc_msb5 ;
 
 
 
@@ -338,6 +345,34 @@
        RooFormulaVar* rv_mu_ttbar_sb3 ;
        RooFormulaVar* rv_mu_ttbar_sb4 ;
        RooFormulaVar* rv_mu_ttbar_sb5 ;
+
+
+       RooFormulaVar* rv_mu_susy_a ;
+       RooFormulaVar* rv_mu_susy_d ;
+
+       RooFormulaVar* rv_mu_susy_sb1 ;
+       RooFormulaVar* rv_mu_susy_sb2 ;
+       RooFormulaVar* rv_mu_susy_sb3 ;
+       RooFormulaVar* rv_mu_susy_sb4 ;
+       RooFormulaVar* rv_mu_susy_sb5 ;
+
+       RooFormulaVar* rv_mu_sl_susy_sig1 ;
+       RooFormulaVar* rv_mu_sl_susy_sig2 ;
+       RooFormulaVar* rv_mu_sl_susy_sig3 ;
+       RooFormulaVar* rv_mu_sl_susy_sig4 ;
+       RooFormulaVar* rv_mu_sl_susy_sig5 ;
+
+       RooFormulaVar* rv_mu_sl_susy_sb1 ;
+       RooFormulaVar* rv_mu_sl_susy_sb2 ;
+       RooFormulaVar* rv_mu_sl_susy_sb3 ;
+       RooFormulaVar* rv_mu_sl_susy_sb4 ;
+       RooFormulaVar* rv_mu_sl_susy_sb5 ;
+
+       RooFormulaVar* rv_mu_sl_susy_msb1 ;
+       RooFormulaVar* rv_mu_sl_susy_msb2 ;
+       RooFormulaVar* rv_mu_sl_susy_msb3 ;
+       RooFormulaVar* rv_mu_sl_susy_msb4 ;
+       RooFormulaVar* rv_mu_sl_susy_msb5 ;
 
 
        //========= Expected counts for observables in terms of parameters ============================
@@ -430,6 +465,9 @@
 
        //============ Other things =================================================================
 
+
+       float Nqcdmcsigerr, Nqcdmcsberr, Nqcdmcaerr, Nqcdmcderr ; //-- QCD MC uncertainties in SIG, SB, A, and D.
+       float EffScaleFactor, EffScaleFactorErr ;
 
        RooArgSet observedParametersList ;
        RooDataSet* dsObserved ;

@@ -21,6 +21,8 @@
 #include "TTree.h"
 #include "TRandom1.h"
 #include "TH2F.h"
+#include "TGaxis.h"
+#include "TLine.h"
 
 #include "RooArgSet.h"
 #include "RooConstVar.h"
@@ -361,6 +363,8 @@
          }
 
          varsAtFitVals = false ;
+
+         delete plinterval_susy_sig ; // can I safely do this???
 
          return true ;
 
@@ -1155,10 +1159,10 @@
        int Nslsb1(0), Nslsb2(0), Nslsb3(0), Nslsb4(0), Nslsb5(0) ; ; //-- data counts in 5 3-jet mass bins of SL, SB.
        int Nslmsb1(0), Nslmsb2(0), Nslmsb3(0), Nslmsb4(0), Nslmsb5(0) ; //-- data counts in 5 3-jet mass bins of SL, MSB.
 
-       float EffScaleFactor(0.), EffScaleFactorErr(0.) ;
+    // float EffScaleFactor(0.), EffScaleFactorErr(0.) ;
 
        float Nqcdmcsig(0.), Nqcdmcsb(0.), Nqcdmca(0.), Nqcdmcd(0.) ; //-- QCD MC counts in SIG, SB, A, and D.
-       float Nqcdmcsigerr(0.), Nqcdmcsberr(0.), Nqcdmcaerr(0.), Nqcdmcderr(0.) ; //-- QCD MC uncertainties in SIG, SB, A, and D.
+    // float Nqcdmcsigerr(0.), Nqcdmcsberr(0.), Nqcdmcaerr(0.), Nqcdmcderr(0.) ; //-- QCD MC uncertainties in SIG, SB, A, and D.
        float Nqcdmcslsig(0.), Nqcdmcslsb(0.), Nqcdmcslmsb(0.) ; //-- QCD MC counts in SL; SIG, LSB, and MSB.
        float Nttbarmcsig(0.), Nttbarmcsb(0.), Nttbarmca(0.), Nttbarmcd(0.) ; //-- ttbar MC counts in SIG, SB, A, and D.
        float Nttbarmcslsig(0.), Nttbarmcslsb(0.), Nttbarmcslmsb(0.) ; //-- ttbar MC counts in SL; SIG, SB, and MSB.
@@ -1532,13 +1536,16 @@
 
       rv_mu_ew_sig    = new RooRealVar( "mu_ew_sig"   , "mu_ew_sig"   , 0.0, 10000. ) ;
       rv_mu_susy_sig  = new RooRealVar( "mu_susy_sig" , "mu_susy_sig" , 0.0, 200. ) ;
+      rv_mu_susymc_sig  = new RooRealVar( "mu_susymc_sig" , "mu_susymc_sig" , 0.0, 100000. ) ;
       rv_eff_sf       = new RooRealVar( "eff_sf"      , "eff_sf"      , 0.0, 4.0 ) ;
 
       rv_mu_ew_sig    -> setVal( Newmcsig ) ;
       rv_mu_susy_sig  -> setVal( 0. ) ;  //-- this is a starting value only.
+      rv_mu_susymc_sig  -> setVal( 0. ) ;
       rv_eff_sf       -> setVal( EffScaleFactor ) ;
 
       rv_mu_ew_sig -> setConstant(kTRUE) ;
+      rv_mu_susymc_sig -> setConstant(kTRUE) ;
 
      //-- Counts in SB, bins of 3-jet mass, EW, signal selection
 
@@ -1562,37 +1569,37 @@
 
      //-- Counts in SB, bins of 3-jet mass, SUSY, signal selection
 
-      rv_mu_susy_sb1 = new RooRealVar( "mu_susy_sb1", "mu_susy_sb1", 0.0, 10000. ) ;
-      rv_mu_susy_sb2 = new RooRealVar( "mu_susy_sb2", "mu_susy_sb2", 0.0, 10000. ) ;
-      rv_mu_susy_sb3 = new RooRealVar( "mu_susy_sb3", "mu_susy_sb3", 0.0, 10000. ) ;
-      rv_mu_susy_sb4 = new RooRealVar( "mu_susy_sb4", "mu_susy_sb4", 0.0, 10000. ) ;
-      rv_mu_susy_sb5 = new RooRealVar( "mu_susy_sb5", "mu_susy_sb5", 0.0, 10000. ) ;
+      rv_mu_susymc_sb1 = new RooRealVar( "mu_susymc_sb1", "mu_susymc_sb1", 0.0, 10000. ) ;
+      rv_mu_susymc_sb2 = new RooRealVar( "mu_susymc_sb2", "mu_susymc_sb2", 0.0, 10000. ) ;
+      rv_mu_susymc_sb3 = new RooRealVar( "mu_susymc_sb3", "mu_susymc_sb3", 0.0, 10000. ) ;
+      rv_mu_susymc_sb4 = new RooRealVar( "mu_susymc_sb4", "mu_susymc_sb4", 0.0, 10000. ) ;
+      rv_mu_susymc_sb5 = new RooRealVar( "mu_susymc_sb5", "mu_susymc_sb5", 0.0, 10000. ) ;
 
-      rv_mu_susy_sb1 -> setVal( 0. ) ;
-      rv_mu_susy_sb2 -> setVal( 0. ) ;
-      rv_mu_susy_sb3 -> setVal( 0. ) ;
-      rv_mu_susy_sb4 -> setVal( 0. ) ;
-      rv_mu_susy_sb5 -> setVal( 0. ) ;
+      rv_mu_susymc_sb1 -> setVal( 0. ) ;
+      rv_mu_susymc_sb2 -> setVal( 0. ) ;
+      rv_mu_susymc_sb3 -> setVal( 0. ) ;
+      rv_mu_susymc_sb4 -> setVal( 0. ) ;
+      rv_mu_susymc_sb5 -> setVal( 0. ) ;
 
-      rv_mu_susy_sb1 -> setConstant(kTRUE) ;
-      rv_mu_susy_sb2 -> setConstant(kTRUE) ;
-      rv_mu_susy_sb3 -> setConstant(kTRUE) ;
-      rv_mu_susy_sb4 -> setConstant(kTRUE) ;
-      rv_mu_susy_sb5 -> setConstant(kTRUE) ;
+      rv_mu_susymc_sb1 -> setConstant(kTRUE) ;
+      rv_mu_susymc_sb2 -> setConstant(kTRUE) ;
+      rv_mu_susymc_sb3 -> setConstant(kTRUE) ;
+      rv_mu_susymc_sb4 -> setConstant(kTRUE) ;
+      rv_mu_susymc_sb5 -> setConstant(kTRUE) ;
 
      //-- Counts in A, signal selection
 
       rv_mu_ttbar_a = new RooRealVar( "mu_ttbar_a", "mu_ttbar_a", 0.0, 10000. ) ;
       rv_mu_qcd_a   = new RooRealVar( "mu_qcd_a"  , "mu_qcd_a"  , 0.0, 10000. ) ;
       rv_mu_ew_a    = new RooRealVar( "mu_ew_a"   , "mu_ew_a"   , 0.0, 10000. ) ;
-      rv_mu_susy_a  = new RooRealVar( "mu_susy_a" , "mu_susy_a" , 0.0, 10000. ) ;
+      rv_mu_susymc_a  = new RooRealVar( "mu_susymc_a" , "mu_susymc_a" , 0.0, 10000. ) ;
 
       rv_mu_ttbar_a -> setVal( Nttbarmca ) ;
       rv_mu_qcd_a   -> setVal( Na - Nttbarmca - Newmca ) ; //-- this is a starting value only.
       rv_mu_ew_a    -> setVal( Newmca ) ;
-      rv_mu_susy_a  -> setVal( 0. ) ;
+      rv_mu_susymc_a  -> setVal( 0. ) ;
 
-      rv_mu_susy_a  ->setConstant(kTRUE) ;
+      rv_mu_susymc_a  ->setConstant(kTRUE) ;
       rv_mu_ew_a    ->setConstant(kTRUE) ;
       rv_mu_ttbar_a ->setConstant(kTRUE) ;
 
@@ -1602,16 +1609,16 @@
       rv_mu_ttbar_d = new RooRealVar( "mu_ttbar_d", "mu_ttbar_d", 0.0, 10000. ) ;
       rv_mu_qcd_d   = new RooRealVar( "mu_qcd_d"  , "mu_qcd_d"  , 0.0, 10000. ) ;
       rv_mu_ew_d    = new RooRealVar( "mu_ew_d"   , "mu_ew_d"   , 0.0, 10000. ) ;
-      rv_mu_susy_d  = new RooRealVar( "mu_susy_d" , "mu_susy_d" , 0.0, 10000. ) ;
+      rv_mu_susymc_d  = new RooRealVar( "mu_susymc_d" , "mu_susymc_d" , 0.0, 10000. ) ;
 
       rv_mu_ttbar_d -> setVal( Nttbarmcd ) ;
       rv_mu_qcd_d   -> setVal( Nd - Nttbarmcd - Newmcd ) ; //-- this is a starting value only.
       rv_mu_ew_d    -> setVal( Newmcd ) ;
-      rv_mu_susy_d  -> setVal( 0. ) ;
+      rv_mu_susymc_d  -> setVal( 0. ) ;
 
       rv_mu_ew_d    -> setConstant(kTRUE) ;
       rv_mu_ttbar_d -> setConstant(kTRUE) ;
-      rv_mu_susy_d  -> setConstant(kTRUE) ;
+      rv_mu_susymc_d  -> setConstant(kTRUE) ;
 
      //-- Counts in LSB, bins of 3-jet mass, qcd, signal selection
 
@@ -1763,65 +1770,65 @@
 
      //-- Single Lepton (SL) counts, susy, SIG region, bins of 3-jet mass
 
-      rv_mu_sl_susy_sig1 = new RooRealVar( "mu_sl_susy_sig1", "mu_sl_susy_sig1", 0.0, 10000. ) ;
-      rv_mu_sl_susy_sig2 = new RooRealVar( "mu_sl_susy_sig2", "mu_sl_susy_sig2", 0.0, 10000. ) ;
-      rv_mu_sl_susy_sig3 = new RooRealVar( "mu_sl_susy_sig3", "mu_sl_susy_sig3", 0.0, 10000. ) ;
-      rv_mu_sl_susy_sig4 = new RooRealVar( "mu_sl_susy_sig4", "mu_sl_susy_sig4", 0.0, 10000. ) ;
-      rv_mu_sl_susy_sig5 = new RooRealVar( "mu_sl_susy_sig5", "mu_sl_susy_sig5", 0.0, 10000. ) ;
+      rv_mu_sl_susymc_sig1 = new RooRealVar( "mu_sl_susymc_sig1", "mu_sl_susymc_sig1", 0.0, 10000. ) ;
+      rv_mu_sl_susymc_sig2 = new RooRealVar( "mu_sl_susymc_sig2", "mu_sl_susymc_sig2", 0.0, 10000. ) ;
+      rv_mu_sl_susymc_sig3 = new RooRealVar( "mu_sl_susymc_sig3", "mu_sl_susymc_sig3", 0.0, 10000. ) ;
+      rv_mu_sl_susymc_sig4 = new RooRealVar( "mu_sl_susymc_sig4", "mu_sl_susymc_sig4", 0.0, 10000. ) ;
+      rv_mu_sl_susymc_sig5 = new RooRealVar( "mu_sl_susymc_sig5", "mu_sl_susymc_sig5", 0.0, 10000. ) ;
 
-      rv_mu_sl_susy_sig1 -> setVal( 0. ) ;
-      rv_mu_sl_susy_sig2 -> setVal( 0. ) ;
-      rv_mu_sl_susy_sig3 -> setVal( 0. ) ;
-      rv_mu_sl_susy_sig4 -> setVal( 0. ) ;
-      rv_mu_sl_susy_sig5 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sig1 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sig2 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sig3 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sig4 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sig5 -> setVal( 0. ) ;
 
-      rv_mu_sl_susy_sig1 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_sig2 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_sig3 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_sig4 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_sig5 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sig1 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sig2 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sig3 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sig4 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sig5 -> setConstant( kTRUE ) ;
 
 
      //-- Single Lepton (SL) counts, susy, SB region, bins of 3-jet mass
 
-      rv_mu_sl_susy_sb1 = new RooRealVar( "mu_sl_susy_sb1", "mu_sl_susy_sb1", 0.0, 10000. ) ;
-      rv_mu_sl_susy_sb2 = new RooRealVar( "mu_sl_susy_sb2", "mu_sl_susy_sb2", 0.0, 10000. ) ;
-      rv_mu_sl_susy_sb3 = new RooRealVar( "mu_sl_susy_sb3", "mu_sl_susy_sb3", 0.0, 10000. ) ;
-      rv_mu_sl_susy_sb4 = new RooRealVar( "mu_sl_susy_sb4", "mu_sl_susy_sb4", 0.0, 10000. ) ;
-      rv_mu_sl_susy_sb5 = new RooRealVar( "mu_sl_susy_sb5", "mu_sl_susy_sb5", 0.0, 10000. ) ;
+      rv_mu_sl_susymc_sb1 = new RooRealVar( "mu_sl_susymc_sb1", "mu_sl_susymc_sb1", 0.0, 10000. ) ;
+      rv_mu_sl_susymc_sb2 = new RooRealVar( "mu_sl_susymc_sb2", "mu_sl_susymc_sb2", 0.0, 10000. ) ;
+      rv_mu_sl_susymc_sb3 = new RooRealVar( "mu_sl_susymc_sb3", "mu_sl_susymc_sb3", 0.0, 10000. ) ;
+      rv_mu_sl_susymc_sb4 = new RooRealVar( "mu_sl_susymc_sb4", "mu_sl_susymc_sb4", 0.0, 10000. ) ;
+      rv_mu_sl_susymc_sb5 = new RooRealVar( "mu_sl_susymc_sb5", "mu_sl_susymc_sb5", 0.0, 10000. ) ;
 
-      rv_mu_sl_susy_sb1 -> setVal( 0. ) ;
-      rv_mu_sl_susy_sb2 -> setVal( 0. ) ;
-      rv_mu_sl_susy_sb3 -> setVal( 0. ) ;
-      rv_mu_sl_susy_sb4 -> setVal( 0. ) ;
-      rv_mu_sl_susy_sb5 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sb1 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sb2 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sb3 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sb4 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sb5 -> setVal( 0. ) ;
 
-      rv_mu_sl_susy_sb1 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_sb2 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_sb3 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_sb4 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_sb5 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sb1 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sb2 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sb3 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sb4 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sb5 -> setConstant( kTRUE ) ;
 
 
      //-- Single Lepton (SL) counts, susy, MSB region, bins of 3-jet mass
 
-      rv_mu_sl_susy_msb1 = new RooRealVar( "mu_sl_susy_msb1", "mu_sl_susy_msb1", 0.0, 10000. ) ;
-      rv_mu_sl_susy_msb2 = new RooRealVar( "mu_sl_susy_msb2", "mu_sl_susy_msb2", 0.0, 10000. ) ;
-      rv_mu_sl_susy_msb3 = new RooRealVar( "mu_sl_susy_msb3", "mu_sl_susy_msb3", 0.0, 10000. ) ;
-      rv_mu_sl_susy_msb4 = new RooRealVar( "mu_sl_susy_msb4", "mu_sl_susy_msb4", 0.0, 10000. ) ;
-      rv_mu_sl_susy_msb5 = new RooRealVar( "mu_sl_susy_msb5", "mu_sl_susy_msb5", 0.0, 10000. ) ;
+      rv_mu_sl_susymc_msb1 = new RooRealVar( "mu_sl_susymc_msb1", "mu_sl_susymc_msb1", 0.0, 10000. ) ;
+      rv_mu_sl_susymc_msb2 = new RooRealVar( "mu_sl_susymc_msb2", "mu_sl_susymc_msb2", 0.0, 10000. ) ;
+      rv_mu_sl_susymc_msb3 = new RooRealVar( "mu_sl_susymc_msb3", "mu_sl_susymc_msb3", 0.0, 10000. ) ;
+      rv_mu_sl_susymc_msb4 = new RooRealVar( "mu_sl_susymc_msb4", "mu_sl_susymc_msb4", 0.0, 10000. ) ;
+      rv_mu_sl_susymc_msb5 = new RooRealVar( "mu_sl_susymc_msb5", "mu_sl_susymc_msb5", 0.0, 10000. ) ;
 
-      rv_mu_sl_susy_msb1 -> setVal( 0. ) ;
-      rv_mu_sl_susy_msb2 -> setVal( 0. ) ;
-      rv_mu_sl_susy_msb3 -> setVal( 0. ) ;
-      rv_mu_sl_susy_msb4 -> setVal( 0. ) ;
-      rv_mu_sl_susy_msb5 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_msb1 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_msb2 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_msb3 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_msb4 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_msb5 -> setVal( 0. ) ;
 
-      rv_mu_sl_susy_msb1 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_msb2 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_msb3 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_msb4 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_msb5 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_msb1 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_msb2 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_msb3 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_msb4 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_msb5 -> setConstant( kTRUE ) ;
 
 
 
@@ -2013,6 +2020,85 @@
 
 
 
+      rv_mu_susy_a = new RooFormulaVar( "mu_susy_a",
+                                        "mu_susymc_a * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_susymc_a, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+
+      rv_mu_susy_d = new RooFormulaVar( "mu_susy_d",
+                                        "mu_susymc_d * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_susymc_d, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+
+
+      rv_mu_susy_sb1 = new RooFormulaVar( "mu_susy_sb1",
+                                        "mu_susymc_sb1 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_susymc_sb1, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+      rv_mu_susy_sb2 = new RooFormulaVar( "mu_susy_sb2",
+                                        "mu_susymc_sb2 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_susymc_sb2, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+      rv_mu_susy_sb3 = new RooFormulaVar( "mu_susy_sb3",
+                                        "mu_susymc_sb3 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_susymc_sb3, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+      rv_mu_susy_sb4 = new RooFormulaVar( "mu_susy_sb4",
+                                        "mu_susymc_sb4 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_susymc_sb4, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+      rv_mu_susy_sb5 = new RooFormulaVar( "mu_susy_sb5",
+                                        "mu_susymc_sb5 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_susymc_sb5, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+
+
+      rv_mu_sl_susy_msb1 = new RooFormulaVar( "mu_sl_susy_msb1",
+                                        "mu_sl_susymc_msb1 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_sl_susymc_msb1, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+      rv_mu_sl_susy_msb2 = new RooFormulaVar( "mu_sl_susy_msb2",
+                                        "mu_sl_susymc_msb2 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_sl_susymc_msb2, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+      rv_mu_sl_susy_msb3 = new RooFormulaVar( "mu_sl_susy_msb3",
+                                        "mu_sl_susymc_msb3 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_sl_susymc_msb3, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+      rv_mu_sl_susy_msb4 = new RooFormulaVar( "mu_sl_susy_msb4",
+                                        "mu_sl_susymc_msb4 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_sl_susymc_msb4, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+      rv_mu_sl_susy_msb5 = new RooFormulaVar( "mu_sl_susy_msb5",
+                                        "mu_sl_susymc_msb5 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_sl_susymc_msb5, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+
+
+      rv_mu_sl_susy_sb1 = new RooFormulaVar( "mu_sl_susy_sb1",
+                                        "mu_sl_susymc_sb1 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_sl_susymc_sb1, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+      rv_mu_sl_susy_sb2 = new RooFormulaVar( "mu_sl_susy_sb2",
+                                        "mu_sl_susymc_sb2 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_sl_susymc_sb2, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+      rv_mu_sl_susy_sb3 = new RooFormulaVar( "mu_sl_susy_sb3",
+                                        "mu_sl_susymc_sb3 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_sl_susymc_sb3, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+      rv_mu_sl_susy_sb4 = new RooFormulaVar( "mu_sl_susy_sb4",
+                                        "mu_sl_susymc_sb4 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_sl_susymc_sb4, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+      rv_mu_sl_susy_sb5 = new RooFormulaVar( "mu_sl_susy_sb5",
+                                        "mu_sl_susymc_sb5 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_sl_susymc_sb5, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+
+
+      rv_mu_sl_susy_sig1 = new RooFormulaVar( "mu_sl_susy_sig1",
+                                        "mu_sl_susymc_sig1 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_sl_susymc_sig1, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+      rv_mu_sl_susy_sig2 = new RooFormulaVar( "mu_sl_susy_sig2",
+                                        "mu_sl_susymc_sig2 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_sl_susymc_sig2, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+      rv_mu_sl_susy_sig3 = new RooFormulaVar( "mu_sl_susy_sig3",
+                                        "mu_sl_susymc_sig3 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_sl_susymc_sig3, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+      rv_mu_sl_susy_sig4 = new RooFormulaVar( "mu_sl_susy_sig4",
+                                        "mu_sl_susymc_sig4 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_sl_susymc_sig4, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+      rv_mu_sl_susy_sig5 = new RooFormulaVar( "mu_sl_susy_sig5",
+                                        "mu_sl_susymc_sig5 * (mu_susy_sig/mu_susymc_sig)",
+                                        RooArgSet( *rv_mu_sl_susymc_sig5, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
+
+
+
+
 
 
     //+++++++++++++ Expected counts for observables in terms of parameters ++++++++++++++++++
@@ -2035,43 +2121,43 @@
 
 
       rv_n_sb1 = new RooFormulaVar( "n_sb1",
-                                     "mu_ttbar_sb1 + mu_qcd_sb1 + mu_ew_sb1 + mu_susy_sb1",
+                                     "mu_ttbar_sb1 + mu_qcd_sb1 + mu_ew_sb1 + eff_sf*mu_susy_sb1",
                                      RooArgSet( *rv_mu_ttbar_sb1, *rv_mu_qcd_sb1,
-                                     *rv_mu_ew_sb1, *rv_mu_susy_sb1 ) ) ;
+                                     *rv_mu_ew_sb1, *rv_eff_sf, *rv_mu_susy_sb1 ) ) ;
 
       rv_n_sb2 = new RooFormulaVar( "n_sb2",
-                                     "mu_ttbar_sb2 + mu_qcd_sb2 + mu_ew_sb2 + mu_susy_sb2",
+                                     "mu_ttbar_sb2 + mu_qcd_sb2 + mu_ew_sb2 + eff_sf*mu_susy_sb2",
                                      RooArgSet( *rv_mu_ttbar_sb2, *rv_mu_qcd_sb2,
-                                     *rv_mu_ew_sb2, *rv_mu_susy_sb2 ) ) ;
+                                     *rv_mu_ew_sb2, *rv_eff_sf, *rv_mu_susy_sb2 ) ) ;
 
       rv_n_sb3 = new RooFormulaVar( "n_sb3",
-                                     "mu_ttbar_sb3 + mu_qcd_sb3 + mu_ew_sb3 + mu_susy_sb3",
+                                     "mu_ttbar_sb3 + mu_qcd_sb3 + mu_ew_sb3 + eff_sf*mu_susy_sb3",
                                      RooArgSet( *rv_mu_ttbar_sb3, *rv_mu_qcd_sb3,
-                                     *rv_mu_ew_sb3, *rv_mu_susy_sb3 ) ) ;
+                                     *rv_mu_ew_sb3, *rv_eff_sf, *rv_mu_susy_sb3 ) ) ;
 
       rv_n_sb4 = new RooFormulaVar( "n_sb4",
-                                     "mu_ttbar_sb4 + mu_qcd_sb4 + mu_ew_sb4 + mu_susy_sb4",
+                                     "mu_ttbar_sb4 + mu_qcd_sb4 + mu_ew_sb4 + eff_sf*mu_susy_sb4",
                                      RooArgSet( *rv_mu_ttbar_sb4, *rv_mu_qcd_sb4,
-                                     *rv_mu_ew_sb4, *rv_mu_susy_sb4 ) ) ;
+                                     *rv_mu_ew_sb4, *rv_eff_sf, *rv_mu_susy_sb4 ) ) ;
 
       rv_n_sb5 = new RooFormulaVar( "n_sb5",
-                                     "mu_ttbar_sb5 + mu_qcd_sb5 + mu_ew_sb5 + mu_susy_sb5",
+                                     "mu_ttbar_sb5 + mu_qcd_sb5 + mu_ew_sb5 + eff_sf*mu_susy_sb5",
                                      RooArgSet( *rv_mu_ttbar_sb5, *rv_mu_qcd_sb5,
-                                     *rv_mu_ew_sb5, *rv_mu_susy_sb5 ) ) ;
+                                     *rv_mu_ew_sb5, *rv_eff_sf, *rv_mu_susy_sb5 ) ) ;
 
 
 
 
 
       rv_n_a = new RooFormulaVar( "n_a",
-                                   "mu_qcd_a + mu_ttbar_a + mu_ew_a + mu_susy_a",
+                                   "mu_qcd_a + mu_ttbar_a + mu_ew_a + eff_sf*mu_susy_a",
                                    RooArgSet( *rv_mu_qcd_a, *rv_mu_ttbar_a,
-                                   *rv_mu_ew_a, *rv_mu_susy_a ) ) ;
+                                   *rv_mu_ew_a, *rv_eff_sf, *rv_mu_susy_a ) ) ;
 
       rv_n_d = new RooFormulaVar( "n_d",
-                                   "mu_qcd_d + mu_ttbar_d + mu_ew_d + mu_susy_d",
+                                   "mu_qcd_d + mu_ttbar_d + mu_ew_d + eff_sf*mu_susy_d",
                                    RooArgSet( *rv_mu_qcd_d, *rv_mu_ttbar_d,
-                                   *rv_mu_ew_d, *rv_mu_susy_d ) ) ;
+                                   *rv_mu_ew_d, *rv_eff_sf, *rv_mu_susy_d ) ) ;
 
 
 
@@ -2099,70 +2185,70 @@
 
 
       rv_n_sl_sig1 = new RooFormulaVar( "n_sl_sig1",
-                                         "mu_sl_ttbar_sig1 + mu_sl_ew_sig1 + mu_sl_susy_sig1",
-                                         RooArgSet( *rv_mu_sl_ttbar_sig1, *rv_mu_sl_ew_sig1, *rv_mu_sl_susy_sig1 ) ) ;
+                                         "mu_sl_ttbar_sig1 + mu_sl_ew_sig1 + eff_sf*mu_sl_susy_sig1",
+                                         RooArgSet( *rv_mu_sl_ttbar_sig1, *rv_mu_sl_ew_sig1, *rv_eff_sf, *rv_mu_sl_susy_sig1 ) ) ;
 
       rv_n_sl_sig2 = new RooFormulaVar( "n_sl_sig2",
-                                         "mu_sl_ttbar_sig2 + mu_sl_ew_sig2 + mu_sl_susy_sig2",
-                                         RooArgSet( *rv_mu_sl_ttbar_sig2, *rv_mu_sl_ew_sig2, *rv_mu_sl_susy_sig2 ) ) ;
+                                         "mu_sl_ttbar_sig2 + mu_sl_ew_sig2 + eff_sf*mu_sl_susy_sig2",
+                                         RooArgSet( *rv_mu_sl_ttbar_sig2, *rv_mu_sl_ew_sig2, *rv_eff_sf, *rv_mu_sl_susy_sig2 ) ) ;
 
       rv_n_sl_sig3 = new RooFormulaVar( "n_sl_sig3",
-                                         "mu_sl_ttbar_sig3 + mu_sl_ew_sig3 + mu_sl_susy_sig3",
-                                         RooArgSet( *rv_mu_sl_ttbar_sig3, *rv_mu_sl_ew_sig3, *rv_mu_sl_susy_sig3 ) ) ;
+                                         "mu_sl_ttbar_sig3 + mu_sl_ew_sig3 + eff_sf*mu_sl_susy_sig3",
+                                         RooArgSet( *rv_mu_sl_ttbar_sig3, *rv_mu_sl_ew_sig3, *rv_eff_sf, *rv_mu_sl_susy_sig3 ) ) ;
 
       rv_n_sl_sig4 = new RooFormulaVar( "n_sl_sig4",
-                                         "mu_sl_ttbar_sig4 + mu_sl_ew_sig4 + mu_sl_susy_sig4",
-                                         RooArgSet( *rv_mu_sl_ttbar_sig4, *rv_mu_sl_ew_sig4, *rv_mu_sl_susy_sig4 ) ) ;
+                                         "mu_sl_ttbar_sig4 + mu_sl_ew_sig4 + eff_sf*mu_sl_susy_sig4",
+                                         RooArgSet( *rv_mu_sl_ttbar_sig4, *rv_mu_sl_ew_sig4, *rv_eff_sf, *rv_mu_sl_susy_sig4 ) ) ;
 
       rv_n_sl_sig5 = new RooFormulaVar( "n_sl_sig5",
-                                         "mu_sl_ttbar_sig5 + mu_sl_ew_sig5 + mu_sl_susy_sig5",
-                                         RooArgSet( *rv_mu_sl_ttbar_sig5, *rv_mu_sl_ew_sig5, *rv_mu_sl_susy_sig5 ) ) ;
+                                         "mu_sl_ttbar_sig5 + mu_sl_ew_sig5 + eff_sf*mu_sl_susy_sig5",
+                                         RooArgSet( *rv_mu_sl_ttbar_sig5, *rv_mu_sl_ew_sig5, *rv_eff_sf, *rv_mu_sl_susy_sig5 ) ) ;
 
 
 
 
       rv_n_sl_sb1 = new RooFormulaVar( "n_sl_sb1",
-                                         "mu_sl_ttbar_sb1 + mu_sl_ew_sb1 + mu_sl_susy_sb1",
-                                         RooArgSet( *rv_mu_sl_ttbar_sb1, *rv_mu_sl_ew_sb1, *rv_mu_sl_susy_sb1 ) ) ;
+                                         "mu_sl_ttbar_sb1 + mu_sl_ew_sb1 + eff_sf*mu_sl_susy_sb1",
+                                         RooArgSet( *rv_mu_sl_ttbar_sb1, *rv_mu_sl_ew_sb1, *rv_eff_sf, *rv_mu_sl_susy_sb1 ) ) ;
 
       rv_n_sl_sb2 = new RooFormulaVar( "n_sl_sb2",
-                                         "mu_sl_ttbar_sb2 + mu_sl_ew_sb2 + mu_sl_susy_sb2",
-                                         RooArgSet( *rv_mu_sl_ttbar_sb2, *rv_mu_sl_ew_sb2, *rv_mu_sl_susy_sb2 ) ) ;
+                                         "mu_sl_ttbar_sb2 + mu_sl_ew_sb2 + eff_sf*mu_sl_susy_sb2",
+                                         RooArgSet( *rv_mu_sl_ttbar_sb2, *rv_mu_sl_ew_sb2, *rv_eff_sf, *rv_mu_sl_susy_sb2 ) ) ;
 
       rv_n_sl_sb3 = new RooFormulaVar( "n_sl_sb3",
-                                         "mu_sl_ttbar_sb3 + mu_sl_ew_sb3 + mu_sl_susy_sb3",
-                                         RooArgSet( *rv_mu_sl_ttbar_sb3, *rv_mu_sl_ew_sb3, *rv_mu_sl_susy_sb3 ) ) ;
+                                         "mu_sl_ttbar_sb3 + mu_sl_ew_sb3 + eff_sf*mu_sl_susy_sb3",
+                                         RooArgSet( *rv_mu_sl_ttbar_sb3, *rv_mu_sl_ew_sb3, *rv_eff_sf, *rv_mu_sl_susy_sb3 ) ) ;
 
       rv_n_sl_sb4 = new RooFormulaVar( "n_sl_sb4",
-                                         "mu_sl_ttbar_sb4 + mu_sl_ew_sb4 + mu_sl_susy_sb4",
-                                         RooArgSet( *rv_mu_sl_ttbar_sb4, *rv_mu_sl_ew_sb4, *rv_mu_sl_susy_sb4 ) ) ;
+                                         "mu_sl_ttbar_sb4 + mu_sl_ew_sb4 + eff_sf*mu_sl_susy_sb4",
+                                         RooArgSet( *rv_mu_sl_ttbar_sb4, *rv_mu_sl_ew_sb4, *rv_eff_sf, *rv_mu_sl_susy_sb4 ) ) ;
 
       rv_n_sl_sb5 = new RooFormulaVar( "n_sl_sb5",
-                                         "mu_sl_ttbar_sb5 + mu_sl_ew_sb5 + mu_sl_susy_sb5",
-                                         RooArgSet( *rv_mu_sl_ttbar_sb5, *rv_mu_sl_ew_sb5, *rv_mu_sl_susy_sb5 ) ) ;
+                                         "mu_sl_ttbar_sb5 + mu_sl_ew_sb5 + eff_sf*mu_sl_susy_sb5",
+                                         RooArgSet( *rv_mu_sl_ttbar_sb5, *rv_mu_sl_ew_sb5, *rv_eff_sf, *rv_mu_sl_susy_sb5 ) ) ;
 
 
 
 
       rv_n_sl_msb1 = new RooFormulaVar( "n_sl_msb1",
-                                         "mu_sl_ttbar_msb1 + mu_sl_ew_msb1 + mu_sl_susy_msb1",
-                                         RooArgSet( *rv_mu_sl_ttbar_msb1, *rv_mu_sl_ew_msb1, *rv_mu_sl_susy_msb1 ) ) ;
+                                         "mu_sl_ttbar_msb1 + mu_sl_ew_msb1 + eff_sf*mu_sl_susy_msb1",
+                                         RooArgSet( *rv_mu_sl_ttbar_msb1, *rv_mu_sl_ew_msb1, *rv_eff_sf, *rv_mu_sl_susy_msb1 ) ) ;
 
       rv_n_sl_msb2 = new RooFormulaVar( "n_sl_msb2",
-                                         "mu_sl_ttbar_msb2 + mu_sl_ew_msb2 + mu_sl_susy_msb2",
-                                         RooArgSet( *rv_mu_sl_ttbar_msb2, *rv_mu_sl_ew_msb2, *rv_mu_sl_susy_msb2 ) ) ;
+                                         "mu_sl_ttbar_msb2 + mu_sl_ew_msb2 + eff_sf*mu_sl_susy_msb2",
+                                         RooArgSet( *rv_mu_sl_ttbar_msb2, *rv_mu_sl_ew_msb2, *rv_eff_sf, *rv_mu_sl_susy_msb2 ) ) ;
 
       rv_n_sl_msb3 = new RooFormulaVar( "n_sl_msb3",
-                                         "mu_sl_ttbar_msb3 + mu_sl_ew_msb3 + mu_sl_susy_msb3",
-                                         RooArgSet( *rv_mu_sl_ttbar_msb3, *rv_mu_sl_ew_msb3, *rv_mu_sl_susy_msb3 ) ) ;
+                                         "mu_sl_ttbar_msb3 + mu_sl_ew_msb3 + eff_sf*mu_sl_susy_msb3",
+                                         RooArgSet( *rv_mu_sl_ttbar_msb3, *rv_mu_sl_ew_msb3, *rv_eff_sf, *rv_mu_sl_susy_msb3 ) ) ;
 
       rv_n_sl_msb4 = new RooFormulaVar( "n_sl_msb4",
-                                         "mu_sl_ttbar_msb4 + mu_sl_ew_msb4 + mu_sl_susy_msb4",
-                                         RooArgSet( *rv_mu_sl_ttbar_msb4, *rv_mu_sl_ew_msb4, *rv_mu_sl_susy_msb4 ) ) ;
+                                         "mu_sl_ttbar_msb4 + mu_sl_ew_msb4 + eff_sf*mu_sl_susy_msb4",
+                                         RooArgSet( *rv_mu_sl_ttbar_msb4, *rv_mu_sl_ew_msb4, *rv_eff_sf, *rv_mu_sl_susy_msb4 ) ) ;
 
       rv_n_sl_msb5 = new RooFormulaVar( "n_sl_msb5",
-                                         "mu_sl_ttbar_msb5 + mu_sl_ew_msb5 + mu_sl_susy_msb5",
-                                         RooArgSet( *rv_mu_sl_ttbar_msb5, *rv_mu_sl_ew_msb5, *rv_mu_sl_susy_msb5 ) ) ;
+                                         "mu_sl_ttbar_msb5 + mu_sl_ew_msb5 + eff_sf*mu_sl_susy_msb5",
+                                         RooArgSet( *rv_mu_sl_ttbar_msb5, *rv_mu_sl_ew_msb5, *rv_eff_sf, *rv_mu_sl_susy_msb5 ) ) ;
 
 
 
@@ -2343,10 +2429,10 @@
        int Nslsb1(0), Nslsb2(0), Nslsb3(0), Nslsb4(0), Nslsb5(0) ; ; //-- data counts in 5 3-jet mass bins of SL, SB.
        int Nslmsb1(0), Nslmsb2(0), Nslmsb3(0), Nslmsb4(0), Nslmsb5(0) ; //-- data counts in 5 3-jet mass bins of SL, MSB.
 
-       float EffScaleFactor(0.), EffScaleFactorErr(0.) ;
+    // float EffScaleFactor(0.), EffScaleFactorErr(0.) ;
 
        float Nqcdmcsig(0.), Nqcdmcsb(0.), Nqcdmca(0.), Nqcdmcd(0.) ; //-- QCD MC counts in SIG, SB, A, and D.
-       float Nqcdmcsigerr(0.), Nqcdmcsberr(0.), Nqcdmcaerr(0.), Nqcdmcderr(0.) ; //-- QCD MC uncertainties in SIG, SB, A, and D.
+    // float Nqcdmcsigerr(0.), Nqcdmcsberr(0.), Nqcdmcaerr(0.), Nqcdmcderr(0.) ; //-- QCD MC uncertainties in SIG, SB, A, and D.
        float Nqcdmcslsig(0.), Nqcdmcslsb(0.), Nqcdmcslmsb(0.) ; //-- QCD MC counts in SL; SIG, LSB, and MSB.
        float Nttbarmcsig(0.), Nttbarmcsb(0.), Nttbarmca(0.), Nttbarmcd(0.) ; //-- ttbar MC counts in SIG, SB, A, and D.
        float Nttbarmcslsig(0.), Nttbarmcslsb(0.), Nttbarmcslmsb(0.) ; //-- ttbar MC counts in SL; SIG, SB, and MSB.
@@ -2689,26 +2775,26 @@
 
      //-- Counts in SB, bins of 3-jet mass, SUSY, signal selection
 
-      rv_mu_susy_sb1 -> setVal( 0. ) ;
-      rv_mu_susy_sb2 -> setVal( 0. ) ;
-      rv_mu_susy_sb3 -> setVal( 0. ) ;
-      rv_mu_susy_sb4 -> setVal( 0. ) ;
-      rv_mu_susy_sb5 -> setVal( 0. ) ;
+      rv_mu_susymc_sb1 -> setVal( 0. ) ;
+      rv_mu_susymc_sb2 -> setVal( 0. ) ;
+      rv_mu_susymc_sb3 -> setVal( 0. ) ;
+      rv_mu_susymc_sb4 -> setVal( 0. ) ;
+      rv_mu_susymc_sb5 -> setVal( 0. ) ;
 
-      rv_mu_susy_sb1 -> setConstant(kTRUE) ;
-      rv_mu_susy_sb2 -> setConstant(kTRUE) ;
-      rv_mu_susy_sb3 -> setConstant(kTRUE) ;
-      rv_mu_susy_sb4 -> setConstant(kTRUE) ;
-      rv_mu_susy_sb5 -> setConstant(kTRUE) ;
+      rv_mu_susymc_sb1 -> setConstant(kTRUE) ;
+      rv_mu_susymc_sb2 -> setConstant(kTRUE) ;
+      rv_mu_susymc_sb3 -> setConstant(kTRUE) ;
+      rv_mu_susymc_sb4 -> setConstant(kTRUE) ;
+      rv_mu_susymc_sb5 -> setConstant(kTRUE) ;
 
      //-- Counts in A, signal selection
 
       rv_mu_ttbar_a -> setVal( Nttbarmca ) ;
       rv_mu_qcd_a   -> setVal( Na - Nttbarmca - Newmca ) ; //-- this is a starting value only.
       rv_mu_ew_a    -> setVal( Newmca ) ;
-      rv_mu_susy_a  -> setVal( 0. ) ;
+      rv_mu_susymc_a  -> setVal( 0. ) ;
 
-      rv_mu_susy_a  ->setConstant(kTRUE) ;
+      rv_mu_susymc_a  ->setConstant(kTRUE) ;
       rv_mu_ew_a    ->setConstant(kTRUE) ;
       rv_mu_ttbar_a ->setConstant(kTRUE) ;
 
@@ -2718,11 +2804,11 @@
       rv_mu_ttbar_d -> setVal( Nttbarmcd ) ;
       rv_mu_qcd_d   -> setVal( Nd - Nttbarmcd - Newmcd ) ; //-- this is a starting value only.
       rv_mu_ew_d    -> setVal( Newmcd ) ;
-      rv_mu_susy_d  -> setVal( 0. ) ;
+      rv_mu_susymc_d  -> setVal( 0. ) ;
 
       rv_mu_ew_d    -> setConstant(kTRUE) ;
       rv_mu_ttbar_d -> setConstant(kTRUE) ;
-      rv_mu_susy_d  -> setConstant(kTRUE) ;
+      rv_mu_susymc_d  -> setConstant(kTRUE) ;
 
      //-- Counts in LSB, bins of 3-jet mass, qcd, signal selection
 
@@ -2827,47 +2913,47 @@
 
      //-- Single Lepton (SL) counts, susy, SIG region, bins of 3-jet mass
 
-      rv_mu_sl_susy_sig1 -> setVal( 0. ) ;
-      rv_mu_sl_susy_sig2 -> setVal( 0. ) ;
-      rv_mu_sl_susy_sig3 -> setVal( 0. ) ;
-      rv_mu_sl_susy_sig4 -> setVal( 0. ) ;
-      rv_mu_sl_susy_sig5 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sig1 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sig2 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sig3 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sig4 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sig5 -> setVal( 0. ) ;
 
-      rv_mu_sl_susy_sig1 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_sig2 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_sig3 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_sig4 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_sig5 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sig1 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sig2 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sig3 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sig4 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sig5 -> setConstant( kTRUE ) ;
 
 
      //-- Single Lepton (SL) counts, susy, SB region, bins of 3-jet mass
 
-      rv_mu_sl_susy_sb1 -> setVal( 0. ) ;
-      rv_mu_sl_susy_sb2 -> setVal( 0. ) ;
-      rv_mu_sl_susy_sb3 -> setVal( 0. ) ;
-      rv_mu_sl_susy_sb4 -> setVal( 0. ) ;
-      rv_mu_sl_susy_sb5 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sb1 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sb2 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sb3 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sb4 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_sb5 -> setVal( 0. ) ;
 
-      rv_mu_sl_susy_sb1 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_sb2 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_sb3 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_sb4 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_sb5 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sb1 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sb2 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sb3 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sb4 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_sb5 -> setConstant( kTRUE ) ;
 
 
      //-- Single Lepton (SL) counts, susy, MSB region, bins of 3-jet mass
 
-      rv_mu_sl_susy_msb1 -> setVal( 0. ) ;
-      rv_mu_sl_susy_msb2 -> setVal( 0. ) ;
-      rv_mu_sl_susy_msb3 -> setVal( 0. ) ;
-      rv_mu_sl_susy_msb4 -> setVal( 0. ) ;
-      rv_mu_sl_susy_msb5 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_msb1 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_msb2 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_msb3 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_msb4 -> setVal( 0. ) ;
+      rv_mu_sl_susymc_msb5 -> setVal( 0. ) ;
 
-      rv_mu_sl_susy_msb1 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_msb2 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_msb3 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_msb4 -> setConstant( kTRUE ) ;
-      rv_mu_sl_susy_msb5 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_msb1 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_msb2 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_msb3 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_msb4 -> setConstant( kTRUE ) ;
+      rv_mu_sl_susymc_msb5 -> setConstant( kTRUE ) ;
 
 
        initialized = true ;
@@ -3441,6 +3527,8 @@
 
        } // pi .
 
+       fclose( infp ) ;
+
        TCanvas* csusy = new TCanvas("csusy","SUSY m0 vs m1/2 scan") ;
        hsusyscanExcluded->Draw("col") ;
        csusy->SaveAs("susyScan.png") ;
@@ -3452,6 +3540,781 @@
 
   //===================================================================
 
+    bool ra2bRoostatsClass::susyScanWithContam( const char* inputScanFile, double dataLumi ) {
+
+
+       printf("\n\n Opening SUSY scan input file : %s\n", inputScanFile ) ;
+
+       FILE* infp ;
+       if ( (infp=fopen( inputScanFile,"r"))==NULL ) {
+          printf("\n\n *** Problem opening input file: %s.\n\n", inputScanFile ) ;
+          return false ;
+       }
+
+       int nm3jbins ;
+       int nM0bins ;
+       float minM0 ;
+       float maxM0 ;
+       float deltaM0 ;
+       int nM12bins ;
+       float minM12 ;
+       float maxM12 ;
+       float deltaM12 ;
+       int nScanPoints ;
+
+       char label[1000] ;
+
+       fscanf( infp, "%s %d", label, &nm3jbins ) ;
+       fscanf( infp, "%s %d %f %f %f", label, &nM0bins, &minM0, &maxM0, &deltaM0 ) ;
+       fscanf( infp, "%s %d %f %f %f", label, &nM12bins, &minM12, &maxM12, &deltaM12 ) ;
+       fscanf( infp, "%s %d", label, &nScanPoints ) ;
+
+       printf( "\n\n" ) ;
+       printf( "  M0   :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM0bins, minM0, maxM0 ) ;
+       printf( "  M1/2 :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM12bins, minM12, maxM12 ) ;
+       printf( "\n\n" ) ;
+
+       TH2F* hsusyscanExcluded = new TH2F("hsusyscanExcluded", "SUSY m0 vs m1/2 parameter scan",
+            nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
+            nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
+
+
+       //--- read in the column headers line.
+       char c(0) ;
+       c = fgetc( infp ) ;
+       c = 0 ;
+       while ( c!=10  ) { c = fgetc( infp ) ; }
+
+       //--- Loop over the scan points.
+       for ( int pi = 0 ; pi < nScanPoints ; pi++ ) {
+
+          float pointM0 ;
+          float pointM12 ;
+          float pointXsec ;
+          int    nsel ;
+          int    n_a ;
+          int    n_d ;
+          int    n_sb_m3j1, n_sb_m3j2, n_sb_m3j3, n_sb_m3j4, n_sb_m3j5 ;
+          int    n_sl_msb_m3j1, n_sl_msb_m3j2, n_sl_msb_m3j3, n_sl_msb_m3j4, n_sl_msb_m3j5 ;
+          int    n_sl_sb_m3j1, n_sl_sb_m3j2, n_sl_sb_m3j3, n_sl_sb_m3j4, n_sl_sb_m3j5 ;
+          int    n_sl_sig_m3j1, n_sl_sig_m3j2, n_sl_sig_m3j3, n_sl_sig_m3j4, n_sl_sig_m3j5 ;
+
+          fscanf( infp, "%f %f %f   %d %d %d   %d %d %d %d %d       %d %d %d %d %d      %d %d %d %d %d      %d %d %d %d %d",
+            &pointM0, &pointM12, &pointXsec,
+            &nsel, &n_a, &n_d,
+            &n_sb_m3j1, &n_sb_m3j2, &n_sb_m3j3, &n_sb_m3j4, &n_sb_m3j5,
+            &n_sl_msb_m3j1, &n_sl_msb_m3j2, &n_sl_msb_m3j3, &n_sl_msb_m3j4, &n_sl_msb_m3j5,
+            &n_sl_sb_m3j1, &n_sl_sb_m3j2, &n_sl_sb_m3j3, &n_sl_sb_m3j4, &n_sl_sb_m3j5,
+            &n_sl_sig_m3j1, &n_sl_sig_m3j2, &n_sl_sig_m3j3, &n_sl_sig_m3j4, &n_sl_sig_m3j5 ) ;
+
+
+          int nGenPerPoint(10000) ;
+
+
+          int m0bin  = hsusyscanExcluded->GetXaxis()->FindBin( pointM0 ) ;
+          int m12bin = hsusyscanExcluded->GetYaxis()->FindBin( pointM12 ) ;
+
+
+       //--- Set up the likelihood to include the SUSY contributions to the non-SIG regions.
+
+          float weight = ( pointXsec * dataLumi ) / ( 1.0*nGenPerPoint ) ;
+
+          reinitialize() ;
+
+          rv_mu_susymc_sig -> setVal( nsel * weight ) ;
+
+          rv_mu_susymc_a  -> setVal( n_a * weight ) ;
+          rv_mu_susymc_d  -> setVal( n_d * weight ) ;
+
+          rv_mu_susymc_sb1 -> setVal( n_sb_m3j1 * weight ) ;
+          rv_mu_susymc_sb2 -> setVal( n_sb_m3j2 * weight ) ;
+          rv_mu_susymc_sb3 -> setVal( n_sb_m3j3 * weight ) ;
+          rv_mu_susymc_sb4 -> setVal( n_sb_m3j4 * weight ) ;
+          rv_mu_susymc_sb5 -> setVal( n_sb_m3j5 * weight ) ;
+
+
+          rv_mu_sl_susymc_msb1 -> setVal( n_sl_msb_m3j1 * weight ) ;
+          rv_mu_sl_susymc_msb2 -> setVal( n_sl_msb_m3j2 * weight ) ;
+          rv_mu_sl_susymc_msb3 -> setVal( n_sl_msb_m3j3 * weight ) ;
+          rv_mu_sl_susymc_msb4 -> setVal( n_sl_msb_m3j4 * weight ) ;
+          rv_mu_sl_susymc_msb5 -> setVal( n_sl_msb_m3j5 * weight ) ;
+
+          rv_mu_sl_susymc_sb1 -> setVal( n_sl_sb_m3j1 * weight ) ;
+          rv_mu_sl_susymc_sb2 -> setVal( n_sl_sb_m3j2 * weight ) ;
+          rv_mu_sl_susymc_sb3 -> setVal( n_sl_sb_m3j3 * weight ) ;
+          rv_mu_sl_susymc_sb4 -> setVal( n_sl_sb_m3j4 * weight ) ;
+          rv_mu_sl_susymc_sb5 -> setVal( n_sl_sb_m3j5 * weight ) ;
+
+          rv_mu_sl_susymc_sig1 -> setVal( n_sl_sig_m3j1 * weight ) ;
+          rv_mu_sl_susymc_sig2 -> setVal( n_sl_sig_m3j2 * weight ) ;
+          rv_mu_sl_susymc_sig3 -> setVal( n_sl_sig_m3j3 * weight ) ;
+          rv_mu_sl_susymc_sig4 -> setVal( n_sl_sig_m3j4 * weight ) ;
+          rv_mu_sl_susymc_sig5 -> setVal( n_sl_sig_m3j5 * weight ) ;
+
+          parameterSnapshot() ;
+
+          doFit() ;
+
+          parameterSnapshot() ;
+
+          float susySigLow, susySigHigh ;
+          profileSusySig( susySigLow, susySigHigh, false ) ;
+
+
+          float nselWeighted =  nsel * weight ;
+
+
+          printf("  Upper limit on SUSY SIG yield : %6.1f\n\n", susySigHigh ) ;
+          printf(" m0 = %4.0f (%d),  m1/2 = %4.0f (%d),  Npred = %7.1f", pointM0, m0bin, pointM12, m12bin, nselWeighted ) ;
+
+
+          if ( nselWeighted > susySigHigh ) {
+             printf(" Excluded\n") ;
+             hsusyscanExcluded->SetBinContent( m0bin, m12bin, 1. ) ;
+          } else {
+             printf("\n") ;
+          }
+
+
+       } // pi .
+
+       fclose( infp ) ;
+
+       TCanvas* csusy = new TCanvas("csusy","SUSY m0 vs m1/2 scan") ;
+       hsusyscanExcluded->Draw("col") ;
+       csusy->SaveAs("susyScan.png") ;
+
+       return true ;
+
+    } // susyScanWithContam.
+
+  //===================================================================
+
+    bool ra2bRoostatsClass::setSusyScanPoint( const char* inputScanFile, double dataLumi, double m0, double m12 ) {
+
+
+
+       printf("\n\n Opening SUSY scan input file : %s\n", inputScanFile ) ;
+
+       FILE* infp ;
+       if ( (infp=fopen( inputScanFile,"r"))==NULL ) {
+          printf("\n\n *** Problem opening input file: %s.\n\n", inputScanFile ) ;
+          return false ;
+       }
+
+       int nm3jbins ;
+       int nM0bins ;
+       float minM0 ;
+       float maxM0 ;
+       float deltaM0 ;
+       int nM12bins ;
+       float minM12 ;
+       float maxM12 ;
+       float deltaM12 ;
+       int nScanPoints ;
+
+       char label[1000] ;
+
+       fscanf( infp, "%s %d", label, &nm3jbins ) ;
+       fscanf( infp, "%s %d %f %f %f", label, &nM0bins, &minM0, &maxM0, &deltaM0 ) ;
+       fscanf( infp, "%s %d %f %f %f", label, &nM12bins, &minM12, &maxM12, &deltaM12 ) ;
+       fscanf( infp, "%s %d", label, &nScanPoints ) ;
+
+       printf( "\n\n" ) ;
+       printf( "  M0   :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM0bins, minM0, maxM0 ) ;
+       printf( "  M1/2 :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM12bins, minM12, maxM12 ) ;
+       printf( "\n\n" ) ;
+
+
+       //--- read in the column headers line.
+       char c(0) ;
+       c = fgetc( infp ) ;
+       c = 0 ;
+       while ( c!=10  ) { c = fgetc( infp ) ; }
+
+       bool found(false) ;
+
+       //--- Loop over the scan points.
+       for ( int pi = 0 ; pi < nScanPoints ; pi++ ) {
+
+          float pointM0 ;
+          float pointM12 ;
+          float pointXsec ;
+          int    nsel ;
+          int    n_a ;
+          int    n_d ;
+          int    n_sb_m3j1, n_sb_m3j2, n_sb_m3j3, n_sb_m3j4, n_sb_m3j5 ;
+          int    n_sl_msb_m3j1, n_sl_msb_m3j2, n_sl_msb_m3j3, n_sl_msb_m3j4, n_sl_msb_m3j5 ;
+          int    n_sl_sb_m3j1, n_sl_sb_m3j2, n_sl_sb_m3j3, n_sl_sb_m3j4, n_sl_sb_m3j5 ;
+          int    n_sl_sig_m3j1, n_sl_sig_m3j2, n_sl_sig_m3j3, n_sl_sig_m3j4, n_sl_sig_m3j5 ;
+
+          fscanf( infp, "%f %f %f   %d %d %d   %d %d %d %d %d       %d %d %d %d %d      %d %d %d %d %d      %d %d %d %d %d",
+            &pointM0, &pointM12, &pointXsec,
+            &nsel, &n_a, &n_d,
+            &n_sb_m3j1, &n_sb_m3j2, &n_sb_m3j3, &n_sb_m3j4, &n_sb_m3j5,
+            &n_sl_msb_m3j1, &n_sl_msb_m3j2, &n_sl_msb_m3j3, &n_sl_msb_m3j4, &n_sl_msb_m3j5,
+            &n_sl_sb_m3j1, &n_sl_sb_m3j2, &n_sl_sb_m3j3, &n_sl_sb_m3j4, &n_sl_sb_m3j5,
+            &n_sl_sig_m3j1, &n_sl_sig_m3j2, &n_sl_sig_m3j3, &n_sl_sig_m3j4, &n_sl_sig_m3j5 ) ;
+
+
+          if (    fabs( pointM0 - m0 ) <= deltaM0/2.
+               && fabs( pointM12 - m12 ) <= deltaM12/2. ) {
+
+             int nGenPerPoint(10000) ;
+             float nselWeighted = ( nsel * pointXsec * dataLumi ) / ( 1.0*nGenPerPoint ) ;
+
+
+             printf("\n\n Found point m0 = %4.0f,  m1/2 = %4.0f,  Npred = %7.1f\n\n\n", pointM0, pointM12, nselWeighted ) ;
+
+          //--- Set up the likelihood to include the SUSY contributions to the non-SIG regions.
+
+             float weight = ( pointXsec * dataLumi ) / ( 1.0*nGenPerPoint ) ;
+
+             rv_mu_susymc_sig -> setVal( nsel * weight ) ;
+
+             rv_mu_susymc_a  -> setVal( n_a * weight ) ;
+             rv_mu_susymc_d  -> setVal( n_d * weight ) ;
+
+             rv_mu_susymc_sb1 -> setVal( n_sb_m3j1 * weight ) ;
+             rv_mu_susymc_sb2 -> setVal( n_sb_m3j2 * weight ) ;
+             rv_mu_susymc_sb3 -> setVal( n_sb_m3j3 * weight ) ;
+             rv_mu_susymc_sb4 -> setVal( n_sb_m3j4 * weight ) ;
+             rv_mu_susymc_sb5 -> setVal( n_sb_m3j5 * weight ) ;
+
+
+             rv_mu_sl_susymc_msb1 -> setVal( n_sl_msb_m3j1 * weight ) ;
+             rv_mu_sl_susymc_msb2 -> setVal( n_sl_msb_m3j2 * weight ) ;
+             rv_mu_sl_susymc_msb3 -> setVal( n_sl_msb_m3j3 * weight ) ;
+             rv_mu_sl_susymc_msb4 -> setVal( n_sl_msb_m3j4 * weight ) ;
+             rv_mu_sl_susymc_msb5 -> setVal( n_sl_msb_m3j5 * weight ) ;
+
+             rv_mu_sl_susymc_sb1 -> setVal( n_sl_sb_m3j1 * weight ) ;
+             rv_mu_sl_susymc_sb2 -> setVal( n_sl_sb_m3j2 * weight ) ;
+             rv_mu_sl_susymc_sb3 -> setVal( n_sl_sb_m3j3 * weight ) ;
+             rv_mu_sl_susymc_sb4 -> setVal( n_sl_sb_m3j4 * weight ) ;
+             rv_mu_sl_susymc_sb5 -> setVal( n_sl_sb_m3j5 * weight ) ;
+
+             rv_mu_sl_susymc_sig1 -> setVal( n_sl_sig_m3j1 * weight ) ;
+             rv_mu_sl_susymc_sig2 -> setVal( n_sl_sig_m3j2 * weight ) ;
+             rv_mu_sl_susymc_sig3 -> setVal( n_sl_sig_m3j3 * weight ) ;
+             rv_mu_sl_susymc_sig4 -> setVal( n_sl_sig_m3j4 * weight ) ;
+             rv_mu_sl_susymc_sig5 -> setVal( n_sl_sig_m3j5 * weight ) ;
+
+             found = true ;
+
+             break ;
+
+          } // point match?
+
+       } // pi .
+
+       fclose( infp ) ;
+
+       if ( found ) {
+          return true ;
+       } else {
+          printf("\n\n *** Point not found in scan.\n\n" ) ;
+          return false ;
+       }
+
+    } // setSusyScanPoint.
+
+
+  //===================================================================
+
+  //===================================================================
+
+    bool ra2bRoostatsClass::fitQualityPlot( bool doNorm, double hmax ) {
+
+     //  Shows all of the Likelihood inputs, normalized to the data values,
+     //  compared to the fit result.
+
+     //
+     //   | |   SB    | | SL MSB  | | SL SB   | |  SL SIG | |A D| |S| |E| | QCDMC | |
+     //    x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
+     //    1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7
+     //                      1                   2                   3
+     //
+
+      TH1F* hfitqual_data = new TH1F("hfitqual_data","RA2b likelihood fit results, data",
+                            37, 0.5, 37.5 ) ;
+      TH1F* hfitqual_ttbar = new TH1F("hfitqual_ttbar","RA2b likelihood fit results, ttbar",
+                            37, 0.5, 37.5 ) ;
+      TH1F* hfitqual_qcd = new TH1F("hfitqual_qcd","RA2b likelihood fit results, QCD",
+                            37, 0.5, 37.5 ) ;
+      TH1F* hfitqual_ew = new TH1F("hfitqual_ew","RA2b likelihood fit results, EW",
+                            37, 0.5, 37.5 ) ;
+      TH1F* hfitqual_susy = new TH1F("hfitqual_susy","RA2b likelihood fit results, SUSY",
+                            37, 0.5, 37.5 ) ;
+      TH1F* hfitqual_gaus = new TH1F("hfitqual_gaus","RA2b likelihood fit results, Gaussian constraints",
+                            37, 0.5, 37.5 ) ;
+
+
+
+      hfitqual_ttbar -> SetFillColor(kBlue-9) ;
+      hfitqual_qcd   -> SetFillColor(2) ;
+      hfitqual_ew    -> SetFillColor(3) ;
+      hfitqual_susy  -> SetFillColor(6) ;
+      hfitqual_gaus  -> SetFillColor(kOrange+1) ;
+
+      THStack* hfitqual_fit = new THStack( "hfitqual_fit", "RA2b likelihood fit results, fit" ) ;
+
+      hfitqual_data->SetMarkerStyle(20) ;
+      hfitqual_data->SetLineWidth(2) ;
+
+      TAxis* xaxis = hfitqual_data->GetXaxis() ;
+
+      int binIndex ;
+
+      binIndex = 2 ;
+
+      double dataVal ;
+      double dataErr ;
+      double dataErrNorm ;
+
+      double ttbarVal ;
+      double qcdVal ;
+      double ewVal ;
+      double susyVal ;
+
+      double ttbarValNorm ;
+      double qcdValNorm ;
+      double ewValNorm ;
+      double susyValNorm ;
+
+      double eff_sf ;
+
+      char   binLabel[1000] ;
+
+
+
+      eff_sf = rv_eff_sf->getVal() ;
+
+
+
+     //-- SB m3j bin 1 -------------------------------------------------------
+
+      sprintf( binLabel, "SB m3j,1" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nsb1->getVal() ;
+      ttbarVal = rv_mu_ttbar_sb1->getVal() ;
+      qcdVal   = rv_mu_qcd_sb1->getVal() ;
+      ewVal    = rv_mu_ew_sb1->getVal() ;
+      susyVal  = rv_mu_susy_sb1->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) {
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         qcdValNorm   = qcdVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  qcd = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, qcdValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+     //-- SB m3j bin 2 -------------------------------------------------------
+
+      sprintf( binLabel, "SB m3j,2" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nsb2->getVal() ;
+      ttbarVal = rv_mu_ttbar_sb2->getVal() ;
+      qcdVal   = rv_mu_qcd_sb2->getVal() ;
+      ewVal    = rv_mu_ew_sb2->getVal() ;
+      susyVal  = rv_mu_susy_sb2->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         qcdValNorm   = qcdVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  qcd = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, qcdValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+     //-- SB m3j bin 3 -------------------------------------------------------
+
+      sprintf( binLabel, "SB m3j,3" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nsb3->getVal() ;
+      ttbarVal = rv_mu_ttbar_sb3->getVal() ;
+      qcdVal   = rv_mu_qcd_sb3->getVal() ;
+      ewVal    = rv_mu_ew_sb3->getVal() ;
+      susyVal  = rv_mu_susy_sb3->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         qcdValNorm   = qcdVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  qcd = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, qcdValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+     //-- SB m3j bin 4 -------------------------------------------------------
+
+      sprintf( binLabel, "SB m3j,4" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nsb4->getVal() ;
+      ttbarVal = rv_mu_ttbar_sb4->getVal() ;
+      qcdVal   = rv_mu_qcd_sb4->getVal() ;
+      ewVal    = rv_mu_ew_sb4->getVal() ;
+      susyVal  = rv_mu_susy_sb4->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         qcdValNorm   = qcdVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  qcd = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, qcdValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+     //-- SB m3j bin 5 -------------------------------------------------------
+
+      sprintf( binLabel, "SB m3j,5" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nsb5->getVal() ;
+      ttbarVal = rv_mu_ttbar_sb5->getVal() ;
+      qcdVal   = rv_mu_qcd_sb5->getVal() ;
+      ewVal    = rv_mu_ew_sb5->getVal() ;
+      susyVal  = rv_mu_susy_sb5->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         qcdValNorm   = qcdVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  qcd = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, qcdValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+
+
+
+
+
+      binIndex++ ;
+
+     //-- SL, MSB m3j bin 1 -------------------------------------------------------
+
+      sprintf( binLabel, "SL MSB m3j,1" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nslmsb1->getVal() ;
+      ttbarVal = rv_mu_sl_ttbar_msb1->getVal() ;
+      ewVal    = rv_mu_sl_ew_msb1->getVal() ;
+      susyVal  = rv_mu_sl_susy_msb1->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+
+     //-- SL, MSB m3j bin 2 -------------------------------------------------------
+
+      sprintf( binLabel, "SL MSB m3j,2" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nslmsb2->getVal() ;
+      ttbarVal = rv_mu_sl_ttbar_msb2->getVal() ;
+      ewVal    = rv_mu_sl_ew_msb2->getVal() ;
+      susyVal  = rv_mu_sl_susy_msb2->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+
+     //-- SL, MSB m3j bin 3 -------------------------------------------------------
+
+      sprintf( binLabel, "SL MSB m3j,3" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nslmsb3->getVal() ;
+      ttbarVal = rv_mu_sl_ttbar_msb3->getVal() ;
+      ewVal    = rv_mu_sl_ew_msb3->getVal() ;
+      susyVal  = rv_mu_sl_susy_msb3->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+
+     //-- SL, MSB m3j bin 4 -------------------------------------------------------
+
+      sprintf( binLabel, "SL MSB m3j,4" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nslmsb4->getVal() ;
+      ttbarVal = rv_mu_sl_ttbar_msb4->getVal() ;
+      ewVal    = rv_mu_sl_ew_msb4->getVal() ;
+      susyVal  = rv_mu_sl_susy_msb4->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+
+     //-- SL, MSB m3j bin 5 -------------------------------------------------------
+
+      sprintf( binLabel, "SL MSB m3j,5" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nslmsb5->getVal() ;
+      ttbarVal = rv_mu_sl_ttbar_msb5->getVal() ;
+      ewVal    = rv_mu_sl_ew_msb5->getVal() ;
+      susyVal  = rv_mu_sl_susy_msb5->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
 
 
 
@@ -3460,3 +4323,1194 @@
 
 
 
+
+
+
+
+
+
+
+
+      binIndex++ ;
+
+     //-- SL, SB m3j bin 1 -------------------------------------------------------
+
+      sprintf( binLabel, "SL SB m3j,1" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nslsb1->getVal() ;
+      ttbarVal = rv_mu_sl_ttbar_sb1->getVal() ;
+      ewVal    = rv_mu_sl_ew_sb1->getVal() ;
+      susyVal  = rv_mu_sl_susy_sb1->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+
+     //-- SL, SB m3j bin 2 -------------------------------------------------------
+
+      sprintf( binLabel, "SL SB m3j,2" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nslsb2->getVal() ;
+      ttbarVal = rv_mu_sl_ttbar_sb2->getVal() ;
+      ewVal    = rv_mu_sl_ew_sb2->getVal() ;
+      susyVal  = rv_mu_sl_susy_sb2->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+
+     //-- SL, SB m3j bin 3 -------------------------------------------------------
+
+      sprintf( binLabel, "SL SB m3j,3" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nslsb3->getVal() ;
+      ttbarVal = rv_mu_sl_ttbar_sb3->getVal() ;
+      ewVal    = rv_mu_sl_ew_sb3->getVal() ;
+      susyVal  = rv_mu_sl_susy_sb3->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+
+     //-- SL, SB m3j bin 4 -------------------------------------------------------
+
+      sprintf( binLabel, "SL SB m3j,4" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nslsb4->getVal() ;
+      ttbarVal = rv_mu_sl_ttbar_sb4->getVal() ;
+      ewVal    = rv_mu_sl_ew_sb4->getVal() ;
+      susyVal  = rv_mu_sl_susy_sb4->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+
+     //-- SL, SB m3j bin 5 -------------------------------------------------------
+
+      sprintf( binLabel, "SL SB m3j,5" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nslsb5->getVal() ;
+      ttbarVal = rv_mu_sl_ttbar_sb5->getVal() ;
+      ewVal    = rv_mu_sl_ew_sb5->getVal() ;
+      susyVal  = rv_mu_sl_susy_sb5->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      binIndex++ ;
+
+     //-- SL, SIG m3j bin 1 -------------------------------------------------------
+
+      sprintf( binLabel, "SL SIG m3j,1" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nslsig1->getVal() ;
+      ttbarVal = rv_mu_sl_ttbar_sig1->getVal() ;
+      ewVal    = rv_mu_sl_ew_sig1->getVal() ;
+      susyVal  = rv_mu_sl_susy_sig1->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+
+     //-- SL, SIG m3j bin 2 -------------------------------------------------------
+
+      sprintf( binLabel, "SL SIG m3j,2" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nslsig2->getVal() ;
+      ttbarVal = rv_mu_sl_ttbar_sig2->getVal() ;
+      ewVal    = rv_mu_sl_ew_sig2->getVal() ;
+      susyVal  = rv_mu_sl_susy_sig2->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+
+     //-- SL, SIG m3j bin 3 -------------------------------------------------------
+
+      sprintf( binLabel, "SL SIG m3j,3" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nslsig3->getVal() ;
+      ttbarVal = rv_mu_sl_ttbar_sig3->getVal() ;
+      ewVal    = rv_mu_sl_ew_sig3->getVal() ;
+      susyVal  = rv_mu_sl_susy_sig3->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+
+     //-- SL, SIG m3j bin 4 -------------------------------------------------------
+
+      sprintf( binLabel, "SL SIG m3j,4" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nslsig4->getVal() ;
+      ttbarVal = rv_mu_sl_ttbar_sig4->getVal() ;
+      ewVal    = rv_mu_sl_ew_sig4->getVal() ;
+      susyVal  = rv_mu_sl_susy_sig4->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+
+     //-- SL, SIG m3j bin 5 -------------------------------------------------------
+
+      sprintf( binLabel, "SL SIG m3j,5" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nslsig5->getVal() ;
+      ttbarVal = rv_mu_sl_ttbar_sig5->getVal() ;
+      ewVal    = rv_mu_sl_ew_sig5->getVal() ;
+      susyVal  = rv_mu_sl_susy_sig5->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+
+
+
+
+
+
+      binIndex++ ;
+
+     //-- A -------------------------------------------------------
+
+      if ( doNorm ) {
+         sprintf( binLabel, "A" ) ;
+      } else {
+         sprintf( binLabel, "A (x0.1)" ) ;
+      }
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Na->getVal() ;
+      ttbarVal = rv_mu_ttbar_a->getVal() ;
+      qcdVal   = rv_mu_qcd_a->getVal() ;
+      ewVal    = rv_mu_ew_a->getVal() ;
+      susyVal  = rv_mu_susy_a->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         qcdValNorm   = qcdVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+      if ( !doNorm ) {
+         hfitqual_data->SetBinContent( binIndex, dataVal*0.1 ) ;
+         dataErrNorm = dataErrNorm*0.1 ;
+         ttbarValNorm = ttbarValNorm*0.1 ;
+         ewValNorm = ewValNorm*0.1 ;
+         qcdValNorm = qcdValNorm*0.1 ;
+         susyValNorm = susyValNorm*0.1 ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  qcd = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, qcdValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+
+
+     //-- D -------------------------------------------------------
+
+      if ( doNorm ) {
+         sprintf( binLabel, "D" ) ;
+      } else {
+         sprintf( binLabel, "D (x0.1)" ) ;
+      }
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nd->getVal() ;
+      ttbarVal = rv_mu_ttbar_d->getVal() ;
+      qcdVal   = rv_mu_qcd_d->getVal() ;
+      ewVal    = rv_mu_ew_d->getVal() ;
+      susyVal  = rv_mu_susy_d->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         qcdValNorm   = qcdVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+      if ( !doNorm ) {
+         hfitqual_data->SetBinContent( binIndex, dataVal*0.1 ) ;
+         dataErrNorm = dataErrNorm*0.1 ;
+         ttbarValNorm = ttbarValNorm*0.1 ;
+         ewValNorm = ewValNorm*0.1 ;
+         qcdValNorm = qcdValNorm*0.1 ;
+         susyValNorm = susyValNorm*0.1 ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  qcd = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, qcdValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+
+
+
+
+
+
+
+
+      binIndex++ ;
+
+     //-- SIG -------------------------------------------------------
+
+      sprintf( binLabel, "SIG" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal  = rv_Nsig->getVal() ;
+      if ( useSigBgVars ) {
+         ttbarVal = rrv_mu_ttbar_sig->getVal() ;
+         qcdVal   = rrv_mu_qcd_sig->getVal() ;
+      } else {
+         ttbarVal = rfv_mu_ttbar_sig->getVal() ;
+         qcdVal   = rfv_mu_qcd_sig->getVal() ;
+      }
+      ewVal    = rv_mu_ew_sig->getVal() ;
+      susyVal  = rv_mu_susy_sig->getVal() ;
+      susyVal = eff_sf * susyVal ;
+
+
+      dataErr = sqrt(dataVal) ;
+
+      dataErrNorm = dataErr ;
+      ttbarValNorm = ttbarVal ;
+      qcdValNorm = qcdVal ;
+      ewValNorm = ewVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttbarValNorm = ttbarVal / dataVal ;
+         qcdValNorm   = qcdVal / dataVal ;
+         ewValNorm    = ewVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
+      hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
+      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  qcd = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, qcdValNorm, ewValNorm, susyValNorm ) ;
+
+      binIndex++ ;
+
+
+
+
+
+
+
+      binIndex++ ;
+
+      double mcVal ;
+      double mcValNorm ;
+
+    //-- Gaussian constraint parameters.
+
+
+    //-- MC A
+
+      if ( doNorm ) {
+         sprintf( binLabel, "QCD MC A" ) ;
+      } else {
+         sprintf( binLabel, "QCD MC A (x0.1)" ) ;
+      }
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal = rv_Nqcdmca->getVal() ;
+      mcVal   = rv_mu_qcdmc_a->getVal() ;
+
+      dataErr = Nqcdmcaerr ;
+
+      dataErrNorm = dataErr ;
+      mcValNorm = mcVal ;
+
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         mcValNorm = mcVal / dataVal ;
+      }
+      if ( !doNorm ) {
+         hfitqual_data->SetBinContent( binIndex, dataVal*0.1 ) ;
+         dataErrNorm = dataErrNorm*0.1 ;
+         mcValNorm = mcValNorm*0.1 ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_gaus -> SetBinContent( binIndex, mcValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   MC = %4.2f\n", binLabel, dataErrNorm, mcValNorm ) ;
+
+      binIndex++ ;
+
+
+
+
+
+    //-- MC D
+
+      if ( doNorm ) {
+         sprintf( binLabel, "QCD MC D" ) ;
+      } else {
+         sprintf( binLabel, "QCD MC D (x0.1)" ) ;
+      }
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal = rv_Nqcdmcd->getVal() ;
+      mcVal   = rv_mu_qcdmc_d->getVal() ;
+
+      dataErr = Nqcdmcderr ;
+
+      dataErrNorm = dataErr ;
+      mcValNorm = mcVal ;
+
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         mcValNorm = mcVal / dataVal ;
+      }
+      if ( !doNorm ) {
+         hfitqual_data->SetBinContent( binIndex, dataVal*0.1 ) ;
+         dataErrNorm = dataErrNorm*0.1 ;
+         mcValNorm = mcValNorm*0.1 ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_gaus -> SetBinContent( binIndex, mcValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   MC = %4.2f\n", binLabel, dataErrNorm, mcValNorm ) ;
+
+      binIndex++ ;
+
+
+
+
+    //-- MC SB
+
+      sprintf( binLabel, "QCD MC SB" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal = rv_Nqcdmcsb->getVal() ;
+      mcVal   = rv_mu_qcdmc_sb->getVal() ;
+
+      dataErr = Nqcdmcsberr ;
+
+      dataErrNorm = dataErr ;
+      mcValNorm = mcVal ;
+
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         mcValNorm = mcVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_gaus -> SetBinContent( binIndex, mcValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   MC = %4.2f\n", binLabel, dataErrNorm, mcValNorm ) ;
+
+      binIndex++ ;
+
+
+
+
+
+    //-- MC SIG
+
+      sprintf( binLabel, "QCD MC SIG" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal = rv_Nqcdmcsig->getVal() ;
+      mcVal   = rv_mu_qcdmc_sig->getVal() ;
+
+      dataErr = Nqcdmcsigerr ;
+
+      dataErrNorm = dataErr ;
+      mcValNorm = mcVal ;
+
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         mcValNorm = mcVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+
+      hfitqual_gaus -> SetBinContent( binIndex, mcValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   MC = %4.2f\n", binLabel, dataErrNorm, mcValNorm ) ;
+
+      binIndex++ ;
+
+
+
+
+
+
+      binIndex++ ;
+
+    //-- Eff SF
+
+      double effsfScale(1.5) ;
+
+      printf(" hist max: %g\n", hfitqual_data->GetMaximum()) ;
+      double effsfsf = hmax*(hfitqual_data->GetMaximum())/(effsfScale)  ;
+
+      sprintf( binLabel, "Eff SF (right scale)" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+      dataVal = EffScaleFactor ;
+      mcVal   = rv_eff_sf->getVal() ;
+
+      dataErr = EffScaleFactorErr ;
+
+      dataErrNorm = dataErr ;
+      mcValNorm = mcVal ;
+
+
+      hfitqual_data->SetBinContent( binIndex, effsfsf*dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         mcValNorm = mcVal / dataVal ;
+      }
+
+
+      hfitqual_data->SetBinError( binIndex, effsfsf*dataErrNorm ) ;
+
+      hfitqual_gaus -> SetBinContent( binIndex, effsfsf*mcValNorm ) ;
+
+      printf(" %10s : err=%4.2f ;   MC = %4.2f\n", binLabel, dataErrNorm, mcValNorm ) ;
+
+      binIndex++ ;
+
+
+
+
+     //-- final formatting
+
+      hfitqual_fit->Add( hfitqual_ew ) ;
+      hfitqual_fit->Add( hfitqual_qcd ) ;
+      hfitqual_fit->Add( hfitqual_ttbar ) ;
+      hfitqual_fit->Add( hfitqual_susy ) ;
+      hfitqual_fit->Add( hfitqual_gaus ) ;
+
+      if ( doNorm ) {
+         hfitqual_data->SetMaximum( hmax ) ;
+      } else {
+         hfitqual_data->SetMaximum( hmax*(hfitqual_data->GetMaximum()) ) ;
+      }
+
+
+      gStyle->SetPadBottomMargin(0.3) ;
+
+
+      TCanvas* cfitqual = new TCanvas("cfitqual","RA2b fit quality", 1200, 550 ) ;
+
+      gPad->SetTicks(1,0) ;
+
+
+      hfitqual_data->SetLabelSize(0.05,"x") ;
+      hfitqual_data->GetXaxis()->LabelsOption("v") ;
+
+      hfitqual_data->Draw() ;
+      hfitqual_fit->Draw("same") ;
+      hfitqual_data->Draw("same") ;
+
+
+
+      TGaxis* axis = new TGaxis() ;
+      axis->DrawAxis( 37.5, 0, 37.5, hfitqual_data->GetMaximum(), 0., effsfScale, 510, "+L") ;
+
+      TLine* line = new TLine() ;
+      line->SetLineWidth(2) ;
+
+      line->DrawLine( 35., 0., 35., hfitqual_data->GetMaximum() ) ;
+
+
+      cfitqual->SaveAs("fitqual.png") ;
+
+      return true ;
+
+    } // fitQualityPlot
+
+  //===================================================================
+
+
+    void ra2bRoostatsClass::setAndFixSusySig( double setVal ) {
+
+       rv_mu_susy_sig->setVal( setVal ) ;
+       rv_mu_susy_sig->setConstant( kTRUE ) ;
+
+       printf("\n\n Set SUSY SIG yield to %.1f and fixed it.\n\n\n", setVal ) ;
+
+    }
+
+  //===================================================================
+
+
+    void ra2bRoostatsClass::freeSusySig( ) {
+
+       rv_mu_susy_sig->setConstant( kFALSE ) ;
+
+       printf("\n\n Freed SUSY SIG yield fit parameter.\n\n\n" ) ;
+
+    }
+
+  //===================================================================
+
+
+
+    void ra2bRoostatsClass::parameterSnapshot() {
+
+       printf("\n\n====================================================================\n\n") ;
+
+       printf("       Snapshot of observables and likelihood parameters.\n\n") ;
+
+
+       double ttbarsig, qcdsig ;
+       if ( useSigBgVars ) {
+          ttbarsig = rrv_mu_ttbar_sig->getVal() ;
+          qcdsig = rrv_mu_qcd_sig->getVal() ;
+       } else {
+          ttbarsig = rfv_mu_ttbar_sig->getVal() ;
+          qcdsig = rfv_mu_qcd_sig->getVal() ;
+       }
+
+       printf("                     Nobs      all    ttbar      qcd       EW     SUSY x Eff SF.\n") ;
+       printf("---------------------------------------------------------------------------------------------\n") ;
+
+       printf("\n") ;
+       printf("     Nsig        :  %5.0f   %7.1f  %7.1f  %7.1f  %7.1f  %7.1f x %4.2f = %7.1f \n",
+              rv_Nsig->getVal(),
+              rv_n_sig->getVal(),
+              ttbarsig,
+              qcdsig,
+              rv_mu_ew_sig->getVal(),
+              rv_mu_susy_sig->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_mu_susy_sig->getVal())*(rv_eff_sf->getVal())
+              ) ;
+
+
+
+
+       printf("\n") ;
+       printf("     Nsb, m3j,1  :  %5.0f   %7.1f  %7.1f  %7.1f  %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nsb1->getVal(),
+              rv_n_sb1->getVal(),
+              rv_mu_ttbar_sb1->getVal(),
+              rv_mu_qcd_sb1->getVal(),
+              rv_mu_ew_sb1->getVal(),
+              rv_mu_susy_sb1->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_susy_sb1->getVal()) ) ;
+
+       printf("     Nsb, m3j,2  :  %5.0f   %7.1f  %7.1f  %7.1f  %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nsb2->getVal(),
+              rv_n_sb2->getVal(),
+              rv_mu_ttbar_sb2->getVal(),
+              rv_mu_qcd_sb2->getVal(),
+              rv_mu_ew_sb2->getVal(),
+              rv_mu_susy_sb2->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_susy_sb2->getVal()) ) ;
+
+       printf("     Nsb, m3j,3  :  %5.0f   %7.1f  %7.1f  %7.1f  %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nsb3->getVal(),
+              rv_n_sb3->getVal(),
+              rv_mu_ttbar_sb3->getVal(),
+              rv_mu_qcd_sb3->getVal(),
+              rv_mu_ew_sb3->getVal(),
+              rv_mu_susy_sb3->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_susy_sb3->getVal()) ) ;
+
+       printf("     Nsb, m3j,4  :  %5.0f   %7.1f  %7.1f  %7.1f  %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nsb4->getVal(),
+              rv_n_sb4->getVal(),
+              rv_mu_ttbar_sb4->getVal(),
+              rv_mu_qcd_sb4->getVal(),
+              rv_mu_ew_sb4->getVal(),
+              rv_mu_susy_sb4->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_susy_sb4->getVal()) ) ;
+
+       printf("     Nsb, m3j,5  :  %5.0f   %7.1f  %7.1f  %7.1f  %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nsb5->getVal(),
+              rv_n_sb5->getVal(),
+              rv_mu_ttbar_sb5->getVal(),
+              rv_mu_qcd_sb5->getVal(),
+              rv_mu_ew_sb5->getVal(),
+              rv_mu_susy_sb5->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_susy_sb5->getVal()) ) ;
+
+
+
+
+       printf("\n") ;
+       printf(" SL Nmsb, m3j,1  :  %5.0f   %7.1f  %7.1f           %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nslmsb1->getVal(),
+              rv_n_sl_msb1->getVal(),
+              rv_mu_sl_ttbar_msb1->getVal(),
+              rv_mu_sl_ew_msb1->getVal(),
+              rv_mu_sl_susy_msb1->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_sl_susy_msb1->getVal()) ) ;
+
+       printf(" SL Nmsb, m3j,2  :  %5.0f   %7.1f  %7.1f           %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nslmsb2->getVal(),
+              rv_n_sl_msb2->getVal(),
+              rv_mu_sl_ttbar_msb2->getVal(),
+              rv_mu_sl_ew_msb2->getVal(),
+              rv_mu_sl_susy_msb2->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_sl_susy_msb2->getVal()) ) ;
+
+       printf(" SL Nmsb, m3j,3  :  %5.0f   %7.1f  %7.1f           %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nslmsb3->getVal(),
+              rv_n_sl_msb3->getVal(),
+              rv_mu_sl_ttbar_msb3->getVal(),
+              rv_mu_sl_ew_msb3->getVal(),
+              rv_mu_sl_susy_msb3->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_sl_susy_msb3->getVal()) ) ;
+
+       printf(" SL Nmsb, m3j,4  :  %5.0f   %7.1f  %7.1f           %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nslmsb4->getVal(),
+              rv_n_sl_msb4->getVal(),
+              rv_mu_sl_ttbar_msb4->getVal(),
+              rv_mu_sl_ew_msb4->getVal(),
+              rv_mu_sl_susy_msb4->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_sl_susy_msb4->getVal()) ) ;
+
+       printf(" SL Nmsb, m3j,5  :  %5.0f   %7.1f  %7.1f           %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nslmsb5->getVal(),
+              rv_n_sl_msb5->getVal(),
+              rv_mu_sl_ttbar_msb5->getVal(),
+              rv_mu_sl_ew_msb5->getVal(),
+              rv_mu_sl_susy_msb5->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_sl_susy_msb5->getVal()) ) ;
+
+
+
+
+       printf("\n") ;
+       printf(" SL Nsb,  m3j,1  :  %5.0f   %7.1f  %7.1f           %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nslsb1->getVal(),
+              rv_n_sl_sb1->getVal(),
+              rv_mu_sl_ttbar_sb1->getVal(),
+              rv_mu_sl_ew_sb1->getVal(),
+              rv_mu_sl_susy_sb1->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_sl_susy_sb1->getVal()) ) ;
+
+       printf(" SL Nsb,  m3j,2  :  %5.0f   %7.1f  %7.1f           %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nslsb2->getVal(),
+              rv_n_sl_sb2->getVal(),
+              rv_mu_sl_ttbar_sb2->getVal(),
+              rv_mu_sl_ew_sb2->getVal(),
+              rv_mu_sl_susy_sb2->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_sl_susy_sb2->getVal()) ) ;
+
+       printf(" SL Nsb,  m3j,3  :  %5.0f   %7.1f  %7.1f           %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nslsb3->getVal(),
+              rv_n_sl_sb3->getVal(),
+              rv_mu_sl_ttbar_sb3->getVal(),
+              rv_mu_sl_ew_sb3->getVal(),
+              rv_mu_sl_susy_sb3->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_sl_susy_sb3->getVal()) ) ;
+
+       printf(" SL Nsb,  m3j,4  :  %5.0f   %7.1f  %7.1f           %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nslsb4->getVal(),
+              rv_n_sl_sb4->getVal(),
+              rv_mu_sl_ttbar_sb4->getVal(),
+              rv_mu_sl_ew_sb4->getVal(),
+              rv_mu_sl_susy_sb4->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_sl_susy_sb4->getVal()) ) ;
+
+       printf(" SL Nsb,  m3j,5  :  %5.0f   %7.1f  %7.1f           %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nslsb5->getVal(),
+              rv_n_sl_sb5->getVal(),
+              rv_mu_sl_ttbar_sb5->getVal(),
+              rv_mu_sl_ew_sb5->getVal(),
+              rv_mu_sl_susy_sb5->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_sl_susy_sb5->getVal()) ) ;
+
+
+
+
+
+
+       printf("\n") ;
+       printf(" SL Nsig, m3j,1  :  %5.0f   %7.1f  %7.1f           %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nslsig1->getVal(),
+              rv_n_sl_sig1->getVal(),
+              rv_mu_sl_ttbar_sig1->getVal(),
+              rv_mu_sl_ew_sig1->getVal(),
+              rv_mu_sl_susy_sig1->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_sl_susy_sig1->getVal()) ) ;
+
+       printf(" SL Nsig, m3j,2  :  %5.0f   %7.1f  %7.1f           %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nslsig2->getVal(),
+              rv_n_sl_sig2->getVal(),
+              rv_mu_sl_ttbar_sig2->getVal(),
+              rv_mu_sl_ew_sig2->getVal(),
+              rv_mu_sl_susy_sig2->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_sl_susy_sig2->getVal()) ) ;
+
+       printf(" SL Nsig, m3j,3  :  %5.0f   %7.1f  %7.1f           %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nslsig3->getVal(),
+              rv_n_sl_sig3->getVal(),
+              rv_mu_sl_ttbar_sig3->getVal(),
+              rv_mu_sl_ew_sig3->getVal(),
+              rv_mu_sl_susy_sig3->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_sl_susy_sig3->getVal()) ) ;
+
+       printf(" SL Nsig, m3j,4  :  %5.0f   %7.1f  %7.1f           %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nslsig4->getVal(),
+              rv_n_sl_sig4->getVal(),
+              rv_mu_sl_ttbar_sig4->getVal(),
+              rv_mu_sl_ew_sig4->getVal(),
+              rv_mu_sl_susy_sig4->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_sl_susy_sig4->getVal()) ) ;
+
+       printf(" SL Nsig, m3j,5  :  %5.0f   %7.1f  %7.1f           %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nslsig5->getVal(),
+              rv_n_sl_sig5->getVal(),
+              rv_mu_sl_ttbar_sig5->getVal(),
+              rv_mu_sl_ew_sig5->getVal(),
+              rv_mu_sl_susy_sig5->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_sl_susy_sig5->getVal()) ) ;
+
+
+       printf("\n") ;
+       printf("     N_A         :  %5.0f   %7.1f  %7.1f  %7.1f  %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Na->getVal(),
+              rv_n_a->getVal(),
+              rv_mu_ttbar_a->getVal(),
+              rv_mu_qcd_a->getVal(),
+              rv_mu_ew_a->getVal(),
+              rv_mu_susy_a->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_susy_a->getVal()) ) ;
+
+       printf("     N_D         :  %5.0f   %7.1f  %7.1f  %7.1f  %7.1f  %7.1f x %4.2f = %7.1f\n",
+              rv_Nd->getVal(),
+              rv_n_d->getVal(),
+              rv_mu_ttbar_d->getVal(),
+              rv_mu_qcd_d->getVal(),
+              rv_mu_ew_d->getVal(),
+              rv_mu_susy_d->getVal(),
+              rv_eff_sf->getVal(),
+              (rv_eff_sf->getVal())*(rv_mu_susy_d->getVal()) ) ;
+
+
+
+       printf("\n") ;
+       printf("  QCD MC A       :  input = %7.1f +/- %5.1f ,   fit = %7.1f  \n",
+              rv_Nqcdmca->getVal(),
+              Nqcdmcaerr,
+              rv_mu_qcdmc_a->getVal() ) ;
+
+       printf("  QCD MC D       :  input = %7.1f +/- %5.1f ,   fit = %7.1f  \n",
+              rv_Nqcdmcd->getVal(),
+              Nqcdmcderr,
+              rv_mu_qcdmc_d->getVal() ) ;
+
+       printf("  QCD MC SB      :  input = %7.1f +/- %5.1f ,   fit = %7.1f  \n",
+              rv_Nqcdmcsb->getVal(),
+              Nqcdmcsberr,
+              rv_mu_qcdmc_sb->getVal() ) ;
+
+       printf("  QCD MC SIG     :  input = %7.1f +/- %5.1f ,   fit = %7.1f  \n",
+              rv_Nqcdmcsig->getVal(),
+              Nqcdmcsigerr,
+              rv_mu_qcdmc_sig->getVal() ) ;
+
+
+       printf("\n") ;
+       printf("  Eff scale fac. :  input = %4.2f +/- %4.2f ,   fit = %4.2f  \n",
+              EffScaleFactor,
+              EffScaleFactorErr,
+              rv_eff_sf->getVal() ) ;
+
+
+
+       printf("\n\n====================================================================\n\n") ;
+
+    }
+
+  //===================================================================
