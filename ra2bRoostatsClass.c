@@ -31,6 +31,8 @@
 #include "RooStats/LikelihoodInterval.h"
 #include "RooStats/LikelihoodIntervalPlot.h"
 
+#include "LikelihoodIntervalPlot.cxx"
+
   using namespace RooFit ;
   using namespace RooStats ;
 
@@ -3474,7 +3476,7 @@
        printf( "  M1/2 :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM12bins, minM12, maxM12 ) ;
        printf( "\n\n" ) ;
 
-       TH2F* hsusyscanExcluded = new TH2F("hsusyscanExcluded", "SUSY m0 vs m1/2 parameter scan",
+       TH2F* hsusyscanExcluded = new TH2F("hsusyscanExcluded", "SUSY m1/2 vs m0 parameter scan",
             nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
             nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
 
@@ -3529,9 +3531,15 @@
 
        fclose( infp ) ;
 
-       TCanvas* csusy = new TCanvas("csusy","SUSY m0 vs m1/2 scan") ;
+       gStyle->SetPadGridX(1) ;
+       gStyle->SetPadGridY(1) ;
+       TCanvas* csusy = new TCanvas("csusy","SUSY m1/2 vs m0 scan") ;
        hsusyscanExcluded->Draw("col") ;
        csusy->SaveAs("susyScan.png") ;
+       TFile* f = new TFile("scan.root","recreate") ;
+       hsusyscanExcluded->Write() ;
+       f->Write() ;
+       f->Close() ;
 
        return true ;
 
@@ -3574,7 +3582,7 @@
        printf( "  M1/2 :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM12bins, minM12, maxM12 ) ;
        printf( "\n\n" ) ;
 
-       TH2F* hsusyscanExcluded = new TH2F("hsusyscanExcluded", "SUSY m0 vs m1/2 parameter scan",
+       TH2F* hsusyscanExcluded = new TH2F("hsusyscanExcluded", "SUSY m1/2 vs m0 parameter scan",
             nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
             nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
 
@@ -3680,9 +3688,15 @@
 
        fclose( infp ) ;
 
-       TCanvas* csusy = new TCanvas("csusy","SUSY m0 vs m1/2 scan") ;
+       TCanvas* csusy = new TCanvas("csusy","SUSY m1/2 vs m0 scan") ;
+       gStyle->SetPadGridX(1) ;
+       gStyle->SetPadGridY(1) ;
        hsusyscanExcluded->Draw("col") ;
        csusy->SaveAs("susyScan.png") ;
+       TFile* f = new TFile("scan.root","recreate") ;
+       hsusyscanExcluded->Write() ;
+       f->Write() ;
+       f->Close() ;
 
        return true ;
 
@@ -5155,6 +5169,15 @@
       hfitqual_fit->Add( hfitqual_susy ) ;
       hfitqual_fit->Add( hfitqual_gaus ) ;
 
+      TLegend* legend = new TLegend(0.88,0.3,0.98,0.9) ;
+
+      legend->AddEntry( hfitqual_data,  "data" ) ;
+      legend->AddEntry( hfitqual_susy,  "SUSY" ) ;
+      legend->AddEntry( hfitqual_ttbar, "ttbar" ) ;
+      legend->AddEntry( hfitqual_qcd,   "QCD" ) ;
+      legend->AddEntry( hfitqual_ew,    "EW" ) ;
+      legend->AddEntry( hfitqual_gaus,  "Gaus.C." ) ;
+
       if ( doNorm ) {
          hfitqual_data->SetMaximum( hmax ) ;
       } else {
@@ -5162,7 +5185,12 @@
       }
 
 
+      double oldBM = gStyle->GetPadBottomMargin() ;
+      double oldRM = gStyle->GetPadRightMargin() ;
+
+
       gStyle->SetPadBottomMargin(0.3) ;
+      gStyle->SetPadRightMargin(0.17) ;
 
 
       TCanvas* cfitqual = new TCanvas("cfitqual","RA2b fit quality", 1200, 550 ) ;
@@ -5176,6 +5204,7 @@
       hfitqual_data->Draw() ;
       hfitqual_fit->Draw("same") ;
       hfitqual_data->Draw("same") ;
+      legend->Draw() ;
 
 
 
@@ -5189,6 +5218,10 @@
 
 
       cfitqual->SaveAs("fitqual.png") ;
+
+
+      gStyle->SetPadBottomMargin(oldBM) ;
+      gStyle->SetPadRightMargin(oldRM) ;
 
       return true ;
 
