@@ -1168,11 +1168,21 @@
        float Nqcdmcslsig(0.), Nqcdmcslsb(0.), Nqcdmcslmsb(0.) ; //-- QCD MC counts in SL; SIG, LSB, and MSB.
        float Nttbarmcsig(0.), Nttbarmcsb(0.), Nttbarmca(0.), Nttbarmcd(0.) ; //-- ttbar MC counts in SIG, SB, A, and D.
        float Nttbarmcslsig(0.), Nttbarmcslsb(0.), Nttbarmcslmsb(0.) ; //-- ttbar MC counts in SL; SIG, SB, and MSB.
-       float Newmcsig(0.), Newmca(0.), Newmcd(0.) ; //-- EW MC counts in SIG, A, and D.
-       float Newmcsb1(0.), Newmcsb2(0.), Newmcsb3(0.), Newmcsb4(0.), Newmcsb5(0.) ; //-- EW MC counts in 5 3-jet mass bins of SB.
-       float Newmcslsig1(0.), Newmcslsig2(0.), Newmcslsig3(0.), Newmcslsig4(0.), Newmcslsig5(0.) ; //-- EW MC, SL counts in SIG, bins of 3-jet mass
-       float Newmcslsb1(0.), Newmcslsb2(0.), Newmcslsb3(0.), Newmcslsb4(0.), Newmcslsb5(0.) ; //-- EW MC, SL counts in SB, bins of 3-jet mass
-       float Newmcslmsb1(0.), Newmcslmsb2(0.), Newmcslmsb3(0.), Newmcslmsb4(0.), Newmcslmsb5(0.) ; //-- EW MC, SL counts in MSB, bins of 3-jet mass
+       float NZnnmcsig(0.), NZnnmca(0.), NZnnmcd(0.) ; //-- Znn counts in SIG, A, and D.
+       float NZnnmcsb1(0.), NZnnmcsb2(0.), NZnnmcsb3(0.), NZnnmcsb4(0.), NZnnmcsb5(0.) ; //-- Znn counts in 5 3-jet mass bins of SB.
+       float NZnnmcslsig1(0.), NZnnmcslsig2(0.), NZnnmcslsig3(0.), NZnnmcslsig4(0.), NZnnmcslsig5(0.) ; //-- Znn, SL counts in SIG, bins of 3-jet mass
+       float NZnnmcslsb1(0.), NZnnmcslsb2(0.), NZnnmcslsb3(0.), NZnnmcslsb4(0.), NZnnmcslsb5(0.) ; //-- Znn, SL counts in SB, bins of 3-jet mass
+       float NZnnmcslmsb1(0.), NZnnmcslmsb2(0.), NZnnmcslmsb3(0.), NZnnmcslmsb4(0.), NZnnmcslmsb5(0.) ; //-- Znn, SL counts in MSB, bins of 3-jet mass
+       float NWJmcsig(0.), NWJmca(0.), NWJmcd(0.) ; //-- WJets MC counts in SIG, A, and D.
+       float NWJmcsb1(0.), NWJmcsb2(0.), NWJmcsb3(0.), NWJmcsb4(0.), NWJmcsb5(0.) ; //-- WJets MC counts in 5 3-jet mass bins of SB.
+       float NWJmcslsig1(0.), NWJmcslsig2(0.), NWJmcslsig3(0.), NWJmcslsig4(0.), NWJmcslsig5(0.) ; //-- WJets MC, SL counts in SIG, bins of 3-jet mass
+       float NWJmcslsb1(0.), NWJmcslsb2(0.), NWJmcslsb3(0.), NWJmcslsb4(0.), NWJmcslsb5(0.) ; //-- WJets MC, SL counts in SB, bins of 3-jet mass
+       float NWJmcslmsb1(0.), NWJmcslmsb2(0.), NWJmcslmsb3(0.), NWJmcslmsb4(0.), NWJmcslmsb5(0.) ; //-- WJets MC, SL counts in MSB, bins of 3-jet mass
+       float Newomcsig(0.), Newomca(0.), Newomcd(0.) ; //-- Other EW MC counts in SIG, A, and D.
+       float Newomcsb1(0.), Newomcsb2(0.), Newomcsb3(0.), Newomcsb4(0.), Newomcsb5(0.) ; //-- Other EW MC counts in 5 3-jet mass bins of SB.
+       float Newomcslsig1(0.), Newomcslsig2(0.), Newomcslsig3(0.), Newomcslsig4(0.), Newomcslsig5(0.) ; //-- Other EW MC, SL counts in SIG, bins of 3-jet mass
+       float Newomcslsb1(0.), Newomcslsb2(0.), Newomcslsb3(0.), Newomcslsb4(0.), Newomcslsb5(0.) ; //-- Other EW MC, SL counts in SB, bins of 3-jet mass
+       float Newomcslmsb1(0.), Newomcslmsb2(0.), Newomcslmsb3(0.), Newomcslmsb4(0.), Newomcslmsb5(0.) ; //-- Other EW MC, SL counts in MSB, bins of 3-jet mass
 
        float Nsusymcsig(0.), Nsusymca(0.), Nsusymcd(0.) ; //-- SUSY MC counts in SIG, A, and D.
        float Nsusymcsb1(0.), Nsusymcsb2(0.), Nsusymcsb3(0.), Nsusymcsb4(0.), Nsusymcsb5(0.) ; //-- SUSY MC counts in 5 3-jet mass bins of SB.
@@ -1241,29 +1251,75 @@
        fscanf( infp, "%s %g", label, &Nttbarmcslsig ) ;        printf( "%s %g\n", label, Nttbarmcslsig ) ;      
        fscanf( infp, "%s %g", label, &Nttbarmcslsb ) ;         printf( "%s %g\n", label, Nttbarmcslsb ) ;      
        fscanf( infp, "%s %g", label, &Nttbarmcslmsb ) ;        printf( "%s %g\n", label, Nttbarmcslmsb ) ;      
-       fscanf( infp, "%s %g", label, &Newmcsig ) ;             printf( "%s %g\n", label, Newmcsig ) ;     
-       fscanf( infp, "%s %g", label, &Newmca ) ;               printf( "%s %g\n", label, Newmca ) ;       
-       fscanf( infp, "%s %g", label, &Newmcd ) ;               printf( "%s %g\n", label, Newmcd ) ;       
-       fscanf( infp, "%s %g", label, &Newmcsb1 ) ;             printf( "%s %g\n", label, Newmcsb1 ) ;     
-       fscanf( infp, "%s %g", label, &Newmcsb2 ) ;             printf( "%s %g\n", label, Newmcsb2 ) ;     
-       fscanf( infp, "%s %g", label, &Newmcsb3 ) ;             printf( "%s %g\n", label, Newmcsb3 ) ;     
-       fscanf( infp, "%s %g", label, &Newmcsb4 ) ;             printf( "%s %g\n", label, Newmcsb4 ) ;     
-       fscanf( infp, "%s %g", label, &Newmcsb5 ) ;             printf( "%s %g\n", label, Newmcsb5 ) ;     
-       fscanf( infp, "%s %g", label, &Newmcslsig1 ) ;          printf( "%s %g\n", label, Newmcslsig1 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslsig2 ) ;          printf( "%s %g\n", label, Newmcslsig2 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslsig3 ) ;          printf( "%s %g\n", label, Newmcslsig3 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslsig4 ) ;          printf( "%s %g\n", label, Newmcslsig4 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslsig5 ) ;          printf( "%s %g\n", label, Newmcslsig5 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslsb1 ) ;          printf( "%s %g\n", label, Newmcslsb1 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslsb2 ) ;          printf( "%s %g\n", label, Newmcslsb2 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslsb3 ) ;          printf( "%s %g\n", label, Newmcslsb3 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslsb4 ) ;          printf( "%s %g\n", label, Newmcslsb4 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslsb5 ) ;          printf( "%s %g\n", label, Newmcslsb5 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslmsb1 ) ;          printf( "%s %g\n", label, Newmcslmsb1 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslmsb2 ) ;          printf( "%s %g\n", label, Newmcslmsb2 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslmsb3 ) ;          printf( "%s %g\n", label, Newmcslmsb3 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslmsb4 ) ;          printf( "%s %g\n", label, Newmcslmsb4 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslmsb5 ) ;          printf( "%s %g\n", label, Newmcslmsb5 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcsig ) ;             printf( "%s %g\n", label, NZnnmcsig ) ;     
+       fscanf( infp, "%s %g", label, &NZnnmca ) ;               printf( "%s %g\n", label, NZnnmca ) ;       
+       fscanf( infp, "%s %g", label, &NZnnmcd ) ;               printf( "%s %g\n", label, NZnnmcd ) ;       
+       fscanf( infp, "%s %g", label, &NZnnmcsb1 ) ;             printf( "%s %g\n", label, NZnnmcsb1 ) ;     
+       fscanf( infp, "%s %g", label, &NZnnmcsb2 ) ;             printf( "%s %g\n", label, NZnnmcsb2 ) ;     
+       fscanf( infp, "%s %g", label, &NZnnmcsb3 ) ;             printf( "%s %g\n", label, NZnnmcsb3 ) ;     
+       fscanf( infp, "%s %g", label, &NZnnmcsb4 ) ;             printf( "%s %g\n", label, NZnnmcsb4 ) ;     
+       fscanf( infp, "%s %g", label, &NZnnmcsb5 ) ;             printf( "%s %g\n", label, NZnnmcsb5 ) ;     
+       fscanf( infp, "%s %g", label, &NZnnmcslsig1 ) ;          printf( "%s %g\n", label, NZnnmcslsig1 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslsig2 ) ;          printf( "%s %g\n", label, NZnnmcslsig2 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslsig3 ) ;          printf( "%s %g\n", label, NZnnmcslsig3 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslsig4 ) ;          printf( "%s %g\n", label, NZnnmcslsig4 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslsig5 ) ;          printf( "%s %g\n", label, NZnnmcslsig5 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslsb1 ) ;          printf( "%s %g\n", label, NZnnmcslsb1 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslsb2 ) ;          printf( "%s %g\n", label, NZnnmcslsb2 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslsb3 ) ;          printf( "%s %g\n", label, NZnnmcslsb3 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslsb4 ) ;          printf( "%s %g\n", label, NZnnmcslsb4 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslsb5 ) ;          printf( "%s %g\n", label, NZnnmcslsb5 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslmsb1 ) ;          printf( "%s %g\n", label, NZnnmcslmsb1 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslmsb2 ) ;          printf( "%s %g\n", label, NZnnmcslmsb2 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslmsb3 ) ;          printf( "%s %g\n", label, NZnnmcslmsb3 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslmsb4 ) ;          printf( "%s %g\n", label, NZnnmcslmsb4 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslmsb5 ) ;          printf( "%s %g\n", label, NZnnmcslmsb5 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcsig ) ;             printf( "%s %g\n", label, NWJmcsig ) ;     
+       fscanf( infp, "%s %g", label, &NWJmca ) ;               printf( "%s %g\n", label, NWJmca ) ;       
+       fscanf( infp, "%s %g", label, &NWJmcd ) ;               printf( "%s %g\n", label, NWJmcd ) ;       
+       fscanf( infp, "%s %g", label, &NWJmcsb1 ) ;             printf( "%s %g\n", label, NWJmcsb1 ) ;     
+       fscanf( infp, "%s %g", label, &NWJmcsb2 ) ;             printf( "%s %g\n", label, NWJmcsb2 ) ;     
+       fscanf( infp, "%s %g", label, &NWJmcsb3 ) ;             printf( "%s %g\n", label, NWJmcsb3 ) ;     
+       fscanf( infp, "%s %g", label, &NWJmcsb4 ) ;             printf( "%s %g\n", label, NWJmcsb4 ) ;     
+       fscanf( infp, "%s %g", label, &NWJmcsb5 ) ;             printf( "%s %g\n", label, NWJmcsb5 ) ;     
+       fscanf( infp, "%s %g", label, &NWJmcslsig1 ) ;          printf( "%s %g\n", label, NWJmcslsig1 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslsig2 ) ;          printf( "%s %g\n", label, NWJmcslsig2 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslsig3 ) ;          printf( "%s %g\n", label, NWJmcslsig3 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslsig4 ) ;          printf( "%s %g\n", label, NWJmcslsig4 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslsig5 ) ;          printf( "%s %g\n", label, NWJmcslsig5 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslsb1 ) ;          printf( "%s %g\n", label, NWJmcslsb1 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslsb2 ) ;          printf( "%s %g\n", label, NWJmcslsb2 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslsb3 ) ;          printf( "%s %g\n", label, NWJmcslsb3 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslsb4 ) ;          printf( "%s %g\n", label, NWJmcslsb4 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslsb5 ) ;          printf( "%s %g\n", label, NWJmcslsb5 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslmsb1 ) ;          printf( "%s %g\n", label, NWJmcslmsb1 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslmsb2 ) ;          printf( "%s %g\n", label, NWJmcslmsb2 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslmsb3 ) ;          printf( "%s %g\n", label, NWJmcslmsb3 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslmsb4 ) ;          printf( "%s %g\n", label, NWJmcslmsb4 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslmsb5 ) ;          printf( "%s %g\n", label, NWJmcslmsb5 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcsig ) ;             printf( "%s %g\n", label, Newomcsig ) ;     
+       fscanf( infp, "%s %g", label, &Newomca ) ;               printf( "%s %g\n", label, Newomca ) ;       
+       fscanf( infp, "%s %g", label, &Newomcd ) ;               printf( "%s %g\n", label, Newomcd ) ;       
+       fscanf( infp, "%s %g", label, &Newomcsb1 ) ;             printf( "%s %g\n", label, Newomcsb1 ) ;     
+       fscanf( infp, "%s %g", label, &Newomcsb2 ) ;             printf( "%s %g\n", label, Newomcsb2 ) ;     
+       fscanf( infp, "%s %g", label, &Newomcsb3 ) ;             printf( "%s %g\n", label, Newomcsb3 ) ;     
+       fscanf( infp, "%s %g", label, &Newomcsb4 ) ;             printf( "%s %g\n", label, Newomcsb4 ) ;     
+       fscanf( infp, "%s %g", label, &Newomcsb5 ) ;             printf( "%s %g\n", label, Newomcsb5 ) ;     
+       fscanf( infp, "%s %g", label, &Newomcslsig1 ) ;          printf( "%s %g\n", label, Newomcslsig1 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslsig2 ) ;          printf( "%s %g\n", label, Newomcslsig2 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslsig3 ) ;          printf( "%s %g\n", label, Newomcslsig3 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslsig4 ) ;          printf( "%s %g\n", label, Newomcslsig4 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslsig5 ) ;          printf( "%s %g\n", label, Newomcslsig5 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslsb1 ) ;          printf( "%s %g\n", label, Newomcslsb1 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslsb2 ) ;          printf( "%s %g\n", label, Newomcslsb2 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslsb3 ) ;          printf( "%s %g\n", label, Newomcslsb3 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslsb4 ) ;          printf( "%s %g\n", label, Newomcslsb4 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslsb5 ) ;          printf( "%s %g\n", label, Newomcslsb5 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslmsb1 ) ;          printf( "%s %g\n", label, Newomcslmsb1 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslmsb2 ) ;          printf( "%s %g\n", label, Newomcslmsb2 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslmsb3 ) ;          printf( "%s %g\n", label, Newomcslmsb3 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslmsb4 ) ;          printf( "%s %g\n", label, Newomcslmsb4 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslmsb5 ) ;          printf( "%s %g\n", label, Newomcslmsb5 ) ;      
        fscanf( infp, "%s %g", label, &Nsusymcsig ) ;           printf( "%s %g\n", label, Nsusymcsig ) ;   
        fscanf( infp, "%s %g", label, &Nsusymca ) ;             printf( "%s %g\n", label, Nsusymca ) ;     
        fscanf( infp, "%s %g", label, &Nsusymcd ) ;             printf( "%s %g\n", label, Nsusymcd ) ;     
@@ -1292,13 +1348,35 @@
        printf("\n Done reading in %s\n\n", infile ) ;
        fclose( infp ) ;
 
+       float Newmcsig = NZnnmcsig + NWJmcsig + Newomcsig ;
+       float Newmca = NZnnmca + NWJmca + Newomca ;
+       float Newmcd = NZnnmcd + NWJmcd + Newomcd ;
+       float Newmcsb1 = NZnnmcsb1 + NWJmcsb1 + Newomcsb1 ;
+       float Newmcsb2 = NZnnmcsb2 + NWJmcsb2 + Newomcsb2 ;
+       float Newmcsb3 = NZnnmcsb3 + NWJmcsb3 + Newomcsb3 ;
+       float Newmcsb4 = NZnnmcsb4 + NWJmcsb4 + Newomcsb4 ;
+       float Newmcsb5 = NZnnmcsb5 + NWJmcsb5 + Newomcsb5 ;
+       float Newmcslsig1 = NZnnmcslsig1 + NWJmcslsig1 + Newomcslsig1 ;
+       float Newmcslsig2 = NZnnmcslsig2 + NWJmcslsig2 + Newomcslsig2 ;
+       float Newmcslsig3 = NZnnmcslsig3 + NWJmcslsig3 + Newomcslsig3 ;
+       float Newmcslsig4 = NZnnmcslsig4 + NWJmcslsig4 + Newomcslsig4 ;
+       float Newmcslsig5 = NZnnmcslsig5 + NWJmcslsig5 + Newomcslsig5 ;
+       float Newmcslsb1 = NZnnmcslsb1 + NWJmcslsb1 + Newomcslsb1 ;
+       float Newmcslsb2 = NZnnmcslsb2 + NWJmcslsb2 + Newomcslsb2 ;
+       float Newmcslsb3 = NZnnmcslsb3 + NWJmcslsb3 + Newomcslsb3 ;
+       float Newmcslsb4 = NZnnmcslsb4 + NWJmcslsb4 + Newomcslsb4 ;
+       float Newmcslsb5 = NZnnmcslsb5 + NWJmcslsb5 + Newomcslsb5 ;
+       float Newmcslmsb1 = NZnnmcslmsb1 + NWJmcslmsb1 + Newomcslmsb1 ;
+       float Newmcslmsb2 = NZnnmcslmsb2 + NWJmcslmsb2 + Newomcslmsb2 ;
+       float Newmcslmsb3 = NZnnmcslmsb3 + NWJmcslmsb3 + Newomcslmsb3 ;
+       float Newmcslmsb4 = NZnnmcslmsb4 + NWJmcslmsb4 + Newomcslmsb4 ;
+       float Newmcslmsb5 = NZnnmcslmsb5 + NWJmcslmsb5 + Newomcslmsb5 ;
 
 
 
 
 
        //--- Print out a nice summary of the inputs.
-
 
        float Nsmsig = Nttbarmcsig + Nqcdmcsig + Newmcsig ;
 
@@ -2438,11 +2516,21 @@
        float Nqcdmcslsig(0.), Nqcdmcslsb(0.), Nqcdmcslmsb(0.) ; //-- QCD MC counts in SL; SIG, LSB, and MSB.
        float Nttbarmcsig(0.), Nttbarmcsb(0.), Nttbarmca(0.), Nttbarmcd(0.) ; //-- ttbar MC counts in SIG, SB, A, and D.
        float Nttbarmcslsig(0.), Nttbarmcslsb(0.), Nttbarmcslmsb(0.) ; //-- ttbar MC counts in SL; SIG, SB, and MSB.
-       float Newmcsig(0.), Newmca(0.), Newmcd(0.) ; //-- EW MC counts in SIG, A, and D.
-       float Newmcsb1(0.), Newmcsb2(0.), Newmcsb3(0.), Newmcsb4(0.), Newmcsb5(0.) ; //-- EW MC counts in 5 3-jet mass bins of SB.
-       float Newmcslsig1(0.), Newmcslsig2(0.), Newmcslsig3(0.), Newmcslsig4(0.), Newmcslsig5(0.) ; //-- EW MC, SL counts in SIG, bins of 3-jet mass
-       float Newmcslsb1(0.), Newmcslsb2(0.), Newmcslsb3(0.), Newmcslsb4(0.), Newmcslsb5(0.) ; //-- EW MC, SL counts in SB, bins of 3-jet mass
-       float Newmcslmsb1(0.), Newmcslmsb2(0.), Newmcslmsb3(0.), Newmcslmsb4(0.), Newmcslmsb5(0.) ; //-- EW MC, SL counts in MSB, bins of 3-jet mass
+       float NZnnmcsig(0.), NZnnmca(0.), NZnnmcd(0.) ; //-- Znn counts in SIG, A, and D.
+       float NZnnmcsb1(0.), NZnnmcsb2(0.), NZnnmcsb3(0.), NZnnmcsb4(0.), NZnnmcsb5(0.) ; //-- Znn counts in 5 3-jet mass bins of SB.
+       float NZnnmcslsig1(0.), NZnnmcslsig2(0.), NZnnmcslsig3(0.), NZnnmcslsig4(0.), NZnnmcslsig5(0.) ; //-- Znn, SL counts in SIG, bins of 3-jet mass
+       float NZnnmcslsb1(0.), NZnnmcslsb2(0.), NZnnmcslsb3(0.), NZnnmcslsb4(0.), NZnnmcslsb5(0.) ; //-- Znn, SL counts in SB, bins of 3-jet mass
+       float NZnnmcslmsb1(0.), NZnnmcslmsb2(0.), NZnnmcslmsb3(0.), NZnnmcslmsb4(0.), NZnnmcslmsb5(0.) ; //-- Znn, SL counts in MSB, bins of 3-jet mass
+       float NWJmcsig(0.), NWJmca(0.), NWJmcd(0.) ; //-- WJets MC counts in SIG, A, and D.
+       float NWJmcsb1(0.), NWJmcsb2(0.), NWJmcsb3(0.), NWJmcsb4(0.), NWJmcsb5(0.) ; //-- WJets MC counts in 5 3-jet mass bins of SB.
+       float NWJmcslsig1(0.), NWJmcslsig2(0.), NWJmcslsig3(0.), NWJmcslsig4(0.), NWJmcslsig5(0.) ; //-- WJets MC, SL counts in SIG, bins of 3-jet mass
+       float NWJmcslsb1(0.), NWJmcslsb2(0.), NWJmcslsb3(0.), NWJmcslsb4(0.), NWJmcslsb5(0.) ; //-- WJets MC, SL counts in SB, bins of 3-jet mass
+       float NWJmcslmsb1(0.), NWJmcslmsb2(0.), NWJmcslmsb3(0.), NWJmcslmsb4(0.), NWJmcslmsb5(0.) ; //-- WJets MC, SL counts in MSB, bins of 3-jet mass
+       float Newomcsig(0.), Newomca(0.), Newomcd(0.) ; //-- Other EW MC counts in SIG, A, and D.
+       float Newomcsb1(0.), Newomcsb2(0.), Newomcsb3(0.), Newomcsb4(0.), Newomcsb5(0.) ; //-- Other EW MC counts in 5 3-jet mass bins of SB.
+       float Newomcslsig1(0.), Newomcslsig2(0.), Newomcslsig3(0.), Newomcslsig4(0.), Newomcslsig5(0.) ; //-- Other EW MC, SL counts in SIG, bins of 3-jet mass
+       float Newomcslsb1(0.), Newomcslsb2(0.), Newomcslsb3(0.), Newomcslsb4(0.), Newomcslsb5(0.) ; //-- Other EW MC, SL counts in SB, bins of 3-jet mass
+       float Newomcslmsb1(0.), Newomcslmsb2(0.), Newomcslmsb3(0.), Newomcslmsb4(0.), Newomcslmsb5(0.) ; //-- Other EW MC, SL counts in MSB, bins of 3-jet mass
 
        float Nsusymcsig(0.), Nsusymca(0.), Nsusymcd(0.) ; //-- SUSY MC counts in SIG, A, and D.
        float Nsusymcsb1(0.), Nsusymcsb2(0.), Nsusymcsb3(0.), Nsusymcsb4(0.), Nsusymcsb5(0.) ; //-- SUSY MC counts in 5 3-jet mass bins of SB.
@@ -2511,29 +2599,75 @@
        fscanf( infp, "%s %g", label, &Nttbarmcslsig ) ;        printf( "%s %g\n", label, Nttbarmcslsig ) ;      
        fscanf( infp, "%s %g", label, &Nttbarmcslsb ) ;         printf( "%s %g\n", label, Nttbarmcslsb ) ;      
        fscanf( infp, "%s %g", label, &Nttbarmcslmsb ) ;        printf( "%s %g\n", label, Nttbarmcslmsb ) ;      
-       fscanf( infp, "%s %g", label, &Newmcsig ) ;             printf( "%s %g\n", label, Newmcsig ) ;     
-       fscanf( infp, "%s %g", label, &Newmca ) ;               printf( "%s %g\n", label, Newmca ) ;       
-       fscanf( infp, "%s %g", label, &Newmcd ) ;               printf( "%s %g\n", label, Newmcd ) ;       
-       fscanf( infp, "%s %g", label, &Newmcsb1 ) ;             printf( "%s %g\n", label, Newmcsb1 ) ;     
-       fscanf( infp, "%s %g", label, &Newmcsb2 ) ;             printf( "%s %g\n", label, Newmcsb2 ) ;     
-       fscanf( infp, "%s %g", label, &Newmcsb3 ) ;             printf( "%s %g\n", label, Newmcsb3 ) ;     
-       fscanf( infp, "%s %g", label, &Newmcsb4 ) ;             printf( "%s %g\n", label, Newmcsb4 ) ;     
-       fscanf( infp, "%s %g", label, &Newmcsb5 ) ;             printf( "%s %g\n", label, Newmcsb5 ) ;     
-       fscanf( infp, "%s %g", label, &Newmcslsig1 ) ;          printf( "%s %g\n", label, Newmcslsig1 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslsig2 ) ;          printf( "%s %g\n", label, Newmcslsig2 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslsig3 ) ;          printf( "%s %g\n", label, Newmcslsig3 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslsig4 ) ;          printf( "%s %g\n", label, Newmcslsig4 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslsig5 ) ;          printf( "%s %g\n", label, Newmcslsig5 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslsb1 ) ;          printf( "%s %g\n", label, Newmcslsb1 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslsb2 ) ;          printf( "%s %g\n", label, Newmcslsb2 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslsb3 ) ;          printf( "%s %g\n", label, Newmcslsb3 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslsb4 ) ;          printf( "%s %g\n", label, Newmcslsb4 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslsb5 ) ;          printf( "%s %g\n", label, Newmcslsb5 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslmsb1 ) ;          printf( "%s %g\n", label, Newmcslmsb1 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslmsb2 ) ;          printf( "%s %g\n", label, Newmcslmsb2 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslmsb3 ) ;          printf( "%s %g\n", label, Newmcslmsb3 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslmsb4 ) ;          printf( "%s %g\n", label, Newmcslmsb4 ) ;      
-       fscanf( infp, "%s %g", label, &Newmcslmsb5 ) ;          printf( "%s %g\n", label, Newmcslmsb5 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcsig ) ;             printf( "%s %g\n", label, NZnnmcsig ) ;     
+       fscanf( infp, "%s %g", label, &NZnnmca ) ;               printf( "%s %g\n", label, NZnnmca ) ;       
+       fscanf( infp, "%s %g", label, &NZnnmcd ) ;               printf( "%s %g\n", label, NZnnmcd ) ;       
+       fscanf( infp, "%s %g", label, &NZnnmcsb1 ) ;             printf( "%s %g\n", label, NZnnmcsb1 ) ;     
+       fscanf( infp, "%s %g", label, &NZnnmcsb2 ) ;             printf( "%s %g\n", label, NZnnmcsb2 ) ;     
+       fscanf( infp, "%s %g", label, &NZnnmcsb3 ) ;             printf( "%s %g\n", label, NZnnmcsb3 ) ;     
+       fscanf( infp, "%s %g", label, &NZnnmcsb4 ) ;             printf( "%s %g\n", label, NZnnmcsb4 ) ;     
+       fscanf( infp, "%s %g", label, &NZnnmcsb5 ) ;             printf( "%s %g\n", label, NZnnmcsb5 ) ;     
+       fscanf( infp, "%s %g", label, &NZnnmcslsig1 ) ;          printf( "%s %g\n", label, NZnnmcslsig1 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslsig2 ) ;          printf( "%s %g\n", label, NZnnmcslsig2 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslsig3 ) ;          printf( "%s %g\n", label, NZnnmcslsig3 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslsig4 ) ;          printf( "%s %g\n", label, NZnnmcslsig4 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslsig5 ) ;          printf( "%s %g\n", label, NZnnmcslsig5 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslsb1 ) ;          printf( "%s %g\n", label, NZnnmcslsb1 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslsb2 ) ;          printf( "%s %g\n", label, NZnnmcslsb2 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslsb3 ) ;          printf( "%s %g\n", label, NZnnmcslsb3 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslsb4 ) ;          printf( "%s %g\n", label, NZnnmcslsb4 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslsb5 ) ;          printf( "%s %g\n", label, NZnnmcslsb5 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslmsb1 ) ;          printf( "%s %g\n", label, NZnnmcslmsb1 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslmsb2 ) ;          printf( "%s %g\n", label, NZnnmcslmsb2 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslmsb3 ) ;          printf( "%s %g\n", label, NZnnmcslmsb3 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslmsb4 ) ;          printf( "%s %g\n", label, NZnnmcslmsb4 ) ;      
+       fscanf( infp, "%s %g", label, &NZnnmcslmsb5 ) ;          printf( "%s %g\n", label, NZnnmcslmsb5 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcsig ) ;             printf( "%s %g\n", label, NWJmcsig ) ;     
+       fscanf( infp, "%s %g", label, &NWJmca ) ;               printf( "%s %g\n", label, NWJmca ) ;       
+       fscanf( infp, "%s %g", label, &NWJmcd ) ;               printf( "%s %g\n", label, NWJmcd ) ;       
+       fscanf( infp, "%s %g", label, &NWJmcsb1 ) ;             printf( "%s %g\n", label, NWJmcsb1 ) ;     
+       fscanf( infp, "%s %g", label, &NWJmcsb2 ) ;             printf( "%s %g\n", label, NWJmcsb2 ) ;     
+       fscanf( infp, "%s %g", label, &NWJmcsb3 ) ;             printf( "%s %g\n", label, NWJmcsb3 ) ;     
+       fscanf( infp, "%s %g", label, &NWJmcsb4 ) ;             printf( "%s %g\n", label, NWJmcsb4 ) ;     
+       fscanf( infp, "%s %g", label, &NWJmcsb5 ) ;             printf( "%s %g\n", label, NWJmcsb5 ) ;     
+       fscanf( infp, "%s %g", label, &NWJmcslsig1 ) ;          printf( "%s %g\n", label, NWJmcslsig1 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslsig2 ) ;          printf( "%s %g\n", label, NWJmcslsig2 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslsig3 ) ;          printf( "%s %g\n", label, NWJmcslsig3 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslsig4 ) ;          printf( "%s %g\n", label, NWJmcslsig4 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslsig5 ) ;          printf( "%s %g\n", label, NWJmcslsig5 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslsb1 ) ;          printf( "%s %g\n", label, NWJmcslsb1 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslsb2 ) ;          printf( "%s %g\n", label, NWJmcslsb2 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslsb3 ) ;          printf( "%s %g\n", label, NWJmcslsb3 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslsb4 ) ;          printf( "%s %g\n", label, NWJmcslsb4 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslsb5 ) ;          printf( "%s %g\n", label, NWJmcslsb5 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslmsb1 ) ;          printf( "%s %g\n", label, NWJmcslmsb1 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslmsb2 ) ;          printf( "%s %g\n", label, NWJmcslmsb2 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslmsb3 ) ;          printf( "%s %g\n", label, NWJmcslmsb3 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslmsb4 ) ;          printf( "%s %g\n", label, NWJmcslmsb4 ) ;      
+       fscanf( infp, "%s %g", label, &NWJmcslmsb5 ) ;          printf( "%s %g\n", label, NWJmcslmsb5 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcsig ) ;             printf( "%s %g\n", label, Newomcsig ) ;     
+       fscanf( infp, "%s %g", label, &Newomca ) ;               printf( "%s %g\n", label, Newomca ) ;       
+       fscanf( infp, "%s %g", label, &Newomcd ) ;               printf( "%s %g\n", label, Newomcd ) ;       
+       fscanf( infp, "%s %g", label, &Newomcsb1 ) ;             printf( "%s %g\n", label, Newomcsb1 ) ;     
+       fscanf( infp, "%s %g", label, &Newomcsb2 ) ;             printf( "%s %g\n", label, Newomcsb2 ) ;     
+       fscanf( infp, "%s %g", label, &Newomcsb3 ) ;             printf( "%s %g\n", label, Newomcsb3 ) ;     
+       fscanf( infp, "%s %g", label, &Newomcsb4 ) ;             printf( "%s %g\n", label, Newomcsb4 ) ;     
+       fscanf( infp, "%s %g", label, &Newomcsb5 ) ;             printf( "%s %g\n", label, Newomcsb5 ) ;     
+       fscanf( infp, "%s %g", label, &Newomcslsig1 ) ;          printf( "%s %g\n", label, Newomcslsig1 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslsig2 ) ;          printf( "%s %g\n", label, Newomcslsig2 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslsig3 ) ;          printf( "%s %g\n", label, Newomcslsig3 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslsig4 ) ;          printf( "%s %g\n", label, Newomcslsig4 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslsig5 ) ;          printf( "%s %g\n", label, Newomcslsig5 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslsb1 ) ;          printf( "%s %g\n", label, Newomcslsb1 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslsb2 ) ;          printf( "%s %g\n", label, Newomcslsb2 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslsb3 ) ;          printf( "%s %g\n", label, Newomcslsb3 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslsb4 ) ;          printf( "%s %g\n", label, Newomcslsb4 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslsb5 ) ;          printf( "%s %g\n", label, Newomcslsb5 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslmsb1 ) ;          printf( "%s %g\n", label, Newomcslmsb1 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslmsb2 ) ;          printf( "%s %g\n", label, Newomcslmsb2 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslmsb3 ) ;          printf( "%s %g\n", label, Newomcslmsb3 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslmsb4 ) ;          printf( "%s %g\n", label, Newomcslmsb4 ) ;      
+       fscanf( infp, "%s %g", label, &Newomcslmsb5 ) ;          printf( "%s %g\n", label, Newomcslmsb5 ) ;      
        fscanf( infp, "%s %g", label, &Nsusymcsig ) ;           printf( "%s %g\n", label, Nsusymcsig ) ;   
        fscanf( infp, "%s %g", label, &Nsusymca ) ;             printf( "%s %g\n", label, Nsusymca ) ;     
        fscanf( infp, "%s %g", label, &Nsusymcd ) ;             printf( "%s %g\n", label, Nsusymcd ) ;     
@@ -2562,6 +2696,29 @@
        printf("\n Done reading in %s\n\n", initializeFile ) ;
        fclose( infp ) ;
 
+       float Newmcsig = NZnnmcsig + NWJmcsig + Newomcsig ;
+       float Newmca = NZnnmca + NWJmca + Newomca ;
+       float Newmcd = NZnnmcd + NWJmcd + Newomcd ;
+       float Newmcsb1 = NZnnmcsb1 + NWJmcsb1 + Newomcsb1 ;
+       float Newmcsb2 = NZnnmcsb2 + NWJmcsb2 + Newomcsb2 ;
+       float Newmcsb3 = NZnnmcsb3 + NWJmcsb3 + Newomcsb3 ;
+       float Newmcsb4 = NZnnmcsb4 + NWJmcsb4 + Newomcsb4 ;
+       float Newmcsb5 = NZnnmcsb5 + NWJmcsb5 + Newomcsb5 ;
+       float Newmcslsig1 = NZnnmcslsig1 + NWJmcslsig1 + Newomcslsig1 ;
+       float Newmcslsig2 = NZnnmcslsig2 + NWJmcslsig2 + Newomcslsig2 ;
+       float Newmcslsig3 = NZnnmcslsig3 + NWJmcslsig3 + Newomcslsig3 ;
+       float Newmcslsig4 = NZnnmcslsig4 + NWJmcslsig4 + Newomcslsig4 ;
+       float Newmcslsig5 = NZnnmcslsig5 + NWJmcslsig5 + Newomcslsig5 ;
+       float Newmcslsb1 = NZnnmcslsb1 + NWJmcslsb1 + Newomcslsb1 ;
+       float Newmcslsb2 = NZnnmcslsb2 + NWJmcslsb2 + Newomcslsb2 ;
+       float Newmcslsb3 = NZnnmcslsb3 + NWJmcslsb3 + Newomcslsb3 ;
+       float Newmcslsb4 = NZnnmcslsb4 + NWJmcslsb4 + Newomcslsb4 ;
+       float Newmcslsb5 = NZnnmcslsb5 + NWJmcslsb5 + Newomcslsb5 ;
+       float Newmcslmsb1 = NZnnmcslmsb1 + NWJmcslmsb1 + Newomcslmsb1 ;
+       float Newmcslmsb2 = NZnnmcslmsb2 + NWJmcslmsb2 + Newomcslmsb2 ;
+       float Newmcslmsb3 = NZnnmcslmsb3 + NWJmcslmsb3 + Newomcslmsb3 ;
+       float Newmcslmsb4 = NZnnmcslmsb4 + NWJmcslmsb4 + Newomcslmsb4 ;
+       float Newmcslmsb5 = NZnnmcslmsb5 + NWJmcslmsb5 + Newomcslmsb5 ;
 
 
 

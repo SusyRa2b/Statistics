@@ -166,6 +166,9 @@
        //-- Counts in SIG, signal selection.
 
        RooRealVar* rv_mu_ew_sig ;
+       RooRealVar* rv_mu_Znn_sig ;
+       RooRealVar* rv_mu_WJ_sig ;
+       RooRealVar* rv_mu_ewo_sig ;
        RooRealVar* rv_mu_susy_sig ;
        RooRealVar* rv_mu_susymc_sig ;
 
@@ -179,6 +182,24 @@
        RooRealVar* rv_mu_ew_sb3 ;
        RooRealVar* rv_mu_ew_sb4 ;
        RooRealVar* rv_mu_ew_sb5 ;
+
+       RooRealVar* rv_mu_Znn_sb1 ;
+       RooRealVar* rv_mu_Znn_sb2 ;
+       RooRealVar* rv_mu_Znn_sb3 ;
+       RooRealVar* rv_mu_Znn_sb4 ;
+       RooRealVar* rv_mu_Znn_sb5 ;
+
+       RooRealVar* rv_mu_WJ_sb1 ;
+       RooRealVar* rv_mu_WJ_sb2 ;
+       RooRealVar* rv_mu_WJ_sb3 ;
+       RooRealVar* rv_mu_WJ_sb4 ;
+       RooRealVar* rv_mu_WJ_sb5 ;
+
+       RooRealVar* rv_mu_ewo_sb1 ;
+       RooRealVar* rv_mu_ewo_sb2 ;
+       RooRealVar* rv_mu_ewo_sb3 ;
+       RooRealVar* rv_mu_ewo_sb4 ;
+       RooRealVar* rv_mu_ewo_sb5 ;
 
 
        //-- Counts in SB, bins of 3-jet mass, SUSY, signal selection.
@@ -195,6 +216,9 @@
        RooRealVar* rv_mu_ttbar_a ;
        RooRealVar* rv_mu_qcd_a ;
        RooRealVar* rv_mu_ew_a ;
+       RooRealVar* rv_mu_Znn_a ;
+       RooRealVar* rv_mu_WJ_a ;
+       RooRealVar* rv_mu_ewo_a ;
        RooRealVar* rv_mu_susymc_a ;
 
 
@@ -203,6 +227,9 @@
        RooRealVar* rv_mu_ttbar_d ;
        RooRealVar* rv_mu_qcd_d ;
        RooRealVar* rv_mu_ew_d ;
+       RooRealVar* rv_mu_Znn_d ;
+       RooRealVar* rv_mu_WJ_d ;
+       RooRealVar* rv_mu_ewo_d ;
        RooRealVar* rv_mu_susymc_d ;
 
 
@@ -259,6 +286,24 @@
        RooRealVar* rv_mu_sl_ew_sig4 ;
        RooRealVar* rv_mu_sl_ew_sig5 ;
 
+       RooRealVar* rv_mu_sl_Znn_sig1 ;
+       RooRealVar* rv_mu_sl_Znn_sig2 ;
+       RooRealVar* rv_mu_sl_Znn_sig3 ;
+       RooRealVar* rv_mu_sl_Znn_sig4 ;
+       RooRealVar* rv_mu_sl_Znn_sig5 ;
+
+       RooRealVar* rv_mu_sl_WJ_sig1 ;
+       RooRealVar* rv_mu_sl_WJ_sig2 ;
+       RooRealVar* rv_mu_sl_WJ_sig3 ;
+       RooRealVar* rv_mu_sl_WJ_sig4 ;
+       RooRealVar* rv_mu_sl_WJ_sig5 ;
+
+       RooRealVar* rv_mu_sl_ewo_sig1 ;
+       RooRealVar* rv_mu_sl_ewo_sig2 ;
+       RooRealVar* rv_mu_sl_ewo_sig3 ;
+       RooRealVar* rv_mu_sl_ewo_sig4 ;
+       RooRealVar* rv_mu_sl_ewo_sig5 ;
+
 
        //-- Single Lepton (SL) counts, ew, SB region, bins of 3-jet mass
 
@@ -268,6 +313,24 @@
        RooRealVar* rv_mu_sl_ew_sb4 ;
        RooRealVar* rv_mu_sl_ew_sb5 ;
 
+       RooRealVar* rv_mu_sl_Znn_sb1 ;
+       RooRealVar* rv_mu_sl_Znn_sb2 ;
+       RooRealVar* rv_mu_sl_Znn_sb3 ;
+       RooRealVar* rv_mu_sl_Znn_sb4 ;
+       RooRealVar* rv_mu_sl_Znn_sb5 ;
+
+       RooRealVar* rv_mu_sl_WJ_sb1 ;
+       RooRealVar* rv_mu_sl_WJ_sb2 ;
+       RooRealVar* rv_mu_sl_WJ_sb3 ;
+       RooRealVar* rv_mu_sl_WJ_sb4 ;
+       RooRealVar* rv_mu_sl_WJ_sb5 ;
+
+       RooRealVar* rv_mu_sl_ewo_sb1 ;
+       RooRealVar* rv_mu_sl_ewo_sb2 ;
+       RooRealVar* rv_mu_sl_ewo_sb3 ;
+       RooRealVar* rv_mu_sl_ewo_sb4 ;
+       RooRealVar* rv_mu_sl_ewo_sb5 ;
+
 
        //-- Single Lepton (SL) counts, ew, MSB region, bins of 3-jet mass
 
@@ -276,6 +339,24 @@
        RooRealVar* rv_mu_sl_ew_msb3 ;
        RooRealVar* rv_mu_sl_ew_msb4 ;
        RooRealVar* rv_mu_sl_ew_msb5 ;
+
+       RooRealVar* rv_mu_sl_Znn_msb1 ;
+       RooRealVar* rv_mu_sl_Znn_msb2 ;
+       RooRealVar* rv_mu_sl_Znn_msb3 ;
+       RooRealVar* rv_mu_sl_Znn_msb4 ;
+       RooRealVar* rv_mu_sl_Znn_msb5 ;
+
+       RooRealVar* rv_mu_sl_WJ_msb1 ;
+       RooRealVar* rv_mu_sl_WJ_msb2 ;
+       RooRealVar* rv_mu_sl_WJ_msb3 ;
+       RooRealVar* rv_mu_sl_WJ_msb4 ;
+       RooRealVar* rv_mu_sl_WJ_msb5 ;
+
+       RooRealVar* rv_mu_sl_ewo_msb1 ;
+       RooRealVar* rv_mu_sl_ewo_msb2 ;
+       RooRealVar* rv_mu_sl_ewo_msb3 ;
+       RooRealVar* rv_mu_sl_ewo_msb4 ;
+       RooRealVar* rv_mu_sl_ewo_msb5 ;
 
 
        //-- Single Lepton (SL) counts, susy, SIG region, bins of 3-jet mass
