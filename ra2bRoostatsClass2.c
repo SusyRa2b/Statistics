@@ -48,8 +48,9 @@
 
      //--- Tell RooFit to shut up about anything less important than an ERROR.
       RooMsgService::instance().setGlobalKillBelow(RooFit::ERROR) ;
+  /// RooMsgService::instance().addStream(DEBUG,Topic(Tracing),OutputFile("debug.log")) ;
       printf("\n\n ==== RooFit output configuration ===============\n") ;
-      RooMsgService::instance().Print() ;
+      RooMsgService::instance().Print("v") ;
       printf("\n\n ================================================\n") ;
 
       varsAtFitVals = false ;
@@ -391,8 +392,8 @@
          ProfileLikelihoodCalculator plc_ttbar_sig( *dsObserved, *likelihood, RooArgSet( *rv_mu_ttbar_sig ) ) ;
          plc_ttbar_sig.SetTestSize(0.32) ;
          ConfInterval* plinterval_ttbar_sig = plc_ttbar_sig.GetInterval() ;
-         ttbarSigLow  = ((LikelihoodInterval*) plinterval_ttbar_sig)->LowerLimit(*rv_mu_ttbar_sig) ;
-         ttbarSigHigh = ((LikelihoodInterval*) plinterval_ttbar_sig)->UpperLimit(*rv_mu_ttbar_sig) ;
+         ttbarSigLow  = ((LikelihoodInterval*) plinterval_ttbar_sig)->LowerLimit(*rrv_mu_ttbar_sig) ;
+         ttbarSigHigh = ((LikelihoodInterval*) plinterval_ttbar_sig)->UpperLimit(*rrv_mu_ttbar_sig) ;
          printf("\n\n") ;
          printf("    ttbar, SIG 68%% CL interval  [%5.1f, %5.1f]\n\n", ttbarSigLow, ttbarSigHigh ) ;
          TCanvas* plcplot_ttbar_sig = new TCanvas("plcplot_ttbar_sig", "ttbar sig, Profile likelihood", 500, 400 ) ;
@@ -416,10 +417,6 @@
             return false ;
          }
 
-         if ( ! useSigBgVars ) {
-            printf("\n\n\n *** Can't do it.  Need to use ra2bRoostatsClass2 with constructor arg useSigBgVars set to true.\n\n") ;
-            return false ;
-         }
 
       //--- Profile likelihood for SIG qcd yield.
 
@@ -1453,17 +1450,22 @@
 
      //-- Counts in SIG
 
-      rv_mu_ttbar_sig   = new RooRealVar( "mu_ttbar_sig", "mu_ttbar_sig", 0.0, 100. ) ;
+      if ( useSigBgVars ) {
+         rrv_mu_ttbar_sig   = new RooRealVar( "mu_ttbar_sig", "mu_ttbar_sig", 0.0, 100. ) ;
+         rv_mu_ttbar_sig = rrv_mu_ttbar_sig ;
+      }
       rv_mu_qcd_sig     = new RooRealVar( "mu_qcd_sig"  , "mu_qcd_sig"  , 0.0,  50. ) ;
       //-- ew is rfv
       rv_mu_susy_sig    = new RooRealVar( "mu_susy_sig" , "mu_susy_sig" , 0.0, 150. ) ;
       rv_mu_susymc_sig  = new RooRealVar( "mu_susymc_sig" , "mu_susymc_sig" , 0.0, 100000. ) ;
 
 
-      rv_mu_ttbar_sig   -> setVal( Nttbarmcsig ) ;  //-- this is a starting value only.
+      if ( useSigBgVars ) {
+         rrv_mu_ttbar_sig   -> setVal( Nttbarmcsig ) ;  //-- this is a starting value only.
+      }
       rv_mu_qcd_sig     -> setVal( Nqcdmcsig ) ;  //-- this is a starting value only.
       rv_mu_susy_sig    -> setVal( 0. ) ;  //-- this is a starting value only.
-      rv_mu_susymc_sig  -> setVal( 0. ) ;
+      rv_mu_susymc_sig  -> setVal( 0.1 ) ;
 
       rv_mu_susymc_sig -> setConstant(kTRUE) ;
 
@@ -1473,12 +1475,19 @@
 
      //-- Counts in SB
 
-      //-- ttbar is rfv
+      if ( !useSigBgVars ) {
+         rrv_mu_ttbar_sb   = new RooRealVar( "mu_ttbar_sb", "mu_ttbar_sb", 0.0, 500. ) ;
+         rv_mu_ttbar_sb = rrv_mu_ttbar_sb ;
+      }
       rv_mu_qcd_sb    = new RooRealVar( "mu_qcd_sb"  , "mu_qcd_sb"  , 0.0, 200. ) ;
       //-- ew is rfv
       rv_mu_susymc_sb = new RooRealVar( "mu_susymc_sb", "mu_susymc_sb", 0.0, 10000. ) ;
       //-- susy is rfv
 
+
+      if ( !useSigBgVars ) {
+         rrv_mu_ttbar_sb   -> setVal( Nttbarmcsb ) ;  //-- this is a starting value only.
+      }
       rv_mu_qcd_sb    -> setVal( Nqcdmcsb ) ;  //-- this is a starting value only.
       rv_mu_susymc_sb -> setVal( 0. ) ;
 
@@ -1525,7 +1534,7 @@
 
      //-- Single Lepton (SL) counts, SIG region
 
-      rv_mu_sl_ttbar_sig  = new RooRealVar( "mu_sl_ttbar_sig", "mu_sl_ttbar_sig", 0.0, 10000. ) ;
+      rv_mu_sl_ttbar_sig  = new RooRealVar( "mu_sl_ttbar_sig", "mu_sl_ttbar_sig", 1.0, 250. ) ;
       //-- ignore QCD in sl
       //-- ew is rfv
       rv_mu_sl_susymc_sig = new RooRealVar( "mu_sl_susymc_sig", "mu_sl_susymc_sig", 0.0, 10000. ) ;
@@ -1542,7 +1551,7 @@
 
      //-- Single Lepton (SL) counts, SB region
 
-      rv_mu_sl_ttbar_sb  = new RooRealVar( "mu_sl_ttbar_sb", "mu_sl_ttbar_sb", 0.0, 10000. ) ;
+      rv_mu_sl_ttbar_sb  = new RooRealVar( "mu_sl_ttbar_sb", "mu_sl_ttbar_sb", 0.0, 250. ) ;
       //-- ignore QCD in sl
       //-- ew is rfv
       rv_mu_sl_susymc_sb = new RooRealVar( "mu_sl_susymc_sb", "mu_sl_susymc_sb", 0.0, 10000. ) ;
@@ -1560,8 +1569,8 @@
 
      //-- QCD MC, SIG,SB,A,D counts, signal selection
 
-      rv_mu_qcdmc_sig = new RooRealVar( "mu_qcdmc_sig", "mu_qcdmc_sig", 0.0, 10000. ) ;
-      rv_mu_qcdmc_sb  = new RooRealVar( "mu_qcdmc_sb" , "mu_qcdmc_sb" , 0.0, 10000. ) ;
+      rv_mu_qcdmc_sig = new RooRealVar( "mu_qcdmc_sig", "mu_qcdmc_sig", 0.1, 10000. ) ;
+      rv_mu_qcdmc_sb  = new RooRealVar( "mu_qcdmc_sb" , "mu_qcdmc_sb" , 0.1, 10000. ) ;
       rv_mu_qcdmc_a   = new RooRealVar( "mu_qcdmc_a"  , "mu_qcdmc_a"  , 0.0, 10000. ) ;
       rv_mu_qcdmc_d   = new RooRealVar( "mu_qcdmc_d"  , "mu_qcdmc_d"  , 0.0, 10000. ) ;
 
@@ -1570,30 +1579,39 @@
       rv_mu_qcdmc_a   -> setVal( Nqcdmca ) ;
       rv_mu_qcdmc_d   -> setVal( Nqcdmcd ) ;
 
+ //++++++++ try fixing (!)
+
+///// rv_mu_qcdmc_sig -> setConstant( kTRUE ) ;
+///// rv_mu_qcdmc_sb  -> setConstant( kTRUE ) ;
+///// rv_mu_qcdmc_a   -> setConstant( kTRUE ) ;
+///// rv_mu_qcdmc_d   -> setConstant( kTRUE ) ;
+
+
+
 
 
      //-- EW MC counts
 
-      rv_mu_wjmc_sig   = new RooRealVar( "mu_wjmc_sig"  , "mu_wjmc_sig"  , 0.01, 10000. ) ;
-      rv_mu_wjmc_a     = new RooRealVar( "mu_wjmc_a"    , "mu_wjmc_a"    , 0.01, 10000. ) ;
-      rv_mu_wjmc_d     = new RooRealVar( "mu_wjmc_d"    , "mu_wjmc_d"    , 0.01, 10000. ) ;
-      rv_mu_wjmc_sb    = new RooRealVar( "mu_wjmc_sb"   , "mu_wjmc_sb"   , 0.01, 10000. ) ;
-      rv_mu_wjmc_slsig = new RooRealVar( "mu_wjmc_slsig", "mu_wjmc_slsig", 0.01, 10000. ) ;
-      rv_mu_wjmc_slsb  = new RooRealVar( "mu_wjmc_slsb" , "mu_wjmc_slsb" , 0.01, 10000. ) ;
+      rv_mu_wjmc_sig   = new RooRealVar( "mu_wjmc_sig"  , "mu_wjmc_sig"  , 0.00, (3+NWJmcsig+5*sqrt(1.*NWJmcsig)) ) ;
+      rv_mu_wjmc_a     = new RooRealVar( "mu_wjmc_a"    , "mu_wjmc_a"    , 0.00, 50. ) ;
+      rv_mu_wjmc_d     = new RooRealVar( "mu_wjmc_d"    , "mu_wjmc_d"    , 0.00, 50. ) ;
+      rv_mu_wjmc_sb    = new RooRealVar( "mu_wjmc_sb"   , "mu_wjmc_sb"   , 0.00, 50. ) ;
+      rv_mu_wjmc_slsig = new RooRealVar( "mu_wjmc_slsig", "mu_wjmc_slsig", 0.00, 50. ) ;
+      rv_mu_wjmc_slsb  = new RooRealVar( "mu_wjmc_slsb" , "mu_wjmc_slsb" , 0.00, 50. ) ;
 
-      rv_mu_znnmc_sig   = new RooRealVar( "mu_znnmc_sig"  , "mu_znnmc_sig"  , 0.01, 10000. ) ;
-      rv_mu_znnmc_a     = new RooRealVar( "mu_znnmc_a"    , "mu_znnmc_a"    , 0.01, 10000. ) ;
-      rv_mu_znnmc_d     = new RooRealVar( "mu_znnmc_d"    , "mu_znnmc_d"    , 0.01, 10000. ) ;
-      rv_mu_znnmc_sb    = new RooRealVar( "mu_znnmc_sb"   , "mu_znnmc_sb"   , 0.01, 10000. ) ;
-      rv_mu_znnmc_slsig = new RooRealVar( "mu_znnmc_slsig", "mu_znnmc_slsig", 0.01, 10000. ) ;
-      rv_mu_znnmc_slsb  = new RooRealVar( "mu_znnmc_slsb" , "mu_znnmc_slsb" , 0.01, 10000. ) ;
+      rv_mu_znnmc_sig   = new RooRealVar( "mu_znnmc_sig"  , "mu_znnmc_sig"  , 0.00, (3+NZnnmcsig+5*sqrt(1.*NZnnmcsig)) ) ;
+      rv_mu_znnmc_a     = new RooRealVar( "mu_znnmc_a"    , "mu_znnmc_a"    , 0.00, 50. ) ;
+      rv_mu_znnmc_d     = new RooRealVar( "mu_znnmc_d"    , "mu_znnmc_d"    , 0.00, 50. ) ;
+      rv_mu_znnmc_sb    = new RooRealVar( "mu_znnmc_sb"   , "mu_znnmc_sb"   , 0.00, 50. ) ;
+      rv_mu_znnmc_slsig = new RooRealVar( "mu_znnmc_slsig", "mu_znnmc_slsig", 0.00, 50. ) ;
+      rv_mu_znnmc_slsb  = new RooRealVar( "mu_znnmc_slsb" , "mu_znnmc_slsb" , 0.00, 50. ) ;
 
-      rv_mu_ewomc_sig   = new RooRealVar( "mu_ewomc_sig"  , "mu_ewomc_sig"  , 0.01, 10000. ) ;
-      rv_mu_ewomc_a     = new RooRealVar( "mu_ewomc_a"    , "mu_ewomc_a"    , 0.01, 10000. ) ;
-      rv_mu_ewomc_d     = new RooRealVar( "mu_ewomc_d"    , "mu_ewomc_d"    , 0.01, 10000. ) ;
-      rv_mu_ewomc_sb    = new RooRealVar( "mu_ewomc_sb"   , "mu_ewomc_sb"   , 0.01, 10000. ) ;
-      rv_mu_ewomc_slsig = new RooRealVar( "mu_ewomc_slsig", "mu_ewomc_slsig", 0.01, 10000. ) ;
-      rv_mu_ewomc_slsb  = new RooRealVar( "mu_ewomc_slsb" , "mu_ewomc_slsb" , 0.01, 10000. ) ;
+      rv_mu_ewomc_sig   = new RooRealVar( "mu_ewomc_sig"  , "mu_ewomc_sig"  , 0.00, 50. ) ;
+      rv_mu_ewomc_a     = new RooRealVar( "mu_ewomc_a"    , "mu_ewomc_a"    , 0.00, 50. ) ;
+      rv_mu_ewomc_d     = new RooRealVar( "mu_ewomc_d"    , "mu_ewomc_d"    , 0.00, 50. ) ;
+      rv_mu_ewomc_sb    = new RooRealVar( "mu_ewomc_sb"   , "mu_ewomc_sb"   , 0.00, 50. ) ;
+      rv_mu_ewomc_slsig = new RooRealVar( "mu_ewomc_slsig", "mu_ewomc_slsig", 0.00, 50. ) ;
+      rv_mu_ewomc_slsb  = new RooRealVar( "mu_ewomc_slsb" , "mu_ewomc_slsb" , 0.00, 50. ) ;
 
 
       rv_mu_wjmc_sig   -> setVal( NWJmcsig ) ;
@@ -1626,6 +1644,26 @@
       rv_mu_ewomc_slsig -> setConstant( kTRUE ) ;
       rv_mu_ewomc_slsb  -> setConstant( kTRUE ) ;
 
+      rv_mu_znnmc_slsig -> setConstant( kTRUE ) ;
+      rv_mu_znnmc_slsb  -> setConstant( kTRUE ) ;
+
+   //++++++ fix all EW for now.
+////  rv_mu_wjmc_sig   -> setConstant( kTRUE ) ;
+////  rv_mu_wjmc_a     -> setConstant( kTRUE ) ;
+////  rv_mu_wjmc_d     -> setConstant( kTRUE ) ;
+////  rv_mu_wjmc_sb    -> setConstant( kTRUE ) ;
+////  rv_mu_wjmc_slsig -> setConstant( kTRUE ) ;
+////  rv_mu_wjmc_slsb  -> setConstant( kTRUE ) ;
+
+////  rv_mu_znnmc_sig   -> setConstant( kTRUE ) ;
+////  rv_mu_znnmc_a     -> setConstant( kTRUE ) ;
+////  rv_mu_znnmc_d     -> setConstant( kTRUE ) ;
+////  rv_mu_znnmc_sb    -> setConstant( kTRUE ) ;
+
+
+
+
+
 
 
 
@@ -1634,24 +1672,28 @@
 
     //-- Efficiency scale factor.
 
-      rv_eff_sf  = new RooRealVar( "eff_sf"      , "eff_sf"      , 0.0, 4.0 ) ;
+      rv_eff_sf  = new RooRealVar( "eff_sf"      , "eff_sf"      , (EffScaleFactor-4.*EffScaleFactorErr), (EffScaleFactor+4.*EffScaleFactorErr) ) ;
       rv_eff_sf  -> setVal( EffScaleFactor ) ;
 
 
-      rv_lsf_wjmc  = new RooRealVar( "lsf_wjmc", "lsf_wjmc", 0.0, 10.0 ) ;
+      rv_lsf_wjmc  = new RooRealVar( "lsf_wjmc", "lsf_wjmc", (lsf_WJmc-4.*lsf_WJmc_err), (lsf_WJmc+4.*lsf_WJmc_err) ) ;
       rv_lsf_wjmc  -> setVal( lsf_WJmc ) ;
 
-      rv_lsf_znnmc  = new RooRealVar( "lsf_znnmc", "lsf_znnmc", 0.0, 10.0 ) ;
+      rv_lsf_znnmc  = new RooRealVar( "lsf_znnmc", "lsf_znnmc", (lsf_Znnmc-4.*lsf_Znnmc_err), (lsf_Znnmc+4.*lsf_Znnmc_err) ) ;
       rv_lsf_znnmc  -> setVal( lsf_Znnmc ) ;
 
-      rv_lsf_ewomc  = new RooRealVar( "lsf_ewomc", "lsf_ewomc", 0.0, 10.0 ) ;
+      rv_lsf_ewomc  = new RooRealVar( "lsf_ewomc", "lsf_ewomc", (lsf_Ewomc-4.*lsf_Ewomc_err), (lsf_Ewomc+4.*lsf_Ewomc_err) ) ;
       rv_lsf_ewomc  -> setVal( lsf_Ewomc ) ;
 
    //+++ Dont use EW other for now.
       rv_lsf_ewomc -> setConstant( kTRUE ) ;
 
+/////++++++ try fixed lsf.
+///   rv_lsf_wjmc  -> setConstant( kTRUE ) ;
+///   rv_lsf_znnmc -> setConstant( kTRUE ) ;
 
-
+/////+++++++++ try fixed eff_sf
+///   rv_eff_sf    -> setConstant( kTRUE ) ;
 
 
 
@@ -1662,9 +1704,17 @@
        printf(" --- Defining relationships between parameters.\n" ) ;
 
 
-      rv_mu_ttbar_sb = new RooFormulaVar( "mu_ttbar_sb",
+      if ( useSigBgVars ) {
+         rfv_mu_ttbar_sb = new RooFormulaVar( "mu_ttbar_sb",
                                                        "mu_ttbar_sig*(mu_sl_ttbar_sb/mu_sl_ttbar_sig)",
                                                        RooArgSet( *rv_mu_ttbar_sig, *rv_mu_sl_ttbar_sb, *rv_mu_sl_ttbar_sig ) ) ;
+         rv_mu_ttbar_sb = rfv_mu_ttbar_sb ;
+      } else {
+         rfv_mu_ttbar_sig = new RooFormulaVar( "mu_ttbar_sig",
+                                                       "mu_ttbar_sb*(mu_sl_ttbar_sig/mu_sl_ttbar_sb)",
+                                                       RooArgSet( *rv_mu_ttbar_sb, *rv_mu_sl_ttbar_sig, *rv_mu_sl_ttbar_sb ) ) ;
+         rv_mu_ttbar_sig = rfv_mu_ttbar_sig ;
+      }
 
 
 
@@ -1838,13 +1888,12 @@
       pdf_NWJmcsl_sig = new RooPoisson( "pdf_NWJmcsl_sig", "Nsl,sig Poisson PDF", *rv_NWJmcslsig, *rv_n_wjmc_sl_sig ) ;
       pdf_NWJmcsl_sb = new RooPoisson( "pdf_NWJmcsl_sb", "Nsl,sb Poisson PDF", *rv_NWJmcslsb, *rv_n_wjmc_sl_sb ) ;
 
-      printf(" defining pdf_NZnnmcsig with observed value %7.1f and mean %7.1f\n", rv_NZnnmcsig->getVal(), rv_n_znnmc_sig->getVal() ) ;
       pdf_NZnnmcsig = new RooPoisson( "pdf_NZnnmcsig", "Nsig Poisson PDF", *rv_NZnnmcsig, *rv_n_znnmc_sig ) ;
       pdf_NZnnmca = new RooPoisson( "pdf_NZnnmca", "Na Poisson PDF", *rv_NZnnmca, *rv_n_znnmc_a ) ;
       pdf_NZnnmcd = new RooPoisson( "pdf_NZnnmcd", "Nd Poisson PDF", *rv_NZnnmcd, *rv_n_znnmc_d ) ;
       pdf_NZnnmcsb = new RooPoisson( "pdf_NZnnmcsb", "Nsb Poisson PDF", *rv_NZnnmcsb, *rv_n_znnmc_sb ) ;
-      pdf_NZnnmcsl_sig = new RooPoisson( "pdf_NZnnmcsl_sig", "Nsl,sig Poisson PDF", *rv_NZnnmcslsig, *rv_n_znnmc_sl_sig ) ;
-      pdf_NZnnmcsl_sb = new RooPoisson( "pdf_NZnnmcsl_sb", "Nsl,sb Poisson PDF", *rv_NZnnmcslsb, *rv_n_znnmc_sl_sb ) ;
+ ///  pdf_NZnnmcsl_sig = new RooPoisson( "pdf_NZnnmcsl_sig", "Nsl,sig Poisson PDF", *rv_NZnnmcslsig, *rv_n_znnmc_sl_sig ) ;
+ ///  pdf_NZnnmcsl_sb = new RooPoisson( "pdf_NZnnmcsl_sb", "Nsl,sb Poisson PDF", *rv_NZnnmcslsb, *rv_n_znnmc_sl_sb ) ;
 
  ///  pdf_NEwomcsig = new RooPoisson( "pdf_NEwomcsig", "Nsig Poisson PDF", *rv_NEwomcsig, *rv_n_ewomc_sig ) ;
  ///  pdf_NEwomca = new RooPoisson( "pdf_NEwomca", "Na Poisson PDF", *rv_NEwomca, *rv_n_ewomc_a ) ;
@@ -1895,8 +1944,8 @@
          pdflist.add( *pdf_NZnnmca ) ;
          pdflist.add( *pdf_NZnnmcd ) ;
          pdflist.add( *pdf_NZnnmcsb ) ;
-         pdflist.add( *pdf_NZnnmcsl_sig ) ;
-         pdflist.add( *pdf_NZnnmcsl_sb ) ;
+ ///     pdflist.add( *pdf_NZnnmcsl_sig ) ;
+ ///     pdflist.add( *pdf_NZnnmcsl_sb ) ;
  ///     pdflist.add( *pdf_NEwomcsig ) ;
  ///     pdflist.add( *pdf_NEwomca ) ;
  ///     pdflist.add( *pdf_NEwomcd ) ;
@@ -1910,7 +1959,7 @@
          pdflist.add( *pdf_Eff_sf ) ;
          pdflist.add( *pdf_lsf_WJmc ) ;
          pdflist.add( *pdf_lsf_Znnmc ) ;
- ///     pdflist.add( *pdf_lsf_Ewomc ) ;
+ ////    pdflist.add( *pdf_lsf_Ewomc ) ;
          likelihood = new RooProdPdf( "likelihood", "ra2b likelihood", pdflist ) ;
       }
 
@@ -1935,8 +1984,8 @@
        observedParametersList.add( *rv_NZnnmca ) ;
        observedParametersList.add( *rv_NZnnmcd ) ;
        observedParametersList.add( *rv_NZnnmcsb ) ;
-       observedParametersList.add( *rv_NZnnmcslsig ) ;
-       observedParametersList.add( *rv_NZnnmcslsb ) ;
+ //    observedParametersList.add( *rv_NZnnmcslsig ) ;
+ //    observedParametersList.add( *rv_NZnnmcslsb ) ;
 
  //    observedParametersList.add( *rv_NEwomcsig ) ;
  //    observedParametersList.add( *rv_NEwomca ) ;
@@ -2249,7 +2298,9 @@
 
      //-- Counts in SIG
 
-      rv_mu_ttbar_sig   -> setVal( Nttbarmcsig ) ;  //-- this is a starting value only.
+      if ( useSigBgVars ) {
+         rrv_mu_ttbar_sig   -> setVal( Nttbarmcsig ) ;  //-- this is a starting value only.
+      }
       rv_mu_qcd_sig     -> setVal( Nqcdmcsig ) ;  //-- this is a starting value only.
       rv_mu_susy_sig    -> setVal( 0. ) ;  //-- this is a starting value only.
       rv_mu_susymc_sig  -> setVal( 0. ) ;
@@ -2262,6 +2313,9 @@
 
      //-- Counts in SB
 
+      if ( !useSigBgVars ) {
+         rrv_mu_ttbar_sb   -> setVal( Nttbarmcsb ) ;  //-- this is a starting value only.
+      }
       rv_mu_qcd_sb    -> setVal( Nqcdmcsb ) ;  //-- this is a starting value only.
       rv_mu_susymc_sb -> setVal( 0. ) ;
 
@@ -3281,7 +3335,11 @@
       xaxis->SetBinLabel(binIndex, binLabel ) ;
 
       dataVal  = rv_Nsig->getVal() ;
-      ttbarVal = rv_mu_ttbar_sig->getVal() ;
+      if ( useSigBgVars ) {
+         ttbarVal = rrv_mu_ttbar_sig->getVal() ;
+      } else {
+         ttbarVal = rfv_mu_ttbar_sig->getVal() ;
+      }
       qcdVal   = rv_mu_qcd_sig->getVal() ;
       ewVal    = rv_mu_ew_sig->getVal() ;
       susyVal  = rv_mu_susy_sig->getVal() ;
@@ -3327,7 +3385,11 @@
       xaxis->SetBinLabel(binIndex, binLabel ) ;
 
       dataVal  = rv_Nsb->getVal() ;
-      ttbarVal = rv_mu_ttbar_sb->getVal() ;
+      if ( useSigBgVars ) {
+         ttbarVal = rfv_mu_ttbar_sb->getVal() ;
+      } else {
+         ttbarVal = rrv_mu_ttbar_sb->getVal() ;
+      }
       qcdVal   = rv_mu_qcd_sb->getVal() ;
       ewVal    = rv_mu_ew_sb->getVal() ;
       susyVal  = rv_mu_susy_sb->getVal() ;
@@ -4499,20 +4561,27 @@
 
 
        printf("\n\n") ;
-       printf("  rv_mu_wjmc_sig : %7.1f\n", rv_mu_wjmc_sig->getVal() ) ;
-       printf("  rv_mu_znnmc_sig : %7.1f\n", rv_mu_znnmc_sig->getVal() ) ;
-       printf("  rv_mu_ewomc_sig : %7.1f\n", rv_mu_ewomc_sig->getVal() ) ;
-       printf("\n\n") ;
 
 
        printf("                     Nobs      all    ttbar      qcd       EW     SUSY x Eff SF.\n") ;
        printf("---------------------------------------------------------------------------------------------\n") ;
 
+       float ttbarSig ;
+       float ttbarSb ;
+
+       if ( useSigBgVars ) {
+          ttbarSig = rrv_mu_ttbar_sig->getVal() ;
+          ttbarSb  = rfv_mu_ttbar_sb->getVal() ;
+       } else {
+          ttbarSig = rfv_mu_ttbar_sig->getVal() ;
+          ttbarSb  = rrv_mu_ttbar_sb->getVal() ;
+       }
+
        printf("\n") ;
        printf("     Nsig        :  %5.0f   %7.1f  %7.1f  %7.1f  %7.1f  %7.1f x %4.2f = %7.1f \n",
               rv_Nsig->getVal(),
               rv_n_sig->getVal(),
-              rv_mu_ttbar_sig->getVal(),
+              ttbarSig,
               rv_mu_qcd_sig->getVal(),
               rv_mu_ew_sig->getVal(),
               rv_mu_susy_sig->getVal(),
@@ -4526,7 +4595,7 @@
        printf("     Nsb         :  %5.0f   %7.1f  %7.1f  %7.1f  %7.1f  %7.1f x %4.2f = %7.1f\n",
               rv_Nsb->getVal(),
               rv_n_sb->getVal(),
-              rv_mu_ttbar_sb->getVal(),
+              ttbarSb,
               rv_mu_qcd_sb->getVal(),
               rv_mu_ew_sb->getVal(),
               rv_mu_susy_sb->getVal(),

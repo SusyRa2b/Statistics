@@ -22,7 +22,7 @@
 
      public :
 
-       ra2bRoostatsClass2( bool ArgUseSigBgVars=true ) ;
+       ra2bRoostatsClass2( bool ArgUseSigBgVars=false ) ;
 
        virtual ~ra2bRoostatsClass2();
 
@@ -132,7 +132,10 @@
 
        //-- Counts in SIG, signal selection.
 
-       RooRealVar*    rv_mu_ttbar_sig ;
+       RooAbsArg*     rv_mu_ttbar_sig ;
+       RooRealVar*    rrv_mu_ttbar_sig ;
+       RooFormulaVar* rfv_mu_ttbar_sig ;
+
        RooRealVar*    rv_mu_qcd_sig ;
        RooFormulaVar* rv_mu_ew_sig ;
        RooRealVar*    rv_mu_susymc_sig ;
@@ -141,7 +144,10 @@
 
        //-- Counts in SB, signal selection.
 
-       RooFormulaVar* rv_mu_ttbar_sb ;
+       RooAbsArg*     rv_mu_ttbar_sb ;
+       RooRealVar*    rrv_mu_ttbar_sb ;
+       RooFormulaVar* rfv_mu_ttbar_sb ;
+
        RooRealVar*    rv_mu_qcd_sb ;
        RooFormulaVar* rv_mu_ew_sb ;
        RooRealVar*    rv_mu_susymc_sb ;
