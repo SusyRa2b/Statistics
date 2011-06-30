@@ -1672,17 +1672,31 @@
 
     //-- Efficiency scale factor.
 
-      rv_eff_sf  = new RooRealVar( "eff_sf"      , "eff_sf"      , (EffScaleFactor-4.*EffScaleFactorErr), (EffScaleFactor+4.*EffScaleFactorErr) ) ;
+      double pmin, pmax ;
+
+      pmin = (EffScaleFactor-4.*EffScaleFactorErr) ;
+      pmax = (EffScaleFactor+4.*EffScaleFactorErr) ;
+      if ( pmin < 0 ) pmin = 0.1 ;
+      rv_eff_sf  = new RooRealVar( "eff_sf"      , "eff_sf"      , pmin, pmax ) ;
       rv_eff_sf  -> setVal( EffScaleFactor ) ;
 
 
-      rv_lsf_wjmc  = new RooRealVar( "lsf_wjmc", "lsf_wjmc", (lsf_WJmc-4.*lsf_WJmc_err), (lsf_WJmc+4.*lsf_WJmc_err) ) ;
+      pmin = (lsf_WJmc-4.*lsf_WJmc_err) ;
+      pmax = (lsf_WJmc+4.*lsf_WJmc_err) ;
+      if ( pmin < 0 ) pmin = 0.1 ;
+      rv_lsf_wjmc  = new RooRealVar( "lsf_wjmc", "lsf_wjmc", pmin, pmax ) ;
       rv_lsf_wjmc  -> setVal( lsf_WJmc ) ;
 
-      rv_lsf_znnmc  = new RooRealVar( "lsf_znnmc", "lsf_znnmc", (lsf_Znnmc-4.*lsf_Znnmc_err), (lsf_Znnmc+4.*lsf_Znnmc_err) ) ;
+      pmin = (lsf_Znnmc-4.*lsf_Znnmc_err) ;
+      pmax = (lsf_Znnmc+4.*lsf_Znnmc_err) ;
+      if ( pmin < 0 ) pmin = 0.1 ;
+      rv_lsf_znnmc  = new RooRealVar( "lsf_znnmc", "lsf_znnmc", pmin, pmax ) ;
       rv_lsf_znnmc  -> setVal( lsf_Znnmc ) ;
 
-      rv_lsf_ewomc  = new RooRealVar( "lsf_ewomc", "lsf_ewomc", (lsf_Ewomc-4.*lsf_Ewomc_err), (lsf_Ewomc+4.*lsf_Ewomc_err) ) ;
+      pmin = (lsf_Ewomc-4.*lsf_Ewomc_err) ;
+      pmax = (lsf_Ewomc+4.*lsf_Ewomc_err) ;
+      if ( pmin < 0 ) pmin = 0.1 ;
+      rv_lsf_ewomc  = new RooRealVar( "lsf_ewomc", "lsf_ewomc", pmin, pmax ) ;
       rv_lsf_ewomc  -> setVal( lsf_Ewomc ) ;
 
    //+++ Dont use EW other for now.
@@ -3280,7 +3294,11 @@
                             nbins, 0.5, nbins+0.5 ) ;
       TH1F* hfitqual_qcd = new TH1F("hfitqual_qcd","RA2b likelihood fit results, QCD",
                             nbins, 0.5, nbins+0.5 ) ;
-      TH1F* hfitqual_ew = new TH1F("hfitqual_ew","RA2b likelihood fit results, EW",
+      TH1F* hfitqual_wj = new TH1F("hfitqual_wj","RA2b likelihood fit results, W+jets",
+                            nbins, 0.5, nbins+0.5 ) ;
+      TH1F* hfitqual_znn = new TH1F("hfitqual_znn","RA2b likelihood fit results, Ztonunu",
+                            nbins, 0.5, nbins+0.5 ) ;
+      TH1F* hfitqual_ewo = new TH1F("hfitqual_ewo","RA2b likelihood fit results, EW-other",
                             nbins, 0.5, nbins+0.5 ) ;
       TH1F* hfitqual_susy = new TH1F("hfitqual_susy","RA2b likelihood fit results, SUSY",
                             nbins, 0.5, nbins+0.5 ) ;
@@ -3291,7 +3309,9 @@
 
       hfitqual_ttbar -> SetFillColor(kBlue-9) ;
       hfitqual_qcd   -> SetFillColor(2) ;
-      hfitqual_ew    -> SetFillColor(3) ;
+      hfitqual_wj    -> SetFillColor(kGreen) ;
+      hfitqual_znn   -> SetFillColor(kGreen-3) ;
+      hfitqual_ewo   -> SetFillColor(kGreen-5) ;
       hfitqual_susy  -> SetFillColor(6) ;
       hfitqual_gaus  -> SetFillColor(kOrange+1) ;
 
@@ -3312,12 +3332,16 @@
 
       double ttbarVal ;
       double qcdVal ;
-      double ewVal ;
+      double wjVal ;
+      double znnVal ;
+      double ewoVal ;
       double susyVal ;
 
       double ttbarValNorm ;
       double qcdValNorm ;
-      double ewValNorm ;
+      double wjValNorm ;
+      double znnValNorm ;
+      double ewoValNorm ;
       double susyValNorm ;
 
       double eff_sf ;
@@ -3341,7 +3365,9 @@
          ttbarVal = rfv_mu_ttbar_sig->getVal() ;
       }
       qcdVal   = rv_mu_qcd_sig->getVal() ;
-      ewVal    = rv_mu_ew_sig->getVal() ;
+      wjVal    = (rv_mu_wjmc_sig->getVal()) * (rv_lsf_wjmc->getVal()) ;
+      znnVal   = (rv_mu_znnmc_sig->getVal()) * (rv_lsf_znnmc->getVal()) ;
+      ewoVal   = (rv_mu_ewomc_sig->getVal()) * (rv_lsf_ewomc->getVal()) ;
       susyVal  = rv_mu_susy_sig->getVal() ;
       susyVal = eff_sf * susyVal ;
 
@@ -3351,7 +3377,9 @@
       dataErrNorm = dataErr ;
       ttbarValNorm = ttbarVal ;
       qcdValNorm = qcdVal ;
-      ewValNorm = ewVal ;
+      wjValNorm = wjVal ;
+      znnValNorm = znnVal ;
+      ewoValNorm = ewoVal ;
       susyValNorm = susyVal ;
       hfitqual_data->SetBinContent( binIndex, dataVal ) ;
       if ( dataVal > 0. && doNorm ) { 
@@ -3359,7 +3387,9 @@
          dataErrNorm  = dataErr / dataVal ; 
          ttbarValNorm = ttbarVal / dataVal ;
          qcdValNorm   = qcdVal / dataVal ;
-         ewValNorm    = ewVal / dataVal ;
+         wjValNorm    = wjVal / dataVal ;
+         znnValNorm    = znnVal / dataVal ;
+         ewoValNorm    = ewoVal / dataVal ;
          susyValNorm  = susyVal / dataVal ;
       }
 
@@ -3368,10 +3398,11 @@
 
       hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
       hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
-      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_wj    -> SetBinContent( binIndex, wjValNorm ) ;
+      hfitqual_znn    -> SetBinContent( binIndex, znnValNorm ) ;
+      hfitqual_ewo    -> SetBinContent( binIndex, ewoValNorm ) ;
       hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
 
-      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  qcd = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, qcdValNorm, ewValNorm, susyValNorm ) ;
 
       binIndex++ ;
 
@@ -3391,24 +3422,31 @@
          ttbarVal = rrv_mu_ttbar_sb->getVal() ;
       }
       qcdVal   = rv_mu_qcd_sb->getVal() ;
-      ewVal    = rv_mu_ew_sb->getVal() ;
+      wjVal    = (rv_mu_wjmc_sb->getVal()) * (rv_lsf_wjmc->getVal()) ;
+      znnVal   = (rv_mu_znnmc_sb->getVal()) * (rv_lsf_znnmc->getVal()) ;
+      ewoVal   = (rv_mu_ewomc_sb->getVal()) * (rv_lsf_ewomc->getVal()) ;
       susyVal  = rv_mu_susy_sb->getVal() ;
       susyVal = eff_sf * susyVal ;
+
 
       dataErr = sqrt(dataVal) ;
 
       dataErrNorm = dataErr ;
       ttbarValNorm = ttbarVal ;
       qcdValNorm = qcdVal ;
-      ewValNorm = ewVal ;
+      wjValNorm = wjVal ;
+      znnValNorm = znnVal ;
+      ewoValNorm = ewoVal ;
       susyValNorm = susyVal ;
       hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-      if ( dataVal > 0. && doNorm ) {
+      if ( dataVal > 0. && doNorm ) { 
          hfitqual_data->SetBinContent( binIndex, 1. ) ;
          dataErrNorm  = dataErr / dataVal ; 
          ttbarValNorm = ttbarVal / dataVal ;
          qcdValNorm   = qcdVal / dataVal ;
-         ewValNorm    = ewVal / dataVal ;
+         wjValNorm    = wjVal / dataVal ;
+         znnValNorm    = znnVal / dataVal ;
+         ewoValNorm    = ewoVal / dataVal ;
          susyValNorm  = susyVal / dataVal ;
       }
 
@@ -3417,10 +3455,11 @@
 
       hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
       hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
-      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_wj    -> SetBinContent( binIndex, wjValNorm ) ;
+      hfitqual_znn    -> SetBinContent( binIndex, znnValNorm ) ;
+      hfitqual_ewo    -> SetBinContent( binIndex, ewoValNorm ) ;
       hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
 
-      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  qcd = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, qcdValNorm, ewValNorm, susyValNorm ) ;
 
       binIndex++ ;
 
@@ -3436,7 +3475,9 @@
 
       dataVal  = rv_Nslsig->getVal() ;
       ttbarVal = rv_mu_sl_ttbar_sig->getVal() ;
-      ewVal    = rv_mu_sl_ew_sig->getVal() ;
+      wjVal    = (rv_mu_wjmc_slsig->getVal()) * (rv_lsf_wjmc->getVal()) ;
+      znnVal   = (rv_mu_znnmc_slsig->getVal()) * (rv_lsf_znnmc->getVal()) ;
+      ewoVal   = (rv_mu_ewomc_slsig->getVal()) * (rv_lsf_ewomc->getVal()) ;
       susyVal  = rv_mu_sl_susy_sig->getVal() ;
       susyVal = eff_sf * susyVal ;
 
@@ -3445,15 +3486,18 @@
 
       dataErrNorm = dataErr ;
       ttbarValNorm = ttbarVal ;
-      qcdValNorm = qcdVal ;
-      ewValNorm = ewVal ;
+      wjValNorm = wjVal ;
+      znnValNorm = znnVal ;
+      ewoValNorm = ewoVal ;
       susyValNorm = susyVal ;
       hfitqual_data->SetBinContent( binIndex, dataVal ) ;
       if ( dataVal > 0. && doNorm ) { 
          hfitqual_data->SetBinContent( binIndex, 1. ) ;
          dataErrNorm  = dataErr / dataVal ; 
          ttbarValNorm = ttbarVal / dataVal ;
-         ewValNorm    = ewVal / dataVal ;
+         wjValNorm    = wjVal / dataVal ;
+         znnValNorm    = znnVal / dataVal ;
+         ewoValNorm    = ewoVal / dataVal ;
          susyValNorm  = susyVal / dataVal ;
       }
 
@@ -3461,10 +3505,11 @@
       hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
 
       hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
-      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_wj    -> SetBinContent( binIndex, wjValNorm ) ;
+      hfitqual_znn    -> SetBinContent( binIndex, znnValNorm ) ;
+      hfitqual_ewo    -> SetBinContent( binIndex, ewoValNorm ) ;
       hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
 
-      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, ewValNorm, susyValNorm ) ;
 
       binIndex++ ;
 
@@ -3479,7 +3524,9 @@
 
       dataVal  = rv_Nslsb->getVal() ;
       ttbarVal = rv_mu_sl_ttbar_sb->getVal() ;
-      ewVal    = rv_mu_sl_ew_sb->getVal() ;
+      wjVal    = (rv_mu_wjmc_slsb->getVal()) * (rv_lsf_wjmc->getVal()) ;
+      znnVal   = (rv_mu_znnmc_slsb->getVal()) * (rv_lsf_znnmc->getVal()) ;
+      ewoVal   = (rv_mu_ewomc_slsb->getVal()) * (rv_lsf_ewomc->getVal()) ;
       susyVal  = rv_mu_sl_susy_sb->getVal() ;
       susyVal = eff_sf * susyVal ;
 
@@ -3488,15 +3535,18 @@
 
       dataErrNorm = dataErr ;
       ttbarValNorm = ttbarVal ;
-      qcdValNorm = qcdVal ;
-      ewValNorm = ewVal ;
+      wjValNorm = wjVal ;
+      znnValNorm = znnVal ;
+      ewoValNorm = ewoVal ;
       susyValNorm = susyVal ;
       hfitqual_data->SetBinContent( binIndex, dataVal ) ;
       if ( dataVal > 0. && doNorm ) { 
          hfitqual_data->SetBinContent( binIndex, 1. ) ;
          dataErrNorm  = dataErr / dataVal ; 
          ttbarValNorm = ttbarVal / dataVal ;
-         ewValNorm    = ewVal / dataVal ;
+         wjValNorm    = wjVal / dataVal ;
+         znnValNorm    = znnVal / dataVal ;
+         ewoValNorm    = ewoVal / dataVal ;
          susyValNorm  = susyVal / dataVal ;
       }
 
@@ -3504,10 +3554,11 @@
       hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
 
       hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
-      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_wj    -> SetBinContent( binIndex, wjValNorm ) ;
+      hfitqual_znn    -> SetBinContent( binIndex, znnValNorm ) ;
+      hfitqual_ewo    -> SetBinContent( binIndex, ewoValNorm ) ;
       hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
 
-      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, ewValNorm, susyValNorm ) ;
 
       binIndex++ ;
 
@@ -3526,7 +3577,9 @@
       dataVal  = rv_Nd->getVal() ;
       ttbarVal = rv_mu_ttbar_d->getVal() ;
       qcdVal   = rv_mu_qcd_d->getVal() ;
-      ewVal    = rv_mu_ew_d->getVal() ;
+      wjVal    = (rv_mu_wjmc_d->getVal()) * (rv_lsf_wjmc->getVal()) ;
+      znnVal   = (rv_mu_znnmc_d->getVal()) * (rv_lsf_znnmc->getVal()) ;
+      ewoVal   = (rv_mu_ewomc_d->getVal()) * (rv_lsf_ewomc->getVal()) ;
       susyVal  = rv_mu_susy_d->getVal() ;
       susyVal = eff_sf * susyVal ;
 
@@ -3536,7 +3589,9 @@
       dataErrNorm = dataErr ;
       ttbarValNorm = ttbarVal ;
       qcdValNorm = qcdVal ;
-      ewValNorm = ewVal ;
+      wjValNorm = wjVal ;
+      znnValNorm = znnVal ;
+      ewoValNorm = ewoVal ;
       susyValNorm = susyVal ;
       hfitqual_data->SetBinContent( binIndex, dataVal ) ;
       if ( dataVal > 0. && doNorm ) { 
@@ -3544,14 +3599,18 @@
          dataErrNorm  = dataErr / dataVal ; 
          ttbarValNorm = ttbarVal / dataVal ;
          qcdValNorm   = qcdVal / dataVal ;
-         ewValNorm    = ewVal / dataVal ;
+         wjValNorm    = wjVal / dataVal ;
+         znnValNorm    = znnVal / dataVal ;
+         ewoValNorm    = ewoVal / dataVal ;
          susyValNorm  = susyVal / dataVal ;
       }
       if ( !doNorm ) {
          hfitqual_data->SetBinContent( binIndex, dataVal*0.1 ) ;
          dataErrNorm = dataErrNorm*0.1 ;
          ttbarValNorm = ttbarValNorm*0.1 ;
-         ewValNorm = ewValNorm*0.1 ;
+         wjValNorm = wjValNorm*0.1 ;
+         znnValNorm = znnValNorm*0.1 ;
+         ewoValNorm = ewoValNorm*0.1 ;
          qcdValNorm = qcdValNorm*0.1 ;
          susyValNorm = susyValNorm*0.1 ;
       }
@@ -3561,10 +3620,11 @@
 
       hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
       hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
-      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_wj    -> SetBinContent( binIndex, wjValNorm ) ;
+      hfitqual_znn    -> SetBinContent( binIndex, znnValNorm ) ;
+      hfitqual_ewo    -> SetBinContent( binIndex, ewoValNorm ) ;
       hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
 
-      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  qcd = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, qcdValNorm, ewValNorm, susyValNorm ) ;
 
       binIndex++ ;
 
@@ -3582,7 +3642,9 @@
       dataVal  = rv_Na->getVal() ;
       ttbarVal = rv_mu_ttbar_a->getVal() ;
       qcdVal   = rv_mu_qcd_a->getVal() ;
-      ewVal    = rv_mu_ew_a->getVal() ;
+      wjVal    = (rv_mu_wjmc_a->getVal()) * (rv_lsf_wjmc->getVal()) ;
+      znnVal   = (rv_mu_znnmc_a->getVal()) * (rv_lsf_znnmc->getVal()) ;
+      ewoVal   = (rv_mu_ewomc_a->getVal()) * (rv_lsf_ewomc->getVal()) ;
       susyVal  = rv_mu_susy_a->getVal() ;
       susyVal = eff_sf * susyVal ;
 
@@ -3592,7 +3654,9 @@
       dataErrNorm = dataErr ;
       ttbarValNorm = ttbarVal ;
       qcdValNorm = qcdVal ;
-      ewValNorm = ewVal ;
+      wjValNorm = wjVal ;
+      znnValNorm = znnVal ;
+      ewoValNorm = ewoVal ;
       susyValNorm = susyVal ;
       hfitqual_data->SetBinContent( binIndex, dataVal ) ;
       if ( dataVal > 0. && doNorm ) { 
@@ -3600,14 +3664,18 @@
          dataErrNorm  = dataErr / dataVal ; 
          ttbarValNorm = ttbarVal / dataVal ;
          qcdValNorm   = qcdVal / dataVal ;
-         ewValNorm    = ewVal / dataVal ;
+         wjValNorm    = wjVal / dataVal ;
+         znnValNorm    = znnVal / dataVal ;
+         ewoValNorm    = ewoVal / dataVal ;
          susyValNorm  = susyVal / dataVal ;
       }
       if ( !doNorm ) {
          hfitqual_data->SetBinContent( binIndex, dataVal*0.1 ) ;
          dataErrNorm = dataErrNorm*0.1 ;
          ttbarValNorm = ttbarValNorm*0.1 ;
-         ewValNorm = ewValNorm*0.1 ;
+         wjValNorm = wjValNorm*0.1 ;
+         znnValNorm = znnValNorm*0.1 ;
+         ewoValNorm = ewoValNorm*0.1 ;
          qcdValNorm = qcdValNorm*0.1 ;
          susyValNorm = susyValNorm*0.1 ;
       }
@@ -3617,10 +3685,11 @@
 
       hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
       hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
-      hfitqual_ew    -> SetBinContent( binIndex, ewValNorm ) ;
+      hfitqual_wj    -> SetBinContent( binIndex, wjValNorm ) ;
+      hfitqual_znn    -> SetBinContent( binIndex, znnValNorm ) ;
+      hfitqual_ewo    -> SetBinContent( binIndex, ewoValNorm ) ;
       hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
 
-      printf(" %10s : err=%4.2f ;   ttbar = %4.2f,  qcd = %4.2f,  EW = %4.2f,  SUSY = %4.2f\n", binLabel, dataErrNorm, ttbarValNorm, qcdValNorm, ewValNorm, susyValNorm ) ;
 
       binIndex++ ;
 
@@ -3655,9 +3724,12 @@
       xaxis->SetBinLabel(binIndex, binLabel ) ;
 
       dataVal  = rv_NWJmcsig->getVal() ;
-      val      = rv_mu_wjmc_sig->getVal() ;
+      val      = (rv_mu_wjmc_sig->getVal())*(rv_lsf_wjmc->getVal()) ;
 
       dataErr = sqrt(dataVal) ;
+
+      dataVal = dataVal*(rv_lsf_wjmc->getVal()) ;
+      dataErr = dataErr*(rv_lsf_wjmc->getVal()) ;
 
       dataErrNorm = dataErr ;
       valNorm = val ;
@@ -3675,7 +3747,7 @@
 
 
       hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-      hfitqual_ew    -> SetBinContent( binIndex, valNorm ) ;
+      hfitqual_wj    -> SetBinContent( binIndex, valNorm ) ;
 
       printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
 
@@ -3693,9 +3765,12 @@
       xaxis->SetBinLabel(binIndex, binLabel ) ;
 
       dataVal  = rv_NWJmcsb->getVal() ;
-      val      = rv_mu_wjmc_sb->getVal() ;
+      val      = (rv_mu_wjmc_sb->getVal())*(rv_lsf_wjmc->getVal()) ;
 
       dataErr = sqrt(dataVal) ;
+
+      dataVal = dataVal*(rv_lsf_wjmc->getVal()) ;
+      dataErr = dataErr*(rv_lsf_wjmc->getVal()) ;
 
       dataErrNorm = dataErr ;
       valNorm = val ;
@@ -3713,7 +3788,7 @@
 
 
       hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-      hfitqual_ew    -> SetBinContent( binIndex, valNorm ) ;
+      hfitqual_wj    -> SetBinContent( binIndex, valNorm ) ;
 
       printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
 
@@ -3731,9 +3806,12 @@
       xaxis->SetBinLabel(binIndex, binLabel ) ;
 
       dataVal  = rv_NWJmcslsig->getVal() ;
-      val      = rv_mu_wjmc_slsig->getVal() ;
+      val      = (rv_mu_wjmc_slsig->getVal())*(rv_lsf_wjmc->getVal()) ;
 
       dataErr = sqrt(dataVal) ;
+
+      dataVal = dataVal*(rv_lsf_wjmc->getVal()) ;
+      dataErr = dataErr*(rv_lsf_wjmc->getVal()) ;
 
       dataErrNorm = dataErr ;
       valNorm = val ;
@@ -3751,7 +3829,7 @@
 
 
       hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-      hfitqual_ew    -> SetBinContent( binIndex, valNorm ) ;
+      hfitqual_wj    -> SetBinContent( binIndex, valNorm ) ;
 
       printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
 
@@ -3769,9 +3847,12 @@
       xaxis->SetBinLabel(binIndex, binLabel ) ;
 
       dataVal  = rv_NWJmcslsb->getVal() ;
-      val      = rv_mu_wjmc_slsb->getVal() ;
+      val      = (rv_mu_wjmc_slsb->getVal())*(rv_lsf_wjmc->getVal()) ;
 
       dataErr = sqrt(dataVal) ;
+
+      dataVal = dataVal*(rv_lsf_wjmc->getVal()) ;
+      dataErr = dataErr*(rv_lsf_wjmc->getVal()) ;
 
       dataErrNorm = dataErr ;
       valNorm = val ;
@@ -3789,7 +3870,7 @@
 
 
       hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-      hfitqual_ew    -> SetBinContent( binIndex, valNorm ) ;
+      hfitqual_wj    -> SetBinContent( binIndex, valNorm ) ;
 
       printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
 
@@ -3807,9 +3888,12 @@
       xaxis->SetBinLabel(binIndex, binLabel ) ;
 
       dataVal  = rv_NWJmcd->getVal() ;
-      val      = rv_mu_wjmc_d->getVal() ;
+      val      = (rv_mu_wjmc_d->getVal())*(rv_lsf_wjmc->getVal()) ;
 
       dataErr = sqrt(dataVal) ;
+
+      dataVal = dataVal*(rv_lsf_wjmc->getVal()) ;
+      dataErr = dataErr*(rv_lsf_wjmc->getVal()) ;
 
       dataErrNorm = dataErr ;
       valNorm = val ;
@@ -3827,7 +3911,7 @@
 
 
       hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-      hfitqual_ew    -> SetBinContent( binIndex, valNorm ) ;
+      hfitqual_wj    -> SetBinContent( binIndex, valNorm ) ;
 
       printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
 
@@ -3845,9 +3929,12 @@
       xaxis->SetBinLabel(binIndex, binLabel ) ;
 
       dataVal  = rv_NWJmca->getVal() ;
-      val      = rv_mu_wjmc_a->getVal() ;
+      val      = (rv_mu_wjmc_a->getVal())*(rv_lsf_wjmc->getVal()) ;
 
       dataErr = sqrt(dataVal) ;
+
+      dataVal = dataVal*(rv_lsf_wjmc->getVal()) ;
+      dataErr = dataErr*(rv_lsf_wjmc->getVal()) ;
 
       dataErrNorm = dataErr ;
       valNorm = val ;
@@ -3865,7 +3952,7 @@
 
 
       hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-      hfitqual_ew    -> SetBinContent( binIndex, valNorm ) ;
+      hfitqual_wj    -> SetBinContent( binIndex, valNorm ) ;
 
       printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
 
@@ -3897,9 +3984,12 @@
       xaxis->SetBinLabel(binIndex, binLabel ) ;
 
       dataVal  = rv_NZnnmcsig->getVal() ;
-      val      = rv_mu_znnmc_sig->getVal() ;
+      val      = (rv_mu_znnmc_sig->getVal())*(rv_lsf_znnmc->getVal()) ;
 
       dataErr = sqrt(dataVal) ;
+
+      dataVal = dataVal*(rv_lsf_znnmc->getVal()) ;
+      dataErr = dataErr*(rv_lsf_znnmc->getVal()) ;
 
       dataErrNorm = dataErr ;
       valNorm = val ;
@@ -3917,7 +4007,7 @@
 
 
       hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-      hfitqual_ew    -> SetBinContent( binIndex, valNorm ) ;
+      hfitqual_znn    -> SetBinContent( binIndex, valNorm ) ;
 
       printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
 
@@ -3935,9 +4025,12 @@
       xaxis->SetBinLabel(binIndex, binLabel ) ;
 
       dataVal  = rv_NZnnmcsb->getVal() ;
-      val      = rv_mu_znnmc_sb->getVal() ;
+      val      = (rv_mu_znnmc_sb->getVal())*(rv_lsf_znnmc->getVal()) ;
 
       dataErr = sqrt(dataVal) ;
+
+      dataVal = dataVal*(rv_lsf_znnmc->getVal()) ;
+      dataErr = dataErr*(rv_lsf_znnmc->getVal()) ;
 
       dataErrNorm = dataErr ;
       valNorm = val ;
@@ -3955,7 +4048,7 @@
 
 
       hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-      hfitqual_ew    -> SetBinContent( binIndex, valNorm ) ;
+      hfitqual_znn    -> SetBinContent( binIndex, valNorm ) ;
 
       printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
 
@@ -3974,11 +4067,15 @@
 
 
       dataVal  = rv_NZnnmcslsig->getVal() ;
-      val      = rv_mu_znnmc_slsig->getVal() ;
+      val      = (rv_mu_znnmc_slsig->getVal())*(rv_lsf_znnmc->getVal()) ;
 
       if ( dataVal > 0.11 ) {
 
          dataErr = sqrt(dataVal) ;
+
+      dataVal = dataVal*(rv_lsf_znnmc->getVal()) ;
+      dataErr = dataErr*(rv_lsf_znnmc->getVal()) ;
+
 
          dataErrNorm = dataErr ;
          valNorm = val ;
@@ -3995,12 +4092,12 @@
          }
 
          hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-         hfitqual_ew    -> SetBinContent( binIndex, valNorm ) ;
+         hfitqual_znn    -> SetBinContent( binIndex, valNorm ) ;
 
       } else {
 
          hfitqual_data->SetBinContent( binIndex, 0. ) ;
-         hfitqual_ew    -> SetBinContent( binIndex, 0. ) ;
+         hfitqual_znn    -> SetBinContent( binIndex, 0. ) ;
 
       }
 
@@ -4020,11 +4117,14 @@
       xaxis->SetBinLabel(binIndex, binLabel ) ;
 
       dataVal  = rv_NZnnmcslsb->getVal() ;
-      val      = rv_mu_znnmc_slsb->getVal() ;
+      val      = (rv_mu_znnmc_slsb->getVal())*(rv_lsf_znnmc->getVal()) ;
 
       if ( dataVal > 0.11 ) {
 
          dataErr = sqrt(dataVal) ;
+
+      dataVal = dataVal*(rv_lsf_znnmc->getVal()) ;
+      dataErr = dataErr*(rv_lsf_znnmc->getVal()) ;
 
          dataErrNorm = dataErr ;
          valNorm = val ;
@@ -4041,12 +4141,12 @@
          }
 
          hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-         hfitqual_ew    -> SetBinContent( binIndex, valNorm ) ;
+         hfitqual_znn    -> SetBinContent( binIndex, valNorm ) ;
 
       } else {
 
          hfitqual_data->SetBinContent( binIndex, 0. ) ;
-         hfitqual_ew    -> SetBinContent( binIndex, 0. ) ;
+         hfitqual_znn    -> SetBinContent( binIndex, 0. ) ;
 
       }
 
@@ -4066,9 +4166,12 @@
       xaxis->SetBinLabel(binIndex, binLabel ) ;
 
       dataVal  = rv_NZnnmcd->getVal() ;
-      val      = rv_mu_znnmc_d->getVal() ;
+      val      = (rv_mu_znnmc_d->getVal())*(rv_lsf_znnmc->getVal()) ;
 
       dataErr = sqrt(dataVal) ;
+
+      dataVal = dataVal*(rv_lsf_znnmc->getVal()) ;
+      dataErr = dataErr*(rv_lsf_znnmc->getVal()) ;
 
       dataErrNorm = dataErr ;
       valNorm = val ;
@@ -4086,7 +4189,7 @@
 
 
       hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-      hfitqual_ew    -> SetBinContent( binIndex, valNorm ) ;
+      hfitqual_znn    -> SetBinContent( binIndex, valNorm ) ;
 
       printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
 
@@ -4104,9 +4207,13 @@
       xaxis->SetBinLabel(binIndex, binLabel ) ;
 
       dataVal  = rv_NZnnmca->getVal() ;
-      val      = rv_mu_znnmc_a->getVal() ;
+      val      = (rv_mu_znnmc_a->getVal())*(rv_lsf_znnmc->getVal()) ;
 
       dataErr = sqrt(dataVal) ;
+
+      dataVal = dataVal*(rv_lsf_znnmc->getVal()) ;
+      dataErr = dataErr*(rv_lsf_znnmc->getVal()) ;
+
 
       dataErrNorm = dataErr ;
       valNorm = val ;
@@ -4124,7 +4231,7 @@
 
 
       hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-      hfitqual_ew    -> SetBinContent( binIndex, valNorm ) ;
+      hfitqual_znn    -> SetBinContent( binIndex, valNorm ) ;
 
       printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
 
@@ -4462,7 +4569,8 @@
 
      //-- final formatting
 
-      hfitqual_fit->Add( hfitqual_ew ) ;
+      hfitqual_fit->Add( hfitqual_wj ) ;
+      hfitqual_fit->Add( hfitqual_znn ) ;
       hfitqual_fit->Add( hfitqual_qcd ) ;
       hfitqual_fit->Add( hfitqual_ttbar ) ;
       hfitqual_fit->Add( hfitqual_susy ) ;
@@ -4474,7 +4582,8 @@
       legend->AddEntry( hfitqual_susy,  "SUSY" ) ;
       legend->AddEntry( hfitqual_ttbar, "ttbar" ) ;
       legend->AddEntry( hfitqual_qcd,   "QCD" ) ;
-      legend->AddEntry( hfitqual_ew,    "EW" ) ;
+      legend->AddEntry( hfitqual_znn,   "Znunu" ) ;
+      legend->AddEntry( hfitqual_wj,    "W+jets" ) ;
       legend->AddEntry( hfitqual_gaus,  "Gaus.C." ) ;
 
       if ( doNorm ) {
@@ -4677,6 +4786,16 @@
               EffScaleFactorErr,
               rv_eff_sf->getVal() ) ;
 
+       printf("\n") ;
+       printf("  LSF W+jets     :  input = %4.2f +/- %4.2f ,   fit = %4.2f  \n",
+              lsf_WJmc,
+              lsf_WJmc_err,
+              rv_lsf_wjmc->getVal() ) ;
+
+       printf("  LSF Z->invis   :  input = %4.2f +/- %4.2f ,   fit = %4.2f  \n",
+              lsf_Znnmc,
+              lsf_Znnmc_err,
+              rv_lsf_znnmc->getVal() ) ;
 
 
        printf("\n\n====================================================================\n\n") ;
