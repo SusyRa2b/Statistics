@@ -23,6 +23,7 @@
 #include "TH2F.h"
 #include "TGaxis.h"
 #include "TLine.h"
+#include "TStringLong.h"
 
 #include "RooArgSet.h"
 #include "RooConstVar.h"
@@ -1351,13 +1352,18 @@
 
       //-- data counts in signal region, A, and D, SB, SL SB, SL SIG.
 
-      rv_Nsig = new RooRealVar( "Nsig", "Nsig", 0.5, 400. ) ;
-      rv_Na = new RooRealVar( "Na", "Na", 0.5, 1000000. ) ;
-      rv_Nd = new RooRealVar( "Nd", "Nd", 0.5, 1000000. ) ;
-      rv_Nsb = new RooRealVar( "Nsb", "Nsb", 0.5, 1000000. ) ;
-      rv_Nslsig = new RooRealVar( "Nslsig", "Nslsig", 0.5, 1000000. ) ;
-      rv_Nslsb = new RooRealVar( "Nslsb", "Nslsb", 0.5, 1000000. ) ;
+      rv_Nsig = new RooRealVar( "Nsig", "Nsig", 0.0, 400. ) ;
+      rv_Na = new RooRealVar( "Na", "Na", 0.0, 1000000. ) ;
+      rv_Nd = new RooRealVar( "Nd", "Nd", 0.0, 1000000. ) ;
+      rv_Nsb = new RooRealVar( "Nsb", "Nsb", 0.0, 1000000. ) ;
+      rv_Nslsig = new RooRealVar( "Nslsig", "Nslsig", 0.0, 1000000. ) ;
+      rv_Nslsb = new RooRealVar( "Nslsb", "Nslsb", 0.0, 1000000. ) ;
 
+      if ( Nsig < 0 ) {
+         printf("\n\n *** Negative value for Nsig in input file.  Will set Nsig to MC expectation, which is %d.\n\n",
+             TMath::Nint( Nsmsig ) ) ;
+         Nsig = TMath::Nint( Nsmsig ) ;
+      }
       rv_Nsig -> setVal( Nsig ) ;
       rv_Na -> setVal( Na ) ;
       rv_Nd -> setVal( Nd ) ;
@@ -1456,7 +1462,9 @@
       }
       rv_mu_qcd_sig     = new RooRealVar( "mu_qcd_sig"  , "mu_qcd_sig"  , 0.0,  50. ) ;
       //-- ew is rfv
-      rv_mu_susy_sig    = new RooRealVar( "mu_susy_sig" , "mu_susy_sig" , 0.0, 150. ) ;
+      float maxSusySig = 2.0*Nsig ;
+      if ( maxSusySig < 15. ) { maxSusySig = 15. ; }
+      rv_mu_susy_sig    = new RooRealVar( "mu_susy_sig" , "mu_susy_sig" , 0.0, maxSusySig ) ;
       rv_mu_susymc_sig  = new RooRealVar( "mu_susymc_sig" , "mu_susymc_sig" , 0.0, 100000. ) ;
 
 
@@ -1917,6 +1925,24 @@
  ///  pdf_NEwomcsl_sb = new RooPoisson( "pdf_NEwomcsl_sb", "Nsl,sb Poisson PDF", *rv_NEwomcslsb, *rv_n_ewomc_sl_sb ) ;
 
 
+      //-- check for really small or zero errors.
+      if ( Nqcdmcsigerr < 0.1 ) {
+         printf("\n\n *** QCDMC SIG error is %8.3f.  Resetting to 0.5 events.\n\n", Nqcdmcsigerr ) ;
+         Nqcdmcsigerr = 0.5 ;
+      }
+      if ( Nqcdmcsberr < 0.1 ) {
+         printf("\n\n *** QCDMC SB error is %8.3f.  Resetting to 0.5 events.\n\n", Nqcdmcsberr ) ;
+         Nqcdmcsberr = 0.5 ;
+      }
+      if ( Nqcdmcaerr < 0.1 ) {
+         printf("\n\n *** QCDMC A error is %8.3f.  Resetting to 0.5 events.\n\n", Nqcdmcaerr ) ;
+         Nqcdmcaerr = 0.5 ;
+      }
+      if ( Nqcdmcderr < 0.1 ) {
+         printf("\n\n *** QCDMC D error is %8.3f.  Resetting to 0.5 events.\n\n", Nqcdmcderr ) ;
+         Nqcdmcderr = 0.5 ;
+      }
+
 
       pdf_Nqcdmc_sig  = new RooGaussian( "pdf_Nqcdmc_sig", "Gaussian pdf for Nqcdmc,sig",
                                           *rv_mu_qcdmc_sig, *rv_Nqcdmcsig, RooConst( Nqcdmcsigerr ) ) ;
@@ -2247,7 +2273,13 @@
 
       //-- data counts in signal region, A, and D, SB, SL SB, SL SIG.
 
-      rv_Nsig -> setVal( Nsig ) ;
+      if ( Nsig < 0 ) {
+         printf("\n\n *** Negative value for Nsig in input file.  Will set Nsig to MC expectation, which is %d.\n\n",
+             TMath::Nint( Nsmsig ) ) ;
+         rv_Nsig -> setVal( TMath::Nint( Nsmsig )  ) ;
+      } else {
+         rv_Nsig -> setVal( Nsig ) ;
+      }
       rv_Na -> setVal( Na ) ;
       rv_Nd -> setVal( Nd ) ;
       rv_Nsb -> setVal( Nsb ) ;
@@ -2433,6 +2465,24 @@
       rv_lsf_ewomc  -> setVal( lsf_Ewomc ) ;
 
 
+
+      //-- check for really small or zero errors.
+      if ( Nqcdmcsigerr < 0.1 ) {
+         printf("\n\n *** QCDMC SIG error is %8.3f.  Resetting to 0.5 events.\n\n", Nqcdmcsigerr ) ;
+         Nqcdmcsigerr = 0.5 ;
+      }
+      if ( Nqcdmcsberr < 0.1 ) {
+         printf("\n\n *** QCDMC SB error is %8.3f.  Resetting to 0.5 events.\n\n", Nqcdmcsberr ) ;
+         Nqcdmcsberr = 0.5 ;
+      }
+      if ( Nqcdmcaerr < 0.1 ) {
+         printf("\n\n *** QCDMC A error is %8.3f.  Resetting to 0.5 events.\n\n", Nqcdmcaerr ) ;
+         Nqcdmcaerr = 0.5 ;
+      }
+      if ( Nqcdmcderr < 0.1 ) {
+         printf("\n\n *** QCDMC D error is %8.3f.  Resetting to 0.5 events.\n\n", Nqcdmcderr ) ;
+         Nqcdmcderr = 0.5 ;
+      }
 
 
        initialized = true ;
@@ -2990,13 +3040,21 @@
           int m0bin  = hsusyscanExcluded->GetXaxis()->FindBin( pointM0 ) ;
           int m12bin = hsusyscanExcluded->GetYaxis()->FindBin( pointM12 ) ;
 
-    //    printf(" m0 = %4.0f (%d),  m1/2 = %4.0f (%d),  Npred = %7.1f", pointM0, m0bin, pointM12, m12bin, nselWeighted ) ;
+          printf(" m0 = %4.0f (%3d),  m1/2 = %4.0f (%3d),  Npred = %7.1f", pointM0, m0bin, pointM12, m12bin, nselWeighted ) ;
+
+          //--- Owen : Do a sanity check.
+          //           If Nobs is 2 or less, give the signal UL assuming zero background.
+          //           From PDG
+          //           Nobs  UL(95%)
+          //           0     3.00
+          //           1     4.74
+          //           2     6.30
 
           if ( nselWeighted > susySigHigh ) {
-    //       printf(" Excluded\n") ;
+             printf(" Excluded\n") ;
              hsusyscanExcluded->SetBinContent( m0bin, m12bin, 1. ) ;
           } else {
-    //       printf("\n") ;
+             printf("\n") ;
           }
 
 
@@ -3004,12 +3062,24 @@
 
        fclose( infp ) ;
 
+
+       TStringLong infilestr( inputScanFile ) ;
+       TStringLong pngoutputfilestr = infilestr ;
+       pngoutputfilestr.ReplaceAll("input","output") ;
+       pngoutputfilestr.ReplaceAll(".txt","-scanplot-nocontam.png") ;
+       printf("\n\n png output file : %s\n\n", pngoutputfilestr.Data() ) ;
+
+       TStringLong rootoutputfilestr = pngoutputfilestr ;
+       rootoutputfilestr.ReplaceAll("png","root") ;
+       printf("\n\n root output file : %s\n\n", rootoutputfilestr.Data() ) ;
+
+
        gStyle->SetPadGridX(1) ;
        gStyle->SetPadGridY(1) ;
        TCanvas* csusy = new TCanvas("csusy","SUSY m1/2 vs m0 scan") ;
        hsusyscanExcluded->Draw("col") ;
-       csusy->SaveAs("susyScan.png") ;
-       TFile* f = new TFile("scan.root","recreate") ;
+       csusy->SaveAs( pngoutputfilestr.Data() ) ;
+       TFile* f = new TFile( rootoutputfilestr.Data() ,"recreate") ;
        hsusyscanExcluded->Write() ;
        f->Write() ;
        f->Close() ;
@@ -3144,12 +3214,26 @@
 
        fclose( infp ) ;
 
+
+
+
+       TStringLong infilestr( inputScanFile ) ;
+       TStringLong pngoutputfilestr = infilestr ;
+       pngoutputfilestr.ReplaceAll("input","output") ;
+       pngoutputfilestr.ReplaceAll(".txt","-scanplot-withcontam.png") ;
+       printf("\n\n png output file : %s\n\n", pngoutputfilestr.Data() ) ;
+
+       TStringLong rootoutputfilestr = pngoutputfilestr ;
+       rootoutputfilestr.ReplaceAll("png","root") ;
+       printf("\n\n root output file : %s\n\n", rootoutputfilestr.Data() ) ;
+
+
        TCanvas* csusy = new TCanvas("csusy","SUSY m1/2 vs m0 scan") ;
        gStyle->SetPadGridX(1) ;
        gStyle->SetPadGridY(1) ;
        hsusyscanExcluded->Draw("col") ;
-       csusy->SaveAs("susyScan.png") ;
-       TFile* f = new TFile("scan.root","recreate") ;
+       csusy->SaveAs( pngoutputfilestr.Data() ) ;
+       TFile* f = new TFile( rootoutputfilestr.Data(),"recreate") ;
        hsusyscanExcluded->Write() ;
        hsusyscanNsigul->Write() ;
        hsusyscanNsigpred->Write() ;
