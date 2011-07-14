@@ -35,11 +35,11 @@ using namespace RooStats ;
        RooRealVar* rv_Nsigee = new RooRealVar( "Nsigee" ,"Nsigee" , 0., 100. ) ;
        RooRealVar* rv_Nsigmm = new RooRealVar( "Nsigmm" ,"Nsigmm" , 0., 100. ) ;
 
-       rv_Nsbee->setVal( 6 ) ;
-       rv_Nsbmm->setVal( 0 ) ;
+       rv_Nsbee->setVal( 5 ) ;
+       rv_Nsbmm->setVal( 3 ) ;
 
-       rv_Nsigee->setVal( 3 ) ;
-       rv_Nsigmm->setVal( 0 ) ;
+       rv_Nsigee->setVal( 4 ) ;
+       rv_Nsigmm->setVal( 3 ) ;
 
 
        RooRealVar* rv_mu_Znnsb  = new RooRealVar( "mu_Znnsb"  , "mu_Znnsb"  , 0., 100. ) ;
@@ -65,23 +65,28 @@ using namespace RooStats ;
        rv_eff_mm->setVal( eff_mm_mean ) ;
        rv_eff_ee->setVal( eff_ee_mean ) ;
 
+       RooRealVar* rv_lumi_ratio = new RooRealVar( "lumi_ratio", "lumi_ratio", 0., 10. ) ;
+
+       rv_lumi_ratio -> setVal( 686./869. ) ;
+       rv_lumi_ratio -> setConstant( kTRUE) ;
+
 
 
        RooFormulaVar* rv_mu_Zeesb = new RooFormulaVar( "mu_Zeesb",
-                       "mu_Znnsb * ( acc_ee * eff_ee / bfRatio )",
-                       RooArgSet( *rv_mu_Znnsb, *rv_acc_ee, *rv_eff_ee, *rv_bfRatio ) ) ;
+                       "mu_Znnsb * ( acc_ee * eff_ee / (bfRatio*lumi_ratio) )",
+                       RooArgSet( *rv_mu_Znnsb, *rv_acc_ee, *rv_eff_ee, *rv_bfRatio, *rv_lumi_ratio ) ) ;
 
        RooFormulaVar* rv_mu_Zmmsb = new RooFormulaVar( "mu_Zmmsb",
-                       "mu_Znnsb * ( acc_mm * eff_mm / bfRatio )",
-                       RooArgSet( *rv_mu_Znnsb, *rv_acc_mm, *rv_eff_mm, *rv_bfRatio ) ) ;
+                       "mu_Znnsb * ( acc_mm * eff_mm / (bfRatio*lumi_ratio) )",
+                       RooArgSet( *rv_mu_Znnsb, *rv_acc_mm, *rv_eff_mm, *rv_bfRatio, *rv_lumi_ratio ) ) ;
 
        RooFormulaVar* rv_mu_Zeesig = new RooFormulaVar( "mu_Zeesig",
-                       "mu_Znnsig * ( acc_ee * eff_ee / bfRatio )",
-                       RooArgSet( *rv_mu_Znnsig, *rv_acc_ee, *rv_eff_ee, *rv_bfRatio ) ) ;
+                       "mu_Znnsig * ( acc_ee * eff_ee / (bfRatio*lumi_ratio) )",
+                       RooArgSet( *rv_mu_Znnsig, *rv_acc_ee, *rv_eff_ee, *rv_bfRatio, *rv_lumi_ratio ) ) ;
 
        RooFormulaVar* rv_mu_Zmmsig = new RooFormulaVar( "mu_Zmmsig",
-                       "mu_Znnsig * ( acc_mm * eff_mm / bfRatio )",
-                       RooArgSet( *rv_mu_Znnsig, *rv_acc_mm, *rv_eff_mm, *rv_bfRatio ) ) ;
+                       "mu_Znnsig * ( acc_mm * eff_mm / (bfRatio*lumi_ratio) )",
+                       RooArgSet( *rv_mu_Znnsig, *rv_acc_mm, *rv_eff_mm, *rv_bfRatio, *rv_lumi_ratio ) ) ;
 
 
 
