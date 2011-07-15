@@ -1618,6 +1618,11 @@
        float Rdata_lsb_err = 0. ;
        if ( Nlsb_corrected > 0 && Nlsb_ldp_corrected > 0 ) { Rdata_lsb_err = Rdata_lsb * sqrt( 1.0/(Nlsb_corrected) + 1.0/(Nlsb_ldp_corrected) ) ; }
 
+       float RdataHTOT_lsb_0b = 0. ;
+       if ( Nhtonlytrig_lsb_0b_ldp > 0 ) { RdataHTOT_lsb_0b = (1.0*Nhtonlytrig_lsb_0b) / (1.0*Nhtonlytrig_lsb_0b_ldp) ; }
+       float RdataHTOT_lsb_0b_err = 0. ;
+       if ( Nhtonlytrig_lsb_0b_ldp > 0 && Nhtonlytrig_lsb_0b > 0 ) { RdataHTOT_lsb_0b_err = RdataHTOT_lsb_0b * sqrt( 1.0/(1.0*Nhtonlytrig_lsb_0b) + 1.0/(1.0*Nhtonlytrig_lsb_0b_ldp) ) ; }
+
 
        float Rqcd_lsb_0b        =  0. ;
        if ( Nqcdmc_lsb_0b_ldp > 0. ) { Rqcd_lsb_0b        =  Nqcdmc_lsb_0b        / Nqcdmc_lsb_0b_ldp ;  }
@@ -1688,57 +1693,61 @@
 
        printf("\n\n\n") ;
 
-       printf("------------+----------+----------+-----------------------+----------+----------+------------+------------+---------------\n") ;
-       printf("   Sample   |  ttbar   |  W+jets  |          QCD          |  Z to nn |   other  |   All SM   |    Data    |     SUSY      \n") ;
-       printf("------------+----------+----------+-----------------------+----------+----------+------------+------------+---------------\n") ;
-       printf("            |          |          |                       |          |          |            |            |               \n") ;
-       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
+       printf("------------+----------+----------+------------------------+----------+----------+------------+------------+---------------\n") ;
+       printf("   Sample   |  ttbar   |  W+jets  |          QCD           |  Z to nn |   other  |   All SM   |    Data    |     SUSY      \n") ;
+       printf("------------+----------+----------+------------------------+----------+----------+------------+------------+---------------\n") ;
+       printf("            |          |          |                        |          |          |            |            |               \n") ;
+       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %7.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
             "sig", Nttbarmc_sig, (lsf_WJmc*NWJmc_sig), Nqcdmc_sig, Nqcdmc_sig_err, lsf_Znnmc*NZnnmc_sig, lsf_Ewomc*NEwomc_sig, Nsm_sig, Nsig, Nsusymc_sig ) ;
-       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
+       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %7.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
             "sb", Nttbarmc_sb, (lsf_WJmc*NWJmc_sb), Nqcdmc_sb, Nqcdmc_sb_err, lsf_Znnmc*NZnnmc_sb, lsf_Ewomc*NEwomc_sb, Nsm_sb, Nsb, Nsusymc_sb ) ;
-       printf("            |          |          |                       |          |          |            |            |               \n") ;
-       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
+       printf("            |          |          |                        |          |          |            |            |               \n") ;
+       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %7.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
             "sig_sl", Nttbarmc_sig_sl, (lsf_WJmc*NWJmc_sig_sl), Nqcdmc_sig_sl, Nqcdmc_sig_sl_err, lsf_Znnmc*NZnnmc_sig_sl, lsf_Ewomc*NEwomc_sig_sl, Nsm_sig_sl, Nsig_sl, Nsusymc_sig_sl ) ;
-       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
+       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %7.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
             "sb_sl", Nttbarmc_sb_sl, (lsf_WJmc*NWJmc_sb_sl), Nqcdmc_sb_sl, Nqcdmc_sb_sl_err, lsf_Znnmc*NZnnmc_sb_sl, lsf_Ewomc*NEwomc_sb_sl, Nsm_sb_sl, Nsb_sl, Nsusymc_sb_sl ) ;
-       printf("            |          |          |                       |          |          |            |            |               \n") ;
-       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
+       printf("            |          |          |                        |          |          |            |            |               \n") ;
+       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %7.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
             "sig_ldp", Nttbarmc_sig_ldp, (lsf_WJmc*NWJmc_sig_ldp), Nqcdmc_sig_ldp, Nqcdmc_sig_ldp_err, lsf_Znnmc*NZnnmc_sig_ldp, lsf_Ewomc*NEwomc_sig_ldp, Nsm_sig_ldp, Nsig_ldp, Nsusymc_sig_ldp ) ;
-       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
+       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %7.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
             "sb_ldp", Nttbarmc_sb_ldp, (lsf_WJmc*NWJmc_sb_ldp), Nqcdmc_sb_ldp, Nqcdmc_sb_ldp_err, lsf_Znnmc*NZnnmc_sb_ldp, lsf_Ewomc*NEwomc_sb_ldp, Nsm_sb_ldp, Nsb_ldp, Nsusymc_sb_ldp ) ;
-       printf("            |          |          |                       |          |          |            |            |               \n") ;
-       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
+       printf("            |          |          |                        |          |          |            |            |               \n") ;
+       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %7.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
             "lsb", Nttbarmc_lsb, (lsf_WJmc*NWJmc_lsb), Nqcdmc_lsb, Nqcdmc_lsb_err, lsf_Znnmc*NZnnmc_lsb, lsf_Ewomc*NEwomc_lsb, Nsm_lsb, Nlsb, Nsusymc_lsb ) ;
-       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
+       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %7.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
             "lsb_ldp", Nttbarmc_lsb_ldp, (lsf_WJmc*NWJmc_lsb_ldp), Nqcdmc_lsb_ldp, Nqcdmc_lsb_ldp_err, lsf_Znnmc*NZnnmc_lsb_ldp, lsf_Ewomc*NEwomc_lsb_ldp, Nsm_lsb_ldp, Nlsb_ldp, Nsusymc_lsb_ldp ) ;
-       printf("            |          |          |                       |          |          |            |            |               \n") ;
-       printf(" %10s | -------- | -------- | %10.1f +/- %6.1f | -------- | -------- | %10.1f | %10d | %8.1f\n",
+       printf("            |          |          |                        |          |          |            |            |               \n") ;
+       printf(" %10s | -------- | -------- | %10.1f +/- %7.1f | -------- | -------- | %10.1f | %10d | %8.1f\n",
             "lsb_0b",  Nqcdmc_lsb_0b, Nqcdmc_lsb_0b_err, Nsm_lsb_0b, Nlsb_0b, Nsusymc_lsb_0b ) ;
-       printf(" %10s | -------- | -------- | %10.1f +/- %6.1f | -------- | -------- | %10.1f | %10d | %8.1f\n",
+       printf(" %10s | -------- | -------- | %10.1f +/- %7.1f | -------- | -------- | %10.1f | %10d | %8.1f\n",
             "lsb_0b_ldp",  Nqcdmc_lsb_0b_ldp, Nqcdmc_lsb_0b_ldp_err, Nsm_lsb_0b_ldp, Nlsb_0b_ldp, Nsusymc_lsb_0b_ldp ) ;
-       printf("            |          |          |                       |          |          |            |            |               \n") ;
-       printf("------------+----------+----------+-----------------------+----------+----------+------------+------------+---------------\n") ;
+       printf("            |          |          |                        |          |          |            |            |               \n") ;
+       printf("------------+----------+----------+------------------------+----------+----------+------------+------------+---------------\n") ;
 
 
        printf("\n\n\n") ;
 
-       printf(" R QCD  :  sig    /    sig_ldp  : ( %10.1f +/- %6.1f ) / ( %10.1f +/- %6.1f )    =    %5.3f +/- %5.3f\n",
+       printf(" R QCD  :  sig    /    sig_ldp  : ( %10.1f +/- %6.1f ) / ( %10.1f +/- %7.1f )    =    %5.3f +/- %5.3f\n",
             Nqcdmc_sig, Nqcdmc_sig_err, Nqcdmc_sig_ldp, Nqcdmc_sig_ldp_err, Rqcd_sig, Rqcd_sig_err ) ;
 
-       printf(" R QCD  :  sb     /     sb_ldp  : ( %10.1f +/- %6.1f ) / ( %10.1f +/- %6.1f )    =    %5.3f +/- %5.3f\n",
+       printf(" R QCD  :  sb     /     sb_ldp  : ( %10.1f +/- %6.1f ) / ( %10.1f +/- %7.1f )    =    %5.3f +/- %5.3f\n",
             Nqcdmc_sb, Nqcdmc_sb_err, Nqcdmc_sb_ldp, Nqcdmc_sb_ldp_err, Rqcd_sb, Rqcd_sb_err ) ;
 
-       printf(" R QCD  :  lsb    /    lsb_ldp  : ( %10.1f +/- %6.1f ) / ( %10.1f +/- %6.1f )    =    %5.3f +/- %5.3f\n",
+       printf(" R QCD  :  lsb    /    lsb_ldp  : ( %10.1f +/- %6.1f ) / ( %10.1f +/- %7.1f )    =    %5.3f +/- %5.3f\n",
             Nqcdmc_lsb, Nqcdmc_lsb_err, Nqcdmc_lsb_ldp, Nqcdmc_lsb_ldp_err, Rqcd_lsb, Rqcd_lsb_err ) ;
 
-       printf(" R data :  lsb    /    lsb_ldp  : ( %10.1f            ) / ( %10.1f            )    =    %5.3f +/- %5.3f\n",
+       printf(" R data :  lsb    /    lsb_ldp  : ( %10.1f            ) / ( %10.1f             )    =    %5.3f +/- %5.3f\n",
             Nlsb_corrected, Nlsb_ldp_corrected, Rdata_lsb, Rdata_lsb_err ) ;
 
-       printf(" R QCD  :  lsb_0b / lsb_0b_ldp  : ( %10.1f +/- %6.1f ) / ( %10.1f +/- %6.1f )    =    %5.3f +/- %5.3f\n",
+       printf(" R QCD  :  lsb_0b / lsb_0b_ldp  : ( %10.1f +/- %6.1f ) / ( %10.1f +/- %7.1f )    =    %5.3f +/- %5.3f\n",
             Nqcdmc_lsb_0b, Nqcdmc_lsb_0b_err, Nqcdmc_lsb_0b_ldp, Nqcdmc_lsb_0b_ldp_err, Rqcd_lsb_0b, Rqcd_lsb_0b_err ) ;
 
-       printf(" R data :  lsb_0b / lsb_0b_ldp  : ( %8d              ) / ( %8d              )    =    %5.3f +/- %5.3f\n",
+       printf(" R data :  lsb_0b / lsb_0b_ldp  : ( %8d              ) / ( %8d               )    =    %5.3f +/- %5.3f\n",
             Nlsb_0b, Nlsb_0b_ldp, Rdata_lsb_0b, Rdata_lsb_0b_err ) ;
+
+       printf(" R data :  lsb_0b / lsb_0b_ldp  : ( %8d              ) / ( %8d               )    =    %5.3f +/- %5.3f (HT-only trigger)\n",
+            Nhtonlytrig_lsb_0b, Nhtonlytrig_lsb_0b_ldp, RdataHTOT_lsb_0b, RdataHTOT_lsb_0b_err ) ;
+
 
 
        printf("\n\n\n") ;
@@ -2761,235 +2770,6 @@
        //--- Print out a nice summary of the inputs.
 
        float Nsm_sig         = Nttbarmc_sig          +  lsf_WJmc*NWJmc_sig          +  Nqcdmc_sig          +  lsf_Znnmc*NZnnmc_sig          +  lsf_Ewomc*NEwomc_sig         ;
-       float Nsm_sb          = Nttbarmc_sb           +  lsf_WJmc*NWJmc_sb           +  Nqcdmc_sb           +  lsf_Znnmc*NZnnmc_sb           +  lsf_Ewomc*NEwomc_sb          ;
-       float Nsm_sig_sl      = Nttbarmc_sig_sl       +  lsf_WJmc*NWJmc_sig_sl       +  Nqcdmc_sig_sl       +  lsf_Znnmc*NZnnmc_sig_sl       +  lsf_Ewomc*NEwomc_sig_sl      ;
-       float Nsm_sb_sl       = Nttbarmc_sb_sl        +  lsf_WJmc*NWJmc_sb_sl        +  Nqcdmc_sb_sl        +  lsf_Znnmc*NZnnmc_sb_sl        +  lsf_Ewomc*NEwomc_sb_sl       ;
-       float Nsm_sig_ldp     = Nttbarmc_sig_ldp      +  lsf_WJmc*NWJmc_sig_ldp      +  Nqcdmc_sig_ldp      +  lsf_Znnmc*NZnnmc_sig_ldp      +  lsf_Ewomc*NEwomc_sig_ldp     ;
-       float Nsm_sb_ldp      = Nttbarmc_sb_ldp       +  lsf_WJmc*NWJmc_sb_ldp       +  Nqcdmc_sb_ldp       +  lsf_Znnmc*NZnnmc_sb_ldp       +  lsf_Ewomc*NEwomc_sb_ldp      ;
-       float Nsm_lsb         = Nttbarmc_lsb          +  lsf_WJmc*NWJmc_lsb          +  Nqcdmc_lsb          +  lsf_Znnmc*NZnnmc_lsb          +  lsf_Ewomc*NEwomc_lsb         ;
-       float Nsm_lsb_ldp     = Nttbarmc_lsb_ldp      +  lsf_WJmc*NWJmc_lsb_ldp      +  Nqcdmc_lsb_ldp      +  lsf_Znnmc*NZnnmc_lsb_ldp      +  lsf_Ewomc*NEwomc_lsb_ldp     ;
-       float Nsm_lsb_0b      =                                                         Nqcdmc_lsb_0b                                                                        ;
-       float Nsm_lsb_0b_ldp  =                                                         Nqcdmc_lsb_0b_ldp                                                                    ;
-
-
-
-       //--- QCD min Delta phi N  pass / fail ratios.
-
-       float Rqcd_sig        =  0. ;
-       if ( Nqcdmc_sig_ldp > 0. ) { Rqcd_sig        =  Nqcdmc_sig        / Nqcdmc_sig_ldp ;  }
-       float Rqcd_sig_err    =  0. ;
-       if ( Nqcdmc_sig > 0. && Nqcdmc_sig_ldp > 0. ) { Rqcd_sig_err  =  Rqcd_sig * sqrt( pow(Nqcdmc_sig_err/Nqcdmc_sig,2) + pow(Nqcdmc_sig_ldp_err/Nqcdmc_sig_ldp,2) ) ; }
-
-
-       float Rqcd_sb        =  0. ;
-       if ( Nqcdmc_sb_ldp > 0. ) { Rqcd_sb        =  Nqcdmc_sb        / Nqcdmc_sb_ldp ;  }
-       float Rqcd_sb_err    =  0. ;
-       if ( Nqcdmc_sb > 0. && Nqcdmc_sb_ldp > 0. ) { Rqcd_sb_err  =  Rqcd_sb * sqrt( pow(Nqcdmc_sb_err/Nqcdmc_sb,2) + pow(Nqcdmc_sb_ldp_err/Nqcdmc_sb_ldp,2) ) ; }
-
-
-       float Rqcd_lsb        =  0. ;
-       if ( Nqcdmc_lsb_ldp > 0. ) { Rqcd_lsb        =  Nqcdmc_lsb        / Nqcdmc_lsb_ldp ;  }
-       float Rqcd_lsb_err    =  0. ;
-       if ( Nqcdmc_lsb > 0. && Nqcdmc_lsb_ldp > 0. ) { Rqcd_lsb_err  =  Rqcd_lsb * sqrt( pow(Nqcdmc_lsb_err/Nqcdmc_lsb,2) + pow(Nqcdmc_lsb_ldp_err/Nqcdmc_lsb_ldp,2) ) ; }
-
-
-       float Nlsb_corrected     = Nlsb     - Nttbarmc_lsb     - lsf_WJmc*NWJmc_lsb     - lsf_Znnmc*NZnnmc_lsb     - lsf_Ewomc*NEwomc_lsb ;
-       float Nlsb_ldp_corrected = Nlsb_ldp - Nttbarmc_lsb_ldp - lsf_WJmc*NWJmc_lsb_ldp - lsf_Znnmc*NZnnmc_lsb_ldp - lsf_Ewomc*NEwomc_lsb_ldp ;
-       float Rdata_lsb = 0. ;
-       if ( Nlsb_ldp_corrected > 0 ) { Rdata_lsb = (Nlsb_corrected) / (Nlsb_ldp_corrected) ; }
-       float Rdata_lsb_err = 0. ;
-       if ( Nlsb_corrected > 0 && Nlsb_ldp_corrected > 0 ) { Rdata_lsb_err = Rdata_lsb * sqrt( 1.0/(Nlsb_corrected) + 1.0/(Nlsb_ldp_corrected) ) ; }
-
-
-       float Rqcd_lsb_0b        =  0. ;
-       if ( Nqcdmc_lsb_0b_ldp > 0. ) { Rqcd_lsb_0b        =  Nqcdmc_lsb_0b        / Nqcdmc_lsb_0b_ldp ;  }
-       float Rqcd_lsb_0b_err    =  0. ;
-       if ( Nqcdmc_lsb_0b > 0. && Nqcdmc_lsb_0b_ldp > 0. ) { Rqcd_lsb_0b_err  =  Rqcd_lsb_0b * sqrt( pow(Nqcdmc_lsb_0b_err/Nqcdmc_lsb_0b,2) + pow(Nqcdmc_lsb_0b_ldp_err/Nqcdmc_lsb_0b_ldp,2) ) ; }
-
-
-       float Rdata_lsb_0b = 0. ;
-       if ( Nlsb_0b_ldp > 0 ) { Rdata_lsb_0b = (1.0*Nlsb_0b) / (1.0*Nlsb_0b_ldp) ; }
-       float Rdata_lsb_0b_err = 0. ;
-       if ( Nlsb_0b > 0 && Nlsb_0b_ldp > 0 ) { Rdata_lsb_0b_err = Rdata_lsb_0b * sqrt( 1.0/(1.0*Nlsb_0b) + 1.0/(1.0*Nlsb_0b_ldp) ) ; }
-
-
-       //--- ttbar + Wjets  MET  SIG / SB ratios
-
-       float Rttwj = 0. ;
-       if ( (Nttbarmc_sb+lsf_WJmc*NWJmc_sb) > 0. ) { Rttwj    =   (Nttbarmc_sig+lsf_WJmc*NWJmc_sig) / (Nttbarmc_sb+lsf_WJmc*NWJmc_sb) ; }
-       float Rttwj_err2 = pow( lsf_WJmc/ (Nttbarmc_sb+lsf_WJmc*NWJmc_sb),2)*NWJmc_sig
-                        + pow( (Nttbarmc_sig+lsf_WJmc*NWJmc_sig) * lsf_WJmc / pow((Nttbarmc_sb+lsf_WJmc*NWJmc_sb),2), 2)*NWJmc_sb ;
-       float Rttwj_err = sqrt(Rttwj_err2) ;
-
-       float Rttwj_sl = 0. ;
-       if ( (Nttbarmc_sb_sl+lsf_WJmc*NWJmc_sb_sl) > 0. ) { Rttwj_sl    =   (Nttbarmc_sig_sl+lsf_WJmc*NWJmc_sig_sl) / (Nttbarmc_sb_sl+lsf_WJmc*NWJmc_sb_sl) ; }
-       float Rttwj_sl_err2 = pow( lsf_WJmc / (Nttbarmc_sb_sl+lsf_WJmc*NWJmc_sb_sl), 2) * NWJmc_sig_sl
-                           + pow( lsf_WJmc * (Nttbarmc_sig_sl+lsf_WJmc*NWJmc_sig_sl) / pow((Nttbarmc_sb_sl+lsf_WJmc*NWJmc_sb_sl),2), 2)*NWJmc_sb_sl ;
-       float Rttwj_sl_err = sqrt(Rttwj_sl_err2) ;
-
-       float Rdata_sl = 0. ;
-       if ( Nsb_sl > 0 ) { Rdata_sl = (1.0*Nsig_sl)/(1.0*Nsb_sl) ; }
-       float Rdata_sl_err = 0. ;
-       if ( Nsig_sl>0 && Nsb_sl>0 ) { Rdata_sl_err = Rdata_sl * sqrt( 1.0/(1.0*Nsig_sl) + 1.0/(1.0*Nsb_sl) ) ; }
-
-
-       //--- Simple MC closure tests.
-
-       float comp_mc_qcd_sb = Nqcdmc_sb_ldp * ( Nqcdmc_lsb_0b / Nqcdmc_lsb_0b_ldp ) ;
-       float comp_mc_qcd_sb_err = Nqcdmc_sb_ldp_err * ( Nqcdmc_lsb_0b / Nqcdmc_lsb_0b_ldp ) ;
-
-       float comp_mc_qcd_sig = Nqcdmc_sig_ldp * ( Nqcdmc_lsb_0b / Nqcdmc_lsb_0b_ldp ) ;
-       float comp_mc_qcd_sig_err = Nqcdmc_sig_ldp_err * ( Nqcdmc_lsb_0b / Nqcdmc_lsb_0b_ldp ) ;
-
-       float comp_mc_ttwj_sig = (Nttbarmc_sb + lsf_WJmc*NWJmc_sb) * ( (Nttbarmc_sig_sl + lsf_WJmc*NWJmc_sig_sl) / (Nttbarmc_sb_sl + lsf_WJmc*NWJmc_sb_sl) ) ;
-
-       //--- below ignores ttbar errors, uses sqrt(N) on raw WJ counts.
-       float comp_mc_ttwj_sig_err2 = pow( lsf_WJmc*( (Nttbarmc_sig_sl + lsf_WJmc*NWJmc_sig_sl) / (Nttbarmc_sb_sl + lsf_WJmc*NWJmc_sb_sl) ),2)*NWJmc_sb
-                                   + pow( (Nttbarmc_sb + lsf_WJmc*NWJmc_sb) *(lsf_WJmc/ (Nttbarmc_sb_sl + lsf_WJmc*NWJmc_sb_sl) ), 2)*NWJmc_sig_sl
-                                   + pow( (Nttbarmc_sb + lsf_WJmc*NWJmc_sb) *  (Nttbarmc_sig_sl + lsf_WJmc*NWJmc_sig_sl) / pow((Nttbarmc_sb_sl + lsf_WJmc*NWJmc_sb_sl) ,2)*lsf_WJmc, 2 )*NWJmc_sb_sl ;
-       float comp_mc_ttwj_sig_err = sqrt(comp_mc_ttwj_sig_err2) ;
-
-       //--- Simple data calculations.
-
-
-       float Nsb_ldp_corrected  = Nsb_ldp  - (Nttbarmc_sb_ldp  + lsf_WJmc*NWJmc_sb_ldp  + lsf_Znnmc*NZnnmc_sb_ldp  + lsf_Ewomc*NEwomc_sb_ldp  ) ;
-       float comp_data_qcd_sb = Nsb_ldp_corrected * ( (1.0*Nlsb_0b)/(1.0*Nlsb_0b_ldp) ) ;
-       float comp_data_qcd_sb_err = sqrt( Nsb_ldp + Nttbarmc_sb_ldp  + lsf_WJmc*NWJmc_sb_ldp  + lsf_Znnmc*NZnnmc_sb_ldp  + lsf_Ewomc*NEwomc_sb_ldp ) * ( (1.0*Nlsb_0b)/(1.0*Nlsb_0b_ldp) ) ;
-
-       float Nsig_ldp_corrected = Nsig_ldp - (Nttbarmc_sig_ldp + lsf_WJmc*NWJmc_sig_ldp + lsf_Znnmc*NZnnmc_sig_ldp + lsf_Ewomc*NEwomc_sig_ldp ) ;
-       float comp_data_qcd_sig = Nsig_ldp_corrected * ( (1.0*Nlsb_0b)/(1.0*Nlsb_0b_ldp) ) ;
-       float comp_data_qcd_sig_err = sqrt( Nsig_ldp + Nttbarmc_sig_ldp  + lsf_WJmc*NWJmc_sig_ldp  + lsf_Znnmc*NZnnmc_sig_ldp  + lsf_Ewomc*NEwomc_sig_ldp ) * ( (1.0*Nlsb_0b)/(1.0*Nlsb_0b_ldp) ) ;
-
-       float comp_data_ttwj_sig = (Nsb - (comp_data_qcd_sb + lsf_Znnmc*NZnnmc_sb + lsf_Ewomc*NEwomc_sb)) * ( (1.0*Nsig_sl) / (1.0*Nsb_sl) ) ;
-       float comp_data_ttwj_sig_err2 = pow( ( (1.0*Nsig_sl) / (1.0*Nsb_sl) ), 2)*Nsb
-                                     + pow( ( (1.0*Nsig_sl) / (1.0*Nsb_sl) ), 2)*pow(comp_data_qcd_sb_err,2)
-                                     + pow( (Nsb - (comp_data_qcd_sb + lsf_Znnmc*NZnnmc_sb + lsf_Ewomc*NEwomc_sb)) / (1.0*Nsb_sl), 2 )*Nsig_sl
-                                     + pow( (Nsb - (comp_data_qcd_sb + lsf_Znnmc*NZnnmc_sb + lsf_Ewomc*NEwomc_sb)) * (1.0*Nsig_sl) / pow(1.0*Nsb_sl,2), 2 ) * Nsb_sl ;
-       float comp_data_ttwj_sig_err = sqrt(comp_data_ttwj_sig_err2) ;
-
-
-       printf("\n\n\n") ;
-
-       printf("------------+----------+----------+-----------------------+----------+----------+------------+------------+---------------\n") ;
-       printf("   Sample   |  ttbar   |  W+jets  |          QCD          |  Z to nn |   other  |   All SM   |    Data    |     SUSY      \n") ;
-       printf("------------+----------+----------+-----------------------+----------+----------+------------+------------+---------------\n") ;
-       printf("            |          |          |                       |          |          |            |            |               \n") ;
-       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
-            "sig", Nttbarmc_sig, (lsf_WJmc*NWJmc_sig), Nqcdmc_sig, Nqcdmc_sig_err, lsf_Znnmc*NZnnmc_sig, lsf_Ewomc*NEwomc_sig, Nsm_sig, Nsig, Nsusymc_sig ) ;
-       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
-            "sb", Nttbarmc_sb, (lsf_WJmc*NWJmc_sb), Nqcdmc_sb, Nqcdmc_sb_err, lsf_Znnmc*NZnnmc_sb, lsf_Ewomc*NEwomc_sb, Nsm_sb, Nsb, Nsusymc_sb ) ;
-       printf("            |          |          |                       |          |          |            |            |               \n") ;
-       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
-            "sig_sl", Nttbarmc_sig_sl, (lsf_WJmc*NWJmc_sig_sl), Nqcdmc_sig_sl, Nqcdmc_sig_sl_err, lsf_Znnmc*NZnnmc_sig_sl, lsf_Ewomc*NEwomc_sig_sl, Nsm_sig_sl, Nsig_sl, Nsusymc_sig_sl ) ;
-       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
-            "sb_sl", Nttbarmc_sb_sl, (lsf_WJmc*NWJmc_sb_sl), Nqcdmc_sb_sl, Nqcdmc_sb_sl_err, lsf_Znnmc*NZnnmc_sb_sl, lsf_Ewomc*NEwomc_sb_sl, Nsm_sb_sl, Nsb_sl, Nsusymc_sb_sl ) ;
-       printf("            |          |          |                       |          |          |            |            |               \n") ;
-       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
-            "sig_ldp", Nttbarmc_sig_ldp, (lsf_WJmc*NWJmc_sig_ldp), Nqcdmc_sig_ldp, Nqcdmc_sig_ldp_err, lsf_Znnmc*NZnnmc_sig_ldp, lsf_Ewomc*NEwomc_sig_ldp, Nsm_sig_ldp, Nsig_ldp, Nsusymc_sig_ldp ) ;
-       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
-            "sb_ldp", Nttbarmc_sb_ldp, (lsf_WJmc*NWJmc_sb_ldp), Nqcdmc_sb_ldp, Nqcdmc_sb_ldp_err, lsf_Znnmc*NZnnmc_sb_ldp, lsf_Ewomc*NEwomc_sb_ldp, Nsm_sb_ldp, Nsb_ldp, Nsusymc_sb_ldp ) ;
-       printf("            |          |          |                       |          |          |            |            |               \n") ;
-       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
-            "lsb", Nttbarmc_lsb, (lsf_WJmc*NWJmc_lsb), Nqcdmc_lsb, Nqcdmc_lsb_err, lsf_Znnmc*NZnnmc_lsb, lsf_Ewomc*NEwomc_lsb, Nsm_lsb, Nlsb, Nsusymc_lsb ) ;
-       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
-            "lsb_ldp", Nttbarmc_lsb_ldp, (lsf_WJmc*NWJmc_lsb_ldp), Nqcdmc_lsb_ldp, Nqcdmc_lsb_ldp_err, lsf_Znnmc*NZnnmc_lsb_ldp, lsf_Ewomc*NEwomc_lsb_ldp, Nsm_lsb_ldp, Nlsb_ldp, Nsusymc_lsb_ldp ) ;
-       printf("            |          |          |                       |          |          |            |            |               \n") ;
-       printf(" %10s | -------- | -------- | %10.1f +/- %6.1f | -------- | -------- | %10.1f | %10d | %8.1f\n",
-            "lsb_0b",  Nqcdmc_lsb_0b, Nqcdmc_lsb_0b_err, Nsm_lsb_0b, Nlsb_0b, Nsusymc_lsb_0b ) ;
-       printf(" %10s | -------- | -------- | %10.1f +/- %6.1f | -------- | -------- | %10.1f | %10d | %8.1f\n",
-            "lsb_0b_ldp",  Nqcdmc_lsb_0b_ldp, Nqcdmc_lsb_0b_ldp_err, Nsm_lsb_0b_ldp, Nlsb_0b_ldp, Nsusymc_lsb_0b_ldp ) ;
-       printf("            |          |          |                       |          |          |            |            |               \n") ;
-       printf("------------+----------+----------+-----------------------+----------+----------+------------+------------+---------------\n") ;
-
-
-       printf("\n\n\n") ;
-
-       printf(" R QCD  :  sig    /    sig_ldp  : ( %10.1f +/- %6.1f ) / ( %10.1f +/- %6.1f )    =    %5.3f +/- %5.3f\n",
-            Nqcdmc_sig, Nqcdmc_sig_err, Nqcdmc_sig_ldp, Nqcdmc_sig_ldp_err, Rqcd_sig, Rqcd_sig_err ) ;
-
-       printf(" R QCD  :  sb     /     sb_ldp  : ( %10.1f +/- %6.1f ) / ( %10.1f +/- %6.1f )    =    %5.3f +/- %5.3f\n",
-            Nqcdmc_sb, Nqcdmc_sb_err, Nqcdmc_sb_ldp, Nqcdmc_sb_ldp_err, Rqcd_sb, Rqcd_sb_err ) ;
-
-       printf(" R QCD  :  lsb    /    lsb_ldp  : ( %10.1f +/- %6.1f ) / ( %10.1f +/- %6.1f )    =    %5.3f +/- %5.3f\n",
-            Nqcdmc_lsb, Nqcdmc_lsb_err, Nqcdmc_lsb_ldp, Nqcdmc_lsb_ldp_err, Rqcd_lsb, Rqcd_lsb_err ) ;
-
-       printf(" R data :  lsb    /    lsb_ldp  : ( %10.1f            ) / ( %10.1f            )    =    %5.3f +/- %5.3f\n",
-            Nlsb_corrected, Nlsb_ldp_corrected, Rdata_lsb, Rdata_lsb_err ) ;
-
-       printf(" R QCD  :  lsb_0b / lsb_0b_ldp  : ( %10.1f +/- %6.1f ) / ( %10.1f +/- %6.1f )    =    %5.3f +/- %5.3f\n",
-            Nqcdmc_lsb_0b, Nqcdmc_lsb_0b_err, Nqcdmc_lsb_0b_ldp, Nqcdmc_lsb_0b_ldp_err, Rqcd_lsb_0b, Rqcd_lsb_0b_err ) ;
-
-       printf(" R data :  lsb_0b / lsb_0b_ldp  : ( %8d              ) / ( %8d              )    =    %5.3f +/- %5.3f\n",
-            Nlsb_0b, Nlsb_0b_ldp, Rdata_lsb_0b, Rdata_lsb_0b_err ) ;
-
-
-       printf("\n\n\n") ;
-
-
-       printf(" R ttwj :  sig    /    sb    :  ( %5.1f +/- %4.1f ) / ( %5.1f +/- %4.1f )   =   %5.3f +/- %5.3f\n",
-                 (Nttbarmc_sig+lsf_WJmc*NWJmc_sig), lsf_WJmc*sqrt(NWJmc_sig),
-                 (Nttbarmc_sb+lsf_WJmc*NWJmc_sb), lsf_WJmc*sqrt(NWJmc_sb),
-                 Rttwj, Rttwj_err ) ;
-
-       printf(" R ttwj :  sig_sl /    sb_sl :  ( %5.1f +/- %4.1f ) / ( %5.1f +/- %4.1f )   =   %5.3f +/- %5.3f\n",
-                 (Nttbarmc_sig_sl+lsf_WJmc*NWJmc_sig_sl), lsf_WJmc*sqrt(NWJmc_sig_sl),
-                 (Nttbarmc_sb_sl+lsf_WJmc*NWJmc_sb_sl), lsf_WJmc*sqrt(NWJmc_sb_sl),
-                 Rttwj_sl, Rttwj_sl_err ) ;
-
-       printf(" R data :  sig_sl /    sb_sl :    %3d              /   %3d                =   %5.3f +/- %5.3f\n",
-                 Nsig_sl, Nsb_sl, Rdata_sl, Rdata_sl_err ) ;
-
-
-
-       printf("\n\n\n") ;
-
-
-       printf(" ----- Simple MC closure tests\n\n") ;
-
-       printf("  QCD :  sb =  sb_ldp * (lsb_0b/lsb_0b_ldp) : ( %6.1f +/- %4.1f ) * ( %8.1f / %10.1f ) = %8.1f +/- %6.1f\n",
-             Nqcdmc_sb_ldp, Nqcdmc_sb_ldp_err, Nqcdmc_lsb_0b, Nqcdmc_lsb_0b_ldp, comp_mc_qcd_sb, comp_mc_qcd_sb_err ) ;
-       printf("                                                                               MC truth value : %8.1f +/- %6.1f\n",
-                   Nqcdmc_sb, Nqcdmc_sb_err ) ;
-
-       printf("\n") ;
-       printf("  QCD : sig = sig_ldp * (lsb_0b/lsb_0b_ldp) : ( %6.1f +/- %4.1f ) * ( %8.1f / %10.1f ) = %8.1f +/- %6.1f\n",
-             Nqcdmc_sig_ldp, Nqcdmc_sig_ldp_err, Nqcdmc_lsb_0b, Nqcdmc_lsb_0b_ldp, comp_mc_qcd_sig, comp_mc_qcd_sig_err ) ;
-       printf("                                                                               MC truth value : %8.1f +/- %6.1f\n",
-                   Nqcdmc_sig, Nqcdmc_sig_err ) ;
-
-
-       printf("\n") ;
-       printf("  ttwj : sig = ttwj_sb * ( ttwj_sig_sl / ttwj_sb_sl ) :  %6.1f * ( %6.1f / %6.1f ) = %6.1f +/- %4.1f\n",
-              (Nttbarmc_sb + lsf_WJmc*NWJmc_sb), (Nttbarmc_sig_sl + lsf_WJmc*NWJmc_sig_sl), (Nttbarmc_sb_sl + lsf_WJmc*NWJmc_sb_sl),
-              comp_mc_ttwj_sig, comp_mc_ttwj_sig_err ) ;
-       printf("                                                                       MC truth value : %6.1f +/- %4.1f\n",
-                (Nttbarmc_sig + lsf_WJmc*NWJmc_sig), lsf_WJmc*sqrt(NWJmc_sig) ) ;
-
-
-       printf("\n\n\n") ;
-
-       printf(" ----- Simple Data calculations\n\n") ;
-
-
-       printf(" QCD :  sb  = (  sb_ldp - (ttwj+znn+other)_ldp_mc ) * (lsb_0b/lsb_0b_ldp) : ( %4d - %5.1f ) * ( %5d / %7d ) = %6.1f +/- %4.1f\n",
-           Nsb_ldp, (Nttbarmc_sb_ldp  + lsf_WJmc*NWJmc_sb_ldp  + lsf_Znnmc*NZnnmc_sb_ldp  + lsf_Ewomc*NEwomc_sb_ldp  ),
-           Nlsb_0b, Nlsb_0b_ldp, comp_data_qcd_sb, comp_data_qcd_sb_err ) ;
-       printf("                                                                                                  MC truth value : %8.1f +/- %4.1f\n",
-                   Nqcdmc_sb, Nqcdmc_sb_err ) ;
-
-       printf("\n") ;
-       printf(" QCD :  sig = ( sig_ldp - (ttwj+znn+other)_ldp_mc ) * (lsb_0b/lsb_0b_ldp) : ( %4d - %5.1f ) * ( %5d / %7d ) = %6.1f +/- %4.1f\n",
-           Nsig_ldp, (Nttbarmc_sig_ldp  + lsf_WJmc*NWJmc_sig_ldp  + lsf_Znnmc*NZnnmc_sig_ldp  + lsf_Ewomc*NEwomc_sig_ldp  ),
-           Nlsb_0b, Nlsb_0b_ldp, comp_data_qcd_sig, comp_data_qcd_sig_err ) ;
-       printf("                                                                                                  MC truth value : %8.1f +/- %4.1f\n",
-                   Nqcdmc_sig, Nqcdmc_sig_err ) ;
-
-
-       printf("\n") ;
-       printf(" ttwj : sig = ( sb - (qcd_sb + (znn+other)_sb_mc) ) * (sig_sl/sb_sl) : ( %5d - ( %5.1f + %5.1f))*(%3d/%3d) = %5.1f +/- %4.1f\n",
-              Nsb, comp_data_qcd_sb, (lsf_Znnmc*NZnnmc_sb + lsf_Ewomc*NEwomc_sb), Nsig_sl, Nsb_sl, comp_data_ttwj_sig, comp_data_ttwj_sig_err ) ;
-       printf("                                                                                              MC truth value : %5.1f +/- %4.1f\n",
-                 (Nttbarmc_sig + lsf_WJmc*NWJmc_sig), lsf_WJmc*sqrt(NWJmc_sig) ) ;
 
 
        printf("\n\n\n") ;
@@ -3859,10 +3639,12 @@
        printf("\n\n root output file : %s\n\n", rootoutputfilestr.Data() ) ;
 
 
-       TCanvas* csusy = new TCanvas("csusy","SUSY m1/2 vs m0 scan") ;
        gStyle->SetPadGridX(1) ;
        gStyle->SetPadGridY(1) ;
+       TCanvas* csusy = new TCanvas("csusy","SUSY m1/2 vs m0 scan") ;
        hsusyscanExcluded->Draw("col") ;
+       gPad->SetGridx(1) ;
+       gPad->SetGridy(1) ;
        csusy->SaveAs( pngoutputfilestr.Data() ) ;
        TFile* f = new TFile( rootoutputfilestr.Data(),"recreate") ;
        hsusyscanExcluded->Write() ;
