@@ -28,7 +28,7 @@
 
        bool initialize( const char* infile ) ;
 
-//     bool reinitialize( ) ;
+       bool reinitialize( ) ;
 
 //     bool readTextDataset( const char* inputTextFile ) ;
 
@@ -42,9 +42,9 @@
 
 //     bool doToyStudy( const char* inputRootFile, const char* outputRootFile, int dsFirst, int nToys ) ;
 
-//     bool susyScanNoContam( const char* inputScanFile, double dataLumi ) ;
-//     bool susyScanWithContam( const char* inputScanFile, double dataLumi ) ;
-//     bool setSusyScanPoint( const char* inputScanFile, double dataLumi, double m0, double m12 ) ;
+       bool susyScanNoContam( const char* inputScanFile ) ;
+       bool susyScanWithContam( const char* inputScanFile ) ;
+       bool setSusyScanPoint( const char* inputScanFile, double m0, double m12 ) ;
 
 
 //     bool sbPlotsUniformBins( const char* plotBaseName ) ;
@@ -65,7 +65,7 @@
 
        void parameterSnapshot() ;
 
-//     bool fitQualityPlot( bool doNorm=false, double hmax=1.5 ) ;
+       bool fitQualityPlot( bool doNorm=false, double hmax=1.5 ) ;
 
        void setAndFixSusySig( double setVal = 0. ) ;
        void freeSusySig() ;

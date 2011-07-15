@@ -2551,437 +2551,580 @@
 
   //===================================================================
 
-//  bool ra2bRoostatsClass3::reinitialize( ) {
-
-
-//     printf( "\n\n Opening input file : %s\n\n", initializeFile ) ;
-
-//     FILE* infp ;
-//     if ( (infp=fopen( initializeFile,"r"))==NULL ) {
-//        printf("\n\n *** Problem opening input file: %s.\n\n", initializeFile ) ;
-//        return false ;
-//     }
-
-//     int Nsig(0), Na(0), Nd(0) ; //-- data counts in signal region, A, and D.
-//     int Nsb(0) ; //-- data counts in SB.
-//     int Nslsig(0) ; //-- data counts in SL, SIG.
-//     int Nslsb(0) ; //-- data counts in SL, SB.
-
-
-//     float Nqcdmcsig(0.), Nqcdmcsb(0.), Nqcdmca(0.), Nqcdmcd(0.) ; //-- QCD MC counts in SIG, SB, A, and D.
-//     float Nqcdmcslsig(0.), Nqcdmcslsb(0.) ; //-- QCD MC counts in SL; SIG and SB.
-//     float Nttbarmcsig(0.), Nttbarmcsb(0.), Nttbarmca(0.), Nttbarmcd(0.) ; //-- ttbar MC counts in SIG, SB, A, and D.
-//     float Nttbarmcslsig(0.), Nttbarmcslsb(0.) ; //-- ttbar MC counts in SL; SIG and SB.
-
-//     int NWJmcsig, NWJmca, NWJmcd, NWJmcsb, NWJmcslsig, NWJmcslsb ;
-//     int NZnnmcsig, NZnnmca, NZnnmcd, NZnnmcsb, NZnnmcslsig, NZnnmcslsb ;
-//     int NEwomcsig, NEwomca, NEwomcd, NEwomcsb, NEwomcslsig, NEwomcslsb ;
-
-//     float Nsusymcsig(0.), Nsusymca(0.), Nsusymcd(0.) ; //-- SUSY MC counts in SIG, A, and D.
-//     float Nsusymcsb(0.) ; //-- SUSY MC counts in SB.
-//     float Nsusymcslsig(0.) ; //-- SUSY MC counts in SL, SIG.
-//     float Nsusymcslsb(0.) ; //-- SUSY MC counts in SL, SB.
-
-//     //--- read in description line.
-//     printf("\n\n") ;
-//     char c(0) ;
-//     while ( c!=10  ) { c = fgetc( infp ) ; printf("%c", c ) ; }
-//     printf("\n\n") ;
-
-
-//     char label[1000] ;
-
-//    //--- Inputs generated with gen_roostats_input.c
-//    //    The order here must be consistent with the order there!
+    bool ra2bRoostatsClass3::reinitialize( ) {
+
+
+       printf( "\n\n Opening input file : %s\n\n", initializeFile ) ;
+
+       FILE* infp ;
+       if ( (infp=fopen( initializeFile,"r"))==NULL ) {
+          printf("\n\n *** Problem opening input file: %s.\n\n", initializeFile ) ;
+          return false ;
+       }
+
+       int    Nsig                  ;
+       int    Nsb                   ;
+       int    Nsig_sl               ;
+       int    Nsb_sl                ;
+       int    Nsig_ldp              ;
+       int    Nsb_ldp               ;
+       int    Nlsb                  ;
+       int    Nlsb_ldp              ;
+       int    Nlsb_0b               ;
+       int    Nlsb_0b_ldp           ;
+       float  Nqcdmc_sig            ;
+       float  Nqcdmc_sig_err        ;
+       float  Nqcdmc_sb             ;
+       float  Nqcdmc_sb_err         ;
+       float  Nqcdmc_sig_sl         ;
+       float  Nqcdmc_sig_sl_err     ;
+       float  Nqcdmc_sb_sl          ;
+       float  Nqcdmc_sb_sl_err      ;
+       float  Nqcdmc_sig_ldp        ;
+       float  Nqcdmc_sig_ldp_err    ;
+       float  Nqcdmc_sb_ldp         ;
+       float  Nqcdmc_sb_ldp_err     ;
+       float  Nqcdmc_lsb            ;
+       float  Nqcdmc_lsb_err        ;
+       float  Nqcdmc_lsb_ldp        ;
+       float  Nqcdmc_lsb_ldp_err    ;
+       float  Nqcdmc_lsb_0b         ;
+       float  Nqcdmc_lsb_0b_err     ;
+       float  Nqcdmc_lsb_0b_ldp     ;
+       float  Nqcdmc_lsb_0b_ldp_err ;
+       float  Nttbarmc_sig          ;
+       float  Nttbarmc_sb           ;
+       float  Nttbarmc_sig_sl       ;
+       float  Nttbarmc_sb_sl        ;
+       float  Nttbarmc_sig_ldp      ;
+       float  Nttbarmc_sb_ldp       ;
+       float  Nttbarmc_lsb          ;
+       float  Nttbarmc_lsb_ldp      ;
+       int    NWJmc_sig             ;
+       int    NWJmc_sb              ;
+       int    NWJmc_sig_sl          ;
+       int    NWJmc_sb_sl           ;
+       int    NWJmc_sig_ldp         ;
+       int    NWJmc_sb_ldp          ;
+       int    NWJmc_lsb             ;
+       int    NWJmc_lsb_ldp         ;
+       int    NZnnmc_sig            ;
+       int    NZnnmc_sb             ;
+       int    NZnnmc_sig_sl         ;
+       int    NZnnmc_sb_sl          ;
+       int    NZnnmc_sig_ldp        ;
+       int    NZnnmc_sb_ldp         ;
+       int    NZnnmc_lsb            ;
+       int    NZnnmc_lsb_ldp        ;
+       int    NEwomc_sig            ;
+       int    NEwomc_sb             ;
+       int    NEwomc_sig_sl         ;
+       int    NEwomc_sb_sl          ;
+       int    NEwomc_sig_ldp        ;
+       int    NEwomc_sb_ldp         ;
+       int    NEwomc_lsb            ;
+       int    NEwomc_lsb_ldp        ;
+       float  Nsusymc_sig           ;
+       float  Nsusymc_sb            ;
+       float  Nsusymc_sig_sl        ;
+       float  Nsusymc_sb_sl         ;
+       float  Nsusymc_sig_ldp       ;
+       float  Nsusymc_sb_ldp        ;
+       float  Nsusymc_lsb           ;
+       float  Nsusymc_lsb_ldp       ;
+       float  Nsusymc_lsb_0b        ;
+       float  Nsusymc_lsb_0b_ldp    ;
+       int    Nhtonlytrig_lsb_0b      ;
+       int    Nhtonlytrig_lsb_0b_ldp  ;
+       int    Nsb_ee                  ;
+       int    Nsig_ee                 ;
+       int    Nsb_mm                  ;
+       int    Nsig_mm                 ;
+
+
+
+       //--- read in description line.
+       printf("\n\n") ;
+       char c(0) ;
+       while ( c!=10  ) { c = fgetc( infp ) ; printf("%c", c ) ; }
+       printf("\n\n") ;
+
+
+       char label[1000] ;
+
+      //--- Inputs generated with gen_roostats_input4.c
+      //    The order here must be consistent with the order there!
+
+       fscanf( infp, "%s %g", label, &EffScaleFactor        ) ;   printf( "%s %g\n", label, EffScaleFactor        ) ;
+       fscanf( infp, "%s %g", label, &EffScaleFactorErr     ) ;   printf( "%s %g\n", label, EffScaleFactorErr     ) ;
+       fscanf( infp, "%s %d", label, &Nsig                  ) ;   printf( "%s %d\n", label, Nsig                  ) ;
+       fscanf( infp, "%s %d", label, &Nsb                   ) ;   printf( "%s %d\n", label, Nsb                   ) ;
+       fscanf( infp, "%s %d", label, &Nsig_sl               ) ;   printf( "%s %d\n", label, Nsig_sl               ) ;
+       fscanf( infp, "%s %d", label, &Nsb_sl                ) ;   printf( "%s %d\n", label, Nsb_sl                ) ;
+       fscanf( infp, "%s %d", label, &Nsig_ldp              ) ;   printf( "%s %d\n", label, Nsig_ldp              ) ;
+       fscanf( infp, "%s %d", label, &Nsb_ldp               ) ;   printf( "%s %d\n", label, Nsb_ldp               ) ;
+       fscanf( infp, "%s %d", label, &Nlsb                  ) ;   printf( "%s %d\n", label, Nlsb                  ) ;
+       fscanf( infp, "%s %d", label, &Nlsb_ldp              ) ;   printf( "%s %d\n", label, Nlsb_ldp              ) ;
+       fscanf( infp, "%s %d", label, &Nlsb_0b               ) ;   printf( "%s %d\n", label, Nlsb_0b               ) ;
+       fscanf( infp, "%s %d", label, &Nlsb_0b_ldp           ) ;   printf( "%s %d\n", label, Nlsb_0b_ldp           ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sig            ) ;   printf( "%s %g\n", label, Nqcdmc_sig            ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sig_err        ) ;   printf( "%s %g\n", label, Nqcdmc_sig_err        ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sb             ) ;   printf( "%s %g\n", label, Nqcdmc_sb             ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sb_err         ) ;   printf( "%s %g\n", label, Nqcdmc_sb_err         ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sig_sl         ) ;   printf( "%s %g\n", label, Nqcdmc_sig_sl         ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sig_sl_err     ) ;   printf( "%s %g\n", label, Nqcdmc_sig_sl_err     ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sb_sl          ) ;   printf( "%s %g\n", label, Nqcdmc_sb_sl          ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sb_sl_err      ) ;   printf( "%s %g\n", label, Nqcdmc_sb_sl_err      ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sig_ldp        ) ;   printf( "%s %g\n", label, Nqcdmc_sig_ldp        ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sig_ldp_err    ) ;   printf( "%s %g\n", label, Nqcdmc_sig_ldp_err    ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sb_ldp         ) ;   printf( "%s %g\n", label, Nqcdmc_sb_ldp         ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sb_ldp_err     ) ;   printf( "%s %g\n", label, Nqcdmc_sb_ldp_err     ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_lsb            ) ;   printf( "%s %g\n", label, Nqcdmc_lsb            ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_err        ) ;   printf( "%s %g\n", label, Nqcdmc_lsb_err        ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_ldp        ) ;   printf( "%s %g\n", label, Nqcdmc_lsb_ldp        ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_ldp_err    ) ;   printf( "%s %g\n", label, Nqcdmc_lsb_ldp_err    ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_0b         ) ;   printf( "%s %g\n", label, Nqcdmc_lsb_0b         ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_0b_err     ) ;   printf( "%s %g\n", label, Nqcdmc_lsb_0b_err     ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_0b_ldp     ) ;   printf( "%s %g\n", label, Nqcdmc_lsb_0b_ldp     ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_0b_ldp_err ) ;   printf( "%s %g\n", label, Nqcdmc_lsb_0b_ldp_err ) ;
+       fscanf( infp, "%s %g", label, &Nttbarmc_sig          ) ;   printf( "%s %g\n", label, Nttbarmc_sig          ) ;
+       fscanf( infp, "%s %g", label, &Nttbarmc_sb           ) ;   printf( "%s %g\n", label, Nttbarmc_sb           ) ;
+       fscanf( infp, "%s %g", label, &Nttbarmc_sig_sl       ) ;   printf( "%s %g\n", label, Nttbarmc_sig_sl       ) ;
+       fscanf( infp, "%s %g", label, &Nttbarmc_sb_sl        ) ;   printf( "%s %g\n", label, Nttbarmc_sb_sl        ) ;
+       fscanf( infp, "%s %g", label, &Nttbarmc_sig_ldp      ) ;   printf( "%s %g\n", label, Nttbarmc_sig_ldp      ) ;
+       fscanf( infp, "%s %g", label, &Nttbarmc_sb_ldp       ) ;   printf( "%s %g\n", label, Nttbarmc_sb_ldp       ) ;
+       fscanf( infp, "%s %g", label, &Nttbarmc_lsb          ) ;   printf( "%s %g\n", label, Nttbarmc_lsb          ) ;
+       fscanf( infp, "%s %g", label, &Nttbarmc_lsb_ldp      ) ;   printf( "%s %g\n", label, Nttbarmc_lsb_ldp      ) ;
+       fscanf( infp, "%s %g", label, &lsf_WJmc              ) ;   printf( "%s %g\n", label, lsf_WJmc              ) ;
+       fscanf( infp, "%s %g", label, &lsf_WJmc_err          ) ;   printf( "%s %g\n", label, lsf_WJmc_err          ) ;
+       fscanf( infp, "%s %d", label, &NWJmc_sig             ) ;   printf( "%s %d\n", label, NWJmc_sig             ) ;
+       fscanf( infp, "%s %d", label, &NWJmc_sb              ) ;   printf( "%s %d\n", label, NWJmc_sb              ) ;
+       fscanf( infp, "%s %d", label, &NWJmc_sig_sl          ) ;   printf( "%s %d\n", label, NWJmc_sig_sl          ) ;
+       fscanf( infp, "%s %d", label, &NWJmc_sb_sl           ) ;   printf( "%s %d\n", label, NWJmc_sb_sl           ) ;
+       fscanf( infp, "%s %d", label, &NWJmc_sig_ldp         ) ;   printf( "%s %d\n", label, NWJmc_sig_ldp         ) ;
+       fscanf( infp, "%s %d", label, &NWJmc_sb_ldp          ) ;   printf( "%s %d\n", label, NWJmc_sb_ldp          ) ;
+       fscanf( infp, "%s %d", label, &NWJmc_lsb             ) ;   printf( "%s %d\n", label, NWJmc_lsb             ) ;
+       fscanf( infp, "%s %d", label, &NWJmc_lsb_ldp         ) ;   printf( "%s %d\n", label, NWJmc_lsb_ldp         ) ;
+       fscanf( infp, "%s %g", label, &lsf_Znnmc             ) ;   printf( "%s %g\n", label, lsf_Znnmc             ) ;
+       fscanf( infp, "%s %g", label, &lsf_Znnmc_err         ) ;   printf( "%s %g\n", label, lsf_Znnmc_err         ) ;
+       fscanf( infp, "%s %d", label, &NZnnmc_sig            ) ;   printf( "%s %d\n", label, NZnnmc_sig            ) ;
+       fscanf( infp, "%s %d", label, &NZnnmc_sb             ) ;   printf( "%s %d\n", label, NZnnmc_sb             ) ;
+       fscanf( infp, "%s %d", label, &NZnnmc_sig_sl         ) ;   printf( "%s %d\n", label, NZnnmc_sig_sl         ) ;
+       fscanf( infp, "%s %d", label, &NZnnmc_sb_sl          ) ;   printf( "%s %d\n", label, NZnnmc_sb_sl          ) ;
+       fscanf( infp, "%s %d", label, &NZnnmc_sig_ldp        ) ;   printf( "%s %d\n", label, NZnnmc_sig_ldp        ) ;
+       fscanf( infp, "%s %d", label, &NZnnmc_sb_ldp         ) ;   printf( "%s %d\n", label, NZnnmc_sb_ldp         ) ;
+       fscanf( infp, "%s %d", label, &NZnnmc_lsb            ) ;   printf( "%s %d\n", label, NZnnmc_lsb            ) ;
+       fscanf( infp, "%s %d", label, &NZnnmc_lsb_ldp        ) ;   printf( "%s %d\n", label, NZnnmc_lsb_ldp        ) ;
+       fscanf( infp, "%s %g", label, &lsf_Ewomc             ) ;   printf( "%s %g\n", label, lsf_Ewomc             ) ;
+       fscanf( infp, "%s %g", label, &lsf_Ewomc_err         ) ;   printf( "%s %g\n", label, lsf_Ewomc_err         ) ;
+       fscanf( infp, "%s %d", label, &NEwomc_sig            ) ;   printf( "%s %d\n", label, NEwomc_sig            ) ;
+       fscanf( infp, "%s %d", label, &NEwomc_sb             ) ;   printf( "%s %d\n", label, NEwomc_sb             ) ;
+       fscanf( infp, "%s %d", label, &NEwomc_sig_sl         ) ;   printf( "%s %d\n", label, NEwomc_sig_sl         ) ;
+       fscanf( infp, "%s %d", label, &NEwomc_sb_sl          ) ;   printf( "%s %d\n", label, NEwomc_sb_sl          ) ;
+       fscanf( infp, "%s %d", label, &NEwomc_sig_ldp        ) ;   printf( "%s %d\n", label, NEwomc_sig_ldp        ) ;
+       fscanf( infp, "%s %d", label, &NEwomc_sb_ldp         ) ;   printf( "%s %d\n", label, NEwomc_sb_ldp         ) ;
+       fscanf( infp, "%s %d", label, &NEwomc_lsb            ) ;   printf( "%s %d\n", label, NEwomc_lsb            ) ;
+       fscanf( infp, "%s %d", label, &NEwomc_lsb_ldp        ) ;   printf( "%s %d\n", label, NEwomc_lsb_ldp        ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_sig           ) ;   printf( "%s %g\n", label, Nsusymc_sig           ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_sb            ) ;   printf( "%s %g\n", label, Nsusymc_sb            ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_sig_sl        ) ;   printf( "%s %g\n", label, Nsusymc_sig_sl        ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_sb_sl         ) ;   printf( "%s %g\n", label, Nsusymc_sb_sl         ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_sig_ldp       ) ;   printf( "%s %g\n", label, Nsusymc_sig_ldp       ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_sb_ldp        ) ;   printf( "%s %g\n", label, Nsusymc_sb_ldp        ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_lsb           ) ;   printf( "%s %g\n", label, Nsusymc_lsb           ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_lsb_ldp       ) ;   printf( "%s %g\n", label, Nsusymc_lsb_ldp       ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_lsb_0b        ) ;   printf( "%s %g\n", label, Nsusymc_lsb_0b        ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_lsb_0b_ldp    ) ;   printf( "%s %g\n", label, Nsusymc_lsb_0b_ldp    ) ;
+       fscanf( infp, "%s %d", label, &Nhtonlytrig_lsb_0b        ) ;   printf( "%s %d\n", label, Nhtonlytrig_lsb_0b        ) ;
+       fscanf( infp, "%s %d", label, &Nhtonlytrig_lsb_0b_ldp    ) ;   printf( "%s %d\n", label, Nhtonlytrig_lsb_0b_ldp    ) ;
+       fscanf( infp, "%s %d", label, &Nsb_ee                    ) ;   printf( "%s %d\n", label, Nsb_ee                    ) ;
+       fscanf( infp, "%s %d", label, &Nsig_ee                   ) ;   printf( "%s %d\n", label, Nsig_ee                   ) ;
+       fscanf( infp, "%s %d", label, &Nsb_mm                    ) ;   printf( "%s %d\n", label, Nsb_mm                    ) ;
+       fscanf( infp, "%s %d", label, &Nsig_mm                   ) ;   printf( "%s %d\n", label, Nsig_mm                   ) ;
+       fscanf( infp, "%s %g", label, &acc_ee_mean               ) ;   printf( "%s %g\n", label, acc_ee_mean               ) ;
+       fscanf( infp, "%s %g", label, &acc_ee_err                ) ;   printf( "%s %g\n", label, acc_ee_err                ) ;
+       fscanf( infp, "%s %g", label, &acc_mm_mean               ) ;   printf( "%s %g\n", label, acc_mm_mean               ) ;
+       fscanf( infp, "%s %g", label, &acc_mm_err                ) ;   printf( "%s %g\n", label, acc_mm_err                ) ;
+       fscanf( infp, "%s %g", label, &eff_ee_mean               ) ;   printf( "%s %g\n", label, eff_ee_mean               ) ;
+       fscanf( infp, "%s %g", label, &eff_ee_err                ) ;   printf( "%s %g\n", label, eff_ee_err                ) ;
+       fscanf( infp, "%s %g", label, &eff_mm_mean               ) ;   printf( "%s %g\n", label, eff_mm_mean               ) ;
+       fscanf( infp, "%s %g", label, &eff_mm_err                ) ;   printf( "%s %g\n", label, eff_mm_err                ) ;
+       fscanf( infp, "%s %g", label, &Ztoll_lumi                ) ;   printf( "%s %g\n", label, Ztoll_lumi                ) ;
+       fscanf( infp, "%s %g", label, &Ztoll_tight_sf            ) ;   printf( "%s %g\n", label, Ztoll_tight_sf            ) ;
+       fscanf( infp, "%s %g", label, &Ztoll_tight_sf_err        ) ;   printf( "%s %g\n", label, Ztoll_tight_sf_err        ) ;
+       fscanf( infp, "%s %g", label, &DataLumi                  ) ;   printf( "%s %g\n", label, DataLumi                  ) ;
+
+       printf("\n Done reading in %s\n\n", initializeFile ) ;
+       fclose( infp ) ;
+
+
+       //--- Print out a nice summary of the inputs.
+
+       float Nsm_sig         = Nttbarmc_sig          +  lsf_WJmc*NWJmc_sig          +  Nqcdmc_sig          +  lsf_Znnmc*NZnnmc_sig          +  lsf_Ewomc*NEwomc_sig         ;
+       float Nsm_sb          = Nttbarmc_sb           +  lsf_WJmc*NWJmc_sb           +  Nqcdmc_sb           +  lsf_Znnmc*NZnnmc_sb           +  lsf_Ewomc*NEwomc_sb          ;
+       float Nsm_sig_sl      = Nttbarmc_sig_sl       +  lsf_WJmc*NWJmc_sig_sl       +  Nqcdmc_sig_sl       +  lsf_Znnmc*NZnnmc_sig_sl       +  lsf_Ewomc*NEwomc_sig_sl      ;
+       float Nsm_sb_sl       = Nttbarmc_sb_sl        +  lsf_WJmc*NWJmc_sb_sl        +  Nqcdmc_sb_sl        +  lsf_Znnmc*NZnnmc_sb_sl        +  lsf_Ewomc*NEwomc_sb_sl       ;
+       float Nsm_sig_ldp     = Nttbarmc_sig_ldp      +  lsf_WJmc*NWJmc_sig_ldp      +  Nqcdmc_sig_ldp      +  lsf_Znnmc*NZnnmc_sig_ldp      +  lsf_Ewomc*NEwomc_sig_ldp     ;
+       float Nsm_sb_ldp      = Nttbarmc_sb_ldp       +  lsf_WJmc*NWJmc_sb_ldp       +  Nqcdmc_sb_ldp       +  lsf_Znnmc*NZnnmc_sb_ldp       +  lsf_Ewomc*NEwomc_sb_ldp      ;
+       float Nsm_lsb         = Nttbarmc_lsb          +  lsf_WJmc*NWJmc_lsb          +  Nqcdmc_lsb          +  lsf_Znnmc*NZnnmc_lsb          +  lsf_Ewomc*NEwomc_lsb         ;
+       float Nsm_lsb_ldp     = Nttbarmc_lsb_ldp      +  lsf_WJmc*NWJmc_lsb_ldp      +  Nqcdmc_lsb_ldp      +  lsf_Znnmc*NZnnmc_lsb_ldp      +  lsf_Ewomc*NEwomc_lsb_ldp     ;
+       float Nsm_lsb_0b      =                                                         Nqcdmc_lsb_0b                                                                        ;
+       float Nsm_lsb_0b_ldp  =                                                         Nqcdmc_lsb_0b_ldp                                                                    ;
+
+
+
+       //--- QCD min Delta phi N  pass / fail ratios.
+
+       float Rqcd_sig        =  0. ;
+       if ( Nqcdmc_sig_ldp > 0. ) { Rqcd_sig        =  Nqcdmc_sig        / Nqcdmc_sig_ldp ;  }
+       float Rqcd_sig_err    =  0. ;
+       if ( Nqcdmc_sig > 0. && Nqcdmc_sig_ldp > 0. ) { Rqcd_sig_err  =  Rqcd_sig * sqrt( pow(Nqcdmc_sig_err/Nqcdmc_sig,2) + pow(Nqcdmc_sig_ldp_err/Nqcdmc_sig_ldp,2) ) ; }
+
+
+       float Rqcd_sb        =  0. ;
+       if ( Nqcdmc_sb_ldp > 0. ) { Rqcd_sb        =  Nqcdmc_sb        / Nqcdmc_sb_ldp ;  }
+       float Rqcd_sb_err    =  0. ;
+       if ( Nqcdmc_sb > 0. && Nqcdmc_sb_ldp > 0. ) { Rqcd_sb_err  =  Rqcd_sb * sqrt( pow(Nqcdmc_sb_err/Nqcdmc_sb,2) + pow(Nqcdmc_sb_ldp_err/Nqcdmc_sb_ldp,2) ) ; }
+
+
+       float Rqcd_lsb        =  0. ;
+       if ( Nqcdmc_lsb_ldp > 0. ) { Rqcd_lsb        =  Nqcdmc_lsb        / Nqcdmc_lsb_ldp ;  }
+       float Rqcd_lsb_err    =  0. ;
+       if ( Nqcdmc_lsb > 0. && Nqcdmc_lsb_ldp > 0. ) { Rqcd_lsb_err  =  Rqcd_lsb * sqrt( pow(Nqcdmc_lsb_err/Nqcdmc_lsb,2) + pow(Nqcdmc_lsb_ldp_err/Nqcdmc_lsb_ldp,2) ) ; }
+
+
+       float Nlsb_corrected     = Nlsb     - Nttbarmc_lsb     - lsf_WJmc*NWJmc_lsb     - lsf_Znnmc*NZnnmc_lsb     - lsf_Ewomc*NEwomc_lsb ;
+       float Nlsb_ldp_corrected = Nlsb_ldp - Nttbarmc_lsb_ldp - lsf_WJmc*NWJmc_lsb_ldp - lsf_Znnmc*NZnnmc_lsb_ldp - lsf_Ewomc*NEwomc_lsb_ldp ;
+       float Rdata_lsb = 0. ;
+       if ( Nlsb_ldp_corrected > 0 ) { Rdata_lsb = (Nlsb_corrected) / (Nlsb_ldp_corrected) ; }
+       float Rdata_lsb_err = 0. ;
+       if ( Nlsb_corrected > 0 && Nlsb_ldp_corrected > 0 ) { Rdata_lsb_err = Rdata_lsb * sqrt( 1.0/(Nlsb_corrected) + 1.0/(Nlsb_ldp_corrected) ) ; }
+
+
+       float Rqcd_lsb_0b        =  0. ;
+       if ( Nqcdmc_lsb_0b_ldp > 0. ) { Rqcd_lsb_0b        =  Nqcdmc_lsb_0b        / Nqcdmc_lsb_0b_ldp ;  }
+       float Rqcd_lsb_0b_err    =  0. ;
+       if ( Nqcdmc_lsb_0b > 0. && Nqcdmc_lsb_0b_ldp > 0. ) { Rqcd_lsb_0b_err  =  Rqcd_lsb_0b * sqrt( pow(Nqcdmc_lsb_0b_err/Nqcdmc_lsb_0b,2) + pow(Nqcdmc_lsb_0b_ldp_err/Nqcdmc_lsb_0b_ldp,2) ) ; }
+
+
+       float Rdata_lsb_0b = 0. ;
+       if ( Nlsb_0b_ldp > 0 ) { Rdata_lsb_0b = (1.0*Nlsb_0b) / (1.0*Nlsb_0b_ldp) ; }
+       float Rdata_lsb_0b_err = 0. ;
+       if ( Nlsb_0b > 0 && Nlsb_0b_ldp > 0 ) { Rdata_lsb_0b_err = Rdata_lsb_0b * sqrt( 1.0/(1.0*Nlsb_0b) + 1.0/(1.0*Nlsb_0b_ldp) ) ; }
+
+
+       //--- ttbar + Wjets  MET  SIG / SB ratios
+
+       float Rttwj = 0. ;
+       if ( (Nttbarmc_sb+lsf_WJmc*NWJmc_sb) > 0. ) { Rttwj    =   (Nttbarmc_sig+lsf_WJmc*NWJmc_sig) / (Nttbarmc_sb+lsf_WJmc*NWJmc_sb) ; }
+       float Rttwj_err2 = pow( lsf_WJmc/ (Nttbarmc_sb+lsf_WJmc*NWJmc_sb),2)*NWJmc_sig
+                        + pow( (Nttbarmc_sig+lsf_WJmc*NWJmc_sig) * lsf_WJmc / pow((Nttbarmc_sb+lsf_WJmc*NWJmc_sb),2), 2)*NWJmc_sb ;
+       float Rttwj_err = sqrt(Rttwj_err2) ;
+
+       float Rttwj_sl = 0. ;
+       if ( (Nttbarmc_sb_sl+lsf_WJmc*NWJmc_sb_sl) > 0. ) { Rttwj_sl    =   (Nttbarmc_sig_sl+lsf_WJmc*NWJmc_sig_sl) / (Nttbarmc_sb_sl+lsf_WJmc*NWJmc_sb_sl) ; }
+       float Rttwj_sl_err2 = pow( lsf_WJmc / (Nttbarmc_sb_sl+lsf_WJmc*NWJmc_sb_sl), 2) * NWJmc_sig_sl
+                           + pow( lsf_WJmc * (Nttbarmc_sig_sl+lsf_WJmc*NWJmc_sig_sl) / pow((Nttbarmc_sb_sl+lsf_WJmc*NWJmc_sb_sl),2), 2)*NWJmc_sb_sl ;
+       float Rttwj_sl_err = sqrt(Rttwj_sl_err2) ;
+
+       float Rdata_sl = 0. ;
+       if ( Nsb_sl > 0 ) { Rdata_sl = (1.0*Nsig_sl)/(1.0*Nsb_sl) ; }
+       float Rdata_sl_err = 0. ;
+       if ( Nsig_sl>0 && Nsb_sl>0 ) { Rdata_sl_err = Rdata_sl * sqrt( 1.0/(1.0*Nsig_sl) + 1.0/(1.0*Nsb_sl) ) ; }
+
+
+       //--- Simple MC closure tests.
+
+       float comp_mc_qcd_sb = Nqcdmc_sb_ldp * ( Nqcdmc_lsb_0b / Nqcdmc_lsb_0b_ldp ) ;
+       float comp_mc_qcd_sb_err = Nqcdmc_sb_ldp_err * ( Nqcdmc_lsb_0b / Nqcdmc_lsb_0b_ldp ) ;
+
+       float comp_mc_qcd_sig = Nqcdmc_sig_ldp * ( Nqcdmc_lsb_0b / Nqcdmc_lsb_0b_ldp ) ;
+       float comp_mc_qcd_sig_err = Nqcdmc_sig_ldp_err * ( Nqcdmc_lsb_0b / Nqcdmc_lsb_0b_ldp ) ;
+
+       float comp_mc_ttwj_sig = (Nttbarmc_sb + lsf_WJmc*NWJmc_sb) * ( (Nttbarmc_sig_sl + lsf_WJmc*NWJmc_sig_sl) / (Nttbarmc_sb_sl + lsf_WJmc*NWJmc_sb_sl) ) ;
+
+       //--- below ignores ttbar errors, uses sqrt(N) on raw WJ counts.
+       float comp_mc_ttwj_sig_err2 = pow( lsf_WJmc*( (Nttbarmc_sig_sl + lsf_WJmc*NWJmc_sig_sl) / (Nttbarmc_sb_sl + lsf_WJmc*NWJmc_sb_sl) ),2)*NWJmc_sb
+                                   + pow( (Nttbarmc_sb + lsf_WJmc*NWJmc_sb) *(lsf_WJmc/ (Nttbarmc_sb_sl + lsf_WJmc*NWJmc_sb_sl) ), 2)*NWJmc_sig_sl
+                                   + pow( (Nttbarmc_sb + lsf_WJmc*NWJmc_sb) *  (Nttbarmc_sig_sl + lsf_WJmc*NWJmc_sig_sl) / pow((Nttbarmc_sb_sl + lsf_WJmc*NWJmc_sb_sl) ,2)*lsf_WJmc, 2 )*NWJmc_sb_sl ;
+       float comp_mc_ttwj_sig_err = sqrt(comp_mc_ttwj_sig_err2) ;
+
+       //--- Simple data calculations.
+
+
+       float Nsb_ldp_corrected  = Nsb_ldp  - (Nttbarmc_sb_ldp  + lsf_WJmc*NWJmc_sb_ldp  + lsf_Znnmc*NZnnmc_sb_ldp  + lsf_Ewomc*NEwomc_sb_ldp  ) ;
+       float comp_data_qcd_sb = Nsb_ldp_corrected * ( (1.0*Nlsb_0b)/(1.0*Nlsb_0b_ldp) ) ;
+       float comp_data_qcd_sb_err = sqrt( Nsb_ldp + Nttbarmc_sb_ldp  + lsf_WJmc*NWJmc_sb_ldp  + lsf_Znnmc*NZnnmc_sb_ldp  + lsf_Ewomc*NEwomc_sb_ldp ) * ( (1.0*Nlsb_0b)/(1.0*Nlsb_0b_ldp) ) ;
+
+       float Nsig_ldp_corrected = Nsig_ldp - (Nttbarmc_sig_ldp + lsf_WJmc*NWJmc_sig_ldp + lsf_Znnmc*NZnnmc_sig_ldp + lsf_Ewomc*NEwomc_sig_ldp ) ;
+       float comp_data_qcd_sig = Nsig_ldp_corrected * ( (1.0*Nlsb_0b)/(1.0*Nlsb_0b_ldp) ) ;
+       float comp_data_qcd_sig_err = sqrt( Nsig_ldp + Nttbarmc_sig_ldp  + lsf_WJmc*NWJmc_sig_ldp  + lsf_Znnmc*NZnnmc_sig_ldp  + lsf_Ewomc*NEwomc_sig_ldp ) * ( (1.0*Nlsb_0b)/(1.0*Nlsb_0b_ldp) ) ;
+
+       float comp_data_ttwj_sig = (Nsb - (comp_data_qcd_sb + lsf_Znnmc*NZnnmc_sb + lsf_Ewomc*NEwomc_sb)) * ( (1.0*Nsig_sl) / (1.0*Nsb_sl) ) ;
+       float comp_data_ttwj_sig_err2 = pow( ( (1.0*Nsig_sl) / (1.0*Nsb_sl) ), 2)*Nsb
+                                     + pow( ( (1.0*Nsig_sl) / (1.0*Nsb_sl) ), 2)*pow(comp_data_qcd_sb_err,2)
+                                     + pow( (Nsb - (comp_data_qcd_sb + lsf_Znnmc*NZnnmc_sb + lsf_Ewomc*NEwomc_sb)) / (1.0*Nsb_sl), 2 )*Nsig_sl
+                                     + pow( (Nsb - (comp_data_qcd_sb + lsf_Znnmc*NZnnmc_sb + lsf_Ewomc*NEwomc_sb)) * (1.0*Nsig_sl) / pow(1.0*Nsb_sl,2), 2 ) * Nsb_sl ;
+       float comp_data_ttwj_sig_err = sqrt(comp_data_ttwj_sig_err2) ;
+
+
+       printf("\n\n\n") ;
+
+       printf("------------+----------+----------+-----------------------+----------+----------+------------+------------+---------------\n") ;
+       printf("   Sample   |  ttbar   |  W+jets  |          QCD          |  Z to nn |   other  |   All SM   |    Data    |     SUSY      \n") ;
+       printf("------------+----------+----------+-----------------------+----------+----------+------------+------------+---------------\n") ;
+       printf("            |          |          |                       |          |          |            |            |               \n") ;
+       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
+            "sig", Nttbarmc_sig, (lsf_WJmc*NWJmc_sig), Nqcdmc_sig, Nqcdmc_sig_err, lsf_Znnmc*NZnnmc_sig, lsf_Ewomc*NEwomc_sig, Nsm_sig, Nsig, Nsusymc_sig ) ;
+       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
+            "sb", Nttbarmc_sb, (lsf_WJmc*NWJmc_sb), Nqcdmc_sb, Nqcdmc_sb_err, lsf_Znnmc*NZnnmc_sb, lsf_Ewomc*NEwomc_sb, Nsm_sb, Nsb, Nsusymc_sb ) ;
+       printf("            |          |          |                       |          |          |            |            |               \n") ;
+       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
+            "sig_sl", Nttbarmc_sig_sl, (lsf_WJmc*NWJmc_sig_sl), Nqcdmc_sig_sl, Nqcdmc_sig_sl_err, lsf_Znnmc*NZnnmc_sig_sl, lsf_Ewomc*NEwomc_sig_sl, Nsm_sig_sl, Nsig_sl, Nsusymc_sig_sl ) ;
+       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
+            "sb_sl", Nttbarmc_sb_sl, (lsf_WJmc*NWJmc_sb_sl), Nqcdmc_sb_sl, Nqcdmc_sb_sl_err, lsf_Znnmc*NZnnmc_sb_sl, lsf_Ewomc*NEwomc_sb_sl, Nsm_sb_sl, Nsb_sl, Nsusymc_sb_sl ) ;
+       printf("            |          |          |                       |          |          |            |            |               \n") ;
+       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
+            "sig_ldp", Nttbarmc_sig_ldp, (lsf_WJmc*NWJmc_sig_ldp), Nqcdmc_sig_ldp, Nqcdmc_sig_ldp_err, lsf_Znnmc*NZnnmc_sig_ldp, lsf_Ewomc*NEwomc_sig_ldp, Nsm_sig_ldp, Nsig_ldp, Nsusymc_sig_ldp ) ;
+       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
+            "sb_ldp", Nttbarmc_sb_ldp, (lsf_WJmc*NWJmc_sb_ldp), Nqcdmc_sb_ldp, Nqcdmc_sb_ldp_err, lsf_Znnmc*NZnnmc_sb_ldp, lsf_Ewomc*NEwomc_sb_ldp, Nsm_sb_ldp, Nsb_ldp, Nsusymc_sb_ldp ) ;
+       printf("            |          |          |                       |          |          |            |            |               \n") ;
+       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
+            "lsb", Nttbarmc_lsb, (lsf_WJmc*NWJmc_lsb), Nqcdmc_lsb, Nqcdmc_lsb_err, lsf_Znnmc*NZnnmc_lsb, lsf_Ewomc*NEwomc_lsb, Nsm_lsb, Nlsb, Nsusymc_lsb ) ;
+       printf(" %10s | %8.1f | %8.1f | %10.1f +/- %6.1f | %8.1f | %8.1f | %10.1f | %10d | %8.1f\n",
+            "lsb_ldp", Nttbarmc_lsb_ldp, (lsf_WJmc*NWJmc_lsb_ldp), Nqcdmc_lsb_ldp, Nqcdmc_lsb_ldp_err, lsf_Znnmc*NZnnmc_lsb_ldp, lsf_Ewomc*NEwomc_lsb_ldp, Nsm_lsb_ldp, Nlsb_ldp, Nsusymc_lsb_ldp ) ;
+       printf("            |          |          |                       |          |          |            |            |               \n") ;
+       printf(" %10s | -------- | -------- | %10.1f +/- %6.1f | -------- | -------- | %10.1f | %10d | %8.1f\n",
+            "lsb_0b",  Nqcdmc_lsb_0b, Nqcdmc_lsb_0b_err, Nsm_lsb_0b, Nlsb_0b, Nsusymc_lsb_0b ) ;
+       printf(" %10s | -------- | -------- | %10.1f +/- %6.1f | -------- | -------- | %10.1f | %10d | %8.1f\n",
+            "lsb_0b_ldp",  Nqcdmc_lsb_0b_ldp, Nqcdmc_lsb_0b_ldp_err, Nsm_lsb_0b_ldp, Nlsb_0b_ldp, Nsusymc_lsb_0b_ldp ) ;
+       printf("            |          |          |                       |          |          |            |            |               \n") ;
+       printf("------------+----------+----------+-----------------------+----------+----------+------------+------------+---------------\n") ;
+
+
+       printf("\n\n\n") ;
+
+       printf(" R QCD  :  sig    /    sig_ldp  : ( %10.1f +/- %6.1f ) / ( %10.1f +/- %6.1f )    =    %5.3f +/- %5.3f\n",
+            Nqcdmc_sig, Nqcdmc_sig_err, Nqcdmc_sig_ldp, Nqcdmc_sig_ldp_err, Rqcd_sig, Rqcd_sig_err ) ;
+
+       printf(" R QCD  :  sb     /     sb_ldp  : ( %10.1f +/- %6.1f ) / ( %10.1f +/- %6.1f )    =    %5.3f +/- %5.3f\n",
+            Nqcdmc_sb, Nqcdmc_sb_err, Nqcdmc_sb_ldp, Nqcdmc_sb_ldp_err, Rqcd_sb, Rqcd_sb_err ) ;
+
+       printf(" R QCD  :  lsb    /    lsb_ldp  : ( %10.1f +/- %6.1f ) / ( %10.1f +/- %6.1f )    =    %5.3f +/- %5.3f\n",
+            Nqcdmc_lsb, Nqcdmc_lsb_err, Nqcdmc_lsb_ldp, Nqcdmc_lsb_ldp_err, Rqcd_lsb, Rqcd_lsb_err ) ;
+
+       printf(" R data :  lsb    /    lsb_ldp  : ( %10.1f            ) / ( %10.1f            )    =    %5.3f +/- %5.3f\n",
+            Nlsb_corrected, Nlsb_ldp_corrected, Rdata_lsb, Rdata_lsb_err ) ;
+
+       printf(" R QCD  :  lsb_0b / lsb_0b_ldp  : ( %10.1f +/- %6.1f ) / ( %10.1f +/- %6.1f )    =    %5.3f +/- %5.3f\n",
+            Nqcdmc_lsb_0b, Nqcdmc_lsb_0b_err, Nqcdmc_lsb_0b_ldp, Nqcdmc_lsb_0b_ldp_err, Rqcd_lsb_0b, Rqcd_lsb_0b_err ) ;
+
+       printf(" R data :  lsb_0b / lsb_0b_ldp  : ( %8d              ) / ( %8d              )    =    %5.3f +/- %5.3f\n",
+            Nlsb_0b, Nlsb_0b_ldp, Rdata_lsb_0b, Rdata_lsb_0b_err ) ;
+
+
+       printf("\n\n\n") ;
+
+
+       printf(" R ttwj :  sig    /    sb    :  ( %5.1f +/- %4.1f ) / ( %5.1f +/- %4.1f )   =   %5.3f +/- %5.3f\n",
+                 (Nttbarmc_sig+lsf_WJmc*NWJmc_sig), lsf_WJmc*sqrt(NWJmc_sig),
+                 (Nttbarmc_sb+lsf_WJmc*NWJmc_sb), lsf_WJmc*sqrt(NWJmc_sb),
+                 Rttwj, Rttwj_err ) ;
+
+       printf(" R ttwj :  sig_sl /    sb_sl :  ( %5.1f +/- %4.1f ) / ( %5.1f +/- %4.1f )   =   %5.3f +/- %5.3f\n",
+                 (Nttbarmc_sig_sl+lsf_WJmc*NWJmc_sig_sl), lsf_WJmc*sqrt(NWJmc_sig_sl),
+                 (Nttbarmc_sb_sl+lsf_WJmc*NWJmc_sb_sl), lsf_WJmc*sqrt(NWJmc_sb_sl),
+                 Rttwj_sl, Rttwj_sl_err ) ;
+
+       printf(" R data :  sig_sl /    sb_sl :    %3d              /   %3d                =   %5.3f +/- %5.3f\n",
+                 Nsig_sl, Nsb_sl, Rdata_sl, Rdata_sl_err ) ;
+
+
+
+       printf("\n\n\n") ;
+
+
+       printf(" ----- Simple MC closure tests\n\n") ;
+
+       printf("  QCD :  sb =  sb_ldp * (lsb_0b/lsb_0b_ldp) : ( %6.1f +/- %4.1f ) * ( %8.1f / %10.1f ) = %8.1f +/- %6.1f\n",
+             Nqcdmc_sb_ldp, Nqcdmc_sb_ldp_err, Nqcdmc_lsb_0b, Nqcdmc_lsb_0b_ldp, comp_mc_qcd_sb, comp_mc_qcd_sb_err ) ;
+       printf("                                                                               MC truth value : %8.1f +/- %6.1f\n",
+                   Nqcdmc_sb, Nqcdmc_sb_err ) ;
+
+       printf("\n") ;
+       printf("  QCD : sig = sig_ldp * (lsb_0b/lsb_0b_ldp) : ( %6.1f +/- %4.1f ) * ( %8.1f / %10.1f ) = %8.1f +/- %6.1f\n",
+             Nqcdmc_sig_ldp, Nqcdmc_sig_ldp_err, Nqcdmc_lsb_0b, Nqcdmc_lsb_0b_ldp, comp_mc_qcd_sig, comp_mc_qcd_sig_err ) ;
+       printf("                                                                               MC truth value : %8.1f +/- %6.1f\n",
+                   Nqcdmc_sig, Nqcdmc_sig_err ) ;
+
+
+       printf("\n") ;
+       printf("  ttwj : sig = ttwj_sb * ( ttwj_sig_sl / ttwj_sb_sl ) :  %6.1f * ( %6.1f / %6.1f ) = %6.1f +/- %4.1f\n",
+              (Nttbarmc_sb + lsf_WJmc*NWJmc_sb), (Nttbarmc_sig_sl + lsf_WJmc*NWJmc_sig_sl), (Nttbarmc_sb_sl + lsf_WJmc*NWJmc_sb_sl),
+              comp_mc_ttwj_sig, comp_mc_ttwj_sig_err ) ;
+       printf("                                                                       MC truth value : %6.1f +/- %4.1f\n",
+                (Nttbarmc_sig + lsf_WJmc*NWJmc_sig), lsf_WJmc*sqrt(NWJmc_sig) ) ;
+
+
+       printf("\n\n\n") ;
 
-//     fscanf( infp, "%s %g", label, &EffScaleFactor ) ;       printf( "%s %g\n", label, EffScaleFactor ) ;         
-//     fscanf( infp, "%s %g", label, &EffScaleFactorErr ) ;    printf( "%s %g\n", label, EffScaleFactorErr ) ;         
-//     fscanf( infp, "%s %d", label, &Nsig ) ;                 printf( "%s %d\n", label, Nsig ) ;         
-//     fscanf( infp, "%s %d", label, &Na ) ;                   printf( "%s %d\n", label, Na ) ;           
-//     fscanf( infp, "%s %d", label, &Nd ) ;                   printf( "%s %d\n", label, Nd ) ;           
-//     fscanf( infp, "%s %d", label, &Nsb ) ;                 printf( "%s %d\n", label, Nsb ) ;         
-//     fscanf( infp, "%s %d", label, &Nslsig ) ;              printf( "%s %d\n", label, Nslsig ) ;      
-//     fscanf( infp, "%s %d", label, &Nslsb ) ;               printf( "%s %d\n", label, Nslsb ) ;       
-//     fscanf( infp, "%s %g", label, &Nqcdmcsig ) ;            printf( "%s %g\n", label, Nqcdmcsig ) ;    
-//     fscanf( infp, "%s %g", label, &Nqcdmcsigerr ) ;         printf( "%s %g\n", label, Nqcdmcsigerr ) ;    
-//     fscanf( infp, "%s %g", label, &Nqcdmcsb ) ;             printf( "%s %g\n", label, Nqcdmcsb ) ;     
-//     fscanf( infp, "%s %g", label, &Nqcdmcsberr ) ;          printf( "%s %g\n", label, Nqcdmcsberr ) ;     
-//     fscanf( infp, "%s %g", label, &Nqcdmca ) ;              printf( "%s %g\n", label, Nqcdmca ) ;      
-//     fscanf( infp, "%s %g", label, &Nqcdmcaerr ) ;           printf( "%s %g\n", label, Nqcdmcaerr ) ;      
-//     fscanf( infp, "%s %g", label, &Nqcdmcd ) ;              printf( "%s %g\n", label, Nqcdmcd ) ;      
-//     fscanf( infp, "%s %g", label, &Nqcdmcderr ) ;           printf( "%s %g\n", label, Nqcdmcderr ) ;      
-//     fscanf( infp, "%s %g", label, &Nqcdmcslsig ) ;          printf( "%s %g\n", label, Nqcdmcslsig ) ;      
-//     fscanf( infp, "%s %g", label, &Nqcdmcslsb ) ;           printf( "%s %g\n", label, Nqcdmcslsb ) ;      
-//     fscanf( infp, "%s %g", label, &Nttbarmcsig ) ;          printf( "%s %g\n", label, Nttbarmcsig ) ;  
-//     fscanf( infp, "%s %g", label, &Nttbarmcsb ) ;           printf( "%s %g\n", label, Nttbarmcsb ) ;   
-//     fscanf( infp, "%s %g", label, &Nttbarmca ) ;            printf( "%s %g\n", label, Nttbarmca ) ;    
-//     fscanf( infp, "%s %g", label, &Nttbarmcd ) ;            printf( "%s %g\n", label, Nttbarmcd ) ;    
-//     fscanf( infp, "%s %g", label, &Nttbarmcslsig ) ;        printf( "%s %g\n", label, Nttbarmcslsig ) ;      
-//     fscanf( infp, "%s %g", label, &Nttbarmcslsb ) ;        printf( "%s %g\n", label, Nttbarmcslsb ) ;      
+       printf(" ----- Simple Data calculations\n\n") ;
 
-//     fscanf( infp, "%s %g", label, &lsf_WJmc ) ;        printf( "%s %g\n", label, lsf_WJmc ) ;      
-//     fscanf( infp, "%s %g", label, &lsf_WJmc_err ) ;        printf( "%s %g\n", label, lsf_WJmc_err ) ;      
-//     fscanf( infp, "%s %d", label, &NWJmcsig ) ;        printf( "%s %d\n", label, NWJmcsig ) ;      
-//     fscanf( infp, "%s %d", label, &NWJmca ) ;        printf( "%s %d\n", label, NWJmca ) ;      
-//     fscanf( infp, "%s %d", label, &NWJmcd ) ;        printf( "%s %d\n", label, NWJmcd ) ;      
-//     fscanf( infp, "%s %d", label, &NWJmcsb ) ;        printf( "%s %d\n", label, NWJmcsb ) ;      
-//     fscanf( infp, "%s %d", label, &NWJmcslsig ) ;        printf( "%s %d\n", label, NWJmcslsig ) ;      
-//     fscanf( infp, "%s %d", label, &NWJmcslsb ) ;        printf( "%s %d\n", label, NWJmcslsb ) ;      
 
-//     fscanf( infp, "%s %g", label, &lsf_Znnmc ) ;        printf( "%s %g\n", label, lsf_Znnmc ) ;      
-//     fscanf( infp, "%s %g", label, &lsf_Znnmc_err ) ;        printf( "%s %g\n", label, lsf_Znnmc_err ) ;      
-//     fscanf( infp, "%s %d", label, &NZnnmcsig ) ;        printf( "%s %d\n", label, NZnnmcsig ) ;      
-//     fscanf( infp, "%s %d", label, &NZnnmca ) ;        printf( "%s %d\n", label, NZnnmca ) ;      
-//     fscanf( infp, "%s %d", label, &NZnnmcd ) ;        printf( "%s %d\n", label, NZnnmcd ) ;      
-//     fscanf( infp, "%s %d", label, &NZnnmcsb ) ;        printf( "%s %d\n", label, NZnnmcsb ) ;      
-//     fscanf( infp, "%s %d", label, &NZnnmcslsig ) ;        printf( "%s %d\n", label, NZnnmcslsig ) ;      
-//     fscanf( infp, "%s %d", label, &NZnnmcslsb ) ;        printf( "%s %d\n", label, NZnnmcslsb ) ;      
+       printf(" QCD :  sb  = (  sb_ldp - (ttwj+znn+other)_ldp_mc ) * (lsb_0b/lsb_0b_ldp) : ( %4d - %5.1f ) * ( %5d / %7d ) = %6.1f +/- %4.1f\n",
+           Nsb_ldp, (Nttbarmc_sb_ldp  + lsf_WJmc*NWJmc_sb_ldp  + lsf_Znnmc*NZnnmc_sb_ldp  + lsf_Ewomc*NEwomc_sb_ldp  ),
+           Nlsb_0b, Nlsb_0b_ldp, comp_data_qcd_sb, comp_data_qcd_sb_err ) ;
+       printf("                                                                                                  MC truth value : %8.1f +/- %4.1f\n",
+                   Nqcdmc_sb, Nqcdmc_sb_err ) ;
 
-//     fscanf( infp, "%s %g", label, &lsf_Ewomc ) ;        printf( "%s %g\n", label, lsf_Ewomc ) ;      
-//     fscanf( infp, "%s %g", label, &lsf_Ewomc_err ) ;        printf( "%s %g\n", label, lsf_Ewomc_err ) ;      
-//     fscanf( infp, "%s %d", label, &NEwomcsig ) ;        printf( "%s %d\n", label, NEwomcsig ) ;      
-//     fscanf( infp, "%s %d", label, &NEwomca ) ;        printf( "%s %d\n", label, NEwomca ) ;      
-//     fscanf( infp, "%s %d", label, &NEwomcd ) ;        printf( "%s %d\n", label, NEwomcd ) ;      
-//     fscanf( infp, "%s %d", label, &NEwomcsb ) ;        printf( "%s %d\n", label, NEwomcsb ) ;      
-//     fscanf( infp, "%s %d", label, &NEwomcslsig ) ;        printf( "%s %d\n", label, NEwomcslsig ) ;      
-//     fscanf( infp, "%s %d", label, &NEwomcslsb ) ;        printf( "%s %d\n", label, NEwomcslsb ) ;      
+       printf("\n") ;
+       printf(" QCD :  sig = ( sig_ldp - (ttwj+znn+other)_ldp_mc ) * (lsb_0b/lsb_0b_ldp) : ( %4d - %5.1f ) * ( %5d / %7d ) = %6.1f +/- %4.1f\n",
+           Nsig_ldp, (Nttbarmc_sig_ldp  + lsf_WJmc*NWJmc_sig_ldp  + lsf_Znnmc*NZnnmc_sig_ldp  + lsf_Ewomc*NEwomc_sig_ldp  ),
+           Nlsb_0b, Nlsb_0b_ldp, comp_data_qcd_sig, comp_data_qcd_sig_err ) ;
+       printf("                                                                                                  MC truth value : %8.1f +/- %4.1f\n",
+                   Nqcdmc_sig, Nqcdmc_sig_err ) ;
 
-//     fscanf( infp, "%s %g", label, &Nsusymcsig ) ;           printf( "%s %g\n", label, Nsusymcsig ) ;   
-//     fscanf( infp, "%s %g", label, &Nsusymca ) ;             printf( "%s %g\n", label, Nsusymca ) ;     
-//     fscanf( infp, "%s %g", label, &Nsusymcd ) ;             printf( "%s %g\n", label, Nsusymcd ) ;     
-//     fscanf( infp, "%s %g", label, &Nsusymcsb ) ;           printf( "%s %g\n", label, Nsusymcsb ) ;   
-//     fscanf( infp, "%s %g", label, &Nsusymcslsig ) ;        printf( "%s %g\n", label, Nsusymcslsig ) ;
-//     fscanf( infp, "%s %g", label, &Nsusymcslsb ) ;        printf( "%s %g\n", label, Nsusymcslsb ) ;
 
+       printf("\n") ;
+       printf(" ttwj : sig = ( sb - (qcd_sb + (znn+other)_sb_mc) ) * (sig_sl/sb_sl) : ( %5d - ( %5.1f + %5.1f))*(%3d/%3d) = %5.1f +/- %4.1f\n",
+              Nsb, comp_data_qcd_sb, (lsf_Znnmc*NZnnmc_sb + lsf_Ewomc*NEwomc_sb), Nsig_sl, Nsb_sl, comp_data_ttwj_sig, comp_data_ttwj_sig_err ) ;
+       printf("                                                                                              MC truth value : %5.1f +/- %4.1f\n",
+                 (Nttbarmc_sig + lsf_WJmc*NWJmc_sig), lsf_WJmc*sqrt(NWJmc_sig) ) ;
 
-//     printf("\n Done reading in %s\n\n", initializeFile ) ;
-//     fclose( infp ) ;
 
+       printf("\n\n\n") ;
 
 
 
 
 
-//     //--- Print out a nice summary of the inputs.
+     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-//     float Newmcsig = lsf_WJmc * NWJmcsig
-//                    + lsf_Znnmc * NZnnmcsig
-//                    + lsf_Ewomc * NEwomcsig ;
 
-//     float Newmcsb = lsf_WJmc * NWJmcsb
-//                    + lsf_Znnmc * NZnnmcsb
-//                    + lsf_Ewomc * NEwomcsb ;
 
-//     float Newmca = lsf_WJmc * NWJmca
-//                    + lsf_Znnmc * NZnnmca
-//                    + lsf_Ewomc * NEwomca ;
+      if ( Nsig < 0 ) {
+         printf("\n\n *** Negative value for Nsig in input file.  Will set Nsig to MC expectation, which is %d.\n\n",
+             TMath::Nint( Nsm_sig ) ) ;
+         Nsig = TMath::Nint( Nsm_sig ) ;
+      }
 
-//     float Newmcd = lsf_WJmc * NWJmcd
-//                    + lsf_Znnmc * NZnnmcd
-//                    + lsf_Ewomc * NEwomcd ;
+      rv_Nsig        -> setVal( Nsig ) ;
+      rv_Nsb         -> setVal( Nsb ) ;
 
-//     float Newmcslsig = lsf_WJmc * NWJmcslsig
-//                    + lsf_Znnmc * NZnnmcslsig
-//                    + lsf_Ewomc * NEwomcslsig ;
+      rv_Nsig_sl     -> setVal( Nsig_sl ) ;
+      rv_Nsb_sl      -> setVal( Nsb_sl ) ;
 
-//     float Newmcslsb = lsf_WJmc * NWJmcslsb
-//                    + lsf_Znnmc * NZnnmcslsb
-//                    + lsf_Ewomc * NEwomcslsb ;
+      rv_Nsig_ldp    -> setVal( Nsig_ldp ) ;
+      rv_Nsb_ldp     -> setVal( Nsb_ldp ) ;
 
+      rv_Nlsb_0b     -> setVal( Nhtonlytrig_lsb_0b ) ;
+      rv_Nlsb_0b_ldp -> setVal( Nhtonlytrig_lsb_0b_ldp ) ;
 
+      rv_Nsb_ee      -> setVal( Nsb_ee ) ;
+      rv_Nsig_ee     -> setVal( Nsig_ee ) ;
 
-//     float Nsmsig = Nttbarmcsig + Nqcdmcsig + Newmcsig ;
+      rv_Nsb_mm      -> setVal( Nsb_mm ) ;
+      rv_Nsig_mm     -> setVal( Nsig_mm ) ;
 
-//     float Nsmsb = Nttbarmcsb + Nqcdmcsb + Newmcsb ;
 
-//     float Nsma = Nttbarmca + Nqcdmca + Newmca ;
-//     float Nsmd = Nttbarmcd + Nqcdmcd + Newmcd ;
 
-//     float Nsmslsig = Nttbarmcslsig + Nqcdmcslsig + Newmcslsig ;
 
-//     float Nsmslsb = Nttbarmcslsb + Nqcdmcslsb + Newmcslsb ;
 
 
 
-//     float Rttmc = Nttbarmcsig / Nttbarmcsb ;
-//     float Rslmc = Nsmslsig / Nsmslsb ;
-//     float Rsldata = (1.0*Nslsig) / (1.0*Nslsb) ;
-//     float Rsldataerr = Rsldata*sqrt(1.0/Nslsig + 1.0/Nslsb) ;
+      if ( useSigTtwjVar ) {
+         rrv_mu_ttwj_sig   -> setVal( Nttbarmc_sig + lsf_WJmc*NWJmc_sig ) ;  //-- this is a starting value only.
+      }
+      if ( !useLdpVars ) {
+         rrv_mu_qcd_sig  -> setVal( Nqcdmc_sig ) ; //-- this is a starting value only.
+      }
 
-//     float Rqcdmctruth = Nqcdmcd / Nqcdmca ;
-//     float Rqcddata    = (Nd-Nttbarmcd-Newmcd)/(Na-Nttbarmca-Newmca) ;
-//     float Rqcddataerr = sqrt( pow(1./(Na-Nttbarmca-Newmca),2)*Nd + pow( ((Nd-Nttbarmcd-Newmcd)/pow((Na-Nttbarmca-Newmca),2)),2)*Na ) ;
 
-//     float frsigttbar = Nttbarmcsig / Nsmsig ;
-//     float frsigqcd   = Nqcdmcsig / Nsmsig ;
-//     float frsigew    = Newmcsig / Nsmsig ;
 
-//     float frsbttbar = Nttbarmcsb / Nsmsb ;
-//     float frsbqcd   = Nqcdmcsb / Nsmsb ;
-//     float frsbew    = Newmcsb / Nsmsb ;
+      rv_mu_znn_sig   -> setVal( lsf_Znnmc*NZnnmc_sig ) ;  //-- this is a starting value only.
+      rv_mu_susy_sig    -> setVal( 0. ) ;  //-- this is a starting value only.
 
 
+      if ( !useSigTtwjVar ) {
+         rrv_mu_ttwj_sb   -> setVal( Nttbarmc_sb + lsf_WJmc*NWJmc_sb ) ;  //-- this is a starting value only.
+      }
+      if ( !useLdpVars ) {
+         rrv_mu_qcd_sb  -> setVal( Nqcdmc_sb ) ; //-- this is a starting value only.
+      }
 
+      rv_mu_znn_sb   -> setVal( lsf_Znnmc*NZnnmc_sb ) ;  //-- this is a starting value only.
+      rv_mu_ttwj_sig_sl  -> setVal( Nttbarmc_sig_sl + lsf_WJmc*NWJmc_sig_sl ) ;  //-- this is a starting value only.
+      rv_mu_ttwj_sb_sl  -> setVal( Nttbarmc_sb_sl + lsf_WJmc*NWJmc_sb_sl ) ;  //-- this is a starting value only.
 
-//     printf("\n\n\n") ;
 
-//     printf("                        ttbar    qcd       EW    all SM      data   SUSY\n") ;
-//     printf("----------------------------------------------------------------------------\n") ;
-//     printf("  Signal box     :  %8.1f %8.1f %8.1f %8.1f %8d %8.1f\n",
-//           Nttbarmcsig, Nqcdmcsig, Newmcsig, Nsmsig, Nsig, Nsusymcsig ) ;
-//     printf("  Sideband       :  %8.1f %8.1f %8.1f %8.1f %8d %8.1f\n",
-//           Nttbarmcsb, Nqcdmcsb, Newmcsb, Nsmsb, Nsb, Nsusymcsb ) ;
-//     printf("\n") ;
-//     printf("  A              :  %8.1f %8.1f %8.1f %8.1f %8d %8.1f\n",
-//           Nttbarmca, Nqcdmca, Newmca, Nsma, Na, Nsusymca ) ;
-//     printf("  D              :  %8.1f %8.1f %8.1f %8.1f %8d %8.1f\n",
-//           Nttbarmcd, Nqcdmcd, Newmcd, Nsmd, Nd, Nsusymcd ) ;
-//     printf("\n") ;
-//     printf("  SL, SIG        :  %8.1f %8.1f %8.1f %8.1f %8d %8.1f\n",
-//           Nttbarmcslsig, Nqcdmcslsig, Newmcslsig, Nsmslsig, Nslsig, Nsusymcslsig ) ;
-//     printf("  SL, SB         :  %8.1f %8.1f %8.1f %8.1f %8d %8.1f\n",
-//           Nttbarmcslsb, Nqcdmcslsb, Newmcslsb, Nsmslsb, Nslsb, Nsusymcslsb ) ;
-//     printf("\n") ;
-//     printf("----------------------------------------------------------------------------\n") ;
-//     printf("\n") ;
-//     printf("    Rttmc     = %5.1f / %5.1f = %5.3f\n", Nttbarmcsig, Nttbarmcsb, Rttmc ) ;
-//     printf("    Rsl,mc    = %5.1f / %5.1f = %5.3f\n", Nsmslsig, Nsmslsb, Rslmc ) ;
-//     printf("    Rsl,data  = %5d / %5d = %5.3f +/- %5.3f\n", Nslsig, Nslsb, Rsldata, Rsldataerr ) ;
-//     printf("\n") ;
-//     printf("    Rqcd,mc   = %5.1f / %6.1f = %5.3f\n", Nqcdmcd, Nqcdmca, Rqcdmctruth ) ;
-//     printf("    Rqcd,data = %5.1f / %6.1f = %5.3f +/- %5.3f\n", (Nd-Nttbarmcd-Newmcd), (Na-Nttbarmca-Newmca), Rqcddata, Rqcddataerr ) ;
-//     printf("\n") ;
-//     printf("                              ttbar    qcd     EW\n") ;
-//     printf("-----------------------------------------------------\n") ;
-//     printf("   SIG region  fractions :   %5.2f   %5.2f   %5.2f\n", frsigttbar, frsigqcd, frsigew ) ;
-//     printf("   SB  region  fractions :   %5.2f   %5.2f   %5.2f\n", frsbttbar, frsbqcd, frsbew ) ;
-//     printf("\n\n\n") ;
+      if ( useLdpVars ) {
+         rrv_mu_qcd_sig_ldp  -> setVal( Nqcdmc_sig_ldp ) ; //-- this is a starting value only.
+      }
 
+      if ( useLdpVars ) {
+         rrv_mu_qcd_sb_ldp  -> setVal( Nqcdmc_sb_ldp ) ; //-- this is a starting value only.
+      }
 
+      rv_mu_qcd_lsb_0b  -> setVal( Nhtonlytrig_lsb_0b ) ;  //-- this is a starting value only.
 
-//     printf(" --- Defining observables.\n" ) ;
+      rv_mu_qcd_lsb_0b_ldp  -> setVal( Nhtonlytrig_lsb_0b_ldp ) ;  //-- this is a starting value only.
 
-//    //-- data counts in signal region, A, and D, SB, SL SB, SL SIG.
+      rv_mu_ttbarmc_sig_ldp  -> setVal( Nttbarmc_sig_ldp ) ;
+      rv_mu_WJmc_sig_ldp     -> setVal( NWJmc_sig_ldp ) ;
+      rv_mu_Znnmc_sig_ldp    -> setVal( NZnnmc_sig_ldp ) ;
+      rv_mu_Ewomc_sig_ldp    -> setVal( NEwomc_sig_ldp ) ;
 
-//    if ( Nsig < 0 ) {
-//       printf("\n\n *** Negative value for Nsig in input file.  Will set Nsig to MC expectation, which is %d.\n\n",
-//           TMath::Nint( Nsmsig ) ) ;
-//       rv_Nsig -> setVal( TMath::Nint( Nsmsig )  ) ;
-//    } else {
-//       rv_Nsig -> setVal( Nsig ) ;
-//    }
-//    rv_Na -> setVal( Na ) ;
-//    rv_Nd -> setVal( Nd ) ;
-//    rv_Nsb -> setVal( Nsb ) ;
-//    rv_Nslsig -> setVal( Nslsig ) ;
-//    rv_Nslsb -> setVal( Nslsb ) ;
+      rv_mu_ttbarmc_sig_ldp  -> setConstant( kTRUE ) ;
+      rv_mu_WJmc_sig_ldp     -> setConstant( kTRUE ) ;
+      rv_mu_Znnmc_sig_ldp    -> setConstant( kTRUE ) ;
+      rv_mu_Ewomc_sig_ldp    -> setConstant( kTRUE ) ;
 
 
+      rv_mu_ttbarmc_sb_ldp  -> setVal( Nttbarmc_sb_ldp ) ;
+      rv_mu_WJmc_sb_ldp     -> setVal( NWJmc_sb_ldp ) ;
+      rv_mu_Znnmc_sb_ldp    -> setVal( NZnnmc_sb_ldp ) ;
+      rv_mu_Ewomc_sb_ldp    -> setVal( NEwomc_sb_ldp ) ;
 
+      rv_mu_ttbarmc_sb_ldp  -> setConstant( kTRUE ) ;
+      rv_mu_WJmc_sb_ldp     -> setConstant( kTRUE ) ;
+      rv_mu_Znnmc_sb_ldp    -> setConstant( kTRUE ) ;
+      rv_mu_Ewomc_sb_ldp    -> setConstant( kTRUE ) ;
 
 
-//    //-- QCD MC counts
+      rv_mu_Ewomc_sig    -> setVal( NEwomc_sig ) ;
+      rv_mu_Ewomc_sig    -> setConstant( kTRUE ) ;
 
-//    rv_Nqcdmca   -> setVal( Nqcdmca ) ;
-//    rv_Nqcdmcd   -> setVal( Nqcdmcd ) ;
-//    rv_Nqcdmcsig -> setVal( Nqcdmcsig ) ;
-//    rv_Nqcdmcsb  -> setVal( Nqcdmcsb ) ;
+      rv_mu_Ewomc_sb    -> setVal( NEwomc_sb ) ;
+      rv_mu_Ewomc_sb    -> setConstant( kTRUE ) ;
 
 
 
+      rv_eff_sf  -> setVal( EffScaleFactor ) ;
+      rv_lsf_Znnmc  -> setVal( lsf_Znnmc ) ;
+      rv_lsf_WJmc  -> setVal( lsf_WJmc ) ;
+      rv_lsf_Ewomc  -> setVal( lsf_Ewomc ) ;
+      sf_ttbarmc = 1.0 ;
+      sf_ttbarmc_err = 0.2 ;
+      rv_sf_ttbarmc   -> setVal( sf_ttbarmc ) ;
 
+      rv_acc_ee  -> setVal( acc_ee_mean ) ;
+      rv_acc_mm  -> setVal( acc_mm_mean ) ;
+      rv_eff_ee  -> setVal( eff_ee_mean ) ;
+      rv_eff_mm  -> setVal( eff_mm_mean ) ;
+      rv_znnoverll_bfratio -> setVal( 5.95 ) ;
+      rv_znnoverll_bfratio -> setConstant( kTRUE ) ;
+      rv_dataoverll_lumiratio  -> setVal( DataLumi / Ztoll_lumi ) ;
+      rv_dataoverll_lumiratio  -> setConstant( kTRUE ) ;
 
 
-//    //-- EW MC counts
 
-//    rv_NWJmcsig   -> setVal( NWJmcsig ) ;
-//    rv_NWJmca     -> setVal( NWJmca ) ;
-//    rv_NWJmcd     -> setVal( NWJmcd ) ;
-//    rv_NWJmcsb    -> setVal( NWJmcsb ) ;
-//    rv_NWJmcslsig -> setVal( NWJmcslsig ) ;
-//    rv_NWJmcslsb  -> setVal( NWJmcslsb ) ;
+       initialized = true ;
 
-//    rv_NZnnmcsig   -> setVal( NZnnmcsig ) ;
-//    rv_NZnnmca     -> setVal( NZnnmca ) ;
-//    rv_NZnnmcd     -> setVal( NZnnmcd ) ;
-//    rv_NZnnmcsb    -> setVal( NZnnmcsb ) ;
-//    rv_NZnnmcslsig -> setVal( NZnnmcslsig ) ;
-//    rv_NZnnmcslsb  -> setVal( NZnnmcslsb ) ;
+       return true ;
 
-//    rv_NEwomcsig   -> setVal( NEwomcsig ) ;
-//    rv_NEwomca     -> setVal( NEwomca ) ;
-//    rv_NEwomcd     -> setVal( NEwomcd ) ;
-//    rv_NEwomcsb    -> setVal( NEwomcsb ) ;
-//    rv_NEwomcslsig -> setVal( NEwomcslsig ) ;
-//    rv_NEwomcslsb  -> setVal( NEwomcslsb ) ;
 
-
-
-
-
-
-
-
-
-
-
-//    //++++++++ Parameters of the likelihood
-
-//    printf(" --- Defining parameters.\n" ) ;
-
-
-
-
-//   //-- Counts in SIG
-
-//    if ( useSigTtwjVar ) {
-//       rrv_mu_ttbar_sig   -> setVal( Nttbarmcsig ) ;  //-- this is a starting value only.
-//    }
-//    rv_mu_qcd_sig     -> setVal( Nqcdmcsig ) ;  //-- this is a starting value only.
-//    rv_mu_susy_sig    -> setVal( 0. ) ;  //-- this is a starting value only.
-//    rv_mu_susymc_sig  -> setVal( 0. ) ;
-
-//    rv_mu_susymc_sig -> setConstant(kTRUE) ;
-
-
-
-
-
-//   //-- Counts in SB
-
-//    if ( !useSigTtwjVar ) {
-//       rrv_mu_ttbar_sb   -> setVal( Nttbarmcsb ) ;  //-- this is a starting value only.
-//    }
-//    rv_mu_qcd_sb    -> setVal( Nqcdmcsb ) ;  //-- this is a starting value only.
-//    rv_mu_susymc_sb -> setVal( 0. ) ;
-
-//    rv_mu_susymc_sb -> setConstant(kTRUE) ;
-
-
-
-
-
-
-//   //-- Counts in A, signal selection
-
-//    rv_mu_ttbar_a   -> setVal( Nttbarmca ) ;
-//    rv_mu_susymc_a  -> setVal( 0. ) ;
-
-//    rv_mu_susymc_a  ->setConstant(kTRUE) ;
-//    rv_mu_ttbar_a   ->setConstant(kTRUE) ;
-
-
-
-
-//   //-- Counts in D, signal selection
-
-//    rv_mu_ttbar_d   -> setVal( Nttbarmcd ) ;
-//    rv_mu_susymc_d  -> setVal( 0. ) ;
-
-//    rv_mu_ttbar_d   -> setConstant(kTRUE) ;
-//    rv_mu_susymc_d  -> setConstant(kTRUE) ;
-
-
-
-
-//   //-- Single Lepton (SL) counts, SIG region
-
-//    rv_mu_sl_ttbar_sig  -> setVal( Nslsig - Newmcslsig ) ;
-//    rv_mu_sl_susymc_sig -> setVal( 0. ) ;
-
-//    rv_mu_sl_susymc_sig -> setConstant( kTRUE ) ;
-
-
-
-
-
-//   //-- Single Lepton (SL) counts, SB region
-
-//    rv_mu_sl_ttbar_sb  -> setVal( Nslsb - Newmcslsb ) ;
-//    rv_mu_sl_susymc_sb -> setVal( 0. ) ;
-
-//    rv_mu_sl_susymc_sb -> setConstant( kTRUE ) ;
-
-
-
-
-
-
-//   //-- QCD MC, SIG,SB,A,D counts, signal selection
-
-//    rv_mu_qcdmc_sig -> setVal( Nqcdmcsig ) ;
-//    rv_mu_qcdmc_sb  -> setVal( Nqcdmcsb ) ;
-//    rv_mu_qcdmc_a   -> setVal( Nqcdmca ) ;
-//    rv_mu_qcdmc_d   -> setVal( Nqcdmcd ) ;
-
-
-
-//   //-- EW MC counts
-
-//    rv_mu_wjmc_sig   -> setVal( NWJmcsig ) ;
-//    rv_mu_wjmc_a     -> setVal( NWJmca ) ;
-//    rv_mu_wjmc_d     -> setVal( NWJmcd ) ;
-//    rv_mu_wjmc_sb    -> setVal( NWJmcsb ) ;
-//    rv_mu_wjmc_slsig -> setVal( NWJmcslsig ) ;
-//    rv_mu_wjmc_slsb  -> setVal( NWJmcslsb ) ;
-
-//    rv_mu_znnmc_sig   -> setVal( NZnnmcsig ) ;
-//    rv_mu_znnmc_a     -> setVal( NZnnmca ) ;
-//    rv_mu_znnmc_d     -> setVal( NZnnmcd ) ;
-//    rv_mu_znnmc_sb    -> setVal( NZnnmcsb ) ;
-//    rv_mu_znnmc_slsig -> setVal( NZnnmcslsig ) ;
-//    rv_mu_znnmc_slsb  -> setVal( NZnnmcslsb ) ;
-
-//    rv_mu_ewomc_sig   -> setVal( NEwomcsig ) ;
-//    rv_mu_ewomc_a     -> setVal( NEwomca ) ;
-//    rv_mu_ewomc_d     -> setVal( NEwomcd ) ;
-//    rv_mu_ewomc_sb    -> setVal( NEwomcsb ) ;
-//    rv_mu_ewomc_slsig -> setVal( NEwomcslsig ) ;
-//    rv_mu_ewomc_slsb  -> setVal( NEwomcslsb ) ;
-
-
-
-
-
-
-
-
-//  //-- Efficiency scale factor.
-
-//    rv_eff_sf  -> setVal( EffScaleFactor ) ;
-
-//    rv_lsf_wjmc  -> setVal( lsf_WJmc ) ;
-//    rv_lsf_znnmc  -> setVal( lsf_Znnmc ) ;
-//    rv_lsf_ewomc  -> setVal( lsf_Ewomc ) ;
-
-
-
-//    //-- check for really small or zero errors.
-//    if ( Nqcdmcsigerr < 0.1 ) {
-//       printf("\n\n *** QCDMC SIG error is %8.3f.  Resetting to 0.5 events.\n\n", Nqcdmcsigerr ) ;
-//       Nqcdmcsigerr = 0.5 ;
-//    }
-//    if ( Nqcdmcsberr < 0.1 ) {
-//       printf("\n\n *** QCDMC SB error is %8.3f.  Resetting to 0.5 events.\n\n", Nqcdmcsberr ) ;
-//       Nqcdmcsberr = 0.5 ;
-//    }
-//    if ( Nqcdmcaerr < 0.1 ) {
-//       printf("\n\n *** QCDMC A error is %8.3f.  Resetting to 0.5 events.\n\n", Nqcdmcaerr ) ;
-//       Nqcdmcaerr = 0.5 ;
-//    }
-//    if ( Nqcdmcderr < 0.1 ) {
-//       printf("\n\n *** QCDMC D error is %8.3f.  Resetting to 0.5 events.\n\n", Nqcdmcderr ) ;
-//       Nqcdmcderr = 0.5 ;
-//    }
-
-
-//     initialized = true ;
-
-//     return true ;
-
-
-//  } // reinitialize.
+    } // reinitialize.
 
 ////===================================================================
 
@@ -3446,830 +3589,799 @@
 
 
 
-////===================================================================
+  //===================================================================
 
-//  bool ra2bRoostatsClass3::susyScanNoContam( const char* inputScanFile, double dataLumi ) {
+    bool ra2bRoostatsClass3::susyScanNoContam( const char* inputScanFile ) {
 
 
-//     //-- First, (re)do the fit and susy signal profile scan.
+       //-- First, (re)do the fit and susy signal profile scan.
 
-//     reinitialize() ;
-//     doFit() ;
-//     float susySigLow, susySigHigh ;
-//     profileSusySig( susySigLow, susySigHigh, false ) ;
+       reinitialize() ;
+       doFit() ;
+       float susySigLow, susySigHigh ;
+       profileSusySig( susySigLow, susySigHigh, false ) ;
 
-//     printf("  Upper limit on SUSY SIG yield : %6.1f\n\n", susySigHigh ) ;
+       printf("  Upper limit on SUSY SIG yield : %6.1f\n\n", susySigHigh ) ;
 
 
 
 
-//     printf("\n\n Opening SUSY scan input file : %s\n", inputScanFile ) ;
+       printf("\n\n Opening SUSY scan input file : %s\n", inputScanFile ) ;
 
-//     FILE* infp ;
-//     if ( (infp=fopen( inputScanFile,"r"))==NULL ) {
-//        printf("\n\n *** Problem opening input file: %s.\n\n", inputScanFile ) ;
-//        return false ;
-//     }
+       FILE* infp ;
+       if ( (infp=fopen( inputScanFile,"r"))==NULL ) {
+          printf("\n\n *** Problem opening input file: %s.\n\n", inputScanFile ) ;
+          return false ;
+       }
 
-//     int nM0bins ;
-//     float minM0 ;
-//     float maxM0 ;
-//     float deltaM0 ;
-//     int nM12bins ;
-//     float minM12 ;
-//     float maxM12 ;
-//     float deltaM12 ;
-//     int nScanPoints ;
+       int nM0bins ;
+       float minM0 ;
+       float maxM0 ;
+       float deltaM0 ;
+       int nM12bins ;
+       float minM12 ;
+       float maxM12 ;
+       float deltaM12 ;
+       int nScanPoints ;
 
-//     char label[1000] ;
+       char label[1000] ;
 
-//     fscanf( infp, "%s %d %f %f %f", label, &nM0bins, &minM0, &maxM0, &deltaM0 ) ;
-//     fscanf( infp, "%s %d %f %f %f", label, &nM12bins, &minM12, &maxM12, &deltaM12 ) ;
-//     fscanf( infp, "%s %d", label, &nScanPoints ) ;
+       fscanf( infp, "%s %d %f %f %f", label, &nM0bins, &minM0, &maxM0, &deltaM0 ) ;
+       fscanf( infp, "%s %d %f %f %f", label, &nM12bins, &minM12, &maxM12, &deltaM12 ) ;
+       fscanf( infp, "%s %d", label, &nScanPoints ) ;
 
-//     printf( "\n\n" ) ;
-//     printf( "  M0   :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM0bins, minM0, maxM0 ) ;
-//     printf( "  M1/2 :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM12bins, minM12, maxM12 ) ;
-//     printf( "\n\n" ) ;
+       printf( "\n\n" ) ;
+       printf( "  M0   :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM0bins, minM0, maxM0 ) ;
+       printf( "  M1/2 :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM12bins, minM12, maxM12 ) ;
+       printf( "\n\n" ) ;
 
-//     TH2F* hsusyscanExcluded = new TH2F("hsusyscanExcluded", "SUSY m1/2 vs m0 parameter scan",
-//          nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
-//          nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
+       TH2F* hsusyscanExcluded = new TH2F("hsusyscanExcluded", "SUSY m1/2 vs m0 parameter scan",
+            nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
+            nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
 
 
-//     //--- read in the column headers line.
-//     char c(0) ;
-//     c = fgetc( infp ) ;
-//     c = 0 ;
-//     while ( c!=10  ) { c = fgetc( infp ) ; }
+       //--- read in the column headers line.
+       char c(0) ;
+       c = fgetc( infp ) ;
+       c = 0 ;
+       while ( c!=10  ) { c = fgetc( infp ) ; }
 
-//     //--- Loop over the scan points.
-//     for ( int pi = 0 ; pi < nScanPoints ; pi++ ) {
+       //--- Loop over the scan points.
+       for ( int pi = 0 ; pi < nScanPoints ; pi++ ) {
 
 
-//        float pointM0 ;
-//        float pointM12 ;
-//        float pointXsec ;
-//        int    nsel ;
-//        int    n_a ;
-//        int    n_d ;
-//        int    n_sb ;
-//        int    n_sl_sb ;
-//        int    n_sl_sig ;
+          float pointM0 ;
+          float pointM12 ;
+          float pointXsec ;
+          int    n_sig ;
+          int    n_sb ;
+          int    n_sig_sl ;
+          int    n_sb_sl ;
+          int    n_sig_ldp ;
+          int    n_sb_ldp ;
 
-//        fscanf( infp, "%f %f %f   %d %d %d   %d  %d  %d",
-//          &pointM0, &pointM12, &pointXsec,
-//          &nsel, &n_a, &n_d,
-//          &n_sb,
-//          &n_sl_sb,
-//          &n_sl_sig ) ;
+          fscanf( infp, "%f %f %f   %d %d %d   %d  %d  %d",
+            &pointM0, &pointM12, &pointXsec,
+            &n_sig, &n_sb, &n_sig_sl,
+            &n_sb_sl, &n_sig_ldp, &n_sb_ldp ) ;
 
-//        int nGenPerPoint(10000) ;
-//        float nselWeighted = ( nsel * pointXsec * dataLumi ) / ( 1.0*nGenPerPoint ) ;
+          int nGenPerPoint(10000) ;
+          float nselWeighted = ( n_sig * pointXsec * DataLumi ) / ( 1.0*nGenPerPoint ) ;
 
 
-//        int m0bin  = hsusyscanExcluded->GetXaxis()->FindBin( pointM0 ) ;
-//        int m12bin = hsusyscanExcluded->GetYaxis()->FindBin( pointM12 ) ;
+          int m0bin  = hsusyscanExcluded->GetXaxis()->FindBin( pointM0 ) ;
+          int m12bin = hsusyscanExcluded->GetYaxis()->FindBin( pointM12 ) ;
 
-//        printf(" m0 = %4.0f (%3d),  m1/2 = %4.0f (%3d),  Npred = %7.1f", pointM0, m0bin, pointM12, m12bin, nselWeighted ) ;
+          printf(" m0 = %4.0f (%3d),  m1/2 = %4.0f (%3d),  Npred = %7.1f", pointM0, m0bin, pointM12, m12bin, nselWeighted ) ;
 
-//        //--- Owen : Do a sanity check.
-//        //           If Nobs is 2 or less, give the signal UL assuming zero background.
-//        //           From PDG
-//        //           Nobs  UL(95%)
-//        //           0     3.00
-//        //           1     4.74
-//        //           2     6.30
+          //--- Owen : Do a sanity check.
+          //           If Nobs is 2 or less, give the signal UL assuming zero background.
+          //           From PDG
+          //           Nobs  UL(95%)
+          //           0     3.00
+          //           1     4.74
+          //           2     6.30
 
-//        if ( nselWeighted > susySigHigh ) {
-//           printf(" Excluded\n") ;
-//           hsusyscanExcluded->SetBinContent( m0bin, m12bin, 1. ) ;
-//        } else {
-//           printf("\n") ;
-//        }
+          if ( nselWeighted > susySigHigh ) {
+             printf(" Excluded\n") ;
+             hsusyscanExcluded->SetBinContent( m0bin, m12bin, 1. ) ;
+          } else {
+             printf("\n") ;
+          }
 
 
-//     } // pi .
+       } // pi .
 
-//     fclose( infp ) ;
+       fclose( infp ) ;
 
 
-//     TStringLong infilestr( inputScanFile ) ;
-//     TStringLong pngoutputfilestr = infilestr ;
-//     pngoutputfilestr.ReplaceAll("input","output") ;
-//     pngoutputfilestr.ReplaceAll(".txt","-scanplot-nocontam.png") ;
-//     printf("\n\n png output file : %s\n\n", pngoutputfilestr.Data() ) ;
+       TStringLong infilestr( inputScanFile ) ;
+       TStringLong pngoutputfilestr = infilestr ;
+       pngoutputfilestr.ReplaceAll("input","output") ;
+       pngoutputfilestr.ReplaceAll(".txt","-scanplot-nocontam.png") ;
+       printf("\n\n png output file : %s\n\n", pngoutputfilestr.Data() ) ;
 
-//     TStringLong rootoutputfilestr = pngoutputfilestr ;
-//     rootoutputfilestr.ReplaceAll("png","root") ;
-//     printf("\n\n root output file : %s\n\n", rootoutputfilestr.Data() ) ;
+       TStringLong rootoutputfilestr = pngoutputfilestr ;
+       rootoutputfilestr.ReplaceAll("png","root") ;
+       printf("\n\n root output file : %s\n\n", rootoutputfilestr.Data() ) ;
 
 
-//     gStyle->SetPadGridX(1) ;
-//     gStyle->SetPadGridY(1) ;
-//     TCanvas* csusy = new TCanvas("csusy","SUSY m1/2 vs m0 scan") ;
-//     hsusyscanExcluded->Draw("col") ;
-//     csusy->SaveAs( pngoutputfilestr.Data() ) ;
-//     TFile* f = new TFile( rootoutputfilestr.Data() ,"recreate") ;
-//     hsusyscanExcluded->Write() ;
-//     f->Write() ;
-//     f->Close() ;
+       gStyle->SetPadGridX(1) ;
+       gStyle->SetPadGridY(1) ;
+       TCanvas* csusy = new TCanvas("csusy","SUSY m1/2 vs m0 scan") ;
+       hsusyscanExcluded->Draw("col") ;
+       csusy->SaveAs( pngoutputfilestr.Data() ) ;
+       TFile* f = new TFile( rootoutputfilestr.Data() ,"recreate") ;
+       hsusyscanExcluded->Write() ;
+       f->Write() ;
+       f->Close() ;
 
-//     return true ;
+       return true ;
 
-//  } // susyScanNoContam.
+    } // susyScanNoContam.
 
 
-////===================================================================
+  //===================================================================
 
-//  bool ra2bRoostatsClass3::susyScanWithContam( const char* inputScanFile, double dataLumi ) {
+    bool ra2bRoostatsClass3::susyScanWithContam( const char* inputScanFile ) {
 
 
-//     printf("\n\n Opening SUSY scan input file : %s\n", inputScanFile ) ;
+       printf("\n\n Opening SUSY scan input file : %s\n", inputScanFile ) ;
 
-//     FILE* infp ;
-//     if ( (infp=fopen( inputScanFile,"r"))==NULL ) {
-//        printf("\n\n *** Problem opening input file: %s.\n\n", inputScanFile ) ;
-//        return false ;
-//     }
+       FILE* infp ;
+       if ( (infp=fopen( inputScanFile,"r"))==NULL ) {
+          printf("\n\n *** Problem opening input file: %s.\n\n", inputScanFile ) ;
+          return false ;
+       }
 
-//     int nM0bins ;
-//     float minM0 ;
-//     float maxM0 ;
-//     float deltaM0 ;
-//     int nM12bins ;
-//     float minM12 ;
-//     float maxM12 ;
-//     float deltaM12 ;
-//     int nScanPoints ;
+       int nM0bins ;
+       float minM0 ;
+       float maxM0 ;
+       float deltaM0 ;
+       int nM12bins ;
+       float minM12 ;
+       float maxM12 ;
+       float deltaM12 ;
+       int nScanPoints ;
 
-//     char label[1000] ;
+       char label[1000] ;
 
-//     fscanf( infp, "%s %d %f %f %f", label, &nM0bins, &minM0, &maxM0, &deltaM0 ) ;
-//     fscanf( infp, "%s %d %f %f %f", label, &nM12bins, &minM12, &maxM12, &deltaM12 ) ;
-//     fscanf( infp, "%s %d", label, &nScanPoints ) ;
+       fscanf( infp, "%s %d %f %f %f", label, &nM0bins, &minM0, &maxM0, &deltaM0 ) ;
+       fscanf( infp, "%s %d %f %f %f", label, &nM12bins, &minM12, &maxM12, &deltaM12 ) ;
+       fscanf( infp, "%s %d", label, &nScanPoints ) ;
 
-//     printf( "\n\n" ) ;
-//     printf( "  M0   :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM0bins, minM0, maxM0 ) ;
-//     printf( "  M1/2 :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM12bins, minM12, maxM12 ) ;
-//     printf( "\n\n" ) ;
+       printf( "\n\n" ) ;
+       printf( "  M0   :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM0bins, minM0, maxM0 ) ;
+       printf( "  M1/2 :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM12bins, minM12, maxM12 ) ;
+       printf( "\n\n" ) ;
 
-//     TH2F* hsusyscanExcluded = new TH2F("hsusyscanExcluded", "SUSY m1/2 vs m0 parameter scan",
-//          nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
-//          nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
+       TH2F* hsusyscanExcluded = new TH2F("hsusyscanExcluded", "SUSY m1/2 vs m0 parameter scan",
+            nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
+            nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
 
-//     TH2F* hsusyscanNsigul = new TH2F("hsusyscanNsigul", "SUSY m1/2 vs m0 parameter scan, upper limit on Nsig",
-//          nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
-//          nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
+       TH2F* hsusyscanNsigul = new TH2F("hsusyscanNsigul", "SUSY m1/2 vs m0 parameter scan, upper limit on Nsig",
+            nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
+            nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
 
-//     TH2F* hsusyscanNsigpred = new TH2F("hsusyscanNsigpred", "SUSY m1/2 vs m0 parameter scan, predicted Nsig",
-//          nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
-//          nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
+       TH2F* hsusyscanNsigpred = new TH2F("hsusyscanNsigpred", "SUSY m1/2 vs m0 parameter scan, predicted Nsig",
+            nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
+            nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
 
 
-//     //--- read in the column headers line.
-//     char c(0) ;
-//     c = fgetc( infp ) ;
-//     c = 0 ;
-//     while ( c!=10  ) { c = fgetc( infp ) ; }
+       //--- read in the column headers line.
+       char c(0) ;
+       c = fgetc( infp ) ;
+       c = 0 ;
+       while ( c!=10  ) { c = fgetc( infp ) ; }
 
-//     //--- Loop over the scan points.
-//     for ( int pi = 0 ; pi < nScanPoints ; pi++ ) {
+       //--- Loop over the scan points.
+       for ( int pi = 0 ; pi < nScanPoints ; pi++ ) {
 
-//        float pointM0 ;
-//        float pointM12 ;
-//        float pointXsec ;
-//        int    nsel ;
-//        int    n_a ;
-//        int    n_d ;
-//        int    n_sb ;
-//        int    n_sl_sb ;
-//        int    n_sl_sig ;
+          float pointM0 ;
+          float pointM12 ;
+          float pointXsec ;
+          int    n_sig ;
+          int    n_sb ;
+          int    n_sig_sl ;
+          int    n_sb_sl ;
+          int    n_sig_ldp ;
+          int    n_sb_ldp ;
 
-//        fscanf( infp, "%f %f %f   %d %d %d   %d  %d  %d",
-//          &pointM0, &pointM12, &pointXsec,
-//          &nsel, &n_a, &n_d,
-//          &n_sb,
-//          &n_sl_sb,
-//          &n_sl_sig ) ;
+          fscanf( infp, "%f %f %f   %d %d %d   %d  %d  %d",
+            &pointM0, &pointM12, &pointXsec,
+            &n_sig, &n_sb, &n_sig_sl,
+            &n_sb_sl, &n_sig_ldp, &n_sb_ldp ) ;
 
 
-//        int nGenPerPoint(10000) ;
 
+          int nGenPerPoint(10000) ;
 
-//        int m0bin  = hsusyscanExcluded->GetXaxis()->FindBin( pointM0 ) ;
-//        int m12bin = hsusyscanExcluded->GetYaxis()->FindBin( pointM12 ) ;
 
+          int m0bin  = hsusyscanExcluded->GetXaxis()->FindBin( pointM0 ) ;
+          int m12bin = hsusyscanExcluded->GetYaxis()->FindBin( pointM12 ) ;
 
-//     //--- Set up the likelihood to include the SUSY contributions to the non-SIG regions.
 
-//        float weight = ( pointXsec * dataLumi ) / ( 1.0*nGenPerPoint ) ;
+       //--- Set up the likelihood to include the SUSY contributions to the non-SIG regions.
 
-//        reinitialize() ;
+          float weight = ( pointXsec * DataLumi ) / ( 1.0*nGenPerPoint ) ;
 
-//        rv_mu_susymc_sig -> setVal( nsel * weight ) ;
-//        rv_mu_susymc_a  -> setVal( n_a * weight ) ;
-//        rv_mu_susymc_d  -> setVal( n_d * weight ) ;
-//        rv_mu_susymc_sb -> setVal( n_sb * weight ) ;
-//        rv_mu_sl_susymc_sb -> setVal( n_sl_sb * weight ) ;
-//        rv_mu_sl_susymc_sig -> setVal( n_sl_sig * weight ) ;
+          reinitialize() ;
 
-//        parameterSnapshot() ;
+          rv_mu_susymc_sig     -> setVal( n_sig * weight ) ;
+          rv_mu_susymc_sb      -> setVal( n_sb * weight ) ;
+          rv_mu_susymc_sig_sl  -> setVal( n_sig_sl * weight ) ;
+          rv_mu_susymc_sb_sl   -> setVal( n_sb_sl * weight ) ;
+          rv_mu_susymc_sig_ldp -> setVal( n_sig_ldp * weight ) ;
+          rv_mu_susymc_sb_ldp  -> setVal( n_sb_ldp * weight ) ;
 
-//        doFit() ;
+          parameterSnapshot() ;
 
-//        parameterSnapshot() ;
+          doFit() ;
 
-//        float susySigLow, susySigHigh ;
-//        profileSusySig( susySigLow, susySigHigh, false ) ;
+          parameterSnapshot() ;
 
+          float susySigLow, susySigHigh ;
+          profileSusySig( susySigLow, susySigHigh, false ) ;
 
-//        float nselWeighted =  nsel * weight ;
 
+          float nselWeighted =  n_sig * weight ;
 
-//        printf("  Upper limit on SUSY SIG yield : %6.1f\n\n", susySigHigh ) ;
-//        printf(" m0 = %4.0f (%d),  m1/2 = %4.0f (%d),  Npred = %7.1f", pointM0, m0bin, pointM12, m12bin, nselWeighted ) ;
 
-//        hsusyscanNsigul->SetBinContent( m0bin, m12bin, susySigHigh ) ;
-//        hsusyscanNsigpred->SetBinContent( m0bin, m12bin, nselWeighted ) ;
+          printf("  Upper limit on SUSY SIG yield : %6.1f\n\n", susySigHigh ) ;
+          printf(" m0 = %4.0f (%d),  m1/2 = %4.0f (%d),  Npred = %7.1f", pointM0, m0bin, pointM12, m12bin, nselWeighted ) ;
 
-//        if ( nselWeighted > susySigHigh ) {
-//           printf(" Excluded\n") ;
-//           hsusyscanExcluded->SetBinContent( m0bin, m12bin, 1. ) ;
-//        } else {
-//           printf("\n") ;
-//        }
+          hsusyscanNsigul->SetBinContent( m0bin, m12bin, susySigHigh ) ;
+          hsusyscanNsigpred->SetBinContent( m0bin, m12bin, nselWeighted ) ;
 
+          if ( nselWeighted > susySigHigh ) {
+             printf(" Excluded\n") ;
+             hsusyscanExcluded->SetBinContent( m0bin, m12bin, 1. ) ;
+          } else {
+             printf("\n") ;
+          }
 
-//     } // pi .
 
-//     fclose( infp ) ;
+       } // pi .
 
+       fclose( infp ) ;
 
 
 
-//     TStringLong infilestr( inputScanFile ) ;
-//     TStringLong pngoutputfilestr = infilestr ;
-//     pngoutputfilestr.ReplaceAll("input","output") ;
-//     pngoutputfilestr.ReplaceAll(".txt","-scanplot-withcontam.png") ;
-//     printf("\n\n png output file : %s\n\n", pngoutputfilestr.Data() ) ;
 
-//     TStringLong rootoutputfilestr = pngoutputfilestr ;
-//     rootoutputfilestr.ReplaceAll("png","root") ;
-//     printf("\n\n root output file : %s\n\n", rootoutputfilestr.Data() ) ;
+       TStringLong infilestr( inputScanFile ) ;
+       TStringLong pngoutputfilestr = infilestr ;
+       pngoutputfilestr.ReplaceAll("input","output") ;
+       pngoutputfilestr.ReplaceAll(".txt","-scanplot-withcontam.png") ;
+       printf("\n\n png output file : %s\n\n", pngoutputfilestr.Data() ) ;
 
+       TStringLong rootoutputfilestr = pngoutputfilestr ;
+       rootoutputfilestr.ReplaceAll("png","root") ;
+       printf("\n\n root output file : %s\n\n", rootoutputfilestr.Data() ) ;
 
-//     TCanvas* csusy = new TCanvas("csusy","SUSY m1/2 vs m0 scan") ;
-//     gStyle->SetPadGridX(1) ;
-//     gStyle->SetPadGridY(1) ;
-//     hsusyscanExcluded->Draw("col") ;
-//     csusy->SaveAs( pngoutputfilestr.Data() ) ;
-//     TFile* f = new TFile( rootoutputfilestr.Data(),"recreate") ;
-//     hsusyscanExcluded->Write() ;
-//     hsusyscanNsigul->Write() ;
-//     hsusyscanNsigpred->Write() ;
-//     f->Write() ;
-//     f->Close() ;
 
-//     return true ;
+       TCanvas* csusy = new TCanvas("csusy","SUSY m1/2 vs m0 scan") ;
+       gStyle->SetPadGridX(1) ;
+       gStyle->SetPadGridY(1) ;
+       hsusyscanExcluded->Draw("col") ;
+       csusy->SaveAs( pngoutputfilestr.Data() ) ;
+       TFile* f = new TFile( rootoutputfilestr.Data(),"recreate") ;
+       hsusyscanExcluded->Write() ;
+       hsusyscanNsigul->Write() ;
+       hsusyscanNsigpred->Write() ;
+       f->Write() ;
+       f->Close() ;
 
-//  } // susyScanWithContam.
+       return true ;
 
-////===================================================================
+    } // susyScanWithContam.
 
-//  bool ra2bRoostatsClass3::setSusyScanPoint( const char* inputScanFile, double dataLumi, double m0, double m12 ) {
+  //===================================================================
 
+    bool ra2bRoostatsClass3::setSusyScanPoint( const char* inputScanFile, double m0, double m12 ) {
 
 
-//     printf("\n\n Opening SUSY scan input file : %s\n", inputScanFile ) ;
 
-//     FILE* infp ;
-//     if ( (infp=fopen( inputScanFile,"r"))==NULL ) {
-//        printf("\n\n *** Problem opening input file: %s.\n\n", inputScanFile ) ;
-//        return false ;
-//     }
+       printf("\n\n Opening SUSY scan input file : %s\n", inputScanFile ) ;
 
-//     int nM0bins ;
-//     float minM0 ;
-//     float maxM0 ;
-//     float deltaM0 ;
-//     int nM12bins ;
-//     float minM12 ;
-//     float maxM12 ;
-//     float deltaM12 ;
-//     int nScanPoints ;
+       FILE* infp ;
+       if ( (infp=fopen( inputScanFile,"r"))==NULL ) {
+          printf("\n\n *** Problem opening input file: %s.\n\n", inputScanFile ) ;
+          return false ;
+       }
 
-//     char label[1000] ;
+       int nM0bins ;
+       float minM0 ;
+       float maxM0 ;
+       float deltaM0 ;
+       int nM12bins ;
+       float minM12 ;
+       float maxM12 ;
+       float deltaM12 ;
+       int nScanPoints ;
 
-//     fscanf( infp, "%s %d %f %f %f", label, &nM0bins, &minM0, &maxM0, &deltaM0 ) ;
-//     fscanf( infp, "%s %d %f %f %f", label, &nM12bins, &minM12, &maxM12, &deltaM12 ) ;
-//     fscanf( infp, "%s %d", label, &nScanPoints ) ;
+       char label[1000] ;
 
-//     printf( "\n\n" ) ;
-//     printf( "  M0   :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM0bins, minM0, maxM0 ) ;
-//     printf( "  M1/2 :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM12bins, minM12, maxM12 ) ;
-//     printf( "\n\n" ) ;
+       fscanf( infp, "%s %d %f %f %f", label, &nM0bins, &minM0, &maxM0, &deltaM0 ) ;
+       fscanf( infp, "%s %d %f %f %f", label, &nM12bins, &minM12, &maxM12, &deltaM12 ) ;
+       fscanf( infp, "%s %d", label, &nScanPoints ) ;
 
+       printf( "\n\n" ) ;
+       printf( "  M0   :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM0bins, minM0, maxM0 ) ;
+       printf( "  M1/2 :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM12bins, minM12, maxM12 ) ;
+       printf( "\n\n" ) ;
 
-//     //--- read in the column headers line.
-//     char c(0) ;
-//     c = fgetc( infp ) ;
-//     c = 0 ;
-//     while ( c!=10  ) { c = fgetc( infp ) ; }
 
-//     bool found(false) ;
+       //--- read in the column headers line.
+       char c(0) ;
+       c = fgetc( infp ) ;
+       c = 0 ;
+       while ( c!=10  ) { c = fgetc( infp ) ; }
 
-//     //--- Loop over the scan points.
-//     for ( int pi = 0 ; pi < nScanPoints ; pi++ ) {
+       bool found(false) ;
 
-//        float pointM0 ;
-//        float pointM12 ;
-//        float pointXsec ;
-//        int    nsel ;
-//        int    n_a ;
-//        int    n_d ;
-//        int    n_sb ;
-//        int    n_sl_sb ;
-//        int    n_sl_sig ;
+       //--- Loop over the scan points.
+       for ( int pi = 0 ; pi < nScanPoints ; pi++ ) {
 
-//        fscanf( infp, "%f %f %f   %d %d %d   %d  %d  %d",
-//          &pointM0, &pointM12, &pointXsec,
-//          &nsel, &n_a, &n_d,
-//          &n_sb,
-//          &n_sl_sb,
-//          &n_sl_sig ) ;
+          float pointM0 ;
+          float pointM12 ;
+          float pointXsec ;
+          int    n_sig ;
+          int    n_sb ;
+          int    n_sig_sl ;
+          int    n_sb_sl ;
+          int    n_sig_ldp ;
+          int    n_sb_ldp ;
 
+          fscanf( infp, "%f %f %f   %d %d %d   %d  %d  %d",
+            &pointM0, &pointM12, &pointXsec,
+            &n_sig, &n_sb, &n_sig_sl,
+            &n_sb_sl, &n_sig_ldp, &n_sb_ldp ) ;
 
-//        if (    fabs( pointM0 - m0 ) <= deltaM0/2.
-//             && fabs( pointM12 - m12 ) <= deltaM12/2. ) {
 
-//           int nGenPerPoint(10000) ;
-//           float nselWeighted = ( nsel * pointXsec * dataLumi ) / ( 1.0*nGenPerPoint ) ;
+          if (    fabs( pointM0 - m0 ) <= deltaM0/2.
+               && fabs( pointM12 - m12 ) <= deltaM12/2. ) {
 
+             int nGenPerPoint(10000) ;
+             float nselWeighted = ( n_sig * pointXsec * DataLumi ) / ( 1.0*nGenPerPoint ) ;
 
-//           printf("\n\n Found point m0 = %4.0f,  m1/2 = %4.0f,  Npred = %7.1f\n\n\n", pointM0, pointM12, nselWeighted ) ;
 
-//        //--- Set up the likelihood to include the SUSY contributions to the non-SIG regions.
+             printf("\n\n Found point m0 = %4.0f,  m1/2 = %4.0f,  Npred = %7.1f\n\n\n", pointM0, pointM12, nselWeighted ) ;
 
-//           float weight = ( pointXsec * dataLumi ) / ( 1.0*nGenPerPoint ) ;
+          //--- Set up the likelihood to include the SUSY contributions to the non-SIG regions.
 
-//           rv_mu_susymc_sig    -> setVal( nsel * weight ) ;
-//           rv_mu_susymc_a      -> setVal( n_a * weight ) ;
-//           rv_mu_susymc_d      -> setVal( n_d * weight ) ;
-//           rv_mu_susymc_sb     -> setVal( n_sb * weight ) ;
-//           rv_mu_sl_susymc_sb  -> setVal( n_sl_sb * weight ) ;
-//           rv_mu_sl_susymc_sig -> setVal( n_sl_sig * weight ) ;
+             float weight = ( pointXsec * DataLumi ) / ( 1.0*nGenPerPoint ) ;
 
-//           found = true ;
+             rv_mu_susymc_sig     -> setVal( n_sig * weight ) ;
+             rv_mu_susymc_sb      -> setVal( n_sb * weight ) ;
+             rv_mu_susymc_sig_sl  -> setVal( n_sig_sl * weight ) ;
+             rv_mu_susymc_sb_sl   -> setVal( n_sb_sl * weight ) ;
+             rv_mu_susymc_sig_ldp -> setVal( n_sig_ldp * weight ) ;
+             rv_mu_susymc_sb_ldp  -> setVal( n_sb_ldp * weight ) ;
 
-//           break ;
+             found = true ;
 
-//        } // point match?
+             break ;
 
-//     } // pi .
+          } // point match?
 
-//     fclose( infp ) ;
+       } // pi .
 
-//     if ( found ) {
-//        return true ;
-//     } else {
-//        printf("\n\n *** Point not found in scan.\n\n" ) ;
-//        return false ;
-//     }
+       fclose( infp ) ;
 
-//  } // setSusyScanPoint.
+       if ( found ) {
+          return true ;
+       } else {
+          printf("\n\n *** Point not found in scan.\n\n" ) ;
+          return false ;
+       }
 
+    } // setSusyScanPoint.
 
-////===================================================================
 
-////===================================================================
+  //===================================================================
 
-//  bool ra2bRoostatsClass3::fitQualityPlot( bool doNorm, double hmax ) {
+  //===================================================================
 
-//   //  Shows all of the Likelihood inputs, normalized to the data values,
-//   //  compared to the fit result.
+    bool ra2bRoostatsClass3::fitQualityPlot( bool doNorm, double hmax ) {
 
-//   //
-//   //
-//   //            S
-//   //            L S
-//   //      S     S L                   E
-//   //      I S   I S                   S
-//   //   | |G B| |G B| |D A| | QCDMC | |F| |
-//   //    x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
-//   //    1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7
-//   //                      1                   2                   3
-//   //
+     //  Shows all of the Likelihood inputs, normalized to the data values,
+     //  compared to the fit result.
 
-//    int nbins(32) ;
+     //
+     //
+     //            S
+     //            L S
+     //      S     S L                   E
+     //      I S   I S                   S
+     //   | |G B| |G B| |D A| | QCDMC | |F| |
+     //    x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
+     //    1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7
+     //                      1                   2                   3
+     //
 
-//    TH1F* hfitqual_data = new TH1F("hfitqual_data","RA2b likelihood fit results, data",
-//                          nbins, 0.5, nbins+0.5 ) ;
-//    TH1F* hfitqual_ttbar = new TH1F("hfitqual_ttbar","RA2b likelihood fit results, ttbar",
-//                          nbins, 0.5, nbins+0.5 ) ;
-//    TH1F* hfitqual_qcd = new TH1F("hfitqual_qcd","RA2b likelihood fit results, QCD",
-//                          nbins, 0.5, nbins+0.5 ) ;
-//    TH1F* hfitqual_wj = new TH1F("hfitqual_wj","RA2b likelihood fit results, W+jets",
-//                          nbins, 0.5, nbins+0.5 ) ;
-//    TH1F* hfitqual_znn = new TH1F("hfitqual_znn","RA2b likelihood fit results, Ztonunu",
-//                          nbins, 0.5, nbins+0.5 ) ;
-//    TH1F* hfitqual_ewo = new TH1F("hfitqual_ewo","RA2b likelihood fit results, EW-other",
-//                          nbins, 0.5, nbins+0.5 ) ;
-//    TH1F* hfitqual_susy = new TH1F("hfitqual_susy","RA2b likelihood fit results, SUSY",
-//                          nbins, 0.5, nbins+0.5 ) ;
-//    TH1F* hfitqual_gaus = new TH1F("hfitqual_gaus","RA2b likelihood fit results, Gaussian constraints",
-//                          nbins, 0.5, nbins+0.5 ) ;
+      int nbins(10) ;
 
+      TH1F* hfitqual_data = new TH1F("hfitqual_data","RA2b likelihood fit results, data",
+                            nbins, 0.5, nbins+0.5 ) ;
+      TH1F* hfitqual_ttwj = new TH1F("hfitqual_ttwj","RA2b likelihood fit results, ttbar",
+                            nbins, 0.5, nbins+0.5 ) ;
+      TH1F* hfitqual_qcd = new TH1F("hfitqual_qcd","RA2b likelihood fit results, QCD",
+                            nbins, 0.5, nbins+0.5 ) ;
+      TH1F* hfitqual_znn = new TH1F("hfitqual_znn","RA2b likelihood fit results, Ztonunu",
+                            nbins, 0.5, nbins+0.5 ) ;
+      TH1F* hfitqual_ewo = new TH1F("hfitqual_ewo","RA2b likelihood fit results, EW-other",
+                            nbins, 0.5, nbins+0.5 ) ;
+      TH1F* hfitqual_susy = new TH1F("hfitqual_susy","RA2b likelihood fit results, SUSY",
+                            nbins, 0.5, nbins+0.5 ) ;
+      TH1F* hfitqual_gaus = new TH1F("hfitqual_gaus","RA2b likelihood fit results, Gaussian constraints",
+                            nbins, 0.5, nbins+0.5 ) ;
 
 
-//    hfitqual_ttbar -> SetFillColor(kBlue-9) ;
-//    hfitqual_qcd   -> SetFillColor(2) ;
-//    hfitqual_wj    -> SetFillColor(kGreen) ;
-//    hfitqual_znn   -> SetFillColor(kGreen-3) ;
-//    hfitqual_ewo   -> SetFillColor(kGreen-5) ;
-//    hfitqual_susy  -> SetFillColor(6) ;
-//    hfitqual_gaus  -> SetFillColor(kOrange+1) ;
 
-//    THStack* hfitqual_fit = new THStack( "hfitqual_fit", "RA2b likelihood fit results, fit" ) ;
+      hfitqual_ttwj  -> SetFillColor(kBlue-9) ;
+      hfitqual_qcd   -> SetFillColor(2) ;
+      hfitqual_znn   -> SetFillColor(kGreen-3) ;
+      hfitqual_ewo   -> SetFillColor(kGreen-5) ;
+      hfitqual_susy  -> SetFillColor(6) ;
+      hfitqual_gaus  -> SetFillColor(kOrange+1) ;
 
-//    hfitqual_data->SetMarkerStyle(20) ;
-//    hfitqual_data->SetLineWidth(2) ;
+      THStack* hfitqual_fit = new THStack( "hfitqual_fit", "RA2b likelihood fit results, fit" ) ;
 
-//    TAxis* xaxis = hfitqual_data->GetXaxis() ;
+      hfitqual_data->SetMarkerStyle(20) ;
+      hfitqual_data->SetLineWidth(2) ;
 
-//    int binIndex ;
+      TAxis* xaxis = hfitqual_data->GetXaxis() ;
 
-//    binIndex = 2 ;
+      int binIndex ;
 
-//    double dataVal ;
-//    double dataErr ;
-//    double dataErrNorm ;
+      binIndex = 2 ;
 
-//    double ttbarVal ;
-//    double qcdVal ;
-//    double wjVal ;
-//    double znnVal ;
-//    double ewoVal ;
-//    double susyVal ;
+      double dataVal ;
+      double dataErr ;
+      double dataErrNorm ;
 
-//    double ttbarValNorm ;
-//    double qcdValNorm ;
-//    double wjValNorm ;
-//    double znnValNorm ;
-//    double ewoValNorm ;
-//    double susyValNorm ;
+      double ttwjVal ;
+      double qcdVal ;
+      double znnVal ;
+      double ewoVal ;
+      double susyVal ;
 
-//    double eff_sf ;
+      double ttwjValNorm ;
+      double qcdValNorm ;
+      double znnValNorm ;
+      double ewoValNorm ;
+      double susyValNorm ;
 
-//    char   binLabel[1000] ;
+      double eff_sf ;
 
+      char   binLabel[1000] ;
 
 
-//    eff_sf = rv_eff_sf->getVal() ;
 
+      eff_sf = rv_eff_sf->getVal() ;
 
-//   //-- SIG -------------------------------------------------------
 
-//    sprintf( binLabel, "SIG" ) ;
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
+     //-- SIG -------------------------------------------------------
 
-//    dataVal  = rv_Nsig->getVal() ;
-//    if ( useSigTtwjVar ) {
-//       ttbarVal = rrv_mu_ttbar_sig->getVal() ;
-//    } else {
-//       ttbarVal = rfv_mu_ttbar_sig->getVal() ;
-//    }
-//    qcdVal   = rv_mu_qcd_sig->getVal() ;
-//    wjVal    = (rv_mu_wjmc_sig->getVal()) * (rv_lsf_wjmc->getVal()) ;
-//    znnVal   = (rv_mu_znnmc_sig->getVal()) * (rv_lsf_znnmc->getVal()) ;
-//    ewoVal   = (rv_mu_ewomc_sig->getVal()) * (rv_lsf_ewomc->getVal()) ;
-//    susyVal  = rv_mu_susy_sig->getVal() ;
-//    susyVal = eff_sf * susyVal ;
+      sprintf( binLabel, "SIG" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
 
+      dataVal  = rv_Nsig->getVal() ;
+      if ( useSigTtwjVar ) {
+         ttwjVal = rrv_mu_ttwj_sig->getVal() ;
+      } else {
+         ttwjVal = rfv_mu_ttwj_sig->getVal() ;
+      }
+      if ( useLdpVars ) {
+         qcdVal   = rfv_mu_qcd_sig->getVal() ;
+      } else {
+         qcdVal   = rrv_mu_qcd_sig->getVal() ;
+      }
+      znnVal   = (rv_mu_znn_sig->getVal()) ;
+      ewoVal   = (rv_mu_ewo_sig->getVal()) * (rv_lsf_Ewomc->getVal()) ;
+      susyVal  = rv_mu_susy_sig->getVal() ;
+      ewoVal   = eff_sf * ewoVal ;
+      susyVal = eff_sf * susyVal ;
 
-//    dataErr = sqrt(dataVal) ;
 
-//    dataErrNorm = dataErr ;
-//    ttbarValNorm = ttbarVal ;
-//    qcdValNorm = qcdVal ;
-//    wjValNorm = wjVal ;
-//    znnValNorm = znnVal ;
-//    ewoValNorm = ewoVal ;
-//    susyValNorm = susyVal ;
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       ttbarValNorm = ttbarVal / dataVal ;
-//       qcdValNorm   = qcdVal / dataVal ;
-//       wjValNorm    = wjVal / dataVal ;
-//       znnValNorm    = znnVal / dataVal ;
-//       ewoValNorm    = ewoVal / dataVal ;
-//       susyValNorm  = susyVal / dataVal ;
-//    }
+      dataErr = sqrt(dataVal) ;
 
+      dataErrNorm = dataErr ;
+      ttwjValNorm = ttwjVal ;
+      qcdValNorm = qcdVal ;
+      znnValNorm = znnVal ;
+      ewoValNorm = ewoVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttwjValNorm = ttwjVal / dataVal ;
+         qcdValNorm   = qcdVal / dataVal ;
+         znnValNorm    = znnVal / dataVal ;
+         ewoValNorm    = ewoVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
 
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
 
-//    hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
-//    hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
-//    hfitqual_wj    -> SetBinContent( binIndex, wjValNorm ) ;
-//    hfitqual_znn    -> SetBinContent( binIndex, znnValNorm ) ;
-//    hfitqual_ewo    -> SetBinContent( binIndex, ewoValNorm ) ;
-//    hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
 
+      hfitqual_ttwj -> SetBinContent( binIndex, ttwjValNorm ) ;
+      hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
+      hfitqual_znn    -> SetBinContent( binIndex, znnValNorm ) ;
+      hfitqual_ewo    -> SetBinContent( binIndex, ewoValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
 
-//    binIndex++ ;
 
+      binIndex++ ;
 
 
 
 
-//   //-- SB  -------------------------------------------------------
 
-//    sprintf( binLabel, "SB" ) ;
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
+     //-- SB -------------------------------------------------------
 
-//    dataVal  = rv_Nsb->getVal() ;
-//    if ( useSigTtwjVar ) {
-//       ttbarVal = rfv_mu_ttbar_sb->getVal() ;
-//    } else {
-//       ttbarVal = rrv_mu_ttbar_sb->getVal() ;
-//    }
-//    qcdVal   = rv_mu_qcd_sb->getVal() ;
-//    wjVal    = (rv_mu_wjmc_sb->getVal()) * (rv_lsf_wjmc->getVal()) ;
-//    znnVal   = (rv_mu_znnmc_sb->getVal()) * (rv_lsf_znnmc->getVal()) ;
-//    ewoVal   = (rv_mu_ewomc_sb->getVal()) * (rv_lsf_ewomc->getVal()) ;
-//    susyVal  = rv_mu_susy_sb->getVal() ;
-//    susyVal = eff_sf * susyVal ;
+      sprintf( binLabel, "SB" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
 
+      dataVal  = rv_Nsb->getVal() ;
+      if ( useSigTtwjVar ) {
+         ttwjVal = rfv_mu_ttwj_sb->getVal() ;
+      } else {
+         ttwjVal = rrv_mu_ttwj_sb->getVal() ;
+      }
+      if ( useLdpVars ) {
+         qcdVal   = rfv_mu_qcd_sb->getVal() ;
+      } else {
+         qcdVal   = rrv_mu_qcd_sb->getVal() ;
+      }
+      znnVal   = (rv_mu_znn_sb->getVal()) ;
+      ewoVal   = (rv_mu_ewo_sb->getVal()) * (rv_lsf_Ewomc->getVal()) ;
+      susyVal  = rv_mu_susy_sb->getVal() ;
+      ewoVal   = eff_sf * ewoVal ;
+      susyVal = eff_sf * susyVal ;
 
-//    dataErr = sqrt(dataVal) ;
 
-//    dataErrNorm = dataErr ;
-//    ttbarValNorm = ttbarVal ;
-//    qcdValNorm = qcdVal ;
-//    wjValNorm = wjVal ;
-//    znnValNorm = znnVal ;
-//    ewoValNorm = ewoVal ;
-//    susyValNorm = susyVal ;
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       ttbarValNorm = ttbarVal / dataVal ;
-//       qcdValNorm   = qcdVal / dataVal ;
-//       wjValNorm    = wjVal / dataVal ;
-//       znnValNorm    = znnVal / dataVal ;
-//       ewoValNorm    = ewoVal / dataVal ;
-//       susyValNorm  = susyVal / dataVal ;
-//    }
+      dataErr = sqrt(dataVal) ;
 
+      dataErrNorm = dataErr ;
+      ttwjValNorm = ttwjVal ;
+      qcdValNorm = qcdVal ;
+      znnValNorm = znnVal ;
+      ewoValNorm = ewoVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttwjValNorm = ttwjVal / dataVal ;
+         qcdValNorm   = qcdVal / dataVal ;
+         znnValNorm    = znnVal / dataVal ;
+         ewoValNorm    = ewoVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
 
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
 
-//    hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
-//    hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
-//    hfitqual_wj    -> SetBinContent( binIndex, wjValNorm ) ;
-//    hfitqual_znn    -> SetBinContent( binIndex, znnValNorm ) ;
-//    hfitqual_ewo    -> SetBinContent( binIndex, ewoValNorm ) ;
-//    hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
 
+      hfitqual_ttwj -> SetBinContent( binIndex, ttwjValNorm ) ;
+      hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
+      hfitqual_znn    -> SetBinContent( binIndex, znnValNorm ) ;
+      hfitqual_ewo    -> SetBinContent( binIndex, ewoValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
 
-//    binIndex++ ;
 
+      binIndex++ ;
 
 
 
 
 
-//   //-- SL, SIG  -------------------------------------------------------
+     //-- SIG,SL -------------------------------------------------------
 
-//    sprintf( binLabel, "SL SIG" ) ;
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
+      sprintf( binLabel, "SIG,SL" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
 
-//    dataVal  = rv_Nslsig->getVal() ;
-//    ttbarVal = rv_mu_sl_ttbar_sig->getVal() ;
-//    wjVal    = (rv_mu_wjmc_slsig->getVal()) * (rv_lsf_wjmc->getVal()) ;
-//    znnVal   = (rv_mu_znnmc_slsig->getVal()) * (rv_lsf_znnmc->getVal()) ;
-//    ewoVal   = (rv_mu_ewomc_slsig->getVal()) * (rv_lsf_ewomc->getVal()) ;
-//    susyVal  = rv_mu_sl_susy_sig->getVal() ;
-//    susyVal = eff_sf * susyVal ;
+      dataVal  = rv_Nsig_sl->getVal() ;
+      ttwjVal = rv_mu_ttwj_sig_sl->getVal() ;
+      qcdVal   = 0. ;
+      znnVal   = 0. ;
+      ewoVal   = 0. ;
+      susyVal  = rv_mu_susy_sig_sl->getVal() ;
+      susyVal = eff_sf * susyVal ;
 
 
-//    dataErr = sqrt(dataVal) ;
+      dataErr = sqrt(dataVal) ;
 
-//    dataErrNorm = dataErr ;
-//    ttbarValNorm = ttbarVal ;
-//    wjValNorm = wjVal ;
-//    znnValNorm = znnVal ;
-//    ewoValNorm = ewoVal ;
-//    susyValNorm = susyVal ;
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       ttbarValNorm = ttbarVal / dataVal ;
-//       wjValNorm    = wjVal / dataVal ;
-//       znnValNorm    = znnVal / dataVal ;
-//       ewoValNorm    = ewoVal / dataVal ;
-//       susyValNorm  = susyVal / dataVal ;
-//    }
+      dataErrNorm = dataErr ;
+      ttwjValNorm = ttwjVal ;
+      qcdValNorm = qcdVal ;
+      znnValNorm = znnVal ;
+      ewoValNorm = ewoVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttwjValNorm = ttwjVal / dataVal ;
+         qcdValNorm   = qcdVal / dataVal ;
+         znnValNorm    = znnVal / dataVal ;
+         ewoValNorm    = ewoVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
 
 
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
 
-//    hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
-//    hfitqual_wj    -> SetBinContent( binIndex, wjValNorm ) ;
-//    hfitqual_znn    -> SetBinContent( binIndex, znnValNorm ) ;
-//    hfitqual_ewo    -> SetBinContent( binIndex, ewoValNorm ) ;
-//    hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+      hfitqual_ttwj -> SetBinContent( binIndex, ttwjValNorm ) ;
+      hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
+      hfitqual_znn    -> SetBinContent( binIndex, znnValNorm ) ;
+      hfitqual_ewo    -> SetBinContent( binIndex, ewoValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
 
 
-//    binIndex++ ;
+      binIndex++ ;
 
 
 
 
 
-//   //-- SL, SB -------------------------------------------------------
+     //-- SB,SL -------------------------------------------------------
 
-//    sprintf( binLabel, "SL SB" ) ;
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
+      sprintf( binLabel, "SB,SL" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
 
-//    dataVal  = rv_Nslsb->getVal() ;
-//    ttbarVal = rv_mu_sl_ttbar_sb->getVal() ;
-//    wjVal    = (rv_mu_wjmc_slsb->getVal()) * (rv_lsf_wjmc->getVal()) ;
-//    znnVal   = (rv_mu_znnmc_slsb->getVal()) * (rv_lsf_znnmc->getVal()) ;
-//    ewoVal   = (rv_mu_ewomc_slsb->getVal()) * (rv_lsf_ewomc->getVal()) ;
-//    susyVal  = rv_mu_sl_susy_sb->getVal() ;
-//    susyVal = eff_sf * susyVal ;
+      dataVal  = rv_Nsb_sl->getVal() ;
+      ttwjVal = rv_mu_ttwj_sb_sl->getVal() ;
+      qcdVal   = 0. ;
+      znnVal   = 0. ;
+      ewoVal   = 0. ;
+      susyVal  = rv_mu_susy_sb_sl->getVal() ;
+      susyVal = eff_sf * susyVal ;
 
 
-//    dataErr = sqrt(dataVal) ;
+      dataErr = sqrt(dataVal) ;
 
-//    dataErrNorm = dataErr ;
-//    ttbarValNorm = ttbarVal ;
-//    wjValNorm = wjVal ;
-//    znnValNorm = znnVal ;
-//    ewoValNorm = ewoVal ;
-//    susyValNorm = susyVal ;
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       ttbarValNorm = ttbarVal / dataVal ;
-//       wjValNorm    = wjVal / dataVal ;
-//       znnValNorm    = znnVal / dataVal ;
-//       ewoValNorm    = ewoVal / dataVal ;
-//       susyValNorm  = susyVal / dataVal ;
-//    }
+      dataErrNorm = dataErr ;
+      ttwjValNorm = ttwjVal ;
+      qcdValNorm = qcdVal ;
+      znnValNorm = znnVal ;
+      ewoValNorm = ewoVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttwjValNorm = ttwjVal / dataVal ;
+         qcdValNorm   = qcdVal / dataVal ;
+         znnValNorm    = znnVal / dataVal ;
+         ewoValNorm    = ewoVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
 
 
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
 
-//    hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
-//    hfitqual_wj    -> SetBinContent( binIndex, wjValNorm ) ;
-//    hfitqual_znn    -> SetBinContent( binIndex, znnValNorm ) ;
-//    hfitqual_ewo    -> SetBinContent( binIndex, ewoValNorm ) ;
-//    hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+      hfitqual_ttwj -> SetBinContent( binIndex, ttwjValNorm ) ;
+      hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
+      hfitqual_znn    -> SetBinContent( binIndex, znnValNorm ) ;
+      hfitqual_ewo    -> SetBinContent( binIndex, ewoValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
 
 
-//    binIndex++ ;
+      binIndex++ ;
 
 
 
 
-//   //-- D -------------------------------------------------------
 
-//    if ( doNorm ) {
-//       sprintf( binLabel, "D" ) ;
-//    } else {
-//       sprintf( binLabel, "D (x0.1)" ) ;
-//    }
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
+     //-- SIG,LDP -------------------------------------------------------
 
-//    dataVal  = rv_Nd->getVal() ;
-//    ttbarVal = rv_mu_ttbar_d->getVal() ;
-//    qcdVal   = rv_mu_qcd_d->getVal() ;
-//    wjVal    = (rv_mu_wjmc_d->getVal()) * (rv_lsf_wjmc->getVal()) ;
-//    znnVal   = (rv_mu_znnmc_d->getVal()) * (rv_lsf_znnmc->getVal()) ;
-//    ewoVal   = (rv_mu_ewomc_d->getVal()) * (rv_lsf_ewomc->getVal()) ;
-//    susyVal  = rv_mu_susy_d->getVal() ;
-//    susyVal = eff_sf * susyVal ;
+      sprintf( binLabel, "SIG,LDP" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
 
+      dataVal  = rv_Nsig_ldp->getVal() ;
+      ttwjVal = rv_mu_ttwj_sig_ldp->getVal() ;
+      if ( useLdpVars ) {
+         qcdVal   = rrv_mu_qcd_sig_ldp->getVal() ;
+      } else {
+         qcdVal   = rfv_mu_qcd_sig_ldp->getVal() ;
+      }
+      znnVal   = rv_mu_znn_sig_ldp->getVal() ;
+      ewoVal   = (rv_mu_ewo_sig_ldp->getVal()) * (rv_lsf_Ewomc->getVal()) ;
+      susyVal  = rv_mu_susy_sig_ldp->getVal() ;
+      ttwjVal  = eff_sf * ttwjVal ;
+      znnVal   = eff_sf * znnVal ;
+      ewoVal   = eff_sf * ewoVal ;
+      susyVal = eff_sf * susyVal ;
 
-//    dataErr = sqrt(dataVal) ;
 
-//    dataErrNorm = dataErr ;
-//    ttbarValNorm = ttbarVal ;
-//    qcdValNorm = qcdVal ;
-//    wjValNorm = wjVal ;
-//    znnValNorm = znnVal ;
-//    ewoValNorm = ewoVal ;
-//    susyValNorm = susyVal ;
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       ttbarValNorm = ttbarVal / dataVal ;
-//       qcdValNorm   = qcdVal / dataVal ;
-//       wjValNorm    = wjVal / dataVal ;
-//       znnValNorm    = znnVal / dataVal ;
-//       ewoValNorm    = ewoVal / dataVal ;
-//       susyValNorm  = susyVal / dataVal ;
-//    }
-//    if ( !doNorm ) {
-//       hfitqual_data->SetBinContent( binIndex, dataVal*0.1 ) ;
-//       dataErrNorm = dataErrNorm*0.1 ;
-//       ttbarValNorm = ttbarValNorm*0.1 ;
-//       wjValNorm = wjValNorm*0.1 ;
-//       znnValNorm = znnValNorm*0.1 ;
-//       ewoValNorm = ewoValNorm*0.1 ;
-//       qcdValNorm = qcdValNorm*0.1 ;
-//       susyValNorm = susyValNorm*0.1 ;
-//    }
+      dataErr = sqrt(dataVal) ;
 
+      dataErrNorm = dataErr ;
+      ttwjValNorm = ttwjVal ;
+      qcdValNorm = qcdVal ;
+      znnValNorm = znnVal ;
+      ewoValNorm = ewoVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttwjValNorm = ttwjVal / dataVal ;
+         qcdValNorm   = qcdVal / dataVal ;
+         znnValNorm    = znnVal / dataVal ;
+         ewoValNorm    = ewoVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
 
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
 
-//    hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
-//    hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
-//    hfitqual_wj    -> SetBinContent( binIndex, wjValNorm ) ;
-//    hfitqual_znn    -> SetBinContent( binIndex, znnValNorm ) ;
-//    hfitqual_ewo    -> SetBinContent( binIndex, ewoValNorm ) ;
-//    hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
 
+      hfitqual_ttwj -> SetBinContent( binIndex, ttwjValNorm ) ;
+      hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
+      hfitqual_znn    -> SetBinContent( binIndex, znnValNorm ) ;
+      hfitqual_ewo    -> SetBinContent( binIndex, ewoValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
 
-//    binIndex++ ;
 
+      binIndex++ ;
 
 
-//   //-- A -------------------------------------------------------
 
-//    if ( doNorm ) {
-//       sprintf( binLabel, "A" ) ;
-//    } else {
-//       sprintf( binLabel, "A (x0.1)" ) ;
-//    }
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
 
-//    dataVal  = rv_Na->getVal() ;
-//    ttbarVal = rv_mu_ttbar_a->getVal() ;
-//    qcdVal   = rv_mu_qcd_a->getVal() ;
-//    wjVal    = (rv_mu_wjmc_a->getVal()) * (rv_lsf_wjmc->getVal()) ;
-//    znnVal   = (rv_mu_znnmc_a->getVal()) * (rv_lsf_znnmc->getVal()) ;
-//    ewoVal   = (rv_mu_ewomc_a->getVal()) * (rv_lsf_ewomc->getVal()) ;
-//    susyVal  = rv_mu_susy_a->getVal() ;
-//    susyVal = eff_sf * susyVal ;
 
+     //-- SB,LDP -------------------------------------------------------
 
-//    dataErr = sqrt(dataVal) ;
+      sprintf( binLabel, "SB,LDP" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
 
-//    dataErrNorm = dataErr ;
-//    ttbarValNorm = ttbarVal ;
-//    qcdValNorm = qcdVal ;
-//    wjValNorm = wjVal ;
-//    znnValNorm = znnVal ;
-//    ewoValNorm = ewoVal ;
-//    susyValNorm = susyVal ;
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       ttbarValNorm = ttbarVal / dataVal ;
-//       qcdValNorm   = qcdVal / dataVal ;
-//       wjValNorm    = wjVal / dataVal ;
-//       znnValNorm    = znnVal / dataVal ;
-//       ewoValNorm    = ewoVal / dataVal ;
-//       susyValNorm  = susyVal / dataVal ;
-//    }
-//    if ( !doNorm ) {
-//       hfitqual_data->SetBinContent( binIndex, dataVal*0.1 ) ;
-//       dataErrNorm = dataErrNorm*0.1 ;
-//       ttbarValNorm = ttbarValNorm*0.1 ;
-//       wjValNorm = wjValNorm*0.1 ;
-//       znnValNorm = znnValNorm*0.1 ;
-//       ewoValNorm = ewoValNorm*0.1 ;
-//       qcdValNorm = qcdValNorm*0.1 ;
-//       susyValNorm = susyValNorm*0.1 ;
-//    }
+      dataVal  = rv_Nsb_ldp->getVal() ;
+      ttwjVal = rv_mu_ttwj_sb_ldp->getVal() ;
+      if ( useLdpVars ) {
+         qcdVal   = rrv_mu_qcd_sb_ldp->getVal() ;
+      } else {
+         qcdVal   = rfv_mu_qcd_sb_ldp->getVal() ;
+      }
+      znnVal   = rv_mu_znn_sb_ldp->getVal() ;
+      ewoVal   = (rv_mu_ewo_sb_ldp->getVal()) * (rv_lsf_Ewomc->getVal()) ;
+      susyVal  = rv_mu_susy_sb_ldp->getVal() ;
+      ttwjVal  = eff_sf * ttwjVal ;
+      znnVal   = eff_sf * znnVal ;
+      ewoVal   = eff_sf * ewoVal ;
+      susyVal = eff_sf * susyVal ;
 
 
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
+      dataErr = sqrt(dataVal) ;
 
-//    hfitqual_ttbar -> SetBinContent( binIndex, ttbarValNorm ) ;
-//    hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
-//    hfitqual_wj    -> SetBinContent( binIndex, wjValNorm ) ;
-//    hfitqual_znn    -> SetBinContent( binIndex, znnValNorm ) ;
-//    hfitqual_ewo    -> SetBinContent( binIndex, ewoValNorm ) ;
-//    hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
+      dataErrNorm = dataErr ;
+      ttwjValNorm = ttwjVal ;
+      qcdValNorm = qcdVal ;
+      znnValNorm = znnVal ;
+      ewoValNorm = ewoVal ;
+      susyValNorm = susyVal ;
+      hfitqual_data->SetBinContent( binIndex, dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         ttwjValNorm = ttwjVal / dataVal ;
+         qcdValNorm   = qcdVal / dataVal ;
+         znnValNorm    = znnVal / dataVal ;
+         ewoValNorm    = ewoVal / dataVal ;
+         susyValNorm  = susyVal / dataVal ;
+      }
 
 
-//    binIndex++ ;
+      hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
 
+      hfitqual_ttwj -> SetBinContent( binIndex, ttwjValNorm ) ;
+      hfitqual_qcd   -> SetBinContent( binIndex, qcdValNorm ) ;
+      hfitqual_znn    -> SetBinContent( binIndex, znnValNorm ) ;
+      hfitqual_ewo    -> SetBinContent( binIndex, ewoValNorm ) ;
+      hfitqual_susy  -> SetBinContent( binIndex, susyValNorm ) ;
 
 
+      binIndex++ ;
 
 
 
@@ -4281,702 +4393,6 @@
 
 
 
-
-//    double val, valNorm ;
-
-
-//    binIndex++ ;
-
-//  //++++++++ W+jets MC ++++++++++++++++++++++++++++++++++++++++
-
-//   //-- W+jets, SIG -------------------------------------------------------
-
-//    if ( doNorm ) {
-//       sprintf( binLabel, "Wjets, SIG" ) ;
-//    } else {
-//       sprintf( binLabel, "Wjets, SIG (x10)" ) ;
-//    }
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-//    dataVal  = rv_NWJmcsig->getVal() ;
-//    val      = (rv_mu_wjmc_sig->getVal())*(rv_lsf_wjmc->getVal()) ;
-
-//    dataErr = sqrt(dataVal) ;
-
-//    dataVal = dataVal*(rv_lsf_wjmc->getVal()) ;
-//    dataErr = dataErr*(rv_lsf_wjmc->getVal()) ;
-
-//    dataErrNorm = dataErr ;
-//    valNorm = val ;
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       valNorm = val / dataVal ;
-//    }
-//    if ( !doNorm ) {
-//       hfitqual_data->SetBinContent( binIndex, dataVal*10. ) ;
-//       dataErrNorm = dataErrNorm*10. ;
-//       valNorm = valNorm*10. ;
-//    }
-
-
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-//    hfitqual_wj    -> SetBinContent( binIndex, valNorm ) ;
-
-//    printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
-
-//    binIndex++ ;
-
-
-
-//   //-- W+jets, SB -------------------------------------------------------
-
-//    if ( doNorm ) {
-//       sprintf( binLabel, "Wjets, SB" ) ;
-//    } else {
-//       sprintf( binLabel, "Wjets, SB (x10)" ) ;
-//    }
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-//    dataVal  = rv_NWJmcsb->getVal() ;
-//    val      = (rv_mu_wjmc_sb->getVal())*(rv_lsf_wjmc->getVal()) ;
-
-//    dataErr = sqrt(dataVal) ;
-
-//    dataVal = dataVal*(rv_lsf_wjmc->getVal()) ;
-//    dataErr = dataErr*(rv_lsf_wjmc->getVal()) ;
-
-//    dataErrNorm = dataErr ;
-//    valNorm = val ;
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       valNorm = val / dataVal ;
-//    }
-//    if ( !doNorm ) {
-//       hfitqual_data->SetBinContent( binIndex, dataVal*10. ) ;
-//       dataErrNorm = dataErrNorm*10. ;
-//       valNorm = valNorm*10. ;
-//    }
-
-
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-//    hfitqual_wj    -> SetBinContent( binIndex, valNorm ) ;
-
-//    printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
-
-//    binIndex++ ;
-
-
-
-//   //-- W+jets, SL, SIG -------------------------------------------------------
-
-//    if ( doNorm ) {
-//       sprintf( binLabel, "Wjets, SL,SIG" ) ;
-//    } else {
-//       sprintf( binLabel, "Wjets, SL,SIG (x10)" ) ;
-//    }
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-//    dataVal  = rv_NWJmcslsig->getVal() ;
-//    val      = (rv_mu_wjmc_slsig->getVal())*(rv_lsf_wjmc->getVal()) ;
-
-//    dataErr = sqrt(dataVal) ;
-
-//    dataVal = dataVal*(rv_lsf_wjmc->getVal()) ;
-//    dataErr = dataErr*(rv_lsf_wjmc->getVal()) ;
-
-//    dataErrNorm = dataErr ;
-//    valNorm = val ;
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       valNorm = val / dataVal ;
-//    }
-//    if ( !doNorm ) {
-//       hfitqual_data->SetBinContent( binIndex, dataVal*10. ) ;
-//       dataErrNorm = dataErrNorm*10. ;
-//       valNorm = valNorm*10. ;
-//    }
-
-
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-//    hfitqual_wj    -> SetBinContent( binIndex, valNorm ) ;
-
-//    printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
-
-//    binIndex++ ;
-
-
-
-//   //-- W+jets, SL, SB -------------------------------------------------------
-
-//    if ( doNorm ) {
-//       sprintf( binLabel, "Wjets, SL,SB" ) ;
-//    } else {
-//       sprintf( binLabel, "Wjets, SL,SB (x10)" ) ;
-//    }
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-//    dataVal  = rv_NWJmcslsb->getVal() ;
-//    val      = (rv_mu_wjmc_slsb->getVal())*(rv_lsf_wjmc->getVal()) ;
-
-//    dataErr = sqrt(dataVal) ;
-
-//    dataVal = dataVal*(rv_lsf_wjmc->getVal()) ;
-//    dataErr = dataErr*(rv_lsf_wjmc->getVal()) ;
-
-//    dataErrNorm = dataErr ;
-//    valNorm = val ;
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       valNorm = val / dataVal ;
-//    }
-//    if ( !doNorm ) {
-//       hfitqual_data->SetBinContent( binIndex, dataVal*10. ) ;
-//       dataErrNorm = dataErrNorm*10. ;
-//       valNorm = valNorm*10. ;
-//    }
-
-
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-//    hfitqual_wj    -> SetBinContent( binIndex, valNorm ) ;
-
-//    printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
-
-//    binIndex++ ;
-
-
-
-//   //-- W+jets, D -------------------------------------------------------
-
-//    if ( doNorm ) {
-//       sprintf( binLabel, "Wjets, D" ) ;
-//    } else {
-//       sprintf( binLabel, "Wjets, D (x10)" ) ;
-//    }
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-//    dataVal  = rv_NWJmcd->getVal() ;
-//    val      = (rv_mu_wjmc_d->getVal())*(rv_lsf_wjmc->getVal()) ;
-
-//    dataErr = sqrt(dataVal) ;
-
-//    dataVal = dataVal*(rv_lsf_wjmc->getVal()) ;
-//    dataErr = dataErr*(rv_lsf_wjmc->getVal()) ;
-
-//    dataErrNorm = dataErr ;
-//    valNorm = val ;
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       valNorm = val / dataVal ;
-//    }
-//    if ( !doNorm ) {
-//       hfitqual_data->SetBinContent( binIndex, dataVal*10. ) ;
-//       dataErrNorm = dataErrNorm*10. ;
-//       valNorm = valNorm*10. ;
-//    }
-
-
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-//    hfitqual_wj    -> SetBinContent( binIndex, valNorm ) ;
-
-//    printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
-
-//    binIndex++ ;
-
-
-
-//   //-- W+jets, A -------------------------------------------------------
-
-//    if ( doNorm ) {
-//       sprintf( binLabel, "Wjets, A" ) ;
-//    } else {
-//       sprintf( binLabel, "Wjets, A (x10)" ) ;
-//    }
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-//    dataVal  = rv_NWJmca->getVal() ;
-//    val      = (rv_mu_wjmc_a->getVal())*(rv_lsf_wjmc->getVal()) ;
-
-//    dataErr = sqrt(dataVal) ;
-
-//    dataVal = dataVal*(rv_lsf_wjmc->getVal()) ;
-//    dataErr = dataErr*(rv_lsf_wjmc->getVal()) ;
-
-//    dataErrNorm = dataErr ;
-//    valNorm = val ;
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       valNorm = val / dataVal ;
-//    }
-//    if ( !doNorm ) {
-//       hfitqual_data->SetBinContent( binIndex, dataVal*10. ) ;
-//       dataErrNorm = dataErrNorm*10. ;
-//       valNorm = valNorm*10. ;
-//    }
-
-
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-//    hfitqual_wj    -> SetBinContent( binIndex, valNorm ) ;
-
-//    printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
-
-//    binIndex++ ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    binIndex++ ;
-
-//  //++++++++ Z invis MC ++++++++++++++++++++++++++++++++++++++++
-
-//   //-- Z invis, SIG -------------------------------------------------------
-
-//    if ( doNorm ) {
-//       sprintf( binLabel, "Zinvis, SIG" ) ;
-//    } else {
-//       sprintf( binLabel, "Zinvis, SIG (x10)" ) ;
-//    }
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-//    dataVal  = rv_NZnnmcsig->getVal() ;
-//    val      = (rv_mu_znnmc_sig->getVal())*(rv_lsf_znnmc->getVal()) ;
-
-//    dataErr = sqrt(dataVal) ;
-
-//    dataVal = dataVal*(rv_lsf_znnmc->getVal()) ;
-//    dataErr = dataErr*(rv_lsf_znnmc->getVal()) ;
-
-//    dataErrNorm = dataErr ;
-//    valNorm = val ;
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       valNorm = val / dataVal ;
-//    }
-//    if ( !doNorm ) {
-//       hfitqual_data->SetBinContent( binIndex, dataVal*10. ) ;
-//       dataErrNorm = dataErrNorm*10. ;
-//       valNorm = valNorm*10. ;
-//    }
-
-
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-//    hfitqual_znn    -> SetBinContent( binIndex, valNorm ) ;
-
-//    printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
-
-//    binIndex++ ;
-
-
-
-//   //-- Z invis, SB -------------------------------------------------------
-
-//    if ( doNorm ) {
-//       sprintf( binLabel, "Zinvis, SB" ) ;
-//    } else {
-//       sprintf( binLabel, "Zinvis, SB (x10)" ) ;
-//    }
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-//    dataVal  = rv_NZnnmcsb->getVal() ;
-//    val      = (rv_mu_znnmc_sb->getVal())*(rv_lsf_znnmc->getVal()) ;
-
-//    dataErr = sqrt(dataVal) ;
-
-//    dataVal = dataVal*(rv_lsf_znnmc->getVal()) ;
-//    dataErr = dataErr*(rv_lsf_znnmc->getVal()) ;
-
-//    dataErrNorm = dataErr ;
-//    valNorm = val ;
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       valNorm = val / dataVal ;
-//    }
-//    if ( !doNorm ) {
-//       hfitqual_data->SetBinContent( binIndex, dataVal*10. ) ;
-//       dataErrNorm = dataErrNorm*10. ;
-//       valNorm = valNorm*10. ;
-//    }
-
-
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-//    hfitqual_znn    -> SetBinContent( binIndex, valNorm ) ;
-
-//    printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
-
-//    binIndex++ ;
-
-
-
-//   //-- Z invis, SL, SIG -------------------------------------------------------
-
-//    if ( doNorm ) {
-//       sprintf( binLabel, "Zinvis, SL,SIG" ) ;
-//    } else {
-//       sprintf( binLabel, "Zinvis, SL,SIG (x10)" ) ;
-//    }
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-
-//    dataVal  = rv_NZnnmcslsig->getVal() ;
-//    val      = (rv_mu_znnmc_slsig->getVal())*(rv_lsf_znnmc->getVal()) ;
-
-//    if ( dataVal > 0.11 ) {
-
-//       dataErr = sqrt(dataVal) ;
-
-//    dataVal = dataVal*(rv_lsf_znnmc->getVal()) ;
-//    dataErr = dataErr*(rv_lsf_znnmc->getVal()) ;
-
-
-//       dataErrNorm = dataErr ;
-//       valNorm = val ;
-//       hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//       if ( dataVal > 0. && doNorm ) { 
-//          hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//          dataErrNorm  = dataErr / dataVal ; 
-//          valNorm = val / dataVal ;
-//       }
-//       if ( !doNorm ) {
-//          hfitqual_data->SetBinContent( binIndex, dataVal*10. ) ;
-//          dataErrNorm = dataErrNorm*10. ;
-//          valNorm = valNorm*10. ;
-//       }
-
-//       hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-//       hfitqual_znn    -> SetBinContent( binIndex, valNorm ) ;
-
-//    } else {
-
-//       hfitqual_data->SetBinContent( binIndex, 0. ) ;
-//       hfitqual_znn    -> SetBinContent( binIndex, 0. ) ;
-
-//    }
-
-//    printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
-
-//    binIndex++ ;
-
-
-
-//   //-- Z invis, SL, SB -------------------------------------------------------
-
-//    if ( doNorm ) {
-//       sprintf( binLabel, "Zinvis, SL,SB" ) ;
-//    } else {
-//       sprintf( binLabel, "Zinvis, SL,SB (x10)" ) ;
-//    }
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-//    dataVal  = rv_NZnnmcslsb->getVal() ;
-//    val      = (rv_mu_znnmc_slsb->getVal())*(rv_lsf_znnmc->getVal()) ;
-
-//    if ( dataVal > 0.11 ) {
-
-//       dataErr = sqrt(dataVal) ;
-
-//    dataVal = dataVal*(rv_lsf_znnmc->getVal()) ;
-//    dataErr = dataErr*(rv_lsf_znnmc->getVal()) ;
-
-//       dataErrNorm = dataErr ;
-//       valNorm = val ;
-//       hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//       if ( dataVal > 0. && doNorm ) { 
-//          hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//          dataErrNorm  = dataErr / dataVal ; 
-//          valNorm = val / dataVal ;
-//       }
-//       if ( !doNorm ) {
-//          hfitqual_data->SetBinContent( binIndex, dataVal*10. ) ;
-//          dataErrNorm = dataErrNorm*10. ;
-//          valNorm = valNorm*10. ;
-//       }
-
-//       hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-//       hfitqual_znn    -> SetBinContent( binIndex, valNorm ) ;
-
-//    } else {
-
-//       hfitqual_data->SetBinContent( binIndex, 0. ) ;
-//       hfitqual_znn    -> SetBinContent( binIndex, 0. ) ;
-
-//    }
-
-//    printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
-
-//    binIndex++ ;
-
-
-
-//   //-- Z invis, D -------------------------------------------------------
-
-//    if ( doNorm ) {
-//       sprintf( binLabel, "Zinvis, D" ) ;
-//    } else {
-//       sprintf( binLabel, "Zinvis, D (x10)" ) ;
-//    }
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-//    dataVal  = rv_NZnnmcd->getVal() ;
-//    val      = (rv_mu_znnmc_d->getVal())*(rv_lsf_znnmc->getVal()) ;
-
-//    dataErr = sqrt(dataVal) ;
-
-//    dataVal = dataVal*(rv_lsf_znnmc->getVal()) ;
-//    dataErr = dataErr*(rv_lsf_znnmc->getVal()) ;
-
-//    dataErrNorm = dataErr ;
-//    valNorm = val ;
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       valNorm = val / dataVal ;
-//    }
-//    if ( !doNorm ) {
-//       hfitqual_data->SetBinContent( binIndex, dataVal*10. ) ;
-//       dataErrNorm = dataErrNorm*10. ;
-//       valNorm = valNorm*10. ;
-//    }
-
-
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-//    hfitqual_znn    -> SetBinContent( binIndex, valNorm ) ;
-
-//    printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
-
-//    binIndex++ ;
-
-
-
-//   //-- Z invis, A -------------------------------------------------------
-
-//    if ( doNorm ) {
-//       sprintf( binLabel, "Zinvis, A" ) ;
-//    } else {
-//       sprintf( binLabel, "Zinvis, A (x10)" ) ;
-//    }
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-//    dataVal  = rv_NZnnmca->getVal() ;
-//    val      = (rv_mu_znnmc_a->getVal())*(rv_lsf_znnmc->getVal()) ;
-
-//    dataErr = sqrt(dataVal) ;
-
-//    dataVal = dataVal*(rv_lsf_znnmc->getVal()) ;
-//    dataErr = dataErr*(rv_lsf_znnmc->getVal()) ;
-
-
-//    dataErrNorm = dataErr ;
-//    valNorm = val ;
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       valNorm = val / dataVal ;
-//    }
-//    if ( !doNorm ) {
-//       hfitqual_data->SetBinContent( binIndex, dataVal*10. ) ;
-//       dataErrNorm = dataErrNorm*10. ;
-//       valNorm = valNorm*10. ;
-//    }
-
-
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-//    hfitqual_znn    -> SetBinContent( binIndex, valNorm ) ;
-
-//    printf(" %10s : err=%4.2f ;   val = %4.2f\n", binLabel, dataErrNorm, valNorm ) ;
-
-//    binIndex++ ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    binIndex++ ;
-
-//    double mcVal ;
-//    double mcValNorm ;
-
-//  //-- Gaussian constraint parameters.
-
-
-//  //-- MC SIG
-
-//    sprintf( binLabel, "QCD MC SIG" ) ;
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-//    dataVal = rv_Nqcdmcsig->getVal() ;
-//    mcVal   = rv_mu_qcdmc_sig->getVal() ;
-
-//    dataErr = Nqcdmcsigerr ;
-
-//    dataErrNorm = dataErr ;
-//    mcValNorm = mcVal ;
-
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       mcValNorm = mcVal / dataVal ;
-//    }
-
-
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-
-//    hfitqual_gaus -> SetBinContent( binIndex, mcValNorm ) ;
-
-//    printf(" %10s : err=%4.2f ;   MC = %4.2f\n", binLabel, dataErrNorm, mcValNorm ) ;
-
-//    binIndex++ ;
-
-
-//  //-- MC SB
-
-//    sprintf( binLabel, "QCD MC SB" ) ;
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-//    dataVal = rv_Nqcdmcsb->getVal() ;
-//    mcVal   = rv_mu_qcdmc_sb->getVal() ;
-
-//    dataErr = Nqcdmcsberr ;
-
-//    dataErrNorm = dataErr ;
-//    mcValNorm = mcVal ;
-
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       mcValNorm = mcVal / dataVal ;
-//    }
-
-
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-
-//    hfitqual_gaus -> SetBinContent( binIndex, mcValNorm ) ;
-
-//    printf(" %10s : err=%4.2f ;   MC = %4.2f\n", binLabel, dataErrNorm, mcValNorm ) ;
-
-//    binIndex++ ;
-
-
-
-//  //-- MC D
-
-//    if ( doNorm ) {
-//       sprintf( binLabel, "QCD MC D" ) ;
-//    } else {
-//       sprintf( binLabel, "QCD MC D (x0.1)" ) ;
-//    }
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-//    dataVal = rv_Nqcdmcd->getVal() ;
-//    mcVal   = rv_mu_qcdmc_d->getVal() ;
-
-//    dataErr = Nqcdmcderr ;
-
-//    dataErrNorm = dataErr ;
-//    mcValNorm = mcVal ;
-
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       mcValNorm = mcVal / dataVal ;
-//    }
-//    if ( !doNorm ) {
-//       hfitqual_data->SetBinContent( binIndex, dataVal*0.1 ) ;
-//       dataErrNorm = dataErrNorm*0.1 ;
-//       mcValNorm = mcValNorm*0.1 ;
-//    }
-
-
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-
-//    hfitqual_gaus -> SetBinContent( binIndex, mcValNorm ) ;
-
-//    printf(" %10s : err=%4.2f ;   MC = %4.2f\n", binLabel, dataErrNorm, mcValNorm ) ;
-
-//    binIndex++ ;
-
-
-
-
-
-//  //-- MC A
-
-//    if ( doNorm ) {
-//       sprintf( binLabel, "QCD MC A" ) ;
-//    } else {
-//       sprintf( binLabel, "QCD MC A (x0.1)" ) ;
-//    }
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-//    dataVal = rv_Nqcdmca->getVal() ;
-//    mcVal   = rv_mu_qcdmc_a->getVal() ;
-
-//    dataErr = Nqcdmcaerr ;
-
-//    dataErrNorm = dataErr ;
-//    mcValNorm = mcVal ;
-
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       mcValNorm = mcVal / dataVal ;
-//    }
-//    if ( !doNorm ) {
-//       hfitqual_data->SetBinContent( binIndex, dataVal*0.1 ) ;
-//       dataErrNorm = dataErrNorm*0.1 ;
-//       mcValNorm = mcValNorm*0.1 ;
-//    }
-
-
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-
-//    hfitqual_gaus -> SetBinContent( binIndex, mcValNorm ) ;
-
-//    printf(" %10s : err=%4.2f ;   MC = %4.2f\n", binLabel, dataErrNorm, mcValNorm ) ;
-
-//    binIndex++ ;
 
 
 
@@ -5102,113 +4518,111 @@
 
 
 
-//    binIndex++ ;
+      binIndex++ ;
 
-//  //-- Eff SF
+    //-- Eff SF
 
-//    double effsfScale(1.5) ;
+      double effsfScale(1.5) ;
 
-//    printf(" hist max: %g\n", hfitqual_data->GetMaximum()) ;
-//    double effsfsf = hmax*(hfitqual_data->GetMaximum())/(effsfScale)  ;
+      printf(" hist max: %g\n", hfitqual_data->GetMaximum()) ;
+      double effsfsf = hmax*(hfitqual_data->GetMaximum())/(effsfScale)  ;
 
-//    sprintf( binLabel, "Eff SF (right scale)" ) ;
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
+      sprintf( binLabel, "Eff SF (right scale)" ) ;
+      xaxis->SetBinLabel(binIndex, binLabel ) ;
 
-//    dataVal = EffScaleFactor ;
-//    mcVal   = rv_eff_sf->getVal() ;
+      dataVal = EffScaleFactor ;
+      float mcVal   = rv_eff_sf->getVal() ;
 
-//    dataErr = EffScaleFactorErr ;
+      dataErr = EffScaleFactorErr ;
 
-//    dataErrNorm = dataErr ;
-//    mcValNorm = mcVal ;
-
-
-//    hfitqual_data->SetBinContent( binIndex, effsfsf*dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       mcValNorm = mcVal / dataVal ;
-//    }
+      dataErrNorm = dataErr ;
+      float mcValNorm = mcVal ;
 
 
-//    hfitqual_data->SetBinError( binIndex, effsfsf*dataErrNorm ) ;
-
-//    hfitqual_gaus -> SetBinContent( binIndex, effsfsf*mcValNorm ) ;
-
-//    printf(" %10s : err=%4.2f ;   MC = %4.2f\n", binLabel, dataErrNorm, mcValNorm ) ;
-
-//    binIndex++ ;
-
+      hfitqual_data->SetBinContent( binIndex, effsfsf*dataVal ) ;
+      if ( dataVal > 0. && doNorm ) { 
+         hfitqual_data->SetBinContent( binIndex, 1. ) ;
+         dataErrNorm  = dataErr / dataVal ; 
+         mcValNorm = mcVal / dataVal ;
+      }
 
 
+      hfitqual_data->SetBinError( binIndex, effsfsf*dataErrNorm ) ;
 
-//   //-- final formatting
+      hfitqual_gaus -> SetBinContent( binIndex, effsfsf*mcValNorm ) ;
 
-//    hfitqual_fit->Add( hfitqual_wj ) ;
-//    hfitqual_fit->Add( hfitqual_znn ) ;
-//    hfitqual_fit->Add( hfitqual_qcd ) ;
-//    hfitqual_fit->Add( hfitqual_ttbar ) ;
-//    hfitqual_fit->Add( hfitqual_susy ) ;
-//    hfitqual_fit->Add( hfitqual_gaus ) ;
+      printf(" %10s : err=%4.2f ;   MC = %4.2f\n", binLabel, dataErrNorm, mcValNorm ) ;
 
-//    TLegend* legend = new TLegend(0.88,0.3,0.98,0.9) ;
-
-//    legend->AddEntry( hfitqual_data,  "data" ) ;
-//    legend->AddEntry( hfitqual_susy,  "SUSY" ) ;
-//    legend->AddEntry( hfitqual_ttbar, "ttbar" ) ;
-//    legend->AddEntry( hfitqual_qcd,   "QCD" ) ;
-//    legend->AddEntry( hfitqual_znn,   "Znunu" ) ;
-//    legend->AddEntry( hfitqual_wj,    "W+jets" ) ;
-//    legend->AddEntry( hfitqual_gaus,  "Gaus.C." ) ;
-
-//    if ( doNorm ) {
-//       hfitqual_data->SetMaximum( hmax ) ;
-//    } else {
-//       hfitqual_data->SetMaximum( hmax*(hfitqual_data->GetMaximum()) ) ;
-//    }
-
-
-//    double oldBM = gStyle->GetPadBottomMargin() ;
-//    double oldRM = gStyle->GetPadRightMargin() ;
-
-
-//    gStyle->SetPadBottomMargin(0.3) ;
-//    gStyle->SetPadRightMargin(0.17) ;
-
-
-//    TCanvas* cfitqual = new TCanvas("cfitqual","RA2b fit quality", 1200, 550 ) ;
-
-//    gPad->SetTicks(1,0) ;
-
-
-//    hfitqual_data->SetLabelSize(0.05,"x") ;
-//    hfitqual_data->GetXaxis()->LabelsOption("v") ;
-
-//    hfitqual_data->Draw() ;
-//    hfitqual_fit->Draw("same") ;
-//    hfitqual_data->Draw("same") ;
-//    legend->Draw() ;
+      binIndex++ ;
 
 
 
-//    TGaxis* axis = new TGaxis() ;
-//    axis->DrawAxis( nbins+0.5, 0, nbins+0.5, hfitqual_data->GetMaximum(), 0., effsfScale, 510, "+L") ;
 
-//    TLine* line = new TLine() ;
-//    line->SetLineWidth(2) ;
+     //-- final formatting
 
-//    line->DrawLine( nbins-2., 0., nbins-2., hfitqual_data->GetMaximum() ) ;
+      hfitqual_fit->Add( hfitqual_znn ) ;
+      hfitqual_fit->Add( hfitqual_qcd ) ;
+      hfitqual_fit->Add( hfitqual_ttwj ) ;
+      hfitqual_fit->Add( hfitqual_susy ) ;
+      hfitqual_fit->Add( hfitqual_gaus ) ;
+
+      TLegend* legend = new TLegend(0.82,0.3,0.98,0.9) ;
+
+      legend->AddEntry( hfitqual_data,  "data" ) ;
+      legend->AddEntry( hfitqual_susy,  "SUSY" ) ;
+      legend->AddEntry( hfitqual_ttwj, "ttwj" ) ;
+      legend->AddEntry( hfitqual_qcd,   "QCD" ) ;
+      legend->AddEntry( hfitqual_znn,   "Znunu" ) ;
+      legend->AddEntry( hfitqual_gaus,  "Gaus.C." ) ;
+
+      if ( doNorm ) {
+         hfitqual_data->SetMaximum( hmax ) ;
+      } else {
+         hfitqual_data->SetMaximum( hmax*(hfitqual_data->GetMaximum()) ) ;
+      }
 
 
-//    cfitqual->SaveAs("fitqual.png") ;
+      double oldBM = gStyle->GetPadBottomMargin() ;
+      double oldRM = gStyle->GetPadRightMargin() ;
 
 
-//    gStyle->SetPadBottomMargin(oldBM) ;
-//    gStyle->SetPadRightMargin(oldRM) ;
+      gStyle->SetPadBottomMargin(0.3) ;
+      gStyle->SetPadRightMargin(0.27) ;
 
-//    return true ;
 
-//  } // fitQualityPlot
+      TCanvas* cfitqual = new TCanvas("cfitqual","RA2b fit quality", 600, 550 ) ;
+
+      gPad->SetTicks(1,0) ;
+
+
+      hfitqual_data->SetLabelSize(0.05,"x") ;
+      hfitqual_data->GetXaxis()->LabelsOption("v") ;
+
+      hfitqual_data->Draw() ;
+      hfitqual_fit->Draw("same") ;
+      hfitqual_data->Draw("same") ;
+      legend->Draw() ;
+
+
+
+      TGaxis* axis = new TGaxis() ;
+      axis->DrawAxis( nbins+0.5, 0, nbins+0.5, hfitqual_data->GetMaximum(), 0., effsfScale, 510, "+L") ;
+
+      TLine* line = new TLine() ;
+      line->SetLineWidth(2) ;
+
+      line->DrawLine( nbins-2., 0., nbins-2., hfitqual_data->GetMaximum() ) ;
+
+
+      cfitqual->SaveAs("fitqual.png") ;
+
+
+      gStyle->SetPadBottomMargin(oldBM) ;
+      gStyle->SetPadRightMargin(oldRM) ;
+
+      return true ;
+
+    } // fitQualityPlot
 
   //===================================================================
 
@@ -5341,90 +4755,38 @@
               rv_mu_susy_sb_ldp->getVal()
               ) ;
 
+       printf("                                    |\n") ;
+       printf("------------------------------------+--------------------------------------------------------\n") ;
 
+       printf("\n") ;
 
-//     printf(" SL Nsb          :  %5.0f   %7.1f  %7.1f           %7.1f  %7.1f x %4.2f = %7.1f\n",
-//            rv_Nslsb->getVal(),
-//            rv_n_sl_sb->getVal(),
-//            rv_mu_sl_ttwj_sb->getVal(),
-//            rv_mu_sl_ew_sb->getVal(),
-//            rv_mu_sl_susy_sb->getVal(),
-//            rv_eff_sf->getVal(),
-//            (rv_eff_sf->getVal())*(rv_mu_sl_susy_sb->getVal()) ) ;
+       float delta ;
 
+       printf("\n") ;
+       delta = 0. ;
+       if ( EffScaleFactorErr>0 ) { delta = (rv_eff_sf->getVal()-EffScaleFactor)/EffScaleFactorErr ; }
+       printf("  Eff scale fac. :  input = %4.2f +/- %4.2f ,   fit = %4.2f, delta = %4.2f sigma.  \n",
+              EffScaleFactor,
+              EffScaleFactorErr,
+              rv_eff_sf->getVal(),
+              delta ) ;
 
+    // printf("\n") ;
+    // delta = 0. ;
+    // if ( lsf_WJmc_err>0 ) { delta = (rv_lsf_WJmc->getVal()-lsf_WJmc)/lsf_WJmc_err ; }
+    // printf("  LSF W+jets     :  input = %4.2f +/- %4.2f ,   fit = %4.2f, delta = %4.2f sigma.  \n",
+    //        lsf_WJmc,
+    //        lsf_WJmc_err,
+    //        rv_lsf_WJmc->getVal(),
+    //        delta ) ;
 
-//     printf(" SL Nsig         :  %5.0f   %7.1f  %7.1f           %7.1f  %7.1f x %4.2f = %7.1f\n",
-//            rv_Nslsig->getVal(),
-//            rv_n_sl_sig->getVal(),
-//            rv_mu_sl_ttwj_sig->getVal(),
-//            rv_mu_sl_ew_sig->getVal(),
-//            rv_mu_sl_susy_sig->getVal(),
-//            rv_eff_sf->getVal(),
-//            (rv_eff_sf->getVal())*(rv_mu_sl_susy_sig->getVal()) ) ;
-
-
-
-//     printf("     N_A         :  %5.0f   %7.1f  %7.1f  %7.1f  %7.1f  %7.1f x %4.2f = %7.1f\n",
-//            rv_Na->getVal(),
-//            rv_n_a->getVal(),
-//            rv_mu_ttwj_a->getVal(),
-//            rv_mu_qcd_a->getVal(),
-//            rv_mu_ew_a->getVal(),
-//            rv_mu_susy_a->getVal(),
-//            rv_eff_sf->getVal(),
-//            (rv_eff_sf->getVal())*(rv_mu_susy_a->getVal()) ) ;
-
-//     printf("     N_D         :  %5.0f   %7.1f  %7.1f  %7.1f  %7.1f  %7.1f x %4.2f = %7.1f\n",
-//            rv_Nd->getVal(),
-//            rv_n_d->getVal(),
-//            rv_mu_ttwj_d->getVal(),
-//            rv_mu_qcd_d->getVal(),
-//            rv_mu_ew_d->getVal(),
-//            rv_mu_susy_d->getVal(),
-//            rv_eff_sf->getVal(),
-//            (rv_eff_sf->getVal())*(rv_mu_susy_d->getVal()) ) ;
-
-
-
-//     printf("\n") ;
-//     printf("  QCD MC A       :  input = %7.1f +/- %5.1f ,   fit = %7.1f  \n",
-//            rv_Nqcdmca->getVal(),
-//            Nqcdmcaerr,
-//            rv_mu_qcdmc_a->getVal() ) ;
-
-//     printf("  QCD MC D       :  input = %7.1f +/- %5.1f ,   fit = %7.1f  \n",
-//            rv_Nqcdmcd->getVal(),
-//            Nqcdmcderr,
-//            rv_mu_qcdmc_d->getVal() ) ;
-
-//     printf("  QCD MC SB      :  input = %7.1f +/- %5.1f ,   fit = %7.1f  \n",
-//            rv_Nqcdmcsb->getVal(),
-//            Nqcdmcsberr,
-//            rv_mu_qcdmc_sb->getVal() ) ;
-
-//     printf("  QCD MC SIG     :  input = %7.1f +/- %5.1f ,   fit = %7.1f  \n",
-//            rv_Nqcdmcsig->getVal(),
-//            Nqcdmcsigerr,
-//            rv_mu_qcdmc_sig->getVal() ) ;
-
-
-//     printf("\n") ;
-//     printf("  Eff scale fac. :  input = %4.2f +/- %4.2f ,   fit = %4.2f  \n",
-//            EffScaleFactor,
-//            EffScaleFactorErr,
-//            rv_eff_sf->getVal() ) ;
-
-//     printf("\n") ;
-//     printf("  LSF W+jets     :  input = %4.2f +/- %4.2f ,   fit = %4.2f  \n",
-//            lsf_WJmc,
-//            lsf_WJmc_err,
-//            rv_lsf_wjmc->getVal() ) ;
-
-//     printf("  LSF Z->invis   :  input = %4.2f +/- %4.2f ,   fit = %4.2f  \n",
-//            lsf_Znnmc,
-//            lsf_Znnmc_err,
-//            rv_lsf_znnmc->getVal() ) ;
+    // delta = 0. ;
+    // if ( lsf_Znnmc_err>0 ) { delta = (rv_lsf_Znnmc->getVal()-lsf_Znnmc)/lsf_Znnmc_err ; }
+    // printf("  LSF Z->invis   :  input = %4.2f +/- %4.2f ,   fit = %4.2f, delta = %4.2f sigma.  \n",
+    //        lsf_Znnmc,
+    //        lsf_Znnmc_err,
+    //        rv_lsf_Znnmc->getVal(),
+    //        delta ) ;
 
 
        printf("\n\n====================================================================\n\n") ;
