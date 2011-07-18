@@ -42,22 +42,25 @@
 
 //     bool doToyStudy( const char* inputRootFile, const char* outputRootFile, int dsFirst, int nToys ) ;
 
-       bool susyScanNoContam( const char* inputScanFile ) ;
-       bool susyScanWithContam( const char* inputScanFile ) ;
+       bool susyScanNoContam( const char* inputScanFile, const char* outputEndname="-scanplot-nocontam.png" ) ;
+       bool susyScanWithContam( const char* inputScanFile, const char* outputEndname="-scanplot-nocontam.png"  ) ;
        bool discoveryScanWithContam( const char* inputScanFile ) ;
+       bool nosusysignifScanWithContam( const char* inputScanFile ) ;
+
+
        bool setSusyScanPoint( const char* inputScanFile, double m0, double m12 ) ;
 
 
        bool profileSusySig( float& susySigLow, float& susySigHigh, bool makePlot=true, const char* plotname="output-files/prof_susy_sig.png", double scanMax=-1. ) ;
 
-       bool profileZnnSig( float& znnSigLow, float& znnSigHigh, bool makePlot=true ) ;
-       bool profileZnnSb( float& znnSbLow, float& znnSbHigh, bool makePlot=true ) ;
+       bool profileZnnSig( float& znnSigLow, float& znnSigHigh, bool makePlot=true, const char* plotname="output-files/prof_znn_sig.png", double scanMax=-1. ) ;
+       bool profileZnnSb( float& znnSbLow, float& znnSbHigh, bool makePlot=true, const char* plotname="output-files/prof_znn_sb.png", double scanMax=-1. ) ;
 
-       bool profilettwjSig( float& ttwjSigLow, float& ttwjSigHigh, bool makePlot=true ) ;
-       bool profilettwjSb( float& ttwjSbLow, float& ttwjSbHigh, bool makePlot=true ) ;
+       bool profilettwjSig( float& ttwjSigLow, float& ttwjSigHigh, bool makePlot=true, const char* plotname="output-files/prof_ttwj_sig.png", double scanMax=-1. ) ;
+       bool profilettwjSb( float& ttwjSbLow, float& ttwjSbHigh, bool makePlot=true, const char* plotname="output-files/prof_ttwj_sb.png", double scanMax=-1. ) ;
 
-       bool profileqcdSig( float& qcdSigLow, float& qcdSigHigh, bool makePlot=true ) ;
-       bool profileqcdSb( float& qcdSbLow, float& qcdSbHigh, bool makePlot=true ) ;
+       bool profileqcdSig( float& qcdSigLow, float& qcdSigHigh, bool makePlot=true, const char* plotname="output-files/prof_qcd_sig.png", double scanMax=-1. ) ;
+       bool profileqcdSb( float& qcdSbLow, float& qcdSbHigh, bool makePlot=true, const char* plotname="output-files/prof_qcd_sb.png", double scanMax=-1. ) ;
 
 
 

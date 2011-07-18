@@ -343,7 +343,7 @@
 
   //==================================================================================================
 
-     bool ra2bRoostatsClass3::profileZnnSig( float& znnSigLow, float& znnSigHigh, bool makePlot ) {
+     bool ra2bRoostatsClass3::profileZnnSig( float& znnSigLow, float& znnSigHigh, bool makePlot, const char* plotname, double scanMax ) {
 
          if ( ! initialized ) {
             printf("\n\n *** Call initialize first.\n\n") ;
@@ -351,6 +351,8 @@
          }
 
       //--- Profile likelihood for signal Z to nunu yield.
+
+         if ( scanMax > 0 ) { rv_mu_znn_sig->setMax(scanMax) ; }
 
          ProfileLikelihoodCalculator plc_znn_sig( *dsObserved, *likelihood, RooArgSet( *rv_mu_znn_sig ) ) ;
          plc_znn_sig.SetTestSize(0.05) ;
@@ -364,8 +366,8 @@
             TCanvas* plcplot_znn_sig = new TCanvas("plcplot_znn_sig", "znn sig, Profile likelihood", 500, 400 ) ;
             LikelihoodIntervalPlot plotInt_znn_sig((LikelihoodInterval*)plinterval_znn_sig);
             plotInt_znn_sig.Draw() ;
-            plcplot_znn_sig->SaveAs("plscan_znn_sig.pdf") ;
-            plcplot_znn_sig->SaveAs("plscan_znn_sig.png") ;
+            gPad->SetGridy(1) ;
+            plcplot_znn_sig->SaveAs( plotname ) ;
          }
 
          varsAtFitVals = false ;
@@ -378,7 +380,7 @@
 
   //==================================================================================================
 
-     bool ra2bRoostatsClass3::profileqcdSig( float& qcdSigLow, float& qcdSigHigh, bool makePlot ) {
+     bool ra2bRoostatsClass3::profileqcdSig( float& qcdSigLow, float& qcdSigHigh, bool makePlot, const char* plotname, double scanMax ) {
 
          if ( ! initialized ) {
             printf("\n\n *** Call initialize first.\n\n") ;
@@ -390,7 +392,9 @@
             return false ;
          }
 
-      //--- Profile likelihood for signal Z to nunu yield.
+      //--- Profile likelihood for signal qcd yield.
+
+         if ( scanMax > 0 ) { rrv_mu_qcd_sig->setMax(scanMax) ; }
 
          ProfileLikelihoodCalculator plc_qcd_sig( *dsObserved, *likelihood, RooArgSet( *rrv_mu_qcd_sig ) ) ;
          plc_qcd_sig.SetTestSize(0.05) ;
@@ -404,8 +408,8 @@
             TCanvas* plcplot_qcd_sig = new TCanvas("plcplot_qcd_sig", "qcd sig, Profile likelihood", 500, 400 ) ;
             LikelihoodIntervalPlot plotInt_qcd_sig((LikelihoodInterval*)plinterval_qcd_sig);
             plotInt_qcd_sig.Draw() ;
-            plcplot_qcd_sig->SaveAs("plscan_qcd_sig.pdf") ;
-            plcplot_qcd_sig->SaveAs("plscan_qcd_sig.png") ;
+            gPad->SetGridy(1) ;
+            plcplot_qcd_sig->SaveAs( plotname ) ;
          }
 
          varsAtFitVals = false ;
@@ -417,7 +421,7 @@
      }
 
   //==================================================================================================
-     bool ra2bRoostatsClass3::profileqcdSb( float& qcdSbLow, float& qcdSbHigh, bool makePlot ) {
+     bool ra2bRoostatsClass3::profileqcdSb( float& qcdSbLow, float& qcdSbHigh, bool makePlot, const char* plotname, double scanMax ) {
 
          if ( ! initialized ) {
             printf("\n\n *** Call initialize first.\n\n") ;
@@ -429,7 +433,9 @@
             return false ;
          }
 
-      //--- Profile likelihood for signal Z to nunu yield.
+      //--- Profile likelihood for SB QCD yield.
+
+         if ( scanMax > 0 ) { rrv_mu_qcd_sb->setMax(scanMax) ; }
 
          ProfileLikelihoodCalculator plc_qcd_sb( *dsObserved, *likelihood, RooArgSet( *rrv_mu_qcd_sb ) ) ;
          plc_qcd_sb.SetTestSize(0.05) ;
@@ -443,8 +449,8 @@
             TCanvas* plcplot_qcd_sb = new TCanvas("plcplot_qcd_sb", "qcd sb, Profile likelihood", 500, 400 ) ;
             LikelihoodIntervalPlot plotInt_qcd_sb((LikelihoodInterval*)plinterval_qcd_sb);
             plotInt_qcd_sb.Draw() ;
-            plcplot_qcd_sb->SaveAs("plscan_qcd_sb.pdf") ;
-            plcplot_qcd_sb->SaveAs("plscan_qcd_sb.png") ;
+            gPad->SetGridy(1) ;
+            plcplot_qcd_sb->SaveAs( plotname ) ;
          }
 
          varsAtFitVals = false ;
@@ -457,7 +463,7 @@
 
   //==================================================================================================
 
-     bool ra2bRoostatsClass3::profilettwjSig( float& ttwjSigLow, float& ttwjSigHigh, bool makePlot ) {
+     bool ra2bRoostatsClass3::profilettwjSig( float& ttwjSigLow, float& ttwjSigHigh, bool makePlot, const char* plotname, double scanMax ) {
 
          if ( ! initialized ) {
             printf("\n\n *** Call initialize first.\n\n") ;
@@ -469,7 +475,9 @@
             return false ;
          }
 
-      //--- Profile likelihood for signal Z to nunu yield.
+      //--- Profile likelihood for signal ttwj yield.
+
+         if ( scanMax > 0 ) { rrv_mu_ttwj_sig->setMax(scanMax) ; }
 
          ProfileLikelihoodCalculator plc_ttwj_sig( *dsObserved, *likelihood, RooArgSet( *rrv_mu_ttwj_sig ) ) ;
          plc_ttwj_sig.SetTestSize(0.05) ;
@@ -483,8 +491,8 @@
             TCanvas* plcplot_ttwj_sig = new TCanvas("plcplot_ttwj_sig", "ttwj sig, Profile likelihood", 500, 400 ) ;
             LikelihoodIntervalPlot plotInt_ttwj_sig((LikelihoodInterval*)plinterval_ttwj_sig);
             plotInt_ttwj_sig.Draw() ;
-            plcplot_ttwj_sig->SaveAs("plscan_ttwj_sig.pdf") ;
-            plcplot_ttwj_sig->SaveAs("plscan_ttwj_sig.png") ;
+            gPad->SetGridy(1) ;
+            plcplot_ttwj_sig->SaveAs( plotname) ;
          }
 
          varsAtFitVals = false ;
@@ -496,7 +504,7 @@
      }
 
   //==================================================================================================
-     bool ra2bRoostatsClass3::profilettwjSb( float& ttwjSbLow, float& ttwjSbHigh, bool makePlot ) {
+     bool ra2bRoostatsClass3::profilettwjSb( float& ttwjSbLow, float& ttwjSbHigh, bool makePlot, const char* plotname, double scanMax ) {
 
          if ( ! initialized ) {
             printf("\n\n *** Call initialize first.\n\n") ;
@@ -510,6 +518,8 @@
 
       //--- Profile likelihood for signal Z to nunu yield.
 
+         if ( scanMax > 0 ) { rrv_mu_ttwj_sb->setMax(scanMax) ; }
+
          ProfileLikelihoodCalculator plc_ttwj_sb( *dsObserved, *likelihood, RooArgSet( *rrv_mu_ttwj_sb ) ) ;
          plc_ttwj_sb.SetTestSize(0.05) ;
          ConfInterval* plinterval_ttwj_sb = plc_ttwj_sb.GetInterval() ;
@@ -522,8 +532,8 @@
             TCanvas* plcplot_ttwj_sb = new TCanvas("plcplot_ttwj_sb", "ttwj sb, Profile likelihood", 500, 400 ) ;
             LikelihoodIntervalPlot plotInt_ttwj_sb((LikelihoodInterval*)plinterval_ttwj_sb);
             plotInt_ttwj_sb.Draw() ;
-            plcplot_ttwj_sb->SaveAs("plscan_ttwj_sb.pdf") ;
-            plcplot_ttwj_sb->SaveAs("plscan_ttwj_sb.png") ;
+            gPad->SetGridy(1) ;
+            plcplot_ttwj_sb->SaveAs( plotname ) ;
          }
 
          varsAtFitVals = false ;
@@ -536,7 +546,7 @@
 
   //==================================================================================================
 
-     bool ra2bRoostatsClass3::profileZnnSb( float& znnSbLow, float& znnSbHigh, bool makePlot ) {
+     bool ra2bRoostatsClass3::profileZnnSb( float& znnSbLow, float& znnSbHigh, bool makePlot, const char* plotname, double scanMax ) {
 
          if ( ! initialized ) {
             printf("\n\n *** Call initialize first.\n\n") ;
@@ -548,6 +558,8 @@
          }
 
       //--- Profile likelihood for Z to nunu SB yield.
+
+         if ( scanMax > 0 ) { rrv_mu_znn_sb->setMax(scanMax) ; }
 
          ProfileLikelihoodCalculator plc_znn_sb( *dsObserved, *likelihood, RooArgSet( *rrv_mu_znn_sb ) ) ;
          plc_znn_sb.SetTestSize(0.05) ;
@@ -561,8 +573,8 @@
             TCanvas* plcplot_znn_sb = new TCanvas("plcplot_znn_sb", "znn sb, Profile likelihood", 500, 400 ) ;
             LikelihoodIntervalPlot plotInt_znn_sb((LikelihoodInterval*)plinterval_znn_sb);
             plotInt_znn_sb.Draw() ;
-            plcplot_znn_sb->SaveAs("plscan_znn_sb.pdf") ;
-            plcplot_znn_sb->SaveAs("plscan_znn_sb.png") ;
+            gPad->SetGridy(1) ;
+            plcplot_znn_sb->SaveAs( plotname ) ;
          }
 
          varsAtFitVals = false ;
@@ -2906,7 +2918,7 @@
 
   //===================================================================
 
-    bool ra2bRoostatsClass3::susyScanNoContam( const char* inputScanFile ) {
+    bool ra2bRoostatsClass3::susyScanNoContam( const char* inputScanFile, const char* outputEndname ) {
 
 
        //-- First, (re)do the fit and susy signal profile scan.
@@ -3013,7 +3025,7 @@
        TStringLong infilestr( inputScanFile ) ;
        TStringLong pngoutputfilestr = infilestr ;
        pngoutputfilestr.ReplaceAll("input","output") ;
-       pngoutputfilestr.ReplaceAll(".txt","-scanplot-nocontam.png") ;
+       pngoutputfilestr.ReplaceAll(".txt", outputEndname ) ;
        printf("\n\n png output file : %s\n\n", pngoutputfilestr.Data() ) ;
 
        TStringLong rootoutputfilestr = pngoutputfilestr ;
@@ -3038,7 +3050,7 @@
 
   //===================================================================
 
-    bool ra2bRoostatsClass3::susyScanWithContam( const char* inputScanFile ) {
+    bool ra2bRoostatsClass3::susyScanWithContam( const char* inputScanFile, const char* outputEndname ) {
 
 
        printf("\n\n Opening SUSY scan input file : %s\n", inputScanFile ) ;
@@ -3166,7 +3178,7 @@
        TStringLong infilestr( inputScanFile ) ;
        TStringLong pngoutputfilestr = infilestr ;
        pngoutputfilestr.ReplaceAll("input","output") ;
-       pngoutputfilestr.ReplaceAll(".txt","-scanplot-withcontam.png") ;
+       pngoutputfilestr.ReplaceAll(".txt", outputEndname ) ;
        printf("\n\n png output file : %s\n\n", pngoutputfilestr.Data() ) ;
 
        TStringLong rootoutputfilestr = pngoutputfilestr ;
@@ -3403,6 +3415,212 @@
        TFile* f = new TFile( rootoutputfilestr.Data(),"recreate") ;
        hsusyscanDeltalogl->Write() ;
        hsusyscanNsigma->Write() ;
+       f->Write() ;
+       f->Close() ;
+
+       return true ;
+
+    } // discoveryScanWithContam.
+  //===================================================================
+
+    bool ra2bRoostatsClass3::nosusysignifScanWithContam( const char* inputScanFile ) {
+
+
+       printf("\n\n Opening SUSY scan input file : %s\n", inputScanFile ) ;
+
+       FILE* infp ;
+       if ( (infp=fopen( inputScanFile,"r"))==NULL ) {
+          printf("\n\n *** Problem opening input file: %s.\n\n", inputScanFile ) ;
+          return false ;
+       }
+
+       int nM0bins ;
+       float minM0 ;
+       float maxM0 ;
+       float deltaM0 ;
+       int nM12bins ;
+       float minM12 ;
+       float maxM12 ;
+       float deltaM12 ;
+       int nScanPoints ;
+
+       char label[1000] ;
+
+       fscanf( infp, "%s %d %f %f %f", label, &nM0bins, &minM0, &maxM0, &deltaM0 ) ;
+       fscanf( infp, "%s %d %f %f %f", label, &nM12bins, &minM12, &maxM12, &deltaM12 ) ;
+       fscanf( infp, "%s %d", label, &nScanPoints ) ;
+
+       printf( "\n\n" ) ;
+       printf( "  M0   :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM0bins, minM0, maxM0 ) ;
+       printf( "  M1/2 :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM12bins, minM12, maxM12 ) ;
+       printf( "\n\n" ) ;
+
+       TH2F* hsusyscanNosusysignif = new TH2F("hsusyscanNosusysignif", "SUSY m1/2 vs m0 parameter scan : Delta log likelihood",
+            nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
+            nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
+
+
+       TH2F* hsusyscanNosusyNsigma = new TH2F("hsusyscanNosusyNsigma", "SUSY m1/2 vs m0 parameter scan : sqrt(2Delta log likelihood)",
+            nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
+            nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
+
+
+       //--- read in the column headers line.
+       char c(0) ;
+       c = fgetc( infp ) ;
+       c = 0 ;
+       while ( c!=10  ) { c = fgetc( infp ) ; }
+
+       //--- Loop over the scan points.
+       for ( int pi = 0 ; pi < nScanPoints ; pi++ ) {
+
+          float pointM0 ;
+          float pointM12 ;
+          float pointXsec ;
+          int    n_sig ;
+          int    n_sb ;
+          int    n_sig_sl ;
+          int    n_sb_sl ;
+          int    n_sig_ldp ;
+          int    n_sb_ldp ;
+
+          fscanf( infp, "%f %f %f   %d %d %d   %d  %d  %d",
+            &pointM0, &pointM12, &pointXsec,
+            &n_sig, &n_sb, &n_sig_sl,
+            &n_sb_sl, &n_sig_ldp, &n_sb_ldp ) ;
+
+
+
+          int nGenPerPoint(10000) ;
+
+
+          int m0bin  = hsusyscanNosusysignif->GetXaxis()->FindBin( pointM0 ) ;
+          int m12bin = hsusyscanNosusysignif->GetYaxis()->FindBin( pointM12 ) ;
+
+
+       //--- Set up the likelihood to include the SUSY contributions to the non-SIG regions.
+
+          float weight = ( pointXsec * DataLumi ) / ( 1.0*nGenPerPoint ) ;
+
+          reinitialize() ;
+
+          rv_mu_susymc_sig     -> setVal( n_sig * weight ) ;
+          rv_mu_susymc_sb      -> setVal( n_sb * weight ) ;
+          rv_mu_susymc_sig_sl  -> setVal( n_sig_sl * weight ) ;
+          rv_mu_susymc_sb_sl   -> setVal( n_sb_sl * weight ) ;
+          rv_mu_susymc_sig_ldp -> setVal( n_sig_ldp * weight ) ;
+          rv_mu_susymc_sb_ldp  -> setVal( n_sb_ldp * weight ) ;
+
+          rv_mu_susy_sig -> setVal( 0.0 ) ;
+
+
+
+          parameterSnapshot() ;
+
+          RooArgSet discFitobservedParametersList ;
+          discFitobservedParametersList.add( *rv_Nsig        ) ;
+          discFitobservedParametersList.add( *rv_Nsb         ) ;
+          discFitobservedParametersList.add( *rv_Nsig_sl     ) ;
+          discFitobservedParametersList.add( *rv_Nsb_sl      ) ;
+          discFitobservedParametersList.add( *rv_Nsig_ldp    ) ;
+          discFitobservedParametersList.add( *rv_Nsb_ldp     ) ;
+          discFitobservedParametersList.add( *rv_Nlsb_0b     ) ;
+          discFitobservedParametersList.add( *rv_Nlsb_0b_ldp ) ;
+          if ( znnModel == 1 ) {
+             discFitobservedParametersList.add( *rv_Nsb_ee      ) ;
+             discFitobservedParametersList.add( *rv_Nsig_ee     ) ;
+             discFitobservedParametersList.add( *rv_Nsb_mm      ) ;
+             discFitobservedParametersList.add( *rv_Nsig_mm     ) ;
+          } else if ( znnModel == 2 ) {
+             discFitobservedParametersList.add( *rv_Nsigsb_ee      ) ;
+             discFitobservedParametersList.add( *rv_Nsigsb_mm      ) ;
+          }
+
+
+          RooDataSet* discFitdsObserved = new RooDataSet("discfit_ra2b_observed_rds", "RA2b observed data values",
+                                         discFitobservedParametersList ) ;
+          discFitdsObserved->add( discFitobservedParametersList ) ;
+
+          rv_mu_susy_sig->setConstant( kFALSE ) ;
+
+          printf("\n\n") ;
+          printf("  Fitting with these values for the observables.\n") ;
+          discFitdsObserved->printMultiline(cout, 1, kTRUE, "") ;
+          printf("\n\n") ;
+          fitResult = likelihood->fitTo(*discFitdsObserved, Save(true));
+
+          double bestLogLikelihood = fitResult->minNll() ;
+          int bestFitStatus = fitResult->status() ;
+          int bestFitCovQual = fitResult->covQual() ;
+
+          printf("\n\n ++++++++ Minimum log likelihood, susy signal floating: %g, status %d, covQual %d.\n\n", bestLogLikelihood, bestFitStatus, bestFitCovQual ) ;
+
+          parameterSnapshot() ;
+
+
+          rv_mu_susy_sig->setVal(0.) ;
+          rv_mu_susy_sig->setConstant( kTRUE ) ;
+
+          fitResult = likelihood->fitTo(*discFitdsObserved, Save(true));
+
+
+          double zerosusyLogLikelihood = fitResult->minNll() ;
+          int nosusyFitStatus = fitResult->status() ;
+          int nosusyCovQual = fitResult->covQual() ;
+
+          printf("\n\n ++++++++ No SUSY log likelihood. : %g, fit status %d, covQual %d\n\n", zerosusyLogLikelihood, nosusyFitStatus, nosusyCovQual ) ;
+          printf("  +++++++ Delta log likelihood : %g\n\n", zerosusyLogLikelihood - bestLogLikelihood ) ;
+
+          parameterSnapshot() ;
+
+          double deltaLogLikelihood = zerosusyLogLikelihood - bestLogLikelihood ;
+
+          if ( TMath::IsNaN( deltaLogLikelihood ) == 0 && bestFitCovQual==3 && nosusyCovQual==3 ) {
+             hsusyscanNosusysignif -> SetBinContent( m0bin, m12bin, deltaLogLikelihood ) ;
+             if ( deltaLogLikelihood>0 ) { hsusyscanNosusyNsigma -> SetBinContent( m0bin, m12bin, sqrt(2*deltaLogLikelihood) ) ; }
+          }
+
+          delete discFitdsObserved ;
+
+       } // pi .
+
+       fclose( infp ) ;
+
+
+
+
+       TStringLong infilestr( inputScanFile ) ;
+       TStringLong pngoutputfilestr = infilestr ;
+       pngoutputfilestr.ReplaceAll("input","output") ;
+       pngoutputfilestr.ReplaceAll(".txt","-nosusy-deltaLogL-withcontam.png") ;
+       printf("\n\n png output file : %s\n\n", pngoutputfilestr.Data() ) ;
+
+       TCanvas* cdsusy = new TCanvas("cdsusy","SUSY m1/2 vs m0 scan") ;
+       hsusyscanNosusysignif->SetMinimum(0.) ;
+       hsusyscanNosusysignif->SetMaximum(8.) ;
+       hsusyscanNosusysignif->Draw("colz") ;
+       cdsusy->SaveAs( pngoutputfilestr.Data() ) ;
+
+
+
+       TStringLong pngoutputfilestr2 = infilestr ;
+       pngoutputfilestr2.ReplaceAll("input","output") ;
+       pngoutputfilestr2.ReplaceAll(".txt","-nosusy-Nsigma-withcontam.png") ;
+       printf("\n\n png output file : %s\n\n", pngoutputfilestr2.Data() ) ;
+
+       hsusyscanNosusyNsigma->SetMinimum(0.) ;
+       hsusyscanNosusyNsigma->SetMaximum(4.) ;
+       hsusyscanNosusyNsigma->Draw("colz") ;
+       cdsusy->SaveAs( pngoutputfilestr2.Data() ) ;
+
+
+
+       TStringLong rootoutputfilestr = pngoutputfilestr ;
+       rootoutputfilestr.ReplaceAll("png","root") ;
+       printf("\n\n root output file : %s\n\n", rootoutputfilestr.Data() ) ;
+       TFile* f = new TFile( rootoutputfilestr.Data(),"recreate") ;
+       hsusyscanNosusysignif->Write() ;
+       hsusyscanNosusyNsigma->Write() ;
        f->Write() ;
        f->Close() ;
 
