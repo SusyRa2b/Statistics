@@ -43,7 +43,7 @@
 //     bool doToyStudy( const char* inputRootFile, const char* outputRootFile, int dsFirst, int nToys ) ;
 
        bool susyScanNoContam( const char* inputScanFile, const char* outputEndname="-scanplot-nocontam.png" ) ;
-       bool susyScanWithContam( const char* inputScanFile, const char* outputEndname="-scanplot-nocontam.png"  ) ;
+       bool susyScanWithContam( const char* inputScanFile, const char* outputEndname="-scanplot-withcontam.png"  ) ;
        bool discoveryScanWithContam( const char* inputScanFile ) ;
        bool nosusysignifScanWithContam( const char* inputScanFile ) ;
 
@@ -222,6 +222,9 @@
        RooRealVar* rv_eff_ee ;
        RooRealVar* rv_eff_mm ;
 
+       RooRealVar* rv_fsig_ee ;
+       RooRealVar* rv_fsig_mm ;
+
        RooRealVar* rv_knn_sig ;
        RooRealVar* rv_knn_sb ;
 
@@ -308,6 +311,8 @@
        RooGaussian* pdf_acc_mm      ;
        RooGaussian* pdf_eff_ee      ;
        RooGaussian* pdf_eff_mm      ;
+       RooGaussian* pdf_fsig_ee      ;
+       RooGaussian* pdf_fsig_mm      ;
        RooGaussian* pdf_Eff_sf      ;
 
        //-- Znn model 1
@@ -338,6 +343,7 @@
        float lsf_Ewomc, lsf_Ewomc_err ;
        float sf_ttbarmc, sf_ttbarmc_err ;
 
+       float  DataLumi                ;
        float  acc_ee_mean             ;
        float  acc_ee_err              ;
        float  acc_mm_mean             ;
@@ -351,7 +357,11 @@
        float  knn_sb_mean             ;
        float  knn_sb_err              ;
        float  Ztoll_lumi              ;
-       float  DataLumi                ;
+       float  fsig_ee_mean            ;
+       float  fsig_ee_err             ;
+       float  fsig_mm_mean            ;
+       float  fsig_mm_err             ;
+
 
        RooArgSet observedParametersList ;
        RooDataSet* dsObserved ;

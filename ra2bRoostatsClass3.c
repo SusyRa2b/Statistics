@@ -31,6 +31,7 @@
 #include "RooStats/ProfileLikelihoodCalculator.h"
 #include "RooStats/LikelihoodInterval.h"
 #include "RooStats/LikelihoodIntervalPlot.h"
+#include "RooStats/HypoTestResult.h"
 
 #include "LikelihoodIntervalPlot.cxx"
 
@@ -294,6 +295,9 @@
        } // pi.
        printf("\n\n") ;
 
+       if ( znnModel == 2 ) {
+          printf("\n Znn SB value : %6.2f\n\n", rfv_mu_znn_sb->getVal() ) ;
+       }
 
 
        varsAtFitVals = true ;
@@ -316,7 +320,29 @@
 
          if ( scanMax > 0 ) { rv_mu_susy_sig->setMax(scanMax) ; }
 
+         printf("\n\n Creating ProfileLikelihoodCalculator for susy sig.\n\n") ;
+      //---------------
          ProfileLikelihoodCalculator plc_susy_sig( *dsObserved, *likelihood, RooArgSet( *rv_mu_susy_sig ) ) ;
+///// //---------------
+/////    RooArgSet* rasNull = new RooArgSet() ;
+/////    rasNull->add( *rv_mu_susy_sig ) ;
+/////    ProfileLikelihoodCalculator plc_susy_sig( *dsObserved, *likelihood, RooArgSet( *rv_mu_susy_sig ),
+/////         0.05, rasNull  ) ;
+///// //---------------
+
+/////    HypoTestResult* htr_susy_sig =  plc_susy_sig.GetHypoTest() ;
+
+/////    if ( htr_susy_sig != 0x0 ) {
+
+/////       htr_susy_sig->Print() ;
+
+/////    } else {
+
+/////       printf("\n\n *** GetHypoTest returned null pointer.\n\n") ;
+
+/////    }
+
+
          plc_susy_sig.SetTestSize(0.05) ;
          ConfInterval* plinterval_susy_sig = plc_susy_sig.GetInterval() ;
          susySigLow  = ((LikelihoodInterval*) plinterval_susy_sig)->LowerLimit(*rv_mu_susy_sig) ;
@@ -998,6 +1024,7 @@
        fscanf( infp, "%s %g", label, &Nsusymc_lsb_0b_ldp    ) ;   printf( "%s %g\n", label, Nsusymc_lsb_0b_ldp    ) ;
        fscanf( infp, "%s %d", label, &Nhtonlytrig_lsb_0b        ) ;   printf( "%s %d\n", label, Nhtonlytrig_lsb_0b        ) ;
        fscanf( infp, "%s %d", label, &Nhtonlytrig_lsb_0b_ldp    ) ;   printf( "%s %d\n", label, Nhtonlytrig_lsb_0b_ldp    ) ;
+       fscanf( infp, "%s %g", label, &DataLumi                  ) ;   printf( "%s %g\n", label, DataLumi                  ) ;
        fscanf( infp, "%s %d", label, &Nsb_ee                    ) ;   printf( "%s %d\n", label, Nsb_ee                    ) ;
        fscanf( infp, "%s %d", label, &Nsig_ee                   ) ;   printf( "%s %d\n", label, Nsig_ee                   ) ;
        fscanf( infp, "%s %d", label, &Nsb_mm                    ) ;   printf( "%s %d\n", label, Nsb_mm                    ) ;
@@ -1015,7 +1042,10 @@
        fscanf( infp, "%s %g", label, &knn_sig_err               ) ;   printf( "%s %g\n", label, knn_sig_err               ) ;
        fscanf( infp, "%s %g", label, &knn_sb_mean               ) ;   printf( "%s %g\n", label, knn_sb_mean               ) ;
        fscanf( infp, "%s %g", label, &knn_sb_err                ) ;   printf( "%s %g\n", label, knn_sb_err                ) ;
-       fscanf( infp, "%s %g", label, &DataLumi                  ) ;   printf( "%s %g\n", label, DataLumi                  ) ;
+       fscanf( infp, "%s %g", label, &fsig_ee_mean              ) ;   printf( "%s %g\n", label, fsig_ee_mean              ) ;
+       fscanf( infp, "%s %g", label, &fsig_ee_err               ) ;   printf( "%s %g\n", label, fsig_ee_err               ) ;
+       fscanf( infp, "%s %g", label, &fsig_mm_mean              ) ;   printf( "%s %g\n", label, fsig_mm_mean              ) ;
+       fscanf( infp, "%s %g", label, &fsig_mm_err               ) ;   printf( "%s %g\n", label, fsig_mm_err               ) ;
 
        printf("\n Done reading in %s\n\n", infile ) ;
        fclose( infp ) ;
@@ -1134,6 +1164,64 @@
                                      + pow( (Nsb - (comp_data_qcd_sb + lsf_Znnmc*NZnnmc_sb + lsf_Ewomc*NEwomc_sb)) / (1.0*Nsb_sl), 2 )*Nsig_sl
                                      + pow( (Nsb - (comp_data_qcd_sb + lsf_Znnmc*NZnnmc_sb + lsf_Ewomc*NEwomc_sb)) * (1.0*Nsig_sl) / pow(1.0*Nsb_sl,2), 2 ) * Nsb_sl ;
        float comp_data_ttwj_sig_err = sqrt(comp_data_ttwj_sig_err2) ;
+
+
+       float comp_znn_sig_ee(2.) ;
+       float comp_znn_sig_mm(2.) ;
+       float comp_znn_sig(2.) ;
+       float comp_znn_sb_ee(2.) ;
+       float comp_znn_sb_mm(2.) ;
+       float comp_znn_sb(2.) ;
+
+       float comp_znn_sig_ee_err(0.) ;
+       float comp_znn_sig_mm_err(0.) ;
+       float comp_znn_sig_err(0.) ;
+       float comp_znn_sb_ee_err(0.) ;
+       float comp_znn_sb_mm_err(0.) ;
+       float comp_znn_sb_err(0.) ;
+
+
+       if ( znnModel == 1 ) {
+
+         comp_znn_sig_ee = Nsig_ee * ( 5.95 * DataLumi * fsig_ee_mean ) / ( acc_ee_mean * eff_ee_mean * Ztoll_lumi ) ;
+         comp_znn_sb_ee  = Nsb_ee  * ( 5.95 * DataLumi * fsig_ee_mean ) / ( acc_ee_mean * eff_ee_mean * Ztoll_lumi ) ;
+
+         comp_znn_sig_mm = Nsig_mm * ( 5.95 * DataLumi * fsig_mm_mean ) / ( acc_mm_mean * eff_mm_mean * Ztoll_lumi ) ;
+         comp_znn_sb_mm  = Nsb_mm  * ( 5.95 * DataLumi * fsig_mm_mean ) / ( acc_mm_mean * eff_mm_mean * Ztoll_lumi ) ;
+
+         if ( Nsig_ee > 0 ) { comp_znn_sig_ee_err = comp_znn_sig_ee * sqrt( 1.0/(1.0*Nsig_ee) + pow(fsig_ee_err/fsig_ee_mean,2) + pow(acc_ee_err/acc_ee_mean,2) + pow(eff_ee_err/eff_ee_mean,2) ) ; }
+         if ( Nsb_ee  > 0 ) { comp_znn_sb_ee_err  = comp_znn_sb_ee  * sqrt( 1.0/(1.0*Nsb_ee)  + pow(fsig_ee_err/fsig_ee_mean,2) + pow(acc_ee_err/acc_ee_mean,2) + pow(eff_ee_err/eff_ee_mean,2) ) ; }
+
+         if ( Nsig_mm > 0 ) { comp_znn_sig_mm_err = comp_znn_sig_mm * sqrt( 1.0/(1.0*Nsig_mm) + pow(fsig_mm_err/fsig_mm_mean,2) + pow(acc_mm_err/acc_mm_mean,2) + pow(eff_mm_err/eff_mm_mean,2) ) ; }
+         if ( Nsb_mm  > 0 ) { comp_znn_sb_mm_err  = comp_znn_sb_mm  * sqrt( 1.0/(1.0*Nsb_mm)  + pow(fsig_mm_err/fsig_mm_mean,2) + pow(acc_mm_err/acc_mm_mean,2) + pow(eff_mm_err/eff_mm_mean,2) ) ; }
+
+
+
+       } else if ( znnModel == 2 ) {
+
+         comp_znn_sig_ee = (Nsig_ee + Nsb_ee) * ( 5.95 * DataLumi * fsig_ee_mean * knn_sig_mean ) / ( acc_ee_mean * eff_ee_mean * Ztoll_lumi ) ;
+         comp_znn_sb_ee  = (Nsig_ee + Nsb_ee) * ( 5.95 * DataLumi * fsig_ee_mean * knn_sb_mean  ) / ( acc_ee_mean * eff_ee_mean * Ztoll_lumi ) ;
+
+         comp_znn_sig_mm = (Nsig_mm + Nsb_mm) * ( 5.95 * DataLumi * fsig_mm_mean * knn_sig_mean ) / ( acc_mm_mean * eff_mm_mean * Ztoll_lumi ) ;
+         comp_znn_sb_mm  = (Nsig_mm + Nsb_mm) * ( 5.95 * DataLumi * fsig_mm_mean * knn_sb_mean  ) / ( acc_mm_mean * eff_mm_mean * Ztoll_lumi ) ;
+
+         if ( (Nsig_ee+Nsb_ee) > 0 ) { comp_znn_sig_ee_err = comp_znn_sig_ee * sqrt( 1.0/(1.0*(Nsig_ee+Nsb_ee)) + pow(fsig_ee_err/fsig_ee_mean,2) + pow(acc_ee_err/acc_ee_mean,2) + pow(eff_ee_err/eff_ee_mean,2) + pow(knn_sig_err/knn_sig_mean,2) ) ; }
+         if ( (Nsig_ee+Nsb_ee) > 0 ) { comp_znn_sb_ee_err  = comp_znn_sb_ee  * sqrt( 1.0/(1.0*(Nsig_ee+Nsb_ee)) + pow(fsig_ee_err/fsig_ee_mean,2) + pow(acc_ee_err/acc_ee_mean,2) + pow(eff_ee_err/eff_ee_mean,2) + pow(knn_sig_err/knn_sig_mean,2) ) ; }
+
+         if ( (Nsig_mm+Nsb_mm) > 0 ) { comp_znn_sig_mm_err = comp_znn_sig_mm * sqrt( 1.0/(1.0*(Nsig_mm+Nsb_mm)) + pow(fsig_mm_err/fsig_mm_mean,2) + pow(acc_mm_err/acc_mm_mean,2) + pow(eff_mm_err/eff_mm_mean,2) + pow(knn_sig_err/knn_sig_mean,2) ) ; }
+         if ( (Nsig_mm+Nsb_mm) > 0 ) { comp_znn_sb_mm_err  = comp_znn_sb_mm  * sqrt( 1.0/(1.0*(Nsig_mm+Nsb_mm)) + pow(fsig_mm_err/fsig_mm_mean,2) + pow(acc_mm_err/acc_mm_mean,2) + pow(eff_mm_err/eff_mm_mean,2) + pow(knn_sig_err/knn_sig_mean,2) ) ; }
+
+
+       }
+
+       //-- really dumb ave.
+       comp_znn_sig = 0.5 * ( comp_znn_sig_ee + comp_znn_sig_mm ) ;
+       comp_znn_sig_err = comp_znn_sig_ee_err ;
+       if ( comp_znn_sig_mm_err > comp_znn_sig_ee_err ) comp_znn_sig_err = comp_znn_sig_mm_err ;
+
+       comp_znn_sb = 0.5 * ( comp_znn_sb_ee + comp_znn_sb_mm ) ;
+       comp_znn_sb_err = comp_znn_sb_ee_err ;
+       if ( comp_znn_sb_mm_err > comp_znn_sb_ee_err ) comp_znn_sb_err = comp_znn_sb_mm_err ;
 
 
        printf("\n\n\n") ;
@@ -1266,7 +1354,13 @@
 
        printf("\n\n\n") ;
 
+       printf(" ---- Z to nunu calculations\n\n" ) ;
 
+       printf("  Znn SIG : %6.1f +/- %5.1f\n", comp_znn_sig, comp_znn_sig_err ) ;
+       printf("  Znn SB  : %6.1f +/- %5.1f\n", comp_znn_sb , comp_znn_sb_err ) ;
+
+
+       printf("\n\n\n") ;
 
 
 
@@ -1370,11 +1464,11 @@
 
       rv_mu_znn_sig      = new RooRealVar( "mu_znn_sig"    , "mu_znn_sig"    , 0.0, 80. ) ;
 
-      float maxSusySig = 2.0*Nsig ;
+      float maxSusySig = 4.0*Nsig ;
       rv_mu_susy_sig     = new RooRealVar( "mu_susy_sig"   , "mu_susy_sig"   , 0.0, maxSusySig ) ;
 
 
-      rv_mu_znn_sig   -> setVal( lsf_Znnmc*NZnnmc_sig ) ;  //-- this is a starting value only.
+      rv_mu_znn_sig   -> setVal( comp_znn_sig ) ;  //-- this is a starting value only.
       rv_mu_susy_sig    -> setVal( 0. ) ;  //-- this is a starting value only.
 
 
@@ -1403,7 +1497,7 @@
 
          rrv_mu_znn_sb       = new RooRealVar( "mu_znn_sb"     , "mu_znn_sb"     , 0.0, 150. ) ;
 
-         rrv_mu_znn_sb   -> setVal( lsf_Znnmc*NZnnmc_sb ) ;  //-- this is a starting value only.
+         rrv_mu_znn_sb   -> setVal( comp_znn_sb ) ;  //-- this is a starting value only.
 
          rv_mu_znn_sb = rrv_mu_znn_sb ;
       }
@@ -1727,6 +1821,18 @@
       }
 
 
+      pmin = (fsig_ee_mean-4.*fsig_ee_err) ;
+      pmax = (fsig_ee_mean+4.*fsig_ee_err) ;
+      if ( pmin < 0 ) pmin = 0.1 ;
+      rv_fsig_ee  = new RooRealVar( "fsig_ee", "fsig_ee", pmin, 1.0 ) ;
+      rv_fsig_ee  -> setVal( fsig_ee_mean ) ;
+
+      pmin = (fsig_mm_mean-4.*fsig_mm_err) ;
+      pmax = (fsig_mm_mean+4.*fsig_mm_err) ;
+      if ( pmin < 0 ) pmin = 0.1 ;
+      rv_fsig_mm  = new RooRealVar( "fsig_mm", "fsig_mm", pmin, 1.0 ) ;
+      rv_fsig_mm  -> setVal( fsig_mm_mean ) ;
+
 
 
      //+++++++++++++++++ Relationships between parameters ++++++++++++++++++++++++++++++++++++++++++++
@@ -1921,30 +2027,30 @@
       if ( znnModel == 1 ) {
 
          rv_n_sig_ee      = new RooFormulaVar( "n_sig_ee",
-                                        "mu_zee_sig_ee",
-                                        RooArgSet( *rv_mu_zee_sig_ee ) ) ;
+                                        "mu_zee_sig_ee / fsig_ee",
+                                        RooArgSet( *rv_mu_zee_sig_ee, *rv_fsig_ee ) ) ;
 
          rv_n_sb_ee       = new RooFormulaVar( "n_sb_ee",
-                                        "mu_zee_sb_ee",
-                                        RooArgSet( *rv_mu_zee_sb_ee ) ) ;
+                                        "mu_zee_sb_ee / fsig_ee",
+                                        RooArgSet( *rv_mu_zee_sb_ee, *rv_fsig_ee ) ) ;
 
          rv_n_sig_mm      = new RooFormulaVar( "n_sig_mm",
-                                        "mu_zmm_sig_mm",
-                                        RooArgSet( *rv_mu_zmm_sig_mm ) ) ;
+                                        "mu_zmm_sig_mm / fsig_mm",
+                                        RooArgSet( *rv_mu_zmm_sig_mm, *rv_fsig_mm ) ) ;
 
          rv_n_sb_mm       = new RooFormulaVar( "n_sb_mm",
-                                        "mu_zmm_sb_mm",
-                                        RooArgSet( *rv_mu_zmm_sb_mm ) ) ;
+                                        "mu_zmm_sb_mm / fsig_mm",
+                                        RooArgSet( *rv_mu_zmm_sb_mm, *rv_fsig_mm ) ) ;
 
       } else if ( znnModel == 2 ) {
 
          rv_n_sigsb_ee      = new RooFormulaVar( "n_sigsb_ee",
-                                        "mu_zee_sigsb_ee",
-                                        RooArgSet( *rv_mu_zee_sigsb_ee ) ) ;
+                                        "mu_zee_sigsb_ee / fsig_ee",
+                                        RooArgSet( *rv_mu_zee_sigsb_ee, *rv_fsig_ee ) ) ;
 
          rv_n_sigsb_mm      = new RooFormulaVar( "n_sigsb_mm",
-                                        "mu_zmm_sigsb_mm",
-                                        RooArgSet( *rv_mu_zmm_sigsb_mm ) ) ;
+                                        "mu_zmm_sigsb_mm / fsig_mm",
+                                        RooArgSet( *rv_mu_zmm_sigsb_mm, *rv_fsig_mm ) ) ;
 
       }
 
@@ -1990,11 +2096,17 @@
       pdf_acc_mm   = new RooGaussian( "pdf_acc_mm" , "Gaussian pdf for Z to mm acceptance",
                                           *rv_acc_mm , RooConst( acc_mm_mean ) , RooConst( acc_mm_err ) ) ;
 
-      pdf_eff_ee   = new RooGaussian( "pdf_eff_ee" , "Gaussian pdf for Z to ee effeptance",
+      pdf_eff_ee   = new RooGaussian( "pdf_eff_ee" , "Gaussian pdf for Z to ee efficiency",
                                           *rv_eff_ee , RooConst( eff_ee_mean ) , RooConst( eff_ee_err ) ) ;
 
-      pdf_eff_mm   = new RooGaussian( "pdf_eff_mm" , "Gaussian pdf for Z to mm effeptance",
+      pdf_eff_mm   = new RooGaussian( "pdf_eff_mm" , "Gaussian pdf for Z to mm efficiency",
                                           *rv_eff_mm , RooConst( eff_mm_mean ) , RooConst( eff_mm_err ) ) ;
+
+      pdf_fsig_ee   = new RooGaussian( "pdf_fsig_ee" , "Gaussian pdf for Z to ee purity",
+                                          *rv_fsig_ee , RooConst( fsig_ee_mean ) , RooConst( fsig_ee_err ) ) ;
+
+      pdf_fsig_mm   = new RooGaussian( "pdf_fsig_mm" , "Gaussian pdf for Z to mm purity",
+                                          *rv_fsig_mm , RooConst( fsig_mm_mean ) , RooConst( fsig_mm_err ) ) ;
 
 
       if ( znnModel == 2 ) {
@@ -2043,6 +2155,8 @@
          pdflist.add( *pdf_acc_mm      ) ;
          pdflist.add( *pdf_eff_ee      ) ;
          pdflist.add( *pdf_eff_mm      ) ;
+         pdflist.add( *pdf_fsig_ee      ) ;
+         pdflist.add( *pdf_fsig_mm      ) ;
          pdflist.add( *pdf_Eff_sf      ) ;
          likelihood = new RooProdPdf( "likelihood", "ra2b likelihood", pdflist ) ;
       }
@@ -2276,6 +2390,7 @@
        fscanf( infp, "%s %g", label, &Nsusymc_lsb_0b_ldp    ) ;   printf( "%s %g\n", label, Nsusymc_lsb_0b_ldp    ) ;
        fscanf( infp, "%s %d", label, &Nhtonlytrig_lsb_0b        ) ;   printf( "%s %d\n", label, Nhtonlytrig_lsb_0b        ) ;
        fscanf( infp, "%s %d", label, &Nhtonlytrig_lsb_0b_ldp    ) ;   printf( "%s %d\n", label, Nhtonlytrig_lsb_0b_ldp    ) ;
+       fscanf( infp, "%s %g", label, &DataLumi                  ) ;   printf( "%s %g\n", label, DataLumi                  ) ;
        fscanf( infp, "%s %d", label, &Nsb_ee                    ) ;   printf( "%s %d\n", label, Nsb_ee                    ) ;
        fscanf( infp, "%s %d", label, &Nsig_ee                   ) ;   printf( "%s %d\n", label, Nsig_ee                   ) ;
        fscanf( infp, "%s %d", label, &Nsb_mm                    ) ;   printf( "%s %d\n", label, Nsb_mm                    ) ;
@@ -2293,7 +2408,10 @@
        fscanf( infp, "%s %g", label, &knn_sig_err               ) ;   printf( "%s %g\n", label, knn_sig_err               ) ;
        fscanf( infp, "%s %g", label, &knn_sb_mean               ) ;   printf( "%s %g\n", label, knn_sb_mean               ) ;
        fscanf( infp, "%s %g", label, &knn_sb_err                ) ;   printf( "%s %g\n", label, knn_sb_err                ) ;
-       fscanf( infp, "%s %g", label, &DataLumi                  ) ;   printf( "%s %g\n", label, DataLumi                  ) ;
+       fscanf( infp, "%s %g", label, &fsig_ee_mean              ) ;   printf( "%s %g\n", label, fsig_ee_mean              ) ;
+       fscanf( infp, "%s %g", label, &fsig_ee_err               ) ;   printf( "%s %g\n", label, fsig_ee_err               ) ;
+       fscanf( infp, "%s %g", label, &fsig_mm_mean              ) ;   printf( "%s %g\n", label, fsig_mm_mean              ) ;
+       fscanf( infp, "%s %g", label, &fsig_mm_err               ) ;   printf( "%s %g\n", label, fsig_mm_err               ) ;
 
        printf("\n Done reading in %s\n\n", initializeFile ) ;
        fclose( infp ) ;
@@ -2435,6 +2553,8 @@
       rv_acc_mm  -> setVal( acc_mm_mean ) ;
       rv_eff_ee  -> setVal( eff_ee_mean ) ;
       rv_eff_mm  -> setVal( eff_mm_mean ) ;
+      rv_fsig_ee  -> setVal( fsig_ee_mean ) ;
+      rv_fsig_mm  -> setVal( fsig_mm_mean ) ;
       if ( znnModel == 2 ) {
          rv_knn_sig -> setVal( knn_sig_mean ) ;
          rv_knn_sb  -> setVal( knn_sb_mean ) ;
@@ -4153,137 +4273,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-//    binIndex++ ;
-
-//  //-- lsf, W+jets
-
-//    sprintf( binLabel, "LSF, W+jets" ) ;
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-//    dataVal = lsf_WJmc ;
-//    mcVal   = rv_lsf_wjmc->getVal() ;
-
-//    dataErr = lsf_WJmc_err ;
-
-//    dataErrNorm = dataErr ;
-//    mcValNorm = mcVal ;
-
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       mcValNorm = mcVal / dataVal ;
-//    }
-//    if ( !doNorm ) {
-//       hfitqual_data->SetBinContent( binIndex, dataVal*0.1 ) ;
-//       dataErrNorm = dataErrNorm*0.1 ;
-//       mcValNorm = mcValNorm*0.1 ;
-//    }
-
-
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-
-//    hfitqual_gaus -> SetBinContent( binIndex, mcValNorm ) ;
-
-//    printf(" %10s : err=%4.2f ;   MC = %4.2f\n", binLabel, dataErrNorm, mcValNorm ) ;
-
-//    binIndex++ ;
-
-
-
-
-//  //-- lsf, Z to nunu
-
-//    sprintf( binLabel, "LSF, Z invis" ) ;
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-//    dataVal = lsf_Znnmc ;
-//    mcVal   = rv_lsf_znnmc->getVal() ;
-
-//    dataErr = lsf_Znnmc_err ;
-
-//    dataErrNorm = dataErr ;
-//    mcValNorm = mcVal ;
-
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       mcValNorm = mcVal / dataVal ;
-//    }
-//    if ( !doNorm ) {
-//       hfitqual_data->SetBinContent( binIndex, dataVal*0.1 ) ;
-//       dataErrNorm = dataErrNorm*0.1 ;
-//       mcValNorm = mcValNorm*0.1 ;
-//    }
-
-
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-
-//    hfitqual_gaus -> SetBinContent( binIndex, mcValNorm ) ;
-
-//    printf(" %10s : err=%4.2f ;   MC = %4.2f\n", binLabel, dataErrNorm, mcValNorm ) ;
-
-//    binIndex++ ;
-
-
-
-
-//  //-- lsf, EW other
-
-//    sprintf( binLabel, "LSF, W+jets" ) ;
-//    xaxis->SetBinLabel(binIndex, binLabel ) ;
-
-//    dataVal = lsf_WJmc ;
-//    mcVal   = rv_lsf_wjmc->getVal() ;
-
-//    dataErr = lsf_WJmc_err ;
-
-//    dataErrNorm = dataErr ;
-//    mcValNorm = mcVal ;
-
-//    hfitqual_data->SetBinContent( binIndex, dataVal ) ;
-//    if ( dataVal > 0. && doNorm ) { 
-//       hfitqual_data->SetBinContent( binIndex, 1. ) ;
-//       dataErrNorm  = dataErr / dataVal ; 
-//       mcValNorm = mcVal / dataVal ;
-//    }
-//    if ( !doNorm ) {
-//       hfitqual_data->SetBinContent( binIndex, dataVal*0.1 ) ;
-//       dataErrNorm = dataErrNorm*0.1 ;
-//       mcValNorm = mcValNorm*0.1 ;
-//    }
-
-
-//    hfitqual_data->SetBinError( binIndex, dataErrNorm ) ;
-
-//    hfitqual_gaus -> SetBinContent( binIndex, mcValNorm ) ;
-
-//    printf(" %10s : err=%4.2f ;   MC = %4.2f\n", binLabel, dataErrNorm, mcValNorm ) ;
-
-//    binIndex++ ;
-
-
-
-
-
-
-
-
-
-
       binIndex++ ;
 
     //-- Eff SF
@@ -4397,7 +4386,11 @@
 
       fitval = rv_mu_susy_sig->getVal() ;
       fiterr = rv_mu_susy_sig->getError() ;
-      sprintf( fitvalchars, "%3.0f +/- %3.0f", fitval, fiterr ) ;
+      if ( fitval<10.) {
+         sprintf( fitvalchars, "%3.1f +/- %3.1f", fitval, fiterr ) ;
+      } else {
+         sprintf( fitvalchars, "%3.0f +/- %3.0f", fitval, fiterr ) ;
+      }
       fittext->DrawTextNDC( tx, ty, fitvalchars ) ;
 
 
@@ -4405,10 +4398,19 @@
       if ( useSigTtwjVar ) {
          fitval = rrv_mu_ttwj_sig->getVal() ;
          fiterr = rrv_mu_ttwj_sig->getError() ;
-         sprintf( fitvalchars, "%3.0f +/- %3.0f", fitval, fiterr ) ;
+         if ( fitval<10.) {
+            sprintf( fitvalchars, "%3.1f +/- %3.1f", fitval, fiterr ) ;
+         } else {
+            sprintf( fitvalchars, "%3.0f +/- %3.0f", fitval, fiterr ) ;
+         }
       } else {
          fitval = rfv_mu_ttwj_sig->getVal() ;
          sprintf( fitvalchars, "%3.0f", fitval ) ;
+         if ( fitval<10.) {
+            sprintf( fitvalchars, "%3.1f", fitval ) ;
+         } else {
+            sprintf( fitvalchars, "%3.0f", fitval ) ;
+         }
       }
       ty = ty - dy ;
       fittext->DrawTextNDC( tx, ty, fitvalchars ) ;
@@ -4419,10 +4421,18 @@
       if ( !useLdpVars ) {
          fitval = rrv_mu_qcd_sig->getVal() ;
          fiterr = rrv_mu_qcd_sig->getError() ;
-         sprintf( fitvalchars, "%3.0f +/- %3.0f", fitval, fiterr ) ;
+         if ( fitval<10.) {
+            sprintf( fitvalchars, "%3.1f +/- %3.1f", fitval, fiterr ) ;
+         } else {
+            sprintf( fitvalchars, "%3.0f +/- %3.0f", fitval, fiterr ) ;
+         }
       } else {
          fitval = rfv_mu_qcd_sig->getVal() ;
-         sprintf( fitvalchars, "%3.0f", fitval ) ;
+         if ( fitval<10.) {
+            sprintf( fitvalchars, "%3.1f", fitval ) ;
+         } else {
+            sprintf( fitvalchars, "%3.0f", fitval ) ;
+         }
       }
       ty = ty - dy ;
       fittext->DrawTextNDC( tx, ty, fitvalchars ) ;
@@ -4432,7 +4442,11 @@
 
       fitval = rv_mu_znn_sig->getVal() ;
       fiterr = rv_mu_znn_sig->getError() ;
-      sprintf( fitvalchars, "%3.0f +/- %3.0f", fitval, fiterr ) ;
+      if ( fitval<10.) {
+         sprintf( fitvalchars, "%3.1f +/- %3.1f", fitval, fiterr ) ;
+      } else {
+         sprintf( fitvalchars, "%3.0f +/- %3.0f", fitval, fiterr ) ;
+      }
       ty = ty - dy ;
       fittext->DrawTextNDC( tx, ty, fitvalchars ) ;
 
