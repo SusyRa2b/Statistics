@@ -20,6 +20,7 @@
 #include "TFile.h"
 #include "TTree.h"
 #include "TRandom1.h"
+#include "TRandom2.h"
 #include "TH2F.h"
 #include "TGaxis.h"
 #include "TLine.h"
@@ -63,6 +64,38 @@
 
       varsAtFitVals = false ;
       initialized = false ;
+
+
+
+
+      //--- CLs stuff below here
+      tt_bgonly = 0x0 ;
+      tt_splusb = 0x0 ;
+
+      toymean_n_sig         = 0. ;
+      toymean_n_sb          = 0. ;
+      toymean_n_sig_ldp     = 0. ;
+      toymean_n_sb_ldp      = 0. ;
+      toymean_n_sig_sl      = 0. ;
+      toymean_n_sb_sl       = 0. ;
+      toymean_n_lsb_0b      = 0. ;
+      toymean_n_lsb_0b_ldp  = 0. ;
+
+       //-- Znn model 1
+      toymean_n_sig_ee      = 0. ;
+      toymean_n_sb_ee       = 0. ;
+      toymean_n_sig_mm      = 0. ;
+      toymean_n_sb_mm       = 0. ;
+
+       //-- Znn model 2
+      toymean_n_sigsb_ee    = 0. ;
+      toymean_n_sigsb_mm    = 0. ;
+
+
+
+
+
+      trandom_cls = new TRandom2(12345) ;
 
    }
 
@@ -280,7 +313,7 @@
        dsObserved->printMultiline(cout, 1, kTRUE, "") ;
        printf("\n\n") ;
 
-       fitResult = likelihood->fitTo(*dsObserved, Save(true));
+       fitResult = likelihood->fitTo(*dsObserved, Save(true), Verbose(true) );
 
        printf("\n\n----- Constant parameters:\n") ;
        RooArgList constPars = fitResult->constPars() ;
@@ -1767,6 +1800,10 @@
       rv_lsf_Ewomc  = new RooRealVar( "lsf_Ewomc", "lsf_Ewomc", pmin, pmax ) ;
       rv_lsf_Ewomc  -> setVal( lsf_Ewomc ) ;
 
+    //----- set this to zero and don't vary it for now
+      rv_lsf_Ewomc  -> setVal( 0. ) ;
+      rv_lsf_Ewomc  -> setConstant( kTRUE ) ;
+
 
 
      //-- adding this here by hand.
@@ -2083,8 +2120,8 @@
       pdf_lsf_Znnmc  = new RooGaussian( "pdf_lsf_Znnmc", "Gaussian pdf for lsf, Znnmc",
                                           *rv_lsf_Znnmc, RooConst( lsf_Znnmc ), RooConst( lsf_Znnmc_err ) ) ;
 
-      pdf_lsf_Ewomc  = new RooGaussian( "pdf_lsf_Ewomc", "Gaussian pdf for lsf, Ewomc",
-                                          *rv_lsf_Ewomc, RooConst( lsf_Ewomc ), RooConst( lsf_Ewomc_err ) ) ;
+ ///  pdf_lsf_Ewomc  = new RooGaussian( "pdf_lsf_Ewomc", "Gaussian pdf for lsf, Ewomc",
+ ///                                      *rv_lsf_Ewomc, RooConst( lsf_Ewomc ), RooConst( lsf_Ewomc_err ) ) ;
 
       pdf_sf_ttbarmc  = new RooGaussian( "pdf_sf_ttbarmc", "Gaussian pdf for lsf, Ewomc",
                                           *rv_sf_ttbarmc, RooConst( sf_ttbarmc ), RooConst( sf_ttbarmc_err ) ) ;
@@ -2149,7 +2186,7 @@
          }
          pdflist.add( *pdf_lsf_WJmc    ) ;
          pdflist.add( *pdf_lsf_Znnmc   ) ;
-         pdflist.add( *pdf_lsf_Ewomc   ) ;
+  ////   pdflist.add( *pdf_lsf_Ewomc   ) ;
          pdflist.add( *pdf_sf_ttbarmc  ) ;
          pdflist.add( *pdf_acc_ee      ) ;
          pdflist.add( *pdf_acc_mm      ) ;
@@ -2308,112 +2345,112 @@
       //--- Inputs generated with gen_roostats_input4.c
       //    The order here must be consistent with the order there!
 
-       fscanf( infp, "%s %g", label, &EffScaleFactor        ) ;   printf( "%s %g\n", label, EffScaleFactor        ) ;
-       fscanf( infp, "%s %g", label, &EffScaleFactorErr     ) ;   printf( "%s %g\n", label, EffScaleFactorErr     ) ;
-       fscanf( infp, "%s %d", label, &Nsig                  ) ;   printf( "%s %d\n", label, Nsig                  ) ;
-       fscanf( infp, "%s %d", label, &Nsb                   ) ;   printf( "%s %d\n", label, Nsb                   ) ;
-       fscanf( infp, "%s %d", label, &Nsig_sl               ) ;   printf( "%s %d\n", label, Nsig_sl               ) ;
-       fscanf( infp, "%s %d", label, &Nsb_sl                ) ;   printf( "%s %d\n", label, Nsb_sl                ) ;
-       fscanf( infp, "%s %d", label, &Nsig_ldp              ) ;   printf( "%s %d\n", label, Nsig_ldp              ) ;
-       fscanf( infp, "%s %d", label, &Nsb_ldp               ) ;   printf( "%s %d\n", label, Nsb_ldp               ) ;
-       fscanf( infp, "%s %d", label, &Nlsb                  ) ;   printf( "%s %d\n", label, Nlsb                  ) ;
-       fscanf( infp, "%s %d", label, &Nlsb_ldp              ) ;   printf( "%s %d\n", label, Nlsb_ldp              ) ;
-       fscanf( infp, "%s %d", label, &Nlsb_0b               ) ;   printf( "%s %d\n", label, Nlsb_0b               ) ;
-       fscanf( infp, "%s %d", label, &Nlsb_0b_ldp           ) ;   printf( "%s %d\n", label, Nlsb_0b_ldp           ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_sig            ) ;   printf( "%s %g\n", label, Nqcdmc_sig            ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_sig_err        ) ;   printf( "%s %g\n", label, Nqcdmc_sig_err        ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_sb             ) ;   printf( "%s %g\n", label, Nqcdmc_sb             ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_sb_err         ) ;   printf( "%s %g\n", label, Nqcdmc_sb_err         ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_sig_sl         ) ;   printf( "%s %g\n", label, Nqcdmc_sig_sl         ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_sig_sl_err     ) ;   printf( "%s %g\n", label, Nqcdmc_sig_sl_err     ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_sb_sl          ) ;   printf( "%s %g\n", label, Nqcdmc_sb_sl          ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_sb_sl_err      ) ;   printf( "%s %g\n", label, Nqcdmc_sb_sl_err      ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_sig_ldp        ) ;   printf( "%s %g\n", label, Nqcdmc_sig_ldp        ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_sig_ldp_err    ) ;   printf( "%s %g\n", label, Nqcdmc_sig_ldp_err    ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_sb_ldp         ) ;   printf( "%s %g\n", label, Nqcdmc_sb_ldp         ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_sb_ldp_err     ) ;   printf( "%s %g\n", label, Nqcdmc_sb_ldp_err     ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_lsb            ) ;   printf( "%s %g\n", label, Nqcdmc_lsb            ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_err        ) ;   printf( "%s %g\n", label, Nqcdmc_lsb_err        ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_ldp        ) ;   printf( "%s %g\n", label, Nqcdmc_lsb_ldp        ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_ldp_err    ) ;   printf( "%s %g\n", label, Nqcdmc_lsb_ldp_err    ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_0b         ) ;   printf( "%s %g\n", label, Nqcdmc_lsb_0b         ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_0b_err     ) ;   printf( "%s %g\n", label, Nqcdmc_lsb_0b_err     ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_0b_ldp     ) ;   printf( "%s %g\n", label, Nqcdmc_lsb_0b_ldp     ) ;
-       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_0b_ldp_err ) ;   printf( "%s %g\n", label, Nqcdmc_lsb_0b_ldp_err ) ;
-       fscanf( infp, "%s %g", label, &Nttbarmc_sig          ) ;   printf( "%s %g\n", label, Nttbarmc_sig          ) ;
-       fscanf( infp, "%s %g", label, &Nttbarmc_sb           ) ;   printf( "%s %g\n", label, Nttbarmc_sb           ) ;
-       fscanf( infp, "%s %g", label, &Nttbarmc_sig_sl       ) ;   printf( "%s %g\n", label, Nttbarmc_sig_sl       ) ;
-       fscanf( infp, "%s %g", label, &Nttbarmc_sb_sl        ) ;   printf( "%s %g\n", label, Nttbarmc_sb_sl        ) ;
-       fscanf( infp, "%s %g", label, &Nttbarmc_sig_ldp      ) ;   printf( "%s %g\n", label, Nttbarmc_sig_ldp      ) ;
-       fscanf( infp, "%s %g", label, &Nttbarmc_sb_ldp       ) ;   printf( "%s %g\n", label, Nttbarmc_sb_ldp       ) ;
-       fscanf( infp, "%s %g", label, &Nttbarmc_lsb          ) ;   printf( "%s %g\n", label, Nttbarmc_lsb          ) ;
-       fscanf( infp, "%s %g", label, &Nttbarmc_lsb_ldp      ) ;   printf( "%s %g\n", label, Nttbarmc_lsb_ldp      ) ;
-       fscanf( infp, "%s %g", label, &lsf_WJmc              ) ;   printf( "%s %g\n", label, lsf_WJmc              ) ;
-       fscanf( infp, "%s %g", label, &lsf_WJmc_err          ) ;   printf( "%s %g\n", label, lsf_WJmc_err          ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_sig             ) ;   printf( "%s %d\n", label, NWJmc_sig             ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_sb              ) ;   printf( "%s %d\n", label, NWJmc_sb              ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_sig_sl          ) ;   printf( "%s %d\n", label, NWJmc_sig_sl          ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_sb_sl           ) ;   printf( "%s %d\n", label, NWJmc_sb_sl           ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_sig_ldp         ) ;   printf( "%s %d\n", label, NWJmc_sig_ldp         ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_sb_ldp          ) ;   printf( "%s %d\n", label, NWJmc_sb_ldp          ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_lsb             ) ;   printf( "%s %d\n", label, NWJmc_lsb             ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_lsb_ldp         ) ;   printf( "%s %d\n", label, NWJmc_lsb_ldp         ) ;
-       fscanf( infp, "%s %g", label, &lsf_Znnmc             ) ;   printf( "%s %g\n", label, lsf_Znnmc             ) ;
-       fscanf( infp, "%s %g", label, &lsf_Znnmc_err         ) ;   printf( "%s %g\n", label, lsf_Znnmc_err         ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_sig            ) ;   printf( "%s %d\n", label, NZnnmc_sig            ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_sb             ) ;   printf( "%s %d\n", label, NZnnmc_sb             ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_sig_sl         ) ;   printf( "%s %d\n", label, NZnnmc_sig_sl         ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_sb_sl          ) ;   printf( "%s %d\n", label, NZnnmc_sb_sl          ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_sig_ldp        ) ;   printf( "%s %d\n", label, NZnnmc_sig_ldp        ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_sb_ldp         ) ;   printf( "%s %d\n", label, NZnnmc_sb_ldp         ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_lsb            ) ;   printf( "%s %d\n", label, NZnnmc_lsb            ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_lsb_ldp        ) ;   printf( "%s %d\n", label, NZnnmc_lsb_ldp        ) ;
-       fscanf( infp, "%s %g", label, &lsf_Ewomc             ) ;   printf( "%s %g\n", label, lsf_Ewomc             ) ;
-       fscanf( infp, "%s %g", label, &lsf_Ewomc_err         ) ;   printf( "%s %g\n", label, lsf_Ewomc_err         ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_sig            ) ;   printf( "%s %d\n", label, NEwomc_sig            ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_sb             ) ;   printf( "%s %d\n", label, NEwomc_sb             ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_sig_sl         ) ;   printf( "%s %d\n", label, NEwomc_sig_sl         ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_sb_sl          ) ;   printf( "%s %d\n", label, NEwomc_sb_sl          ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_sig_ldp        ) ;   printf( "%s %d\n", label, NEwomc_sig_ldp        ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_sb_ldp         ) ;   printf( "%s %d\n", label, NEwomc_sb_ldp         ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_lsb            ) ;   printf( "%s %d\n", label, NEwomc_lsb            ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_lsb_ldp        ) ;   printf( "%s %d\n", label, NEwomc_lsb_ldp        ) ;
-       fscanf( infp, "%s %g", label, &Nsusymc_sig           ) ;   printf( "%s %g\n", label, Nsusymc_sig           ) ;
-       fscanf( infp, "%s %g", label, &Nsusymc_sb            ) ;   printf( "%s %g\n", label, Nsusymc_sb            ) ;
-       fscanf( infp, "%s %g", label, &Nsusymc_sig_sl        ) ;   printf( "%s %g\n", label, Nsusymc_sig_sl        ) ;
-       fscanf( infp, "%s %g", label, &Nsusymc_sb_sl         ) ;   printf( "%s %g\n", label, Nsusymc_sb_sl         ) ;
-       fscanf( infp, "%s %g", label, &Nsusymc_sig_ldp       ) ;   printf( "%s %g\n", label, Nsusymc_sig_ldp       ) ;
-       fscanf( infp, "%s %g", label, &Nsusymc_sb_ldp        ) ;   printf( "%s %g\n", label, Nsusymc_sb_ldp        ) ;
-       fscanf( infp, "%s %g", label, &Nsusymc_lsb           ) ;   printf( "%s %g\n", label, Nsusymc_lsb           ) ;
-       fscanf( infp, "%s %g", label, &Nsusymc_lsb_ldp       ) ;   printf( "%s %g\n", label, Nsusymc_lsb_ldp       ) ;
-       fscanf( infp, "%s %g", label, &Nsusymc_lsb_0b        ) ;   printf( "%s %g\n", label, Nsusymc_lsb_0b        ) ;
-       fscanf( infp, "%s %g", label, &Nsusymc_lsb_0b_ldp    ) ;   printf( "%s %g\n", label, Nsusymc_lsb_0b_ldp    ) ;
-       fscanf( infp, "%s %d", label, &Nhtonlytrig_lsb_0b        ) ;   printf( "%s %d\n", label, Nhtonlytrig_lsb_0b        ) ;
-       fscanf( infp, "%s %d", label, &Nhtonlytrig_lsb_0b_ldp    ) ;   printf( "%s %d\n", label, Nhtonlytrig_lsb_0b_ldp    ) ;
-       fscanf( infp, "%s %g", label, &DataLumi                  ) ;   printf( "%s %g\n", label, DataLumi                  ) ;
-       fscanf( infp, "%s %d", label, &Nsb_ee                    ) ;   printf( "%s %d\n", label, Nsb_ee                    ) ;
-       fscanf( infp, "%s %d", label, &Nsig_ee                   ) ;   printf( "%s %d\n", label, Nsig_ee                   ) ;
-       fscanf( infp, "%s %d", label, &Nsb_mm                    ) ;   printf( "%s %d\n", label, Nsb_mm                    ) ;
-       fscanf( infp, "%s %d", label, &Nsig_mm                   ) ;   printf( "%s %d\n", label, Nsig_mm                   ) ;
-       fscanf( infp, "%s %g", label, &acc_ee_mean               ) ;   printf( "%s %g\n", label, acc_ee_mean               ) ;
-       fscanf( infp, "%s %g", label, &acc_ee_err                ) ;   printf( "%s %g\n", label, acc_ee_err                ) ;
-       fscanf( infp, "%s %g", label, &acc_mm_mean               ) ;   printf( "%s %g\n", label, acc_mm_mean               ) ;
-       fscanf( infp, "%s %g", label, &acc_mm_err                ) ;   printf( "%s %g\n", label, acc_mm_err                ) ;
-       fscanf( infp, "%s %g", label, &eff_ee_mean               ) ;   printf( "%s %g\n", label, eff_ee_mean               ) ;
-       fscanf( infp, "%s %g", label, &eff_ee_err                ) ;   printf( "%s %g\n", label, eff_ee_err                ) ;
-       fscanf( infp, "%s %g", label, &eff_mm_mean               ) ;   printf( "%s %g\n", label, eff_mm_mean               ) ;
-       fscanf( infp, "%s %g", label, &eff_mm_err                ) ;   printf( "%s %g\n", label, eff_mm_err                ) ;
-       fscanf( infp, "%s %g", label, &Ztoll_lumi                ) ;   printf( "%s %g\n", label, Ztoll_lumi                ) ;
-       fscanf( infp, "%s %g", label, &knn_sig_mean              ) ;   printf( "%s %g\n", label, knn_sig_mean              ) ;
-       fscanf( infp, "%s %g", label, &knn_sig_err               ) ;   printf( "%s %g\n", label, knn_sig_err               ) ;
-       fscanf( infp, "%s %g", label, &knn_sb_mean               ) ;   printf( "%s %g\n", label, knn_sb_mean               ) ;
-       fscanf( infp, "%s %g", label, &knn_sb_err                ) ;   printf( "%s %g\n", label, knn_sb_err                ) ;
-       fscanf( infp, "%s %g", label, &fsig_ee_mean              ) ;   printf( "%s %g\n", label, fsig_ee_mean              ) ;
-       fscanf( infp, "%s %g", label, &fsig_ee_err               ) ;   printf( "%s %g\n", label, fsig_ee_err               ) ;
-       fscanf( infp, "%s %g", label, &fsig_mm_mean              ) ;   printf( "%s %g\n", label, fsig_mm_mean              ) ;
-       fscanf( infp, "%s %g", label, &fsig_mm_err               ) ;   printf( "%s %g\n", label, fsig_mm_err               ) ;
+       fscanf( infp, "%s %g", label, &EffScaleFactor        ) ;// printf( "%s %g\n", label, EffScaleFactor        ) ;
+       fscanf( infp, "%s %g", label, &EffScaleFactorErr     ) ;// printf( "%s %g\n", label, EffScaleFactorErr     ) ;
+       fscanf( infp, "%s %d", label, &Nsig                  ) ;// printf( "%s %d\n", label, Nsig                  ) ;
+       fscanf( infp, "%s %d", label, &Nsb                   ) ;// printf( "%s %d\n", label, Nsb                   ) ;
+       fscanf( infp, "%s %d", label, &Nsig_sl               ) ;// printf( "%s %d\n", label, Nsig_sl               ) ;
+       fscanf( infp, "%s %d", label, &Nsb_sl                ) ;// printf( "%s %d\n", label, Nsb_sl                ) ;
+       fscanf( infp, "%s %d", label, &Nsig_ldp              ) ;// printf( "%s %d\n", label, Nsig_ldp              ) ;
+       fscanf( infp, "%s %d", label, &Nsb_ldp               ) ;// printf( "%s %d\n", label, Nsb_ldp               ) ;
+       fscanf( infp, "%s %d", label, &Nlsb                  ) ;// printf( "%s %d\n", label, Nlsb                  ) ;
+       fscanf( infp, "%s %d", label, &Nlsb_ldp              ) ;// printf( "%s %d\n", label, Nlsb_ldp              ) ;
+       fscanf( infp, "%s %d", label, &Nlsb_0b               ) ;// printf( "%s %d\n", label, Nlsb_0b               ) ;
+       fscanf( infp, "%s %d", label, &Nlsb_0b_ldp           ) ;// printf( "%s %d\n", label, Nlsb_0b_ldp           ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sig            ) ;// printf( "%s %g\n", label, Nqcdmc_sig            ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sig_err        ) ;// printf( "%s %g\n", label, Nqcdmc_sig_err        ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sb             ) ;// printf( "%s %g\n", label, Nqcdmc_sb             ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sb_err         ) ;// printf( "%s %g\n", label, Nqcdmc_sb_err         ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sig_sl         ) ;// printf( "%s %g\n", label, Nqcdmc_sig_sl         ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sig_sl_err     ) ;// printf( "%s %g\n", label, Nqcdmc_sig_sl_err     ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sb_sl          ) ;// printf( "%s %g\n", label, Nqcdmc_sb_sl          ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sb_sl_err      ) ;// printf( "%s %g\n", label, Nqcdmc_sb_sl_err      ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sig_ldp        ) ;// printf( "%s %g\n", label, Nqcdmc_sig_ldp        ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sig_ldp_err    ) ;// printf( "%s %g\n", label, Nqcdmc_sig_ldp_err    ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sb_ldp         ) ;// printf( "%s %g\n", label, Nqcdmc_sb_ldp         ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_sb_ldp_err     ) ;// printf( "%s %g\n", label, Nqcdmc_sb_ldp_err     ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_lsb            ) ;// printf( "%s %g\n", label, Nqcdmc_lsb            ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_err        ) ;// printf( "%s %g\n", label, Nqcdmc_lsb_err        ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_ldp        ) ;// printf( "%s %g\n", label, Nqcdmc_lsb_ldp        ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_ldp_err    ) ;// printf( "%s %g\n", label, Nqcdmc_lsb_ldp_err    ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_0b         ) ;// printf( "%s %g\n", label, Nqcdmc_lsb_0b         ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_0b_err     ) ;// printf( "%s %g\n", label, Nqcdmc_lsb_0b_err     ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_0b_ldp     ) ;// printf( "%s %g\n", label, Nqcdmc_lsb_0b_ldp     ) ;
+       fscanf( infp, "%s %g", label, &Nqcdmc_lsb_0b_ldp_err ) ;// printf( "%s %g\n", label, Nqcdmc_lsb_0b_ldp_err ) ;
+       fscanf( infp, "%s %g", label, &Nttbarmc_sig          ) ;// printf( "%s %g\n", label, Nttbarmc_sig          ) ;
+       fscanf( infp, "%s %g", label, &Nttbarmc_sb           ) ;// printf( "%s %g\n", label, Nttbarmc_sb           ) ;
+       fscanf( infp, "%s %g", label, &Nttbarmc_sig_sl       ) ;// printf( "%s %g\n", label, Nttbarmc_sig_sl       ) ;
+       fscanf( infp, "%s %g", label, &Nttbarmc_sb_sl        ) ;// printf( "%s %g\n", label, Nttbarmc_sb_sl        ) ;
+       fscanf( infp, "%s %g", label, &Nttbarmc_sig_ldp      ) ;// printf( "%s %g\n", label, Nttbarmc_sig_ldp      ) ;
+       fscanf( infp, "%s %g", label, &Nttbarmc_sb_ldp       ) ;// printf( "%s %g\n", label, Nttbarmc_sb_ldp       ) ;
+       fscanf( infp, "%s %g", label, &Nttbarmc_lsb          ) ;// printf( "%s %g\n", label, Nttbarmc_lsb          ) ;
+       fscanf( infp, "%s %g", label, &Nttbarmc_lsb_ldp      ) ;// printf( "%s %g\n", label, Nttbarmc_lsb_ldp      ) ;
+       fscanf( infp, "%s %g", label, &lsf_WJmc              ) ;// printf( "%s %g\n", label, lsf_WJmc              ) ;
+       fscanf( infp, "%s %g", label, &lsf_WJmc_err          ) ;// printf( "%s %g\n", label, lsf_WJmc_err          ) ;
+       fscanf( infp, "%s %d", label, &NWJmc_sig             ) ;// printf( "%s %d\n", label, NWJmc_sig             ) ;
+       fscanf( infp, "%s %d", label, &NWJmc_sb              ) ;// printf( "%s %d\n", label, NWJmc_sb              ) ;
+       fscanf( infp, "%s %d", label, &NWJmc_sig_sl          ) ;// printf( "%s %d\n", label, NWJmc_sig_sl          ) ;
+       fscanf( infp, "%s %d", label, &NWJmc_sb_sl           ) ;// printf( "%s %d\n", label, NWJmc_sb_sl           ) ;
+       fscanf( infp, "%s %d", label, &NWJmc_sig_ldp         ) ;// printf( "%s %d\n", label, NWJmc_sig_ldp         ) ;
+       fscanf( infp, "%s %d", label, &NWJmc_sb_ldp          ) ;// printf( "%s %d\n", label, NWJmc_sb_ldp          ) ;
+       fscanf( infp, "%s %d", label, &NWJmc_lsb             ) ;// printf( "%s %d\n", label, NWJmc_lsb             ) ;
+       fscanf( infp, "%s %d", label, &NWJmc_lsb_ldp         ) ;// printf( "%s %d\n", label, NWJmc_lsb_ldp         ) ;
+       fscanf( infp, "%s %g", label, &lsf_Znnmc             ) ;// printf( "%s %g\n", label, lsf_Znnmc             ) ;
+       fscanf( infp, "%s %g", label, &lsf_Znnmc_err         ) ;// printf( "%s %g\n", label, lsf_Znnmc_err         ) ;
+       fscanf( infp, "%s %d", label, &NZnnmc_sig            ) ;// printf( "%s %d\n", label, NZnnmc_sig            ) ;
+       fscanf( infp, "%s %d", label, &NZnnmc_sb             ) ;// printf( "%s %d\n", label, NZnnmc_sb             ) ;
+       fscanf( infp, "%s %d", label, &NZnnmc_sig_sl         ) ;// printf( "%s %d\n", label, NZnnmc_sig_sl         ) ;
+       fscanf( infp, "%s %d", label, &NZnnmc_sb_sl          ) ;// printf( "%s %d\n", label, NZnnmc_sb_sl          ) ;
+       fscanf( infp, "%s %d", label, &NZnnmc_sig_ldp        ) ;// printf( "%s %d\n", label, NZnnmc_sig_ldp        ) ;
+       fscanf( infp, "%s %d", label, &NZnnmc_sb_ldp         ) ;// printf( "%s %d\n", label, NZnnmc_sb_ldp         ) ;
+       fscanf( infp, "%s %d", label, &NZnnmc_lsb            ) ;// printf( "%s %d\n", label, NZnnmc_lsb            ) ;
+       fscanf( infp, "%s %d", label, &NZnnmc_lsb_ldp        ) ;// printf( "%s %d\n", label, NZnnmc_lsb_ldp        ) ;
+       fscanf( infp, "%s %g", label, &lsf_Ewomc             ) ;// printf( "%s %g\n", label, lsf_Ewomc             ) ;
+       fscanf( infp, "%s %g", label, &lsf_Ewomc_err         ) ;// printf( "%s %g\n", label, lsf_Ewomc_err         ) ;
+       fscanf( infp, "%s %d", label, &NEwomc_sig            ) ;// printf( "%s %d\n", label, NEwomc_sig            ) ;
+       fscanf( infp, "%s %d", label, &NEwomc_sb             ) ;// printf( "%s %d\n", label, NEwomc_sb             ) ;
+       fscanf( infp, "%s %d", label, &NEwomc_sig_sl         ) ;// printf( "%s %d\n", label, NEwomc_sig_sl         ) ;
+       fscanf( infp, "%s %d", label, &NEwomc_sb_sl          ) ;// printf( "%s %d\n", label, NEwomc_sb_sl          ) ;
+       fscanf( infp, "%s %d", label, &NEwomc_sig_ldp        ) ;// printf( "%s %d\n", label, NEwomc_sig_ldp        ) ;
+       fscanf( infp, "%s %d", label, &NEwomc_sb_ldp         ) ;// printf( "%s %d\n", label, NEwomc_sb_ldp         ) ;
+       fscanf( infp, "%s %d", label, &NEwomc_lsb            ) ;// printf( "%s %d\n", label, NEwomc_lsb            ) ;
+       fscanf( infp, "%s %d", label, &NEwomc_lsb_ldp        ) ;// printf( "%s %d\n", label, NEwomc_lsb_ldp        ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_sig           ) ;// printf( "%s %g\n", label, Nsusymc_sig           ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_sb            ) ;// printf( "%s %g\n", label, Nsusymc_sb            ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_sig_sl        ) ;// printf( "%s %g\n", label, Nsusymc_sig_sl        ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_sb_sl         ) ;// printf( "%s %g\n", label, Nsusymc_sb_sl         ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_sig_ldp       ) ;// printf( "%s %g\n", label, Nsusymc_sig_ldp       ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_sb_ldp        ) ;// printf( "%s %g\n", label, Nsusymc_sb_ldp        ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_lsb           ) ;// printf( "%s %g\n", label, Nsusymc_lsb           ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_lsb_ldp       ) ;// printf( "%s %g\n", label, Nsusymc_lsb_ldp       ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_lsb_0b        ) ;// printf( "%s %g\n", label, Nsusymc_lsb_0b        ) ;
+       fscanf( infp, "%s %g", label, &Nsusymc_lsb_0b_ldp    ) ;// printf( "%s %g\n", label, Nsusymc_lsb_0b_ldp    ) ;
+       fscanf( infp, "%s %d", label, &Nhtonlytrig_lsb_0b        ) ;// printf( "%s %d\n", label, Nhtonlytrig_lsb_0b        ) ;
+       fscanf( infp, "%s %d", label, &Nhtonlytrig_lsb_0b_ldp    ) ;// printf( "%s %d\n", label, Nhtonlytrig_lsb_0b_ldp    ) ;
+       fscanf( infp, "%s %g", label, &DataLumi                  ) ;// printf( "%s %g\n", label, DataLumi                  ) ;
+       fscanf( infp, "%s %d", label, &Nsb_ee                    ) ;// printf( "%s %d\n", label, Nsb_ee                    ) ;
+       fscanf( infp, "%s %d", label, &Nsig_ee                   ) ;// printf( "%s %d\n", label, Nsig_ee                   ) ;
+       fscanf( infp, "%s %d", label, &Nsb_mm                    ) ;// printf( "%s %d\n", label, Nsb_mm                    ) ;
+       fscanf( infp, "%s %d", label, &Nsig_mm                   ) ;// printf( "%s %d\n", label, Nsig_mm                   ) ;
+       fscanf( infp, "%s %g", label, &acc_ee_mean               ) ;// printf( "%s %g\n", label, acc_ee_mean               ) ;
+       fscanf( infp, "%s %g", label, &acc_ee_err                ) ;// printf( "%s %g\n", label, acc_ee_err                ) ;
+       fscanf( infp, "%s %g", label, &acc_mm_mean               ) ;// printf( "%s %g\n", label, acc_mm_mean               ) ;
+       fscanf( infp, "%s %g", label, &acc_mm_err                ) ;// printf( "%s %g\n", label, acc_mm_err                ) ;
+       fscanf( infp, "%s %g", label, &eff_ee_mean               ) ;// printf( "%s %g\n", label, eff_ee_mean               ) ;
+       fscanf( infp, "%s %g", label, &eff_ee_err                ) ;// printf( "%s %g\n", label, eff_ee_err                ) ;
+       fscanf( infp, "%s %g", label, &eff_mm_mean               ) ;// printf( "%s %g\n", label, eff_mm_mean               ) ;
+       fscanf( infp, "%s %g", label, &eff_mm_err                ) ;// printf( "%s %g\n", label, eff_mm_err                ) ;
+       fscanf( infp, "%s %g", label, &Ztoll_lumi                ) ;// printf( "%s %g\n", label, Ztoll_lumi                ) ;
+       fscanf( infp, "%s %g", label, &knn_sig_mean              ) ;// printf( "%s %g\n", label, knn_sig_mean              ) ;
+       fscanf( infp, "%s %g", label, &knn_sig_err               ) ;// printf( "%s %g\n", label, knn_sig_err               ) ;
+       fscanf( infp, "%s %g", label, &knn_sb_mean               ) ;// printf( "%s %g\n", label, knn_sb_mean               ) ;
+       fscanf( infp, "%s %g", label, &knn_sb_err                ) ;// printf( "%s %g\n", label, knn_sb_err                ) ;
+       fscanf( infp, "%s %g", label, &fsig_ee_mean              ) ;// printf( "%s %g\n", label, fsig_ee_mean              ) ;
+       fscanf( infp, "%s %g", label, &fsig_ee_err               ) ;// printf( "%s %g\n", label, fsig_ee_err               ) ;
+       fscanf( infp, "%s %g", label, &fsig_mm_mean              ) ;// printf( "%s %g\n", label, fsig_mm_mean              ) ;
+       fscanf( infp, "%s %g", label, &fsig_mm_err               ) ;// printf( "%s %g\n", label, fsig_mm_err               ) ;
 
-       printf("\n Done reading in %s\n\n", initializeFile ) ;
+  //   printf("\n Done reading in %s\n\n", initializeFile ) ;
        fclose( infp ) ;
 
 
@@ -2422,7 +2459,7 @@
        float Nsm_sig         = Nttbarmc_sig          +  lsf_WJmc*NWJmc_sig          +  Nqcdmc_sig          +  lsf_Znnmc*NZnnmc_sig          +  lsf_Ewomc*NEwomc_sig         ;
 
 
-       printf("\n\n\n") ;
+ //    printf("\n\n\n") ;
 
 
 
@@ -2434,8 +2471,7 @@
 
 
       if ( Nsig < 0 ) {
-         printf("\n\n *** Negative value for Nsig in input file.  Will set Nsig to MC expectation, which is %d.\n\n",
-             TMath::Nint( Nsm_sig ) ) ;
+      // printf("\n\n *** Negative value for Nsig in input file.  Will set Nsig to MC expectation, which is %d.\n\n", TMath::Nint( Nsm_sig ) ) ;
          Nsig = TMath::Nint( Nsm_sig ) ;
       }
 
@@ -2544,7 +2580,9 @@
       rv_eff_sf  -> setVal( EffScaleFactor ) ;
       rv_lsf_Znnmc  -> setVal( lsf_Znnmc ) ;
       rv_lsf_WJmc  -> setVal( lsf_WJmc ) ;
-      rv_lsf_Ewomc  -> setVal( lsf_Ewomc ) ;
+  //  rv_lsf_Ewomc  -> setVal( lsf_Ewomc ) ;
+      rv_lsf_Ewomc  -> setVal( 0. ) ;
+      rv_lsf_Ewomc  -> setConstant( kTRUE ) ;
       sf_ttbarmc = 1.0 ;
       sf_ttbarmc_err = 0.2 ;
       rv_sf_ttbarmc   -> setVal( sf_ttbarmc ) ;
@@ -4490,6 +4528,18 @@
   //===================================================================
 
 
+    void ra2bRoostatsClass3::setAndFixSusySigToPredictedValue( ) {
+
+       rv_mu_susy_sig->setVal( rv_mu_susymc_sig->getVal() ) ;
+       rv_mu_susy_sig->setConstant( kTRUE ) ;
+
+       printf("\n\n Set SUSY SIG yield to %.1f and fixed it.\n\n\n", rv_mu_susymc_sig->getVal() ) ;
+
+    }
+
+  //===================================================================
+
+
     void ra2bRoostatsClass3::freeSusySig( ) {
 
        rv_mu_susy_sig->setConstant( kFALSE ) ;
@@ -4499,6 +4549,7 @@
     }
 
   //===================================================================
+
 
 
 
@@ -4650,4 +4701,263 @@
 
     }
 
+
   //===================================================================
+
+
+    void ra2bRoostatsClass3::saveToymeanSnapshot( ) {
+
+       printf("\n\n Saving BG-only model predictions for observables.\n\n\n" ) ;
+
+       toymean_n_sig        = rv_n_sig        ->getVal() ;
+       toymean_n_sb         = rv_n_sb         ->getVal() ;
+       toymean_n_sig_sl     = rv_n_sig_sl     ->getVal() ;
+       toymean_n_sb_sl      = rv_n_sb_sl      ->getVal() ;
+       toymean_n_sig_ldp    = rv_n_sig_ldp    ->getVal() ;
+       toymean_n_sb_ldp     = rv_n_sb_ldp     ->getVal() ;
+       toymean_n_lsb_0b     = rv_n_lsb_0b     ->getVal() ;
+       toymean_n_lsb_0b_ldp = rv_n_lsb_0b_ldp ->getVal() ;
+
+       if ( znnModel == 1 ) {
+          toymean_n_sig_ee = rv_n_sig_ee ->getVal() ;
+          toymean_n_sb_ee  = rv_n_sb_ee  ->getVal() ;
+          toymean_n_sig_mm = rv_n_sig_mm ->getVal() ;
+          toymean_n_sb_mm  = rv_n_sb_mm  ->getVal() ;
+       } else if ( znnModel == 2 ) {
+          toymean_n_sig_ee = rv_n_sigsb_ee ->getVal() ;
+          toymean_n_sig_ee = rv_n_sigsb_mm ->getVal() ;
+       }
+
+       printf( " toymean_n_sig        %8.2f\n", toymean_n_sig        ) ;
+       printf( " toymean_n_sb         %8.2f\n", toymean_n_sb         ) ;
+       printf( " toymean_n_sig_sl     %8.2f\n", toymean_n_sig_sl     ) ;
+       printf( " toymean_n_sb_sl      %8.2f\n", toymean_n_sb_sl      ) ;
+       printf( " toymean_n_sig_ldp    %8.2f\n", toymean_n_sig_ldp    ) ;
+       printf( " toymean_n_sb_ldp     %8.2f\n", toymean_n_sb_ldp     ) ;
+       printf( " toymean_n_lsb_0b     %8.2f\n", toymean_n_lsb_0b     ) ;
+       printf( " toymean_n_lsb_0b_ldp %8.2f\n", toymean_n_lsb_0b_ldp ) ;
+       if ( znnModel == 1 ) {
+          printf( " toymean_n_sig_ee        %8.2f\n", toymean_n_sig_ee        ) ;
+          printf( " toymean_n_sb_ee         %8.2f\n", toymean_n_sb_ee         ) ;
+          printf( " toymean_n_sig_mm        %8.2f\n", toymean_n_sig_mm        ) ;
+          printf( " toymean_n_sb_mm         %8.2f\n", toymean_n_sb_mm         ) ;
+       } else if ( znnModel == 2 ) {
+          printf( " toymean_n_sigsb_ee        %8.2f\n", toymean_n_sigsb_ee        ) ;
+          printf( " toymean_n_sigsb_mm        %8.2f\n", toymean_n_sigsb_mm        ) ;
+       }
+       printf( "\n\n\n") ;
+
+    }
+
+  //===================================================================
+
+
+    void ra2bRoostatsClass3::genToyExperiment() {
+
+       rv_Nsig        -> setVal( trandom_cls->Poisson( toymean_n_sig        ) ) ;
+       rv_Nsb         -> setVal( trandom_cls->Poisson( toymean_n_sb         ) ) ;
+       rv_Nsig_ldp    -> setVal( trandom_cls->Poisson( toymean_n_sig_ldp    ) ) ;
+       rv_Nsb_ldp     -> setVal( trandom_cls->Poisson( toymean_n_sb_ldp     ) ) ;
+       rv_Nsig_sl     -> setVal( trandom_cls->Poisson( toymean_n_sig_sl     ) ) ;
+       rv_Nsb_sl      -> setVal( trandom_cls->Poisson( toymean_n_sb_sl      ) ) ;
+       rv_Nlsb_0b     -> setVal( trandom_cls->Poisson( toymean_n_lsb_0b     ) ) ;
+       rv_Nlsb_0b_ldp -> setVal( trandom_cls->Poisson( toymean_n_lsb_0b_ldp ) ) ;
+
+       if ( znnModel == 1 ) {
+          rv_Nsig_ee     -> setVal( trandom_cls->Poisson( toymean_n_sig_ee ) ) ;
+          rv_Nsb_ee      -> setVal( trandom_cls->Poisson( toymean_n_sb_ee  ) ) ;
+          rv_Nsig_mm     -> setVal( trandom_cls->Poisson( toymean_n_sig_mm ) ) ;
+          rv_Nsb_mm      -> setVal( trandom_cls->Poisson( toymean_n_sb_mm  ) ) ;
+       } else if ( znnModel == 2 ) {
+          rv_Nsigsb_ee   -> setVal( trandom_cls->Poisson( toymean_n_sigsb_ee  ) ) ;
+          rv_Nsigsb_mm   -> setVal( trandom_cls->Poisson( toymean_n_sigsb_mm  ) ) ;
+       }
+
+
+    } // genToyExperiment
+
+  //===================================================================
+
+
+    void ra2bRoostatsClass3::doToyStudy( int nToys, bool isBgonlyStudy ) {
+
+       int n_sig         ;
+       int n_sb          ;
+       int n_sig_ldp     ;
+       int n_sb_ldp      ;
+       int n_sig_sl      ;
+       int n_sb_sl       ;
+       int n_lsb_0b      ;
+       int n_lsb_0b_ldp  ;
+
+       int n_sig_ee      ;
+       int n_sb_ee       ;
+       int n_sig_mm      ;
+       int n_sb_mm       ;
+       int n_sigsb_ee      ;
+       int n_sigsb_mm      ;
+
+       double maxLogL ;
+       double sfixedLogL ;
+       double testStat ;
+
+       int maxCovQual ;
+       int sfixedCovQual ;
+
+
+       TTree* tt(0x0) ;
+
+       if ( isBgonlyStudy ) {
+          tt = new TTree("tt_cls_bgonly", "CLs BG-only toy study") ;
+       } else {
+          tt = new TTree("tt_cls_splusb", "CLs SIG+BG toy study") ;
+       }
+
+       tt->Branch( "maxLogL"        , &maxLogL           , "maxLogL/D"            ) ;
+       tt->Branch( "sfixedLogL"        , &sfixedLogL           , "sfixedLogL/D"            ) ;
+       tt->Branch( "testStat"        , &testStat           , "testStat/D"            ) ;
+
+       tt->Branch( "maxCovQual"        , &maxCovQual           , "maxCovQual/I"            ) ;
+       tt->Branch( "sfixedCovQual"        , &sfixedCovQual           , "sfixedCovQual/I"            ) ;
+
+       tt->Branch( "n_sig"        , &n_sig           , "n_sig/I"            ) ;
+       tt->Branch( "n_sb"         , &n_sb            , "n_sb/I"             ) ;
+       tt->Branch( "n_sig_ldp"    , &n_sig_ldp       , "n_sig_ldp/I"        ) ;
+       tt->Branch( "n_sb_ldp"     , &n_sb_ldp        , "n_sb_ldp/I"         ) ;
+       tt->Branch( "n_sig_sl"     , &n_sig_sl        , "n_sig_sl/I"         ) ;
+       tt->Branch( "n_sb_sl"      , &n_sb_sl         , "n_sb_sl/I"          ) ;
+       tt->Branch( "n_lsb_0b"     , &n_lsb_0b        , "n_lsb_0b/I"         ) ;
+       tt->Branch( "n_lsb_0b_ldp" , &n_lsb_0b_ldp    , "n_lsb_0b_ldp/I"     ) ;
+       if ( znnModel==1 ) {
+          tt->Branch( "n_sig_ee"        , &n_sig_ee           , "n_sig_ee/I"            ) ;
+          tt->Branch( "n_sb_ee"         , &n_sb_ee            , "n_sb_ee/I"             ) ;
+          tt->Branch( "n_sig_mm"        , &n_sig_mm           , "n_sig_mm/I"            ) ;
+          tt->Branch( "n_sb_mm"         , &n_sb_mm            , "n_sb_mm/I"             ) ;
+       } else if (znnModel==2) {
+          tt->Branch( "n_sigsb_ee"        , &n_sigsb_ee           , "n_sigsb_ee/I"            ) ;
+          tt->Branch( "n_sigsb_mm"        , &n_sigsb_mm           , "n_sigsb_mm/I"            ) ;
+       }
+
+       for ( int ti=0; ti<nToys; ti++ ) {
+
+          reinitialize() ;
+
+          genToyExperiment() ;
+
+          RooArgSet toyFitobservedParametersList ;
+          toyFitobservedParametersList.add( *rv_Nsig        ) ;
+          toyFitobservedParametersList.add( *rv_Nsb         ) ;
+          toyFitobservedParametersList.add( *rv_Nsig_sl     ) ;
+          toyFitobservedParametersList.add( *rv_Nsb_sl      ) ;
+          toyFitobservedParametersList.add( *rv_Nsig_ldp    ) ;
+          toyFitobservedParametersList.add( *rv_Nsb_ldp     ) ;
+          toyFitobservedParametersList.add( *rv_Nlsb_0b     ) ;
+          toyFitobservedParametersList.add( *rv_Nlsb_0b_ldp ) ;
+          if ( znnModel == 1 ) {
+             toyFitobservedParametersList.add( *rv_Nsb_ee      ) ;
+             toyFitobservedParametersList.add( *rv_Nsig_ee     ) ;
+             toyFitobservedParametersList.add( *rv_Nsb_mm      ) ;
+             toyFitobservedParametersList.add( *rv_Nsig_mm     ) ;
+          } else if ( znnModel == 2 ) {
+             toyFitobservedParametersList.add( *rv_Nsigsb_ee      ) ;
+             toyFitobservedParametersList.add( *rv_Nsigsb_mm      ) ;
+          }
+
+
+          RooDataSet* toyFitdsObserved = new RooDataSet("toyfit_ra2b_observed_rds", "RA2b toy observed data values",
+                                         toyFitobservedParametersList ) ;
+          toyFitdsObserved->add( toyFitobservedParametersList ) ;
+
+
+         //-- fit with susy yield floating to get the absolute maximum log likelihood.
+
+          rv_mu_susy_sig->setConstant( kFALSE ) ;
+
+          printf("\n\n") ;
+          printf("  Fitting with these values for the observables.\n") ;
+          toyFitdsObserved->printMultiline(cout, 1, kTRUE, "") ;
+          printf("\n\n") ;
+       // fitResult = likelihood->fitTo(*toyFitdsObserved, Save(true));
+          fitResult = likelihood->fitTo(*toyFitdsObserved, Save(true), PrintLevel(-1));
+          maxLogL = fitResult->minNll() ;
+          maxCovQual = fitResult->covQual() ;
+          printf("\n  Fit result with susy floating for toy %d : %8.3f \n\n", ti, maxLogL ) ;
+          parameterSnapshot() ;
+
+
+         //-- fit with susy yield fixed to susy model prediction.
+          rv_mu_susy_sig -> setVal( rv_mu_susymc_sig->getVal() ) ;
+          rv_mu_susy_sig->setConstant( kTRUE ) ;
+          printf("\n  Fitting with susy SIG yield fixed to %8.2f\n\n", rv_mu_susy_sig->getVal() ) ;
+       // fitResult = likelihood->fitTo(*toyFitdsObserved, Save(true));
+          fitResult = likelihood->fitTo(*toyFitdsObserved, Save(true), PrintLevel(-1));
+          sfixedLogL = fitResult->minNll() ;
+          sfixedCovQual = fitResult->covQual() ;
+          testStat = 2.*(sfixedLogL-maxLogL) ;
+          printf("\n  Fit result with susy fixed to prediction for toy %d : %8.3f, %8.3f \n\n", ti, sfixedLogL, testStat ) ;
+          parameterSnapshot() ;
+
+
+         //--- save this experiment in the TTree.
+
+          n_sig        = rv_Nsig        ->getVal() ;
+          n_sb         = rv_Nsb         ->getVal() ;
+          n_sig_sl     = rv_Nsig_sl     ->getVal() ;
+          n_sb_sl      = rv_Nsb_sl      ->getVal() ;
+          n_sig_ldp    = rv_Nsig_ldp    ->getVal() ;
+          n_sb_ldp     = rv_Nsb_ldp     ->getVal() ;
+          n_lsb_0b     = rv_Nlsb_0b     ->getVal() ;
+          n_lsb_0b_ldp = rv_Nlsb_0b_ldp ->getVal() ;
+
+          if ( znnModel == 1 ) {
+             n_sig_ee = rv_Nsig_ee ->getVal() ;
+             n_sb_ee  = rv_Nsb_ee  ->getVal() ;
+             n_sig_mm = rv_Nsig_mm ->getVal() ;
+             n_sb_mm  = rv_Nsb_mm  ->getVal() ;
+          } else if ( znnModel == 2 ) {
+             n_sig_ee = rv_Nsigsb_ee ->getVal() ;
+             n_sig_ee = rv_Nsigsb_mm ->getVal() ;
+          }
+
+          //-- check for Nans
+          if ( TMath::IsNaN( testStat ) != 0 ) { testStat = -1. ; }
+          if ( TMath::IsNaN( maxLogL ) != 0 ) { maxLogL = -1. ; }
+          if ( TMath::IsNaN( sfixedLogL ) != 0 ) { sfixedLogL = -1. ; }
+
+          tt->Fill() ;
+
+       } // ti.
+
+
+    // TFile* f = new TFile( "toy.root","recreate") ;
+       tt->Write() ;
+    // f->Close() ;
+
+
+    } // doToyStudy
+
+
+  //===================================================================
+
+
+    double ra2bRoostatsClass3::getLogLikelihoodValue( ) {
+
+        return fitResult->minNll() ;
+
+    }
+
+  //===================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+

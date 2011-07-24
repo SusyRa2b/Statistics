@@ -1,6 +1,7 @@
 #ifndef ra2bRoostatsClass3_h
 #define ra2bRoostatsClass3_h
 
+#include "Trandom2.h"
 #include "RooRealVar.h"
 #include "RooFormulaVar.h"
 #include "RooWorkspace.h"
@@ -30,17 +31,8 @@
 
        bool reinitialize( ) ;
 
-//     bool readTextDataset( const char* inputTextFile ) ;
-
-//     bool generateToyDatasetsFromLikelihood( const char* outputRootFile, int nToys ) ;
-
-//     bool generateToyDatasetsFromNVals( const char* outputRootFile, int nToys ) ;
-
-//     bool readToyDataset( const char* inputRootFile, int dsIndex ) ;
-
        bool doFit() ;
 
-//     bool doToyStudy( const char* inputRootFile, const char* outputRootFile, int dsFirst, int nToys ) ;
 
        bool susyScanNoContam( const char* inputScanFile, const char* outputEndname="-scanplot-nocontam.png" ) ;
        bool susyScanWithContam( const char* inputScanFile, const char* outputEndname="-scanplot-withcontam.png"  ) ;
@@ -71,6 +63,18 @@
        void setAndFixSusySig( double setVal = 0. ) ;
        void freeSusySig() ;
 
+
+      //--- things for CLs
+
+       void saveToymeanSnapshot() ;
+
+       void genToyExperiment() ;
+
+       void doToyStudy( int nToys=1000, bool isBgonlyStudy=true ) ;
+
+       void setAndFixSusySigToPredictedValue() ;
+
+       double getLogLikelihoodValue() ;
 
      private :
 
@@ -293,6 +297,9 @@
 
 
 
+
+
+
        //=========== PDFs for the likelihood ============================================================
 
        RooPoisson*  pdf_Nsig        ;
@@ -370,6 +377,35 @@
 
        RooFitResult* fitResult ;
 
+
+       //========= Stuff needed for CLs below here ==================================================
+
+     //++++ Model predictions from fitting data to BG-only hypothesis (susy fixed to zero in fit)
+
+       double toymean_n_sig        ;
+       double toymean_n_sb         ;
+       double toymean_n_sig_ldp    ;
+       double toymean_n_sb_ldp     ;
+       double toymean_n_sig_sl     ;
+       double toymean_n_sb_sl      ;
+       double toymean_n_lsb_0b     ;
+       double toymean_n_lsb_0b_ldp ;
+
+       //-- Znn model 1
+       double toymean_n_sig_ee     ;
+       double toymean_n_sb_ee      ;
+       double toymean_n_sig_mm     ;
+       double toymean_n_sb_mm      ;
+
+       //-- Znn model 2
+       double toymean_n_sigsb_ee   ;
+       double toymean_n_sigsb_mm   ;
+
+       TTree* tt_bgonly ;
+       TTree* tt_splusb ;
+
+
+       TRandom2* trandom_cls ;
 
    } ;
 
