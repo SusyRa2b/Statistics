@@ -70,7 +70,7 @@
 
        void genToyExperiment() ;
 
-       void doToyStudy( int nToys=1000, bool isBgonlyStudy=true ) ;
+       double doToyStudy( int nToys=1000, bool isBgonlyStudy=true, double data_q = 0. ) ;
 
        void setAndFixSusySigToPredictedValue() ;
 
