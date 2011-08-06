@@ -34,8 +34,8 @@
        bool doFit() ;
 
 
-       bool susyScanNoContam( const char* inputScanFile, const char* outputEndname="-scanplot-nocontam.png" ) ;
-       bool susyScanWithContam( const char* inputScanFile, const char* outputEndname="-scanplot-withcontam.png"  ) ;
+       bool susyScanNoContam( const char* inputScanFile, const char* outputFilebase="output-files/scanplot-nocontam" ) ;
+       bool susyScanWithContam( const char* inputScanFile, const char* outputFilebase="output-files/scanplot-withcontam"  ) ;
        bool discoveryScanWithContam( const char* inputScanFile ) ;
        bool nosusysignifScanWithContam( const char* inputScanFile ) ;
 
