@@ -39,28 +39,22 @@ Nttbarmc_sig_ldp  6.84175
 Nttbarmc_sb_ldp   12.8038
   Nttbarmc_lsb                 158.1
   Nttbarmc_lsb_ldp             240.8
-lsf_WJmc          2.566
- lsf_WJmc_err                0.532
-  NWJmc_sig               1
-  NWJmc_sb                1
+  NWJmc_sig               2.57
+  NWJmc_sb                2.57
   NWJmc_sig_sl            0
   NWJmc_sb_sl             0
 NWJmc_sig_ldp     0
 NWJmc_sb_ldp      0
-  NWJmc_lsb               2
-  NWJmc_lsb_ldp           2
-lsf_Znnmc         3.080
- lsf_Znnmc_err               0.673
+  NWJmc_lsb               5.13
+  NWJmc_lsb_ldp           5.13
   NZnnmc_sig              0
-  NZnnmc_sb               2
+  NZnnmc_sb               6.16
   NZnnmc_sig_sl           0
   NZnnmc_sb_sl            0
 NZnnmc_sig_ldp    0
 NZnnmc_sb_ldp     0
-  NZnnmc_lsb             1
+  NZnnmc_lsb             3.08
   NZnnmc_lsb_ldp         0
- lsf_Ewomc                   0.0
- lsf_Ewomc_err               0.0
   NEwomc_sig              0
   NEwomc_sb               0
   NEwomc_sig_sl           0
@@ -103,3 +97,15 @@ DataLumi               1092.
   fsig_ee_err    0.065
   fsig_mm_mean   0.711
   fsig_mm_err    0.071
+  sf_mc                 1.00
+  sf_mc_err             0.50
+  sf_qcd_sb             1.00
+  sf_qcd_sb_err         0.10
+  sf_qcd_sig            1.00
+  sf_qcd_sig_err        0.87
+  sf_ttwj_sig           1.00
+  sf_ttwj_sig_err       0.13
+  sf_ee                 1.00
+  sf_ee_err             0.16
+  sf_mm                 1.00
+  sf_mm_err             0.34

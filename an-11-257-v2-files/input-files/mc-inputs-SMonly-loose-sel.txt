@@ -39,36 +39,30 @@
   Nttbarmc_sb_ldp               32.1
   Nttbarmc_lsb                 576.8
   Nttbarmc_lsb_ldp             958.8
- lsf_WJmc                    1.772
- lsf_WJmc_err                0.532
-  NWJmc_sig               7
-  NWJmc_sb                6
-  NWJmc_sig_sl            6
-  NWJmc_sb_sl             4
-  NWJmc_sig_ldp           1
-  NWJmc_sb_ldp            2
-  NWJmc_lsb               21
-  NWJmc_lsb_ldp           24
- lsf_Znnmc                   2.245
- lsf_Znnmc_err               0.673
-  NZnnmc_sig              1
-  NZnnmc_sb               6
+  NWJmc_sig               12.4
+  NWJmc_sb                10.6
+  NWJmc_sig_sl            10.6
+  NWJmc_sb_sl             7.1
+  NWJmc_sig_ldp           1.8
+  NWJmc_sb_ldp            3.5
+  NWJmc_lsb               37.2
+  NWJmc_lsb_ldp           42.5
+  NZnnmc_sig              2.2
+  NZnnmc_sb               13.5
   NZnnmc_sig_sl           0
   NZnnmc_sb_sl            0
-  NZnnmc_sig_ldp         2
-  NZnnmc_sb_ldp          2
-  NZnnmc_lsb             10
-  NZnnmc_lsb_ldp         2
- lsf_Ewomc                   1.011
- lsf_Ewomc_err               0.303
-  NEwomc_sig              1
+  NZnnmc_sig_ldp         4.5
+  NZnnmc_sb_ldp          4.5
+  NZnnmc_lsb             22.5
+  NZnnmc_lsb_ldp         2.5
+  NEwomc_sig              0
   NEwomc_sb               0
   NEwomc_sig_sl           0
-  NEwomc_sb_sl            1
+  NEwomc_sb_sl            0
   NEwomc_sig_ldp          0
   NEwomc_sb_ldp           0
-  NEwomc_lsb              1
-  NEwomc_lsb_ldp          4
+  NEwomc_lsb              0
+  NEwomc_lsb_ldp          0
   Nsusymc_sig                   71.9
   Nsusymc_sb                    57.5
   Nsusymc_sig_sl                14.3
@@ -103,3 +97,15 @@
   fsig_ee_err    0.065
   fsig_mm_mean   0.711
   fsig_mm_err    0.071
+  sf_mc                 1.00
+  sf_mc_err             0.50
+  sf_qcd_sb             1.00
+  sf_qcd_sb_err         0.13
+  sf_qcd_sig            1.00
+  sf_qcd_sig_err        0.34
+  sf_ttwj_sig           1.00
+  sf_ttwj_sig_err       0.08
+  sf_ee                 1.00
+  sf_ee_err             0.16
+  sf_mm                 1.00
+  sf_mm_err             0.34

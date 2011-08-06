@@ -939,30 +939,30 @@
        float  Nttbarmc_sb_ldp       ;
        float  Nttbarmc_lsb          ;
        float  Nttbarmc_lsb_ldp      ;
-       int    NWJmc_sig             ;
-       int    NWJmc_sb              ;
-       int    NWJmc_sig_sl          ;
-       int    NWJmc_sb_sl           ;
-       int    NWJmc_sig_ldp         ;
-       int    NWJmc_sb_ldp          ;
-       int    NWJmc_lsb             ;
-       int    NWJmc_lsb_ldp         ;
-       int    NZnnmc_sig            ;
-       int    NZnnmc_sb             ;
-       int    NZnnmc_sig_sl         ;
-       int    NZnnmc_sb_sl          ;
-       int    NZnnmc_sig_ldp        ;
-       int    NZnnmc_sb_ldp         ;
-       int    NZnnmc_lsb            ;
-       int    NZnnmc_lsb_ldp        ;
-       int    NEwomc_sig            ;
-       int    NEwomc_sb             ;
-       int    NEwomc_sig_sl         ;
-       int    NEwomc_sb_sl          ;
-       int    NEwomc_sig_ldp        ;
-       int    NEwomc_sb_ldp         ;
-       int    NEwomc_lsb            ;
-       int    NEwomc_lsb_ldp        ;
+       float  NWJmc_sig             ;
+       float  NWJmc_sb              ;
+       float  NWJmc_sig_sl          ;
+       float  NWJmc_sb_sl           ;
+       float  NWJmc_sig_ldp         ;
+       float  NWJmc_sb_ldp          ;
+       float  NWJmc_lsb             ;
+       float  NWJmc_lsb_ldp         ;
+       float  NZnnmc_sig            ;
+       float  NZnnmc_sb             ;
+       float  NZnnmc_sig_sl         ;
+       float  NZnnmc_sb_sl          ;
+       float  NZnnmc_sig_ldp        ;
+       float  NZnnmc_sb_ldp         ;
+       float  NZnnmc_lsb            ;
+       float  NZnnmc_lsb_ldp        ;
+       float  NEwomc_sig            ;
+       float  NEwomc_sb             ;
+       float  NEwomc_sig_sl         ;
+       float  NEwomc_sb_sl          ;
+       float  NEwomc_sig_ldp        ;
+       float  NEwomc_sb_ldp         ;
+       float  NEwomc_lsb            ;
+       float  NEwomc_lsb_ldp        ;
        float  Nsusymc_sig           ;
        float  Nsusymc_sb            ;
        float  Nsusymc_sig_sl        ;
@@ -979,6 +979,27 @@
        int    Nsig_ee                 ;
        int    Nsb_mm                  ;
        int    Nsig_mm                 ;
+
+       float  sf_mc            ;
+       float  sf_mc_err        ;
+       float  sf_qcd_sb        ;
+       float  sf_qcd_sb_err    ;
+       float  sf_qcd_sig       ;
+       float  sf_qcd_sig_err   ;
+       float  sf_ttwj_sig      ;
+       float  sf_ttwj_sig_err  ;
+       float  sf_ee            ;
+       float  sf_ee_err        ;
+       float  sf_mm            ;
+       float  sf_mm_err        ;
+
+
+
+
+
+
+
+
 
 
 
@@ -1034,36 +1055,30 @@
        fscanf( infp, "%s %g", label, &Nttbarmc_sb_ldp       ) ;   printf( "%s %g\n", label, Nttbarmc_sb_ldp       ) ;
        fscanf( infp, "%s %g", label, &Nttbarmc_lsb          ) ;   printf( "%s %g\n", label, Nttbarmc_lsb          ) ;
        fscanf( infp, "%s %g", label, &Nttbarmc_lsb_ldp      ) ;   printf( "%s %g\n", label, Nttbarmc_lsb_ldp      ) ;
-       fscanf( infp, "%s %g", label, &lsf_WJmc              ) ;   printf( "%s %g\n", label, lsf_WJmc              ) ;
-       fscanf( infp, "%s %g", label, &lsf_WJmc_err          ) ;   printf( "%s %g\n", label, lsf_WJmc_err          ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_sig             ) ;   printf( "%s %d\n", label, NWJmc_sig             ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_sb              ) ;   printf( "%s %d\n", label, NWJmc_sb              ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_sig_sl          ) ;   printf( "%s %d\n", label, NWJmc_sig_sl          ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_sb_sl           ) ;   printf( "%s %d\n", label, NWJmc_sb_sl           ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_sig_ldp         ) ;   printf( "%s %d\n", label, NWJmc_sig_ldp         ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_sb_ldp          ) ;   printf( "%s %d\n", label, NWJmc_sb_ldp          ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_lsb             ) ;   printf( "%s %d\n", label, NWJmc_lsb             ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_lsb_ldp         ) ;   printf( "%s %d\n", label, NWJmc_lsb_ldp         ) ;
-       fscanf( infp, "%s %g", label, &lsf_Znnmc             ) ;   printf( "%s %g\n", label, lsf_Znnmc             ) ;
-       fscanf( infp, "%s %g", label, &lsf_Znnmc_err         ) ;   printf( "%s %g\n", label, lsf_Znnmc_err         ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_sig            ) ;   printf( "%s %d\n", label, NZnnmc_sig            ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_sb             ) ;   printf( "%s %d\n", label, NZnnmc_sb             ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_sig_sl         ) ;   printf( "%s %d\n", label, NZnnmc_sig_sl         ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_sb_sl          ) ;   printf( "%s %d\n", label, NZnnmc_sb_sl          ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_sig_ldp        ) ;   printf( "%s %d\n", label, NZnnmc_sig_ldp        ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_sb_ldp         ) ;   printf( "%s %d\n", label, NZnnmc_sb_ldp         ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_lsb            ) ;   printf( "%s %d\n", label, NZnnmc_lsb            ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_lsb_ldp        ) ;   printf( "%s %d\n", label, NZnnmc_lsb_ldp        ) ;
-       fscanf( infp, "%s %g", label, &lsf_Ewomc             ) ;   printf( "%s %g\n", label, lsf_Ewomc             ) ;
-       fscanf( infp, "%s %g", label, &lsf_Ewomc_err         ) ;   printf( "%s %g\n", label, lsf_Ewomc_err         ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_sig            ) ;   printf( "%s %d\n", label, NEwomc_sig            ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_sb             ) ;   printf( "%s %d\n", label, NEwomc_sb             ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_sig_sl         ) ;   printf( "%s %d\n", label, NEwomc_sig_sl         ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_sb_sl          ) ;   printf( "%s %d\n", label, NEwomc_sb_sl          ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_sig_ldp        ) ;   printf( "%s %d\n", label, NEwomc_sig_ldp        ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_sb_ldp         ) ;   printf( "%s %d\n", label, NEwomc_sb_ldp         ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_lsb            ) ;   printf( "%s %d\n", label, NEwomc_lsb            ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_lsb_ldp        ) ;   printf( "%s %d\n", label, NEwomc_lsb_ldp        ) ;
+       fscanf( infp, "%s %g", label, &NWJmc_sig             ) ;   printf( "%s %g\n", label, NWJmc_sig             ) ;
+       fscanf( infp, "%s %g", label, &NWJmc_sb              ) ;   printf( "%s %g\n", label, NWJmc_sb              ) ;
+       fscanf( infp, "%s %g", label, &NWJmc_sig_sl          ) ;   printf( "%s %g\n", label, NWJmc_sig_sl          ) ;
+       fscanf( infp, "%s %g", label, &NWJmc_sb_sl           ) ;   printf( "%s %g\n", label, NWJmc_sb_sl           ) ;
+       fscanf( infp, "%s %g", label, &NWJmc_sig_ldp         ) ;   printf( "%s %g\n", label, NWJmc_sig_ldp         ) ;
+       fscanf( infp, "%s %g", label, &NWJmc_sb_ldp          ) ;   printf( "%s %g\n", label, NWJmc_sb_ldp          ) ;
+       fscanf( infp, "%s %g", label, &NWJmc_lsb             ) ;   printf( "%s %g\n", label, NWJmc_lsb             ) ;
+       fscanf( infp, "%s %g", label, &NWJmc_lsb_ldp         ) ;   printf( "%s %g\n", label, NWJmc_lsb_ldp         ) ;
+       fscanf( infp, "%s %g", label, &NZnnmc_sig            ) ;   printf( "%s %g\n", label, NZnnmc_sig            ) ;
+       fscanf( infp, "%s %g", label, &NZnnmc_sb             ) ;   printf( "%s %g\n", label, NZnnmc_sb             ) ;
+       fscanf( infp, "%s %g", label, &NZnnmc_sig_sl         ) ;   printf( "%s %g\n", label, NZnnmc_sig_sl         ) ;
+       fscanf( infp, "%s %g", label, &NZnnmc_sb_sl          ) ;   printf( "%s %g\n", label, NZnnmc_sb_sl          ) ;
+       fscanf( infp, "%s %g", label, &NZnnmc_sig_ldp        ) ;   printf( "%s %g\n", label, NZnnmc_sig_ldp        ) ;
+       fscanf( infp, "%s %g", label, &NZnnmc_sb_ldp         ) ;   printf( "%s %g\n", label, NZnnmc_sb_ldp         ) ;
+       fscanf( infp, "%s %g", label, &NZnnmc_lsb            ) ;   printf( "%s %g\n", label, NZnnmc_lsb            ) ;
+       fscanf( infp, "%s %g", label, &NZnnmc_lsb_ldp        ) ;   printf( "%s %g\n", label, NZnnmc_lsb_ldp        ) ;
+       fscanf( infp, "%s %g", label, &NEwomc_sig            ) ;   printf( "%s %g\n", label, NEwomc_sig            ) ;
+       fscanf( infp, "%s %g", label, &NEwomc_sb             ) ;   printf( "%s %g\n", label, NEwomc_sb             ) ;
+       fscanf( infp, "%s %g", label, &NEwomc_sig_sl         ) ;   printf( "%s %g\n", label, NEwomc_sig_sl         ) ;
+       fscanf( infp, "%s %g", label, &NEwomc_sb_sl          ) ;   printf( "%s %g\n", label, NEwomc_sb_sl          ) ;
+       fscanf( infp, "%s %g", label, &NEwomc_sig_ldp        ) ;   printf( "%s %g\n", label, NEwomc_sig_ldp        ) ;
+       fscanf( infp, "%s %g", label, &NEwomc_sb_ldp         ) ;   printf( "%s %g\n", label, NEwomc_sb_ldp         ) ;
+       fscanf( infp, "%s %g", label, &NEwomc_lsb            ) ;   printf( "%s %g\n", label, NEwomc_lsb            ) ;
+       fscanf( infp, "%s %g", label, &NEwomc_lsb_ldp        ) ;   printf( "%s %g\n", label, NEwomc_lsb_ldp        ) ;
        fscanf( infp, "%s %g", label, &Nsusymc_sig           ) ;   printf( "%s %g\n", label, Nsusymc_sig           ) ;
        fscanf( infp, "%s %g", label, &Nsusymc_sb            ) ;   printf( "%s %g\n", label, Nsusymc_sb            ) ;
        fscanf( infp, "%s %g", label, &Nsusymc_sig_sl        ) ;   printf( "%s %g\n", label, Nsusymc_sig_sl        ) ;
@@ -1099,9 +1114,31 @@
        fscanf( infp, "%s %g", label, &fsig_mm_mean              ) ;   printf( "%s %g\n", label, fsig_mm_mean              ) ;
        fscanf( infp, "%s %g", label, &fsig_mm_err               ) ;   printf( "%s %g\n", label, fsig_mm_err               ) ;
 
+       fscanf( infp, "%s %g", label, &sf_mc                     ) ;   printf( "%s %g\n", label, sf_mc                     ) ;
+       fscanf( infp, "%s %g", label, &sf_mc_err                 ) ;   printf( "%s %g\n", label, sf_mc_err                 ) ;
+       fscanf( infp, "%s %g", label, &sf_qcd_sb                 ) ;   printf( "%s %g\n", label, sf_qcd_sb                 ) ;
+       fscanf( infp, "%s %g", label, &sf_qcd_sb_err             ) ;   printf( "%s %g\n", label, sf_qcd_sb_err             ) ;
+       fscanf( infp, "%s %g", label, &sf_qcd_sig                ) ;   printf( "%s %g\n", label, sf_qcd_sig                ) ;
+       fscanf( infp, "%s %g", label, &sf_qcd_sig_err            ) ;   printf( "%s %g\n", label, sf_qcd_sig_err            ) ;
+       fscanf( infp, "%s %g", label, &sf_ttwj_sig               ) ;   printf( "%s %g\n", label, sf_ttwj_sig               ) ;
+       fscanf( infp, "%s %g", label, &sf_ttwj_sig_err           ) ;   printf( "%s %g\n", label, sf_ttwj_sig_err           ) ;
+       fscanf( infp, "%s %g", label, &sf_ee                     ) ;   printf( "%s %g\n", label, sf_ee                     ) ;
+       fscanf( infp, "%s %g", label, &sf_ee_err                 ) ;   printf( "%s %g\n", label, sf_ee_err                 ) ;
+       fscanf( infp, "%s %g", label, &sf_mm                     ) ;   printf( "%s %g\n", label, sf_mm                     ) ;
+       fscanf( infp, "%s %g", label, &sf_mm_err                 ) ;   printf( "%s %g\n", label, sf_mm_err                 ) ;
+
+
+
        printf("\n Done reading in %s\n\n", infile ) ;
        fclose( infp ) ;
 
+
+       //+++++ Owen, Aug 6.  set all lsf_ factors to 1.  Input MC counts are now all weighted.
+       //                    Calculations of stat errors below are now wrong.  Fix later.
+       lsf_WJmc = 1.0 ;
+       lsf_Znnmc = 1.0 ;
+       lsf_Ewomc = 0.0 ; // don't use ewo.
+       sf_ttbarmc = 1.0 ;
 
        //--- Print out a nice summary of the inputs.
 
@@ -1799,37 +1836,33 @@
       rv_eff_sf  -> setVal( EffScaleFactor ) ;
 
 
-      pmin = (lsf_Znnmc-4.*lsf_Znnmc_err) ;
-      pmax = (lsf_Znnmc+4.*lsf_Znnmc_err) ;
-      if ( pmin < 0 ) pmin = 0.1 ;
-      rv_lsf_Znnmc  = new RooRealVar( "lsf_Znnmc", "lsf_Znnmc", pmin, pmax ) ;
-      rv_lsf_Znnmc  -> setVal( lsf_Znnmc ) ;
+
+      pmin = (sf_mc-4*sf_mc_err) ;
+      pmax = (sf_mc+4*sf_mc_err) ;
+      if ( pmin < 0 ) pmin = 0.0 ;
+      rv_sf_mc = new RooRealVar( "sf_mc", "sf_mc", pmin, pmax ) ;
+      rv_sf_mc -> setVal( sf_mc ) ;
 
 
-      pmin = (lsf_WJmc-4.*lsf_WJmc_err) ;
-      pmax = (lsf_WJmc+4.*lsf_WJmc_err) ;
-      if ( pmin < 0 ) pmin = 0.1 ;
-      rv_lsf_WJmc  = new RooRealVar( "lsf_WJmc", "lsf_WJmc", pmin, pmax ) ;
-      rv_lsf_WJmc  -> setVal( lsf_WJmc ) ;
+      pmin = (sf_qcd_sb-4*sf_qcd_sb_err) ;
+      pmax = (sf_qcd_sb+4*sf_qcd_sb_err) ;
+      if ( pmin < 0 ) pmin = 0.0 ;
+      rv_sf_qcd_sb = new RooRealVar( "sf_qcd_sb", "sf_qcd_sb", pmin, pmax ) ;
+      rv_sf_qcd_sb -> setVal( sf_qcd_sb ) ;
 
 
-      pmin = (lsf_Ewomc-4.*lsf_Ewomc_err) ;
-      pmax = (lsf_Ewomc+4.*lsf_Ewomc_err) ;
-      if ( pmin < 0 ) pmin = 0.1 ;
-      rv_lsf_Ewomc  = new RooRealVar( "lsf_Ewomc", "lsf_Ewomc", pmin, pmax ) ;
-      rv_lsf_Ewomc  -> setVal( lsf_Ewomc ) ;
-
-    //----- set this to zero and don't vary it for now
-      rv_lsf_Ewomc  -> setVal( 0. ) ;
-      rv_lsf_Ewomc  -> setConstant( kTRUE ) ;
+      pmin = (sf_qcd_sig-4*sf_qcd_sig_err) ;
+      pmax = (sf_qcd_sig+4*sf_qcd_sig_err) ;
+      if ( pmin < 0 ) pmin = 0.0 ;
+      rv_sf_qcd_sig = new RooRealVar( "sf_qcd_sig", "sf_qcd_sig", pmin, pmax ) ;
+      rv_sf_qcd_sig -> setVal( sf_qcd_sig ) ;
 
 
-
-     //-- adding this here by hand.
-      rv_sf_ttbarmc   = new RooRealVar( "sf_ttbarmc", "sf_ttbarmc", 0.1, 2.2 ) ;
-      sf_ttbarmc = 1.0 ;
-      sf_ttbarmc_err = 0.2 ;
-      rv_sf_ttbarmc   -> setVal( sf_ttbarmc ) ;
+      pmin = (sf_ttwj_sig-4*sf_ttwj_sig_err) ;
+      pmax = (sf_ttwj_sig+4*sf_ttwj_sig_err) ;
+      if ( pmin < 0 ) pmin = 0.0 ;
+      rv_sf_ttwj_sig = new RooRealVar( "sf_ttwj_sig", "sf_ttwj_sig", pmin, pmax ) ;
+      rv_sf_ttwj_sig -> setVal( sf_ttwj_sig ) ;
 
 
 
@@ -1891,6 +1924,23 @@
 
 
 
+
+      pmin = (sf_ee-4*sf_ee_err) ;
+      pmax = (sf_ee+4*sf_ee_err) ;
+      if ( pmin < 0 ) pmin = 0.0 ;
+      rv_sf_ee = new RooRealVar( "sf_ee", "sf_ee", pmin, pmax ) ;
+      rv_sf_ee -> setVal( sf_ee ) ;
+
+
+      pmin = (sf_mm-4*sf_mm_err) ;
+      pmax = (sf_mm+4*sf_mm_err) ;
+      if ( pmin < 0 ) pmin = 0.0 ;
+      rv_sf_mm = new RooRealVar( "sf_mm", "sf_mm", pmin, pmax ) ;
+      rv_sf_mm -> setVal( sf_mm ) ;
+
+
+
+
      //+++++++++++++++++ Relationships between parameters ++++++++++++++++++++++++++++++++++++++++++++
 
        printf(" --- Defining relationships between parameters.\n" ) ;
@@ -1902,26 +1952,29 @@
 
       if ( useSigTtwjVar ) {
          rfv_mu_ttwj_sb = new RooFormulaVar( "mu_ttwj_sb",
-                                                       "mu_ttwj_sig*(mu_ttwj_sb_sl/mu_ttwj_sig_sl)",
-                                                       RooArgSet( *rv_mu_ttwj_sig, *rv_mu_ttwj_sb_sl, *rv_mu_ttwj_sig_sl ) ) ;
+                                                       "mu_ttwj_sig * (1.0/sf_ttwj_sig) * (mu_ttwj_sb_sl/mu_ttwj_sig_sl)",
+                                                       RooArgSet( *rv_mu_ttwj_sig, *rv_sf_ttwj_sig, *rv_mu_ttwj_sb_sl, *rv_mu_ttwj_sig_sl ) ) ;
          rv_mu_ttwj_sb = rfv_mu_ttwj_sb ;
       } else {
          rfv_mu_ttwj_sig = new RooFormulaVar( "mu_ttwj_sig",
-                                                       "mu_ttwj_sb*(mu_ttwj_sig_sl/mu_ttwj_sb_sl)",
-                                                       RooArgSet( *rv_mu_ttwj_sb, *rv_mu_ttwj_sig_sl, *rv_mu_ttwj_sb_sl ) ) ;
+                                                       "mu_ttwj_sb * sf_ttwj_sig * (mu_ttwj_sig_sl/mu_ttwj_sb_sl)",
+                                                       RooArgSet( *rv_mu_ttwj_sb, *rv_sf_ttwj_sig, *rv_mu_ttwj_sig_sl, *rv_mu_ttwj_sb_sl ) ) ;
          rv_mu_ttwj_sig = rfv_mu_ttwj_sig ;
       }
 
+
+
+
       rv_mu_ttwj_sig_ldp = new RooFormulaVar( "mu_ttwj_sig_ldp",
-                              "sf_ttbarmc*mu_ttbarmc_sig_ldp + lsf_WJmc*mu_WJmc_sig_ldp",
-                              RooArgSet( *rv_sf_ttbarmc, *rv_mu_ttbarmc_sig_ldp,
-                                         *rv_lsf_WJmc, *rv_mu_WJmc_sig_ldp ) ) ;
+                              "mu_ttbarmc_sig_ldp + mu_WJmc_sig_ldp",
+                              RooArgSet( *rv_mu_ttbarmc_sig_ldp,
+                                         *rv_mu_WJmc_sig_ldp ) ) ;
 
 
       rv_mu_ttwj_sb_ldp = new RooFormulaVar( "mu_ttwj_sb_ldp",
-                              "sf_ttbarmc*mu_ttbarmc_sb_ldp + lsf_WJmc*mu_WJmc_sb_ldp",
-                              RooArgSet( *rv_sf_ttbarmc, *rv_mu_ttbarmc_sb_ldp,
-                                         *rv_lsf_WJmc, *rv_mu_WJmc_sb_ldp ) ) ;
+                              "mu_ttbarmc_sb_ldp + mu_WJmc_sb_ldp",
+                              RooArgSet( *rv_mu_ttbarmc_sb_ldp,
+                                         *rv_mu_WJmc_sb_ldp ) ) ;
 
 
 
@@ -1933,25 +1986,25 @@
       if ( useLdpVars ) {
 
          rfv_mu_qcd_sig = new RooFormulaVar( "mu_qcd_sig",
-                                     "mu_qcd_sig_ldp * ( mu_qcd_lsb_0b / mu_qcd_lsb_0b_ldp )",
-                                     RooArgSet( *rv_mu_qcd_sig_ldp, *rv_mu_qcd_lsb_0b, *rv_mu_qcd_lsb_0b_ldp ) ) ;
+                                     "mu_qcd_sig_ldp * sf_qcd_sig * ( mu_qcd_lsb_0b / mu_qcd_lsb_0b_ldp )",
+                                     RooArgSet( *rv_mu_qcd_sig_ldp, *rv_sf_qcd_sig, *rv_mu_qcd_lsb_0b, *rv_mu_qcd_lsb_0b_ldp ) ) ;
          rv_mu_qcd_sig = rfv_mu_qcd_sig ;
 
          rfv_mu_qcd_sb = new RooFormulaVar( "mu_qcd_sb",
-                                     "mu_qcd_sb_ldp * ( mu_qcd_lsb_0b / mu_qcd_lsb_0b_ldp )",
-                                     RooArgSet( *rv_mu_qcd_sb_ldp, *rv_mu_qcd_lsb_0b, *rv_mu_qcd_lsb_0b_ldp ) ) ;
+                                     "mu_qcd_sb_ldp * sf_qcd_sb * ( mu_qcd_lsb_0b / mu_qcd_lsb_0b_ldp )",
+                                     RooArgSet( *rv_mu_qcd_sb_ldp, *rv_sf_qcd_sb, *rv_mu_qcd_lsb_0b, *rv_mu_qcd_lsb_0b_ldp ) ) ;
          rv_mu_qcd_sb = rfv_mu_qcd_sb ;
 
       } else {
 
          rfv_mu_qcd_sig_ldp = new RooFormulaVar( "mu_qcd_sig_ldp",
-                                     "mu_qcd_sig * ( mu_qcd_lsb_0b_ldp / mu_qcd_lsb_0b )",
-                                     RooArgSet( *rv_mu_qcd_sig, *rv_mu_qcd_lsb_0b_ldp, *rv_mu_qcd_lsb_0b ) ) ;
+                                     "mu_qcd_sig * (1.0/sf_qcd_sig) * ( mu_qcd_lsb_0b_ldp / mu_qcd_lsb_0b )",
+                                     RooArgSet( *rv_mu_qcd_sig, *rv_sf_qcd_sig, *rv_mu_qcd_lsb_0b_ldp, *rv_mu_qcd_lsb_0b ) ) ;
          rv_mu_qcd_sig_ldp = rfv_mu_qcd_sig_ldp ;
 
          rfv_mu_qcd_sb_ldp = new RooFormulaVar( "mu_qcd_sb_ldp",
-                                     "mu_qcd_sb * ( mu_qcd_lsb_0b_ldp / mu_qcd_lsb_0b )",
-                                     RooArgSet( *rv_mu_qcd_sb, *rv_mu_qcd_lsb_0b_ldp, *rv_mu_qcd_lsb_0b ) ) ;
+                                     "mu_qcd_sb * (1.0/sf_qcd_sb) * ( mu_qcd_lsb_0b_ldp / mu_qcd_lsb_0b )",
+                                     RooArgSet( *rv_mu_qcd_sb, *rv_sf_qcd_sb, *rv_mu_qcd_lsb_0b_ldp, *rv_mu_qcd_lsb_0b ) ) ;
          rv_mu_qcd_sb_ldp = rfv_mu_qcd_sb_ldp ;
 
       }
@@ -1988,31 +2041,31 @@
     //-- Z to nu nu
 
       rv_mu_znn_sig_ldp = new RooFormulaVar( "mu_znn_sig_ldp",
-                              "lsf_Znnmc*mu_Znnmc_sig_ldp",
-                              RooArgSet( *rv_lsf_Znnmc, *rv_mu_Znnmc_sig_ldp ) ) ;
+                              "mu_Znnmc_sig_ldp",
+                              RooArgSet( *rv_mu_Znnmc_sig_ldp ) ) ;
 
       rv_mu_znn_sb_ldp = new RooFormulaVar( "mu_znn_sb_ldp",
-                              "lsf_Znnmc*mu_Znnmc_sb_ldp",
-                              RooArgSet( *rv_lsf_Znnmc, *rv_mu_Znnmc_sb_ldp ) ) ;
+                              "mu_Znnmc_sb_ldp",
+                              RooArgSet( *rv_mu_Znnmc_sb_ldp ) ) ;
 
 
       if ( znnModel == 1 ) {
 
          rv_mu_zee_sb_ee = new RooFormulaVar( "mu_zee_sb_ee",
-                                         "mu_znn_sb * ( acc_ee * eff_ee ) / ( znnoverll_bfratio * dataoverll_lumiratio )",
-                                         RooArgSet( *rv_mu_znn_sb, *rv_acc_ee, *rv_eff_ee, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
+                                         "mu_znn_sb * sf_ee * ( acc_ee * eff_ee ) / ( znnoverll_bfratio * dataoverll_lumiratio )",
+                                         RooArgSet( *rv_mu_znn_sb, *rv_sf_ee, *rv_acc_ee, *rv_eff_ee, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
 
          rv_mu_zee_sig_ee = new RooFormulaVar( "mu_zee_sig_ee",
-                                         "mu_znn_sig * ( acc_ee * eff_ee ) / ( znnoverll_bfratio * dataoverll_lumiratio )",
-                                         RooArgSet( *rv_mu_znn_sig, *rv_acc_ee, *rv_eff_ee, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
+                                         "mu_znn_sig * sf_ee * ( acc_ee * eff_ee ) / ( znnoverll_bfratio * dataoverll_lumiratio )",
+                                         RooArgSet( *rv_mu_znn_sig, *rv_sf_ee, *rv_acc_ee, *rv_eff_ee, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
 
          rv_mu_zmm_sb_mm = new RooFormulaVar( "mu_zmm_sb_mm",
-                                         "mu_znn_sb * ( acc_mm * eff_mm ) / ( znnoverll_bfratio * dataoverll_lumiratio )",
-                                         RooArgSet( *rv_mu_znn_sb, *rv_acc_mm, *rv_eff_mm, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
+                                         "mu_znn_sb * sf_mm * ( acc_mm * eff_mm ) / ( znnoverll_bfratio * dataoverll_lumiratio )",
+                                         RooArgSet( *rv_mu_znn_sb, *rv_sf_mm, *rv_acc_mm, *rv_eff_mm, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
 
          rv_mu_zmm_sig_mm = new RooFormulaVar( "mu_zmm_sig_mm",
-                                         "mu_znn_sig * ( acc_mm * eff_mm ) / ( znnoverll_bfratio * dataoverll_lumiratio )",
-                                         RooArgSet( *rv_mu_znn_sig, *rv_acc_mm, *rv_eff_mm, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
+                                         "mu_znn_sig * sf_mm * ( acc_mm * eff_mm ) / ( znnoverll_bfratio * dataoverll_lumiratio )",
+                                         RooArgSet( *rv_mu_znn_sig, *rv_sf_mm, *rv_acc_mm, *rv_eff_mm, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
 
       } else if ( znnModel == 2 ) {
 
@@ -2023,21 +2076,21 @@
          rv_mu_znn_sb = rfv_mu_znn_sb ;
 
          rv_mu_zee_sigsb_ee = new RooFormulaVar( "mu_zee_sigsb_ee",
-                                       "( mu_znn_sig / knn_sig ) * ( (acc_ee * eff_ee ) / ( znnoverll_bfratio * dataoverll_lumiratio ) )",
-                                         RooArgSet( *rv_mu_znn_sig, *rv_knn_sig, *rv_acc_ee, *rv_eff_ee, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
+                                       "( mu_znn_sig / knn_sig ) * sf_ee * ( (acc_ee * eff_ee ) / ( znnoverll_bfratio * dataoverll_lumiratio ) )",
+                                         RooArgSet( *rv_mu_znn_sig, *rv_knn_sig, *rv_sf_ee, *rv_acc_ee, *rv_eff_ee, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
 
          rv_mu_zmm_sigsb_mm = new RooFormulaVar( "mu_zmm_sigsb_mm",
-                                       "( mu_znn_sig / knn_sig ) * ( (acc_mm * eff_mm ) / ( znnoverll_bfratio * dataoverll_lumiratio ) )",
-                                         RooArgSet( *rv_mu_znn_sig, *rv_knn_sig, *rv_acc_mm, *rv_eff_mm, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
+                                       "( mu_znn_sig / knn_sig ) * sf_mm * ( (acc_mm * eff_mm ) / ( znnoverll_bfratio * dataoverll_lumiratio ) )",
+                                         RooArgSet( *rv_mu_znn_sig, *rv_knn_sig, *rv_sf_mm, *rv_acc_mm, *rv_eff_mm, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
 
       }
 
     //-- EWO
 
-      rv_mu_ewo_sig     = new RooFormulaVar( "mu_ewo_sig"     , "lsf_Ewomc*mu_Ewomc_sig"     , RooArgSet( *rv_lsf_Ewomc, *rv_mu_Ewomc_sig     ) ) ;
-      rv_mu_ewo_sb      = new RooFormulaVar( "mu_ewo_sb"      , "lsf_Ewomc*mu_Ewomc_sb"      , RooArgSet( *rv_lsf_Ewomc, *rv_mu_Ewomc_sb      ) ) ;
-      rv_mu_ewo_sig_ldp = new RooFormulaVar( "mu_ewo_sig_ldp" , "lsf_Ewomc*mu_Ewomc_sig_ldp" , RooArgSet( *rv_lsf_Ewomc, *rv_mu_Ewomc_sig_ldp ) ) ;
-      rv_mu_ewo_sb_ldp  = new RooFormulaVar( "mu_ewo_sb_ldp"  , "lsf_Ewomc*mu_Ewomc_sb_ldp"  , RooArgSet( *rv_lsf_Ewomc, *rv_mu_Ewomc_sb_ldp  ) ) ;
+      rv_mu_ewo_sig     = new RooFormulaVar( "mu_ewo_sig"     , "mu_Ewomc_sig"     , RooArgSet( *rv_mu_Ewomc_sig     ) ) ;
+      rv_mu_ewo_sb      = new RooFormulaVar( "mu_ewo_sb"      , "mu_Ewomc_sb"      , RooArgSet( *rv_mu_Ewomc_sb      ) ) ;
+      rv_mu_ewo_sig_ldp = new RooFormulaVar( "mu_ewo_sig_ldp" , "mu_Ewomc_sig_ldp" , RooArgSet( *rv_mu_Ewomc_sig_ldp ) ) ;
+      rv_mu_ewo_sb_ldp  = new RooFormulaVar( "mu_ewo_sb_ldp"  , "mu_Ewomc_sb_ldp"  , RooArgSet( *rv_mu_Ewomc_sb_ldp  ) ) ;
 
 
 
@@ -2057,12 +2110,12 @@
                                      RooArgSet( *rv_mu_ttwj_sb , *rv_mu_qcd_sb , *rv_mu_znn_sb , *rv_eff_sf, *rv_mu_ewo_sb , *rv_mu_susy_sb  ) ) ;
 
       rv_n_sig_ldp     = new RooFormulaVar( "n_sig_ldp",
-                                     "mu_qcd_sig_ldp + eff_sf*( mu_ttwj_sig_ldp + mu_znn_sig_ldp + mu_ewo_sig_ldp + mu_susy_sig_ldp)",
-                                     RooArgSet( *rv_mu_qcd_sig_ldp, *rv_eff_sf, *rv_mu_ttwj_sig_ldp, *rv_mu_znn_sig_ldp, *rv_mu_ewo_sig_ldp, *rv_mu_susy_sig_ldp ) ) ;
+                                     "mu_qcd_sig_ldp + eff_sf*( sf_mc * (mu_ttwj_sig_ldp + mu_znn_sig_ldp + mu_ewo_sig_ldp) + mu_susy_sig_ldp)",
+                                     RooArgSet( *rv_mu_qcd_sig_ldp, *rv_eff_sf, *rv_sf_mc, *rv_mu_ttwj_sig_ldp, *rv_mu_znn_sig_ldp, *rv_mu_ewo_sig_ldp, *rv_mu_susy_sig_ldp ) ) ;
 
       rv_n_sb_ldp      = new RooFormulaVar( "n_sb_ldp",
-                                     "mu_qcd_sb_ldp + eff_sf*( mu_ttwj_sb_ldp + mu_znn_sb_ldp + mu_ewo_sb_ldp + mu_susy_sb_ldp)",
-                                     RooArgSet( *rv_mu_qcd_sb_ldp, *rv_eff_sf, *rv_mu_ttwj_sb_ldp, *rv_mu_znn_sb_ldp, *rv_mu_ewo_sb_ldp, *rv_mu_susy_sb_ldp ) ) ;
+                                     "mu_qcd_sb_ldp + eff_sf*( sf_mc * (mu_ttwj_sb_ldp + mu_znn_sb_ldp + mu_ewo_sb_ldp) + mu_susy_sb_ldp)",
+                                     RooArgSet( *rv_mu_qcd_sb_ldp, *rv_eff_sf, *rv_sf_mc, *rv_mu_ttwj_sb_ldp, *rv_mu_znn_sb_ldp, *rv_mu_ewo_sb_ldp, *rv_mu_susy_sb_ldp ) ) ;
 
       rv_n_sig_sl      = new RooFormulaVar( "n_sig_sl",
                                      "mu_ttwj_sig_sl + eff_sf*mu_susy_sig_sl",
@@ -2133,17 +2186,20 @@
          pdf_Nsigsb_mm     = new RooPoisson( "pdf_Nsigsb_mm"     , "Nsigsb_mm Poisson PDF"     , *rv_Nsigsb_mm     , *rv_n_sigsb_mm ) ;
       }
 
-      pdf_lsf_WJmc   = new RooGaussian( "pdf_lsf_Wjmc" , "Gaussian pdf for lsf, WJmc",
-                                          *rv_lsf_WJmc , RooConst( lsf_WJmc ) , RooConst( lsf_WJmc_err ) ) ;
 
-      pdf_lsf_Znnmc  = new RooGaussian( "pdf_lsf_Znnmc", "Gaussian pdf for lsf, Znnmc",
-                                          *rv_lsf_Znnmc, RooConst( lsf_Znnmc ), RooConst( lsf_Znnmc_err ) ) ;
+      pdf_sf_mc    = new RooGaussian( "pdf_sf_mc" , "Gaussian pdf for MC scale factor",
+                                       *rv_sf_mc , RooConst( sf_mc ), RooConst( sf_mc_err ) ) ;
 
- ///  pdf_lsf_Ewomc  = new RooGaussian( "pdf_lsf_Ewomc", "Gaussian pdf for lsf, Ewomc",
- ///                                      *rv_lsf_Ewomc, RooConst( lsf_Ewomc ), RooConst( lsf_Ewomc_err ) ) ;
+      pdf_sf_qcd_sb    = new RooGaussian( "pdf_sf_qcd_sb" , "Gaussian pdf for QCD pass/fail ratio SB scale factor",
+                                       *rv_sf_qcd_sb , RooConst( sf_qcd_sb ), RooConst( sf_qcd_sb_err ) ) ;
 
-      pdf_sf_ttbarmc  = new RooGaussian( "pdf_sf_ttbarmc", "Gaussian pdf for lsf, Ewomc",
-                                          *rv_sf_ttbarmc, RooConst( sf_ttbarmc ), RooConst( sf_ttbarmc_err ) ) ;
+      pdf_sf_qcd_sig    = new RooGaussian( "pdf_sf_qcd_sig" , "Gaussian pdf for QCD pass/fail ratio SIG scale factor",
+                                       *rv_sf_qcd_sig , RooConst( sf_qcd_sig ), RooConst( sf_qcd_sig_err ) ) ;
+
+      pdf_sf_ttwj_sig    = new RooGaussian( "pdf_sf_ttwj_sig" , "Gaussian pdf for ttwj SIG/SB scale factor",
+                                       *rv_sf_ttwj_sig , RooConst( sf_ttwj_sig ), RooConst( sf_ttwj_sig_err ) ) ;
+
+
 
 
       pdf_acc_ee   = new RooGaussian( "pdf_acc_ee" , "Gaussian pdf for Z to ee acceptance",
@@ -2163,6 +2219,13 @@
 
       pdf_fsig_mm   = new RooGaussian( "pdf_fsig_mm" , "Gaussian pdf for Z to mm purity",
                                           *rv_fsig_mm , RooConst( fsig_mm_mean ) , RooConst( fsig_mm_err ) ) ;
+
+      pdf_sf_ee    = new RooGaussian( "pdf_sf_ee" , "Gaussian pdf for Z to ee scale factor",
+                                       *rv_sf_ee , RooConst( sf_ee ), RooConst( sf_ee_err ) ) ;
+
+      pdf_sf_mm    = new RooGaussian( "pdf_sf_mm" , "Gaussian pdf for Z to mm scale factor",
+                                       *rv_sf_mm , RooConst( sf_mm ), RooConst( sf_mm_err ) ) ;
+
 
 
       if ( znnModel == 2 ) {
@@ -2203,10 +2266,13 @@
             pdflist.add( *pdf_knn_sig     ) ;
             pdflist.add( *pdf_knn_sb      ) ;
          }
-         pdflist.add( *pdf_lsf_WJmc    ) ;
-         pdflist.add( *pdf_lsf_Znnmc   ) ;
-  ////   pdflist.add( *pdf_lsf_Ewomc   ) ;
-         pdflist.add( *pdf_sf_ttbarmc  ) ;
+         pdflist.add( *pdf_sf_mc      ) ;
+         pdflist.add( *pdf_sf_qcd_sb      ) ;
+         pdflist.add( *pdf_sf_qcd_sig      ) ;
+         pdflist.add( *pdf_sf_ttwj_sig      ) ;
+         pdflist.add( *pdf_sf_ee      ) ;
+         pdflist.add( *pdf_sf_mm      ) ;
+
          pdflist.add( *pdf_acc_ee      ) ;
          pdflist.add( *pdf_acc_mm      ) ;
          pdflist.add( *pdf_eff_ee      ) ;
@@ -2309,30 +2375,30 @@
        float  Nttbarmc_sb_ldp       ;
        float  Nttbarmc_lsb          ;
        float  Nttbarmc_lsb_ldp      ;
-       int    NWJmc_sig             ;
-       int    NWJmc_sb              ;
-       int    NWJmc_sig_sl          ;
-       int    NWJmc_sb_sl           ;
-       int    NWJmc_sig_ldp         ;
-       int    NWJmc_sb_ldp          ;
-       int    NWJmc_lsb             ;
-       int    NWJmc_lsb_ldp         ;
-       int    NZnnmc_sig            ;
-       int    NZnnmc_sb             ;
-       int    NZnnmc_sig_sl         ;
-       int    NZnnmc_sb_sl          ;
-       int    NZnnmc_sig_ldp        ;
-       int    NZnnmc_sb_ldp         ;
-       int    NZnnmc_lsb            ;
-       int    NZnnmc_lsb_ldp        ;
-       int    NEwomc_sig            ;
-       int    NEwomc_sb             ;
-       int    NEwomc_sig_sl         ;
-       int    NEwomc_sb_sl          ;
-       int    NEwomc_sig_ldp        ;
-       int    NEwomc_sb_ldp         ;
-       int    NEwomc_lsb            ;
-       int    NEwomc_lsb_ldp        ;
+       float  NWJmc_sig             ;
+       float  NWJmc_sb              ;
+       float  NWJmc_sig_sl          ;
+       float  NWJmc_sb_sl           ;
+       float  NWJmc_sig_ldp         ;
+       float  NWJmc_sb_ldp          ;
+       float  NWJmc_lsb             ;
+       float  NWJmc_lsb_ldp         ;
+       float  NZnnmc_sig            ;
+       float  NZnnmc_sb             ;
+       float  NZnnmc_sig_sl         ;
+       float  NZnnmc_sb_sl          ;
+       float  NZnnmc_sig_ldp        ;
+       float  NZnnmc_sb_ldp         ;
+       float  NZnnmc_lsb            ;
+       float  NZnnmc_lsb_ldp        ;
+       float  NEwomc_sig            ;
+       float  NEwomc_sb             ;
+       float  NEwomc_sig_sl         ;
+       float  NEwomc_sb_sl          ;
+       float  NEwomc_sig_ldp        ;
+       float  NEwomc_sb_ldp         ;
+       float  NEwomc_lsb            ;
+       float  NEwomc_lsb_ldp        ;
        float  Nsusymc_sig           ;
        float  Nsusymc_sb            ;
        float  Nsusymc_sig_sl        ;
@@ -2349,6 +2415,19 @@
        int    Nsig_ee                 ;
        int    Nsb_mm                  ;
        int    Nsig_mm                 ;
+
+       float  sf_mc            ;
+       float  sf_mc_err        ;
+       float  sf_qcd_sb        ;
+       float  sf_qcd_sb_err    ;
+       float  sf_qcd_sig       ;
+       float  sf_qcd_sig_err   ;
+       float  sf_ttwj_sig      ;
+       float  sf_ttwj_sig_err  ;
+       float  sf_ee            ;
+       float  sf_ee_err        ;
+       float  sf_mm            ;
+       float  sf_mm_err        ;
 
 
 
@@ -2404,36 +2483,30 @@
        fscanf( infp, "%s %g", label, &Nttbarmc_sb_ldp       ) ;// printf( "%s %g\n", label, Nttbarmc_sb_ldp       ) ;
        fscanf( infp, "%s %g", label, &Nttbarmc_lsb          ) ;// printf( "%s %g\n", label, Nttbarmc_lsb          ) ;
        fscanf( infp, "%s %g", label, &Nttbarmc_lsb_ldp      ) ;// printf( "%s %g\n", label, Nttbarmc_lsb_ldp      ) ;
-       fscanf( infp, "%s %g", label, &lsf_WJmc              ) ;// printf( "%s %g\n", label, lsf_WJmc              ) ;
-       fscanf( infp, "%s %g", label, &lsf_WJmc_err          ) ;// printf( "%s %g\n", label, lsf_WJmc_err          ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_sig             ) ;// printf( "%s %d\n", label, NWJmc_sig             ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_sb              ) ;// printf( "%s %d\n", label, NWJmc_sb              ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_sig_sl          ) ;// printf( "%s %d\n", label, NWJmc_sig_sl          ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_sb_sl           ) ;// printf( "%s %d\n", label, NWJmc_sb_sl           ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_sig_ldp         ) ;// printf( "%s %d\n", label, NWJmc_sig_ldp         ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_sb_ldp          ) ;// printf( "%s %d\n", label, NWJmc_sb_ldp          ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_lsb             ) ;// printf( "%s %d\n", label, NWJmc_lsb             ) ;
-       fscanf( infp, "%s %d", label, &NWJmc_lsb_ldp         ) ;// printf( "%s %d\n", label, NWJmc_lsb_ldp         ) ;
-       fscanf( infp, "%s %g", label, &lsf_Znnmc             ) ;// printf( "%s %g\n", label, lsf_Znnmc             ) ;
-       fscanf( infp, "%s %g", label, &lsf_Znnmc_err         ) ;// printf( "%s %g\n", label, lsf_Znnmc_err         ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_sig            ) ;// printf( "%s %d\n", label, NZnnmc_sig            ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_sb             ) ;// printf( "%s %d\n", label, NZnnmc_sb             ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_sig_sl         ) ;// printf( "%s %d\n", label, NZnnmc_sig_sl         ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_sb_sl          ) ;// printf( "%s %d\n", label, NZnnmc_sb_sl          ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_sig_ldp        ) ;// printf( "%s %d\n", label, NZnnmc_sig_ldp        ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_sb_ldp         ) ;// printf( "%s %d\n", label, NZnnmc_sb_ldp         ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_lsb            ) ;// printf( "%s %d\n", label, NZnnmc_lsb            ) ;
-       fscanf( infp, "%s %d", label, &NZnnmc_lsb_ldp        ) ;// printf( "%s %d\n", label, NZnnmc_lsb_ldp        ) ;
-       fscanf( infp, "%s %g", label, &lsf_Ewomc             ) ;// printf( "%s %g\n", label, lsf_Ewomc             ) ;
-       fscanf( infp, "%s %g", label, &lsf_Ewomc_err         ) ;// printf( "%s %g\n", label, lsf_Ewomc_err         ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_sig            ) ;// printf( "%s %d\n", label, NEwomc_sig            ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_sb             ) ;// printf( "%s %d\n", label, NEwomc_sb             ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_sig_sl         ) ;// printf( "%s %d\n", label, NEwomc_sig_sl         ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_sb_sl          ) ;// printf( "%s %d\n", label, NEwomc_sb_sl          ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_sig_ldp        ) ;// printf( "%s %d\n", label, NEwomc_sig_ldp        ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_sb_ldp         ) ;// printf( "%s %d\n", label, NEwomc_sb_ldp         ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_lsb            ) ;// printf( "%s %d\n", label, NEwomc_lsb            ) ;
-       fscanf( infp, "%s %d", label, &NEwomc_lsb_ldp        ) ;// printf( "%s %d\n", label, NEwomc_lsb_ldp        ) ;
+       fscanf( infp, "%s %g", label, &NWJmc_sig             ) ;// printf( "%s %g\n", label, NWJmc_sig             ) ;
+       fscanf( infp, "%s %g", label, &NWJmc_sb              ) ;// printf( "%s %g\n", label, NWJmc_sb              ) ;
+       fscanf( infp, "%s %g", label, &NWJmc_sig_sl          ) ;// printf( "%s %g\n", label, NWJmc_sig_sl          ) ;
+       fscanf( infp, "%s %g", label, &NWJmc_sb_sl           ) ;// printf( "%s %g\n", label, NWJmc_sb_sl           ) ;
+       fscanf( infp, "%s %g", label, &NWJmc_sig_ldp         ) ;// printf( "%s %g\n", label, NWJmc_sig_ldp         ) ;
+       fscanf( infp, "%s %g", label, &NWJmc_sb_ldp          ) ;// printf( "%s %g\n", label, NWJmc_sb_ldp          ) ;
+       fscanf( infp, "%s %g", label, &NWJmc_lsb             ) ;// printf( "%s %g\n", label, NWJmc_lsb             ) ;
+       fscanf( infp, "%s %g", label, &NWJmc_lsb_ldp         ) ;// printf( "%s %g\n", label, NWJmc_lsb_ldp         ) ;
+       fscanf( infp, "%s %g", label, &NZnnmc_sig            ) ;// printf( "%s %g\n", label, NZnnmc_sig            ) ;
+       fscanf( infp, "%s %g", label, &NZnnmc_sb             ) ;// printf( "%s %g\n", label, NZnnmc_sb             ) ;
+       fscanf( infp, "%s %g", label, &NZnnmc_sig_sl         ) ;// printf( "%s %g\n", label, NZnnmc_sig_sl         ) ;
+       fscanf( infp, "%s %g", label, &NZnnmc_sb_sl          ) ;// printf( "%s %g\n", label, NZnnmc_sb_sl          ) ;
+       fscanf( infp, "%s %g", label, &NZnnmc_sig_ldp        ) ;// printf( "%s %g\n", label, NZnnmc_sig_ldp        ) ;
+       fscanf( infp, "%s %g", label, &NZnnmc_sb_ldp         ) ;// printf( "%s %g\n", label, NZnnmc_sb_ldp         ) ;
+       fscanf( infp, "%s %g", label, &NZnnmc_lsb            ) ;// printf( "%s %g\n", label, NZnnmc_lsb            ) ;
+       fscanf( infp, "%s %g", label, &NZnnmc_lsb_ldp        ) ;// printf( "%s %g\n", label, NZnnmc_lsb_ldp        ) ;
+       fscanf( infp, "%s %g", label, &NEwomc_sig            ) ;// printf( "%s %g\n", label, NEwomc_sig            ) ;
+       fscanf( infp, "%s %g", label, &NEwomc_sb             ) ;// printf( "%s %g\n", label, NEwomc_sb             ) ;
+       fscanf( infp, "%s %g", label, &NEwomc_sig_sl         ) ;// printf( "%s %g\n", label, NEwomc_sig_sl         ) ;
+       fscanf( infp, "%s %g", label, &NEwomc_sb_sl          ) ;// printf( "%s %g\n", label, NEwomc_sb_sl          ) ;
+       fscanf( infp, "%s %g", label, &NEwomc_sig_ldp        ) ;// printf( "%s %g\n", label, NEwomc_sig_ldp        ) ;
+       fscanf( infp, "%s %g", label, &NEwomc_sb_ldp         ) ;// printf( "%s %g\n", label, NEwomc_sb_ldp         ) ;
+       fscanf( infp, "%s %g", label, &NEwomc_lsb            ) ;// printf( "%s %g\n", label, NEwomc_lsb            ) ;
+       fscanf( infp, "%s %g", label, &NEwomc_lsb_ldp        ) ;// printf( "%s %g\n", label, NEwomc_lsb_ldp        ) ;
        fscanf( infp, "%s %g", label, &Nsusymc_sig           ) ;// printf( "%s %g\n", label, Nsusymc_sig           ) ;
        fscanf( infp, "%s %g", label, &Nsusymc_sb            ) ;// printf( "%s %g\n", label, Nsusymc_sb            ) ;
        fscanf( infp, "%s %g", label, &Nsusymc_sig_sl        ) ;// printf( "%s %g\n", label, Nsusymc_sig_sl        ) ;
@@ -2469,8 +2542,28 @@
        fscanf( infp, "%s %g", label, &fsig_mm_mean              ) ;// printf( "%s %g\n", label, fsig_mm_mean              ) ;
        fscanf( infp, "%s %g", label, &fsig_mm_err               ) ;// printf( "%s %g\n", label, fsig_mm_err               ) ;
 
+       fscanf( infp, "%s %g", label, &sf_mc                     ) ;// printf( "%s %g\n", label, sf_mc                     ) ;
+       fscanf( infp, "%s %g", label, &sf_mc_err                 ) ;// printf( "%s %g\n", label, sf_mc_err                 ) ;
+       fscanf( infp, "%s %g", label, &sf_qcd_sb                 ) ;// printf( "%s %g\n", label, sf_qcd_sb                 ) ;
+       fscanf( infp, "%s %g", label, &sf_qcd_sb_err             ) ;// printf( "%s %g\n", label, sf_qcd_sb_err             ) ;
+       fscanf( infp, "%s %g", label, &sf_qcd_sig                ) ;// printf( "%s %g\n", label, sf_qcd_sig                ) ;
+       fscanf( infp, "%s %g", label, &sf_qcd_sig_err            ) ;// printf( "%s %g\n", label, sf_qcd_sig_err            ) ;
+       fscanf( infp, "%s %g", label, &sf_ttwj_sig               ) ;// printf( "%s %g\n", label, sf_ttwj_sig               ) ;
+       fscanf( infp, "%s %g", label, &sf_ttwj_sig_err           ) ;// printf( "%s %g\n", label, sf_ttwj_sig_err           ) ;
+       fscanf( infp, "%s %g", label, &sf_ee                     ) ;// printf( "%s %g\n", label, sf_ee                     ) ;
+       fscanf( infp, "%s %g", label, &sf_ee_err                 ) ;// printf( "%s %g\n", label, sf_ee_err                 ) ;
+       fscanf( infp, "%s %g", label, &sf_mm                     ) ;// printf( "%s %g\n", label, sf_mm                     ) ;
+       fscanf( infp, "%s %g", label, &sf_mm_err                 ) ;// printf( "%s %g\n", label, sf_mm_err                 ) ;
+
   //   printf("\n Done reading in %s\n\n", initializeFile ) ;
        fclose( infp ) ;
+
+       //+++++ Owen, Aug 6.  set all lsf_ factors to 1.  Input MC counts are now all weighted.
+       //                    Calculations of stat errors below are now wrong.  Fix later.
+       lsf_WJmc = 1.0 ;
+       lsf_Znnmc = 1.0 ;
+       lsf_Ewomc = 0.0 ; // don't use ewo.
+       sf_ttbarmc = 1.0 ;
 
 
        //--- Print out a nice summary of the inputs.
@@ -2655,14 +2748,13 @@
 
 
       rv_eff_sf  -> setVal( EffScaleFactor ) ;
-      rv_lsf_Znnmc  -> setVal( lsf_Znnmc ) ;
-      rv_lsf_WJmc  -> setVal( lsf_WJmc ) ;
-  //  rv_lsf_Ewomc  -> setVal( lsf_Ewomc ) ;
-      rv_lsf_Ewomc  -> setVal( 0. ) ;
-      rv_lsf_Ewomc  -> setConstant( kTRUE ) ;
-      sf_ttbarmc = 1.0 ;
-      sf_ttbarmc_err = 0.2 ;
-      rv_sf_ttbarmc   -> setVal( sf_ttbarmc ) ;
+
+      rv_sf_mc -> setVal( sf_mc ) ;
+      rv_sf_qcd_sb -> setVal( sf_qcd_sb ) ;
+      rv_sf_qcd_sig -> setVal( sf_qcd_sig ) ;
+      rv_sf_ttwj_sig -> setVal( sf_ttwj_sig ) ;
+      rv_sf_ee -> setVal( sf_ee ) ;
+      rv_sf_mm -> setVal( sf_mm ) ;
 
       rv_acc_ee  -> setVal( acc_ee_mean ) ;
       rv_acc_mm  -> setVal( acc_mm_mean ) ;
@@ -3638,7 +3730,7 @@
          qcdVal   = rrv_mu_qcd_sig->getVal() ;
       }
       znnVal   = (rv_mu_znn_sig->getVal()) ;
-      ewoVal   = (rv_mu_ewo_sig->getVal()) * (rv_lsf_Ewomc->getVal()) ;
+      ewoVal   = (rv_mu_ewo_sig->getVal()) ;
       susyVal  = rv_mu_susy_sig->getVal() ;
       ewoVal   = eff_sf * ewoVal ;
       susyVal = eff_sf * susyVal ;
@@ -3700,7 +3792,7 @@
       } else {
          znnVal   = (rfv_mu_znn_sb->getVal()) ;
       }
-      ewoVal   = (rv_mu_ewo_sb->getVal()) * (rv_lsf_Ewomc->getVal()) ;
+      ewoVal   = (rv_mu_ewo_sb->getVal()) ;
       susyVal  = rv_mu_susy_sb->getVal() ;
       ewoVal   = eff_sf * ewoVal ;
       susyVal = eff_sf * susyVal ;
@@ -3852,7 +3944,7 @@
          qcdVal   = rfv_mu_qcd_sig_ldp->getVal() ;
       }
       znnVal   = rv_mu_znn_sig_ldp->getVal() ;
-      ewoVal   = (rv_mu_ewo_sig_ldp->getVal()) * (rv_lsf_Ewomc->getVal()) ;
+      ewoVal   = (rv_mu_ewo_sig_ldp->getVal())  ;
       susyVal  = rv_mu_susy_sig_ldp->getVal() ;
       ttwjVal  = eff_sf * ttwjVal ;
       znnVal   = eff_sf * znnVal ;
@@ -3908,7 +4000,7 @@
          qcdVal   = rfv_mu_qcd_sb_ldp->getVal() ;
       }
       znnVal   = rv_mu_znn_sb_ldp->getVal() ;
-      ewoVal   = (rv_mu_ewo_sb_ldp->getVal()) * (rv_lsf_Ewomc->getVal()) ;
+      ewoVal   = (rv_mu_ewo_sb_ldp->getVal())  ;
       susyVal  = rv_mu_susy_sb_ldp->getVal() ;
       ttwjVal  = eff_sf * ttwjVal ;
       znnVal   = eff_sf * znnVal ;

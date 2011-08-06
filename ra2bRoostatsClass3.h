@@ -216,10 +216,13 @@
 
        RooRealVar* rv_eff_sf ;
 
-       RooRealVar* rv_lsf_WJmc   ;
-       RooRealVar* rv_lsf_Znnmc  ;
-       RooRealVar* rv_lsf_Ewomc  ;
-       RooRealVar* rv_sf_ttbarmc ;
+
+       RooRealVar* rv_sf_mc ;
+       RooRealVar* rv_sf_qcd_sb ;
+       RooRealVar* rv_sf_qcd_sig ;
+       RooRealVar* rv_sf_ttwj_sig ;
+       RooRealVar* rv_sf_ee ;
+       RooRealVar* rv_sf_mm ;
 
        RooRealVar* rv_acc_ee ;
        RooRealVar* rv_acc_mm ;
@@ -310,10 +313,15 @@
        RooPoisson*  pdf_Nsb_sl      ;
        RooPoisson*  pdf_Nlsb_0b     ;
        RooPoisson*  pdf_Nlsb_0b_ldp ;
-       RooGaussian* pdf_lsf_WJmc    ;
-       RooGaussian* pdf_lsf_Znnmc   ;
-       RooGaussian* pdf_lsf_Ewomc   ;
-       RooGaussian* pdf_sf_ttbarmc  ;
+
+       RooGaussian* pdf_sf_mc ;
+       RooGaussian* pdf_sf_qcd_sb ;
+       RooGaussian* pdf_sf_qcd_sig ;
+       RooGaussian* pdf_sf_ttwj_sig ;
+       RooGaussian* pdf_sf_ee ;
+       RooGaussian* pdf_sf_mm ;
+
+
        RooGaussian* pdf_acc_ee      ;
        RooGaussian* pdf_acc_mm      ;
        RooGaussian* pdf_eff_ee      ;
