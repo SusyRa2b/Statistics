@@ -1,0 +1,38 @@
+
+
+  echo .
+  echo .
+  echo .
+  echo    MC likelihood analysis, inputs set to SM-only, ge1b, loose
+  echo .
+  echo .
+  echo .
+  root -b -q an-11-257-v2-files/analysis-macros/MCSMonly-lm9-loose-sel.c >& an-11-257-v2-files/log-files/MCSMonly-lm9-loose-sel.log
+
+  echo .
+  echo .
+  echo .
+  echo    MC likelihood analysis, inputs set to SM-only, ge1b, tight
+  echo .
+  echo .
+  echo .
+  root -b -q an-11-257-v2-files/analysis-macros/MCSMonly-lm9-tight-sel.c >& an-11-257-v2-files/log-files/MCSMonly-lm9-tight-sel.log
+
+  echo .
+  echo .
+  echo .
+  echo    MC likelihood analysis, inputs set to SM+susy,LM9, ge1b, loose
+  echo .
+  echo .
+  echo .
+  root -b -q an-11-257-v2-files/analysis-macros/MCSMsusy-lm9-loose-sel.c >& an-11-257-v2-files/log-files/MCSMsusy-lm9-loose-sel.log
+
+  echo .
+  echo .
+  echo .
+  echo    MC likelihood analysis, inputs set to SM+susy,LM9, ge1b, tight
+  echo .
+  echo .
+  echo .
+  root -b -q an-11-257-v2-files/analysis-macros/MCSMsusy-lm9-tight-sel.c >& an-11-257-v2-files/log-files/MCSMsusy-lm9-tight-sel.log
+

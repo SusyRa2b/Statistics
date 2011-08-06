@@ -1,0 +1,5 @@
+m0_binning   1  0  10  10
+m12_binning  1  0  10  10
+NscanPoints  1
+    m0    m12      Xsec     n_sig    n_sb    n_sig_sl   n_sb_sl  n_sig_ldp  n_sb_ldp
+   0    0      7.13    48 41 10 8 12 14
