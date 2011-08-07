@@ -1,6 +1,6 @@
 
 
-  August 6, 2011
+  August 7, 2011
 
   Owen Long, UCR
 
@@ -35,5 +35,18 @@
   To run the susy scans
 
     source an-11-257-v2-files/analysis-macros/sourceme-scans
+
+
+  To run the toy MC studies
+
+    source an-11-257-v2-files/analysis-macros/sourceme-runtoys
+
+
+  To make plots of the toy results
+
+    source an-11-257-v2-files/analysis-macros/sourceme-toyplots
+
+
+
 
 
