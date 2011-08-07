@@ -10,6 +10,7 @@
 #include "ra2bRoostatsClass3.h"
 
 #include <iostream>
+#include <string.h>
 
 
 #include "TCanvas.h"
@@ -4456,8 +4457,8 @@
           toymean_n_sig_mm = rv_n_sig_mm ->getVal() ;
           toymean_n_sb_mm  = rv_n_sb_mm  ->getVal() ;
        } else if ( znnModel == 2 ) {
-          toymean_n_sig_ee = rv_n_sigsb_ee ->getVal() ;
-          toymean_n_sig_ee = rv_n_sigsb_mm ->getVal() ;
+          toymean_n_sigsb_ee = rv_n_sigsb_ee ->getVal() ;
+          toymean_n_sigsb_mm = rv_n_sigsb_mm ->getVal() ;
        }
 
        printf( " toymean_n_sig        %8.2f\n", toymean_n_sig        ) ;
@@ -4574,6 +4575,7 @@
           tt->Branch( "n_sigsb_mm"        , &n_sigsb_mm           , "n_sigsb_mm/I"            ) ;
        }
 
+
        int nWorse(0) ;
 
        for ( int ti=0; ti<nToys; ti++ ) {
@@ -4682,6 +4684,220 @@
 
 
     } // doToyStudy
+
+
+  //===================================================================
+
+
+    double ra2bRoostatsClass3::doToyStudyNoSusyInFit( int nToys, const char* trueValsInputFile ) {
+
+       float true_ttwj_sig(0.) ;
+       float true_qcd_sig(0.) ;
+       float true_znn_sig(0.) ;
+
+       if ( strlen(trueValsInputFile) > 0 ) {
+          FILE* infp ;
+          if ( (infp=fopen( trueValsInputFile,"r"))==NULL ) {
+             printf("\n\n *** Problem opening true values input file: %s.\n\n", trueValsInputFile ) ;
+             return 0.0 ;
+          }
+          char label[1000] ;
+          //--- order matters!
+          fscanf( infp, "%s %g", label, &true_ttwj_sig ) ;
+          fscanf( infp, "%s %g", label, &true_qcd_sig ) ;
+          fscanf( infp, "%s %g", label, &true_znn_sig ) ;
+          printf("\n\n True values of SIG yields: ttwj =%5.1f, QCD =%5.1f, Znn =%5.1f\n\n", true_ttwj_sig, true_qcd_sig, true_znn_sig ) ;
+          fclose( infp ) ;
+       }
+
+       double retVal = 1.0 ;
+
+       int n_sig         ;
+       int n_sb          ;
+       int n_sig_ldp     ;
+       int n_sb_ldp      ;
+       int n_sig_sl      ;
+       int n_sb_sl       ;
+       int n_lsb_0b      ;
+       int n_lsb_0b_ldp  ;
+
+       int n_sig_ee      ;
+       int n_sb_ee       ;
+       int n_sig_mm      ;
+       int n_sb_mm       ;
+       int n_sigsb_ee      ;
+       int n_sigsb_mm      ;
+
+       double ttwj_sig_true ;
+       double ttwj_sig_fit ;
+       double ttwj_sig_err ;
+       double ttwj_sig_pull ;
+
+       double qcd_sig_true ;
+       double qcd_sig_fit ;
+       double qcd_sig_err ;
+       double qcd_sig_pull ;
+
+       double znn_sig_true ;
+       double znn_sig_fit ;
+       double znn_sig_err ;
+       double znn_sig_pull ;
+
+       int maxCovQual ;
+
+
+       TTree* tt(0x0) ;
+
+       tt = new TTree("tt_toy_nosusyfit", "toy study for fit with SUSY fixed to zero") ;
+
+       tt->Branch( "maxCovQual"        , &maxCovQual           , "maxCovQual/I"            ) ;
+
+       tt->Branch( "n_sig"        , &n_sig           , "n_sig/I"            ) ;
+       tt->Branch( "n_sb"         , &n_sb            , "n_sb/I"             ) ;
+       tt->Branch( "n_sig_ldp"    , &n_sig_ldp       , "n_sig_ldp/I"        ) ;
+       tt->Branch( "n_sb_ldp"     , &n_sb_ldp        , "n_sb_ldp/I"         ) ;
+       tt->Branch( "n_sig_sl"     , &n_sig_sl        , "n_sig_sl/I"         ) ;
+       tt->Branch( "n_sb_sl"      , &n_sb_sl         , "n_sb_sl/I"          ) ;
+       tt->Branch( "n_lsb_0b"     , &n_lsb_0b        , "n_lsb_0b/I"         ) ;
+       tt->Branch( "n_lsb_0b_ldp" , &n_lsb_0b_ldp    , "n_lsb_0b_ldp/I"     ) ;
+       if ( znnModel==1 ) {
+          tt->Branch( "n_sig_ee"        , &n_sig_ee           , "n_sig_ee/I"            ) ;
+          tt->Branch( "n_sb_ee"         , &n_sb_ee            , "n_sb_ee/I"             ) ;
+          tt->Branch( "n_sig_mm"        , &n_sig_mm           , "n_sig_mm/I"            ) ;
+          tt->Branch( "n_sb_mm"         , &n_sb_mm            , "n_sb_mm/I"             ) ;
+       } else if (znnModel==2) {
+          tt->Branch( "n_sigsb_ee"        , &n_sigsb_ee           , "n_sigsb_ee/I"            ) ;
+          tt->Branch( "n_sigsb_mm"        , &n_sigsb_mm           , "n_sigsb_mm/I"            ) ;
+       }
+
+       tt->Branch( "ttwj_sig_true"        , &ttwj_sig_true           , "ttwj_sig_true/D"            ) ;
+       tt->Branch( "ttwj_sig_fit"         , &ttwj_sig_fit            , "ttwj_sig_fit/D"             ) ;
+       tt->Branch( "ttwj_sig_err"         , &ttwj_sig_err            , "ttwj_sig_err/D"             ) ;
+       tt->Branch( "ttwj_sig_pull"        , &ttwj_sig_pull           , "ttwj_sig_pull/D"            ) ;
+
+       tt->Branch( "qcd_sig_true"        , &qcd_sig_true           , "qcd_sig_true/D"            ) ;
+       tt->Branch( "qcd_sig_fit"         , &qcd_sig_fit            , "qcd_sig_fit/D"             ) ;
+       tt->Branch( "qcd_sig_err"         , &qcd_sig_err            , "qcd_sig_err/D"             ) ;
+       tt->Branch( "qcd_sig_pull"        , &qcd_sig_pull           , "qcd_sig_pull/D"            ) ;
+
+       tt->Branch( "znn_sig_true"        , &znn_sig_true           , "znn_sig_true/D"            ) ;
+       tt->Branch( "znn_sig_fit"         , &znn_sig_fit            , "znn_sig_fit/D"             ) ;
+       tt->Branch( "znn_sig_err"         , &znn_sig_err            , "znn_sig_err/D"             ) ;
+       tt->Branch( "znn_sig_pull"        , &znn_sig_pull           , "znn_sig_pull/D"            ) ;
+
+
+       ttwj_sig_true = true_ttwj_sig ;
+       qcd_sig_true  = true_qcd_sig ;
+       znn_sig_true  = true_znn_sig ;
+
+
+       for ( int ti=0; ti<nToys; ti++ ) {
+
+          reinitialize() ;
+
+          genToyExperiment() ;
+
+          RooArgSet toyFitobservedParametersList ;
+          toyFitobservedParametersList.add( *rv_Nsig        ) ;
+          toyFitobservedParametersList.add( *rv_Nsb         ) ;
+          toyFitobservedParametersList.add( *rv_Nsig_sl     ) ;
+          toyFitobservedParametersList.add( *rv_Nsb_sl      ) ;
+          toyFitobservedParametersList.add( *rv_Nsig_ldp    ) ;
+          toyFitobservedParametersList.add( *rv_Nsb_ldp     ) ;
+          toyFitobservedParametersList.add( *rv_Nlsb_0b     ) ;
+          toyFitobservedParametersList.add( *rv_Nlsb_0b_ldp ) ;
+          if ( znnModel == 1 ) {
+             toyFitobservedParametersList.add( *rv_Nsb_ee      ) ;
+             toyFitobservedParametersList.add( *rv_Nsig_ee     ) ;
+             toyFitobservedParametersList.add( *rv_Nsb_mm      ) ;
+             toyFitobservedParametersList.add( *rv_Nsig_mm     ) ;
+          } else if ( znnModel == 2 ) {
+             toyFitobservedParametersList.add( *rv_Nsigsb_ee      ) ;
+             toyFitobservedParametersList.add( *rv_Nsigsb_mm      ) ;
+          }
+
+
+          RooDataSet* toyFitdsObserved = new RooDataSet("toyfit_ra2b_observed_rds", "RA2b toy observed data values",
+                                         toyFitobservedParametersList ) ;
+          toyFitdsObserved->add( toyFitobservedParametersList ) ;
+
+
+         //-- fit with susy yield fixed to zero.
+
+          rv_mu_susy_sig -> setVal( 0.0 ) ;
+          rv_mu_susy_sig->setConstant( kTRUE ) ;
+
+          printf("\n\n") ;
+          printf("  Fitting with these values for the observables.\n") ;
+          toyFitdsObserved->printMultiline(cout, 1, kTRUE, "") ;
+          printf("\n\n") ;
+       // fitResult = likelihood->fitTo(*toyFitdsObserved, Save(true));
+          fitResult = likelihood->fitTo(*toyFitdsObserved, Save(true), PrintLevel(-1));
+          maxCovQual = fitResult->covQual() ;
+          parameterSnapshot() ;
+
+
+         //--- save this experiment in the TTree.
+
+          n_sig        = rv_Nsig        ->getVal() ;
+          n_sb         = rv_Nsb         ->getVal() ;
+          n_sig_sl     = rv_Nsig_sl     ->getVal() ;
+          n_sb_sl      = rv_Nsb_sl      ->getVal() ;
+          n_sig_ldp    = rv_Nsig_ldp    ->getVal() ;
+          n_sb_ldp     = rv_Nsb_ldp     ->getVal() ;
+          n_lsb_0b     = rv_Nlsb_0b     ->getVal() ;
+          n_lsb_0b_ldp = rv_Nlsb_0b_ldp ->getVal() ;
+
+          if ( znnModel == 1 ) {
+             n_sig_ee = rv_Nsig_ee ->getVal() ;
+             n_sb_ee  = rv_Nsb_ee  ->getVal() ;
+             n_sig_mm = rv_Nsig_mm ->getVal() ;
+             n_sb_mm  = rv_Nsb_mm  ->getVal() ;
+          } else if ( znnModel == 2 ) {
+             n_sig_ee = rv_Nsigsb_ee ->getVal() ;
+             n_sig_ee = rv_Nsigsb_mm ->getVal() ;
+          }
+
+
+          if ( useSigTtwjVar ) {
+             ttwj_sig_fit = rrv_mu_ttwj_sig->getVal() ;
+             ttwj_sig_err = rrv_mu_ttwj_sig->getError() ;
+             ttwj_sig_pull = -12. ;
+             if ( ttwj_sig_err > 0. ) { ttwj_sig_pull = (ttwj_sig_fit - ttwj_sig_true)/ttwj_sig_err ; }
+          } else {
+             ttwj_sig_fit = rfv_mu_ttwj_sig->getVal() ;
+             ttwj_sig_err = -1. ;
+             ttwj_sig_pull = -12. ;
+          }
+
+          if ( !useLdpVars ) {
+             qcd_sig_fit = rrv_mu_qcd_sig->getVal() ;
+             qcd_sig_err = rrv_mu_qcd_sig->getError() ;
+             qcd_sig_pull = -12. ;
+             if ( qcd_sig_err > 0. ) { qcd_sig_pull = (qcd_sig_fit - qcd_sig_true)/qcd_sig_err ; }
+          } else {
+             qcd_sig_fit = rfv_mu_qcd_sig->getVal() ;
+             qcd_sig_err = -1. ;
+             qcd_sig_pull = -12. ;
+          }
+
+          znn_sig_fit = rv_mu_znn_sig->getVal() ;
+          znn_sig_err = rv_mu_znn_sig->getError() ;
+          znn_sig_pull = -12. ;
+          if ( znn_sig_err > 0. ) { znn_sig_pull = (znn_sig_fit - znn_sig_true)/znn_sig_err ; }
+
+
+          tt->Fill() ;
+
+       } // ti.
+
+
+       tt->Write() ;
+
+       return retVal ;
+
+
+    } // doToyStudyNoSusyInFit
 
 
   //===================================================================

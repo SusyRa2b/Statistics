@@ -1,0 +1,3 @@
+ttwj_sig 8.5
+qcd_sig  0.5
+znn_sig  3.0

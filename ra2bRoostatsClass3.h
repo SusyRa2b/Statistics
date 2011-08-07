@@ -71,6 +71,7 @@
        void genToyExperiment() ;
 
        double doToyStudy( int nToys=1000, bool isBgonlyStudy=true, double data_q = 0. ) ;
+       double doToyStudyNoSusyInFit( int nToys=1000, const char* trueValsInputFile="" ) ;
 
        void setAndFixSusySigToPredictedValue() ;
 

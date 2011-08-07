@@ -1,0 +1,22 @@
+
+
+  echo .
+  echo .
+  echo .
+  echo    ge1b, loose toy studies
+  echo .
+  echo .
+  echo .
+  root -b -q an-11-257-v2-files/analysis-macros/runtoyge1bloose.c >& an-11-257-v2-files/log-files/runtoyge1bloose.log
+
+
+  echo .
+  echo .
+  echo .
+  echo    ge1b, tight toy studies
+  echo .
+  echo .
+  echo .
+  root -b -q an-11-257-v2-files/analysis-macros/runtoyge1btight.c >& an-11-257-v2-files/log-files/runtoyge1btight.log
+
+
