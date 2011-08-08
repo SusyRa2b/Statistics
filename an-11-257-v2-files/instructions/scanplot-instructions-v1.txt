@@ -1,0 +1,210 @@
+
+
+  August 8, 2011
+  Owen Long, UC Riverside
+
+
+  This is an outline of the steps necessary to make a SUSY exclusion plot
+  in a 2D parameter space.
+
+  All references to code and input files in the
+  UserCode/SusyAnalysis/RA2b/Statistics directory
+  are for the cvs tag all-ra2b-an-11-257-v2-aug8-2011b
+
+  To ensure consistency, check that out in a separate place with this
+  command if you want to test it or inspect it in the form documented
+  below.
+
+    cvs co -r all-ra2b-an-11-257-v2-aug8-2011 UserCode/SusyAnalysis/RA2b/Statistics
+
+  You may need to first do this (in tcsh)
+
+    setenv CVSROOT :ext:your_user_name@cmssw.cvs.cern.ch:/cvs/CMSSW
+
+  where you replace your_user_name with your cern lxplus user name.
+
+  Look at the file an-11-257-v2-files/README.txt and set up the directories
+  following the instructions.
+
+  If you have questions, send me email at owen.long@ucr.edu
+
+  Owen
+
+
+  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+  Step 1) Prepare a text file that contains the essential information
+          for each MC scan point.  The essential information is the predicted
+          number of SUSY events in the 6 bins (SIG,SB,SIG-SL,SB-SL,SIG-LDP,SB-LDP)
+          for each scan point.
+
+     An example for the old scan MC is
+     an-11-257-v2-files/input-files/susyScanInput4-tanb50-SSVHPT-nj3-nb1-ht350-sb150_200-sig200.txt
+
+     The first few lines look like this
+
+---------------------------------------------------------------------------------------
+m0_binning   41  200  600  10
+m12_binning  27  140  400  10
+NscanPoints  1107
+    m0    m12      Xsec     n_sig    n_sb    n_sig_sl   n_sb_sl  n_sig_ldp  n_sb_ldp
+   200    140      62.510    373    293     60     58     68     68
+   200    150      44.630    433    281    113     53     55     69
+   200    160      33.610    490    310    120     93     64     71
+---------------------------------------------------------------------------------------
+
+     The numbers in the first two lines are: number of points, min val, max val, step size.
+     The columns in the main part of the table are defined in the 4th line.
+     Note that this was for the old scan MC, where the cross section was the same
+     for every event (not true anymore...).
+
+     The code that reads this file in and uses it is ra2bRoostatsClass3::susyScanWithContam.
+     inside ra2bRoostatsClass3.c starting at line 2930.
+
+     You will see that I was using the equation
+
+        Nrec = Int_L * Xsec * eff
+        Nrec = Int_L * Xsec * (nsel / ngen)
+
+     where Nrec is the predicted number of selected events, Int_L is the integrated
+     luminosity of the data, Xsec is the cross section, nsel is the unweighted (integer)
+     number of MC events that pass the selection,
+     and ngen is the total number of MC events generated.
+
+     In the table, the last 6 columns are the nsel numbers and ngen=10000 for all.
+
+     In the new scan MC, each sub-process has a different k-factor and so the correct
+     equation is
+
+        Nrec = Int_L * ( sum_i  Xsec_i * eff_i )
+        Nrec = Int_L * ( sum_i  Xsec_i * (nsel_i / ngen_i) )
+
+     where the sum over i is over all sub-processes.
+
+     *** In order to switch to the new mSUGRA format, you will need to tabulate the Nrec
+         numbers for the 6 bins, not the nsel numbers, using the equation above.
+         This means you will need to change the input file format and
+         the code that reads it in ra2bRoostatsClass3.c.
+
+     For the UCR ntuples, the code that produces the big scan table is
+     susyScanInputs4.c,h for the old mSUGRA MC.  I started working on the simplified
+     model MC but didn't finish.  That code is susyScanInputs4t1bbbb.c,h.
+     You can check out this code by following these instructions
+
+       https://twiki.cern.ch/twiki/bin/view/CMS/SusyRA2BJets#UCR_reduced_ntuples
+
+
+
+  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+   Step 2) Run the scan.
+
+     An example of this with the old mSUGRA scan MC is
+     an-11-257-v2-files/analysis-macros/an-scanplot-unblind-tb50-withcontam-ge1b-loose.c
+
+     You can run it from the UserCode/SusyAnalysis/RA2b/Statistics by doing this
+     (in tcsh)
+
+        source an-11-257-v2-files/analysis-macros/sourceme-scans
+
+     It will generate a very big log file in an-11-257-v2-files/log-files.
+     If you want to monitor how the scan is going, try something like this
+     from a separate window
+
+        tail -f an-11-257-v2-files/log-files/an-scanplot-unblind-tb50-withcontam-ge1b-loose.log | grep "CL interval"
+
+     The old scan MC takes about ~5 to 10 minutes to run on my mac for each selection.
+
+     When it's done, it will generate these output files
+
+        an-11-257-v2-files/output-files/an-scanplot-unblind-tb50-withcontam-ge1b-loose.root
+        an-11-257-v2-files/output-files/an-scanplot-unblind-tb50-withcontam-ge1b-loose.png
+
+     The png file is the scan plot that I've been showing.
+
+
+  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+   Advice on how to proceed for the new mSUGRA scan MC
+
+     - The hard part is clearly step 1.  Once you get everything into the new
+       input file in the new format (saving Nrec not nsel) and modify the
+       ra2bRoostatsClass3::susyScanWithContam code accordingly, everything else
+       is pretty much the same.
+
+     - Compare your Nrec numbers for a few m0-m1/2 points that overlap with the old
+       scan MC and make sure that your numbers aren't off by orders of magnitude.
+       You will have to do the simple calculation to get from nsel to Nrec for the
+       old MC.  I would guess they would agree within a factor of 10.
+
+
+   Advice for the t1bbbb simplified MC
+
+     - These MC are generated in a wedge of parameter space (m_gluino vs m_lsp, I think)
+       so they aren't arranged in a grid like the mSUGRA scan.  The spacing between
+       the points is uniform though, so you can save the results in a simple
+       2D histogram.  Just define it so that it covers the whole wedge.
+
+     - I recommend doing step 1 for this MC in the same way as the new mSUGRA MC
+       so that you can use the same code to read the file.  That is, save Nrec,
+       not nsel.
+
+     - The cross section here depends only on the gluino mass.  The code below
+       is a simple lookup table.
+
+------------------------------------------------------------------------------------
+  double t1bbbbXsecLookup( double mGluino ) {
+
+     if ( mGluino < 0. || mGluino > 1100. ) { return 0.0 ; }
+
+     if ( fabs(mGluino-100.)<24.9)  { return     21200.0000; }
+     if ( fabs(mGluino-125.)<24.9)  { return      7170.0000; }
+     if ( fabs(mGluino-150.)<24.9)  { return      2860.0000; }
+     if ( fabs(mGluino-175.)<24.9)  { return      1280.0000; }
+     if ( fabs(mGluino-200.)<24.9)  { return       625.0000; }
+     if ( fabs(mGluino-225.)<24.9)  { return       326.0000; }
+     if ( fabs(mGluino-250.)<24.9)  { return       180.0000; }
+     if ( fabs(mGluino-275.)<24.9)  { return       104.0000; }
+     if ( fabs(mGluino-300.)<24.9)  { return        62.1000; }
+     if ( fabs(mGluino-325.)<24.9)  { return        38.3000; }
+     if ( fabs(mGluino-350.)<24.9)  { return        24.2000; }
+     if ( fabs(mGluino-375.)<24.9)  { return        15.7000; }
+     if ( fabs(mGluino-400.)<24.9)  { return        10.4000; }
+     if ( fabs(mGluino-425.)<24.9)  { return         6.9700; }
+     if ( fabs(mGluino-450.)<24.9)  { return         4.7600; }
+     if ( fabs(mGluino-475.)<24.9)  { return         3.3000; }
+     if ( fabs(mGluino-500.)<24.9)  { return         2.3100; }
+     if ( fabs(mGluino-525.)<24.9)  { return         1.6400; }
+     if ( fabs(mGluino-550.)<24.9)  { return         1.1700; }
+     if ( fabs(mGluino-575.)<24.9)  { return         0.8470; }
+     if ( fabs(mGluino-600.)<24.9)  { return         0.6170; }
+     if ( fabs(mGluino-625.)<24.9)  { return         0.4530; }
+     if ( fabs(mGluino-650.)<24.9)  { return         0.3350; }
+     if ( fabs(mGluino-675.)<24.9)  { return         0.2490; }
+     if ( fabs(mGluino-700.)<24.9)  { return         0.1860; }
+     if ( fabs(mGluino-725.)<24.9)  { return         0.1400; }
+     if ( fabs(mGluino-750.)<24.9)  { return         0.1060; }
+     if ( fabs(mGluino-775.)<24.9)  { return         0.0801; }
+     if ( fabs(mGluino-800.)<24.9)  { return         0.0610; }
+     if ( fabs(mGluino-825.)<24.9)  { return         0.0466; }
+     if ( fabs(mGluino-850.)<24.9)  { return         0.0358; }
+     if ( fabs(mGluino-875.)<24.9)  { return         0.0275; }
+     if ( fabs(mGluino-900.)<24.9)  { return         0.0212; }
+     if ( fabs(mGluino-925.)<24.9)  { return         0.0164; }
+     if ( fabs(mGluino-950.)<24.9)  { return         0.0128; }
+     if ( fabs(mGluino-975.)<24.9)  { return         0.0000; }
+     if ( fabs(mGluino-1000.)<24.9) { return         0.0000; }
+     if ( fabs(mGluino-1025.)<24.9) { return         0.0000; }
+     if ( fabs(mGluino-1050.)<24.9) { return         0.0000; }
+     if ( fabs(mGluino-1075.)<24.9) { return         0.0000; }
+     if ( fabs(mGluino-1100.)<24.9) { return         0.0000; }
+     if ( fabs(mGluino-1125.)<24.9) { return         0.0000; }
+     if ( fabs(mGluino-1150.)<24.9) { return         0.0000; }
+     if ( fabs(mGluino-1175.)<24.9) { return         0.0000; }
+
+    return 0.0 ;
+
+  }
+------------------------------------------------------------------------------------
+
