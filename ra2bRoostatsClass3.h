@@ -1,7 +1,7 @@
 #ifndef ra2bRoostatsClass3_h
 #define ra2bRoostatsClass3_h
 
-#include "Trandom2.h"
+#include "TRandom2.h"
 #include "RooRealVar.h"
 #include "RooFormulaVar.h"
 #include "RooWorkspace.h"
