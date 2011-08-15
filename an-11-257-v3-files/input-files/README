@@ -1,0 +1,18 @@
+The format is defined by the following code:
+
+For LM9:
+    (*textfiles[i])<<m0_<<" "<<m12_<<" ";
+
+    (*textfiles[i])<<SIG.rawYield<<" "<<SB.rawYield<<" "<<SIGSL.rawYield<<" "<<SBSL.rawYield<<" "<<SIGLDP.rawYield<<" "<<SBLDP.rawYield<<" "
+		   <<SIG.effCorr<<" "<<SB.effCorr<<" "<<SIGSL.effCorr<<" "<<SBSL.effCorr<<" "<<SIGLDP.effCorr<<" "<<SBLDP.effCorr<<" "
+	    <<SIG.totalSystematic<<" "<<SB.totalSystematic<<" "<<SIGSL.totalSystematic<<" "<<SBSL.totalSystematic<<" "<<SIGLDP.totalSystematic<<" "<<SBLDP.totalSystematic<<endl;
+
+For mSugra there is one extra field -- the Number of Entries generated at that point is the 3rd column.
+
+Systematics are in %.
+
+For LM9, the total systematic does not include PDF uncertainties. The best estimate we have for LM9 PDF uncertainties is 13%.
+
+For mSugra, all uncertainties have been included.
+
+In both cases the lumi uncertainty is included.

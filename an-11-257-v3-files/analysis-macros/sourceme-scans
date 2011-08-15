@@ -1,0 +1,41 @@
+
+# echo .
+# echo .
+# echo .
+# echo    Data tanbeta=40 scan, ge1b, loose
+# echo .
+# echo .
+# echo .
+# root -b -q an-11-257-v3-files/analysis-macros/an-scanplot-unblind-tb40-withcontam-ge1b-loose.c >& an-11-257-v3-files/log-files/an-scanplot-unblind-tb40-withcontam-ge1b-loose.log
+
+
+# echo .
+# echo .
+# echo .
+# echo    Data tanbeta=40 scan, ge1b, tight
+# echo .
+# echo .
+# echo .
+# root -b -q an-11-257-v3-files/analysis-macros/an-scanplot-unblind-tb40-withcontam-ge1b-tight.c >& an-11-257-v3-files/log-files/an-scanplot-unblind-tb40-withcontam-ge1b-tight.log
+
+
+# echo .
+# echo .
+# echo .
+# echo    Data tanbeta=40 scan, ge2b, loose
+# echo .
+# echo .
+# echo .
+# root -b -q an-11-257-v3-files/analysis-macros/an-scanplot-unblind-tb40-withcontam-ge2b-loose.c >& an-11-257-v3-files/log-files/an-scanplot-unblind-tb40-withcontam-ge2b-loose.log
+
+
+  echo .
+  echo .
+  echo .
+  echo    Data tanbeta=40 scan, ge2b, tight
+  echo .
+  echo .
+  echo .
+  root -b -q an-11-257-v3-files/analysis-macros/an-scanplot-unblind-tb40-withcontam-ge2b-tight.c >& an-11-257-v3-files/log-files/an-scanplot-unblind-tb40-withcontam-ge2b-tight.log
+
+
