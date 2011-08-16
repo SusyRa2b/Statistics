@@ -1828,15 +1828,60 @@
 
     //_______ Efficiency scale factor.  Applied to SUSY and all MC inputs _______________
 
+    //   August 15, 2011:  splitting things up in the 6 bins.
+    //
+    //     There will be a "master" gaussian variable that will be the one floating.
+    //     The master will have a mean of 1 and a width of 0.1 (sig_m = 0.1).
+    //
+    //     The 6 scale factors will then be tied to it, adjusting the width, to make
+    //     them 100% correlated, using
+    //
+    //        sf_i  =  1 - (1-sf_m)*(sig_i/sig_m)
+    //
+    //     In order to avoid negative scale factors, a maximum value of sig_i is set at 35%
+    //     and a minimum value of sf_m is set to 1 - sig_m/sig_i = 0.715.
+    //
+    //
       double pmin, pmax ;
 
-      pmin = (EffScaleFactor-4.*EffScaleFactorErr) ;
-      pmax = (EffScaleFactor+4.*EffScaleFactorErr) ;
-      if ( pmin < 0 ) pmin = 0.1 ;
-      rv_eff_sf  = new RooRealVar( "eff_sf"      , "eff_sf"      , pmin, pmax ) ;
-      rv_eff_sf  -> setVal( EffScaleFactor ) ;
+
+    //--- this one is the "master" parameter.
+      pmin = 0.715 ;
+      pmax = 1.5 ;
+      rv_eff_sf_m  = new RooRealVar( "eff_sf_m"      , "eff_sf_m"      , pmin, pmax ) ;
+      rv_eff_sf_m  -> setVal( 1.0 ) ;
+
+    //--- width parameters.
+      rv_width_eff_sf_m       = new RooRealVar( "width_eff_sf_m"      , "width_eff_sf_m", 0., 1. ) ;
+      rv_width_eff_sf_sig     = new RooRealVar( "width_eff_sf_sig"    , "width_eff_sf_sig", 0., 1. ) ;
+      rv_width_eff_sf_sb      = new RooRealVar( "width_eff_sf_sb"     , "width_eff_sf_sb", 0., 1. ) ;
+      rv_width_eff_sf_sig_sl  = new RooRealVar( "width_eff_sf_sig_sl" , "width_eff_sf_sig_sl", 0., 1. ) ;
+      rv_width_eff_sf_sb_sl   = new RooRealVar( "width_eff_sf_sb_sl"  , "width_eff_sf_sb_sl", 0., 1. ) ;
+      rv_width_eff_sf_sig_ldp = new RooRealVar( "width_eff_sf_sig_ldp", "width_eff_sf_sig_ldp", 0., 1. ) ;
+      rv_width_eff_sf_sb_ldp  = new RooRealVar( "width_eff_sf_sb_ldp" , "width_eff_sf_sb_ldp", 0., 1. ) ;
+
+      rv_width_eff_sf_m -> setVal( 0.10 ) ;
+
+      //--- Initialize all width parameters to 15%.  They will be reset in the susy scan.
+      rv_width_eff_sf_sig     -> setVal( 0.15 ) ;
+      rv_width_eff_sf_sb      -> setVal( 0.15 ) ;
+      rv_width_eff_sf_sig_sl  -> setVal( 0.15 ) ;
+      rv_width_eff_sf_sb_sl   -> setVal( 0.15 ) ;
+      rv_width_eff_sf_sig_ldp -> setVal( 0.15 ) ;
+      rv_width_eff_sf_sb_ldp  -> setVal( 0.15 ) ;
+
+      rv_width_eff_sf_m       -> setConstant( kTRUE ) ;
+      rv_width_eff_sf_sig     -> setConstant( kTRUE ) ;
+      rv_width_eff_sf_sb      -> setConstant( kTRUE ) ;
+      rv_width_eff_sf_sig_sl  -> setConstant( kTRUE ) ;
+      rv_width_eff_sf_sb_sl   -> setConstant( kTRUE ) ;
+      rv_width_eff_sf_sig_ldp -> setConstant( kTRUE ) ;
+      rv_width_eff_sf_sb_ldp  -> setConstant( kTRUE ) ;
 
 
+
+
+    //--- Systematics
 
       pmin = (sf_mc-4*sf_mc_err) ;
       pmax = (sf_mc+4*sf_mc_err) ;
@@ -2096,6 +2141,33 @@
 
 
 
+    //-- Parametric relations between correlated efficiency scale factors.
+
+      rv_eff_sf_sig     = new RooFormulaVar( "eff_sf_sig",
+                                          "1.0 - ( 1.0 - eff_sf_m ) * ( width_eff_sf_sig / width_eff_sf_m )",
+                                          RooArgSet( *rv_eff_sf_m, *rv_width_eff_sf_sig, *rv_width_eff_sf_m ) ) ;
+
+      rv_eff_sf_sb      = new RooFormulaVar( "eff_sf_sb",
+                                          "1.0 - ( 1.0 - eff_sf_m ) * ( width_eff_sf_sb / width_eff_sf_m )",
+                                          RooArgSet( *rv_eff_sf_m, *rv_width_eff_sf_sb, *rv_width_eff_sf_m ) ) ;
+
+      rv_eff_sf_sig_sl  = new RooFormulaVar( "eff_sf_sig_sl",
+                                          "1.0 - ( 1.0 - eff_sf_m ) * ( width_eff_sf_sig_sl / width_eff_sf_m )",
+                                          RooArgSet( *rv_eff_sf_m, *rv_width_eff_sf_sig_sl, *rv_width_eff_sf_m ) ) ;
+
+      rv_eff_sf_sb_sl   = new RooFormulaVar( "eff_sf_sb_sl",
+                                          "1.0 - ( 1.0 - eff_sf_m ) * ( width_eff_sf_sb_sl / width_eff_sf_m )",
+                                          RooArgSet( *rv_eff_sf_m, *rv_width_eff_sf_sb_sl, *rv_width_eff_sf_m ) ) ;
+
+      rv_eff_sf_sig_ldp = new RooFormulaVar( "eff_sf_sig_ldp",
+                                          "1.0 - ( 1.0 - eff_sf_m ) * ( width_eff_sf_sig_ldp / width_eff_sf_m )",
+                                          RooArgSet( *rv_eff_sf_m, *rv_width_eff_sf_sig_ldp, *rv_width_eff_sf_m ) ) ;
+
+      rv_eff_sf_sb_ldp  = new RooFormulaVar( "eff_sf_sb_ldp",
+                                          "1.0 - ( 1.0 - eff_sf_m ) * ( width_eff_sf_sb_ldp / width_eff_sf_m )",
+                                          RooArgSet( *rv_eff_sf_m, *rv_width_eff_sf_sb_ldp, *rv_width_eff_sf_m ) ) ;
+
+
 
     //+++++++++++++ Expected counts for observables in terms of parameters ++++++++++++++++++
 
@@ -2103,28 +2175,28 @@
 
 
       rv_n_sig         = new RooFormulaVar( "n_sig",
-                                     "mu_ttwj_sig + mu_qcd_sig + mu_znn_sig + eff_sf*( mu_ewo_sig + mu_susy_sig)",
-                                     RooArgSet( *rv_mu_ttwj_sig, *rv_mu_qcd_sig, *rv_mu_znn_sig, *rv_eff_sf, *rv_mu_ewo_sig, *rv_mu_susy_sig ) ) ;
+                                     "mu_ttwj_sig + mu_qcd_sig + mu_znn_sig + eff_sf_sig*( mu_ewo_sig + mu_susy_sig)",
+                                     RooArgSet( *rv_mu_ttwj_sig, *rv_mu_qcd_sig, *rv_mu_znn_sig, *rv_eff_sf_sig, *rv_mu_ewo_sig, *rv_mu_susy_sig ) ) ;
 
       rv_n_sb          = new RooFormulaVar( "n_sb",
-                                     "mu_ttwj_sb  + mu_qcd_sb  + mu_znn_sb  + eff_sf*( mu_ewo_sb  + mu_susy_sb )",
-                                     RooArgSet( *rv_mu_ttwj_sb , *rv_mu_qcd_sb , *rv_mu_znn_sb , *rv_eff_sf, *rv_mu_ewo_sb , *rv_mu_susy_sb  ) ) ;
+                                     "mu_ttwj_sb  + mu_qcd_sb  + mu_znn_sb  + eff_sf_sb*( mu_ewo_sb  + mu_susy_sb )",
+                                     RooArgSet( *rv_mu_ttwj_sb , *rv_mu_qcd_sb , *rv_mu_znn_sb , *rv_eff_sf_sb, *rv_mu_ewo_sb , *rv_mu_susy_sb  ) ) ;
 
       rv_n_sig_ldp     = new RooFormulaVar( "n_sig_ldp",
-                                     "mu_qcd_sig_ldp + eff_sf*( sf_mc * (mu_ttwj_sig_ldp + mu_znn_sig_ldp + mu_ewo_sig_ldp) + mu_susy_sig_ldp)",
-                                     RooArgSet( *rv_mu_qcd_sig_ldp, *rv_eff_sf, *rv_sf_mc, *rv_mu_ttwj_sig_ldp, *rv_mu_znn_sig_ldp, *rv_mu_ewo_sig_ldp, *rv_mu_susy_sig_ldp ) ) ;
+                                     "mu_qcd_sig_ldp + eff_sf_sig_ldp*( sf_mc * (mu_ttwj_sig_ldp + mu_znn_sig_ldp + mu_ewo_sig_ldp) + mu_susy_sig_ldp)",
+                                     RooArgSet( *rv_mu_qcd_sig_ldp, *rv_eff_sf_sig_ldp, *rv_sf_mc, *rv_mu_ttwj_sig_ldp, *rv_mu_znn_sig_ldp, *rv_mu_ewo_sig_ldp, *rv_mu_susy_sig_ldp ) ) ;
 
       rv_n_sb_ldp      = new RooFormulaVar( "n_sb_ldp",
-                                     "mu_qcd_sb_ldp + eff_sf*( sf_mc * (mu_ttwj_sb_ldp + mu_znn_sb_ldp + mu_ewo_sb_ldp) + mu_susy_sb_ldp)",
-                                     RooArgSet( *rv_mu_qcd_sb_ldp, *rv_eff_sf, *rv_sf_mc, *rv_mu_ttwj_sb_ldp, *rv_mu_znn_sb_ldp, *rv_mu_ewo_sb_ldp, *rv_mu_susy_sb_ldp ) ) ;
+                                     "mu_qcd_sb_ldp + eff_sf_sb_ldp*( sf_mc * (mu_ttwj_sb_ldp + mu_znn_sb_ldp + mu_ewo_sb_ldp) + mu_susy_sb_ldp)",
+                                     RooArgSet( *rv_mu_qcd_sb_ldp, *rv_eff_sf_sb_ldp, *rv_sf_mc, *rv_mu_ttwj_sb_ldp, *rv_mu_znn_sb_ldp, *rv_mu_ewo_sb_ldp, *rv_mu_susy_sb_ldp ) ) ;
 
       rv_n_sig_sl      = new RooFormulaVar( "n_sig_sl",
-                                     "mu_ttwj_sig_sl + eff_sf*mu_susy_sig_sl",
-                                     RooArgSet( *rv_mu_ttwj_sig_sl, *rv_eff_sf, *rv_mu_susy_sig_sl ) ) ;
+                                     "mu_ttwj_sig_sl + eff_sf_sig_sl*mu_susy_sig_sl",
+                                     RooArgSet( *rv_mu_ttwj_sig_sl, *rv_eff_sf_sig_sl, *rv_mu_susy_sig_sl ) ) ;
 
       rv_n_sb_sl       = new RooFormulaVar( "n_sb_sl",
-                                     "mu_ttwj_sb_sl + eff_sf*mu_susy_sb_sl",
-                                     RooArgSet( *rv_mu_ttwj_sb_sl, *rv_eff_sf, *rv_mu_susy_sb_sl ) ) ;
+                                     "mu_ttwj_sb_sl + eff_sf_sb_sl*mu_susy_sb_sl",
+                                     RooArgSet( *rv_mu_ttwj_sb_sl, *rv_eff_sf_sb_sl, *rv_mu_susy_sb_sl ) ) ;
 
       rv_n_lsb_0b      = new RooFormulaVar( "n_lsb_0b",
                                      "mu_qcd_lsb_0b",
@@ -2239,8 +2311,8 @@
 
       }
 
-      pdf_Eff_sf     = new RooGaussian( "pdf_Eff_sf", "Gaussian pdf for Efficiency scale factor",
-                                          *rv_eff_sf, RooConst( EffScaleFactor ) , RooConst( EffScaleFactorErr ) ) ;
+      pdf_Eff_sf_m     = new RooGaussian( "pdf_Eff_sf_m", "Master Gaussian pdf for Efficiency scale factors",
+                                          *rv_eff_sf_m, RooConst( 1.0 ) , RooConst( 0.10 ) ) ;
 
 
 
@@ -2280,7 +2352,7 @@
          pdflist.add( *pdf_eff_mm      ) ;
          pdflist.add( *pdf_fsig_ee      ) ;
          pdflist.add( *pdf_fsig_mm      ) ;
-         pdflist.add( *pdf_Eff_sf      ) ;
+         pdflist.add( *pdf_Eff_sf_m      ) ;
          likelihood = new RooProdPdf( "likelihood", "ra2b likelihood", pdflist ) ;
       }
 
@@ -2748,7 +2820,7 @@
 
 
 
-      rv_eff_sf  -> setVal( EffScaleFactor ) ;
+      rv_eff_sf_m  -> setVal( 1.0 ) ;
 
       rv_sf_mc -> setVal( sf_mc ) ;
       rv_sf_qcd_sb -> setVal( sf_qcd_sb ) ;
@@ -2949,13 +3021,6 @@
        float minM12 ;
        float maxM12 ;
        float deltaM12 ;
-  //// int nScanPoints ;
-
-  //// char label[1000] ;
-
-  //// fscanf( infp, "%s %d %f %f %f", label, &nM0bins, &minM0, &maxM0, &deltaM0 ) ;
-  //// fscanf( infp, "%s %d %f %f %f", label, &nM12bins, &minM12, &maxM12, &deltaM12 ) ;
-  //// fscanf( infp, "%s %d", label, &nScanPoints ) ;
 
 
    //+++ ORL: Aug 14, 2011 ++++++++++++++++++++++++++
@@ -2984,10 +3049,6 @@
             nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
             nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
 
-       TH2F* hsusyscanEffError = new TH2F("hsusyscanEffError", "SUSY m1/2 vs m0 parameter scan, EffError",
-            nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
-            nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
-
        TH2F* hsusyscanExcluded = new TH2F("hsusyscanExcluded", "SUSY m1/2 vs m0 parameter scan",
             nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
             nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
@@ -3000,31 +3061,36 @@
             nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
             nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
 
+       TH2F* hsusyscanEffError_sig = new TH2F("hsusyscanEffError_sig", "SUSY m1/2 vs m0 parameter scan, EffError, sig",
+            nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
+            nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
 
-  //// //--- read in the column headers line.
-  //// char c(0) ;
-  //// c = fgetc( infp ) ;
-  //// c = 0 ;
-  //// while ( c!=10  ) { c = fgetc( infp ) ; }
+       TH2F* hsusyscanEffError_sb = new TH2F("hsusyscanEffError_sb", "SUSY m1/2 vs m0 parameter scan, EffError, sb",
+            nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
+            nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
+
+       TH2F* hsusyscanEffError_sig_sl = new TH2F("hsusyscanEffError_sig_sl", "SUSY m1/2 vs m0 parameter scan, EffError, sig_sl",
+            nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
+            nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
+
+       TH2F* hsusyscanEffError_sb_sl = new TH2F("hsusyscanEffError_sb_sl", "SUSY m1/2 vs m0 parameter scan, EffError, sb_sl",
+            nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
+            nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
+
+       TH2F* hsusyscanEffError_sig_ldp = new TH2F("hsusyscanEffError_sig_ldp", "SUSY m1/2 vs m0 parameter scan, EffError, sig_ldp",
+            nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
+            nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
+
+       TH2F* hsusyscanEffError_sb_ldp = new TH2F("hsusyscanEffError_sb_ldp", "SUSY m1/2 vs m0 parameter scan, EffError, sb_ldp",
+            nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
+            nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
+
 
        //--- Loop over the scan points.
-  //// for ( int pi = 0 ; pi < nScanPoints ; pi++ )
        while ( !feof( infp ) ) {
 
           float pointM0 ;
           float pointM12 ;
-  //////  float pointXsec ;
-  //////  int    n_sig ;
-  //////  int    n_sb ;
-  //////  int    n_sig_sl ;
-  //////  int    n_sb_sl ;
-  //////  int    n_sig_ldp ;
-  //////  int    n_sb_ldp ;
-
-  //////  fscanf( infp, "%f %f %f   %d %d %d   %d  %d  %d",
-  //////    &pointM0, &pointM12, &pointXsec,
-  //////    &n_sig, &n_sb, &n_sig_sl,
-  //////    &n_sb_sl, &n_sig_ldp, &n_sb_ldp ) ;
 
 
 
@@ -3060,10 +3126,19 @@
 
           if ( feof(infp) ) break ;
           if ( n_sig_raw < 0.00001 ) continue ;
+          if ( nGen != 10000 ) continue ; // get rid of bad scan points.
+
+          //-- enforce a maximum efficiency uncertainty (to avoid negative scale factors).
+          if ( n_sig_error     > 35. ) { n_sig_error     = 35. ; }
+          if ( n_sb_error      > 35. ) { n_sb_error      = 35. ; }
+          if ( n_sig_sl_error  > 35. ) { n_sig_sl_error  = 35. ; }
+          if ( n_sb_sl_error   > 35. ) { n_sb_sl_error   = 35. ; }
+          if ( n_sig_ldp_error > 35. ) { n_sig_ldp_error = 35. ; }
+          if ( n_sb_ldp_error  > 35. ) { n_sb_ldp_error  = 35. ; }
+
    //++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-   /////  int nGenPerPoint(10000) ;
 
 
           int m0bin  = hsusyscanExcluded->GetXaxis()->FindBin( pointM0 ) ;
@@ -3072,16 +3147,9 @@
 
        //--- Set up the likelihood to include the SUSY contributions to the non-SIG regions.
 
-   /////  float weight = ( pointXsec * DataLumi ) / ( 1.0*nGenPerPoint ) ;
 
           reinitialize() ;
 
-   /////  rv_mu_susymc_sig     -> setVal( n_sig * weight ) ;
-   /////  rv_mu_susymc_sb      -> setVal( n_sb * weight ) ;
-   /////  rv_mu_susymc_sig_sl  -> setVal( n_sig_sl * weight ) ;
-   /////  rv_mu_susymc_sb_sl   -> setVal( n_sb_sl * weight ) ;
-   /////  rv_mu_susymc_sig_ldp -> setVal( n_sig_ldp * weight ) ;
-   /////  rv_mu_susymc_sb_ldp  -> setVal( n_sb_ldp * weight ) ;
 
           rv_mu_susymc_sig       -> setVal( n_sig_raw     * n_sig_correction     ) ;
           rv_mu_susymc_sb        -> setVal( n_sb_raw      * n_sb_correction      ) ;
@@ -3090,6 +3158,22 @@
           rv_mu_susymc_sig_ldp   -> setVal( n_sig_ldp_raw * n_sig_ldp_correction ) ;
           rv_mu_susymc_sb_ldp    -> setVal( n_sb_ldp_raw  * n_sb_ldp_correction  ) ;
 
+          rv_width_eff_sf_sig     -> setVal( n_sig_error     / 100. ) ;
+          rv_width_eff_sf_sb      -> setVal( n_sb_error      / 100. ) ;
+          rv_width_eff_sf_sig_sl  -> setVal( n_sig_sl_error  / 100. ) ;
+          rv_width_eff_sf_sb_sl   -> setVal( n_sb_sl_error   / 100. ) ;
+          rv_width_eff_sf_sig_ldp -> setVal( n_sig_ldp_error / 100. ) ;
+          rv_width_eff_sf_sb_ldp  -> setVal( n_sb_ldp_error  / 100. ) ;
+
+          printf("\n\n") ;
+          printf(" Setting susy N_sig     to  %7.1f\n", n_sig_raw     * n_sig_correction      ) ;
+          printf(" Setting susy N_sb      to  %7.1f\n", n_sb_raw      * n_sb_correction       ) ;
+          printf(" Setting susy N_sig_sl  to  %7.1f\n", n_sig_sl_raw  * n_sig_sl_correction   ) ;
+          printf(" Setting susy N_sb_sl   to  %7.1f\n", n_sb_sl_raw   * n_sb_sl_correction    ) ;
+          printf(" Setting susy N_sig_ldp to  %7.1f\n", n_sig_ldp_raw * n_sig_ldp_correction  ) ;
+          printf(" Setting susy N_sb_ldp  to  %7.1f\n", n_sb_ldp_raw  * n_sb_ldp_correction   ) ;
+          printf("\n\n") ;
+
           parameterSnapshot() ;
 
           doFit() ;
@@ -3097,10 +3181,11 @@
           parameterSnapshot() ;
 
           float susySigLow, susySigHigh ;
+          susySigLow = 0. ;
+          susySigHigh = 9999. ;
           profileSusySig( susySigLow, susySigHigh, false ) ;
 
 
-   /////  float nselWeighted =  n_sig * weight ;
 
           float nselWeighted =  n_sig_raw     * n_sig_correction ;
 
@@ -3112,7 +3197,13 @@
           hsusyscanNsigpred->SetBinContent( m0bin, m12bin, nselWeighted ) ;
           hsusyscanNgen->SetBinContent( m0bin, m12bin, 1.0*nGen ) ;
           hsusyscanEffCorr->SetBinContent( m0bin, m12bin, n_sig_correction ) ;
-          hsusyscanEffError->SetBinContent( m0bin, m12bin, n_sig_error ) ;
+
+          hsusyscanEffError_sig->SetBinContent( m0bin, m12bin, n_sig_error ) ;
+          hsusyscanEffError_sb->SetBinContent( m0bin, m12bin, n_sb_error ) ;
+          hsusyscanEffError_sig_sl->SetBinContent( m0bin, m12bin, n_sig_sl_error ) ;
+          hsusyscanEffError_sb_sl->SetBinContent( m0bin, m12bin, n_sb_sl_error ) ;
+          hsusyscanEffError_sig_ldp->SetBinContent( m0bin, m12bin, n_sig_ldp_error ) ;
+          hsusyscanEffError_sb_ldp->SetBinContent( m0bin, m12bin, n_sb_ldp_error ) ;
 
 
           if ( nselWeighted > susySigHigh ) {
@@ -3130,17 +3221,6 @@
 
 
 
- //--------------------------
- //    TStringLong infilestr( inputScanFile ) ;
- //    TStringLong pngoutputfilestr = infilestr ;
- //    pngoutputfilestr.ReplaceAll("input","output") ;
- //    pngoutputfilestr.ReplaceAll(".txt", outputEndname ) ;
- //    printf("\n\n png output file : %s\n\n", pngoutputfilestr.Data() ) ;
-
- //    TStringLong rootoutputfilestr = pngoutputfilestr ;
- //    rootoutputfilestr.ReplaceAll("png","root") ;
- //    printf("\n\n root output file : %s\n\n", rootoutputfilestr.Data() ) ;
- //--------------------------
 
 
 
@@ -3168,7 +3248,12 @@
        hsusyscanNsigpred->Write() ;
        hsusyscanNgen->Write() ;
        hsusyscanEffCorr->Write() ;
-       hsusyscanEffError->Write() ;
+       hsusyscanEffError_sig->Write() ;
+       hsusyscanEffError_sb->Write() ;
+       hsusyscanEffError_sig_sl->Write() ;
+       hsusyscanEffError_sb_sl->Write() ;
+       hsusyscanEffError_sig_ldp->Write() ;
+       hsusyscanEffError_sb_ldp->Write() ;
        f->Write() ;
        f->Close() ;
 
@@ -3605,6 +3690,8 @@
     bool ra2bRoostatsClass4::setSusyScanPoint( const char* inputScanFile, double m0, double m12 ) {
 
 
+       //--- Aug 15, 2011: updated to new format for AN, v3.
+
 
        printf("\n\n Opening SUSY scan input file : %s\n", inputScanFile ) ;
 
@@ -3622,74 +3709,112 @@
        float minM12 ;
        float maxM12 ;
        float deltaM12 ;
-       int nScanPoints ;
 
-       char label[1000] ;
 
-       fscanf( infp, "%s %d %f %f %f", label, &nM0bins, &minM0, &maxM0, &deltaM0 ) ;
-       fscanf( infp, "%s %d %f %f %f", label, &nM12bins, &minM12, &maxM12, &deltaM12 ) ;
-       fscanf( infp, "%s %d", label, &nScanPoints ) ;
+   //+++ ORL: Aug 14, 2011 ++++++++++++++++++++++++++
+       nM0bins = 93 ;
+       minM0 = 160 ;
+       maxM0 = 2000 ;
+       deltaM0 = 20 ;
+
+       nM12bins = 38 ;
+       minM12 = 20 ;
+       maxM12 = 760 ;
+       deltaM12 = 20 ;
+   //++++++++++++++++++++++++++++++++++++++++++++++++
+
 
        printf( "\n\n" ) ;
        printf( "  M0   :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM0bins, minM0, maxM0 ) ;
        printf( "  M1/2 :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM12bins, minM12, maxM12 ) ;
        printf( "\n\n" ) ;
 
-
-       //--- read in the column headers line.
-       char c(0) ;
-       c = fgetc( infp ) ;
-       c = 0 ;
-       while ( c!=10  ) { c = fgetc( infp ) ; }
-
        bool found(false) ;
 
        //--- Loop over the scan points.
-       for ( int pi = 0 ; pi < nScanPoints ; pi++ ) {
+       while ( !feof( infp ) ) {
 
           float pointM0 ;
           float pointM12 ;
-          float pointXsec ;
-          int    n_sig ;
-          int    n_sb ;
-          int    n_sig_sl ;
-          int    n_sb_sl ;
-          int    n_sig_ldp ;
-          int    n_sb_ldp ;
 
-          fscanf( infp, "%f %f %f   %d %d %d   %d  %d  %d",
-            &pointM0, &pointM12, &pointXsec,
-            &n_sig, &n_sb, &n_sig_sl,
-            &n_sb_sl, &n_sig_ldp, &n_sb_ldp ) ;
+
+
+   //+++ ORL: Aug 14, 2011 ++++++++++++++++++++++++++
+          float n_sig_raw ;
+          float n_sb_raw ;
+          float n_sig_sl_raw ;
+          float n_sb_sl_raw ;
+          float n_sig_ldp_raw ;
+          float n_sb_ldp_raw ;
+
+          float n_sig_correction ;
+          float n_sb_correction ;
+          float n_sig_sl_correction ;
+          float n_sb_sl_correction ;
+          float n_sig_ldp_correction ;
+          float n_sb_ldp_correction ;
+
+          float n_sig_error ;
+          float n_sb_error ;
+          float n_sig_sl_error ;
+          float n_sb_sl_error ;
+          float n_sig_ldp_error ;
+          float n_sb_ldp_error ;
+
+          int nGen ;
+
+          fscanf( infp, "%f %f %d  %f %f %f %f %f %f  %f %f %f %f %f %f %f %f %f %f %f %f",
+            &pointM0, &pointM12, &nGen,
+            &n_sig_raw, &n_sb_raw, &n_sig_sl_raw, &n_sb_sl_raw, &n_sig_ldp_raw, &n_sb_ldp_raw,
+            &n_sig_correction, &n_sb_correction, &n_sig_sl_correction, &n_sb_sl_correction, &n_sig_ldp_correction, &n_sb_ldp_correction,
+            &n_sig_error, &n_sb_error, &n_sig_sl_error, &n_sb_sl_error, &n_sig_ldp_error, &n_sb_ldp_error ) ;
+
+          if ( feof(infp) ) break ;
+          if ( n_sig_raw < 0.00001 ) continue ;
+   //--If you are asking for it, I'll assume it's good.  Josh is using 0 for ngen dummy in LM9.
+   /////  if ( nGen != 10000 ) continue ; // get rid of bad scan points.
+
+          //-- enforce a maximum efficiency uncertainty (to avoid negative scale factors).
+          if ( n_sig_error     > 35. ) { n_sig_error     = 35. ; }
+          if ( n_sb_error      > 35. ) { n_sb_error      = 35. ; }
+          if ( n_sig_sl_error  > 35. ) { n_sig_sl_error  = 35. ; }
+          if ( n_sb_sl_error   > 35. ) { n_sb_sl_error   = 35. ; }
+          if ( n_sig_ldp_error > 35. ) { n_sig_ldp_error = 35. ; }
+          if ( n_sb_ldp_error  > 35. ) { n_sb_ldp_error  = 35. ; }
+
+   //++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 
           if (    fabs( pointM0 - m0 ) <= deltaM0/2.
                && fabs( pointM12 - m12 ) <= deltaM12/2. ) {
 
-             int nGenPerPoint(10000) ;
-             float nselWeighted = ( n_sig * pointXsec * DataLumi ) / ( 1.0*nGenPerPoint ) ;
+             rv_mu_susymc_sig       -> setVal( n_sig_raw     * n_sig_correction     ) ;
+             rv_mu_susymc_sb        -> setVal( n_sb_raw      * n_sb_correction      ) ;
+             rv_mu_susymc_sig_sl    -> setVal( n_sig_sl_raw  * n_sig_sl_correction  ) ;
+             rv_mu_susymc_sb_sl     -> setVal( n_sb_sl_raw   * n_sb_sl_correction   ) ;
+             rv_mu_susymc_sig_ldp   -> setVal( n_sig_ldp_raw * n_sig_ldp_correction ) ;
+             rv_mu_susymc_sb_ldp    -> setVal( n_sb_ldp_raw  * n_sb_ldp_correction  ) ;
+
+             rv_width_eff_sf_sig     -> setVal( n_sig_error     / 100. ) ;
+             rv_width_eff_sf_sb      -> setVal( n_sb_error      / 100. ) ;
+             rv_width_eff_sf_sig_sl  -> setVal( n_sig_sl_error  / 100. ) ;
+             rv_width_eff_sf_sb_sl   -> setVal( n_sb_sl_error   / 100. ) ;
+             rv_width_eff_sf_sig_ldp -> setVal( n_sig_ldp_error / 100. ) ;
+             rv_width_eff_sf_sb_ldp  -> setVal( n_sb_ldp_error  / 100. ) ;
 
 
-             printf("\n\n Found point m0 = %4.0f,  m1/2 = %4.0f,  Npred = %7.1f\n\n\n", pointM0, pointM12, nselWeighted ) ;
 
-          //--- Set up the likelihood to include the SUSY contributions to the non-SIG regions.
+             printf("\n\n Found point m0 = %4.0f,  m1/2 = %4.0f,  Npred = %7.1f\n\n\n", pointM0, pointM12, n_sig_raw * n_sig_correction ) ;
 
-             float weight = ( pointXsec * DataLumi ) / ( 1.0*nGenPerPoint ) ;
-
-             rv_mu_susymc_sig     -> setVal( n_sig     * weight ) ;
-             rv_mu_susymc_sb      -> setVal( n_sb      * weight ) ;
-             rv_mu_susymc_sig_sl  -> setVal( n_sig_sl  * weight ) ;
-             rv_mu_susymc_sb_sl   -> setVal( n_sb_sl   * weight ) ;
-             rv_mu_susymc_sig_ldp -> setVal( n_sig_ldp * weight ) ;
-             rv_mu_susymc_sb_ldp  -> setVal( n_sb_ldp  * weight ) ;
 
              printf("\n\n") ;
-             printf(" Setting susy N_sig     to  %7.1f\n", n_sig     * weight ) ;
-             printf(" Setting susy N_sb      to  %7.1f\n", n_sb      * weight ) ;
-             printf(" Setting susy N_sig_sl  to  %7.1f\n", n_sig_sl  * weight ) ;
-             printf(" Setting susy N_sb_sl   to  %7.1f\n", n_sb_sl   * weight ) ;
-             printf(" Setting susy N_sig_ldp to  %7.1f\n", n_sig_ldp * weight ) ;
-             printf(" Setting susy N_sb_ldp  to  %7.1f\n", n_sb_ldp  * weight ) ;
+             printf(" Setting susy N_sig     to  %7.1f\n", n_sig_raw     * n_sig_correction      ) ;
+             printf(" Setting susy N_sb      to  %7.1f\n", n_sb_raw      * n_sb_correction       ) ;
+             printf(" Setting susy N_sig_sl  to  %7.1f\n", n_sig_sl_raw  * n_sig_sl_correction   ) ;
+             printf(" Setting susy N_sb_sl   to  %7.1f\n", n_sb_sl_raw   * n_sb_sl_correction    ) ;
+             printf(" Setting susy N_sig_ldp to  %7.1f\n", n_sig_ldp_raw * n_sig_ldp_correction  ) ;
+             printf(" Setting susy N_sb_ldp  to  %7.1f\n", n_sb_ldp_raw  * n_sb_ldp_correction   ) ;
              printf("\n\n") ;
 
              found = true ;
@@ -3698,7 +3823,7 @@
 
           } // point match?
 
-       } // pi .
+       } // not eof ?
 
        fclose( infp ) ;
 
@@ -3786,13 +3911,23 @@
       double ewoValNorm ;
       double susyValNorm ;
 
-      double eff_sf ;
+      double eff_sf_sig ;
+      double eff_sf_sb ;
+      double eff_sf_sig_sl ;
+      double eff_sf_sb_sl ;
+      double eff_sf_sig_ldp ;
+      double eff_sf_sb_ldp ;
 
       char   binLabel[1000] ;
 
 
 
-      eff_sf = rv_eff_sf->getVal() ;
+      eff_sf_sig     = rv_eff_sf_sig->getVal() ;
+      eff_sf_sb      = rv_eff_sf_sb->getVal() ;
+      eff_sf_sig_sl  = rv_eff_sf_sig_sl->getVal() ;
+      eff_sf_sb_sl   = rv_eff_sf_sb_sl->getVal() ;
+      eff_sf_sig_ldp = rv_eff_sf_sig_ldp->getVal() ;
+      eff_sf_sb_ldp  = rv_eff_sf_sb_ldp->getVal() ;
 
 
      //-- SIG -------------------------------------------------------
@@ -3814,8 +3949,8 @@
       znnVal   = (rv_mu_znn_sig->getVal()) ;
       ewoVal   = (rv_mu_ewo_sig->getVal()) ;
       susyVal  = rv_mu_susy_sig->getVal() ;
-      ewoVal   = eff_sf * ewoVal ;
-      susyVal = eff_sf * susyVal ;
+      ewoVal   = eff_sf_sig * ewoVal ;
+      susyVal = eff_sf_sig * susyVal ;
 
 
       dataErr = sqrt(dataVal) ;
@@ -3876,8 +4011,8 @@
       }
       ewoVal   = (rv_mu_ewo_sb->getVal()) ;
       susyVal  = rv_mu_susy_sb->getVal() ;
-      ewoVal   = eff_sf * ewoVal ;
-      susyVal = eff_sf * susyVal ;
+      ewoVal   = eff_sf_sb * ewoVal ;
+      susyVal = eff_sf_sb * susyVal ;
 
 
       dataErr = sqrt(dataVal) ;
@@ -3926,7 +4061,7 @@
       znnVal   = 0. ;
       ewoVal   = 0. ;
       susyVal  = rv_mu_susy_sig_sl->getVal() ;
-      susyVal = eff_sf * susyVal ;
+      susyVal = eff_sf_sig_sl * susyVal ;
 
 
       dataErr = sqrt(dataVal) ;
@@ -3975,7 +4110,7 @@
       znnVal   = 0. ;
       ewoVal   = 0. ;
       susyVal  = rv_mu_susy_sb_sl->getVal() ;
-      susyVal = eff_sf * susyVal ;
+      susyVal = eff_sf_sb_sl * susyVal ;
 
 
       dataErr = sqrt(dataVal) ;
@@ -4028,10 +4163,10 @@
       znnVal   = rv_mu_znn_sig_ldp->getVal() ;
       ewoVal   = (rv_mu_ewo_sig_ldp->getVal())  ;
       susyVal  = rv_mu_susy_sig_ldp->getVal() ;
-      ttwjVal  = eff_sf * ttwjVal ;
-      znnVal   = eff_sf * znnVal ;
-      ewoVal   = eff_sf * ewoVal ;
-      susyVal = eff_sf * susyVal ;
+      ttwjVal  = eff_sf_sig_ldp * ttwjVal ;
+      znnVal   = eff_sf_sig_ldp * znnVal ;
+      ewoVal   = eff_sf_sig_ldp * ewoVal ;
+      susyVal = eff_sf_sig_ldp * susyVal ;
 
 
       dataErr = sqrt(dataVal) ;
@@ -4084,10 +4219,10 @@
       znnVal   = rv_mu_znn_sb_ldp->getVal() ;
       ewoVal   = (rv_mu_ewo_sb_ldp->getVal())  ;
       susyVal  = rv_mu_susy_sb_ldp->getVal() ;
-      ttwjVal  = eff_sf * ttwjVal ;
-      znnVal   = eff_sf * znnVal ;
-      ewoVal   = eff_sf * ewoVal ;
-      susyVal = eff_sf * susyVal ;
+      ttwjVal  = eff_sf_sb_ldp * ttwjVal ;
+      znnVal   = eff_sf_sb_ldp * znnVal ;
+      ewoVal   = eff_sf_sb_ldp * ewoVal ;
+      susyVal = eff_sf_sb_ldp * susyVal ;
 
 
       dataErr = sqrt(dataVal) ;
@@ -4137,10 +4272,10 @@
       sprintf( binLabel, "Eff SF" ) ;
       xaxis->SetBinLabel(binIndex, binLabel ) ;
 
-      dataVal = EffScaleFactor ;
-      float mcVal   = rv_eff_sf->getVal() ;
+      dataVal = 1.0 ;
+      float mcVal   = rv_eff_sf_sig->getVal() ;
 
-      dataErr = EffScaleFactorErr ;
+      dataErr = rv_width_eff_sf_sig->getVal() ;
 
       dataErrNorm = dataErr ;
       float mcValNorm = mcVal ;
@@ -4305,9 +4440,8 @@
 
 
 
-      fitval = rv_eff_sf->getVal() ;
-      fiterr = rv_eff_sf->getError() ;
-      sprintf( fitvalchars, "%4.2f +/- %4.2f", fitval, fiterr ) ;
+      fitval = rv_eff_sf_sig->getVal() ;
+      sprintf( fitvalchars, "%4.2f", fitval ) ;
       ty = ty - dy ;
       fittext->DrawTextNDC( tx, ty, fitvalchars ) ;
 
@@ -4411,8 +4545,8 @@
               ttwjSig,
               qcdSig,
               rv_mu_znn_sig->getVal(),
-              (rv_mu_ewo_sig->getVal())*(rv_eff_sf->getVal()),
-              (rv_mu_susy_sig->getVal())*(rv_eff_sf->getVal()),
+              (rv_mu_ewo_sig->getVal())*(rv_eff_sf_sig->getVal()),
+              (rv_mu_susy_sig->getVal())*(rv_eff_sf_sig->getVal()),
               rv_mu_susy_sig->getVal()
               ) ;
 
@@ -4429,8 +4563,8 @@
               ttwjSb,
               qcdSb,
               znnsbval,
-              (rv_mu_ewo_sb->getVal())*(rv_eff_sf->getVal()),
-              (rv_mu_susy_sb->getVal())*(rv_eff_sf->getVal()),
+              (rv_mu_ewo_sb->getVal())*(rv_eff_sf_sb->getVal()),
+              (rv_mu_susy_sb->getVal())*(rv_eff_sf_sb->getVal()),
               rv_mu_susy_sb->getVal()
               ) ;
 
@@ -4440,7 +4574,7 @@
               rv_Nsig_sl->getVal(),
               rv_n_sig_sl->getVal(),
               rv_mu_ttwj_sig_sl->getVal(),
-              (rv_mu_susy_sig_sl->getVal())*(rv_eff_sf->getVal()),
+              (rv_mu_susy_sig_sl->getVal())*(rv_eff_sf_sig_sl->getVal()),
               rv_mu_susy_sig_sl->getVal()
               ) ;
 
@@ -4449,7 +4583,7 @@
               rv_Nsb_sl->getVal(),
               rv_n_sb_sl->getVal(),
               rv_mu_ttwj_sb_sl->getVal(),
-              (rv_mu_susy_sb_sl->getVal())*(rv_eff_sf->getVal()),
+              (rv_mu_susy_sb_sl->getVal())*(rv_eff_sf_sb_sl->getVal()),
               rv_mu_susy_sb_sl->getVal()
               ) ;
 
@@ -4461,8 +4595,8 @@
               rv_mu_ttwj_sig_ldp->getVal(),
               qcdSigLdp,
               rv_mu_znn_sig_ldp->getVal(),
-              (rv_mu_ewo_sig_ldp->getVal())*(rv_eff_sf->getVal()),
-              (rv_mu_susy_sig_ldp->getVal())*(rv_eff_sf->getVal()),
+              (rv_mu_ewo_sig_ldp->getVal())*(rv_eff_sf_sig_ldp->getVal()),
+              (rv_mu_susy_sig_ldp->getVal())*(rv_eff_sf_sig_ldp->getVal()),
               rv_mu_susy_sig_ldp->getVal()
               ) ;
 
@@ -4472,8 +4606,8 @@
               rv_mu_ttwj_sb_ldp->getVal(),
               qcdSbLdp,
               rv_mu_znn_sb_ldp->getVal(),
-              (rv_mu_ewo_sb_ldp->getVal())*(rv_eff_sf->getVal()),
-              (rv_mu_susy_sb_ldp->getVal())*(rv_eff_sf->getVal()),
+              (rv_mu_ewo_sb_ldp->getVal())*(rv_eff_sf_sb_ldp->getVal()),
+              (rv_mu_susy_sb_ldp->getVal())*(rv_eff_sf_sb_ldp->getVal()),
               rv_mu_susy_sb_ldp->getVal()
               ) ;
 
@@ -4486,11 +4620,11 @@
 
        printf("\n") ;
        delta = 0. ;
-       if ( EffScaleFactorErr>0 ) { delta = (rv_eff_sf->getVal()-EffScaleFactor)/EffScaleFactorErr ; }
+       if ( EffScaleFactorErr>0 ) { delta = (rv_eff_sf_sig->getVal()-1.0)/(rv_width_eff_sf_sig->getVal()) ; }
        printf("  Eff scale fac. :  input = %4.2f +/- %4.2f ,   fit = %4.2f, delta = %4.2f sigma.  \n",
               EffScaleFactor,
               EffScaleFactorErr,
-              rv_eff_sf->getVal(),
+              rv_eff_sf_sig->getVal(),
               delta ) ;
 
     // printf("\n") ;
@@ -4513,7 +4647,7 @@
 
        printf("\n\n====================================================================\n\n") ;
 
-    }
+    } // parameterSnapshot
 
 
   //===================================================================

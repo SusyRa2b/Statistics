@@ -2,15 +2,15 @@
   EffScaleFactor       1.0
   EffScaleFactorErr    0.15
 Nsig              5
-Nsb               18
+Nsb               17
 Nsig_sl           6
 Nsb_sl            12
 Nsig_ldp          2
-Nsb_ldp           40
-  Nlsb                    257
-  Nlsb_ldp                2529
-  Nlsb_0b                 19000
-  Nlsb_0b_ldp             202360
+Nsb_ldp           36
+  Nlsb                    0
+  Nlsb_ldp                0
+  Nlsb_0b                 0
+  Nlsb_0b_ldp             0
   Nqcdmc_sig                      0.077
   Nqcdmc_sig_err                  0.033
   Nqcdmc_sb                       0.732
@@ -35,24 +35,24 @@ Nsb_ldp           40
   Nttbarmc_sb                   12.2
   Nttbarmc_sig_sl                1.2
   Nttbarmc_sb_sl                10.1
-Nttbarmc_sig_ldp  0.781914
-Nttbarmc_sb_ldp   9.18749
+Nttbarsingletopzjetsmc_sig_ldp  0.78
+Nttbarsingletopzjetsmc_sb_ldp   9.67
   Nttbarmc_lsb                  37.3
   Nttbarmc_lsb_ldp             116.4
   NWJmc_sig               0
   NWJmc_sb                0
   NWJmc_sig_sl            0
   NWJmc_sb_sl             0
-NWJmc_sig_ldp     0
-NWJmc_sb_ldp      0
+NWJmc_sig_ldp     0.00
+NWJmc_sb_ldp      0.00
   NWJmc_lsb               2.57
   NWJmc_lsb_ldp           2.57
   NZnnmc_sig              0
   NZnnmc_sb               3.08
   NZnnmc_sig_sl           0
   NZnnmc_sb_sl            0
-NZnnmc_sig_ldp    0
-NZnnmc_sb_ldp     0
+NZnnmc_sig_ldp    0.03
+NZnnmc_sb_ldp     0.25
   NZnnmc_lsb             0
   NZnnmc_lsb_ldp         0
   NEwomc_sig              0
@@ -73,26 +73,26 @@ NZnnmc_sb_ldp     0
   Nsusymc_lsb_ldp               27.6
   Nsusymc_lsb_0b                15.3
   Nsusymc_lsb_0b_ldp            28.9
-Nhtonlytrig_lsb_0b           326
-Nhtonlytrig_lsb_0b_ldp       4147
-  DataLumi               1092.  
+Nlsb_0b           341
+Nlsb_0b_ldp       4204
+  DataLumi               1143
   Nsb_ee         0
   Nsig_ee        0
   Nsb_mm         2
-  Nsig_mm        3
-  acc_ee_mean    0.88
-  acc_ee_err     0.08
-  acc_mm_mean    0.90
-  acc_mm_err     0.05
-  eff_ee_mean    0.715
-  eff_ee_err     0.064
-  eff_mm_mean    0.794
-  eff_mm_err     0.056
-  Ztoll_lumi     1092.
-  knn_sig_mean   0.034
-  knn_sig_err    0.034
-  knn_sb_mean    0.050
-  knn_sb_err     0.050
+  Nsig_mm        2
+ acc_ee_mean    0.80
+ acc_ee_err     0.05
+ acc_mm_mean    0.85
+ acc_mm_err     0.04
+ eff_ee_mean    0.480
+ eff_ee_err     0.052
+ eff_mm_mean    0.621
+ eff_mm_err     0.061
+Ztoll_lumi      1143
+ knn_2b_sig_tight_mean    0.039
+ knn_2b_sig_tight_err     0.039
+ knn_2b_sb_tight_mean     0.057
+ knn_2b_sb_tight_err      0.057
   fsig_ee_mean   0.651
   fsig_ee_err    0.065
   fsig_mm_mean   0.711
@@ -100,12 +100,12 @@ Nhtonlytrig_lsb_0b_ldp       4147
   sf_mc                 1.00
   sf_mc_err             0.50
   sf_qcd_sb             1.00
-  sf_qcd_sb_err         0.53
+  sf_qcd_sb_err         0.66
   sf_qcd_sig            1.00
-  sf_qcd_sig_err        0.68
+  sf_qcd_sig_err        0.70
   sf_ttwj_sig           1.00
-  sf_ttwj_sig_err       0.19
+  sf_ttwj_sig_err       0.39
   sf_ee                 1.00
-  sf_ee_err             0.16
+  sf_ee_err             0.11
   sf_mm                 1.00
-  sf_mm_err             0.34
+  sf_mm_err             0.20
