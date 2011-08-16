@@ -29,7 +29,8 @@
       rfitNoSusy.reinitialize() ;
       rfitNoSusy.setAndFixSusySig(0.) ;
       rfitNoSusy.doFit() ;
-      rfitNoSusy.profileZnnSig(low,high,1,"an-11-257-v3-files/output-files/znnSigProf-unblind-NoSusy-ge2b-tight-sel.png", 10. ) ;
+   // rfitNoSusy.profileZnnSig(low,high,1,"an-11-257-v3-files/output-files/znnSigProf-unblind-NoSusy-ge2b-tight-sel.png", 10. ) ;
+      rfitNoSusy.profileZnnSig(low,high,0 ) ;
 
 
 
@@ -53,7 +54,8 @@
       rfitSusyFloat.profileqcdSig(low,high,1,"an-11-257-v3-files/output-files/qcdSigProf-unblind-susyFloat-lm9-ge2b-tight-sel.png", 5. ) ;
       rfitSusyFloat.reinitialize() ;
       rfitSusyFloat.doFit() ;
-      rfitSusyFloat.profileZnnSig(low,high,1,"an-11-257-v3-files/output-files/znnSigProf-unblind-susyFloat-lm9-ge2b-tight-sel.png", 10. ) ;
+   // rfitSusyFloat.profileZnnSig(low,high,1,"an-11-257-v3-files/output-files/znnSigProf-unblind-susyFloat-lm9-ge2b-tight-sel.png", 10. ) ;
+      rfitSusyFloat.profileZnnSig(low,high,0 ) ;
 
 
       rfitSusyFloat.reinitialize() ;
@@ -96,7 +98,8 @@
       rfitSusyFix.reinitialize() ;
       rfitSusyFix.setAndFixSusySigToPredictedValue() ;
       rfitSusyFix.doFit() ;
-      rfitSusyFix.profileZnnSig(low,high,1,"an-11-257-v3-files/output-files/znnSigProf-unblind-susyFixed-lm9-ge2b-tight-sel.png", 10. ) ;
+   // rfitSusyFix.profileZnnSig(low,high,1,"an-11-257-v3-files/output-files/znnSigProf-unblind-susyFixed-lm9-ge2b-tight-sel.png", 10. ) ;
+      rfitSusyFix.profileZnnSig(low,high,0 ) ;
 
 
 
