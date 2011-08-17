@@ -70,6 +70,10 @@
 
        void genToyExperiment() ;
 
+       void saveDataObservableVals() ;
+       void setObservablesToDataVals() ;
+
+
        double doToyStudy( int nToys=1000, bool isBgonlyStudy=true, double data_q = 0. ) ;
        double doToyStudyNoSusyInFit( int nToys=1000, const char* trueValsInputFile="" ) ;
 
@@ -316,6 +320,40 @@
 
 
 
+       //=========== Mean values and sigmas for nuisance parameters (things with Gaussian PDFs in likelihood).
+
+       double np_m_Eff_sf_m ;
+       double np_m_sf_mc ;
+       double np_m_sf_qcd_sb ;
+       double np_m_sf_qcd_sig ;
+       double np_m_sf_ttwj_sig ;
+       double np_m_sf_ee ;
+       double np_m_sf_mm ;
+       double np_m_acc_ee ;
+       double np_m_acc_mm ;
+       double np_m_eff_ee ;
+       double np_m_eff_mm ;
+       double np_m_fsig_ee ;
+       double np_m_fsig_mm ;
+       double np_m_knn_sig ;
+       double np_m_knn_sb ;
+
+
+       double np_s_Eff_sf_m ;
+       double np_s_sf_mc ;
+       double np_s_sf_qcd_sb ;
+       double np_s_sf_qcd_sig ;
+       double np_s_sf_ttwj_sig ;
+       double np_s_sf_ee ;
+       double np_s_sf_mm ;
+       double np_s_acc_ee ;
+       double np_s_acc_mm ;
+       double np_s_eff_ee ;
+       double np_s_eff_mm ;
+       double np_s_fsig_ee ;
+       double np_s_fsig_mm ;
+       double np_s_knn_sig ;
+       double np_s_knn_sb ;
 
 
        //=========== PDFs for the likelihood ============================================================
@@ -329,6 +367,7 @@
        RooPoisson*  pdf_Nlsb_0b     ;
        RooPoisson*  pdf_Nlsb_0b_ldp ;
 
+       RooGaussian* pdf_Eff_sf_m      ;
        RooGaussian* pdf_sf_mc ;
        RooGaussian* pdf_sf_qcd_sb ;
        RooGaussian* pdf_sf_qcd_sig ;
@@ -343,7 +382,6 @@
        RooGaussian* pdf_eff_mm      ;
        RooGaussian* pdf_fsig_ee      ;
        RooGaussian* pdf_fsig_mm      ;
-       RooGaussian* pdf_Eff_sf_m      ;
 
        //-- Znn model 1
        RooPoisson*  pdf_Nsig_ee     ;
@@ -429,6 +467,27 @@
 
 
        TRandom2* trandom_cls ;
+
+
+
+       double dataval_Nsig ;
+       double dataval_Nsb  ;
+       double dataval_Nsig_sl ;
+       double dataval_Nsb_sl  ;
+       double dataval_Nsig_ldp ;
+       double dataval_Nsb_ldp  ;
+
+       double dataval_Nlsb_0b ;
+       double dataval_Nlsb_0b_ldp ;
+
+       double dataval_Nsig_ee ;
+       double dataval_Nsb_ee ;
+       double dataval_Nsig_mm ;
+       double dataval_Nsb_mm ;
+
+       double dataval_Nsigsb_ee ;
+       double dataval_Nsigsb_mm ;
+
 
    } ;
 

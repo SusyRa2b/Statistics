@@ -29,6 +29,7 @@
 
 #include "RooArgSet.h"
 #include "RooConstVar.h"
+#include "RooTrace.h"
 
 #include "RooStats/ProfileLikelihoodCalculator.h"
 #include "RooStats/LikelihoodInterval.h"
@@ -2260,59 +2261,89 @@
       }
 
 
+      np_m_sf_mc = sf_mc ;
+      np_s_sf_mc = sf_mc_err ;
       pdf_sf_mc    = new RooGaussian( "pdf_sf_mc" , "Gaussian pdf for MC scale factor",
-                                       *rv_sf_mc , RooConst( sf_mc ), RooConst( sf_mc_err ) ) ;
+                                       *rv_sf_mc , RooConst( np_m_sf_mc ), RooConst( np_s_sf_mc ) ) ;
 
+      np_m_sf_qcd_sb = sf_qcd_sb ;
+      np_s_sf_qcd_sb = sf_qcd_sb_err ;
       pdf_sf_qcd_sb    = new RooGaussian( "pdf_sf_qcd_sb" , "Gaussian pdf for QCD pass/fail ratio SB scale factor",
-                                       *rv_sf_qcd_sb , RooConst( sf_qcd_sb ), RooConst( sf_qcd_sb_err ) ) ;
+                                       *rv_sf_qcd_sb , RooConst( np_m_sf_qcd_sb ), RooConst( np_s_sf_qcd_sb ) ) ;
 
+      np_m_sf_qcd_sig = sf_qcd_sig ;
+      np_s_sf_qcd_sig = sf_qcd_sig_err ;
       pdf_sf_qcd_sig    = new RooGaussian( "pdf_sf_qcd_sig" , "Gaussian pdf for QCD pass/fail ratio SIG scale factor",
-                                       *rv_sf_qcd_sig , RooConst( sf_qcd_sig ), RooConst( sf_qcd_sig_err ) ) ;
+                                       *rv_sf_qcd_sig , RooConst( np_m_sf_qcd_sig ), RooConst( np_s_sf_qcd_sig ) ) ;
 
+      np_m_sf_ttwj_sig = sf_ttwj_sig ;
+      np_s_sf_ttwj_sig = sf_ttwj_sig_err ;
       pdf_sf_ttwj_sig    = new RooGaussian( "pdf_sf_ttwj_sig" , "Gaussian pdf for ttwj SIG/SB scale factor",
-                                       *rv_sf_ttwj_sig , RooConst( sf_ttwj_sig ), RooConst( sf_ttwj_sig_err ) ) ;
+                                       *rv_sf_ttwj_sig , RooConst( np_m_sf_ttwj_sig ), RooConst( np_s_sf_ttwj_sig ) ) ;
 
 
 
 
+      np_m_acc_ee = acc_ee_mean ;
+      np_s_acc_ee = acc_ee_err ;
       pdf_acc_ee   = new RooGaussian( "pdf_acc_ee" , "Gaussian pdf for Z to ee acceptance",
-                                          *rv_acc_ee , RooConst( acc_ee_mean ) , RooConst( acc_ee_err ) ) ;
+                                          *rv_acc_ee , RooConst( np_m_acc_ee ) , RooConst( np_s_acc_ee ) ) ;
 
+      np_m_acc_mm = acc_mm_mean ;
+      np_s_acc_mm = acc_mm_err ;
       pdf_acc_mm   = new RooGaussian( "pdf_acc_mm" , "Gaussian pdf for Z to mm acceptance",
-                                          *rv_acc_mm , RooConst( acc_mm_mean ) , RooConst( acc_mm_err ) ) ;
+                                          *rv_acc_mm , RooConst( np_m_acc_mm ) , RooConst( np_s_acc_mm ) ) ;
 
+      np_m_eff_ee = eff_ee_mean ;
+      np_s_eff_ee = eff_ee_err ;
       pdf_eff_ee   = new RooGaussian( "pdf_eff_ee" , "Gaussian pdf for Z to ee efficiency",
-                                          *rv_eff_ee , RooConst( eff_ee_mean ) , RooConst( eff_ee_err ) ) ;
+                                          *rv_eff_ee , RooConst( np_m_eff_ee ) , RooConst( np_s_eff_ee ) ) ;
 
+      np_m_eff_mm = eff_mm_mean ;
+      np_s_eff_mm = eff_mm_err ;
       pdf_eff_mm   = new RooGaussian( "pdf_eff_mm" , "Gaussian pdf for Z to mm efficiency",
-                                          *rv_eff_mm , RooConst( eff_mm_mean ) , RooConst( eff_mm_err ) ) ;
+                                          *rv_eff_mm , RooConst( np_m_eff_mm ) , RooConst( np_s_eff_mm ) ) ;
 
+      np_m_fsig_ee = fsig_ee_mean ;
+      np_s_fsig_ee = fsig_ee_err ;
       pdf_fsig_ee   = new RooGaussian( "pdf_fsig_ee" , "Gaussian pdf for Z to ee purity",
-                                          *rv_fsig_ee , RooConst( fsig_ee_mean ) , RooConst( fsig_ee_err ) ) ;
+                                          *rv_fsig_ee , RooConst( np_m_fsig_ee ) , RooConst( np_s_fsig_ee ) ) ;
 
+      np_m_fsig_mm = fsig_mm_mean ;
+      np_s_fsig_mm = fsig_mm_err ;
       pdf_fsig_mm   = new RooGaussian( "pdf_fsig_mm" , "Gaussian pdf for Z to mm purity",
-                                          *rv_fsig_mm , RooConst( fsig_mm_mean ) , RooConst( fsig_mm_err ) ) ;
+                                          *rv_fsig_mm , RooConst( np_m_fsig_mm ) , RooConst( np_s_fsig_mm ) ) ;
 
+      np_m_sf_ee = sf_ee ;
+      np_s_sf_ee = sf_ee_err ;
       pdf_sf_ee    = new RooGaussian( "pdf_sf_ee" , "Gaussian pdf for Z to ee scale factor",
-                                       *rv_sf_ee , RooConst( sf_ee ), RooConst( sf_ee_err ) ) ;
+                                       *rv_sf_ee , RooConst( np_m_sf_ee ), RooConst( np_s_sf_ee ) ) ;
 
+      np_m_sf_mm = sf_mm ;
+      np_s_sf_mm = sf_mm_err ;
       pdf_sf_mm    = new RooGaussian( "pdf_sf_mm" , "Gaussian pdf for Z to mm scale factor",
-                                       *rv_sf_mm , RooConst( sf_mm ), RooConst( sf_mm_err ) ) ;
+                                       *rv_sf_mm , RooConst( np_m_sf_mm ), RooConst( np_s_sf_mm ) ) ;
 
 
 
       if ( znnModel == 2 ) {
 
+         np_m_knn_sig = knn_sig_mean ;
+         np_s_knn_sig = knn_sig_err ;
          pdf_knn_sig = new RooGaussian( "pdf_knn_sig", "Gaussian pdf for Z to nunu loose to tight signal scale factor",
-                                          *rv_knn_sig , RooConst( knn_sig_mean ) , RooConst( knn_sig_err ) ) ;
+                                          *rv_knn_sig , RooConst( np_m_knn_sig ) , RooConst( np_s_knn_sig ) ) ;
 
+         np_m_knn_sb = knn_sb_mean ;
+         np_s_knn_sb = knn_sb_err ;
          pdf_knn_sb = new RooGaussian( "pdf_knn_sb", "Gaussian pdf for Z to nunu loose to tight SB scale factor",
                                           *rv_knn_sb , RooConst( knn_sb_mean ) , RooConst( knn_sb_err ) ) ;
 
       }
 
+      np_m_Eff_sf_m = 1.00 ;
+      np_s_Eff_sf_m = 0.10 ;
       pdf_Eff_sf_m     = new RooGaussian( "pdf_Eff_sf_m", "Master Gaussian pdf for Efficiency scale factors",
-                                          *rv_eff_sf_m, RooConst( 1.0 ) , RooConst( 0.10 ) ) ;
+                                          *rv_eff_sf_m, RooConst( np_m_Eff_sf_m ) , RooConst( np_s_Eff_sf_m ) ) ;
 
 
 
@@ -4655,7 +4686,7 @@
 
     void ra2bRoostatsClass4::saveToymeanSnapshot( ) {
 
-       printf("\n\n Saving BG-only model predictions for observables.\n\n\n" ) ;
+       printf("\n\n Saving model predictions for observables.\n\n\n" ) ;
 
        toymean_n_sig        = rv_n_sig        ->getVal() ;
        toymean_n_sb         = rv_n_sb         ->getVal() ;
@@ -4695,7 +4726,54 @@
        }
        printf( "\n\n\n") ;
 
-    }
+    } // saveToymeanSnapshot
+
+  //===================================================================
+
+
+    void ra2bRoostatsClass4::saveDataObservableVals( ) {
+
+       printf("\n\n Saving data values for observables.\n\n\n" ) ;
+
+       dataval_Nsig        = rv_Nsig        ->getVal() ;
+       dataval_Nsb         = rv_Nsb         ->getVal() ;
+       dataval_Nsig_sl     = rv_Nsig_sl     ->getVal() ;
+       dataval_Nsb_sl      = rv_Nsb_sl      ->getVal() ;
+       dataval_Nsig_ldp    = rv_Nsig_ldp    ->getVal() ;
+       dataval_Nsb_ldp     = rv_Nsb_ldp     ->getVal() ;
+       dataval_Nlsb_0b     = rv_Nlsb_0b     ->getVal() ;
+       dataval_Nlsb_0b_ldp = rv_Nlsb_0b_ldp ->getVal() ;
+
+       if ( znnModel == 1 ) {
+          dataval_Nsig_ee = rv_Nsig_ee ->getVal() ;
+          dataval_Nsb_ee  = rv_Nsb_ee  ->getVal() ;
+          dataval_Nsig_mm = rv_Nsig_mm ->getVal() ;
+          dataval_Nsb_mm  = rv_Nsb_mm  ->getVal() ;
+       } else if ( znnModel == 2 ) {
+          dataval_Nsigsb_ee = rv_Nsigsb_ee ->getVal() ;
+          dataval_Nsigsb_mm = rv_Nsigsb_mm ->getVal() ;
+       }
+
+       printf( " dataval_Nsig        %8.2f\n", dataval_Nsig        ) ;
+       printf( " dataval_Nsb         %8.2f\n", dataval_Nsb         ) ;
+       printf( " dataval_Nsig_sl     %8.2f\n", dataval_Nsig_sl     ) ;
+       printf( " dataval_Nsb_sl      %8.2f\n", dataval_Nsb_sl      ) ;
+       printf( " dataval_Nsig_ldp    %8.2f\n", dataval_Nsig_ldp    ) ;
+       printf( " dataval_Nsb_ldp     %8.2f\n", dataval_Nsb_ldp     ) ;
+       printf( " dataval_Nlsb_0b     %8.2f\n", dataval_Nlsb_0b     ) ;
+       printf( " dataval_Nlsb_0b_ldp %8.2f\n", dataval_Nlsb_0b_ldp ) ;
+       if ( znnModel == 1 ) {
+          printf( " dataval_Nsig_ee        %8.2f\n", dataval_Nsig_ee        ) ;
+          printf( " dataval_Nsb_ee         %8.2f\n", dataval_Nsb_ee         ) ;
+          printf( " dataval_Nsig_mm        %8.2f\n", dataval_Nsig_mm        ) ;
+          printf( " dataval_Nsb_mm         %8.2f\n", dataval_Nsb_mm         ) ;
+       } else if ( znnModel == 2 ) {
+          printf( " dataval_Nsigsb_ee        %8.2f\n", dataval_Nsigsb_ee        ) ;
+          printf( " dataval_Nsigsb_mm        %8.2f\n", dataval_Nsigsb_mm        ) ;
+       }
+       printf( "\n\n\n") ;
+
+    } // saveDataObservableVals
 
   //===================================================================
 
@@ -4726,12 +4804,41 @@
 
   //===================================================================
 
+    void ra2bRoostatsClass4::setObservablesToDataVals() {
+
+       rv_Nsig        -> setVal(  dataval_Nsig         ) ;
+       rv_Nsb         -> setVal(  dataval_Nsb          ) ;
+       rv_Nsig_ldp    -> setVal(  dataval_Nsig_ldp     ) ;
+       rv_Nsb_ldp     -> setVal(  dataval_Nsb_ldp      ) ;
+       rv_Nsig_sl     -> setVal(  dataval_Nsig_sl      ) ;
+       rv_Nsb_sl      -> setVal(  dataval_Nsb_sl       ) ;
+       rv_Nlsb_0b     -> setVal(  dataval_Nlsb_0b      ) ;
+       rv_Nlsb_0b_ldp -> setVal(  dataval_Nlsb_0b_ldp  ) ;
+
+       if ( znnModel == 1 ) {
+          rv_Nsig_ee     -> setVal(  dataval_Nsig_ee  ) ;
+          rv_Nsb_ee      -> setVal(  dataval_Nsb_ee   ) ;
+          rv_Nsig_mm     -> setVal(  dataval_Nsig_mm  ) ;
+          rv_Nsb_mm      -> setVal(  dataval_Nsb_mm   ) ;
+       } else if ( znnModel == 2 ) {
+          rv_Nsigsb_ee   -> setVal(  dataval_Nsigsb_ee   ) ;
+          rv_Nsigsb_mm   -> setVal(  dataval_Nsigsb_mm   ) ;
+       }
+
+
+    } // setObservablesToDataVals
+
+  //===================================================================
+
 
     //-- returns p-value of data for this hypothesis, given the data-fit value of the test statistic q.
 
     double ra2bRoostatsClass4::doToyStudy( int nToys, bool isBgonlyStudy, double data_q ) {
 
        double retVal = 1.0 ;
+
+       saveDataObservableVals() ;
+
 
        int n_sig         ;
        int n_sb          ;
@@ -4748,6 +4855,22 @@
        int n_sb_mm       ;
        int n_sigsb_ee      ;
        int n_sigsb_mm      ;
+
+       double tm_sig         ;
+       double tm_sb          ;
+       double tm_sig_ldp     ;
+       double tm_sb_ldp      ;
+       double tm_sig_sl      ;
+       double tm_sb_sl       ;
+       double tm_lsb_0b      ;
+       double tm_lsb_0b_ldp  ;
+
+       double tm_sig_ee      ;
+       double tm_sb_ee       ;
+       double tm_sig_mm      ;
+       double tm_sb_mm       ;
+       double tm_sigsb_ee      ;
+       double tm_sigsb_mm      ;
 
        double maxLogL ;
        double sfixedLogL ;
@@ -4790,14 +4913,235 @@
           tt->Branch( "n_sigsb_mm"        , &n_sigsb_mm           , "n_sigsb_mm/I"            ) ;
        }
 
+       tt->Branch( "tm_sig"        , &tm_sig           , "tm_sig/D"            ) ;
+       tt->Branch( "tm_sb"         , &tm_sb            , "tm_sb/D"             ) ;
+       tt->Branch( "tm_sig_ldp"    , &tm_sig_ldp       , "tm_sig_ldp/D"        ) ;
+       tt->Branch( "tm_sb_ldp"     , &tm_sb_ldp        , "tm_sb_ldp/D"         ) ;
+       tt->Branch( "tm_sig_sl"     , &tm_sig_sl        , "tm_sig_sl/D"         ) ;
+       tt->Branch( "tm_sb_sl"      , &tm_sb_sl         , "tm_sb_sl/D"          ) ;
+       tt->Branch( "tm_lsb_0b"     , &tm_lsb_0b        , "tm_lsb_0b/D"         ) ;
+       tt->Branch( "tm_lsb_0b_ldp" , &tm_lsb_0b_ldp    , "tm_lsb_0b_ldp/D"     ) ;
+       if ( znnModel==1 ) {
+          tt->Branch( "tm_sig_ee"        , &tm_sig_ee           , "tm_sig_ee/D"            ) ;
+          tt->Branch( "tm_sb_ee"         , &tm_sb_ee            , "tm_sb_ee/D"             ) ;
+          tt->Branch( "tm_sig_mm"        , &tm_sig_mm           , "tm_sig_mm/D"            ) ;
+          tt->Branch( "tm_sb_mm"         , &tm_sb_mm            , "tm_sb_mm/D"             ) ;
+       } else if (znnModel==2) {
+          tt->Branch( "tm_sigsb_ee"        , &tm_sigsb_ee           , "tm_sigsb_ee/D"            ) ;
+          tt->Branch( "tm_sigsb_mm"        , &tm_sigsb_mm           , "tm_sigsb_mm/D"            ) ;
+       }
+
+
+
+       //-- memory management debugging
+       ////// RooTrace::active(kTRUE) ;
 
        int nWorse(0) ;
 
        for ( int ti=0; ti<nToys; ti++ ) {
 
+          RooFitResult* toyFitResult(0x0) ;
+
+          printf("\n\n\n\n\n +++++++++++++++++ Beginning of toy experiment %6d +++++++++++++++++\n\n\n", ti ) ;
+
+        //-- memory management debugging
+          ////// RooTrace::mark() ;
+
+         //-- Steps 1,2) Generate value of mean for each Gaussian PDF (nuisance parameter "measurements").
+         //              Build a new likelihood with these Gaussian PDFs.
+
+          RooGaussian* tgl_pdf_Eff_sf_m = new RooGaussian( "tgl_pdf_Eff_sf_m", "ToyGenL Gaussian pdf for Master efficiency scale factor",
+                                                                *rv_eff_sf_m,
+                                                                RooConst( trandom_cls->Gaus( np_m_Eff_sf_m, np_s_Eff_sf_m ) ),
+                                                                RooConst( np_s_Eff_sf_m ) ) ;
+
+          RooGaussian* tgl_pdf_sf_mc = new RooGaussian( "tgl_pdf_sf_mc", "ToyGenL Gaussian pdf for MC scale factor",
+                                                                *rv_sf_mc,
+                                                                RooConst( trandom_cls->Gaus( np_m_sf_mc, np_s_sf_mc ) ),
+                                                                RooConst( np_s_sf_mc ) ) ;
+
+          RooGaussian* tgl_pdf_sf_qcd_sb = new RooGaussian( "tgl_pdf_sf_qcd_sb", "ToyGenL Gaussian pdf for QCD pass/fail ratio for SB scale factor",
+                                                                *rv_sf_qcd_sb,
+                                                                RooConst( trandom_cls->Gaus( np_m_sf_qcd_sb, np_s_sf_qcd_sb ) ),
+                                                                RooConst( np_s_sf_qcd_sb ) ) ;
+
+          RooGaussian* tgl_pdf_sf_qcd_sig = new RooGaussian( "tgl_pdf_sf_qcd_sig", "ToyGenL Gaussian pdf for QCD pass/fail ratio for SIG scale factor",
+                                                                *rv_sf_qcd_sig,
+                                                                RooConst( trandom_cls->Gaus( np_m_sf_qcd_sig, np_s_sf_qcd_sig ) ),
+                                                                RooConst( np_s_sf_qcd_sig ) ) ;
+
+          RooGaussian* tgl_pdf_sf_ttwj_sig = new RooGaussian( "tgl_pdf_sf_ttwj_sig", "ToyGenL Gaussian pdf for ttwj SIG/SB scale factor",
+                                                                *rv_sf_ttwj_sig,
+                                                                RooConst( trandom_cls->Gaus( np_m_sf_ttwj_sig, np_s_sf_ttwj_sig ) ),
+                                                                RooConst( np_s_sf_ttwj_sig ) ) ;
+
+          RooGaussian* tgl_pdf_sf_ee = new RooGaussian( "tgl_pdf_sf_ee", "ToyGenL Gaussian pdf for Z to ee scale factor",
+                                                                *rv_sf_ee,
+                                                                RooConst( trandom_cls->Gaus( np_m_sf_ee, np_s_sf_ee ) ),
+                                                                RooConst( np_s_sf_ee ) ) ;
+
+          RooGaussian* tgl_pdf_sf_mm = new RooGaussian( "tgl_pdf_sf_mm", "ToyGenL Gaussian pdf for Z to mm scale factor",
+                                                                *rv_sf_mm,
+                                                                RooConst( trandom_cls->Gaus( np_m_sf_mm, np_s_sf_mm ) ),
+                                                                RooConst( np_s_sf_mm ) ) ;
+
+          RooGaussian* tgl_pdf_acc_ee = new RooGaussian( "tgl_pdf_acc_ee", "ToyGenL Gaussian pdf for Z to ee acceptance",
+                                                                *rv_acc_ee,
+                                                                RooConst( trandom_cls->Gaus( np_m_acc_ee, np_s_acc_ee ) ),
+                                                                RooConst( np_s_acc_ee ) ) ;
+
+          RooGaussian* tgl_pdf_acc_mm = new RooGaussian( "tgl_pdf_acc_mm", "ToyGenL Gaussian pdf for Z to mm acceptance",
+                                                                *rv_acc_mm,
+                                                                RooConst( trandom_cls->Gaus( np_m_acc_mm, np_s_acc_mm ) ),
+                                                                RooConst( np_s_acc_mm ) ) ;
+
+          RooGaussian* tgl_pdf_eff_ee = new RooGaussian( "tgl_pdf_eff_ee", "ToyGenL Gaussian pdf for Z to ee efficiency",
+                                                                *rv_eff_ee,
+                                                                RooConst( trandom_cls->Gaus( np_m_eff_ee, np_s_eff_ee ) ),
+                                                                RooConst( np_s_eff_ee ) ) ;
+
+          RooGaussian* tgl_pdf_eff_mm = new RooGaussian( "tgl_pdf_eff_mm", "ToyGenL Gaussian pdf for Z to mm efficiency",
+                                                                *rv_eff_mm,
+                                                                RooConst( trandom_cls->Gaus( np_m_eff_mm, np_s_eff_mm ) ),
+                                                                RooConst( np_s_eff_mm ) ) ;
+
+          RooGaussian* tgl_pdf_fsig_ee = new RooGaussian( "tgl_pdf_fsig_ee", "ToyGenL Gaussian pdf for Z to ee purity",
+                                                                *rv_fsig_ee,
+                                                                RooConst( trandom_cls->Gaus( np_m_fsig_ee, np_s_fsig_ee ) ),
+                                                                RooConst( np_s_fsig_ee ) ) ;
+
+          RooGaussian* tgl_pdf_fsig_mm = new RooGaussian( "tgl_pdf_fsig_mm", "ToyGenL Gaussian pdf for Z to mm purity",
+                                                                *rv_fsig_mm,
+                                                                RooConst( trandom_cls->Gaus( np_m_fsig_mm, np_s_fsig_mm ) ),
+                                                                RooConst( np_s_fsig_mm ) ) ;
+
+          RooGaussian* tgl_pdf_knn_sig(0x0) ;
+          RooGaussian* tgl_pdf_knn_sb(0x0) ;
+
+          if ( znnModel == 2 ) {
+
+             tgl_pdf_knn_sig = new RooGaussian( "tgl_pdf_knn_sig", "ToyGenL Gaussian pdf for Z to nunu loose to tight signal scale factor",
+                                              *rv_knn_sig ,
+                                              RooConst( trandom_cls->Gaus( np_m_knn_sig, np_s_knn_sig ) ) ,
+                                              RooConst( np_s_knn_sig ) ) ;
+
+             tgl_pdf_knn_sb = new RooGaussian( "tgl_pdf_knn_sb", "ToyGenL Gaussian pdf for Z to nunu loose to tight SB scale factor",
+                                              *rv_knn_sb ,
+                                              RooConst( trandom_cls->Gaus( np_m_knn_sb, np_s_knn_sb ) ) ,
+                                              RooConst( knn_sb_err ) ) ;
+
+          }
+
+
+
+         RooArgSet tgl_pdflist ;
+         tgl_pdflist.add( *pdf_Nsig        ) ;
+         tgl_pdflist.add( *pdf_Nsb         ) ;
+         tgl_pdflist.add( *pdf_Nsig_ldp    ) ;
+         tgl_pdflist.add( *pdf_Nsb_ldp     ) ;
+         tgl_pdflist.add( *pdf_Nsig_sl     ) ;
+         tgl_pdflist.add( *pdf_Nsb_sl      ) ;
+         tgl_pdflist.add( *pdf_Nlsb_0b     ) ;
+         tgl_pdflist.add( *pdf_Nlsb_0b_ldp ) ;
+         if ( znnModel == 1 ) {
+            tgl_pdflist.add( *pdf_Nsig_ee     ) ;
+            tgl_pdflist.add( *pdf_Nsb_ee      ) ;
+            tgl_pdflist.add( *pdf_Nsig_mm     ) ;
+            tgl_pdflist.add( *pdf_Nsb_mm      ) ;
+         } else if ( znnModel == 2 ) {
+            tgl_pdflist.add( *pdf_Nsigsb_ee   ) ;
+            tgl_pdflist.add( *pdf_Nsigsb_mm   ) ;
+            tgl_pdflist.add( *tgl_pdf_knn_sig     ) ;
+            tgl_pdflist.add( *tgl_pdf_knn_sb      ) ;
+         }
+         tgl_pdflist.add( *tgl_pdf_sf_mc      ) ;
+         tgl_pdflist.add( *tgl_pdf_sf_qcd_sb      ) ;
+         tgl_pdflist.add( *tgl_pdf_sf_qcd_sig      ) ;
+         tgl_pdflist.add( *tgl_pdf_sf_ttwj_sig      ) ;
+         tgl_pdflist.add( *tgl_pdf_sf_ee      ) ;
+         tgl_pdflist.add( *tgl_pdf_sf_mm      ) ;
+
+         tgl_pdflist.add( *tgl_pdf_acc_ee      ) ;
+         tgl_pdflist.add( *tgl_pdf_acc_mm      ) ;
+         tgl_pdflist.add( *tgl_pdf_eff_ee      ) ;
+         tgl_pdflist.add( *tgl_pdf_eff_mm      ) ;
+         tgl_pdflist.add( *tgl_pdf_fsig_ee      ) ;
+         tgl_pdflist.add( *tgl_pdf_fsig_mm      ) ;
+         tgl_pdflist.add( *tgl_pdf_Eff_sf_m      ) ;
+         RooProdPdf* tgl_likelihood = new RooProdPdf( "tgl_likelihood", "ToyGen ra2b likelihood", tgl_pdflist ) ;
+
+
+
+
+
+
+       //--- Step 3) Fit the actual data with this likelihood function.
+
           reinitialize() ;
 
+          setObservablesToDataVals() ;
+
+          RooArgSet toyGenFitobservedParametersList ;
+          toyGenFitobservedParametersList.add( *rv_Nsig        ) ;
+          toyGenFitobservedParametersList.add( *rv_Nsb         ) ;
+          toyGenFitobservedParametersList.add( *rv_Nsig_sl     ) ;
+          toyGenFitobservedParametersList.add( *rv_Nsb_sl      ) ;
+          toyGenFitobservedParametersList.add( *rv_Nsig_ldp    ) ;
+          toyGenFitobservedParametersList.add( *rv_Nsb_ldp     ) ;
+          toyGenFitobservedParametersList.add( *rv_Nlsb_0b     ) ;
+          toyGenFitobservedParametersList.add( *rv_Nlsb_0b_ldp ) ;
+          if ( znnModel == 1 ) {
+             toyGenFitobservedParametersList.add( *rv_Nsb_ee      ) ;
+             toyGenFitobservedParametersList.add( *rv_Nsig_ee     ) ;
+             toyGenFitobservedParametersList.add( *rv_Nsb_mm      ) ;
+             toyGenFitobservedParametersList.add( *rv_Nsig_mm     ) ;
+          } else if ( znnModel == 2 ) {
+             toyGenFitobservedParametersList.add( *rv_Nsigsb_ee      ) ;
+             toyGenFitobservedParametersList.add( *rv_Nsigsb_mm      ) ;
+          }
+
+
+
+          RooDataSet* toyGenFitdsObserved = new RooDataSet("toyGenFit_ra2b_observed_rds", "ToyGenL RA2b observed data values",
+                                         toyGenFitobservedParametersList ) ;
+          toyGenFitdsObserved->add( toyGenFitobservedParametersList ) ;
+
+
+          if ( isBgonlyStudy ) {
+            //-- fit with susy yield fixed to zero.
+             rv_mu_susy_sig -> setVal( 0. ) ;
+          } else {
+            //-- fit with susy yield fixed to predicted value.
+             rv_mu_susy_sig -> setVal( rv_mu_susymc_sig->getVal() ) ;
+          }
+          rv_mu_susy_sig->setConstant( kTRUE ) ;
+
+          printf("\n\n") ;
+          printf("  Fitting with these values for the observables.\n") ;
+          toyGenFitdsObserved->printMultiline(cout, 1, kTRUE, "") ;
+          printf("\n\n") ;
+       // toyFitResult = tgl_likelihood->fitTo(*toyGenFitdsObserved, Save(true));
+          toyFitResult = tgl_likelihood->fitTo(*toyGenFitdsObserved, Save(true), PrintLevel(-1));
+          maxLogL = toyFitResult->minNll() ;
+          maxCovQual = toyFitResult->covQual() ;
+          if ( isBgonlyStudy ) {
+             printf("\n  Fit result with susy fixed to zero for toy %d : %8.3f \n\n", ti, maxLogL ) ;
+          } else {
+             printf("\n  Fit result with susy fixed to predicted value for toy %d : %8.3f \n\n", ti, maxLogL ) ;
+          }
+          parameterSnapshot() ;
+          delete toyFitResult ;
+
+
+
+       //--- Step 4) Use the results of this fit to generate a toy dataset.
+
+          saveToymeanSnapshot() ;
           genToyExperiment() ;
+
+
+       //--- Step 5) Do the analysis (i.e. evaluate the test statistic) for this toy dataset using
+       //            the nominal likelihood (NOT the one for the fit above).
 
           RooArgSet toyFitobservedParametersList ;
           toyFitobservedParametersList.add( *rv_Nsig        ) ;
@@ -4832,25 +5176,33 @@
           printf("  Fitting with these values for the observables.\n") ;
           toyFitdsObserved->printMultiline(cout, 1, kTRUE, "") ;
           printf("\n\n") ;
-       // fitResult = likelihood->fitTo(*toyFitdsObserved, Save(true));
-          fitResult = likelihood->fitTo(*toyFitdsObserved, Save(true), PrintLevel(-1));
-          maxLogL = fitResult->minNll() ;
-          maxCovQual = fitResult->covQual() ;
+       // toyFitResult = likelihood->fitTo(*toyFitdsObserved, Save(true));
+          toyFitResult = likelihood->fitTo(*toyFitdsObserved, Save(true), PrintLevel(-1));
+          maxLogL = toyFitResult->minNll() ;
+          maxCovQual = toyFitResult->covQual() ;
           printf("\n  Fit result with susy floating for toy %d : %8.3f \n\n", ti, maxLogL ) ;
           parameterSnapshot() ;
+          delete toyFitResult ;
 
 
          //-- fit with susy yield fixed to susy model prediction.
           rv_mu_susy_sig -> setVal( rv_mu_susymc_sig->getVal() ) ;
           rv_mu_susy_sig->setConstant( kTRUE ) ;
           printf("\n  Fitting with susy SIG yield fixed to %8.2f\n\n", rv_mu_susy_sig->getVal() ) ;
-       // fitResult = likelihood->fitTo(*toyFitdsObserved, Save(true));
-          fitResult = likelihood->fitTo(*toyFitdsObserved, Save(true), PrintLevel(-1));
-          sfixedLogL = fitResult->minNll() ;
-          sfixedCovQual = fitResult->covQual() ;
+       // toyFitResult = likelihood->fitTo(*toyFitdsObserved, Save(true));
+          toyFitResult = likelihood->fitTo(*toyFitdsObserved, Save(true), PrintLevel(-1));
+          sfixedLogL = toyFitResult->minNll() ;
+          sfixedCovQual = toyFitResult->covQual() ;
           testStat = 2.*(sfixedLogL-maxLogL) ;
           printf("\n  Fit result with susy fixed to prediction for toy %d : %8.3f, %8.3f \n\n", ti, sfixedLogL, testStat ) ;
           parameterSnapshot() ;
+          delete toyFitResult ;
+
+
+
+
+
+
 
 
          //--- save this experiment in the TTree.
@@ -4874,6 +5226,24 @@
              n_sig_ee = rv_Nsigsb_mm ->getVal() ;
           }
 
+          tm_sig        = toymean_n_sig ;
+          tm_sb         = toymean_n_sb ;
+          tm_sig_sl     = toymean_n_sig_sl ;
+          tm_sb_sl      = toymean_n_sb_sl ;
+          tm_sig_ldp    = toymean_n_sig_ldp ;
+          tm_sb_ldp     = toymean_n_sb_ldp ;
+          tm_lsb_0b     = toymean_n_lsb_0b ;
+          tm_lsb_0b_ldp = toymean_n_lsb_0b_ldp ;
+          if ( znnModel == 1 ) {
+             tm_sig_ee   = toymean_n_sig_ee ;
+             tm_sb_ee    = toymean_n_sb_ee ;
+             tm_sig_mm   = toymean_n_sig_mm ;
+             tm_sb_mm    = toymean_n_sb_mm ;
+          } else if ( znnModel == 2 ) {
+             tm_sigsb_ee = toymean_n_sigsb_ee ;
+             tm_sigsb_mm = toymean_n_sigsb_mm ;
+          }
+
           //-- check for Nans
           if ( TMath::IsNaN( testStat ) != 0 ) { testStat = -1. ; }
           if ( TMath::IsNaN( maxLogL ) != 0 ) { maxLogL = -1. ; }
@@ -4884,6 +5254,43 @@
           if ( testStat >= data_q ) { nWorse++ ; }
 
           printf("\n\n ===== Value of test statistic for toy %5d is %9.3f\n\n", ti, testStat) ;
+
+
+          //-- clean up. (This doesn't seem to help with the memory leak...)
+
+          printf("\n\n  Before deletes.\n\n") ;
+          ////// RooTrace::dump(cout,kTRUE) ;
+
+
+          printf(" Cleaning up...\n") ;
+          tgl_pdflist.removeAll() ;
+          toyGenFitobservedParametersList.removeAll() ;
+          toyFitobservedParametersList.removeAll() ;
+          delete tgl_likelihood ;
+          delete toyGenFitdsObserved ;
+          delete toyFitdsObserved ;
+          delete tgl_pdf_Eff_sf_m ;
+          delete tgl_pdf_sf_mc ;
+          delete tgl_pdf_sf_qcd_sb ;
+          delete tgl_pdf_sf_qcd_sig ;
+          delete tgl_pdf_sf_ttwj_sig ;
+          delete tgl_pdf_sf_ee ;
+          delete tgl_pdf_sf_mm ;
+          delete tgl_pdf_acc_ee ;
+          delete tgl_pdf_acc_mm ;
+          delete tgl_pdf_eff_ee ;
+          delete tgl_pdf_eff_mm ;
+          delete tgl_pdf_fsig_ee ;
+          delete tgl_pdf_fsig_mm ;
+          if ( znnModel == 2 ) {
+             delete tgl_pdf_knn_sig ;
+             delete tgl_pdf_knn_sb ;
+          }
+          printf(" Done cleaning up.\n") ;
+
+        //--- memory management debugging
+          printf("\n\n  After deletes.\n\n") ;
+          ////// RooTrace::dump(cout,kTRUE) ;
 
        } // ti.
 
