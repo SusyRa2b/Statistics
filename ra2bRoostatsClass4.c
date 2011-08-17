@@ -4883,6 +4883,8 @@
 
           if ( testStat >= data_q ) { nWorse++ ; }
 
+          printf("\n\n ===== Value of test statistic for toy %5d is %9.3f\n\n", ti, testStat) ;
+
        } // ti.
 
 
