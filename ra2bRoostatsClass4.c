@@ -4888,48 +4888,50 @@
           tt = new TTree("tt_cls_splusb", "CLs SIG+BG toy study") ;
        }
 
-       tt->Branch( "maxLogL"        , &maxLogL           , "maxLogL/D"            ) ;
-       tt->Branch( "sfixedLogL"        , &sfixedLogL           , "sfixedLogL/D"            ) ;
+   //-- To save disk quota space, need to strip the ntuple WAY down.
+
+  ///  tt->Branch( "maxLogL"        , &maxLogL           , "maxLogL/D"            ) ;
+  ///  tt->Branch( "sfixedLogL"        , &sfixedLogL           , "sfixedLogL/D"            ) ;
        tt->Branch( "testStat"        , &testStat           , "testStat/D"            ) ;
 
-       tt->Branch( "maxCovQual"        , &maxCovQual           , "maxCovQual/I"            ) ;
-       tt->Branch( "sfixedCovQual"        , &sfixedCovQual           , "sfixedCovQual/I"            ) ;
+  ///  tt->Branch( "maxCovQual"        , &maxCovQual           , "maxCovQual/I"            ) ;
+  ///  tt->Branch( "sfixedCovQual"        , &sfixedCovQual           , "sfixedCovQual/I"            ) ;
 
-       tt->Branch( "n_sig"        , &n_sig           , "n_sig/I"            ) ;
-       tt->Branch( "n_sb"         , &n_sb            , "n_sb/I"             ) ;
-       tt->Branch( "n_sig_ldp"    , &n_sig_ldp       , "n_sig_ldp/I"        ) ;
-       tt->Branch( "n_sb_ldp"     , &n_sb_ldp        , "n_sb_ldp/I"         ) ;
-       tt->Branch( "n_sig_sl"     , &n_sig_sl        , "n_sig_sl/I"         ) ;
-       tt->Branch( "n_sb_sl"      , &n_sb_sl         , "n_sb_sl/I"          ) ;
-       tt->Branch( "n_lsb_0b"     , &n_lsb_0b        , "n_lsb_0b/I"         ) ;
-       tt->Branch( "n_lsb_0b_ldp" , &n_lsb_0b_ldp    , "n_lsb_0b_ldp/I"     ) ;
-       if ( znnModel==1 ) {
-          tt->Branch( "n_sig_ee"        , &n_sig_ee           , "n_sig_ee/I"            ) ;
-          tt->Branch( "n_sb_ee"         , &n_sb_ee            , "n_sb_ee/I"             ) ;
-          tt->Branch( "n_sig_mm"        , &n_sig_mm           , "n_sig_mm/I"            ) ;
-          tt->Branch( "n_sb_mm"         , &n_sb_mm            , "n_sb_mm/I"             ) ;
-       } else if (znnModel==2) {
-          tt->Branch( "n_sigsb_ee"        , &n_sigsb_ee           , "n_sigsb_ee/I"            ) ;
-          tt->Branch( "n_sigsb_mm"        , &n_sigsb_mm           , "n_sigsb_mm/I"            ) ;
-       }
+  ///  tt->Branch( "n_sig"        , &n_sig           , "n_sig/I"            ) ;
+  ///  tt->Branch( "n_sb"         , &n_sb            , "n_sb/I"             ) ;
+  ///  tt->Branch( "n_sig_ldp"    , &n_sig_ldp       , "n_sig_ldp/I"        ) ;
+  ///  tt->Branch( "n_sb_ldp"     , &n_sb_ldp        , "n_sb_ldp/I"         ) ;
+  ///  tt->Branch( "n_sig_sl"     , &n_sig_sl        , "n_sig_sl/I"         ) ;
+  ///  tt->Branch( "n_sb_sl"      , &n_sb_sl         , "n_sb_sl/I"          ) ;
+  ///  tt->Branch( "n_lsb_0b"     , &n_lsb_0b        , "n_lsb_0b/I"         ) ;
+  ///  tt->Branch( "n_lsb_0b_ldp" , &n_lsb_0b_ldp    , "n_lsb_0b_ldp/I"     ) ;
+  ///  if ( znnModel==1 ) {
+  ///     tt->Branch( "n_sig_ee"        , &n_sig_ee           , "n_sig_ee/I"            ) ;
+  ///     tt->Branch( "n_sb_ee"         , &n_sb_ee            , "n_sb_ee/I"             ) ;
+  ///     tt->Branch( "n_sig_mm"        , &n_sig_mm           , "n_sig_mm/I"            ) ;
+  ///     tt->Branch( "n_sb_mm"         , &n_sb_mm            , "n_sb_mm/I"             ) ;
+  ///  } else if (znnModel==2) {
+  ///     tt->Branch( "n_sigsb_ee"        , &n_sigsb_ee           , "n_sigsb_ee/I"            ) ;
+  ///     tt->Branch( "n_sigsb_mm"        , &n_sigsb_mm           , "n_sigsb_mm/I"            ) ;
+  ///  }
 
-       tt->Branch( "tm_sig"        , &tm_sig           , "tm_sig/D"            ) ;
-       tt->Branch( "tm_sb"         , &tm_sb            , "tm_sb/D"             ) ;
-       tt->Branch( "tm_sig_ldp"    , &tm_sig_ldp       , "tm_sig_ldp/D"        ) ;
-       tt->Branch( "tm_sb_ldp"     , &tm_sb_ldp        , "tm_sb_ldp/D"         ) ;
-       tt->Branch( "tm_sig_sl"     , &tm_sig_sl        , "tm_sig_sl/D"         ) ;
-       tt->Branch( "tm_sb_sl"      , &tm_sb_sl         , "tm_sb_sl/D"          ) ;
-       tt->Branch( "tm_lsb_0b"     , &tm_lsb_0b        , "tm_lsb_0b/D"         ) ;
-       tt->Branch( "tm_lsb_0b_ldp" , &tm_lsb_0b_ldp    , "tm_lsb_0b_ldp/D"     ) ;
-       if ( znnModel==1 ) {
-          tt->Branch( "tm_sig_ee"        , &tm_sig_ee           , "tm_sig_ee/D"            ) ;
-          tt->Branch( "tm_sb_ee"         , &tm_sb_ee            , "tm_sb_ee/D"             ) ;
-          tt->Branch( "tm_sig_mm"        , &tm_sig_mm           , "tm_sig_mm/D"            ) ;
-          tt->Branch( "tm_sb_mm"         , &tm_sb_mm            , "tm_sb_mm/D"             ) ;
-       } else if (znnModel==2) {
-          tt->Branch( "tm_sigsb_ee"        , &tm_sigsb_ee           , "tm_sigsb_ee/D"            ) ;
-          tt->Branch( "tm_sigsb_mm"        , &tm_sigsb_mm           , "tm_sigsb_mm/D"            ) ;
-       }
+  ///  tt->Branch( "tm_sig"        , &tm_sig           , "tm_sig/D"            ) ;
+  ///  tt->Branch( "tm_sb"         , &tm_sb            , "tm_sb/D"             ) ;
+  ///  tt->Branch( "tm_sig_ldp"    , &tm_sig_ldp       , "tm_sig_ldp/D"        ) ;
+  ///  tt->Branch( "tm_sb_ldp"     , &tm_sb_ldp        , "tm_sb_ldp/D"         ) ;
+  ///  tt->Branch( "tm_sig_sl"     , &tm_sig_sl        , "tm_sig_sl/D"         ) ;
+  ///  tt->Branch( "tm_sb_sl"      , &tm_sb_sl         , "tm_sb_sl/D"          ) ;
+  ///  tt->Branch( "tm_lsb_0b"     , &tm_lsb_0b        , "tm_lsb_0b/D"         ) ;
+  ///  tt->Branch( "tm_lsb_0b_ldp" , &tm_lsb_0b_ldp    , "tm_lsb_0b_ldp/D"     ) ;
+  ///  if ( znnModel==1 ) {
+  ///     tt->Branch( "tm_sig_ee"        , &tm_sig_ee           , "tm_sig_ee/D"            ) ;
+  ///     tt->Branch( "tm_sb_ee"         , &tm_sb_ee            , "tm_sb_ee/D"             ) ;
+  ///     tt->Branch( "tm_sig_mm"        , &tm_sig_mm           , "tm_sig_mm/D"            ) ;
+  ///     tt->Branch( "tm_sb_mm"         , &tm_sb_mm            , "tm_sb_mm/D"             ) ;
+  ///  } else if (znnModel==2) {
+  ///     tt->Branch( "tm_sigsb_ee"        , &tm_sigsb_ee           , "tm_sigsb_ee/D"            ) ;
+  ///     tt->Branch( "tm_sigsb_mm"        , &tm_sigsb_mm           , "tm_sigsb_mm/D"            ) ;
+  ///  }
 
 
 
@@ -5222,8 +5224,8 @@
              n_sig_mm = rv_Nsig_mm ->getVal() ;
              n_sb_mm  = rv_Nsb_mm  ->getVal() ;
           } else if ( znnModel == 2 ) {
-             n_sig_ee = rv_Nsigsb_ee ->getVal() ;
-             n_sig_ee = rv_Nsigsb_mm ->getVal() ;
+             n_sigsb_ee = rv_Nsigsb_ee ->getVal() ;
+             n_sigsb_mm = rv_Nsigsb_mm ->getVal() ;
           }
 
           tm_sig        = toymean_n_sig ;
@@ -5253,7 +5255,11 @@
 
           if ( testStat >= data_q ) { nWorse++ ; }
 
-          printf("\n\n ===== Value of test statistic for toy %5d is %9.3f\n\n", ti, testStat) ;
+          if ( isBgonlyStudy ) {
+             printf("\n\n ===== Value of test statistic for BG-only  toy %5d is %9.3f\n\n", ti, testStat) ;
+          } else {
+             printf("\n\n ===== Value of test statistic for S-plus-B toy %5d is %9.3f\n\n", ti, testStat) ;
+          }
 
 
           //-- clean up. (This doesn't seem to help with the memory leak...)
