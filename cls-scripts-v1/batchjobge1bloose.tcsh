@@ -139,7 +139,7 @@ endif
 
 
 #---------
-  root -b -q cls-scripts-v1/runclstest_ge1bloose.c\($1,$2\) >& /tmp/owen/clstest-ge1bloose-tb40-$1-$2.log
+  root -b -q cls-scripts-v1/runcls_ge1bloose.c\($1,$2\) >& /tmp/owen/clstest-ge1bloose-tb40-$1-$2.log
 
   echo done with running root.  Log file is
   ls -l /tmp/owen/clstest-ge1bloose-tb40-$1-$2.log
