@@ -3261,16 +3261,24 @@
           hsusyscanEffError_sb_ldp->SetBinContent( m0bin, m12bin, n_sb_ldp_error ) ;
           if ( isT1bbbb ) {
              if(n_sig_raw > 0) {
-               hsusyscanXsecul->SetBinContent( pointM0/25.+1., pointM12/25.+1., susySigHigh/(1143.*(n_sig_raw/10000.)) );
+            //---------
             // hsusyscanXsecul->SetBinContent( pointM0/25.+1., pointM12/25.+1., susySigHigh*10000./n_sig_raw/1143.);
-               hsusyscanEfficiency->SetBinContent( pointM0/25.+1., pointM12/25.+1., n_sig_raw/10000.);
+            //---------
+            // hsusyscanXsecul->SetBinContent( pointM0/25.+1., pointM12/25.+1., susySigHigh/(1143.*(n_sig_raw/10000.)) );
+            // hsusyscanEfficiency->SetBinContent( pointM0/25.+1., pointM12/25.+1., n_sig_raw/10000.);
+            //---------
+               hsusyscanXsecul->SetBinContent( pointM0/25.+1., pointM12/25.+1., susySigHigh/(1143.*((n_sig_raw*n_sig_correction)/10000.)) );
+               hsusyscanEfficiency->SetBinContent( pointM0/25.+1., pointM12/25.+1., (n_sig_raw*n_sig_correction)/10000.);
+            //---------
              }
           }
 
 
           if ( nselWeighted > susySigHigh ) {
-             printf(" Excluded\n") ;
-             hsusyscanExcluded->SetBinContent( m0bin, m12bin, 1. ) ;
+             if ( ! isT1bbbb ) {
+                printf(" Excluded\n") ;
+                hsusyscanExcluded->SetBinContent( m0bin, m12bin, 1. ) ;
+             }
           } else {
              printf("\n") ;
           }

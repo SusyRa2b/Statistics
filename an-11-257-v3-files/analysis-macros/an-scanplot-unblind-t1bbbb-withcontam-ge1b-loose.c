@@ -11,8 +11,8 @@
       rfit.initialize("an-11-257-v3-files/input-files/byhand-data-ge1b-loose.txt") ;
       rfit.doFit() ;
       rfit.parameterSnapshot() ;
-      rfit.susyScanWithContam("an-11-257-v3-files/input-files/T1bbbb_HT350_MET200_BTag1.txt",
-                              "an-11-257-v3-files/output-files/an-scanplot-unblind-t1bbbb-withcontam-ge1b-loose" ) ;
+      rfit.susyScanWithContam("an-11-257-v3-files/input-files/signalSyst.T1bbbb-preliminary.ge1bLoose.dat",
+                              "an-11-257-v3-files/output-files/an-scanplot-unblind-t1bbbb-withcontam-ge1b-loose", 1 ) ;
 
 
    }
