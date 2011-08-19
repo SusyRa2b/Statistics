@@ -5180,6 +5180,7 @@
           printf("\n\n") ;
        // toyFitResult = likelihood->fitTo(*toyFitdsObserved, Save(true));
           toyFitResult = likelihood->fitTo(*toyFitdsObserved, Save(true), PrintLevel(-1));
+          double maxL_mu_susy_sig = rv_mu_susy_sig->getVal() ;
           maxLogL = toyFitResult->minNll() ;
           maxCovQual = toyFitResult->covQual() ;
           printf("\n  Fit result with susy floating for toy %d : %8.3f \n\n", ti, maxLogL ) ;
@@ -5187,18 +5188,32 @@
           delete toyFitResult ;
 
 
-         //-- fit with susy yield fixed to susy model prediction.
-          rv_mu_susy_sig -> setVal( rv_mu_susymc_sig->getVal() ) ;
-          rv_mu_susy_sig->setConstant( kTRUE ) ;
-          printf("\n  Fitting with susy SIG yield fixed to %8.2f\n\n", rv_mu_susy_sig->getVal() ) ;
-       // toyFitResult = likelihood->fitTo(*toyFitdsObserved, Save(true));
-          toyFitResult = likelihood->fitTo(*toyFitdsObserved, Save(true), PrintLevel(-1));
-          sfixedLogL = toyFitResult->minNll() ;
-          sfixedCovQual = toyFitResult->covQual() ;
-          testStat = 2.*(sfixedLogL-maxLogL) ;
-          printf("\n  Fit result with susy fixed to prediction for toy %d : %8.3f, %8.3f \n\n", ti, sfixedLogL, testStat ) ;
-          parameterSnapshot() ;
-          delete toyFitResult ;
+        //--- Only bother doing the next step if the maxL value of the susy yield is
+        //    less than the predicted value.
+        //    If it the maxL value is greater than the predicted value, set the test statistic to zero.
+        //    This is to get a one-sided limit.
+
+          if ( maxL_mu_susy_sig < (rv_mu_susymc_sig->getVal()) ) {
+            //-- fit with susy yield fixed to susy model prediction.
+             rv_mu_susy_sig -> setVal( rv_mu_susymc_sig->getVal() ) ;
+             rv_mu_susy_sig->setConstant( kTRUE ) ;
+             printf("\n  Fitting with susy SIG yield fixed to %8.2f\n\n", rv_mu_susy_sig->getVal() ) ;
+          // toyFitResult = likelihood->fitTo(*toyFitdsObserved, Save(true));
+             toyFitResult = likelihood->fitTo(*toyFitdsObserved, Save(true), PrintLevel(-1));
+             sfixedLogL = toyFitResult->minNll() ;
+             sfixedCovQual = toyFitResult->covQual() ;
+             testStat = 2.*(sfixedLogL-maxLogL) ;
+             printf("\n  Fit result with susy fixed to prediction for toy %d : %8.3f, %8.3f \n\n", ti, sfixedLogL, testStat ) ;
+             parameterSnapshot() ;
+             delete toyFitResult ;
+          } else {
+             sfixedLogL = 0.0 ;
+             sfixedCovQual = 0 ;
+             testStat = 0.0 ;
+             printf("\n  SUSY yield from susy floating is greater than predicted value: %9.2f > %9.2f\n",
+                          maxL_mu_susy_sig, (rv_mu_susymc_sig->getVal()) ) ;
+             printf("  +++++ Setting test statistic to zero.\n\n") ;
+          }
 
 
 
