@@ -3030,7 +3030,7 @@
 
   //===================================================================
 
-    bool ra2bRoostatsClass4::susyScanWithContam( const char* inputScanFile, const char* outputFilebase ) {
+    bool ra2bRoostatsClass4::susyScanWithContam( const char* inputScanFile, const char* outputFilebase, bool isT1bbbb ) {
 
 
 
@@ -3054,17 +3054,28 @@
        float deltaM12 ;
 
 
-   //+++ ORL: Aug 14, 2011 ++++++++++++++++++++++++++
-       nM0bins = 93 ;
-       minM0 = 160 ;
-       maxM0 = 2000 ;
-       deltaM0 = 20 ;
 
-       nM12bins = 38 ;
-       minM12 = 20 ;
-       maxM12 = 760 ;
-       deltaM12 = 20 ;
-   //++++++++++++++++++++++++++++++++++++++++++++++++
+       if ( !isT1bbbb ) {
+          nM0bins = 93 ;
+          minM0 = 160 ;
+          maxM0 = 2000 ;
+          deltaM0 = 20 ;
+
+          nM12bins = 38 ;
+          minM12 = 20 ;
+          maxM12 = 760 ;
+          deltaM12 = 20 ;
+       } else {
+          nM0bins = 60 ;
+          minM0 = 0 ;
+          maxM0 = 1500 ;
+          deltaM0 = 25 ;
+
+          nM12bins = 60 ;
+          minM12 = 0 ;
+          maxM12 = 1500 ;
+          deltaM12 = 25 ;
+       }
 
 
        printf( "\n\n" ) ;
@@ -3115,6 +3126,19 @@
        TH2F* hsusyscanEffError_sb_ldp = new TH2F("hsusyscanEffError_sb_ldp", "SUSY m1/2 vs m0 parameter scan, EffError, sb_ldp",
             nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
             nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
+
+       TH2F* hsusyscanXsecul(0x0) ;
+       TH2F* hsusyscanEfficiency(0x0) ;
+
+       if ( isT1bbbb ) {
+          hsusyscanXsecul = new TH2F( "hsusyscanXsecul","T1bbbb Xsec upper limit",
+               nM0bins, minM0, maxM0,
+               nM12bins, minM12, maxM12 ) ;
+
+          hsusyscanEfficiency = new TH2F( "hsusyscanEfficiency", "T1bbbb efficiency",
+               nM0bins, minM0, maxM0,
+               nM12bins, minM12, maxM12 ) ;
+       }
 
 
        //--- Loop over the scan points.
@@ -3235,6 +3259,13 @@
           hsusyscanEffError_sb_sl->SetBinContent( m0bin, m12bin, n_sb_sl_error ) ;
           hsusyscanEffError_sig_ldp->SetBinContent( m0bin, m12bin, n_sig_ldp_error ) ;
           hsusyscanEffError_sb_ldp->SetBinContent( m0bin, m12bin, n_sb_ldp_error ) ;
+          if ( isT1bbbb ) {
+             if(n_sig_raw > 0) {
+               hsusyscanXsecul->SetBinContent( pointM0/25.+1., pointM12/25.+1., susySigHigh/(1143.*(n_sig_raw/10000.)) );
+            // hsusyscanXsecul->SetBinContent( pointM0/25.+1., pointM12/25.+1., susySigHigh*10000./n_sig_raw/1143.);
+               hsusyscanEfficiency->SetBinContent( pointM0/25.+1., pointM12/25.+1., n_sig_raw/10000.);
+             }
+          }
 
 
           if ( nselWeighted > susySigHigh ) {
@@ -3285,6 +3316,10 @@
        hsusyscanEffError_sb_sl->Write() ;
        hsusyscanEffError_sig_ldp->Write() ;
        hsusyscanEffError_sb_ldp->Write() ;
+       if ( isT1bbbb ) {
+          hsusyscanXsecul->Write() ;
+          hsusyscanEfficiency->Write() ;
+       }
        f->Write() ;
        f->Close() ;
 

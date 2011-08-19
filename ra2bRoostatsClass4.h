@@ -35,7 +35,7 @@
 
 
        bool susyScanNoContam( const char* inputScanFile, const char* outputFilebase="output-files/scanplot-nocontam" ) ;
-       bool susyScanWithContam( const char* inputScanFile, const char* outputFilebase="output-files/scanplot-withcontam"  ) ;
+       bool susyScanWithContam( const char* inputScanFile, const char* outputFilebase="output-files/scanplot-withcontam" , bool isT1bbbb = "false" ) ;
        bool discoveryScanWithContam( const char* inputScanFile ) ;
        bool nosusysignifScanWithContam( const char* inputScanFile ) ;
 
