@@ -3322,7 +3322,7 @@
            csusy->SaveAs( pngoutputfile ) ;
        } else {
            TCanvas* csusy = new TCanvas("csusy","SUSY mLSP vs mGluino scan, Cross section upper limit") ;
-           hsusyscanXsecul->Draw("col") ;
+           hsusyscanXsecul->Draw("colz") ;
            gPad->SetGridx(1) ;
            gPad->SetGridy(1) ;
            csusy->SaveAs( pngoutputfile ) ;
