@@ -6,7 +6,6 @@
 
       float low,high ;
 
-
       ra2bRoostatsClass4 rfit(0,1,1) ;
       rfit.initialize("an-11-257-v3-files/input-files/byhand-data-ge1b-loose.txt") ;
       rfit.doFit() ;

@@ -1,6 +1,6 @@
 
 
-   void an_scanplot_unblind_tb40_withcontam_ge2b_tight() {
+   void an_scanplot_unblind_t1bbbb_withcontam_ge2b_tight() {
 
       gROOT->LoadMacro("ra2bRoostatsClass4.c+") ;
 
@@ -12,8 +12,8 @@
       rfit.initialize("an-11-257-v3-files/input-files/byhand-data-ge2b-tight.txt") ;
       rfit.doFit() ;
       rfit.parameterSnapshot() ;
-      rfit.susyScanWithContam("an-11-257-v3-files/input-files/signalSyst.mSUGRAtanb40.ge2btight.dat",
-                              "an-11-257-v3-files/output-files/an-scanplot-unblind-tb40-withcontam-ge2b-tight" ) ;
+      rfit.susyScanWithContam("an-11-257-v3-files/input-files/signalSyst.T1bbbb-preliminary.ge2btight.dat",
+                              "an-11-257-v3-files/output-files/an-scanplot-unblind-t1bbbb-withcontam-ge2b-tight", 1 ) ;
 
 
    }

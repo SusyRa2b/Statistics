@@ -3033,6 +3033,13 @@
     bool ra2bRoostatsClass4::susyScanWithContam( const char* inputScanFile, const char* outputFilebase, bool isT1bbbb ) {
 
 
+       if ( isT1bbbb ) {
+          printf("\n\n +++++ Input is t1bbbb MC.\n\n") ;
+       } else {
+          printf("\n\n +++++ Input is tanb40 MC.\n\n") ;
+       }
+
+
 
     //=== Owen, Aug 14, 2011: Adapting to Josh's input format.
 
@@ -3307,13 +3314,23 @@
 
        gStyle->SetPadGridX(1) ;
        gStyle->SetPadGridY(1) ;
-       TCanvas* csusy = new TCanvas("csusy","SUSY m1/2 vs m0 scan") ;
-       hsusyscanExcluded->Draw("col") ;
-       gPad->SetGridx(1) ;
-       gPad->SetGridy(1) ;
-       csusy->SaveAs( pngoutputfile ) ;
+       if ( !isT1bbbb ) {
+           TCanvas* csusy = new TCanvas("csusy","SUSY m1/2 vs m0 scan") ;
+           hsusyscanExcluded->Draw("col") ;
+           gPad->SetGridx(1) ;
+           gPad->SetGridy(1) ;
+           csusy->SaveAs( pngoutputfile ) ;
+       } else {
+           TCanvas* csusy = new TCanvas("csusy","SUSY mLSP vs mGluino scan, Cross section upper limit") ;
+           hsusyscanXsecul->Draw("col") ;
+           gPad->SetGridx(1) ;
+           gPad->SetGridy(1) ;
+           csusy->SaveAs( pngoutputfile ) ;
+       }
+
+
        TFile* f = new TFile( rootoutputfile,"recreate") ;
-       hsusyscanExcluded->Write() ;
+
        hsusyscanNsigul->Write() ;
        hsusyscanNsigpred->Write() ;
        hsusyscanNgen->Write() ;
@@ -3327,7 +3344,10 @@
        if ( isT1bbbb ) {
           hsusyscanXsecul->Write() ;
           hsusyscanEfficiency->Write() ;
+       } else {
+          hsusyscanExcluded->Write() ;
        }
+
        f->Write() ;
        f->Close() ;
 
