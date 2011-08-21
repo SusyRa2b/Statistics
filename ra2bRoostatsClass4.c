@@ -3274,7 +3274,7 @@
             // hsusyscanXsecul->SetBinContent( pointM0/25.+1., pointM12/25.+1., susySigHigh/(1143.*(n_sig_raw/10000.)) );
             // hsusyscanEfficiency->SetBinContent( pointM0/25.+1., pointM12/25.+1., n_sig_raw/10000.);
             //---------
-               hsusyscanXsecul->SetBinContent( pointM0/25.+1., pointM12/25.+1., susySigHigh/(1143.*((n_sig_raw*n_sig_correction)/10000.)) );
+               hsusyscanXsecul->SetBinContent( pointM0/25.+1., pointM12/25.+1., susySigHigh/(DataLumi*((n_sig_raw*n_sig_correction)/10000.)) );
                hsusyscanEfficiency->SetBinContent( pointM0/25.+1., pointM12/25.+1., (n_sig_raw*n_sig_correction)/10000.);
             //---------
              }
@@ -3781,7 +3781,7 @@
 
   //===================================================================
 
-    bool ra2bRoostatsClass4::setSusyScanPoint( const char* inputScanFile, double m0, double m12 ) {
+    bool ra2bRoostatsClass4::setSusyScanPoint( const char* inputScanFile, double m0, double m12, bool isT1bbbb, double t1bbbbXsec ) {
 
 
        //--- Aug 15, 2011: updated to new format for AN, v3.
@@ -3795,33 +3795,17 @@
           return false ;
        }
 
-       int nM0bins ;
-       float minM0 ;
-       float maxM0 ;
-       float deltaM0 ;
-       int nM12bins ;
-       float minM12 ;
-       float maxM12 ;
-       float deltaM12 ;
+       double deltaM0(0.) ;
+       double deltaM12(0.) ;
 
+       if ( !isT1bbbb ) {
+          deltaM0 = 20 ;
+          deltaM12 = 20 ;
+       } else {
+          deltaM0 = 25 ;
+          deltaM12 = 25 ;
+       }
 
-   //+++ ORL: Aug 14, 2011 ++++++++++++++++++++++++++
-       nM0bins = 93 ;
-       minM0 = 160 ;
-       maxM0 = 2000 ;
-       deltaM0 = 20 ;
-
-       nM12bins = 38 ;
-       minM12 = 20 ;
-       maxM12 = 760 ;
-       deltaM12 = 20 ;
-   //++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-       printf( "\n\n" ) ;
-       printf( "  M0   :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM0bins, minM0, maxM0 ) ;
-       printf( "  M1/2 :  Npoints = %4d,  min=%4.0f, max=%4.0f\n", nM12bins, minM12, maxM12 ) ;
-       printf( "\n\n" ) ;
 
        bool found(false) ;
 
@@ -3883,12 +3867,39 @@
           if (    fabs( pointM0 - m0 ) <= deltaM0/2.
                && fabs( pointM12 - m12 ) <= deltaM12/2. ) {
 
-             rv_mu_susymc_sig       -> setVal( n_sig_raw     * n_sig_correction     ) ;
-             rv_mu_susymc_sb        -> setVal( n_sb_raw      * n_sb_correction      ) ;
-             rv_mu_susymc_sig_sl    -> setVal( n_sig_sl_raw  * n_sig_sl_correction  ) ;
-             rv_mu_susymc_sb_sl     -> setVal( n_sb_sl_raw   * n_sb_sl_correction   ) ;
-             rv_mu_susymc_sig_ldp   -> setVal( n_sig_ldp_raw * n_sig_ldp_correction ) ;
-             rv_mu_susymc_sb_ldp    -> setVal( n_sb_ldp_raw  * n_sb_ldp_correction  ) ;
+             double setVal_n_sig(0.) ;
+             double setVal_n_sb(0.) ;
+             double setVal_n_sig_sl(0.) ;
+             double setVal_n_sb_sl(0.) ;
+             double setVal_n_sig_ldp(0.) ;
+             double setVal_n_sb_ldp(0.) ;
+
+
+             if ( !isT1bbbb ) {
+                //-- tanb40
+                setVal_n_sig     = n_sig_raw     * n_sig_correction     ;
+                setVal_n_sb      = n_sb_raw      * n_sb_correction      ;
+                setVal_n_sig_sl  = n_sig_sl_raw  * n_sig_sl_correction  ;
+                setVal_n_sb_sl   = n_sb_sl_raw   * n_sb_sl_correction   ;
+                setVal_n_sig_ldp = n_sig_ldp_raw * n_sig_ldp_correction ;
+                setVal_n_sb_ldp  = n_sb_ldp_raw  * n_sb_ldp_correction  ;
+             } else {
+                //-- t1bbbb
+                double nGenPerPoint = 10000 ;
+                setVal_n_sig     = DataLumi * t1bbbbXsec * (( n_sig_raw     * n_sig_correction     )/ nGenPerPoint ) ;
+                setVal_n_sb      = DataLumi * t1bbbbXsec * (( n_sb_raw      * n_sb_correction      )/ nGenPerPoint ) ;
+                setVal_n_sig_sl  = DataLumi * t1bbbbXsec * (( n_sig_sl_raw  * n_sig_sl_correction  )/ nGenPerPoint ) ;
+                setVal_n_sb_sl   = DataLumi * t1bbbbXsec * (( n_sb_sl_raw   * n_sb_sl_correction   )/ nGenPerPoint ) ;
+                setVal_n_sig_ldp = DataLumi * t1bbbbXsec * (( n_sig_ldp_raw * n_sig_ldp_correction )/ nGenPerPoint ) ;
+                setVal_n_sb_ldp  = DataLumi * t1bbbbXsec * (( n_sb_ldp_raw  * n_sb_ldp_correction  )/ nGenPerPoint ) ;
+             }
+
+             rv_mu_susymc_sig       -> setVal( setVal_n_sig      ) ;
+             rv_mu_susymc_sb        -> setVal( setVal_n_sb       ) ;
+             rv_mu_susymc_sig_sl    -> setVal( setVal_n_sig_sl   ) ;
+             rv_mu_susymc_sb_sl     -> setVal( setVal_n_sb_sl    ) ;
+             rv_mu_susymc_sig_ldp   -> setVal( setVal_n_sig_ldp  ) ;
+             rv_mu_susymc_sb_ldp    -> setVal( setVal_n_sb_ldp   ) ;
 
              rv_width_eff_sf_sig     -> setVal( n_sig_error     / 100. ) ;
              rv_width_eff_sf_sb      -> setVal( n_sb_error      / 100. ) ;
@@ -3899,16 +3910,20 @@
 
 
 
-             printf("\n\n Found point m0 = %4.0f,  m1/2 = %4.0f,  Npred = %7.1f\n\n\n", pointM0, pointM12, n_sig_raw * n_sig_correction ) ;
+             if ( !isT1bbbb ) {
+                printf("\n\n Found point m0 = %4.0f,  m1/2 = %4.0f,  Npred = %7.1f\n\n\n", pointM0, pointM12, setVal_n_sig ) ;
+             } else {
+                printf("\n\n Found point mGluino = %4.0f,  mLSP = %4.0f,  Npred = %7.1f\n\n\n", pointM0, pointM12, setVal_n_sig ) ;
+             }
 
 
              printf("\n\n") ;
-             printf(" Setting susy N_sig     to  %7.1f\n", n_sig_raw     * n_sig_correction      ) ;
-             printf(" Setting susy N_sb      to  %7.1f\n", n_sb_raw      * n_sb_correction       ) ;
-             printf(" Setting susy N_sig_sl  to  %7.1f\n", n_sig_sl_raw  * n_sig_sl_correction   ) ;
-             printf(" Setting susy N_sb_sl   to  %7.1f\n", n_sb_sl_raw   * n_sb_sl_correction    ) ;
-             printf(" Setting susy N_sig_ldp to  %7.1f\n", n_sig_ldp_raw * n_sig_ldp_correction  ) ;
-             printf(" Setting susy N_sb_ldp  to  %7.1f\n", n_sb_ldp_raw  * n_sb_ldp_correction   ) ;
+             printf(" Setting susy N_sig     to  %7.1f\n", setVal_n_sig       ) ;
+             printf(" Setting susy N_sb      to  %7.1f\n", setVal_n_sb        ) ;
+             printf(" Setting susy N_sig_sl  to  %7.1f\n", setVal_n_sig_sl    ) ;
+             printf(" Setting susy N_sb_sl   to  %7.1f\n", setVal_n_sb_sl     ) ;
+             printf(" Setting susy N_sig_ldp to  %7.1f\n", setVal_n_sig_ldp   ) ;
+             printf(" Setting susy N_sb_ldp  to  %7.1f\n", setVal_n_sb_ldp    ) ;
              printf("\n\n") ;
 
              found = true ;

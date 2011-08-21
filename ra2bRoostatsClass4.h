@@ -40,7 +40,7 @@
        bool nosusysignifScanWithContam( const char* inputScanFile ) ;
 
 
-       bool setSusyScanPoint( const char* inputScanFile, double m0, double m12 ) ;
+       bool setSusyScanPoint( const char* inputScanFile, double m0, double m12, bool isT1bbbb = false, double t1bbbbXsec=0. ) ;
 
 
        bool profileSusySig( float& susySigLow, float& susySigHigh, bool makePlot=true, const char* plotname="output-files/prof_susy_sig.png", double scanMax=-1. ) ;

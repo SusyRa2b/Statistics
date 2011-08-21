@@ -139,24 +139,24 @@ endif
 
 
 #---------
-  root -b -q cls-scripts-v1/runcls_ge1btight.c\($1,$2\) >& /tmp/owen/clstest-ge1btight-tb40-$1-$2.log
+  root -b -q cls-scripts-v1/runcls_ge1btight.c\($1,$2\) >& /tmp/owen/cls-ge1btight-tb40-$1-$2.log
 
   echo done with running root.  Log file is
-  ls -l /tmp/owen/clstest-ge1btight-tb40-$1-$2.log
+  ls -l /tmp/owen/cls-ge1btight-tb40-$1-$2.log
 
-  grep "test stat"    /tmp/owen/clstest-ge1btight-tb40-$1-$2.log >  log-files-ge1btight/short-clstest-ge1btight-tb40-$1-$2.log
-  grep "p-value of"   /tmp/owen/clstest-ge1btight-tb40-$1-$2.log >> log-files-ge1btight/short-clstest-ge1btight-tb40-$1-$2.log
-  grep "final result" /tmp/owen/clstest-ge1btight-tb40-$1-$2.log >> log-files-ge1btight/short-clstest-ge1btight-tb40-$1-$2.log
+  grep "test stat"    /tmp/owen/cls-ge1btight-tb40-$1-$2.log >  log-files-ge1btight/short-cls-ge1btight-tb40-$1-$2.log
+  grep "p-value of"   /tmp/owen/cls-ge1btight-tb40-$1-$2.log >> log-files-ge1btight/short-cls-ge1btight-tb40-$1-$2.log
+  grep "final result" /tmp/owen/cls-ge1btight-tb40-$1-$2.log >> log-files-ge1btight/short-cls-ge1btight-tb40-$1-$2.log
 
-  gzip -9v log-files-ge1btight/short-clstest-ge1btight-tb40-$1-$2.log
+  gzip -9v log-files-ge1btight/short-cls-ge1btight-tb40-$1-$2.log
 #---------
-# root -b -q runcls_ge1btight.c\($1,$2\) >& log-files-ge1btight/clstest-ge1btight-tb40-$1-$2.log
+# root -b -q runcls_ge1btight.c\($1,$2\) >& log-files-ge1btight/cls-ge1btight-tb40-$1-$2.log
 
-# grep "test stat"    log-files-ge1btight/clstest-ge1btight-tb40-$1-$2.log >  log-files-ge1btight/short-clstest-ge1btight-tb40-$1-$2.log
-# grep "p-value of"   log-files-ge1btight/clstest-ge1btight-tb40-$1-$2.log >> log-files-ge1btight/short-clstest-ge1btight-tb40-$1-$2.log
-# grep "final result" log-files-ge1btight/clstest-ge1btight-tb40-$1-$2.log >> log-files-ge1btight/short-clstest-ge1btight-tb40-$1-$2.log
+# grep "test stat"    log-files-ge1btight/cls-ge1btight-tb40-$1-$2.log >  log-files-ge1btight/short-cls-ge1btight-tb40-$1-$2.log
+# grep "p-value of"   log-files-ge1btight/cls-ge1btight-tb40-$1-$2.log >> log-files-ge1btight/short-cls-ge1btight-tb40-$1-$2.log
+# grep "final result" log-files-ge1btight/cls-ge1btight-tb40-$1-$2.log >> log-files-ge1btight/short-cls-ge1btight-tb40-$1-$2.log
 
-# gzip -9v log-files-ge1btight/clstest-ge1btight-tb40-$1-$2.log
+# gzip -9v log-files-ge1btight/cls-ge1btight-tb40-$1-$2.log
 #---------
 
 
