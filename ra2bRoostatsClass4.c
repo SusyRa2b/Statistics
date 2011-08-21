@@ -3147,6 +3147,7 @@
                nM12bins, minM12, maxM12 ) ;
        }
 
+       printf(" t1bbbb scan point:  mGluino   mLSP     Eff     NsigUL    XsecUL\n" ) ;
 
        //--- Loop over the scan points.
        while ( !feof( infp ) ) {
@@ -3266,16 +3267,25 @@
           hsusyscanEffError_sb_sl->SetBinContent( m0bin, m12bin, n_sb_sl_error ) ;
           hsusyscanEffError_sig_ldp->SetBinContent( m0bin, m12bin, n_sig_ldp_error ) ;
           hsusyscanEffError_sb_ldp->SetBinContent( m0bin, m12bin, n_sb_ldp_error ) ;
+
+          float t1bbbbEff = 0. ;
+          float t1bbbbXsecUL = 999. ;
+
           if ( isT1bbbb ) {
              if(n_sig_raw > 0) {
+                t1bbbbEff = (n_sig_raw*n_sig_correction)/10000. ;
+                t1bbbbXsecUL = susySigHigh/(DataLumi*t1bbbbEff) ;
             //---------
             // hsusyscanXsecul->SetBinContent( pointM0/25.+1., pointM12/25.+1., susySigHigh*10000./n_sig_raw/1143.);
             //---------
             // hsusyscanXsecul->SetBinContent( pointM0/25.+1., pointM12/25.+1., susySigHigh/(1143.*(n_sig_raw/10000.)) );
             // hsusyscanEfficiency->SetBinContent( pointM0/25.+1., pointM12/25.+1., n_sig_raw/10000.);
             //---------
-               hsusyscanXsecul->SetBinContent( pointM0/25.+1., pointM12/25.+1., susySigHigh/(DataLumi*((n_sig_raw*n_sig_correction)/10000.)) );
-               hsusyscanEfficiency->SetBinContent( pointM0/25.+1., pointM12/25.+1., (n_sig_raw*n_sig_correction)/10000.);
+            // hsusyscanXsecul->SetBinContent( pointM0/25.+1., pointM12/25.+1., susySigHigh/(DataLumi*((n_sig_raw*n_sig_correction)/10000.)) );
+            // hsusyscanEfficiency->SetBinContent( pointM0/25.+1., pointM12/25.+1., (n_sig_raw*n_sig_correction)/10000.);
+            //---------
+               hsusyscanXsecul->SetBinContent( pointM0/25.+1., pointM12/25.+1., t1bbbbXsecUL );
+               hsusyscanEfficiency->SetBinContent( pointM0/25.+1., pointM12/25.+1., t1bbbbEff );
             //---------
              }
           }
@@ -3285,9 +3295,17 @@
              if ( ! isT1bbbb ) {
                 printf(" Excluded\n") ;
                 hsusyscanExcluded->SetBinContent( m0bin, m12bin, 1. ) ;
+             } else {
+                printf("\n") ;
              }
           } else {
              printf("\n") ;
+          }
+
+          if ( isT1bbbb ) {
+             //--- note that pointM0 is really mGluino and pointM12 is really mLSP for t1bbbb.
+             printf(" t1bbbb scan point: %6.0f  %6.0f  %8.4f  %8.1f  %8.2f\n",
+                    pointM0, pointM12, t1bbbbEff, susySigHigh, t1bbbbXsecUL ) ;
           }
 
 
