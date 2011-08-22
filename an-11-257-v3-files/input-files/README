@@ -1,22 +1,44 @@
 
 
-  From : /afs/cern.ch/user/j/joshmt/public/RA2b/
+  From Josh: /afs/cern.ch/user/j/joshmt/public/RA2b 
+
+  --------
 
 The format is defined by the following code:
 
-For LM9:
-    (*textfiles[i])<<m0_<<" "<<m12_<<" ";
+    (*textfiles[i])<<m0_<<" "<<m12_<<" "<<nentries<<" ";
 
     (*textfiles[i])<<SIG.rawYield<<" "<<SB.rawYield<<" "<<SIGSL.rawYield<<" "<<SBSL.rawYield<<" "<<SIGLDP.rawYield<<" "<<SBLDP.rawYield<<" "
 		   <<SIG.effCorr<<" "<<SB.effCorr<<" "<<SIGSL.effCorr<<" "<<SBSL.effCorr<<" "<<SIGLDP.effCorr<<" "<<SBLDP.effCorr<<" "
 	    <<SIG.totalSystematic<<" "<<SB.totalSystematic<<" "<<SIGSL.totalSystematic<<" "<<SBSL.totalSystematic<<" "<<SIGLDP.totalSystematic<<" "<<SBLDP.totalSystematic<<endl;
 
-For mSugra there is one extra field -- the Number of Entries generated at that point is the 3rd column.
+For mSugra the Number of Entries generated at that point is the 3rd column. For LM9 it is 0.
+
+For LM9 and mSugra, the "rawYield" is the number of events in 1143 1/pb, after weighting with the appropriate cross section, but before the efficiency correction is applied.
+
+For T1bbbb, the "rawYield" is really raw. It is just the number of events in the sample passing the selection. So divide by 10000 to get the efficiency. Again, this is before the efficiency correction is applued.
 
 Systematics are in %.
 
-For LM9, the total systematic does not include PDF uncertainties. The best estimate we have for LM9 PDF uncertainties is 13%.
+== Status of the systematics ==
 
-For mSugra, all uncertainties have been included.
+LM9 includes *all* systematic uncertainties including full PDF uncertainties
+22 Aug -- updated to use correct b tag eff prescription from Jeff. (not yet approved but hopefully final)
 
-In both cases the lumi uncertainty is included.
+~~~
+For mSugra, all uncertainties have also been included.
+Uncertainties for PDFs, trigger, PU, and JER are fixed.
+JES, b tag, unclustered energy, k factor are computed point by point.
+b tag uncertainties still use our old recipe for jet pT>240 GeV
+~~~
+For T1bbbb (Updated on 20 Aug):
+Uncertainties for trigger, PU, and JER are fixed.
+JES, b tag, PDFs, and unclustered energy are computed point by point.
+b tag uncertainties use the new nominal proposal from Jeff.
+
+Statistical uncertainties on the efficiency are *not* included in the total uncertainty.
+This applies to both the text files and the ROOT files.
+
+~~~
+
+In all cases the lumi uncertainty is included.
