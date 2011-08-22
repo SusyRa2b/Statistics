@@ -5412,9 +5412,8 @@
        } // ti.
 
 
-    // TFile* f = new TFile( "toy.root","recreate") ;
-       tt->Write() ;
-    // f->Close() ;
+  //-- turn off root output to save disk quota.
+  //// tt->Write() ;
 
        retVal = (1.0*nWorse)/(1.0*nToys) ;
 
