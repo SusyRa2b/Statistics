@@ -94,17 +94,17 @@ Ztoll_lumi      1143
   knn_sb_mean    0.0
   knn_sb_err     0.0
   fsig_ee_mean   0.651
-  fsig_ee_err    0.065
+  fsig_ee_err    0.130
   fsig_mm_mean   0.711
-  fsig_mm_err    0.071
+  fsig_mm_err    0.130
   sf_mc                 1.00
   sf_mc_err             0.50
   sf_qcd_sb             1.00
-  sf_qcd_sb_err         0.31
+  sf_qcd_sb_err         0.282
   sf_qcd_sig            1.00
-  sf_qcd_sig_err        0.42
+  sf_qcd_sig_err        1.022
   sf_ttwj_sig           1.00
-  sf_ttwj_sig_err       0.05
+  sf_ttwj_sig_err       0.057
   sf_ee                 1.00
   sf_ee_err             0.11
   sf_mm                 1.00

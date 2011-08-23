@@ -94,17 +94,17 @@ knn_1b_sig_err     0.052
 knn_1b_sb_mean     0.145
 knn_1b_sb_err      0.072
   fsig_ee_mean   0.651
-  fsig_ee_err    0.065
+  fsig_ee_err    0.130
   fsig_mm_mean   0.711
-  fsig_mm_err    0.071
+  fsig_mm_err    0.130
   sf_mc                 1.00
   sf_mc_err             0.50
   sf_qcd_sb             1.00
-  sf_qcd_sb_err         0.40
+  sf_qcd_sb_err         1.022
   sf_qcd_sig            1.00
-  sf_qcd_sig_err        0.56
+  sf_qcd_sig_err        2.128
   sf_ttwj_sig           1.00
-  sf_ttwj_sig_err       0.13
+  sf_ttwj_sig_err       0.174
   sf_ee                 1.00
   sf_ee_err             0.11
   sf_mm                 1.00
