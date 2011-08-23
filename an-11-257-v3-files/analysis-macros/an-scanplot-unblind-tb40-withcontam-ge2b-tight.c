@@ -2,13 +2,13 @@
 
    void an_scanplot_unblind_tb40_withcontam_ge2b_tight() {
 
-      gROOT->LoadMacro("ra2bRoostatsClass4.c+") ;
+      gROOT->LoadMacro("ra2bRoostatsClass4ln.c+") ;
 
       float low,high ;
 
-      // ra2bRoostatsClass4( bool ArgUseSigTtwjVar=false, bool ArgUseLdpVars=true ) ;
+      // ra2bRoostatsClass4ln( bool ArgUseSigTtwjVar=false, bool ArgUseLdpVars=true ) ;
 
-      ra2bRoostatsClass4 rfit(0,1,2) ; //-- important!  3rd argument must be 2 for "tight" Znn model.
+      ra2bRoostatsClass4ln rfit(0,1,2) ; //-- important!  3rd argument must be 2 for "tight" Znn model.
       rfit.initialize("an-11-257-v3-files/input-files/byhand-data-ge2b-tight.txt") ;
       rfit.doFit() ;
       rfit.parameterSnapshot() ;

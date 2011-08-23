@@ -2,12 +2,12 @@
 
    void runtoyge1btight() {
 
-      gROOT->LoadMacro("ra2bRoostatsClass4.c+") ;
+      gROOT->LoadMacro("ra2bRoostatsClass4ln.c+") ;
 
 
-      // ra2bRoostatsClass4( bool ArgUseSigTtwjVar=false, bool ArgUseLdpVars=true ) ;
+      // ra2bRoostatsClass4ln( bool ArgUseSigTtwjVar=false, bool ArgUseLdpVars=true ) ;
 
-      ra2bRoostatsClass4 rfit(1,0,2) ;  //+++ VERY IMPORTANT!  3rd argument must be 2 for tight sel!
+      ra2bRoostatsClass4ln rfit(1,0,2) ;  //+++ VERY IMPORTANT!  3rd argument must be 2 for tight sel!
 
       rfit.initialize("an-11-257-v3-files/input-files/mc-inputs-SMonly-tight-sel.txt") ;
       rfit.setSusyScanPoint("an-11-257-v3-files/input-files/signalSyst.LM9.ge1bTight.1143invpb.dat",0,0) ;

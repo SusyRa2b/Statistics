@@ -2,14 +2,14 @@
 
    void MCSMsusy_lm9_tight_sel() {
 
-      gROOT->LoadMacro("ra2bRoostatsClass4.c+") ;
+      gROOT->LoadMacro("ra2bRoostatsClass4ln.c+") ;
 
       float low,high ;
       float susylow, susyhigh ;
 
-      // ra2bRoostatsClass4( bool ArgUseSigTtwjVar=false, bool ArgUseLdpVars=true ) ;
+      // ra2bRoostatsClass4ln( bool ArgUseSigTtwjVar=false, bool ArgUseLdpVars=true ) ;
 
-      ra2bRoostatsClass4 rfitNoSusy(1,0,2) ;
+      ra2bRoostatsClass4ln rfitNoSusy(1,0,2) ;
       rfitNoSusy.initialize("an-11-257-v3-files/input-files/mc-inputs-SM+lm9-tight-sel.txt") ;
       rfitNoSusy.setAndFixSusySig(0.) ;
 
@@ -41,7 +41,7 @@
 
    //-------------------------
 
-      ra2bRoostatsClass4 rfitSusyFloat(1,0,2) ;
+      ra2bRoostatsClass4ln rfitSusyFloat(1,0,2) ;
       rfitSusyFloat.initialize("an-11-257-v3-files/input-files/mc-inputs-SM+lm9-tight-sel.txt") ;
       rfitSusyFloat.setSusyScanPoint("an-11-257-v3-files/input-files/signalSyst.LM9.ge1bTight.1143invpb.dat",0,0) ;
 
@@ -81,7 +81,7 @@
 
    //-------------------------
 
-      ra2bRoostatsClass4 rfitSusyFix(1,0,2) ;
+      ra2bRoostatsClass4ln rfitSusyFix(1,0,2) ;
       rfitSusyFix.initialize("an-11-257-v3-files/input-files/mc-inputs-SM+lm9-tight-sel.txt") ;
       rfitSusyFix.setSusyScanPoint("an-11-257-v3-files/input-files/signalSyst.LM9.ge1bTight.1143invpb.dat",0,0) ;
       rfitSusyFix.setAndFixSusySigToPredictedValue() ;

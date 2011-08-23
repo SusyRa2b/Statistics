@@ -2,12 +2,12 @@
 
    void runtoyge1bloose() {
 
-      gROOT->LoadMacro("ra2bRoostatsClass4.c+") ;
+      gROOT->LoadMacro("ra2bRoostatsClass4ln.c+") ;
 
 
-      // ra2bRoostatsClass4( bool ArgUseSigTtwjVar=false, bool ArgUseLdpVars=true ) ;
+      // ra2bRoostatsClass4ln( bool ArgUseSigTtwjVar=false, bool ArgUseLdpVars=true ) ;
 
-      ra2bRoostatsClass4 rfit(1,0,1) ;
+      ra2bRoostatsClass4ln rfit(1,0,1) ;
       rfit.initialize("an-11-257-v3-files/input-files/mc-inputs-SMonly-loose-sel.txt") ;
       rfit.setSusyScanPoint("an-11-257-v3-files/input-files/signalSyst.LM9.ge1bLoose.1143invpb.dat",0,0) ;
 

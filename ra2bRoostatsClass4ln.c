@@ -4041,14 +4041,14 @@
 
           }
 
-
-          //-- enforce a maximum efficiency uncertainty (to avoid negative scale factors).
-          if ( n_sig_error     > 35. ) { n_sig_error     = 35. ; }
-          if ( n_sb_error      > 35. ) { n_sb_error      = 35. ; }
-          if ( n_sig_sl_error  > 35. ) { n_sig_sl_error  = 35. ; }
-          if ( n_sb_sl_error   > 35. ) { n_sb_sl_error   = 35. ; }
-          if ( n_sig_ldp_error > 35. ) { n_sig_ldp_error = 35. ; }
-          if ( n_sb_ldp_error  > 35. ) { n_sb_ldp_error  = 35. ; }
+    //--- Not needed with log-normal
+     ///  //-- enforce a maximum efficiency uncertainty (to avoid negative scale factors).
+     ///  if ( n_sig_error     > 35. ) { n_sig_error     = 35. ; }
+     ///  if ( n_sb_error      > 35. ) { n_sb_error      = 35. ; }
+     ///  if ( n_sig_sl_error  > 35. ) { n_sig_sl_error  = 35. ; }
+     ///  if ( n_sb_sl_error   > 35. ) { n_sb_sl_error   = 35. ; }
+     ///  if ( n_sig_ldp_error > 35. ) { n_sig_ldp_error = 35. ; }
+     ///  if ( n_sb_ldp_error  > 35. ) { n_sb_ldp_error  = 35. ; }
 
    //++++++++++++++++++++++++++++++++++++++++++++++++
 
