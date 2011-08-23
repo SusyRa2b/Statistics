@@ -3976,86 +3976,86 @@
    //--If you are asking for it, I'll assume it's good.  Josh is using 0 for ngen dummy in LM9.
    /////  if ( nGen != 10000 ) continue ; // get rid of bad scan points.
 
-           double nGenPerPoint = 10000 ; // for t1bbbb
-
-          printf("\n\n") ;
-          printf("  SUSY efficiency  systematic uncertainty,   n_sig_error     = %6.1f %%\n", n_sig_error     ) ;
-          printf("  SUSY efficiency  systematic uncertainty,   n_sb_error      = %6.1f %%\n", n_sb_error      ) ;
-          printf("  SUSY efficiency  systematic uncertainty,   n_sig_sl_error  = %6.1f %%\n", n_sig_sl_error  ) ;
-          printf("  SUSY efficiency  systematic uncertainty,   n_sb_sl_error   = %6.1f %%\n", n_sb_sl_error   ) ;
-          printf("  SUSY efficiency  systematic uncertainty,   n_sig_ldp_error = %6.1f %%\n", n_sig_ldp_error ) ;
-          printf("  SUSY efficiency  systematic uncertainty,   n_sb_ldp_error  = %6.1f %%\n", n_sb_ldp_error  ) ;
-          printf("\n\n") ;
-
-   //--Include the stat error on the efficiency for t1bbbb.
-          if ( isT1bbbb ) {
-
-           //-- absolute raw eff
-              float n_sig_raw_eff     = n_sig_raw     / nGenPerPoint ;
-              float n_sb_raw_eff      = n_sb_raw      / nGenPerPoint ;
-              float n_sig_sl_raw_eff  = n_sig_sl_raw  / nGenPerPoint ;
-              float n_sb_sl_raw_eff   = n_sb_sl_raw   / nGenPerPoint ;
-              float n_sig_ldp_raw_eff = n_sig_ldp_raw / nGenPerPoint ;
-              float n_sb_ldp_raw_eff  = n_sb_ldp_raw  / nGenPerPoint ;
-
-
-            //-- absolute stat err.
-              float n_sig_stat_error     =  sqrt(  n_sig_raw_eff    * ( 1.0 - n_sig_raw_eff     ) / nGenPerPoint ) ;
-              float n_sb_stat_error      =  sqrt(  n_sb_raw_eff     * ( 1.0 - n_sb_raw_eff      ) / nGenPerPoint ) ;
-              float n_sig_sl_stat_error  =  sqrt(  n_sig_sl_raw_eff * ( 1.0 - n_sig_sl_raw_eff  ) / nGenPerPoint ) ;
-              float n_sb_sl_stat_error   =  sqrt(  n_sb_sl_raw_eff  * ( 1.0 - n_sb_sl_raw_eff   ) / nGenPerPoint ) ;
-              float n_sig_ldp_stat_error =  sqrt(  n_sig_ldp_raw_eff* ( 1.0 - n_sig_ldp_raw_eff ) / nGenPerPoint ) ;
-              float n_sb_ldp_stat_error  =  sqrt(  n_sb_ldp_raw_eff * ( 1.0 - n_sb_ldp_raw_eff  ) / nGenPerPoint ) ;
-
-            //-- relative stat err in percent.
-              if ( n_sig_raw_eff     > 0 ) { n_sig_stat_error     = 100.* n_sig_stat_error     / n_sig_raw_eff     ; } else { n_sig_stat_error     = 0. ; }
-              if ( n_sb_raw_eff      > 0 ) { n_sb_stat_error      = 100.* n_sb_stat_error      / n_sb_raw_eff      ; } else { n_sb_stat_error      = 0. ; }
-              if ( n_sig_sl_raw_eff  > 0 ) { n_sig_sl_stat_error  = 100.* n_sig_sl_stat_error  / n_sig_sl_raw_eff  ; } else { n_sig_sl_stat_error  = 0. ; }
-              if ( n_sb_sl_raw_eff   > 0 ) { n_sb_sl_stat_error   = 100.* n_sb_sl_stat_error   / n_sb_sl_raw_eff   ; } else { n_sb_sl_stat_error   = 0. ; }
-              if ( n_sig_ldp_raw_eff > 0 ) { n_sig_ldp_stat_error = 100.* n_sig_ldp_stat_error / n_sig_ldp_raw_eff ; } else { n_sig_ldp_stat_error = 0. ; }
-              if ( n_sb_ldp_raw_eff  > 0 ) { n_sb_ldp_stat_error  = 100.* n_sb_ldp_stat_error  / n_sb_ldp_raw_eff  ; } else { n_sb_ldp_stat_error  = 0. ; }
-
-              printf("  SUSY efficiency  statistical uncertainty,   n_sig_stat_error     = %6.1f %%\n", n_sig_stat_error     ) ;
-              printf("  SUSY efficiency  statistical uncertainty,   n_sb_stat_error      = %6.1f %%\n", n_sb_stat_error      ) ;
-              printf("  SUSY efficiency  statistical uncertainty,   n_sig_sl_stat_error  = %6.1f %%\n", n_sig_sl_stat_error  ) ;
-              printf("  SUSY efficiency  statistical uncertainty,   n_sb_sl_stat_error   = %6.1f %%\n", n_sb_sl_stat_error   ) ;
-              printf("  SUSY efficiency  statistical uncertainty,   n_sig_ldp_stat_error = %6.1f %%\n", n_sig_ldp_stat_error ) ;
-              printf("  SUSY efficiency  statistical uncertainty,   n_sb_ldp_stat_error  = %6.1f %%\n", n_sb_ldp_stat_error  ) ;
-
-            //-- total err in percent.
-              n_sig_error     = sqrt( pow( n_sig_error    , 2) + pow( n_sig_stat_error    , 2) ) ;
-              n_sb_error      = sqrt( pow( n_sb_error     , 2) + pow( n_sb_stat_error     , 2) ) ;
-              n_sig_sl_error  = sqrt( pow( n_sig_sl_error , 2) + pow( n_sig_sl_stat_error , 2) ) ;
-              n_sb_sl_error   = sqrt( pow( n_sb_sl_error  , 2) + pow( n_sb_sl_stat_error  , 2) ) ;
-              n_sig_ldp_error = sqrt( pow( n_sig_ldp_error, 2) + pow( n_sig_ldp_stat_error, 2) ) ;
-              n_sb_ldp_error  = sqrt( pow( n_sb_ldp_error , 2) + pow( n_sb_ldp_stat_error , 2) ) ;
-
-              printf("\n\n") ;
-              printf("  SUSY efficiency  total uncertainty,   n_sig_error     = %6.1f %%\n", n_sig_error     ) ;
-              printf("  SUSY efficiency  total uncertainty,   n_sb_error      = %6.1f %%\n", n_sb_error      ) ;
-              printf("  SUSY efficiency  total uncertainty,   n_sig_sl_error  = %6.1f %%\n", n_sig_sl_error  ) ;
-              printf("  SUSY efficiency  total uncertainty,   n_sb_sl_error   = %6.1f %%\n", n_sb_sl_error   ) ;
-              printf("  SUSY efficiency  total uncertainty,   n_sig_ldp_error = %6.1f %%\n", n_sig_ldp_error ) ;
-              printf("  SUSY efficiency  total uncertainty,   n_sb_ldp_error  = %6.1f %%\n", n_sb_ldp_error  ) ;
-              printf("\n\n") ;
-
-          }
-
-    //--- Not needed with log-normal
-     ///  //-- enforce a maximum efficiency uncertainty (to avoid negative scale factors).
-     ///  if ( n_sig_error     > 35. ) { n_sig_error     = 35. ; }
-     ///  if ( n_sb_error      > 35. ) { n_sb_error      = 35. ; }
-     ///  if ( n_sig_sl_error  > 35. ) { n_sig_sl_error  = 35. ; }
-     ///  if ( n_sb_sl_error   > 35. ) { n_sb_sl_error   = 35. ; }
-     ///  if ( n_sig_ldp_error > 35. ) { n_sig_ldp_error = 35. ; }
-     ///  if ( n_sb_ldp_error  > 35. ) { n_sb_ldp_error  = 35. ; }
-
-   //++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-
           if (    fabs( pointM0 - m0 ) <= deltaM0/2.
                && fabs( pointM12 - m12 ) <= deltaM12/2. ) {
+
+              double nGenPerPoint = 10000 ; // for t1bbbb
+
+             printf("\n\n") ;
+             printf("  SUSY efficiency  systematic uncertainty,   n_sig_error     = %6.1f %%\n", n_sig_error     ) ;
+             printf("  SUSY efficiency  systematic uncertainty,   n_sb_error      = %6.1f %%\n", n_sb_error      ) ;
+             printf("  SUSY efficiency  systematic uncertainty,   n_sig_sl_error  = %6.1f %%\n", n_sig_sl_error  ) ;
+             printf("  SUSY efficiency  systematic uncertainty,   n_sb_sl_error   = %6.1f %%\n", n_sb_sl_error   ) ;
+             printf("  SUSY efficiency  systematic uncertainty,   n_sig_ldp_error = %6.1f %%\n", n_sig_ldp_error ) ;
+             printf("  SUSY efficiency  systematic uncertainty,   n_sb_ldp_error  = %6.1f %%\n", n_sb_ldp_error  ) ;
+             printf("\n\n") ;
+
+      //--Include the stat error on the efficiency for t1bbbb.
+             if ( isT1bbbb ) {
+
+              //-- absolute raw eff
+                 float n_sig_raw_eff     = n_sig_raw     / nGenPerPoint ;
+                 float n_sb_raw_eff      = n_sb_raw      / nGenPerPoint ;
+                 float n_sig_sl_raw_eff  = n_sig_sl_raw  / nGenPerPoint ;
+                 float n_sb_sl_raw_eff   = n_sb_sl_raw   / nGenPerPoint ;
+                 float n_sig_ldp_raw_eff = n_sig_ldp_raw / nGenPerPoint ;
+                 float n_sb_ldp_raw_eff  = n_sb_ldp_raw  / nGenPerPoint ;
+
+
+               //-- absolute stat err.
+                 float n_sig_stat_error     =  sqrt(  n_sig_raw_eff    * ( 1.0 - n_sig_raw_eff     ) / nGenPerPoint ) ;
+                 float n_sb_stat_error      =  sqrt(  n_sb_raw_eff     * ( 1.0 - n_sb_raw_eff      ) / nGenPerPoint ) ;
+                 float n_sig_sl_stat_error  =  sqrt(  n_sig_sl_raw_eff * ( 1.0 - n_sig_sl_raw_eff  ) / nGenPerPoint ) ;
+                 float n_sb_sl_stat_error   =  sqrt(  n_sb_sl_raw_eff  * ( 1.0 - n_sb_sl_raw_eff   ) / nGenPerPoint ) ;
+                 float n_sig_ldp_stat_error =  sqrt(  n_sig_ldp_raw_eff* ( 1.0 - n_sig_ldp_raw_eff ) / nGenPerPoint ) ;
+                 float n_sb_ldp_stat_error  =  sqrt(  n_sb_ldp_raw_eff * ( 1.0 - n_sb_ldp_raw_eff  ) / nGenPerPoint ) ;
+
+               //-- relative stat err in percent.
+                 if ( n_sig_raw_eff     > 0 ) { n_sig_stat_error     = 100.* n_sig_stat_error     / n_sig_raw_eff     ; } else { n_sig_stat_error     = 0. ; }
+                 if ( n_sb_raw_eff      > 0 ) { n_sb_stat_error      = 100.* n_sb_stat_error      / n_sb_raw_eff      ; } else { n_sb_stat_error      = 0. ; }
+                 if ( n_sig_sl_raw_eff  > 0 ) { n_sig_sl_stat_error  = 100.* n_sig_sl_stat_error  / n_sig_sl_raw_eff  ; } else { n_sig_sl_stat_error  = 0. ; }
+                 if ( n_sb_sl_raw_eff   > 0 ) { n_sb_sl_stat_error   = 100.* n_sb_sl_stat_error   / n_sb_sl_raw_eff   ; } else { n_sb_sl_stat_error   = 0. ; }
+                 if ( n_sig_ldp_raw_eff > 0 ) { n_sig_ldp_stat_error = 100.* n_sig_ldp_stat_error / n_sig_ldp_raw_eff ; } else { n_sig_ldp_stat_error = 0. ; }
+                 if ( n_sb_ldp_raw_eff  > 0 ) { n_sb_ldp_stat_error  = 100.* n_sb_ldp_stat_error  / n_sb_ldp_raw_eff  ; } else { n_sb_ldp_stat_error  = 0. ; }
+
+                 printf("  SUSY efficiency  statistical uncertainty,   n_sig_stat_error     = %6.1f %%\n", n_sig_stat_error     ) ;
+                 printf("  SUSY efficiency  statistical uncertainty,   n_sb_stat_error      = %6.1f %%\n", n_sb_stat_error      ) ;
+                 printf("  SUSY efficiency  statistical uncertainty,   n_sig_sl_stat_error  = %6.1f %%\n", n_sig_sl_stat_error  ) ;
+                 printf("  SUSY efficiency  statistical uncertainty,   n_sb_sl_stat_error   = %6.1f %%\n", n_sb_sl_stat_error   ) ;
+                 printf("  SUSY efficiency  statistical uncertainty,   n_sig_ldp_stat_error = %6.1f %%\n", n_sig_ldp_stat_error ) ;
+                 printf("  SUSY efficiency  statistical uncertainty,   n_sb_ldp_stat_error  = %6.1f %%\n", n_sb_ldp_stat_error  ) ;
+
+               //-- total err in percent.
+                 n_sig_error     = sqrt( pow( n_sig_error    , 2) + pow( n_sig_stat_error    , 2) ) ;
+                 n_sb_error      = sqrt( pow( n_sb_error     , 2) + pow( n_sb_stat_error     , 2) ) ;
+                 n_sig_sl_error  = sqrt( pow( n_sig_sl_error , 2) + pow( n_sig_sl_stat_error , 2) ) ;
+                 n_sb_sl_error   = sqrt( pow( n_sb_sl_error  , 2) + pow( n_sb_sl_stat_error  , 2) ) ;
+                 n_sig_ldp_error = sqrt( pow( n_sig_ldp_error, 2) + pow( n_sig_ldp_stat_error, 2) ) ;
+                 n_sb_ldp_error  = sqrt( pow( n_sb_ldp_error , 2) + pow( n_sb_ldp_stat_error , 2) ) ;
+
+                 printf("\n\n") ;
+                 printf("  SUSY efficiency  total uncertainty,   n_sig_error     = %6.1f %%\n", n_sig_error     ) ;
+                 printf("  SUSY efficiency  total uncertainty,   n_sb_error      = %6.1f %%\n", n_sb_error      ) ;
+                 printf("  SUSY efficiency  total uncertainty,   n_sig_sl_error  = %6.1f %%\n", n_sig_sl_error  ) ;
+                 printf("  SUSY efficiency  total uncertainty,   n_sb_sl_error   = %6.1f %%\n", n_sb_sl_error   ) ;
+                 printf("  SUSY efficiency  total uncertainty,   n_sig_ldp_error = %6.1f %%\n", n_sig_ldp_error ) ;
+                 printf("  SUSY efficiency  total uncertainty,   n_sb_ldp_error  = %6.1f %%\n", n_sb_ldp_error  ) ;
+                 printf("\n\n") ;
+
+             }
+
+       //--- Not needed with log-normal
+        ///  //-- enforce a maximum efficiency uncertainty (to avoid negative scale factors).
+        ///  if ( n_sig_error     > 35. ) { n_sig_error     = 35. ; }
+        ///  if ( n_sb_error      > 35. ) { n_sb_error      = 35. ; }
+        ///  if ( n_sig_sl_error  > 35. ) { n_sig_sl_error  = 35. ; }
+        ///  if ( n_sb_sl_error   > 35. ) { n_sb_sl_error   = 35. ; }
+        ///  if ( n_sig_ldp_error > 35. ) { n_sig_ldp_error = 35. ; }
+        ///  if ( n_sb_ldp_error  > 35. ) { n_sb_ldp_error  = 35. ; }
+
+      //++++++++++++++++++++++++++++++++++++++++++++++++
+
+
 
              double setVal_n_sig(0.) ;
              double setVal_n_sb(0.) ;
