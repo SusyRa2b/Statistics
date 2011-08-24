@@ -25,11 +25,11 @@
       rfitNoSusy.reinitialize() ;
       rfitNoSusy.setAndFixSusySig(0.) ;
       rfitNoSusy.doFit() ;
-      rfitNoSusy.profileqcdSig(low,high,1,"an-11-257-v3-files/output-files/qcdSigProf-MCSMonly-NoSusy-loose-sel.png", 40. ) ;
+      rfitNoSusy.profileqcdSig(low,high,1,"an-11-257-v3-files/output-files/qcdSigProf-MCSMonly-NoSusy-loose-sel.png", 100. ) ;
       rfitNoSusy.reinitialize() ;
       rfitNoSusy.setAndFixSusySig(0.) ;
       rfitNoSusy.doFit() ;
-      rfitNoSusy.profileZnnSig(low,high,1,"an-11-257-v3-files/output-files/znnSigProf-MCSMonly-NoSusy-loose-sel.png", 50. ) ;
+      rfitNoSusy.profileZnnSig(low,high,1,"an-11-257-v3-files/output-files/znnSigProf-MCSMonly-NoSusy-loose-sel.png", 80. ) ;
 
 
 
@@ -56,10 +56,10 @@
       rfitSusyFloat.profilettwjSig(low,high,1,"an-11-257-v3-files/output-files/ttwjSigProf-MCSMonly-susyFloat-lm9-loose-sel.png", 200. ) ;
       rfitSusyFloat.reinitialize() ;
       rfitSusyFloat.doFit() ;
-      rfitSusyFloat.profileqcdSig(low,high,1,"an-11-257-v3-files/output-files/qcdSigProf-MCSMonly-susyFloat-lm9-loose-sel.png", 40. ) ;
+      rfitSusyFloat.profileqcdSig(low,high,1,"an-11-257-v3-files/output-files/qcdSigProf-MCSMonly-susyFloat-lm9-loose-sel.png", 100. ) ;
       rfitSusyFloat.reinitialize() ;
       rfitSusyFloat.doFit() ;
-      rfitSusyFloat.profileZnnSig(low,high,1,"an-11-257-v3-files/output-files/znnSigProf-MCSMonly-susyFloat-lm9-loose-sel.png", 50. ) ;
+      rfitSusyFloat.profileZnnSig(low,high,1,"an-11-257-v3-files/output-files/znnSigProf-MCSMonly-susyFloat-lm9-loose-sel.png", 80. ) ;
 
 
       rfitSusyFloat.reinitialize() ;
@@ -98,11 +98,11 @@
       rfitSusyFix.reinitialize() ;
       rfitSusyFix.setAndFixSusySigToPredictedValue() ;
       rfitSusyFix.doFit() ;
-      rfitSusyFix.profileqcdSig(low,high,1,"an-11-257-v3-files/output-files/qcdSigProf-MCSMonly-susyFixed-lm9-loose-sel.png", 40. ) ;
+      rfitSusyFix.profileqcdSig(low,high,1,"an-11-257-v3-files/output-files/qcdSigProf-MCSMonly-susyFixed-lm9-loose-sel.png", 100. ) ;
       rfitSusyFix.reinitialize() ;
       rfitSusyFix.setAndFixSusySigToPredictedValue() ;
       rfitSusyFix.doFit() ;
-      rfitSusyFix.profileZnnSig(low,high,1,"an-11-257-v3-files/output-files/znnSigProf-MCSMonly-susyFixed-lm9-loose-sel.png", 50. ) ;
+      rfitSusyFix.profileZnnSig(low,high,1,"an-11-257-v3-files/output-files/znnSigProf-MCSMonly-susyFixed-lm9-loose-sel.png", 80. ) ;
 
 
 

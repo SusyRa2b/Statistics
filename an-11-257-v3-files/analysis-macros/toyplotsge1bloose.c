@@ -37,7 +37,7 @@
       gStyle->SetOptStat("emr") ;
 
       TH1F* httwjfit = new TH1F("httwjfit","ttwj",40, 50., 220. ) ;
-      TH1F* hqcdfit  = new TH1F("hqcdfit" ,"qcd" ,40, 0., 35. ) ;
+      TH1F* hqcdfit  = new TH1F("hqcdfit" ,"qcd" ,40, 0., 50. ) ;
       TH1F* hznnfit  = new TH1F("hznnfit" ,"znn" ,40, 0., 100. ) ;
 
       toyns.Draw("ttwj_sig_fit>>httwjfit","") ;
@@ -73,8 +73,8 @@
 
      //============ fit uncertainty
 
-      TH1F* httwjerr = new TH1F("httwjerr","ttwj",40, 5., 25. ) ;
-      TH1F* hqcderr  = new TH1F("hqcderr" ,"qcd" ,40, 0., 15. ) ;
+      TH1F* httwjerr = new TH1F("httwjerr","ttwj",40, 5., 35. ) ;
+      TH1F* hqcderr  = new TH1F("hqcderr" ,"qcd" ,40, 0., 30. ) ;
       TH1F* hznnerr  = new TH1F("hznnerr" ,"znn" ,40, 0., 25. ) ;
 
       toyns.Draw("ttwj_sig_err>>httwjerr","") ;
@@ -131,7 +131,7 @@
     //    If inputs are changed, grep the string "Data value of test statistic"
     //    in the runtoyge1bloose log file to find the new value.
     //
-      arrow->DrawArrow(2.16,150,2.16,0.,0,">") ;
+      arrow->DrawArrow(1.69,150,1.69,0.,0,">") ;
 
       TLegend* legend = new TLegend(0.4,0.5,0.8,0.8) ;
       legend->AddEntry( hbgo, "BG-only hypothesis") ;

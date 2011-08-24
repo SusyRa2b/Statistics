@@ -25,7 +25,7 @@
       rfitNoSusy.reinitialize() ;
       rfitNoSusy.setAndFixSusySig(0.) ;
       rfitNoSusy.doFit() ;
-      rfitNoSusy.profileqcdSig(low,high,1,"an-11-257-v3-files/output-files/qcdSigProf-MCSMsusy-NoSusy-tight-sel.png", 5. ) ;
+      rfitNoSusy.profileqcdSig(low,high,1,"an-11-257-v3-files/output-files/qcdSigProf-MCSMsusy-NoSusy-tight-sel.png", 20. ) ;
       rfitNoSusy.reinitialize() ;
       rfitNoSusy.setAndFixSusySig(0.) ;
       rfitNoSusy.doFit() ;
@@ -56,7 +56,7 @@
       rfitSusyFloat.profilettwjSig(low,high,1,"an-11-257-v3-files/output-files/ttwjSigProf-MCSMsusy-susyFloat-lm9-tight-sel.png", 100. ) ;
       rfitSusyFloat.reinitialize() ;
       rfitSusyFloat.doFit() ;
-      rfitSusyFloat.profileqcdSig(low,high,1,"an-11-257-v3-files/output-files/qcdSigProf-MCSMsusy-susyFloat-lm9-tight-sel.png", 5. ) ;
+      rfitSusyFloat.profileqcdSig(low,high,1,"an-11-257-v3-files/output-files/qcdSigProf-MCSMsusy-susyFloat-lm9-tight-sel.png", 20. ) ;
       rfitSusyFloat.reinitialize() ;
       rfitSusyFloat.doFit() ;
       rfitSusyFloat.profileZnnSig(low,high,1,"an-11-257-v3-files/output-files/znnSigProf-MCSMsusy-susyFloat-lm9-tight-sel.png", 20. ) ;
@@ -98,7 +98,7 @@
       rfitSusyFix.reinitialize() ;
       rfitSusyFix.setAndFixSusySigToPredictedValue() ;
       rfitSusyFix.doFit() ;
-      rfitSusyFix.profileqcdSig(low,high,1,"an-11-257-v3-files/output-files/qcdSigProf-MCSMsusy-susyFixed-lm9-tight-sel.png", 5. ) ;
+      rfitSusyFix.profileqcdSig(low,high,1,"an-11-257-v3-files/output-files/qcdSigProf-MCSMsusy-susyFixed-lm9-tight-sel.png", 20. ) ;
       rfitSusyFix.reinitialize() ;
       rfitSusyFix.setAndFixSusySigToPredictedValue() ;
       rfitSusyFix.doFit() ;

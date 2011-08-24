@@ -318,22 +318,25 @@
     // fitResult = likelihood->fitTo(*dsObserved, Save(true), Verbose(true) );
        fitResult = likelihood->fitTo(*dsObserved, Save(true) );
 
-       printf("\n\n----- Constant parameters:\n") ;
        RooArgList constPars = fitResult->constPars() ;
+       printf("\n\n----- Constant parameters: %d\n", constPars.getSize() ) ;
        for ( int pi=0; pi<constPars.getSize(); pi++ ) {
+          printf(" par %2d : ", pi ) ;
           constPars[pi].Print() ;
        } // pi.
 
-       printf("\n\n----- Floating parameters:\n") ;
        RooArgList floatPars = fitResult->floatParsFinal() ;
+       printf("\n\n----- Floating parameters: %d\n", floatPars.getSize() ) ;
        for ( int pi=0; pi<floatPars.getSize(); pi++ ) {
+          printf(" par %2d : ", pi ) ;
           floatPars[pi].Print() ;
        } // pi.
        printf("\n\n") ;
-
+       printf(" here 1\n") ;
        if ( znnModel == 2 ) {
           printf("\n Znn SB value : %6.2f\n\n", rfv_mu_znn_sb->getVal() ) ;
        }
+       printf(" here 2\n") ;
 
 
        varsAtFitVals = true ;
@@ -5150,55 +5153,57 @@
        TTree* tt(0x0) ;
 
        if ( isBgonlyStudy ) {
+          printf(" Creating bgonly ttree.\n") ;
           tt = new TTree("tt_cls_bgonly", "CLs BG-only toy study") ;
        } else {
+          printf(" Creating splusb ttree.\n") ;
           tt = new TTree("tt_cls_splusb", "CLs SIG+BG toy study") ;
        }
 
    //-- To save disk quota space, need to strip the ntuple WAY down.
 
-  ///  tt->Branch( "maxLogL"        , &maxLogL           , "maxLogL/D"            ) ;
-  ///  tt->Branch( "sfixedLogL"        , &sfixedLogL           , "sfixedLogL/D"            ) ;
+       tt->Branch( "maxLogL"        , &maxLogL           , "maxLogL/D"            ) ;
+       tt->Branch( "sfixedLogL"        , &sfixedLogL           , "sfixedLogL/D"            ) ;
        tt->Branch( "testStat"        , &testStat           , "testStat/D"            ) ;
 
-  ///  tt->Branch( "maxCovQual"        , &maxCovQual           , "maxCovQual/I"            ) ;
-  ///  tt->Branch( "sfixedCovQual"        , &sfixedCovQual           , "sfixedCovQual/I"            ) ;
+       tt->Branch( "maxCovQual"        , &maxCovQual           , "maxCovQual/I"            ) ;
+       tt->Branch( "sfixedCovQual"        , &sfixedCovQual           , "sfixedCovQual/I"            ) ;
 
-  ///  tt->Branch( "n_sig"        , &n_sig           , "n_sig/I"            ) ;
-  ///  tt->Branch( "n_sb"         , &n_sb            , "n_sb/I"             ) ;
-  ///  tt->Branch( "n_sig_ldp"    , &n_sig_ldp       , "n_sig_ldp/I"        ) ;
-  ///  tt->Branch( "n_sb_ldp"     , &n_sb_ldp        , "n_sb_ldp/I"         ) ;
-  ///  tt->Branch( "n_sig_sl"     , &n_sig_sl        , "n_sig_sl/I"         ) ;
-  ///  tt->Branch( "n_sb_sl"      , &n_sb_sl         , "n_sb_sl/I"          ) ;
-  ///  tt->Branch( "n_lsb_0b"     , &n_lsb_0b        , "n_lsb_0b/I"         ) ;
-  ///  tt->Branch( "n_lsb_0b_ldp" , &n_lsb_0b_ldp    , "n_lsb_0b_ldp/I"     ) ;
-  ///  if ( znnModel==1 ) {
-  ///     tt->Branch( "n_sig_ee"        , &n_sig_ee           , "n_sig_ee/I"            ) ;
-  ///     tt->Branch( "n_sb_ee"         , &n_sb_ee            , "n_sb_ee/I"             ) ;
-  ///     tt->Branch( "n_sig_mm"        , &n_sig_mm           , "n_sig_mm/I"            ) ;
-  ///     tt->Branch( "n_sb_mm"         , &n_sb_mm            , "n_sb_mm/I"             ) ;
-  ///  } else if (znnModel==2) {
-  ///     tt->Branch( "n_sigsb_ee"        , &n_sigsb_ee           , "n_sigsb_ee/I"            ) ;
-  ///     tt->Branch( "n_sigsb_mm"        , &n_sigsb_mm           , "n_sigsb_mm/I"            ) ;
-  ///  }
+       tt->Branch( "n_sig"        , &n_sig           , "n_sig/I"            ) ;
+       tt->Branch( "n_sb"         , &n_sb            , "n_sb/I"             ) ;
+       tt->Branch( "n_sig_ldp"    , &n_sig_ldp       , "n_sig_ldp/I"        ) ;
+       tt->Branch( "n_sb_ldp"     , &n_sb_ldp        , "n_sb_ldp/I"         ) ;
+       tt->Branch( "n_sig_sl"     , &n_sig_sl        , "n_sig_sl/I"         ) ;
+       tt->Branch( "n_sb_sl"      , &n_sb_sl         , "n_sb_sl/I"          ) ;
+       tt->Branch( "n_lsb_0b"     , &n_lsb_0b        , "n_lsb_0b/I"         ) ;
+       tt->Branch( "n_lsb_0b_ldp" , &n_lsb_0b_ldp    , "n_lsb_0b_ldp/I"     ) ;
+       if ( znnModel==1 ) {
+          tt->Branch( "n_sig_ee"        , &n_sig_ee           , "n_sig_ee/I"            ) ;
+          tt->Branch( "n_sb_ee"         , &n_sb_ee            , "n_sb_ee/I"             ) ;
+          tt->Branch( "n_sig_mm"        , &n_sig_mm           , "n_sig_mm/I"            ) ;
+          tt->Branch( "n_sb_mm"         , &n_sb_mm            , "n_sb_mm/I"             ) ;
+       } else if (znnModel==2) {
+          tt->Branch( "n_sigsb_ee"        , &n_sigsb_ee           , "n_sigsb_ee/I"            ) ;
+          tt->Branch( "n_sigsb_mm"        , &n_sigsb_mm           , "n_sigsb_mm/I"            ) ;
+       }
 
-  ///  tt->Branch( "tm_sig"        , &tm_sig           , "tm_sig/D"            ) ;
-  ///  tt->Branch( "tm_sb"         , &tm_sb            , "tm_sb/D"             ) ;
-  ///  tt->Branch( "tm_sig_ldp"    , &tm_sig_ldp       , "tm_sig_ldp/D"        ) ;
-  ///  tt->Branch( "tm_sb_ldp"     , &tm_sb_ldp        , "tm_sb_ldp/D"         ) ;
-  ///  tt->Branch( "tm_sig_sl"     , &tm_sig_sl        , "tm_sig_sl/D"         ) ;
-  ///  tt->Branch( "tm_sb_sl"      , &tm_sb_sl         , "tm_sb_sl/D"          ) ;
-  ///  tt->Branch( "tm_lsb_0b"     , &tm_lsb_0b        , "tm_lsb_0b/D"         ) ;
-  ///  tt->Branch( "tm_lsb_0b_ldp" , &tm_lsb_0b_ldp    , "tm_lsb_0b_ldp/D"     ) ;
-  ///  if ( znnModel==1 ) {
-  ///     tt->Branch( "tm_sig_ee"        , &tm_sig_ee           , "tm_sig_ee/D"            ) ;
-  ///     tt->Branch( "tm_sb_ee"         , &tm_sb_ee            , "tm_sb_ee/D"             ) ;
-  ///     tt->Branch( "tm_sig_mm"        , &tm_sig_mm           , "tm_sig_mm/D"            ) ;
-  ///     tt->Branch( "tm_sb_mm"         , &tm_sb_mm            , "tm_sb_mm/D"             ) ;
-  ///  } else if (znnModel==2) {
-  ///     tt->Branch( "tm_sigsb_ee"        , &tm_sigsb_ee           , "tm_sigsb_ee/D"            ) ;
-  ///     tt->Branch( "tm_sigsb_mm"        , &tm_sigsb_mm           , "tm_sigsb_mm/D"            ) ;
-  ///  }
+       tt->Branch( "tm_sig"        , &tm_sig           , "tm_sig/D"            ) ;
+       tt->Branch( "tm_sb"         , &tm_sb            , "tm_sb/D"             ) ;
+       tt->Branch( "tm_sig_ldp"    , &tm_sig_ldp       , "tm_sig_ldp/D"        ) ;
+       tt->Branch( "tm_sb_ldp"     , &tm_sb_ldp        , "tm_sb_ldp/D"         ) ;
+       tt->Branch( "tm_sig_sl"     , &tm_sig_sl        , "tm_sig_sl/D"         ) ;
+       tt->Branch( "tm_sb_sl"      , &tm_sb_sl         , "tm_sb_sl/D"          ) ;
+       tt->Branch( "tm_lsb_0b"     , &tm_lsb_0b        , "tm_lsb_0b/D"         ) ;
+       tt->Branch( "tm_lsb_0b_ldp" , &tm_lsb_0b_ldp    , "tm_lsb_0b_ldp/D"     ) ;
+       if ( znnModel==1 ) {
+          tt->Branch( "tm_sig_ee"        , &tm_sig_ee           , "tm_sig_ee/D"            ) ;
+          tt->Branch( "tm_sb_ee"         , &tm_sb_ee            , "tm_sb_ee/D"             ) ;
+          tt->Branch( "tm_sig_mm"        , &tm_sig_mm           , "tm_sig_mm/D"            ) ;
+          tt->Branch( "tm_sb_mm"         , &tm_sb_mm            , "tm_sb_mm/D"             ) ;
+       } else if (znnModel==2) {
+          tt->Branch( "tm_sigsb_ee"        , &tm_sigsb_ee           , "tm_sigsb_ee/D"            ) ;
+          tt->Branch( "tm_sigsb_mm"        , &tm_sigsb_mm           , "tm_sigsb_mm/D"            ) ;
+       }
 
 
        double original_mean_eff_sf_sig     = rv_mean_eff_sf_sig -> getVal() ;
@@ -5220,8 +5225,12 @@
        double original_np_m_eff_mm         = np_m_eff_mm  -> getVal() ;
        double original_np_m_fsig_ee        = np_m_fsig_ee  -> getVal() ;
        double original_np_m_fsig_mm        = np_m_fsig_mm  -> getVal() ;
-       double original_np_m_knn_sig        = np_m_knn_sig  -> getVal() ;
-       double original_np_m_knn_sb         = np_m_knn_sb  -> getVal() ;
+       double original_np_m_knn_sig(0.) ;
+       double original_np_m_knn_sb(0.) ;
+       if ( znnModel==2 ) {
+          original_np_m_knn_sig        = np_m_knn_sig  -> getVal() ;
+          original_np_m_knn_sb         = np_m_knn_sb  -> getVal() ;
+       }
 
 
        //-- memory management debugging
@@ -5335,122 +5344,6 @@
 
 
 
- ////     RooGaussian* tgl_pdf_sf_mc = new RooGaussian( "tgl_pdf_sf_mc", "ToyGenL Gaussian pdf for MC scale factor",
- ////                                                           *rv_sf_mc,
- ////                                                           RooConst( trandom_cls->Gaus( np_m_sf_mc, np_s_sf_mc ) ),
- ////                                                           RooConst( np_s_sf_mc ) ) ;
-
- ////     RooGaussian* tgl_pdf_sf_qcd_sb = new RooGaussian( "tgl_pdf_sf_qcd_sb", "ToyGenL Gaussian pdf for QCD pass/fail ratio for SB scale factor",
- ////                                                           *rv_sf_qcd_sb,
- ////                                                           RooConst( trandom_cls->Gaus( np_m_sf_qcd_sb, np_s_sf_qcd_sb ) ),
- ////                                                           RooConst( np_s_sf_qcd_sb ) ) ;
-
- ////     RooGaussian* tgl_pdf_sf_qcd_sig = new RooGaussian( "tgl_pdf_sf_qcd_sig", "ToyGenL Gaussian pdf for QCD pass/fail ratio for SIG scale factor",
- ////                                                           *rv_sf_qcd_sig,
- ////                                                           RooConst( trandom_cls->Gaus( np_m_sf_qcd_sig, np_s_sf_qcd_sig ) ),
- ////                                                           RooConst( np_s_sf_qcd_sig ) ) ;
-
- ////     RooGaussian* tgl_pdf_sf_ttwj_sig = new RooGaussian( "tgl_pdf_sf_ttwj_sig", "ToyGenL Gaussian pdf for ttwj SIG/SB scale factor",
- ////                                                           *rv_sf_ttwj_sig,
- ////                                                           RooConst( trandom_cls->Gaus( np_m_sf_ttwj_sig, np_s_sf_ttwj_sig ) ),
- ////                                                           RooConst( np_s_sf_ttwj_sig ) ) ;
-
- ////     RooGaussian* tgl_pdf_sf_ee = new RooGaussian( "tgl_pdf_sf_ee", "ToyGenL Gaussian pdf for Z to ee scale factor",
- ////                                                           *rv_sf_ee,
- ////                                                           RooConst( trandom_cls->Gaus( np_m_sf_ee, np_s_sf_ee ) ),
- ////                                                           RooConst( np_s_sf_ee ) ) ;
-
- ////     RooGaussian* tgl_pdf_sf_mm = new RooGaussian( "tgl_pdf_sf_mm", "ToyGenL Gaussian pdf for Z to mm scale factor",
- ////                                                           *rv_sf_mm,
- ////                                                           RooConst( trandom_cls->Gaus( np_m_sf_mm, np_s_sf_mm ) ),
- ////                                                           RooConst( np_s_sf_mm ) ) ;
-
- ////     RooGaussian* tgl_pdf_acc_ee = new RooGaussian( "tgl_pdf_acc_ee", "ToyGenL Gaussian pdf for Z to ee acceptance",
- ////                                                           *rv_acc_ee,
- ////                                                           RooConst( trandom_cls->Gaus( np_m_acc_ee, np_s_acc_ee ) ),
- ////                                                           RooConst( np_s_acc_ee ) ) ;
-
- ////     RooGaussian* tgl_pdf_acc_mm = new RooGaussian( "tgl_pdf_acc_mm", "ToyGenL Gaussian pdf for Z to mm acceptance",
- ////                                                           *rv_acc_mm,
- ////                                                           RooConst( trandom_cls->Gaus( np_m_acc_mm, np_s_acc_mm ) ),
- ////                                                           RooConst( np_s_acc_mm ) ) ;
-
- ////     RooGaussian* tgl_pdf_eff_ee = new RooGaussian( "tgl_pdf_eff_ee", "ToyGenL Gaussian pdf for Z to ee efficiency",
- ////                                                           *rv_eff_ee,
- ////                                                           RooConst( trandom_cls->Gaus( np_m_eff_ee, np_s_eff_ee ) ),
- ////                                                           RooConst( np_s_eff_ee ) ) ;
-
- ////     RooGaussian* tgl_pdf_eff_mm = new RooGaussian( "tgl_pdf_eff_mm", "ToyGenL Gaussian pdf for Z to mm efficiency",
- ////                                                           *rv_eff_mm,
- ////                                                           RooConst( trandom_cls->Gaus( np_m_eff_mm, np_s_eff_mm ) ),
- ////                                                           RooConst( np_s_eff_mm ) ) ;
-
- ////     RooGaussian* tgl_pdf_fsig_ee = new RooGaussian( "tgl_pdf_fsig_ee", "ToyGenL Gaussian pdf for Z to ee purity",
- ////                                                           *rv_fsig_ee,
- ////                                                           RooConst( trandom_cls->Gaus( np_m_fsig_ee, np_s_fsig_ee ) ),
- ////                                                           RooConst( np_s_fsig_ee ) ) ;
-
- ////     RooGaussian* tgl_pdf_fsig_mm = new RooGaussian( "tgl_pdf_fsig_mm", "ToyGenL Gaussian pdf for Z to mm purity",
- ////                                                           *rv_fsig_mm,
- ////                                                           RooConst( trandom_cls->Gaus( np_m_fsig_mm, np_s_fsig_mm ) ),
- ////                                                           RooConst( np_s_fsig_mm ) ) ;
-
- ////     RooGaussian* tgl_pdf_knn_sig(0x0) ;
- ////     RooGaussian* tgl_pdf_knn_sb(0x0) ;
-
- ////     if ( znnModel == 2 ) {
-
- ////        tgl_pdf_knn_sig = new RooGaussian( "tgl_pdf_knn_sig", "ToyGenL Gaussian pdf for Z to nunu loose to tight signal scale factor",
- ////                                         *rv_knn_sig ,
- ////                                         RooConst( trandom_cls->Gaus( np_m_knn_sig, np_s_knn_sig ) ) ,
- ////                                         RooConst( np_s_knn_sig ) ) ;
-
- ////        tgl_pdf_knn_sb = new RooGaussian( "tgl_pdf_knn_sb", "ToyGenL Gaussian pdf for Z to nunu loose to tight SB scale factor",
- ////                                         *rv_knn_sb ,
- ////                                         RooConst( trandom_cls->Gaus( np_m_knn_sb, np_s_knn_sb ) ) ,
- ////                                         RooConst( knn_sb_err ) ) ;
-
- ////     }
-
-
-
- ////    RooArgSet tgl_pdflist ;
- ////    tgl_pdflist.add( *pdf_Nsig        ) ;
- ////    tgl_pdflist.add( *pdf_Nsb         ) ;
- ////    tgl_pdflist.add( *pdf_Nsig_ldp    ) ;
- ////    tgl_pdflist.add( *pdf_Nsb_ldp     ) ;
- ////    tgl_pdflist.add( *pdf_Nsig_sl     ) ;
- ////    tgl_pdflist.add( *pdf_Nsb_sl      ) ;
- ////    tgl_pdflist.add( *pdf_Nlsb_0b     ) ;
- ////    tgl_pdflist.add( *pdf_Nlsb_0b_ldp ) ;
- ////    if ( znnModel == 1 ) {
- ////       tgl_pdflist.add( *pdf_Nsig_ee     ) ;
- ////       tgl_pdflist.add( *pdf_Nsb_ee      ) ;
- ////       tgl_pdflist.add( *pdf_Nsig_mm     ) ;
- ////       tgl_pdflist.add( *pdf_Nsb_mm      ) ;
- ////    } else if ( znnModel == 2 ) {
- ////       tgl_pdflist.add( *pdf_Nsigsb_ee   ) ;
- ////       tgl_pdflist.add( *pdf_Nsigsb_mm   ) ;
- ////       tgl_pdflist.add( *tgl_pdf_knn_sig     ) ;
- ////       tgl_pdflist.add( *tgl_pdf_knn_sb      ) ;
- ////    }
- ////    tgl_pdflist.add( *tgl_pdf_sf_mc      ) ;
- ////    tgl_pdflist.add( *tgl_pdf_sf_qcd_sb      ) ;
- ////    tgl_pdflist.add( *tgl_pdf_sf_qcd_sig      ) ;
- ////    tgl_pdflist.add( *tgl_pdf_sf_ttwj_sig      ) ;
- ////    tgl_pdflist.add( *tgl_pdf_sf_ee      ) ;
- ////    tgl_pdflist.add( *tgl_pdf_sf_mm      ) ;
-
- ////    tgl_pdflist.add( *tgl_pdf_acc_ee      ) ;
- ////    tgl_pdflist.add( *tgl_pdf_acc_mm      ) ;
- ////    tgl_pdflist.add( *tgl_pdf_eff_ee      ) ;
- ////    tgl_pdflist.add( *tgl_pdf_eff_mm      ) ;
- ////    tgl_pdflist.add( *tgl_pdf_fsig_ee      ) ;
- ////    tgl_pdflist.add( *tgl_pdf_fsig_mm      ) ;
-
- ////    tgl_pdflist.add( *pdf_eff_sf_prim      ) ;
-
- ////    RooProdPdf* tgl_likelihood = new RooProdPdf( "tgl_likelihood", "ToyGen ra2b likelihood", tgl_pdflist ) ;
 
 
 
@@ -5546,8 +5439,10 @@
           np_m_eff_mm       -> setVal( original_np_m_eff_mm      ) ;
           np_m_fsig_ee      -> setVal( original_np_m_fsig_ee     ) ;
           np_m_fsig_mm      -> setVal( original_np_m_fsig_mm     ) ;
-          np_m_knn_sig      -> setVal( original_np_m_knn_sig     ) ;
-          np_m_knn_sb       -> setVal( original_np_m_knn_sb      ) ;
+          if ( znnModel == 2 ) {
+             np_m_knn_sig      -> setVal( original_np_m_knn_sig     ) ;
+             np_m_knn_sb       -> setVal( original_np_m_knn_sb      ) ;
+          }
 
 
 
@@ -5694,24 +5589,6 @@
           toyFitobservedParametersList.removeAll() ;
           delete toyGenFitdsObserved ;
           delete toyFitdsObserved ;
-  //////  tgl_pdflist.removeAll() ;
-  //////  delete tgl_likelihood ;
-  //////  delete tgl_pdf_sf_mc ;
-  //////  delete tgl_pdf_sf_qcd_sb ;
-  //////  delete tgl_pdf_sf_qcd_sig ;
-  //////  delete tgl_pdf_sf_ttwj_sig ;
-  //////  delete tgl_pdf_sf_ee ;
-  //////  delete tgl_pdf_sf_mm ;
-  //////  delete tgl_pdf_acc_ee ;
-  //////  delete tgl_pdf_acc_mm ;
-  //////  delete tgl_pdf_eff_ee ;
-  //////  delete tgl_pdf_eff_mm ;
-  //////  delete tgl_pdf_fsig_ee ;
-  //////  delete tgl_pdf_fsig_mm ;
-  //////  if ( znnModel == 2 ) {
-  //////     delete tgl_pdf_knn_sig ;
-  //////     delete tgl_pdf_knn_sb ;
-  //////  }
           printf(" Done cleaning up.\n") ;
 
         //--- memory management debugging
@@ -5722,7 +5599,7 @@
 
 
   //-- turn off root output to save disk quota.
-  //// tt->Write() ;
+       tt->Write() ;
 
        retVal = (1.0*nWorse)/(1.0*nToys) ;
 

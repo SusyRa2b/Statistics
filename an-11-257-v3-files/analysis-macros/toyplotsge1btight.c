@@ -74,7 +74,7 @@
      //============ fit uncertainty
 
       TH1F* httwjerr = new TH1F("httwjerr","ttwj",40, 0., 10. ) ;
-      TH1F* hqcderr  = new TH1F("hqcderr" ,"qcd" ,40, 0., 2. ) ;
+      TH1F* hqcderr  = new TH1F("hqcderr" ,"qcd" ,40, 0., 8. ) ;
       TH1F* hznnerr  = new TH1F("hznnerr" ,"znn" ,40, 0., 10. ) ;
 
       toyns.Draw("ttwj_sig_err>>httwjerr","") ;
@@ -131,7 +131,7 @@
     //    If inputs are changed, grep the string "Data value of test statistic"
     //    in the runtoyge1btight log file to find the new value.
     //
-      arrow->DrawArrow(1.73,150,1.73,0.,0,">") ;
+      arrow->DrawArrow(1.13,150,1.13,0.,0,">") ;
 
       TLegend* legend = new TLegend(0.4,0.5,0.8,0.8) ;
       legend->AddEntry( hbgo, "BG-only hypothesis") ;

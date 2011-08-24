@@ -89,6 +89,7 @@
 
       rfit.saveToymeanSnapshot() ;
 
+      printf("\n\n    Starting BG-only toy study \n\n") ;
       double bgonlyPvalue = rfit.doToyStudy(1000,1, data_q ) ;
 
       printf(" +++++++++++ p-value of BG-only hypothesis : %8.3f\n", bgonlyPvalue ) ;
@@ -110,6 +111,7 @@
 
       rfit.saveToymeanSnapshot() ;
 
+      printf("\n\n    Starting SIG-plus-BG toy study \n\n") ;
       double splusbPvalue = rfit.doToyStudy(1000,0, data_q ) ;
 
       printf(" +++++++++++ p-value of SIG+BG hypothesis : %8.3f\n", splusbPvalue ) ;
