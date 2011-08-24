@@ -1836,20 +1836,20 @@
 
 
     //--- mean parameters.
-      rv_mean_eff_sf_sig     = new RooRealVar( "mean_eff_sf_sig"    , "mean_eff_sf_sig", 0., 1. ) ;
-      rv_mean_eff_sf_sb      = new RooRealVar( "mean_eff_sf_sb"     , "mean_eff_sf_sb", 0., 1. ) ;
-      rv_mean_eff_sf_sig_sl  = new RooRealVar( "mean_eff_sf_sig_sl" , "mean_eff_sf_sig_sl", 0., 1. ) ;
-      rv_mean_eff_sf_sb_sl   = new RooRealVar( "mean_eff_sf_sb_sl"  , "mean_eff_sf_sb_sl", 0., 1. ) ;
-      rv_mean_eff_sf_sig_ldp = new RooRealVar( "mean_eff_sf_sig_ldp", "mean_eff_sf_sig_ldp", 0., 1. ) ;
-      rv_mean_eff_sf_sb_ldp  = new RooRealVar( "mean_eff_sf_sb_ldp" , "mean_eff_sf_sb_ldp", 0., 1. ) ;
+      rv_mean_eff_sf_sig     = new RooRealVar( "mean_eff_sf_sig"    , "mean_eff_sf_sig", 0., 10. ) ;
+      rv_mean_eff_sf_sb      = new RooRealVar( "mean_eff_sf_sb"     , "mean_eff_sf_sb", 0., 10. ) ;
+      rv_mean_eff_sf_sig_sl  = new RooRealVar( "mean_eff_sf_sig_sl" , "mean_eff_sf_sig_sl", 0., 10. ) ;
+      rv_mean_eff_sf_sb_sl   = new RooRealVar( "mean_eff_sf_sb_sl"  , "mean_eff_sf_sb_sl", 0., 10. ) ;
+      rv_mean_eff_sf_sig_ldp = new RooRealVar( "mean_eff_sf_sig_ldp", "mean_eff_sf_sig_ldp", 0., 10. ) ;
+      rv_mean_eff_sf_sb_ldp  = new RooRealVar( "mean_eff_sf_sb_ldp" , "mean_eff_sf_sb_ldp", 0., 10. ) ;
 
     //--- width parameters.
-      rv_width_eff_sf_sig     = new RooRealVar( "width_eff_sf_sig"    , "width_eff_sf_sig", 0., 1. ) ;
-      rv_width_eff_sf_sb      = new RooRealVar( "width_eff_sf_sb"     , "width_eff_sf_sb", 0., 1. ) ;
-      rv_width_eff_sf_sig_sl  = new RooRealVar( "width_eff_sf_sig_sl" , "width_eff_sf_sig_sl", 0., 1. ) ;
-      rv_width_eff_sf_sb_sl   = new RooRealVar( "width_eff_sf_sb_sl"  , "width_eff_sf_sb_sl", 0., 1. ) ;
-      rv_width_eff_sf_sig_ldp = new RooRealVar( "width_eff_sf_sig_ldp", "width_eff_sf_sig_ldp", 0., 1. ) ;
-      rv_width_eff_sf_sb_ldp  = new RooRealVar( "width_eff_sf_sb_ldp" , "width_eff_sf_sb_ldp", 0., 1. ) ;
+      rv_width_eff_sf_sig     = new RooRealVar( "width_eff_sf_sig"    , "width_eff_sf_sig", 0., 10. ) ;
+      rv_width_eff_sf_sb      = new RooRealVar( "width_eff_sf_sb"     , "width_eff_sf_sb", 0., 10. ) ;
+      rv_width_eff_sf_sig_sl  = new RooRealVar( "width_eff_sf_sig_sl" , "width_eff_sf_sig_sl", 0., 10. ) ;
+      rv_width_eff_sf_sb_sl   = new RooRealVar( "width_eff_sf_sb_sl"  , "width_eff_sf_sb_sl", 0., 10. ) ;
+      rv_width_eff_sf_sig_ldp = new RooRealVar( "width_eff_sf_sig_ldp", "width_eff_sf_sig_ldp", 0., 10. ) ;
+      rv_width_eff_sf_sb_ldp  = new RooRealVar( "width_eff_sf_sb_ldp" , "width_eff_sf_sb_ldp", 0., 10. ) ;
 
 
       rv_mean_eff_sf_sig     -> setVal( 1.00 ) ;
