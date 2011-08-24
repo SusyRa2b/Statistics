@@ -12,7 +12,7 @@
       rfit.initialize("an-11-257-v3-files/input-files/byhand-data-ge2b-tight.txt") ;
       rfit.doFit() ;
       rfit.parameterSnapshot() ;
-      rfit.susyScanWithContam("an-11-257-v3-files/input-files/signalSyst.T1bbbb-preliminary.ge2btight.dat",
+      rfit.susyScanWithContam("an-11-257-v3-files/input-files/signalSyst.T1bbbb.ge2btight.dat",
                               "an-11-257-v3-files/output-files/an-scanplot-unblind-t1bbbb-withcontam-ge2b-tight", 1 ) ;
 
 

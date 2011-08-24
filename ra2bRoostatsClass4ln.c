@@ -3115,12 +3115,12 @@
           maxM12 = 760 ;
           deltaM12 = 20 ;
        } else {
-          nM0bins = 60 ;
+          nM0bins = 61 ;
           minM0 = 0 ;
           maxM0 = 1500 ;
           deltaM0 = 25 ;
 
-          nM12bins = 60 ;
+          nM12bins = 61 ;
           minM12 = 0 ;
           maxM12 = 1500 ;
           deltaM12 = 25 ;
@@ -3181,12 +3181,12 @@
 
        if ( isT1bbbb ) {
           hsusyscanXsecul = new TH2F( "hsusyscanXsecul","T1bbbb Xsec upper limit",
-               nM0bins, minM0, maxM0,
-               nM12bins, minM12, maxM12 ) ;
+               nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
+               nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
 
           hsusyscanEfficiency = new TH2F( "hsusyscanEfficiency", "T1bbbb efficiency",
-               nM0bins, minM0, maxM0,
-               nM12bins, minM12, maxM12 ) ;
+               nM0bins, minM0-deltaM0/2., maxM0+deltaM0/2.,
+               nM12bins, minM12-deltaM12/2., maxM12+deltaM12/2. ) ;
        }
 
        printf(" t1bbbb scan point:  mGluino   mLSP     Eff     NsigUL    XsecUL\n" ) ;
@@ -3231,7 +3231,8 @@
 
           if ( feof(infp) ) break ;
           if ( n_sig_raw < 0.00001 ) continue ;
-          if ( nGen != 10000 ) continue ; // get rid of bad scan points.
+     //// if ( nGen != 10000 ) continue ; // get rid of bad scan points.
+          if ( nGen  < 9995 || nGen > 10000 ) continue ; // get rid of bad scan points.
 
            double nGenPerPoint = 10000 ; // for t1bbbb
 
