@@ -1558,7 +1558,9 @@
 
       rv_mu_znn_sig      = new RooRealVar( "mu_znn_sig"    , "mu_znn_sig"    , 0.0, 80. ) ;
 
-      float maxSusySig = 4.0*Nsig ;
+  //---- Aug 26: increase to x 10.
+  //  float maxSusySig = 4.0*Nsig ;
+      float maxSusySig = 10.0*Nsig ;
       rv_mu_susy_sig     = new RooRealVar( "mu_susy_sig"   , "mu_susy_sig"   , 0.0, maxSusySig ) ;
 
 
@@ -4924,8 +4926,8 @@
        delta = 0. ;
        if ( EffScaleFactorErr>0 ) { delta = (rv_eff_sf_sig->getVal()-1.0)/(rv_width_eff_sf_sig->getVal()) ; }
        printf("  Eff scale fac. :  input = %4.2f +/- %4.2f ,   fit = %4.2f, delta = %4.2f sigma.  \n",
-              EffScaleFactor,
-              EffScaleFactorErr,
+              rv_eff_sf_sig->getVal(),
+              rv_width_eff_sf_sig->getVal(),
               rv_eff_sf_sig->getVal(),
               delta ) ;
 
@@ -5147,6 +5149,14 @@
        double sfixedLogL ;
        double testStat ;
 
+       double hypo_fit_sf_eff_sig ;
+       double sig_eff_err ;
+
+       double sig0_fit_sf_eff_sig ;
+       double sig0_fit_mu_susy_sig ;
+       double sigfloat_fit_sf_eff_sig ;
+       double sigfloat_fit_mu_susy_sig ;
+
        int maxCovQual ;
        int sfixedCovQual ;
 
@@ -5205,6 +5215,12 @@
           tt->Branch( "tm_sigsb_ee"        , &tm_sigsb_ee           , "tm_sigsb_ee/D"            ) ;
           tt->Branch( "tm_sigsb_mm"        , &tm_sigsb_mm           , "tm_sigsb_mm/D"            ) ;
        }
+       tt->Branch( "hypo_fit_sf_eff_sig" , &hypo_fit_sf_eff_sig    , "hypo_fit_sf_eff_sig/D"     ) ;
+       tt->Branch( "sig_eff_err" , &sig_eff_err    , "sig_eff_err/D"     ) ;
+       tt->Branch( "sig0_fit_sf_eff_sig" , &sig0_fit_sf_eff_sig    , "sig0_fit_sf_eff_sig/D"     ) ;
+       tt->Branch( "sig0_fit_mu_susy_sig" , &sig0_fit_mu_susy_sig    , "sig0_fit_mu_susy_sig/D"     ) ;
+       tt->Branch( "sigfloat_fit_sf_eff_sig" , &sigfloat_fit_sf_eff_sig    , "sigfloat_fit_sf_eff_sig/D"     ) ;
+       tt->Branch( "sigfloat_fit_mu_susy_sig" , &sigfloat_fit_mu_susy_sig    , "sigfloat_fit_mu_susy_sig/D"     ) ;
 
 
        double original_mean_eff_sf_sig     = rv_mean_eff_sf_sig -> getVal() ;
@@ -5409,6 +5425,8 @@
           parameterSnapshot() ;
           delete toyFitResult ;
 
+          hypo_fit_sf_eff_sig = rv_eff_sf_sig -> getVal() ;
+          sig_eff_err = rv_width_eff_sf_sig -> getVal() ;
 
 
        //--- Step 4) Use the results of this fit to generate a toy dataset.
@@ -5485,7 +5503,9 @@
           double maxL_mu_susy_sig = rv_mu_susy_sig->getVal() ;
           maxLogL = toyFitResult->minNll() ;
           maxCovQual = toyFitResult->covQual() ;
-          printf("\n  Fit result with susy floating for toy %d : %8.3f \n\n", ti, maxLogL ) ;
+          sigfloat_fit_sf_eff_sig = rv_eff_sf_sig -> getVal() ;
+          sigfloat_fit_mu_susy_sig = rv_mu_susymc_sig->getVal() ;
+          printf("\n  Fit result with susy floating for toy %d : %8.3f, mu_susy_sig = %8.1f\n\n", ti, maxLogL, rv_mu_susy_sig->getVal() ) ;
           parameterSnapshot() ;
           delete toyFitResult ;
 
@@ -5495,6 +5515,8 @@
         //    If it the maxL value is greater than the predicted value, set the test statistic to zero.
         //    This is to get a one-sided limit.
 
+          sig0_fit_sf_eff_sig = -1. ;
+          sig0_fit_mu_susy_sig = -1. ;
           if ( maxL_mu_susy_sig < (rv_mu_susymc_sig->getVal()) ) {
             //-- fit with susy yield fixed to susy model prediction.
              rv_mu_susy_sig -> setVal( rv_mu_susymc_sig->getVal() ) ;
@@ -5505,6 +5527,8 @@
              sfixedLogL = toyFitResult->minNll() ;
              sfixedCovQual = toyFitResult->covQual() ;
              testStat = 2.*(sfixedLogL-maxLogL) ;
+             sig0_fit_sf_eff_sig = rv_eff_sf_sig -> getVal() ;
+             sig0_fit_mu_susy_sig = rv_mu_susymc_sig->getVal() ;
              printf("\n  Fit result with susy fixed to prediction for toy %d : %8.3f, %8.3f \n\n", ti, sfixedLogL, testStat ) ;
              parameterSnapshot() ;
              delete toyFitResult ;
