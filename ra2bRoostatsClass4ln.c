@@ -5154,8 +5154,10 @@
 
        double sig0_fit_sf_eff_sig ;
        double sig0_fit_mu_susy_sig ;
+       double sig0_fit_eff_sf_prim ;
        double sigfloat_fit_sf_eff_sig ;
        double sigfloat_fit_mu_susy_sig ;
+       double sigfloat_fit_eff_sf_prim ;
 
        int maxCovQual ;
        int sfixedCovQual ;
@@ -5219,8 +5221,10 @@
        tt->Branch( "sig_eff_err" , &sig_eff_err    , "sig_eff_err/D"     ) ;
        tt->Branch( "sig0_fit_sf_eff_sig" , &sig0_fit_sf_eff_sig    , "sig0_fit_sf_eff_sig/D"     ) ;
        tt->Branch( "sig0_fit_mu_susy_sig" , &sig0_fit_mu_susy_sig    , "sig0_fit_mu_susy_sig/D"     ) ;
+       tt->Branch( "sig0_fit_eff_sf_prim" , &sig0_fit_eff_sf_prim    , "sig0_fit_eff_sf_prim/D"     ) ;
        tt->Branch( "sigfloat_fit_sf_eff_sig" , &sigfloat_fit_sf_eff_sig    , "sigfloat_fit_sf_eff_sig/D"     ) ;
        tt->Branch( "sigfloat_fit_mu_susy_sig" , &sigfloat_fit_mu_susy_sig    , "sigfloat_fit_mu_susy_sig/D"     ) ;
+       tt->Branch( "sigfloat_fit_eff_sf_prim" , &sigfloat_fit_eff_sf_prim    , "sigfloat_fit_eff_sf_prim/D"     ) ;
 
 
        double original_mean_eff_sf_sig     = rv_mean_eff_sf_sig -> getVal() ;
@@ -5504,7 +5508,8 @@
           maxLogL = toyFitResult->minNll() ;
           maxCovQual = toyFitResult->covQual() ;
           sigfloat_fit_sf_eff_sig = rv_eff_sf_sig -> getVal() ;
-          sigfloat_fit_mu_susy_sig = rv_mu_susymc_sig->getVal() ;
+          sigfloat_fit_mu_susy_sig = rv_mu_susy_sig->getVal() ;
+          sigfloat_fit_eff_sf_prim = rv_eff_sf_prim->getVal() ;
           printf("\n  Fit result with susy floating for toy %d : %8.3f, mu_susy_sig = %8.1f\n\n", ti, maxLogL, rv_mu_susy_sig->getVal() ) ;
           parameterSnapshot() ;
           delete toyFitResult ;
@@ -5517,6 +5522,7 @@
 
           sig0_fit_sf_eff_sig = -1. ;
           sig0_fit_mu_susy_sig = -1. ;
+          sig0_fit_eff_sf_prim = -1. ;
           if ( maxL_mu_susy_sig < (rv_mu_susymc_sig->getVal()) ) {
             //-- fit with susy yield fixed to susy model prediction.
              rv_mu_susy_sig -> setVal( rv_mu_susymc_sig->getVal() ) ;
@@ -5528,7 +5534,8 @@
              sfixedCovQual = toyFitResult->covQual() ;
              testStat = 2.*(sfixedLogL-maxLogL) ;
              sig0_fit_sf_eff_sig = rv_eff_sf_sig -> getVal() ;
-             sig0_fit_mu_susy_sig = rv_mu_susymc_sig->getVal() ;
+             sig0_fit_mu_susy_sig = rv_mu_susy_sig->getVal() ;
+             sig0_fit_eff_sf_prim = rv_eff_sf_prim->getVal() ;
              printf("\n  Fit result with susy fixed to prediction for toy %d : %8.3f, %8.3f \n\n", ti, sfixedLogL, testStat ) ;
              parameterSnapshot() ;
              delete toyFitResult ;
