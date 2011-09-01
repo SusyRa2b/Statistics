@@ -4,6 +4,10 @@
 # Args: mg mlsp Xsec iter
 #
 
+  set jobdir = `pwd`
+
+  echo jobdir is $jobdir
+
   cd /afs/cern.ch/user/o/owen/rel-dirs/CMSSW_4_2_5
 
   echo doing cmsenv
@@ -136,28 +140,23 @@ endif
 # mkdir -p output-files-ge2btight-t1bbbb-iter$4
 
 
-  echo testing /tmp/owen area
-
-  touch /tmp/owen/testfile
-  ls -l /tmp/owen
-
 
 #---------
-  root -b -q cls-scripts-v2/runcls_ln_ge2btight_t1bbbb.c\($1,$2,$3\) >& /tmp/owen/cls-ge2btight-t1bbbb-$1-$2-iter$4.log
+  root -b -q cls-scripts-v2/runcls_ln_ge2btight_t1bbbb.c\($1,$2,$3\) >& $jobdir/cls-ge2btight-t1bbbb-$1-$2-iter$4.log
 
   echo Done with running root.
 
-  echo listing of /tmp/owen is
-  ls -l /tmp/owen
+  echo listing of jobdir $jobdir is
+  ls -l $jobdir
 
 
   echo Log file is cls-ge2btight-t1bbbb-$1-$2-iter$4.log   Checking it...
-  ls -l /tmp/owen/cls-ge2btight-t1bbbb-$1-$2-iter$4.log
+  ls -l $jobdir/cls-ge2btight-t1bbbb-$1-$2-iter$4.log
 
   echo doing the greps
-  grep "test stat"    /tmp/owen/cls-ge2btight-t1bbbb-$1-$2-iter$4.log >  log-files-ge2btight-t1bbbb-iter$4/short-cls-ge2btight-t1bbbb-$1-$2-iter$4.log
-  grep "p-value of"   /tmp/owen/cls-ge2btight-t1bbbb-$1-$2-iter$4.log >> log-files-ge2btight-t1bbbb-iter$4/short-cls-ge2btight-t1bbbb-$1-$2-iter$4.log
-  grep "final result" /tmp/owen/cls-ge2btight-t1bbbb-$1-$2-iter$4.log >> log-files-ge2btight-t1bbbb-iter$4/short-cls-ge2btight-t1bbbb-$1-$2-iter$4.log
+  grep "test stat"    $jobdir/cls-ge2btight-t1bbbb-$1-$2-iter$4.log >  log-files-ge2btight-t1bbbb-iter$4/short-cls-ge2btight-t1bbbb-$1-$2-iter$4.log
+  grep "p-value of"   $jobdir/cls-ge2btight-t1bbbb-$1-$2-iter$4.log >> log-files-ge2btight-t1bbbb-iter$4/short-cls-ge2btight-t1bbbb-$1-$2-iter$4.log
+  grep "final result" $jobdir/cls-ge2btight-t1bbbb-$1-$2-iter$4.log >> log-files-ge2btight-t1bbbb-iter$4/short-cls-ge2btight-t1bbbb-$1-$2-iter$4.log
 
   gzip -9v log-files-ge2btight-t1bbbb-iter$4/short-cls-ge2btight-t1bbbb-$1-$2-iter$4.log
 #---------

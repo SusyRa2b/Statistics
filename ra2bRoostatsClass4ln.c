@@ -1559,8 +1559,10 @@
       rv_mu_znn_sig      = new RooRealVar( "mu_znn_sig"    , "mu_znn_sig"    , 0.0, 80. ) ;
 
   //---- Aug 26: increase to x 10.
+  //---- Aug 30: increase to x 100.
   //  float maxSusySig = 4.0*Nsig ;
-      float maxSusySig = 10.0*Nsig ;
+  //  float maxSusySig = 10.0*Nsig ;
+      float maxSusySig = 100.0*Nsig ;
       rv_mu_susy_sig     = new RooRealVar( "mu_susy_sig"   , "mu_susy_sig"   , 0.0, maxSusySig ) ;
 
 
@@ -1890,8 +1892,9 @@
 
     //--- Underlying Gaussian variable for log-normal.
 
-      rv_eff_sf_prim = new RooRealVar("eff_sf_prim", "eff_sf_prim", 0., -5., 5. ) ;
-      rv_eff_sf_nom  = new RooRealVar("eff_sf_nom" , "eff_sf_nom" , 0., -5., 5. ) ;
+   //--- Owen, Aug 30: increase range from +-5 to +-15
+      rv_eff_sf_prim = new RooRealVar("eff_sf_prim", "eff_sf_prim", 0., -15., 15. ) ;
+      rv_eff_sf_nom  = new RooRealVar("eff_sf_nom" , "eff_sf_nom" , 0., -15., 15. ) ;
       rv_eff_sf_nom->setConstant() ;
 
 
@@ -5150,6 +5153,7 @@
        double testStat ;
 
        double hypo_fit_sf_eff_sig ;
+       double hypo_fit_eff_sf_prim ;
        double sig_eff_err ;
 
        double sig0_fit_sf_eff_sig ;
@@ -5158,6 +5162,7 @@
        double sigfloat_fit_sf_eff_sig ;
        double sigfloat_fit_mu_susy_sig ;
        double sigfloat_fit_eff_sf_prim ;
+       double toygen_eff_sf_sig_mean ;
 
        int maxCovQual ;
        int sfixedCovQual ;
@@ -5218,6 +5223,7 @@
           tt->Branch( "tm_sigsb_mm"        , &tm_sigsb_mm           , "tm_sigsb_mm/D"            ) ;
        }
        tt->Branch( "hypo_fit_sf_eff_sig" , &hypo_fit_sf_eff_sig    , "hypo_fit_sf_eff_sig/D"     ) ;
+       tt->Branch( "hypo_fit_eff_sf_prim" , &hypo_fit_eff_sf_prim    , "hypo_fit_eff_sf_prim/D"     ) ;
        tt->Branch( "sig_eff_err" , &sig_eff_err    , "sig_eff_err/D"     ) ;
        tt->Branch( "sig0_fit_sf_eff_sig" , &sig0_fit_sf_eff_sig    , "sig0_fit_sf_eff_sig/D"     ) ;
        tt->Branch( "sig0_fit_mu_susy_sig" , &sig0_fit_mu_susy_sig    , "sig0_fit_mu_susy_sig/D"     ) ;
@@ -5225,6 +5231,8 @@
        tt->Branch( "sigfloat_fit_sf_eff_sig" , &sigfloat_fit_sf_eff_sig    , "sigfloat_fit_sf_eff_sig/D"     ) ;
        tt->Branch( "sigfloat_fit_mu_susy_sig" , &sigfloat_fit_mu_susy_sig    , "sigfloat_fit_mu_susy_sig/D"     ) ;
        tt->Branch( "sigfloat_fit_eff_sf_prim" , &sigfloat_fit_eff_sf_prim    , "sigfloat_fit_eff_sf_prim/D"     ) ;
+       tt->Branch( "toygen_eff_sf_sig_mean" , &toygen_eff_sf_sig_mean    , "toygen_eff_sf_sig_mean/D"     ) ;
+
 
 
        double original_mean_eff_sf_sig     = rv_mean_eff_sf_sig -> getVal() ;
@@ -5254,6 +5262,7 @@
        }
 
 
+
        //-- memory management debugging
        ////// RooTrace::active(kTRUE) ;
 
@@ -5276,9 +5285,12 @@
 
           double grn ;
 
-          grn = -1. ;
-          while ( grn < 0. ) { grn = trandom_cls->Gaus( original_mean_eff_sf_sig, rv_width_eff_sf_sig->getVal() ) ; }
-          rv_mean_eff_sf_sig -> setVal( grn ) ;
+  //-------- Trying new method
+     //// grn = -1. ;
+     //// while ( grn < 0. ) { grn = trandom_cls->Gaus( original_mean_eff_sf_sig, rv_width_eff_sf_sig->getVal() ) ; }
+     //// rv_mean_eff_sf_sig -> setVal( grn ) ;
+     //// toygen_eff_sf_sig_mean = grn ;
+  //-------- Trying new method
 
           grn = -1. ;
           while ( grn < 0. ) { grn = trandom_cls->Gaus( original_mean_eff_sf_sb, rv_width_eff_sf_sb->getVal() ) ; }
@@ -5375,6 +5387,13 @@
 
           reinitialize() ;
 
+  //-------- Trying new method
+          rv_eff_sf_prim -> setVal( trandom_cls->Gaus( 0., 1. ) ) ;
+          rv_eff_sf_prim -> setConstant( kTRUE ) ;
+          printf("\n\n Generated value of rv_eff_sf_prim : %8.3f\n", rv_eff_sf_prim->getVal() ) ;
+          printf(" Computed value of rv_eff_sf_sig : %8.3f\n\n", rv_eff_sf_sig->getVal() ) ;
+  //-------- Trying new method
+
           setObservablesToDataVals() ;
 
           RooArgSet toyGenFitobservedParametersList ;
@@ -5429,7 +5448,10 @@
           parameterSnapshot() ;
           delete toyFitResult ;
 
+          printf("\n\n AFTER hypo fit: Generated value of rv_eff_sf_prim : %8.3f\n", rv_eff_sf_prim->getVal() ) ;
+          printf(" AFTER hypo fit: Computed value of rv_eff_sf_sig : %8.3f\n\n", rv_eff_sf_sig->getVal() ) ;
           hypo_fit_sf_eff_sig = rv_eff_sf_sig -> getVal() ;
+          hypo_fit_eff_sf_prim = rv_eff_sf_prim->getVal() ;
           sig_eff_err = rv_width_eff_sf_sig -> getVal() ;
 
 
@@ -5449,6 +5471,8 @@
           rv_mean_eff_sf_sig_ldp -> setVal(  original_mean_eff_sf_sig_ldp ) ;
           rv_mean_eff_sf_sb_ldp  -> setVal(  original_mean_eff_sf_sb_ldp  ) ;
 
+          printf("\n\n Reset rv_mean_eff_sf_sig to %8.3f\n", rv_mean_eff_sf_sig->getVal() ) ;
+
 
           np_m_sf_mc        -> setVal( original_np_m_sf_mc       ) ;
           np_m_sf_qcd_sb    -> setVal( original_np_m_sf_qcd_sb   ) ;
@@ -5467,7 +5491,9 @@
              np_m_knn_sb       -> setVal( original_np_m_knn_sb      ) ;
           }
 
-
+  //-------- Trying new method
+          rv_eff_sf_prim -> setConstant( kFALSE ) ;
+  //-------- Trying new method
 
           RooArgSet toyFitobservedParametersList ;
           toyFitobservedParametersList.add( *rv_Nsig        ) ;
@@ -5631,7 +5657,7 @@
 
 
   //-- turn off root output to save disk quota.
-       tt->Write() ;
+ ///// tt->Write() ;
 
        retVal = (1.0*nWorse)/(1.0*nToys) ;
 

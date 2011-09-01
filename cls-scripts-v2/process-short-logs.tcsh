@@ -1,7 +1,8 @@
 #!/bin/tcsh -f
 
+  set selection = $1
 
-  foreach d ( log-files-ge*-t1bbbb-iter* )
+  foreach d ( log-files-$1-t1bbbb-iter* )
 
      echo $d
 
