@@ -337,8 +337,6 @@
        RooPoisson*  pdf_Nsigsb_ee   ;
        RooPoisson*  pdf_Nsigsb_mm   ;
 
-       RooGaussian* pdf_eff_sf_prim      ;
-
        RooProdPdf*  likelihood ;
 
 

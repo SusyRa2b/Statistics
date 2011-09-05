@@ -1482,17 +1482,16 @@
 	allNuisancePdfs.add (pdf_knn_sb);
       }
 
-      /*
-      RooRealVar Eff_sf_m_prim ( "Eff_sf_m_prim", "Eff_sf_m_prim", 0, -5, 5);
-      RooRealVar Eff_sf_m_nom ( "Eff_sf_m_nom", "Eff_sf_m_nom", 0, -5, 5);
-      RooGaussian pdf_Eff_sf_m ("pdf_Eff_sf_m" , "pdf_Eff_sf_m", Eff_sf_m_prim, Eff_sf_m_nom, RooConst(1));
+
+      RooRealVar eff_sf_prim ( "eff_sf_prim", "eff_sf_prim", 0, -5, 5);
+      RooRealVar eff_sf_nom ( "eff_sf_nom", "eff_sf_nom", 0, -5, 5);
+      RooGaussian pdf_eff_sf_prim ("pdf_eff_sf_prim" , "master pdf_eff_sf_prim", *rv_eff_sf_prim, *rv_eff_sf_nom, RooConst(1));
       sprintf (formula, "pow(%f,@0)", exp(0.10));
-      RooFormulaVar fv_Eff_sf_m ("Eff_sf_m", formula, RooArgList(Eff_sf_m_prim));
-      Eff_sf_m_nom.setConstant();
-      globalObservables.add (Eff_sf_m_nom);
-      allNuisances.add (Eff_sf_m_prim);
-      allNuisancePdfs.add (pdf_Eff_sf_m);
-      */
+      RooFormulaVar fv_Eff_sf_m ("Eff_sf_m", formula, RooArgList(eff_sf_prim));
+      rv_eff_sf_nom->setConstant();
+      globalObservables.add (*rv_eff_sf_nom);
+      allNuisances.add (eff_sf_prim);
+      allNuisancePdfs.add (pdf_eff_sf_prim);
 
 /*       RooRealVar xxx_prim ( "xxx_prim", "xxx_prim", 0, -5, 5); */
 /*       RooRealVar xxx_nom ( "xxx_nom", "xxx_nom", 0, -5, 5); */
@@ -1794,10 +1793,6 @@
       }
 
 
-      pdf_eff_sf_prim     = new RooGaussian( "pdf_eff_sf_prim", "Master Gaussian pdf for log-normal Efficiency scale factors",
-                                          *rv_eff_sf_prim, *rv_eff_sf_nom , RooConst( 1.0 ) ) ;
-
-
       {
          RooArgSet pdflist ;
          pdflist.add( *pdf_Nsig        ) ;
@@ -1818,7 +1813,6 @@
             pdflist.add( *pdf_Nsigsb_mm   ) ;
          }
 
-         pdflist.add( *pdf_eff_sf_prim      ) ;
 	 pdflist.add(allNuisancePdfs);
 
          likelihood = new RooProdPdf( "likelihood", "ra2b likelihood", pdflist ) ;
