@@ -1888,8 +1888,8 @@
        // with the background-only data.
        // Save the parameter point snapshot in the Workspace
        pNll = bModel.GetPdf()->createNLL(*dsObserved);
-       pProfile = pNll->createProfile(poi);
-       ((RooRealVar *)poi.first())->setVal(0.); // set signal = 0
+       pProfile = pNll->createProfile(*bModel.GetParametersOfInterest());
+       ((RooRealVar *)(bModel.GetParametersOfInterest()->first()))->setVal(0.); // set signal = 0
        pProfile->getVal(); // this will do fit and set nuisance parameters to profiled values
        pPoiAndNuisance = new RooArgSet();
        pPoiAndNuisance->add(*bModel.GetParametersOfInterest());
