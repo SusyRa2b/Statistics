@@ -23,7 +23,7 @@ void runcls_ln_ge1btight_t1bbbb_7(int mgl, int mlsp) {
   fname += ".root";
 
   AGHypoTestInvDemo ("ws.root", "ws", "SbModel", "BModel", 
-  		     "ra2b_observed_rds", 0, 3, true, 9, 5, 37, 500,
+  		     "ra2b_observed_rds", 0, 3, true, 9, 5, 37, 1000,
   		     mgl, mlsp, fname);
 
 }
