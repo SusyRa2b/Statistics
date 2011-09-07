@@ -1,4 +1,4 @@
-// @(#)root/roostats:$Id: ToyMCSampler.cxx 40242 2011-07-14 17:14:55Z moneta $
+// @(#)root/roostats:$Id: ToyMCSampler.cxx,v 1.1 2011/09/07 03:58:18 owen Exp $
 // Author: Sven Kreiss    June 2010
 // Author: Kyle Cranmer, Lorenzo Moneta, Gregory Schott, Wouter Verkerke
 /*************************************************************************
@@ -277,8 +277,10 @@ SamplingDistribution* ToyMCSampler::GetSamplingDistributionSingleWorker(RooArgSe
 
    TTree toytt("toytt","toytt") ;
    int Nsig ;
+   double tt_testStat ;
    toytt.Branch("Nsig", &Nsig, "Nsig/I" ) ;
    toytt.Branch("mu_susy_sig", &mu_susy_sig_val, "mu_susy_sig/D") ;
+   toytt.Branch("testStat", &tt_testStat, "testStat/D" ) ;
 
    fMaxToys = 500 ;
    for (Int_t i = 0; i < fMaxToys; ++i) {
@@ -316,6 +318,7 @@ SamplingDistribution* ToyMCSampler::GetSamplingDistributionSingleWorker(RooArgSe
             }
          }
          cout << " ToyMCSampler::GetSamplingDistributionSingleWorker: test stat value : " << value << endl << flush ;
+         tt_testStat = value ;
 
          delete toydata;
       }else{
