@@ -1,6 +1,6 @@
 #include "Riostream.h"
 
-void runcls_ln_ge1btight_t1bbbb_7_ol(int mgl, int mlsp) {
+void runcls_ln_ge1btight_t1bbbb_7_ol(int mgl, int mlsp, double mu_susy_sig) {
 
   gROOT->LoadMacro("ra2bRoostatsClass7.c+") ;
 
@@ -23,7 +23,7 @@ void runcls_ln_ge1btight_t1bbbb_7_ol(int mgl, int mlsp) {
   fname += ".root";
 
   OLHypoTestInvDemo ("ws.root", "ws", "SbModel", "BModel", 
-  		     "ra2b_observed_rds", 0, 3, true, 2, 10, 20, 10,
+  		     "ra2b_observed_rds", 0, 3, true, 1, mu_susy_sig, mu_susy_sig, 500,
   		     mgl, mlsp, fname);
 
 }

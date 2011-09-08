@@ -131,6 +131,16 @@ void OLHypoTestInvDemo(const char * fileName =0,
    }		
       		
 
+
+   printf("\n\n") ;
+   HypoTestResult* htr = r->GetResult(0) ;
+   printf("  Data value for test stat : %7.3f\n", htr->GetTestStatisticData() ) ;
+   printf("  CLsplusb : %9.4f\n", r->CLsplusb(0) ) ;
+   printf("  CLb      : %9.4f\n", r->CLb(0) ) ;
+   printf("  CLs      : %9.4f\n", r->CLs(0) ) ;
+   printf("\n\n") ;
+   cout << flush ;
+
    double upperLimit = r->UpperLimit();
    double ulError = r->UpperLimitEstimatedError();
 
@@ -203,6 +213,7 @@ void OLHypoTestInvDemo(const char * fileName =0,
 
 }
 
+//==================================================================================================================
 
 // internal routine to run the inverter
 HypoTestInverterResult *  RunInverter(RooWorkspace * w, const char * modelSBName, const char * modelBName, 
@@ -356,8 +367,16 @@ HypoTestInverterResult *  RunInverter(RooWorkspace * w, const char * modelSBName
       toymcs->SetProofConfig(&pc);    // enable proof
    }
 
-   
-   if (npoints > 0) {
+
+   printf(" npoints = %d, poimin = %7.2f, poimax = %7.2f\n\n", npoints, poimin, poimax ) ;
+   cout << flush ;
+
+   if ( npoints==1 ) {
+
+      std::cout << "Evaluating one point : " << poimax << std::endl;
+      calc.RunOnePoint(poimax);
+
+   } else if (npoints > 0) {
       if (poimin >= poimax) { 
          // if no min/max given scan between MLE and +4 sigma 
          poimin = int(poihat);
