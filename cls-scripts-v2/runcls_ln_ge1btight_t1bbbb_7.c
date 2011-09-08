@@ -6,8 +6,8 @@ void runcls_ln_ge1btight_t1bbbb_7(int mgl, int mlsp) {
 
   ra2bRoostatsClass7 ra2b(1,0,2) ; 
   
-  ra2b.initialize("an-11-257-v3-files/input-files/byhand-data-ge1b-tight.txt") ;
-  ra2b.setSusyScanPoint("an-11-257-v3-files/input-files/signalSyst.T1bbbb.ge1bTight.dat", mgl, mlsp, true, 1.0 ) ;
+  ra2b.initialize("an-11-257-v3-files/input-files/byhand-data-ge1b-tight.txt",
+                  "an-11-257-v3-files/input-files/signalSyst.T1bbbb.ge1bTight.dat", mgl, mlsp, true, 1.0 ) ;
   
   gROOT->LoadMacro("AGHypoTestInvDemo.C+") ;
   

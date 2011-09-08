@@ -27,7 +27,8 @@
 
        virtual ~ra2bRoostatsClass7();
 
-       bool initialize( const char* infile = "an-11-257-v2-files/input-files/byhand-data-ge2b-loose.txt") ;
+       bool initialize( const char* infile = "an-11-257-v2-files/input-files/byhand-data-ge2b-loose.txt",
+                        const char* inputScanFile = "an-11-257-v3-files/input-files/signalSyst.T1bbbb.ge1bTight.dat", double m0 = 875., double m12 = 525., bool isT1bbbb = false, double t1bbbbXsec=0. ) ;
        bool setSusyScanPoint( const char* inputScanFile, double m0, double m12, bool isT1bbbb = false, double t1bbbbXsec=0. ) ;
 
      private :

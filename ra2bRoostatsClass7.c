@@ -328,7 +328,8 @@
 
   //===================================================================
 
-    bool ra2bRoostatsClass7::initialize( const char* infile ) {
+    bool ra2bRoostatsClass7::initialize( const char* infile ,
+                                         const char* inputScanFile, double m0, double m12, bool isT1bbbb, double t1bbbbXsec ) {
 
 
        printf( "\n\n Opening input file : %s\n\n", infile ) ;
@@ -1323,6 +1324,26 @@
       rv_width_eff_sf_sb_ldp  -> setConstant( kTRUE ) ;
 
 
+
+
+
+
+
+   //
+   // Owen : Sept 7, 2011: need to set these here so that it gets into the workspace.
+   //
+   //++++++++++
+      setSusyScanPoint( inputScanFile,  m0,  m12,  isT1bbbb,  t1bbbbXsec ) ;
+   //++++++++++
+
+
+
+
+
+
+
+
+
     //--- Underlying Gaussian variable for log-normal.
 
    //--- Owen, Aug 30: increase range from +-5 to +-15
@@ -1924,6 +1945,9 @@
 
 
     } // initialize.
+
+
+   //===================================================================================================================================
 
 
     bool ra2bRoostatsClass7::setSusyScanPoint( const char* inputScanFile, double m0, double m12, bool isT1bbbb, double t1bbbbXsec ) {
