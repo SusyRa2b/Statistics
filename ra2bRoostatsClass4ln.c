@@ -382,7 +382,9 @@
 /////    }
 
 
-         plc_susy_sig.SetTestSize(0.05) ;
+    // Owen: change to 10 % to get 1-sided 95% UL.
+  //////       plc_susy_sig.SetTestSize(0.05) ;
+         plc_susy_sig.SetTestSize(0.10) ;
          ConfInterval* plinterval_susy_sig = plc_susy_sig.GetInterval() ;
          susySigLow  = ((LikelihoodInterval*) plinterval_susy_sig)->LowerLimit(*rv_mu_susy_sig) ;
          susySigHigh = ((LikelihoodInterval*) plinterval_susy_sig)->UpperLimit(*rv_mu_susy_sig) ;
