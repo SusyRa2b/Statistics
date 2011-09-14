@@ -9,7 +9,6 @@
 #include "RooGaussian.h"
 #include "RooProdPdf.h"
 #include "RooWorkspace.h"
-///////#include "RooWorkspace.cxx"
 #include "RooDataSet.h"
 #include "RooFitResult.h"
 
