@@ -986,7 +986,7 @@
          rrv_mu_ttwj_sig   -> setVal( Nttbarmc_sig + lsf_WJmc*NWJmc_sig ) ;  //-- this is a starting value only.
       }
       if ( !useLdpVars ) {
-         rrv_mu_qcd_sig  = new RooRealVar( "mu_qcd_sig"    , "mu_qcd_sig"    , 0.0, 50. ) ;
+         rrv_mu_qcd_sig  = new RooRealVar( "mu_qcd_sig"    , "mu_qcd_sig"    , 0.0, 100. ) ;
          rv_mu_qcd_sig = rrv_mu_qcd_sig ;
          rrv_mu_qcd_sig  -> setVal( Nqcdmc_sig ) ; //-- this is a starting value only.
       }
