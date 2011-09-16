@@ -4,6 +4,14 @@
 #include "TCanvas.h"
 #include "TSystem.h"
 #include "TTree.h"
+#include "TH1F.h"
+#include "TAxis.h"
+#include "THStack.h"
+#include "TLegend.h"
+#include "TStyle.h"
+#include "TLine.h"
+#include "TGAxis.h"
+#include "TText.h"
 #include "RooWorkspace.h"
 #include "RooDataSet.h"
 #include "RooArgSet.h"
@@ -26,8 +34,9 @@
   //
   //------
 
-   void ws_fitqual_plots1( const char* wsfile = "ws-lm9-ge1btight.root", double mu_susy_sig_val = 0. ) {
+   void ws_fitqual_plots1( const char* wsfile = "ws-lm9-ge1btight.root", double mu_susy_sig_val = 0., bool doNorm = false ) {
 
+      double hmax = 1.5 ;
 
        char sel[100] ;
        if ( strstr( wsfile, "ge1bloose" ) != 0 ) {
@@ -80,10 +89,6 @@
 
        RooAbsPdf* likelihood = modelConfig->GetPdf() ;
 
-       const RooArgSet* observables = modelConfig->GetObservables() ;
-
-       const RooArgSet* nuisanceParameters = modelConfig->GetNuisanceParameters() ;
-
        RooRealVar* rrv_mu_susy_sig = ws->var("mu_susy_sig") ;
        if ( rrv_mu_susy_sig == 0x0 ) {
           printf("\n\n\n *** can't find mu_susy_sig in workspace.  Quitting.\n\n\n") ;
@@ -130,6 +135,22 @@
           printf(" %20s : %8.2f\n", func->GetName(), func->getVal() ) ;
        }
 
+       printf("\n\n") ;
+
+
+
+
+
+
+
+
+       double ttwjSigVal, ttwjSbVal ;
+       double qcdSigVal,  qcdSbVal  ;
+
+       double ttwjSigErr ;
+       double qcdSigErr ;
+
+
      //-- Note: Depending on the first 2 arguments used in ra2bRoostatsClass*.c, you either
      //          have the SIG or SB parameter (but not both) for ttwj and qcd.
      //
@@ -140,27 +161,88 @@
      //         (e.g. make_lm9_ws_ge1btight.c).
      //
 
+     //--- sort out which configuration was used (SIG or SB vars for ttwj and qcd).
 
        TObject* ttwj_sig_obj = ws->obj("mu_ttwj_sig") ;
-       TObject* ttwj_sb_obj  = ws->obj("mu_ttwj_sb") ;
+       TObject* ttwj_sb_obj = ws->obj("mu_ttwj_sb") ;
 
-       if ( ttwj_sig_obj->IsA()->InheritsFrom(RooRealVar::Class()) )    { printf(" mu_ttwj_sig is a RooRealVar\n" ) ; }
-       if ( ttwj_sig_obj->IsA()->InheritsFrom(RooFormulaVar::Class()) ) { printf(" mu_ttwj_sig is a RooFormulaVar\n" ) ; }
-       if ( ttwj_sb_obj->IsA()->InheritsFrom(RooRealVar::Class()) )    { printf(" mu_ttwj_sb is a RooRealVar\n" ) ; }
-       if ( ttwj_sb_obj->IsA()->InheritsFrom(RooFormulaVar::Class()) ) { printf(" mu_ttwj_sb is a RooFormulaVar\n" ) ; }
+       if ( ttwj_sig_obj->IsA()->InheritsFrom(RooRealVar::Class()) )    {
+          ttwjSigVal = ((RooRealVar*) ttwj_sig_obj) -> getVal() ;
+          ttwjSigErr = ((RooRealVar*) ttwj_sig_obj) -> getError() ;
+          ttwjSbVal = ((RooFormulaVar*) ttwj_sb_obj) -> getVal() ;
+          printf(" mu_ttwj_sig is a RooRealVar.\n" ) ; 
+       } else if ( ttwj_sig_obj->IsA()->InheritsFrom(RooFormulaVar::Class()) ) {
+          ttwjSigVal = ((RooFormulaVar*) ttwj_sig_obj) -> getVal() ;
+          ttwjSigErr = -1. ;
+          ttwjSbVal = ((RooRealVar*) ttwj_sb_obj) -> getVal() ;
+          printf(" mu_ttwj_sig is a RooFormulaVar\n" ) ;
+       } else {
+          printf("\n\n\n *** what kind of class is mu_ttwj_sig???\n\n\n\n") ;
+          return ;
+       }
+       printf(" mu_ttwj_sig = %8.2f\n", ttwjSigVal ) ;
+       printf(" mu_ttwj_sb  = %8.2f\n", ttwjSbVal ) ;
+
+
+
+       TObject* qcd_sig_obj = ws->obj("mu_qcd_sig") ;
+       TObject* qcd_sb_obj = ws->obj("mu_qcd_sb") ;
+
+       if ( qcd_sig_obj->IsA()->InheritsFrom(RooRealVar::Class()) )    {
+          qcdSigVal = ((RooRealVar*) qcd_sig_obj) -> getVal() ;
+          qcdSigErr = ((RooRealVar*) qcd_sig_obj) -> getError() ;
+          qcdSbVal = ((RooFormulaVar*) qcd_sb_obj) -> getVal() ;
+          printf(" mu_qcd_sig is a RooRealVar.\n" ) ; 
+       } else if ( qcd_sig_obj->IsA()->InheritsFrom(RooFormulaVar::Class()) ) {
+          qcdSigVal = ((RooFormulaVar*) qcd_sig_obj) -> getVal() ;
+          qcdSigErr = -1. ;
+          qcdSbVal = ((RooRealVar*) qcd_sb_obj) -> getVal() ;
+          printf(" mu_qcd_sig is a RooFormulaVar\n" ) ;
+       } else {
+          printf("\n\n\n *** what kind of class is mu_qcd_sig???\n\n\n\n") ;
+          return ;
+       }
+       printf(" mu_qcd_sig  = %8.2f\n", qcdSigVal ) ;
+       printf(" mu_qcd_sb   = %8.2f\n", qcdSbVal ) ;
 
 
 
 
 
-       int nbins(10) ;
+      //--- unpack observables.
+
+       int dataNsig(0) ;
+       int dataNsb(0) ;
+       int dataNsig_sl(0) ;
+       int dataNsb_sl(0) ;
+       int dataNsig_ldp(0) ;
+       int dataNsb_ldp(0) ;
+
+       const RooArgSet* dsras = rds->get() ;
+       TIterator* obsIter = dsras->createIterator() ;
+       while ( RooRealVar* obs = (RooRealVar*) obsIter->Next() ) {
+          if ( strcmp( obs->GetName(), "Nsig"     ) == 0 ) { dataNsig     = obs->getVal() ; }
+          if ( strcmp( obs->GetName(), "Nsb"      ) == 0 ) { dataNsb      = obs->getVal() ; }
+          if ( strcmp( obs->GetName(), "Nsig_sl"  ) == 0 ) { dataNsig_sl  = obs->getVal() ; }
+          if ( strcmp( obs->GetName(), "Nsb_sl"   ) == 0 ) { dataNsb_sl   = obs->getVal() ; }
+          if ( strcmp( obs->GetName(), "Nsig_ldp" ) == 0 ) { dataNsig_ldp = obs->getVal() ; }
+          if ( strcmp( obs->GetName(), "Nsb_ldp"  ) == 0 ) { dataNsb_ldp  = obs->getVal() ; }
+       }
+
+
+
+      gStyle->SetPadBottomMargin(0.20) ;
+      gStyle->SetPadRightMargin(0.50) ;
+
+
+       int nbins(8) ;
 
        TH1F* hfitqual_data = new TH1F("hfitqual_data", "RA2b likelihood fit results, data", nbins, 0.5, nbins+0.5 ) ;
        TH1F* hfitqual_susy = new TH1F("hfitqual_susy", "RA2b likelihood fit results, susy", nbins, 0.5, nbins+0.5 ) ;
        TH1F* hfitqual_ttwj = new TH1F("hfitqual_ttwj", "RA2b likelihood fit results, ttwj", nbins, 0.5, nbins+0.5 ) ;
        TH1F* hfitqual_qcd  = new TH1F("hfitqual_qcd" , "RA2b likelihood fit results, qcd" , nbins, 0.5, nbins+0.5 ) ;
        TH1F* hfitqual_znn  = new TH1F("hfitqual_znn" , "RA2b likelihood fit results, znn" , nbins, 0.5, nbins+0.5 ) ;
-       TH1F* hfitqual_np   = new TH1F("hfitqual_np"  , "RA2b likelihood fit results, np"  , nbins, 0.5, nbins+0.5 ) ;
+       TH1F* hfitqual_np   = new TH1F("hfitqual_np"  , "RA2b likelihood fit results, np"  , 1, 0., 1. ) ;
 
        hfitqual_ttwj  -> SetFillColor(kBlue-9) ;
        hfitqual_qcd   -> SetFillColor(2) ;
@@ -179,183 +261,533 @@
        char binLabel[1000] ;
        int  binIndex ;
 
-       double dataVal ;
-       double ttwjVal ;
-       double qcdVal ;
-       double znnVal ;
-       double susyVal ;
+       double dataVal(0.) ;
+       double dataErr(0.) ;
+       double ttwjVal(0.) ;
+       double qcdVal(0.) ;
+       double znnVal(0.) ;
+       double susyVal(0.) ;
+       double lhtotalVal(0.) ;
 
-       double eff_sf_sig ;
-       double eff_sf_sb ;
-       double eff_sf_sig_sl ;
-       double eff_sf_sb_sl ;
-       double eff_sf_sig_ldp ;
-       double eff_sf_sb_ldp ;
+       double eff_sf_sig(0.) ;
+       double eff_sf_sb(0.) ;
+       double eff_sf_sig_sl(0.) ;
+       double eff_sf_sb_sl(0.) ;
+       double eff_sf_sig_ldp(0.) ;
+       double eff_sf_sb_ldp(0.) ;
 
-       double sf_mc ;
-
+       double sf_mc(0.) ;
 
 
      //-- SIG ---------------------------------------------------------------------------
+
+       double znnSigVal ;
+       double znnSigErr ;
+       double susySigVal ;
+       double susySigErr ;
 
        sprintf( binLabel, "SIG" ) ;
        binIndex = 2 ;
        xaxis->SetBinLabel(binIndex, binLabel ) ;
 
 
+       dataVal = dataNsig ;
+       eff_sf_sig = ((RooFormulaVar*) ws->obj("eff_sf_sig")) -> getVal() ;
+       susyVal = eff_sf_sig * ( ((RooRealVar*) ws->obj("mu_susy_sig")) -> getVal() ) ;
+       ttwjVal = ttwjSigVal ;
+       qcdVal  = qcdSigVal ;
+       znnVal  = ((RooRealVar*) ws->obj("mu_znn_sig"))  -> getVal() ;
+       lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+
+       dataErr = sqrt(dataVal) ;
+
+    //-- get values for later.
+       susySigVal = ((RooRealVar*) ws->obj("mu_susy_sig")) -> getVal() ;
+       susySigErr = ((RooRealVar*) ws->obj("mu_susy_sig")) -> getError() ;
+       znnSigVal = ((RooRealVar*) ws->obj("mu_znn_sig"))  -> getVal() ;
+       znnSigErr = ((RooRealVar*) ws->obj("mu_znn_sig"))  -> getError() ;
+
+       printf("\n\n") ;
+       printf(" %8s      susy : %8.2f\n", binLabel, susyVal ) ;
+       printf(" %8s      ttwj : %8.2f\n", binLabel, ttwjVal ) ;
+       printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
+       printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
+       printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
-//     char parName[1000] ;
+       if ( doNorm && dataVal > 0. ) {
+          dataErr = dataErr / dataVal ;
+          susyVal = susyVal / dataVal ;
+          ttwjVal = ttwjVal / dataVal ;
+          qcdVal  = qcdVal / dataVal ;
+          znnVal  = znnVal / dataVal ;
+          dataVal = 1. ;
+       }
 
-//     RooRealVar* rrv_ttwj(0x0) ;
-//     RooRealVar* rrv_qcd(0x0) ;
-//     RooRealVar* rrv_znn(0x0) ;
-
-//     sprintf( parName, "mu_ttwj_sig" ) ;
-//     rrv_ttwj = ws->var( parName ) ;
-//     if ( rrv_ttwj == 0x0 ) {
-//        printf("\n\n\n *** can't find %s in workspace.  Checking other var.\n\n\n", parName ) ;
-//        sprintf( parName, "mu_ttwj_sb" ) ;
-//        rrv_ttwj = ws->var( parName ) ;
-//        if ( rrv_ttwj == 0x0 ) {
-//           printf("\n\n\n *** can't find %s either.  I quit.\n\n\n", parName ) ;
-//           return ;
-//        }
-//     }
-
-//     sprintf( parName, "mu_qcd_sig" ) ;
-//     rrv_qcd = ws->var( parName ) ;
-//     if ( rrv_qcd == 0x0 ) {
-//        printf("\n\n\n *** can't find %s in workspace.  Checking other var.\n\n\n", parName ) ;
-//        sprintf( parName, "mu_qcd_sb" ) ;
-//        rrv_qcd = ws->var( parName ) ;
-//        if ( rrv_qcd == 0x0 ) {
-//           printf("\n\n\n *** can't find %s either.  I quit.\n\n\n", parName ) ;
-//           return ;
-//        }
-//     }
-
-//     sprintf( parName, "mu_znn_sig" ) ;
-//     rrv_znn = ws->var( parName ) ;
-//     if ( rrv_znn == 0x0 ) {
-//        printf("\n\n\n *** can't find %s in workspace.  I quit.\n\n\n", parName ) ;
-//        return ;
-//     }
-
-
-
-
-//     printf("\n\n\n  ===== Begin Toy study ====================\n\n") ;
-
-//     RooMCStudy mcs( *likelihood,
-//                     *observables,
-//                     Constrain( *nuisanceParameters ),
-//                     Silence(),
-//                     FitOptions(PrintLevel(-1),PrintEvalErrors(-1))
-//                     ) ;
+       hfitqual_data -> SetBinContent( binIndex, dataVal ) ;
+       hfitqual_data -> SetBinError( binIndex, dataErr ) ;
+       hfitqual_susy -> SetBinContent( binIndex, susyVal ) ;
+       hfitqual_ttwj -> SetBinContent( binIndex, ttwjVal ) ;
+       hfitqual_qcd  -> SetBinContent( binIndex, qcdVal ) ;
+       hfitqual_znn  -> SetBinContent( binIndex, znnVal ) ;
 
 
 
-//    mcs.generate( nToys, 1, true, "" ) ;
+     //-- SB ---------------------------------------------------------------------------
 
-//    int    gen_nsig ;
-//    double fit_tru_ttwj ;
-//    double fit_tru_qcd ;
-//    double fit_tru_znn ;
-//    double fit_val_ttwj ;
-//    double fit_val_qcd ;
-//    double fit_val_znn ;
-//    double fit_err_ttwj ;
-//    double fit_err_qcd ;
-//    double fit_err_znn ;
-//    int    fit_cov_qual ;
-
-//    fit_tru_ttwj = rrv_ttwj->getVal() ;
-//    fit_tru_qcd  = rrv_qcd->getVal() ;
-//    fit_tru_znn  = rrv_znn->getVal() ;
+       sprintf( binLabel, "SB" ) ;
+       binIndex++ ;
+       xaxis->SetBinLabel(binIndex, binLabel ) ;
 
 
+       dataVal = dataNsb ;
+       eff_sf_sb = ((RooFormulaVar*) ws->obj("eff_sf_sb")) -> getVal() ;
+       susyVal = eff_sf_sb * ( ((RooRealVar*) ws->obj("mu_susy_sb")) -> getVal() ) ;
+       ttwjVal = ttwjSbVal ;
+       qcdVal  = qcdSbVal ;
+       znnVal  = ((RooRealVar*) ws->obj("mu_znn_sb"))  -> getVal() ;
+       lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
 
-//    TTree* tt(0x0) ;
-
-//    tt = new TTree("toytt", "Toy TTree" ) ;
-
-//    tt->Branch( "gen_nsig",  &gen_nsig,  "gen_nsig/I"  ) ;
-//    tt->Branch( "fit_val_ttwj",  &fit_val_ttwj,  "fit_val_ttwj/D"  ) ;
-//    tt->Branch( "fit_val_qcd",  &fit_val_qcd,  "fit_val_qcd/D"  ) ;
-//    tt->Branch( "fit_val_znn",  &fit_val_znn,  "fit_val_znn/D"  ) ;
-//    tt->Branch( "fit_err_ttwj",  &fit_err_ttwj,  "fit_err_ttwj/D"  ) ;
-//    tt->Branch( "fit_err_qcd",  &fit_err_qcd,  "fit_err_qcd/D"  ) ;
-//    tt->Branch( "fit_err_znn",  &fit_err_znn,  "fit_err_znn/D"  ) ;
-//    tt->Branch( "fit_tru_ttwj",  &fit_tru_ttwj,  "fit_tru_ttwj/D"  ) ;
-//    tt->Branch( "fit_tru_qcd",  &fit_tru_qcd,  "fit_tru_qcd/D"  ) ;
-//    tt->Branch( "fit_tru_znn",  &fit_tru_znn,  "fit_tru_znn/D"  ) ;
-//    tt->Branch( "fit_cov_qual",  &fit_cov_qual,  "fit_cov_qual/I"  ) ;
+       dataErr = sqrt(dataVal) ;
 
 
-
-//    for ( int ti=0; ti<nToys; ti++ ) {
-
-
-//       //-- initialize all floating parameters to the values from the pre fit.
-//       TIterator* parIter = preFitFloatVals.createIterator() ;
-//       while ( RooRealVar* par = (RooRealVar*) parIter->Next() ) {
-//          RooRealVar* rrv = ws->var( par->GetName() ) ;
-//          rrv->setVal( par->getVal() ) ;
-//          //printf(" %20s : %8.2f\n", rrv->GetName(), rrv->getVal() ) ;
-//       }
-//       //printf("\n\n") ;
-
-//       RooAbsData* toyrds = (RooAbsData*) mcs.genData(ti) ;
-
-//       const RooArgSet* dsras = toyrds->get() ;
-//       TIterator* obsIter = dsras->createIterator() ;
-//       while ( RooRealVar* obs = (RooRealVar*) obsIter->Next() ) {
-//          if ( strcmp( obs->GetName(), "Nsig" ) == 0 ) { 
-//             gen_nsig = obs->getVal() ;
-//             cout << "   found Nsig : " << gen_nsig << endl << flush ;
-//             break ;
-//          }
-//       }
-
-//       RooFitResult* rfr = likelihood->fitTo( *toyrds, Save(true), PrintLevel(-1), PrintEvalErrors(-1) ) ;
+       printf("\n\n") ;
+       printf(" %8s      susy : %8.2f\n", binLabel, susyVal ) ;
+       printf(" %8s      ttwj : %8.2f\n", binLabel, ttwjVal ) ;
+       printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
+       printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
+       printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
-//       fit_val_ttwj = rrv_ttwj->getVal() ;
-//       fit_val_qcd = rrv_qcd->getVal() ;
-//       fit_val_znn = rrv_znn->getVal() ;
-//       fit_err_ttwj = rrv_ttwj->getError() ;
-//       fit_err_qcd = rrv_qcd->getError() ;
-//       fit_err_znn = rrv_znn->getError() ;
-//       fit_cov_qual = rfr->covQual() ;
+       if ( doNorm && dataVal > 0. ) {
+          dataErr = dataErr / dataVal ;
+          susyVal = susyVal / dataVal ;
+          ttwjVal = ttwjVal / dataVal ;
+          qcdVal  = qcdVal / dataVal ;
+          znnVal  = znnVal / dataVal ;
+          dataVal = 1. ;
+       }
+
+       hfitqual_data -> SetBinContent( binIndex, dataVal ) ;
+       hfitqual_data -> SetBinError( binIndex, dataErr ) ;
+       hfitqual_susy -> SetBinContent( binIndex, susyVal ) ;
+       hfitqual_ttwj -> SetBinContent( binIndex, ttwjVal ) ;
+       hfitqual_qcd  -> SetBinContent( binIndex, qcdVal ) ;
+       hfitqual_znn  -> SetBinContent( binIndex, znnVal ) ;
 
 
-//       tt->Fill() ;
 
-//       printf("\n\n\n  ===== RooDataSet for toy %d ====================\n\n", ti) ;
+     //-- SIG, SL ---------------------------------------------------------------------------
 
-//       toyrds->Print() ;
-//       toyrds->printMultiline(cout, 1, kTRUE, "") ;
-//       printf("\n\n\n Toy %4d Fit covariance quality : %d\n", ti, fit_cov_qual ) ;
-
-//       printf("  generated Nsig : %3d\n", gen_nsig ) ;
-//       printf("    %20s : %8.2f +/- %8.2f\n", rrv_ttwj->GetName(), rrv_ttwj->getVal(), rrv_ttwj->getError() ) ;
-//       printf("    %20s : %8.2f +/- %8.2f\n", rrv_qcd->GetName(), rrv_qcd->getVal(), rrv_qcd->getError() ) ;
-//       printf("    %20s : %8.2f +/- %8.2f\n", rrv_znn->GetName(), rrv_znn->getVal(), rrv_znn->getError() ) ;
-
-//       printf("\n\n") ;
-
-//       delete rfr ;
+       sprintf( binLabel, "SIG,SL" ) ;
+       binIndex++ ;
+       xaxis->SetBinLabel(binIndex, binLabel ) ;
 
 
-//   } // ti.
+       dataVal = dataNsig_sl ;
+       eff_sf_sig_sl = ((RooFormulaVar*) ws->obj("eff_sf_sig_sl")) -> getVal() ;
+       susyVal = eff_sf_sig_sl * ( ((RooRealVar*) ws->obj("mu_susy_sig_sl")) -> getVal() ) ;
+       ttwjVal = ((RooRealVar*) ws->obj("mu_ttwj_sig_sl")) -> getVal() ;
+       qcdVal  = 0. ;
+       znnVal  = 0. ;
+       lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
 
-//   char toyRootFile[10000] ;
-//   gSystem->Exec("mkdir -p output-files") ;
-//   sprintf( toyRootFile, "output-files/toy-data-%s.root", sel ) ;
-//   TFile f( toyRootFile, "recreate") ;
-//   tt->Write() ;
+       dataErr = sqrt(dataVal) ;
 
+
+       printf("\n\n") ;
+       printf(" %8s      susy : %8.2f\n", binLabel, susyVal ) ;
+       printf(" %8s      ttwj : %8.2f\n", binLabel, ttwjVal ) ;
+       printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
+       printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
+       printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
+
+
+       if ( doNorm && dataVal > 0. ) {
+          dataErr = dataErr / dataVal ;
+          susyVal = susyVal / dataVal ;
+          ttwjVal = ttwjVal / dataVal ;
+          qcdVal  = qcdVal / dataVal ;
+          znnVal  = znnVal / dataVal ;
+          dataVal = 1. ;
+       }
+
+       hfitqual_data -> SetBinContent( binIndex, dataVal ) ;
+       hfitqual_data -> SetBinError( binIndex, dataErr ) ;
+       hfitqual_susy -> SetBinContent( binIndex, susyVal ) ;
+       hfitqual_ttwj -> SetBinContent( binIndex, ttwjVal ) ;
+       hfitqual_qcd  -> SetBinContent( binIndex, qcdVal ) ;
+       hfitqual_znn  -> SetBinContent( binIndex, znnVal ) ;
+
+
+
+     //-- SB, SL ---------------------------------------------------------------------------
+
+       sprintf( binLabel, "SB,SL" ) ;
+       binIndex++ ;
+       xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+
+       dataVal = dataNsb_sl ;
+       eff_sf_sb_sl = ((RooFormulaVar*) ws->obj("eff_sf_sb_sl")) -> getVal() ;
+       susyVal = eff_sf_sb_sl * ( ((RooRealVar*) ws->obj("mu_susy_sb_sl")) -> getVal() ) ;
+       ttwjVal = ((RooRealVar*) ws->obj("mu_ttwj_sb_sl")) -> getVal() ;
+       qcdVal  = 0. ;
+       znnVal  = 0. ;
+       lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+
+       dataErr = sqrt(dataVal) ;
+
+
+       printf("\n\n") ;
+       printf(" %8s      susy : %8.2f\n", binLabel, susyVal ) ;
+       printf(" %8s      ttwj : %8.2f\n", binLabel, ttwjVal ) ;
+       printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
+       printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
+       printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
+
+
+       if ( doNorm && dataVal > 0. ) {
+          dataErr = dataErr / dataVal ;
+          susyVal = susyVal / dataVal ;
+          ttwjVal = ttwjVal / dataVal ;
+          qcdVal  = qcdVal / dataVal ;
+          znnVal  = znnVal / dataVal ;
+          dataVal = 1. ;
+       }
+
+       hfitqual_data -> SetBinContent( binIndex, dataVal ) ;
+       hfitqual_data -> SetBinError( binIndex, dataErr ) ;
+       hfitqual_susy -> SetBinContent( binIndex, susyVal ) ;
+       hfitqual_ttwj -> SetBinContent( binIndex, ttwjVal ) ;
+       hfitqual_qcd  -> SetBinContent( binIndex, qcdVal ) ;
+       hfitqual_znn  -> SetBinContent( binIndex, znnVal ) ;
+
+
+
+
+
+
+     //-- SIG, LDP ---------------------------------------------------------------------------
+
+       sprintf( binLabel, "SIG,LDP" ) ;
+       binIndex++ ;
+       xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+
+       dataVal = dataNsig_ldp ;
+       eff_sf_sig_ldp = ((RooFormulaVar*) ws->obj("eff_sf_sig_ldp")) -> getVal() ;
+       susyVal = eff_sf_sig_ldp * ( ((RooRealVar*) ws->obj("mu_susy_sig_ldp")) -> getVal() ) ;
+       sf_mc = ((RooFormulaVar*) ws->obj("sf_mc")) -> getVal() ;
+       ttwjVal = eff_sf_sig_ldp * sf_mc * ( ( ((RooRealVar*) ws->obj("mu_ttbarmc_sig_ldp")) -> getVal() )  + ( ((RooRealVar*) ws->obj("mu_WJmc_sig_ldp")) -> getVal() )  ) ;
+       qcdVal  = ((RooRealVar*) ws->obj("mu_qcd_sig_ldp")) -> getVal() ;
+       znnVal  = eff_sf_sig_ldp * sf_mc * ( ((RooRealVar*) ws->obj("mu_Znnmc_sig_ldp")) -> getVal()   ) ;
+       lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+
+       dataErr = sqrt(dataVal) ;
+
+
+       printf("\n\n") ;
+       printf(" %8s      susy : %8.2f\n", binLabel, susyVal ) ;
+       printf(" %8s      ttwj : %8.2f\n", binLabel, ttwjVal ) ;
+       printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
+       printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
+       printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
+
+
+       if ( doNorm && dataVal > 0. ) {
+          dataErr = dataErr / dataVal ;
+          susyVal = susyVal / dataVal ;
+          ttwjVal = ttwjVal / dataVal ;
+          qcdVal  = qcdVal / dataVal ;
+          znnVal  = znnVal / dataVal ;
+          dataVal = 1. ;
+       }
+
+       hfitqual_data -> SetBinContent( binIndex, dataVal ) ;
+       hfitqual_data -> SetBinError( binIndex, dataErr ) ;
+       hfitqual_susy -> SetBinContent( binIndex, susyVal ) ;
+       hfitqual_ttwj -> SetBinContent( binIndex, ttwjVal ) ;
+       hfitqual_qcd  -> SetBinContent( binIndex, qcdVal ) ;
+       hfitqual_znn  -> SetBinContent( binIndex, znnVal ) ;
+
+
+
+     //-- SB, LDP ---------------------------------------------------------------------------
+
+       sprintf( binLabel, "SB,LDP" ) ;
+       binIndex++ ;
+       xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+
+       dataVal = dataNsb_ldp ;
+       eff_sf_sb_ldp = ((RooFormulaVar*) ws->obj("eff_sf_sb_ldp")) -> getVal() ;
+       susyVal = eff_sf_sb_ldp * ( ((RooRealVar*) ws->obj("mu_susy_sb_ldp")) -> getVal() ) ;
+       sf_mc = ((RooFormulaVar*) ws->obj("sf_mc")) -> getVal() ;
+       ttwjVal = eff_sf_sb_ldp * sf_mc * ( ( ((RooRealVar*) ws->obj("mu_ttbarmc_sb_ldp")) -> getVal() )  + ( ((RooRealVar*) ws->obj("mu_WJmc_sb_ldp")) -> getVal() )  ) ;
+       qcdVal  = ((RooRealVar*) ws->obj("mu_qcd_sb_ldp")) -> getVal() ;
+       znnVal  = eff_sf_sb_ldp * sf_mc * ( ((RooRealVar*) ws->obj("mu_Znnmc_sb_ldp")) -> getVal()   ) ;
+       lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+
+       dataErr = sqrt(dataVal) ;
+
+
+       printf("\n\n") ;
+       printf(" %8s      susy : %8.2f\n", binLabel, susyVal ) ;
+       printf(" %8s      ttwj : %8.2f\n", binLabel, ttwjVal ) ;
+       printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
+       printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
+       printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
+
+
+       if ( doNorm && dataVal > 0. ) {
+          dataErr = dataErr / dataVal ;
+          susyVal = susyVal / dataVal ;
+          ttwjVal = ttwjVal / dataVal ;
+          qcdVal  = qcdVal / dataVal ;
+          znnVal  = znnVal / dataVal ;
+          dataVal = 1. ;
+       }
+
+       hfitqual_data -> SetBinContent( binIndex, dataVal ) ;
+       hfitqual_data -> SetBinError( binIndex, dataErr ) ;
+       hfitqual_susy -> SetBinContent( binIndex, susyVal ) ;
+       hfitqual_ttwj -> SetBinContent( binIndex, ttwjVal ) ;
+       hfitqual_qcd  -> SetBinContent( binIndex, qcdVal ) ;
+       hfitqual_znn  -> SetBinContent( binIndex, znnVal ) ;
+
+
+
+
+
+
+
+
+
+     //-- Eff sf ---------
+
+      float eff_sf_prim   =  ((RooRealVar*) ws->obj("eff_sf_prim")) -> getVal() ;
+
+      hfitqual_np -> SetBinContent( 1, eff_sf_prim ) ;
+
+
+
+
+
+
+
+
+
+
+
+     //--- final formatting and drawing.
+
+
+      gStyle->SetOptStat(0) ;
+      gStyle->SetOptTitle(0) ;
+
+      hfitqual_fit->Add( hfitqual_znn ) ;
+      hfitqual_fit->Add( hfitqual_qcd ) ;
+      hfitqual_fit->Add( hfitqual_ttwj ) ;
+      hfitqual_fit->Add( hfitqual_susy ) ;
+
+      TLegend* legend = new TLegend(0.65,0.2,0.77,0.9) ;
+
+      legend->AddEntry( hfitqual_data,  "data" ) ;
+      legend->AddEntry( hfitqual_susy,  "SUSY" ) ;
+      legend->AddEntry( hfitqual_ttwj, "ttwj" ) ;
+      legend->AddEntry( hfitqual_qcd,   "QCD" ) ;
+      legend->AddEntry( hfitqual_znn,   "Znunu" ) ;
+      legend->AddEntry( hfitqual_np,  "Eff PG" ) ;
+
+
+      if ( doNorm ) {
+         hfitqual_data->SetMaximum( hmax ) ;
+      } else {
+         hfitqual_data->SetMaximum( hmax*(hfitqual_data->GetMaximum()) ) ;
+      }
+
+      TCanvas* cfitqual = new TCanvas("cfitqual","RA2b fit quality", 780, 550 ) ;
+
+      gPad->SetTicks(1,0) ;
+
+
+      hfitqual_data->SetLabelSize(0.055,"x") ;
+      hfitqual_data->GetXaxis()->LabelsOption("v") ;
+
+      hfitqual_data->Draw("histpe") ;
+      hfitqual_fit->Draw("same") ;
+      hfitqual_data->Draw("same") ;
+      gPad->SetGridy(1) ;
+      legend->Draw() ;
+
+      cfitqual->Update() ;
+
+
+
+
+   //-- Give SIG box values and uncertainties.
+
+      TText* fittext = new TText() ;
+      fittext->SetTextSize(0.045) ;
+      double fitval ;
+      double fiterr ;
+      double tx = 0.80 ;
+      double ty = 0.71 ;
+      double dy = 0.115 ;
+      char fitvalchars[1000] ;
+
+
+
+      if ( mu_susy_sig_val < 0. ) {
+         fitval = susySigVal ;
+         fiterr = susySigErr ;
+         if ( fitval<10.) {
+            sprintf( fitvalchars, "%3.1f +/- %3.1f", fitval, fiterr ) ;
+         } else {
+            sprintf( fitvalchars, "%3.0f +/- %3.0f", fitval, fiterr ) ;
+         }
+         fittext->DrawTextNDC( tx, ty, fitvalchars ) ;
+      } else {
+         fitval = susySigVal ;
+         if ( fitval<10.) {
+            sprintf( fitvalchars, "%3.1f", fitval ) ;
+         } else {
+            sprintf( fitvalchars, "%3.0f", fitval ) ;
+         }
+         fittext->DrawTextNDC( tx, ty, fitvalchars ) ;
+      }
+
+
+
+      if ( ttwjSigErr > 0. ) {
+         fitval = ttwjSigVal ;
+         fiterr = ttwjSigErr ;
+         if ( fitval<10.) {
+            sprintf( fitvalchars, "%3.1f +/- %3.1f", fitval, fiterr ) ;
+         } else {
+            sprintf( fitvalchars, "%3.0f +/- %3.0f", fitval, fiterr ) ;
+         }
+      } else {
+         fitval = ttwjSigVal ;
+         sprintf( fitvalchars, "%3.0f", fitval ) ;
+         if ( fitval<10.) {
+            sprintf( fitvalchars, "%3.1f", fitval ) ;
+         } else {
+            sprintf( fitvalchars, "%3.0f", fitval ) ;
+         }
+      }
+      ty = ty - dy ;
+      fittext->DrawTextNDC( tx, ty, fitvalchars ) ;
+
+
+
+
+      if ( qcdSigErr > 0. ) {
+         fitval = qcdSigVal ;
+         fiterr = qcdSigErr ;
+         if ( fitval<10.) {
+            sprintf( fitvalchars, "%3.1f +/- %3.1f", fitval, fiterr ) ;
+         } else {
+            sprintf( fitvalchars, "%3.0f +/- %3.0f", fitval, fiterr ) ;
+         }
+      } else {
+         fitval = qcdSigVal ;
+         if ( fitval<10.) {
+            sprintf( fitvalchars, "%3.1f", fitval ) ;
+         } else {
+            sprintf( fitvalchars, "%3.0f", fitval ) ;
+         }
+      }
+      ty = ty - dy ;
+      fittext->DrawTextNDC( tx, ty, fitvalchars ) ;
+
+
+
+
+      fitval = znnSigVal ;
+      fiterr = znnSigErr ;
+      if ( fitval<10.) {
+         sprintf( fitvalchars, "%3.1f +/- %3.1f", fitval, fiterr ) ;
+      } else {
+         sprintf( fitvalchars, "%3.0f +/- %3.0f", fitval, fiterr ) ;
+      }
+      ty = ty - dy ;
+      fittext->DrawTextNDC( tx, ty, fitvalchars ) ;
+
+
+
+
+      fitval =  eff_sf_prim ;
+      sprintf( fitvalchars, "%4.2f", fitval ) ;
+      ty = ty - dy ;
+      fittext->DrawTextNDC( tx, ty, fitvalchars ) ;
+
+
+
+
+      TPad* bigPad = (TPad*) gPad ;
+
+
+   //--- Efficiency scale factor primary Gaussian value.
+
+      hfitqual_np->SetMinimum(-5.) ;
+      hfitqual_np->SetMaximum( 5.) ;
+
+      hfitqual_np->SetNdivisions(101,"x") ;
+      hfitqual_np->SetNdivisions(101,"y") ;
+      hfitqual_np->SetLabelOffset(99,"y") ;
+
+
+
+      TPad* tp = new TPad("tp","tp",0.52,0.,0.61,1.0) ;
+
+      tp->SetRightMargin(0.4) ;
+
+
+
+      tp->Draw() ;
+      tp->cd() ;
+      hfitqual_np->SetLabelSize(0.5,"x") ;
+      xaxis = hfitqual_np->GetXaxis() ;
+      xaxis->SetBinLabel(1,"Eff PG") ;
+      hfitqual_np->GetXaxis()->LabelsOption("v") ;
+      hfitqual_np->Draw() ;
+
+      cfitqual->Update() ;
+
+
+      TGaxis* axis = new TGaxis() ;
+      axis->SetLabelOffset(0.1) ;
+      axis->SetLabelSize(0.30) ;
+      axis->SetTickSize(0.2) ;
+      axis->DrawAxis( 1.0, -5., 1.0, 5., -5., 5., 510, "+LS") ;
+
+      cfitqual->Update() ;
+
+
+
+   //--- title
+
+      bigPad->cd() ;
+
+      char titletext[10000] ;
+      if ( mu_susy_sig_val < 0. ) {
+         sprintf( titletext, "%s : SUSY floating", sel ) ;
+      } else {
+         sprintf( titletext, "%s : SUSY fixed to %.1f", sel, mu_susy_sig_val ) ;
+      }
+      fittext->SetTextSize(0.050) ;
+      fittext->DrawTextNDC( 0.02, 0.93, titletext ) ;
+
+
+      cfitqual->Update() ;
 
 
    }
