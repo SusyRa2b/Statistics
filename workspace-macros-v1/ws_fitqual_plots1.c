@@ -95,19 +95,29 @@
           return ;
        } else {
           printf(" current value is : %8.3f\n", rrv_mu_susy_sig->getVal() ) ; cout << flush ;
-          if ( mu_susy_sig_val < 0. ) {
-             printf(" allowing mu_susy_sig to float in the fit.\n") ;
-             rrv_mu_susy_sig->setConstant(kFALSE) ;
-          } else {
-             printf(" fixing mu_susy_sig to %8.2f.\n", mu_susy_sig_val ) ;
-             rrv_mu_susy_sig->setVal( mu_susy_sig_val ) ;
-             rrv_mu_susy_sig->setConstant(kTRUE) ;
-          }
+          rrv_mu_susy_sig->setConstant(kFALSE) ;
        }
 
-       printf("\n\n\n  ===== Doing a fit ====================\n\n") ;
+
+       printf("\n\n\n  ===== Doing a fit with SUSY component floating ====================\n\n") ;
 
        RooFitResult* fitResult = likelihood->fitTo( *rds, Save(true) ) ;
+       double logLikelihoodSusyFloat = fitResult->minNll() ;
+
+       double logLikelihoodSusyFixed(0.) ;
+       double testStatVal(-1.) ;
+       if ( mu_susy_sig_val >= 0. ) {
+          printf("\n\n\n  ===== Doing a fit with SUSY fixed ====================\n\n") ;
+          printf(" fixing mu_susy_sig to %8.2f.\n", mu_susy_sig_val ) ;
+          rrv_mu_susy_sig->setVal( mu_susy_sig_val ) ;
+          rrv_mu_susy_sig->setConstant(kTRUE) ;
+
+          fitResult = likelihood->fitTo( *rds, Save(true) ) ;
+          logLikelihoodSusyFixed = fitResult->minNll() ;
+          testStatVal = 2.*(logLikelihoodSusyFixed - logLikelihoodSusyFloat) ;
+          printf("\n\n\n ======= test statistic : -2 * ln (L_fixed / ln L_max) = %8.3f\n\n\n", testStatVal ) ;
+       }
+
 
        printf("\n ==== Final floating parameter values\n\n") ;
        const RooArgList fitFloatVals = fitResult->floatParsFinal() ;
@@ -585,6 +595,8 @@
 
 
 
+      printf("\n\n\n") ;
+
 
      //--- final formatting and drawing.
 
@@ -786,6 +798,11 @@
       fittext->SetTextSize(0.050) ;
       fittext->DrawTextNDC( 0.02, 0.93, titletext ) ;
 
+      if ( testStatVal >=0 ) {
+         sprintf( titletext, "-2 * ln (L_fixed / ln L_max) = %8.3f\n", testStatVal ) ;
+         fittext->SetTextSize(0.035) ;
+         fittext->DrawTextNDC( 0.12, 0.85, titletext ) ;
+      }
 
       cfitqual->Update() ;
 
