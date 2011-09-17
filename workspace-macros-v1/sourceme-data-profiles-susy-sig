@@ -1,0 +1,28 @@
+
+
+  mkdir -p log-files
+  mkdir -p output-files
+
+
+
+
+  echo susySigProf-unblind-susyFloat-lm9-ge1b-loose-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/ws-lm9-ge1bloose.root\",\"mu_susy_sig\",0.10,-1.,200\) \
+         >& log-files/susySigProf-unblind-susyFloat-lm9-ge1b-loose-sel.log
+  mv plplot-mu_susy_sig.png output-files/susySigProf-unblind-susyFloat-lm9-ge1b-loose-sel.png
+
+  echo susySigProf-unblind-susyFloat-lm9-ge1b-tight-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/ws-lm9-ge1btight.root\",\"mu_susy_sig\",0.10,-1.,50\) \
+         >& log-files/susySigProf-unblind-susyFloat-lm9-ge1b-tight-sel.log
+  mv plplot-mu_susy_sig.png output-files/susySigProf-unblind-susyFloat-lm9-ge1b-tight-sel.png
+
+  echo susySigProf-unblind-susyFloat-lm9-ge2b-loose-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/ws-lm9-ge2bloose.root\",\"mu_susy_sig\",0.10,-1.,50\) \
+         >& log-files/susySigProf-unblind-susyFloat-lm9-ge2b-loose-sel.log
+  mv plplot-mu_susy_sig.png output-files/susySigProf-unblind-susyFloat-lm9-ge2b-loose-sel.png
+
+  echo susySigProf-unblind-susyFloat-lm9-ge2b-tight-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/ws-lm9-ge2btight.root\",\"mu_susy_sig\",0.10,-1.,20\) \
+         >& log-files/susySigProf-unblind-susyFloat-lm9-ge2b-tight-sel.log
+  mv plplot-mu_susy_sig.png output-files/susySigProf-unblind-susyFloat-lm9-ge2b-tight-sel.png
+

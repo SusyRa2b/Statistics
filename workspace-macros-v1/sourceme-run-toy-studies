@@ -1,0 +1,15 @@
+
+
+   mkdir -p output-files
+   mkdir -p log-files
+
+   echo toystudy-ge1bloose
+   root -b -q workspace-macros-v1/ws_toystudy1.c+\(\"ws-lm9-ge1bloose.root\",1000\) >& log-files/toystudy-ge1bloose.log
+
+   echo toystudy-ge1btight
+   root -b -q workspace-macros-v1/ws_toystudy1.c+\(\"ws-lm9-ge1btight.root\",1000\) >& log-files/toystudy-ge1btight.log
+
+   root -b -q plot-macros-v1/toyplotsge1bloose.c+
+
+   root -b -q plot-macros-v1/toyplotsge1btight.c+
+

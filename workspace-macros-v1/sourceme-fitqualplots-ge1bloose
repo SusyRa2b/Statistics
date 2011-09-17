@@ -1,0 +1,38 @@
+
+
+  mkdir -p log-files
+  mkdir -p output-files
+
+  echo fitQual-unblind-BestFit-NoSusy-ge1b-loose-sel
+  root -b -q workspace-macros-v1/ws_fitqual_plots1.c+\(\"output-files/ws-lm9-ge1bloose.root\",0.,false\) \
+         >& log-files/fitQual-unblind-BestFit-NoSusy-ge1b-loose-sel.log
+  mv fitqual.png output-files/fitQual-unblind-BestFit-NoSusy-ge1b-loose-sel.png
+
+  echo fitQual-unblind-BestFit-susyFloat-lm9-ge1b-loose-sel
+  root -b -q workspace-macros-v1/ws_fitqual_plots1.c+\(\"output-files/ws-lm9-ge1bloose.root\",-1,false\) \
+         >& log-files/fitQual-unblind-BestFit-susyFloat-lm9-ge1b-loose-sel.log
+  mv fitqual.png output-files/fitQual-unblind-BestFit-susyFloat-lm9-ge1b-loose-sel.png
+
+  echo fitQual-unblind-BestFit-susyFixed-lm9-ge1b-loose-sel
+  root -b -q workspace-macros-v1/ws_fitqual_plots1.c+\(\"output-files/ws-lm9-ge1bloose.root\",108.2,false\) \
+         >& log-files/fitQual-unblind-BestFit-susyFixed-lm9-ge1b-loose-sel.log
+  mv fitqual.png output-files/fitQual-unblind-BestFit-susyFixed-lm9-ge1b-loose-sel.png
+
+
+
+
+  echo fitQualNorm-unblind-BestFit-NoSusy-ge1b-loose-sel
+  root -b -q workspace-macros-v1/ws_fitqual_plots1.c+\(\"output-files/ws-lm9-ge1bloose.root\",0.,true\) \
+         >& log-files/fitQualNorm-unblind-BestFit-NoSusy-ge1b-loose-sel.log
+  mv fitqual.png output-files/fitQualNorm-unblind-BestFit-NoSusy-ge1b-loose-sel.png
+
+  echo fitQualNorm-unblind-BestFit-susyFloat-lm9-ge1b-loose-sel
+  root -b -q workspace-macros-v1/ws_fitqual_plots1.c+\(\"output-files/ws-lm9-ge1bloose.root\",-1,true\) \
+         >& log-files/fitQualNorm-unblind-BestFit-susyFloat-lm9-ge1b-loose-sel.log
+  mv fitqual.png output-files/fitQualNorm-unblind-BestFit-susyFloat-lm9-ge1b-loose-sel.png
+
+  echo fitQualNorm-unblind-BestFit-susyFixed-lm9-ge1b-loose-sel
+  root -b -q workspace-macros-v1/ws_fitqual_plots1.c+\(\"output-files/ws-lm9-ge1bloose.root\",108.2,true\) \
+         >& log-files/fitQualNorm-unblind-BestFit-susyFixed-lm9-ge1b-loose-sel.log
+  mv fitqual.png output-files/fitQualNorm-unblind-BestFit-susyFixed-lm9-ge1b-loose-sel.png
+

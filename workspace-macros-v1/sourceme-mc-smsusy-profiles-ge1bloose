@@ -1,0 +1,62 @@
+
+
+  mkdir -p log-files
+  mkdir -p output-files
+
+  echo ttwjSigProf-MCSMsusy-NoSusy-loose-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/ws-mc-smsusy-lm9-ge1bloose.root\",\"mu_ttwj_sig\",0.3173,0.,450\) \
+         >& log-files/ttwjSigProf-MCSMsusy-NoSusy-loose-sel.log
+  mv plplot-mu_ttwj_sig.png output-files/ttwjSigProf-MCSMsusy-NoSusy-loose-sel.png
+
+  echo ttwjSigProf-MCSMsusy-susyFloat-lm9-loose-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/ws-mc-smsusy-lm9-ge1bloose.root\",\"mu_ttwj_sig\",0.3173,-1.,450\) \
+         >& log-files/ttwjSigProf-MCSMsusy-susyFloat-lm9-loose-sel.log
+  mv plplot-mu_ttwj_sig.png output-files/ttwjSigProf-MCSMsusy-susyFloat-lm9-loose-sel.png
+
+  echo ttwjSigProf-MCSMsusy-susyFixed-lm9-loose-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/ws-mc-smsusy-lm9-ge1bloose.root\",\"mu_ttwj_sig\",0.3173,164.3,450\) \
+         >& log-files/ttwjSigProf-MCSMsusy-susyFixed-lm9-loose-sel.log
+  mv plplot-mu_ttwj_sig.png output-files/ttwjSigProf-MCSMsusy-susyFixed-lm9-loose-sel.png
+
+
+
+  echo znnSigProf-MCSMsusy-NoSusy-loose-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/ws-mc-smsusy-lm9-ge1bloose.root\",\"mu_znn_sig\",0.3173,0.,100\) \
+         >& log-files/znnSigProf-MCSMsusy-NoSusy-loose-sel.log
+  mv plplot-mu_znn_sig.png output-files/znnSigProf-MCSMsusy-NoSusy-loose-sel.png
+
+  echo znnSigProf-MCSMsusy-susyFloat-lm9-loose-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/ws-mc-smsusy-lm9-ge1bloose.root\",\"mu_znn_sig\",0.3173,-1.,100\) \
+         >& log-files/znnSigProf-MCSMsusy-susyFloat-lm9-loose-sel.log
+  mv plplot-mu_znn_sig.png output-files/znnSigProf-MCSMsusy-susyFloat-lm9-loose-sel.png
+
+  echo znnSigProf-MCSMsusy-susyFixed-lm9-loose-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/ws-mc-smsusy-lm9-ge1bloose.root\",\"mu_znn_sig\",0.3173,164.3,100\) \
+         >& log-files/znnSigProf-MCSMsusy-susyFixed-lm9-loose-sel.log
+  mv plplot-mu_znn_sig.png output-files/znnSigProf-MCSMsusy-susyFixed-lm9-loose-sel.png
+
+
+
+  echo qcdSigProf-MCSMsusy-NoSusy-loose-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/ws-mc-smsusy-lm9-ge1bloose.root\",\"mu_qcd_sig\",0.3173,0.,200\) \
+         >& log-files/qcdSigProf-MCSMsusy-NoSusy-loose-sel.log
+  mv plplot-mu_qcd_sig.png output-files/qcdSigProf-MCSMsusy-NoSusy-loose-sel.png
+
+  echo qcdSigProf-MCSMsusy-susyFloat-lm9-loose-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/ws-mc-smsusy-lm9-ge1bloose.root\",\"mu_qcd_sig\",0.3173,-1.,200\) \
+         >& log-files/qcdSigProf-MCSMsusy-susyFloat-lm9-loose-sel.log
+  mv plplot-mu_qcd_sig.png output-files/qcdSigProf-MCSMsusy-susyFloat-lm9-loose-sel.png
+
+  echo qcdSigProf-MCSMsusy-susyFixed-lm9-loose-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/ws-mc-smsusy-lm9-ge1bloose.root\",\"mu_qcd_sig\",0.3173,164.3,200\) \
+         >& log-files/qcdSigProf-MCSMsusy-susyFixed-lm9-loose-sel.log
+  mv plplot-mu_qcd_sig.png output-files/qcdSigProf-MCSMsusy-susyFixed-lm9-loose-sel.png
+
+
+
+
+  echo susySigProf-MCSMsusy-susyFloat-lm9-loose-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/ws-mc-smsusy-lm9-ge1bloose.root\",\"mu_susy_sig\",0.10,-1.,450\) \
+         >& log-files/susySigProf-MCSMsusy-susyFloat-lm9-loose-sel.log
+  mv plplot-mu_susy_sig.png output-files/susySigProf-MCSMsusy-susyFloat-lm9-loose-sel.png
+

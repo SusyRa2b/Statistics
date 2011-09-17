@@ -1,0 +1,40 @@
+
+
+  mkdir -p log-files
+  mkdir -p output-files
+
+  echo fitQual-MCSMonly-BestFit-NoSusy-loose-sel
+  root -b -q workspace-macros-v1/ws_fitqual_plots1.c+\(\"output-files/ws-mc-smonly-lm9-ge1bloose.root\",0.,false\) \
+         >& log-files/fitQual-MCSMonly-BestFit-NoSusy-loose-sel.log
+  mv fitqual.png output-files/fitQual-MCSMonly-BestFit-NoSusy-loose-sel.png
+
+  echo fitQual-MCSMonly-BestFit-susyFloat-lm9-loose-sel
+  root -b -q workspace-macros-v1/ws_fitqual_plots1.c+\(\"output-files/ws-mc-smonly-lm9-ge1bloose.root\",-1,false\) \
+         >& log-files/fitQual-MCSMonly-BestFit-susyFloat-lm9-loose-sel.log
+  mv fitqual.png output-files/fitQual-MCSMonly-BestFit-susyFloat-lm9-loose-sel.png
+
+  echo fitQual-MCSMonly-BestFit-susyFixed-lm9-loose-sel
+  root -b -q workspace-macros-v1/ws_fitqual_plots1.c+\(\"output-files/ws-mc-smonly-lm9-ge1bloose.root\",164.3,false\) \
+         >& log-files/fitQual-MCSMonly-BestFit-susyFixed-lm9-loose-sel.log
+  mv fitqual.png output-files/fitQual-MCSMonly-BestFit-susyFixed-lm9-loose-sel.png
+
+
+
+  echo fitQualNorm-MCSMonly-BestFit-NoSusy-loose-sel
+  root -b -q workspace-macros-v1/ws_fitqual_plots1.c+\(\"output-files/ws-mc-smonly-lm9-ge1bloose.root\",0.,true\) \
+         >& log-files/fitQualNorm-MCSMonly-BestFit-NoSusy-loose-sel.log
+  mv fitqual.png output-files/fitQualNorm-MCSMonly-BestFit-NoSusy-loose-sel.png
+
+  echo fitQualNorm-MCSMonly-BestFit-susyFloat-lm9-loose-sel
+  root -b -q workspace-macros-v1/ws_fitqual_plots1.c+\(\"output-files/ws-mc-smonly-lm9-ge1bloose.root\",-1,true\) \
+         >& log-files/fitQualNorm-MCSMonly-BestFit-susyFloat-lm9-loose-sel.log
+  mv fitqual.png output-files/fitQualNorm-MCSMonly-BestFit-susyFloat-lm9-loose-sel.png
+
+  echo fitQualNorm-MCSMonly-BestFit-susyFixed-lm9-loose-sel
+  root -b -q workspace-macros-v1/ws_fitqual_plots1.c+\(\"output-files/ws-mc-smonly-lm9-ge1bloose.root\",164.3,true\) \
+         >& log-files/fitQualNorm-MCSMonly-BestFit-susyFixed-lm9-loose-sel.log
+  mv fitqual.png output-files/fitQualNorm-MCSMonly-BestFit-susyFixed-lm9-loose-sel.png
+
+
+
+

@@ -806,6 +806,8 @@
 
       cfitqual->Update() ;
 
+      cfitqual->SaveAs("fitqual.png") ;
+
 
    }
 

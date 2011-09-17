@@ -1,0 +1,40 @@
+
+
+  mkdir -p log-files
+  mkdir -p output-files
+
+  echo fitQual-MCSMsusy-BestFit-NoSusy-tight-sel
+  root -b -q workspace-macros-v1/ws_fitqual_plots1.c+\(\"output-files/ws-mc-smsusy-lm9-ge1btight.root\",0.,false\) \
+         >& log-files/fitQual-MCSMsusy-BestFit-NoSusy-tight-sel.log
+  mv fitqual.png output-files/fitQual-MCSMsusy-BestFit-NoSusy-tight-sel.png
+
+  echo fitQual-MCSMsusy-BestFit-susyFloat-lm9-tight-sel
+  root -b -q workspace-macros-v1/ws_fitqual_plots1.c+\(\"output-files/ws-mc-smsusy-lm9-ge1btight.root\",-1,false\) \
+         >& log-files/fitQual-MCSMsusy-BestFit-susyFloat-lm9-tight-sel.log
+  mv fitqual.png output-files/fitQual-MCSMsusy-BestFit-susyFloat-lm9-tight-sel.png
+
+  echo fitQual-MCSMsusy-BestFit-susyFixed-lm9-tight-sel
+  root -b -q workspace-macros-v1/ws_fitqual_plots1.c+\(\"output-files/ws-mc-smsusy-lm9-ge1btight.root\",80.1,false\) \
+         >& log-files/fitQual-MCSMsusy-BestFit-susyFixed-lm9-tight-sel.log
+  mv fitqual.png output-files/fitQual-MCSMsusy-BestFit-susyFixed-lm9-tight-sel.png
+
+
+
+  echo fitQualNorm-MCSMsusy-BestFit-NoSusy-tight-sel
+  root -b -q workspace-macros-v1/ws_fitqual_plots1.c+\(\"output-files/ws-mc-smsusy-lm9-ge1btight.root\",0.,true\) \
+         >& log-files/fitQualNorm-MCSMsusy-BestFit-NoSusy-tight-sel.log
+  mv fitqual.png output-files/fitQualNorm-MCSMsusy-BestFit-NoSusy-tight-sel.png
+
+  echo fitQualNorm-MCSMsusy-BestFit-susyFloat-lm9-tight-sel
+  root -b -q workspace-macros-v1/ws_fitqual_plots1.c+\(\"output-files/ws-mc-smsusy-lm9-ge1btight.root\",-1,true\) \
+         >& log-files/fitQualNorm-MCSMsusy-BestFit-susyFloat-lm9-tight-sel.log
+  mv fitqual.png output-files/fitQualNorm-MCSMsusy-BestFit-susyFloat-lm9-tight-sel.png
+
+  echo fitQualNorm-MCSMsusy-BestFit-susyFixed-lm9-tight-sel
+  root -b -q workspace-macros-v1/ws_fitqual_plots1.c+\(\"output-files/ws-mc-smsusy-lm9-ge1btight.root\",80.1,true\) \
+         >& log-files/fitQualNorm-MCSMsusy-BestFit-susyFixed-lm9-tight-sel.log
+  mv fitqual.png output-files/fitQualNorm-MCSMsusy-BestFit-susyFixed-lm9-tight-sel.png
+
+
+
+

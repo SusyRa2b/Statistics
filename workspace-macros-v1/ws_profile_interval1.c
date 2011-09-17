@@ -13,7 +13,7 @@
   using namespace RooFit;
   using namespace RooStats;
 
-   void ws_profile_interval1( const char* wsfile = "ws-test1.root", const char* parName = "mu_susy_sig", double alpha = 0.10, double xmax = -1. ) {
+   void ws_profile_interval1( const char* wsfile = "ws-test1.root", const char* parName = "mu_susy_sig", double alpha = 0.10, double mu_susy_sig_val = 0., double xmax = -1. ) {
 
 
 
@@ -62,17 +62,25 @@
        }
        if ( xmax > 0 ) { rrv_par->setMax( xmax ) ; }
 
+       printf("\n\n\n  ===== Grabbing mu_susy_sig rrv ====================\n\n") ;
+       RooRealVar* rrv_mu_susy_sig = ws->var("mu_susy_sig") ;
+       if ( rrv_mu_susy_sig == 0x0 ) {
+          printf("\n\n\n *** can't find mu_susy_sig in workspace.  Quitting.\n\n\n") ; return ;
+       }
        if ( strcmp( parName, "mu_susy_sig" ) != 0 ) {
-          printf("\n\n\n  ===== Grabbing mu_susy_sig rrv ====================\n\n") ;
-          RooRealVar* rrv_mu_susy_sig = ws->var("mu_susy_sig") ;
-          if ( rrv_mu_susy_sig == 0x0 ) {
-             printf("\n\n\n *** can't find mu_susy_sig in workspace.  Quitting.\n\n\n") ; return ;
+          if ( mu_susy_sig_val >= 0. ) {
+             printf(" current value is : %8.3f\n", rrv_mu_susy_sig->getVal() ) ; cout << flush ;
+             printf(" fixing to %8.2f.\n", mu_susy_sig_val ) ;
+             rrv_mu_susy_sig->setVal( mu_susy_sig_val ) ;
+             rrv_mu_susy_sig->setConstant(kTRUE) ;
           } else {
              printf(" current value is : %8.3f\n", rrv_mu_susy_sig->getVal() ) ; cout << flush ;
-             printf(" fixing to zero.\n") ;
-             rrv_mu_susy_sig->setVal(0.) ;
-             rrv_mu_susy_sig->setConstant(kTRUE) ;
+             printf(" allowing mu_susy_sig to float.\n") ;
+             rrv_mu_susy_sig->setConstant(kFALSE) ;
           }
+       } else {
+          printf("\n\n profile plot parameter is mu_susy_sig.\n") ;
+          rrv_mu_susy_sig->setConstant(kFALSE) ;
        }
 
        printf("\n\n\n  ===== Grabbing likelihood pdf ====================\n\n") ;
