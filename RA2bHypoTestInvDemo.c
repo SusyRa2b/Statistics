@@ -15,15 +15,18 @@
 #include "TLine.h"
 #include "TH2F.h"
 
-#include "HypoTestCalculatorGeneric.cxx"
-
 #include "RooStats/HybridCalculator.h"
-////////////////#include "RooStats/ToyMCSampler.h"
-#include "ToyMCSampler.cxx"
 #include "RooStats/HypoTestPlot.h"
 
+
+//-------------
+#include "HypoTestCalculatorGeneric.h"
+#include "RooStats/ToyMCSampler.h"
+/////#include "HypoTestCalculatorGeneric.cxx"
+/////#include "ToyMCSampler.cxx"
+//-------------
+
 #include "RooStats/NumEventsTestStat.h"
-//#include "MyProfileLikelihoodTestStat.h"
 #include "RooStats/ProfileLikelihoodTestStat.h"
 #include "RooStats/SimpleLikelihoodRatioTestStat.h"
 #include "RooStats/RatioOfProfiledLikelihoodsTestStat.h"

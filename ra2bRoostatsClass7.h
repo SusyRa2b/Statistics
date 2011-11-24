@@ -23,7 +23,7 @@
 
      public :
 
-       ra2bRoostatsClass7( bool ArgUseSigTtwjVar=false, bool ArgUseLdpVars=true, int ArgznnModel=1 ) ;
+       ra2bRoostatsClass7( bool ArgUseSigTtwjVar=false, bool ArgUseLdpVars=true ) ;
 
        virtual ~ra2bRoostatsClass7();
 
@@ -38,7 +38,6 @@
        bool varsAtFitVals ;
        bool useSigTtwjVar ;
        bool useLdpVars ;
-       int  znnModel ;
        bool initialized ;
 
        double toy_mu0_ttbar_sig ;
@@ -127,8 +126,8 @@
        RooAbsArg*     rv_mu_qcd_sb_ldp     ;
 
 
-       RooRealVar*    rv_mu_qcd_lsb_0b     ;
-       RooRealVar*    rv_mu_qcd_lsb_0b_ldp ;
+   //  RooRealVar*    rv_mu_qcd_lsb_0b     ;
+   //  RooRealVar*    rv_mu_qcd_lsb_0b_ldp ;
 
 
 
@@ -196,23 +195,6 @@
        RooRealVar* rv_mean_eff_sf_sb_ldp ;
 
 
-/*        RooRealVar* rv_sf_mc ; */
-/*        RooRealVar* rv_sf_qcd_sb ; */
-/*        RooRealVar* rv_sf_qcd_sig ; */
-/*        RooRealVar* rv_sf_ttwj_sig ; */
-/*        RooRealVar* rv_sf_ee ; */
-/*        RooRealVar* rv_sf_mm ; */
-
-/*        RooRealVar* rv_acc_ee ; */
-/*        RooRealVar* rv_acc_mm ; */
-/*        RooRealVar* rv_eff_ee ; */
-/*        RooRealVar* rv_eff_mm ; */
-
-/*        RooRealVar* rv_fsig_ee ; */
-/*        RooRealVar* rv_fsig_mm ; */
-
-/*        RooRealVar* rv_knn_sig ; */
-/*        RooRealVar* rv_knn_sb ; */
 
        RooRealVar* rv_znnoverll_bfratio    ;
        RooRealVar* rv_dataoverll_lumiratio ;
@@ -297,6 +279,7 @@
        double np_m_fsig_mm ;
        double np_m_knn_sig ;
        double np_m_knn_sb ;
+       double np_m_Rlsb_passfail ;
 
 
        double np_s_Eff_sf_m ;
@@ -314,6 +297,7 @@
        double np_s_fsig_mm ;
        double np_s_knn_sig ;
        double np_s_knn_sb ;
+       double np_s_Rlsb_passfail ;
 
 
        //=========== PDFs for the likelihood ============================================================
@@ -353,18 +337,26 @@
        float sf_ttbarmc, sf_ttbarmc_err ;
 
        float  DataLumi                ;
-       float  acc_ee_mean             ;
-       float  acc_ee_err              ;
-       float  acc_mm_mean             ;
-       float  acc_mm_err              ;
+       float  acc_ee_sig_mean             ;
+       float  acc_ee_sig_err              ;
+       float  acc_ee_sb_mean             ;
+       float  acc_ee_sb_err              ;
+       float  acc_mm_sig_mean             ;
+       float  acc_mm_sig_err              ;
+       float  acc_mm_sb_mean             ;
+       float  acc_mm_sb_err              ;
        float  eff_ee_mean             ;
        float  eff_ee_err              ;
        float  eff_mm_mean             ;
        float  eff_mm_err              ;
-       float  knn_sig_mean            ;
-       float  knn_sig_err             ;
-       float  knn_sb_mean             ;
-       float  knn_sb_err              ;
+       float  knn_ee_sig_mean            ;
+       float  knn_ee_sig_err             ;
+       float  knn_ee_sb_mean             ;
+       float  knn_ee_sb_err              ;
+       float  knn_mm_sig_mean            ;
+       float  knn_mm_sig_err             ;
+       float  knn_mm_sb_mean             ;
+       float  knn_mm_sb_err              ;
        float  Ztoll_lumi              ;
        float  fsig_ee_mean            ;
        float  fsig_ee_err             ;
@@ -375,59 +367,10 @@
        RooArgSet observedParametersList ;
        RooDataSet* dsObserved ;
 
-/*        RooWorkspace* workspace ; */
 
        RooFitResult* fitResult ;
 
 
-       //========= Stuff needed for CLs below here ==================================================
-
-     //++++ Model predictions from fitting data to BG-only hypothesis (susy fixed to zero in fit)
-
-       double toymean_n_sig        ;
-       double toymean_n_sb         ;
-       double toymean_n_sig_ldp    ;
-       double toymean_n_sb_ldp     ;
-       double toymean_n_sig_sl     ;
-       double toymean_n_sb_sl      ;
-       double toymean_n_lsb_0b     ;
-       double toymean_n_lsb_0b_ldp ;
-
-       //-- Znn model 1
-       double toymean_n_sig_ee     ;
-       double toymean_n_sb_ee      ;
-       double toymean_n_sig_mm     ;
-       double toymean_n_sb_mm      ;
-
-       //-- Znn model 2
-       double toymean_n_sigsb_ee   ;
-       double toymean_n_sigsb_mm   ;
-
-       TTree* tt_bgonly ;
-       TTree* tt_splusb ;
-
-
-       TRandom2* trandom_cls ;
-
-
-
-       double dataval_Nsig ;
-       double dataval_Nsb  ;
-       double dataval_Nsig_sl ;
-       double dataval_Nsb_sl  ;
-       double dataval_Nsig_ldp ;
-       double dataval_Nsb_ldp  ;
-
-       double dataval_Nlsb_0b ;
-       double dataval_Nlsb_0b_ldp ;
-
-       double dataval_Nsig_ee ;
-       double dataval_Nsb_ee ;
-       double dataval_Nsig_mm ;
-       double dataval_Nsb_mm ;
-
-       double dataval_Nsigsb_ee ;
-       double dataval_Nsigsb_mm ;
 
 
    } ;
