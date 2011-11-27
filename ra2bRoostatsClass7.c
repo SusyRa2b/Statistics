@@ -887,12 +887,18 @@
       allNuisances.add (sf_ttwj_sig_prim);
       allNuisancePdfs.add (pdf_sf_ttwj_sig);
 
+
+   //--------------------------------------
+
       RooRealVar knn_ee_sig_prim ( "knn_ee_sig_prim", "knn_ee_sig_prim", 0, -5, 5);
       RooRealVar knn_ee_sig_nom ( "knn_ee_sig_nom", "knn_ee_sig_nom", 0, -5, 5);
       RooGaussian pdf_knn_ee_sig ("pdf_knn_ee_sig" , "pdf_knn_ee_sig", knn_ee_sig_prim, knn_ee_sig_nom, RooConst(1));
       sprintf (formula, "%f*pow(%f,@0)", knn_ee_sig_mean, exp(knn_ee_sig_err/knn_ee_sig_mean));
       RooFormulaVar fv_knn_ee_sig ("knn_ee_sig", formula, RooArgList(knn_ee_sig_prim));
       knn_ee_sig_nom.setConstant();
+      globalObservables.add (knn_ee_sig_nom);
+      allNuisances.add (knn_ee_sig_prim);
+      allNuisancePdfs.add (pdf_knn_ee_sig);
 
       RooRealVar knn_ee_sb_prim ( "knn_ee_sb_prim", "knn_ee_sb_prim", 0, -5, 5);
       RooRealVar knn_ee_sb_nom ( "knn_ee_sb_nom", "knn_ee_sb_nom", 0, -5, 5);
@@ -900,6 +906,9 @@
       sprintf (formula, "%f*pow(%f,@0)", knn_ee_sb_mean, exp(knn_ee_sb_err/knn_ee_sb_mean));
       RooFormulaVar fv_knn_ee_sb ("knn_ee_sb", formula, RooArgList(knn_ee_sb_prim));
       knn_ee_sb_nom.setConstant();
+      globalObservables.add (knn_ee_sb_nom);
+      allNuisances.add (knn_ee_sb_prim);
+      allNuisancePdfs.add (pdf_knn_ee_sb);
 
       RooRealVar knn_mm_sig_prim ( "knn_mm_sig_prim", "knn_mm_sig_prim", 0, -5, 5);
       RooRealVar knn_mm_sig_nom ( "knn_mm_sig_nom", "knn_mm_sig_nom", 0, -5, 5);
@@ -907,6 +916,9 @@
       sprintf (formula, "%f*pow(%f,@0)", knn_mm_sig_mean, exp(knn_mm_sig_err/knn_mm_sig_mean));
       RooFormulaVar fv_knn_mm_sig ("knn_mm_sig", formula, RooArgList(knn_mm_sig_prim));
       knn_mm_sig_nom.setConstant();
+      globalObservables.add (knn_mm_sig_nom);
+      allNuisances.add (knn_mm_sig_prim);
+      allNuisancePdfs.add (pdf_knn_mm_sig);
 
       RooRealVar knn_mm_sb_prim ( "knn_mm_sb_prim", "knn_mm_sb_prim", 0, -5, 5);
       RooRealVar knn_mm_sb_nom ( "knn_mm_sb_nom", "knn_mm_sb_nom", 0, -5, 5);
@@ -914,6 +926,11 @@
       sprintf (formula, "%f*pow(%f,@0)", knn_mm_sb_mean, exp(knn_mm_sb_err/knn_mm_sb_mean));
       RooFormulaVar fv_knn_mm_sb ("knn_mm_sb", formula, RooArgList(knn_mm_sb_prim));
       knn_mm_sb_nom.setConstant();
+      globalObservables.add (knn_mm_sb_nom);
+      allNuisances.add (knn_mm_sb_prim);
+      allNuisancePdfs.add (pdf_knn_mm_sb);
+
+    //--------------------------------------
 
 
 
