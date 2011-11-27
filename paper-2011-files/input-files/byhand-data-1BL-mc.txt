@@ -1,0 +1,61 @@
+  Description : numbers entered by hand
+Nsig              489
+Nsb               565
+Nsig_sl           287
+Nsb_sl            346
+Nsig_ldp          303
+Nsb_ldp           591
+ Nsb_1b_ee         16
+ Nsig_1b_ee        29
+ Nsb_1b_mm         20
+ Nsig_1b_mm        32
+ Rlsb_passfail         0.1687
+ Rlsb_passfail_err     0.0119
+Nttbarsingletopzjetsmc_sig_ldp  64.08
+Nttbarsingletopzjetsmc_sb_ldp   97.97
+NWJmc_sig_ldp     18.9585
+NWJmc_sb_ldp      22.2579
+NZnnmc_sig_ldp    8.44979
+NZnnmc_sb_ldp     11.0813
+  NEwomc_sig_ldp          0
+  NEwomc_sb_ldp           0
+  NEwomc_sig              0
+  NEwomc_sb               0
+DataLumi                4684
+ acc_ee_sig_mean    0.859
+ acc_ee_sig_err     0.028
+ acc_ee_sb_mean     0.798
+ acc_ee_sb_err      0.032
+ acc_mm_sig_mean    0.856
+ acc_mm_sig_err     0.028
+ acc_mm_sb_mean     0.807
+ acc_mm_sb_err      0.031
+ eff_ee_mean    0.538
+ eff_ee_err     0.036
+ eff_mm_mean    0.602
+ eff_mm_err     0.036
+Ztoll_lumi      4684
+  knn_ee_sig_mean   0.401
+  knn_ee_sig_err    0.044
+  knn_ee_sb_mean    0.401
+  knn_ee_sb_err     0.044
+  knn_mm_sig_mean   0.401
+  knn_mm_sig_err    0.059
+  knn_mm_sb_mean    0.401
+  knn_mm_sb_err     0.059
+  fsig_ee_mean   0.911
+  fsig_ee_err    0.104
+  fsig_mm_mean   0.866
+  fsig_mm_err    0.079
+  sf_mc                 1.00
+  sf_mc_err             0.50
+  sf_qcd_sb             1.00
+  sf_qcd_sb_err         1.159
+  sf_qcd_sig            1.00
+  sf_qcd_sig_err        0.516
+  sf_ttwj_sig           1.00
+  sf_ttwj_sig_err       0.10 
+  sf_ee                 1.00
+  sf_ee_err             0.176
+  sf_mm                 1.00
+  sf_mm_err             0.242
