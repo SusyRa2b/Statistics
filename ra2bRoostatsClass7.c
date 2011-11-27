@@ -364,7 +364,7 @@
          rrv_mu_ttwj_sig   -> setVal( initialval_ttwj_sig ) ;  //-- this is a starting value only.
       }
       if ( !useLdpVars ) {
-         rrv_mu_qcd_sig  = new RooRealVar( "mu_qcd_sig"    , "mu_qcd_sig"    , 0.0, 100. ) ;
+         rrv_mu_qcd_sig  = new RooRealVar( "mu_qcd_sig"    , "mu_qcd_sig"    , 0.0, 200. ) ;
          rv_mu_qcd_sig = rrv_mu_qcd_sig ;
          rrv_mu_qcd_sig  -> setVal( initialval_qcd_sig ) ; //-- this is a starting value only.
       }
@@ -372,7 +372,7 @@
 
       //-- Note: Ewo is rfv
 
-      rv_mu_znn_sig      = new RooRealVar( "mu_znn_sig"    , "mu_znn_sig"    , 0.0, 80. ) ;
+      rv_mu_znn_sig      = new RooRealVar( "mu_znn_sig"    , "mu_znn_sig"    , 0.0, 300. ) ;
 
       float maxSusySig = 4.0*Nsig ;
       rv_mu_susy_sig     = new RooRealVar( "mu_susy_sig"   , "mu_susy_sig"   , 0.0, maxSusySig ) ;
@@ -394,7 +394,7 @@
          rrv_mu_ttwj_sb   -> setVal( initialval_ttwj_sb ) ;  //-- this is a starting value only.
       }
       if ( !useLdpVars ) {
-         rrv_mu_qcd_sb  = new RooRealVar( "mu_qcd_sb"    , "mu_qcd_sb"    , 0.0, 100. ) ;
+         rrv_mu_qcd_sb  = new RooRealVar( "mu_qcd_sb"    , "mu_qcd_sb"    , 0.0, 500. ) ;
          rv_mu_qcd_sb = rrv_mu_qcd_sb ;
          rrv_mu_qcd_sb  -> setVal( initialval_qcd_sb ) ; //-- this is a starting value only.
       }
@@ -404,7 +404,7 @@
       //-- Note: SUSY is rfv
 
 
-      rrv_mu_znn_sb       = new RooRealVar( "mu_znn_sb"     , "mu_znn_sb"     , 0.0, 150. ) ;
+      rrv_mu_znn_sb       = new RooRealVar( "mu_znn_sb"     , "mu_znn_sb"     , 0.0, 350. ) ;
 
       rrv_mu_znn_sb   -> setVal( initialval_znn_sb ) ;  //-- this is a starting value only.
 
@@ -418,7 +418,7 @@
 
     //____ Counts in SIG, SL  ______________________
 
-      rv_mu_ttwj_sig_sl  = new RooRealVar( "mu_ttwj_sig_sl"    , "mu_ttwj_sig_sl"    , 0.0, 500. ) ;
+      rv_mu_ttwj_sig_sl  = new RooRealVar( "mu_ttwj_sig_sl"    , "mu_ttwj_sig_sl"    , 0.0, 2500. ) ;
 
       //-- Note: QCD, Ewo, and Znn are assumed to be negligible and are not explicitly included.
       //-- Note: SUSY is rfv
@@ -449,7 +449,7 @@
     //____ Counts in SIG, LDP  ______________________
 
       if ( useLdpVars ) {
-         rrv_mu_qcd_sig_ldp  = new RooRealVar( "mu_qcd_sig_ldp"    , "mu_qcd_sig_ldp"    , 0.0, 500. ) ;
+         rrv_mu_qcd_sig_ldp  = new RooRealVar( "mu_qcd_sig_ldp"    , "mu_qcd_sig_ldp"    , 0.0, 3500. ) ;
          rv_mu_qcd_sig_ldp = rrv_mu_qcd_sig_ldp ;
          rrv_mu_qcd_sig_ldp  -> setVal( initialval_qcd_sig_ldp ) ; //-- this is a starting value only.
       }
@@ -469,7 +469,7 @@
     //____ Counts in SB, LDP  ______________________
 
       if ( useLdpVars ) {
-         rrv_mu_qcd_sb_ldp  = new RooRealVar( "mu_qcd_sb_ldp"    , "mu_qcd_sb_ldp"    , 0.0, 1000. ) ;
+         rrv_mu_qcd_sb_ldp  = new RooRealVar( "mu_qcd_sb_ldp"    , "mu_qcd_sb_ldp"    , 0.0, 3000. ) ;
          rv_mu_qcd_sb_ldp = rrv_mu_qcd_sb_ldp ;
          rrv_mu_qcd_sb_ldp  -> setVal( initialval_qcd_sb_ldp ) ; //-- this is a starting value only.
       }
