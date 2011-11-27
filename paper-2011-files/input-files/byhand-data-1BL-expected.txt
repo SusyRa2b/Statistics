@@ -1,5 +1,5 @@
   Description : numbers entered by hand
-Nsig              478
+Nsig              459
 Nsb               584
 Nsig_sl           222
 Nsb_sl            299
