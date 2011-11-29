@@ -1,0 +1,25 @@
+
+
+  mkdir -p log-files
+  mkdir -p output-files
+
+
+  echo ttwjSigProf-data-NoSusy-2BL-sel
+  root -b -q workspace-macros/ws_profile_interval1.c\(\"output-files/ws-lm9-2BL.root\",\"mu_ttwj_sig\",0.3173,0.,170\) \
+         >& log-files/ttwjSigProf-data-NoSusy-2BL-sel.log
+  mv plplot-mu_ttwj_sig.png output-files/ttwjSigProf-data-NoSusy-2BL-sel.png
+
+  echo ttwjSigProf-data-susyFloat-lm9-2BL-sel
+  root -b -q workspace-macros/ws_profile_interval1.c\(\"output-files/ws-lm9-2BL.root\",\"mu_ttwj_sig\",0.3173,-1.,170\) \
+         >& log-files/ttwjSigProf-data-susyFloat-lm9-2BL-sel.log
+  mv plplot-mu_ttwj_sig.png output-files/ttwjSigProf-data-susyFloat-lm9-2BL-sel.png
+
+  echo ttwjSigProf-data-susyFixed-lm9-2BL-sel
+  root -b -q workspace-macros/ws_profile_interval1.c\(\"output-files/ws-lm9-2BL.root\",\"mu_ttwj_sig\",0.3173,180.6,170\) \
+         >& log-files/ttwjSigProf-data-susyFixed-lm9-2BL-sel.log
+  mv plplot-mu_ttwj_sig.png output-files/ttwjSigProf-data-susyFixed-lm9-2BL-sel.png
+
+
+
+
+

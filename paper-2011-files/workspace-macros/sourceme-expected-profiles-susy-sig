@@ -1,0 +1,34 @@
+
+
+  mkdir -p log-files
+  mkdir -p output-files
+
+
+
+
+  echo susySigProf-expected-susyFloat-lm9-1BL-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/expected-ws-lm9-1BL.root\",\"mu_susy_sig\",0.10,-1.,550\) \
+         >& log-files/susySigProf-expected-susyFloat-lm9-1BL-sel.log
+  mv plplot-mu_susy_sig.png output-files/susySigProf-expected-susyFloat-lm9-1BL-sel.png
+
+  echo susySigProf-expected-susyFloat-lm9-1BT-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/expected-ws-lm9-1BT.root\",\"mu_susy_sig\",0.10,-1.,30\) \
+         >& log-files/susySigProf-expected-susyFloat-lm9-1BT-sel.log
+  mv plplot-mu_susy_sig.png output-files/susySigProf-expected-susyFloat-lm9-1BT-sel.png
+
+  echo susySigProf-expected-susyFloat-lm9-2BL-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/expected-ws-lm9-2BL.root\",\"mu_susy_sig\",0.10,-1.,250\) \
+         >& log-files/susySigProf-expected-susyFloat-lm9-2BL-sel.log
+  mv plplot-mu_susy_sig.png output-files/susySigProf-expected-susyFloat-lm9-2BL-sel.png
+
+  echo susySigProf-expected-susyFloat-lm9-2BT-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/expected-ws-lm9-2BT.root\",\"mu_susy_sig\",0.10,-1.,100\) \
+         >& log-files/susySigProf-expected-susyFloat-lm9-2BT-sel.log
+  mv plplot-mu_susy_sig.png output-files/susySigProf-expected-susyFloat-lm9-2BT-sel.png
+
+  echo susySigProf-expected-susyFloat-lm9-3B-sel
+  root -b -q workspace-macros-v1/ws_profile_interval1.c\(\"output-files/expected-ws-lm9-3B.root\",\"mu_susy_sig\",0.10,-1.,40\) \
+         >& log-files/susySigProf-expected-susyFloat-lm9-3B-sel.log
+  mv plplot-mu_susy_sig.png output-files/susySigProf-expected-susyFloat-lm9-3B-sel.png
+
+

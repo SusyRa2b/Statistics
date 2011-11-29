@@ -1,0 +1,25 @@
+
+
+  mkdir -p log-files
+  mkdir -p output-files
+
+
+  echo qcdSigProf-data-NoSusy-3B-sel
+  root -b -q workspace-macros/ws_profile_interval1.c\(\"output-files/ws-lm9-3B.root\",\"mu_qcd_sig\",0.3173,0.,10\) \
+         >& log-files/qcdSigProf-data-NoSusy-3B-sel.log
+  mv plplot-mu_qcd_sig.png output-files/qcdSigProf-data-NoSusy-3B-sel.png
+
+  echo qcdSigProf-data-susyFloat-lm9-3B-sel
+  root -b -q workspace-macros/ws_profile_interval1.c\(\"output-files/ws-lm9-3B.root\",\"mu_qcd_sig\",0.3173,-1.,10\) \
+         >& log-files/qcdSigProf-data-susyFloat-lm9-3B-sel.log
+  mv plplot-mu_qcd_sig.png output-files/qcdSigProf-data-susyFloat-lm9-3B-sel.png
+
+  echo qcdSigProf-data-susyFixed-lm9-3B-sel
+  root -b -q workspace-macros/ws_profile_interval1.c\(\"output-files/ws-lm9-3B.root\",\"mu_qcd_sig\",0.3173,33.9,10\) \
+         >& log-files/qcdSigProf-data-susyFixed-lm9-3B-sel.log
+  mv plplot-mu_qcd_sig.png output-files/qcdSigProf-data-susyFixed-lm9-3B-sel.png
+
+
+
+
+

@@ -1,0 +1,10 @@
+
+  mkdir -p log-files
+
+  root -b -q workspace-macros/make_lm9_expected_ws_1BL.c |& tee log-files/make_lm9_expected_ws_1BL.log
+  root -b -q workspace-macros/make_lm9_expected_ws_1BT.c |& tee log-files/make_lm9_expected_ws_1BT.log
+  root -b -q workspace-macros/make_lm9_expected_ws_2BL.c |& tee log-files/make_lm9_expected_ws_2BL.log
+  root -b -q workspace-macros/make_lm9_expected_ws_2BT.c |& tee log-files/make_lm9_expected_ws_2BT.log
+  root -b -q workspace-macros/make_lm9_expected_ws_3B.c  |& tee log-files/make_lm9_expected_ws_3B.log
+
+
