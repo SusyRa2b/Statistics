@@ -1,4 +1,4 @@
-// @(#)root/roostats:$Id: ToyMCSampler.cxx,v 1.4 2011/11/30 13:57:52 owen Exp $
+// @(#)root/roostats:$Id: ToyMCSampler.cxx,v 1.5 2011/11/30 13:59:46 owen Exp $
 // Author: Sven Kreiss    June 2010
 // Author: Kyle Cranmer, Lorenzo Moneta, Gregory Schott, Wouter Verkerke
 /*************************************************************************
@@ -314,7 +314,7 @@ SamplingDistribution* ToyMCSampler::GetSamplingDistributionSingleWorker(RooArgSe
    toytt.Branch("mu_susy_sig", &mu_susy_sig_val, "mu_susy_sig/D") ;
    toytt.Branch("testStat"   , &tt_testStat    , "testStat/D" ) ;
 
-   fTestStat->SetWS( GetWS() ) ;
+   //////// fTestStat->SetWS( GetWS() ) ;
   //=== DEBUG code =================================================================
 
    //fMaxToys = 500 ;
