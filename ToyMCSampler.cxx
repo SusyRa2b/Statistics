@@ -1,4 +1,4 @@
-// @(#)root/roostats:$Id: ToyMCSampler.cxx,v 1.2 2011/09/07 04:06:38 owen Exp $
+// @(#)root/roostats:$Id: ToyMCSampler.cxx,v 1.3 2011/11/30 13:55:58 owen Exp $
 // Author: Sven Kreiss    June 2010
 // Author: Kyle Cranmer, Lorenzo Moneta, Gregory Schott, Wouter Verkerke
 /*************************************************************************
@@ -283,6 +283,8 @@ SamplingDistribution* ToyMCSampler::GetSamplingDistributionSingleWorker(RooArgSe
    if ( fabs( mu_susy_sig_val - 0.0 ) < 1.e-6 ) { isBgonlyStudy = true ; }
 
    if ( !isBgonlyStudy ) {
+      printf("\n\n Making sure directory output-files exists.\n\n") ;
+      gSystem->Exec("mkdir -p output-files") ;
       char ttreefile[10000] ;
       sprintf( ttreefile, "output-files/toytt-%.2f.root", mu_susy_sig_val ) ;
       TFile* toyttf = new TFile( ttreefile, "recreate" ) ;
