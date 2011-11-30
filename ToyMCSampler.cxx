@@ -1,4 +1,4 @@
-// @(#)root/roostats:$Id: ToyMCSampler.cxx,v 1.1 2011/09/07 03:58:18 owen Exp $
+// @(#)root/roostats:$Id: ToyMCSampler.cxx,v 1.2 2011/09/07 04:06:38 owen Exp $
 // Author: Sven Kreiss    June 2010
 // Author: Kyle Cranmer, Lorenzo Moneta, Gregory Schott, Wouter Verkerke
 /*************************************************************************
@@ -9,7 +9,11 @@
  * For the list of contributors see $ROOTSYS/README/CREDITS.             *
  *************************************************************************/
 
-#include "RooStats/ToyMCSampler.h"
+//===== DEBUG
+//#include "RooStats/ToyMCSampler.h"
+#include "ToyMCSampler.h"
+#include "TFile.h"
+//===== DEBUG
 
 #ifndef ROO_MSG_SERVICE
 #include "RooMsgService.h"
@@ -160,6 +164,7 @@ Bool_t ToyMCSampler::fgAlwaysUseMultiGen = kFALSE ;
 ToyMCSampler::~ToyMCSampler() {
    if(fNuisanceParametersSampler) delete fNuisanceParametersSampler;
    if (fNullPOI) delete fNullPOI;
+   ClearCache();
 }
 
 
@@ -271,18 +276,45 @@ SamplingDistribution* ToyMCSampler::GetSamplingDistributionSingleWorker(RooArgSe
    // (taking weights into account)
    Double_t toysInTails = 0.0;
 
-   char ttreefile[10000] ;
-   sprintf( ttreefile, "output-files/toytt-%.2f.root", mu_susy_sig_val ) ;
-   TFile toyttf( ttreefile, "recreate" ) ;
+  //=== DEBUG code =================================================================
 
-   TTree toytt("toytt","toytt") ;
-   int Nsig ;
+   bool isBgonlyStudy(false) ;
+
+   if ( fabs( mu_susy_sig_val - 0.0 ) < 1.e-6 ) { isBgonlyStudy = true ; }
+
+   if ( !isBgonlyStudy ) {
+      char ttreefile[10000] ;
+      sprintf( ttreefile, "output-files/toytt-%.2f.root", mu_susy_sig_val ) ;
+      TFile* toyttf = new TFile( ttreefile, "recreate" ) ;
+      cout << "\n\n ====== Toy TTree root file : " << ttreefile << " ;  pointer " << toyttf << endl << endl << flush ;
+   }
+
+   char ttname[100] ;
+   if ( !isBgonlyStudy ) {
+      sprintf( ttname, "spbtoytt" ) ;
+   } else {
+      sprintf( ttname, "bgotoytt" ) ;
+   }
+   TTree toytt( ttname, ttname ) ;
+   int Nsig, Nsb, Nsig_sl, Nsb_sl, Nsig_ldp, Nsb_ldp, Nsig_ee, Nsb_ee, Nsig_mm, Nsb_mm ;
    double tt_testStat ;
    toytt.Branch("Nsig", &Nsig, "Nsig/I" ) ;
+   toytt.Branch("Nsb", &Nsb, "Nsb/I" ) ;
+   toytt.Branch("Nsig_sl"    , &Nsig_sl        , "Nsig_sl/I" ) ;
+   toytt.Branch("Nsb_sl"     , &Nsb_sl         , "Nsb_sl/I" ) ;
+   toytt.Branch("Nsig_ldp"   , &Nsig_ldp       , "Nsig_ldp/I" ) ;
+   toytt.Branch("Nsb_ldp"    , &Nsb_ldp        , "Nsb_ldp/I" ) ;
+   toytt.Branch("Nsig_ee"    , &Nsig_ee        , "Nsig_ee/I" ) ;
+   toytt.Branch("Nsb_ee"     , &Nsb_ee         , "Nsb_ee/I" ) ;
+   toytt.Branch("Nsig_mm"    , &Nsig_mm        , "Nsig_mm/I" ) ;
+   toytt.Branch("Nsb_mm"     , &Nsb_mm         , "Nsb_mm/I" ) ;
    toytt.Branch("mu_susy_sig", &mu_susy_sig_val, "mu_susy_sig/D") ;
-   toytt.Branch("testStat", &tt_testStat, "testStat/D" ) ;
+   toytt.Branch("testStat"   , &tt_testStat    , "testStat/D" ) ;
 
-   fMaxToys = 500 ;
+   fTestStat->SetWS( GetWS() ) ;
+  //=== DEBUG code =================================================================
+
+   //fMaxToys = 500 ;
    for (Int_t i = 0; i < fMaxToys; ++i) {
 
       cout << "\n\n ToyMCSampler::GetSamplingDistributionSingleWorker: toy " << i << endl << endl << flush ;
@@ -311,14 +343,21 @@ SamplingDistribution* ToyMCSampler::GetSamplingDistributionSingleWorker(RooArgSe
          const RooArgSet* ras = toydata->get(0) ;
          TIterator* obsIter = ras->createIterator() ;
          while ( RooRealVar* obs = (RooRealVar*) obsIter->Next() ) {
-            if ( strcmp( obs->GetName(), "Nsig" ) == 0 ) { 
-               Nsig = obs->getVal() ;
-               cout << "   found Nsig : " << Nsig << endl << flush ;
-               break ;
-            }
+            if ( strcmp( obs->GetName(), "Nsig"     ) == 0 ) { Nsig     = obs->getVal() ; }
+            if ( strcmp( obs->GetName(), "Nsb"      ) == 0 ) { Nsb      = obs->getVal() ; }
+            if ( strcmp( obs->GetName(), "Nsig_sl"  ) == 0 ) { Nsig_sl  = obs->getVal() ; }
+            if ( strcmp( obs->GetName(), "Nsb_sl"   ) == 0 ) { Nsb_sl   = obs->getVal() ; }
+            if ( strcmp( obs->GetName(), "Nsig_ldp" ) == 0 ) { Nsig_ldp = obs->getVal() ; }
+            if ( strcmp( obs->GetName(), "Nsb_ldp"  ) == 0 ) { Nsb_ldp  = obs->getVal() ; }
+            if ( strcmp( obs->GetName(), "Nsig_ee"  ) == 0 ) { Nsig_ee  = obs->getVal() ; }
+            if ( strcmp( obs->GetName(), "Nsb_ee"   ) == 0 ) { Nsb_ee   = obs->getVal() ; }
+            if ( strcmp( obs->GetName(), "Nsig_mm"  ) == 0 ) { Nsig_mm  = obs->getVal() ; }
+            if ( strcmp( obs->GetName(), "Nsb_mm"   ) == 0 ) { Nsb_mm   = obs->getVal() ; }
          }
          cout << " ToyMCSampler::GetSamplingDistributionSingleWorker: test stat value : " << value << endl << flush ;
          tt_testStat = value ;
+         RooWorkspace* wsp = GetWS() ;
+         cout << " ToyMCSampler::GetSamplingDistributionSingleWorker: RooWorkspace pointer: " << wsp << endl << flush ;
 
          delete toydata;
       }else{
@@ -342,7 +381,9 @@ SamplingDistribution* ToyMCSampler::GetSamplingDistributionSingleWorker(RooArgSe
       testStatVec.push_back(value);
       if(weight >= 0.) testStatWeights.push_back(weight);
 
+      //=== DEBUG =====
       toytt.Fill() ;
+      //=== DEBUG =====
 
       // adaptive sampling checks
       if (value <= fAdaptiveLowLimit  ||  value >= fAdaptiveHighLimit) {
@@ -354,7 +395,15 @@ SamplingDistribution* ToyMCSampler::GetSamplingDistributionSingleWorker(RooArgSe
    }
 
    toytt.Write() ;
-   toyttf.Close() ;
+   if ( isBgonlyStudy ) {
+      TFile* toyttf = gDirectory->GetFile() ;
+      if ( toyttf == 0x0 ) {
+         printf("\n\n\n **** WARNING.  Can't find Toy TTree file pointer!!!\n\n\n") ;
+      } else {
+         cout << " ====== Closing Toy TTree file " << toyttf->GetName() << " ;  pointer " << toyttf << endl << endl << flush ;
+         toyttf->Close() ;
+      }
+   }
 
 
    // clean up
@@ -686,7 +735,35 @@ RooAbsData* ToyMCSampler::Generate(RooAbsPdf &pdf, RooArgSet &observables, const
 }
 
 
+void ToyMCSampler::ClearCache() { 
+   // clear the cache obtained from the pdf used for speeding the toy and global observables generation
+   // needs to be called every time the model pdf (fPdf) changes 
 
 
+   if (_gs1) delete _gs1; 
+   _gs1 = 0;
+   if (_gs2) delete _gs2; 
+   _gs2 = 0;
+   if (_gs3) delete _gs3; 
+   _gs3 = 0;
+   if (_gs4) delete _gs4; 
+   _gs4 = 0;
+
+   // no need to delete the _pdfList since it is managed by the RooSimultaneous object
+   if (_pdfList.size() > 0) { 
+      std::list<RooArgSet*>::iterator oiter = _obsList.begin();
+      for (std::list<RooAbsPdf::GenSpec*>::iterator giter  = _gsList.begin(); giter != _gsList.end(); ++giter, ++oiter) {
+         delete *oiter; 
+         delete *giter; 
+      }
+      _pdfList.clear();
+      _obsList.clear();
+      _gsList.clear();
+   }
+
+   //LM: is this set really needed ??
+   if (_allVars) delete _allVars; 
+   _allVars = 0;
+}
 
 } // end namespace RooStats

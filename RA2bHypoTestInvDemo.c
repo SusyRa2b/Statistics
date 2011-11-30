@@ -20,10 +20,10 @@
 
 
 //-------------
-#include "HypoTestCalculatorGeneric.h"
-#include "RooStats/ToyMCSampler.h"
-/////#include "HypoTestCalculatorGeneric.cxx"
-/////#include "ToyMCSampler.cxx"
+//#include "HypoTestCalculatorGeneric.h"
+//#include "RooStats/ToyMCSampler.h"
+#include "HypoTestCalculatorGeneric.cxx"
+#include "ToyMCSampler.cxx"
 //-------------
 
 #include "RooStats/NumEventsTestStat.h"
@@ -157,7 +157,11 @@ void RA2bHypoTestInvDemo(const char * fileName =0,
    const char * resultName = (w) ? w->GetName() : r->GetName();
    TString plotTitle = TString::Format("%s CL Scan for workspace %s",typeName,resultName);
    HypoTestInverterPlot *plot = new HypoTestInverterPlot("HTI_Result_Plot",plotTitle,r);
+   TCanvas* c1 = new TCanvas() ;
    plot->Draw("CLb 2CL");  // plot all and Clb
+   c1->Update() ;
+   c1->SaveAs("cls-canv1.png") ;
+   c1->SaveAs("cls-canv1.pdf") ;
 
    if (plotHypoTestResult) { 
       TCanvas * c2 = new TCanvas();
@@ -168,6 +172,9 @@ void RA2bHypoTestInvDemo(const char * fileName =0,
          pl->SetLogYaxis(true);
          pl->Draw();
       }
+      c2->Update() ;
+      c2->SaveAs("cls-canv2.png") ;
+      c2->SaveAs("cls-canv2.pdf") ;
    }
 
 
@@ -321,6 +328,9 @@ HypoTestInverterResult *  RunInverter(RooWorkspace * w, const char * modelSBName
    else hc = new HybridCalculator(*data, *bModel, *sbModel);
 
    ToyMCSampler *toymcs = (ToyMCSampler*)hc->GetTestStatSampler();
+   //=== DEBUG
+   ///// toymcs->SetWS( w ) ;
+   //=== DEBUG
    toymcs->SetNEventsPerToy(1);
    toymcs->SetTestStatistic(testStat);
    if (optimize) toymcs->SetUseMultiGen(true);

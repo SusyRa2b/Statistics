@@ -1,4 +1,4 @@
-// @(#)root/roostats:$Id: ToyMCSampler.h 40023 2011-06-27 16:58:44Z moneta $
+// @(#)root/roostats:$Id: ToyMCSampler.h 40961 2011-09-20 17:08:56Z moneta $
 // Author: Sven Kreiss and Kyle Cranmer    June 2010
 // Author: Kyle Cranmer, Lorenzo Moneta, Gregory Schott, Wouter Verkerke
 // Additions and modifications by Mario Pelliccioni
@@ -210,7 +210,7 @@ class ToyMCSampler: public TestStatSampler {
          if (fNullPOI) delete fNullPOI; fNullPOI = (RooArgSet*)nullpoi.snapshot(); 
       }
       // Set the Pdf, add to the the workspace if not already there
-      virtual void SetPdf(RooAbsPdf& pdf) { fPdf = &pdf; }
+      virtual void SetPdf(RooAbsPdf& pdf) { fPdf = &pdf; ClearCache(); }
       // How to randomize the prior. Set to NULL to deactivate randomization.
       virtual void SetPriorNuisance(RooAbsPdf* pdf) { fPriorNuisance = pdf; }
       // specify the nuisance parameters (eg. the rest of the parameters)
@@ -274,12 +274,21 @@ class ToyMCSampler: public TestStatSampler {
 
       void SetProtoData(const RooDataSet* d) { fProtoData = d; }
 
+
+      //===== DEBUG ==========
+      void SetWS( RooWorkspace* aws ) { ws = aws ; }
+      RooWorkspace* GetWS() { return ws ; }
+      //===== DEBUG ==========
+
    protected:
+
+      RooWorkspace* ws ;
 
       // helper for GenerateToyData
       RooAbsData* Generate(RooAbsPdf &pdf, RooArgSet &observables, const RooDataSet *protoData=NULL, int forceEvents=0) const;
 
-
+      // helper method for clearing  the cache
+      void ClearCache();
 
       TestStatistic *fTestStat; // test statistic that is being sampled
       RooAbsPdf *fPdf; // model
