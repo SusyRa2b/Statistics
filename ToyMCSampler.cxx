@@ -1,4 +1,4 @@
-// @(#)root/roostats:$Id: ToyMCSampler.cxx,v 1.5 2011/11/30 13:59:46 owen Exp $
+// @(#)root/roostats:$Id: ToyMCSampler.cxx,v 1.6 2011/11/30 14:05:08 owen Exp $
 // Author: Sven Kreiss    June 2010
 // Author: Kyle Cranmer, Lorenzo Moneta, Gregory Schott, Wouter Verkerke
 /*************************************************************************
@@ -317,7 +317,7 @@ SamplingDistribution* ToyMCSampler::GetSamplingDistributionSingleWorker(RooArgSe
    //////// fTestStat->SetWS( GetWS() ) ;
   //=== DEBUG code =================================================================
 
-   //fMaxToys = 500 ;
+   fMaxToys = 100 ;
    for (Int_t i = 0; i < fMaxToys; ++i) {
 
       cout << "\n\n ToyMCSampler::GetSamplingDistributionSingleWorker: toy " << i << endl << endl << flush ;
@@ -359,8 +359,8 @@ SamplingDistribution* ToyMCSampler::GetSamplingDistributionSingleWorker(RooArgSe
          }
          cout << " ToyMCSampler::GetSamplingDistributionSingleWorker: test stat value : " << value << endl << flush ;
          tt_testStat = value ;
-         RooWorkspace* wsp = GetWS() ;
-         cout << " ToyMCSampler::GetSamplingDistributionSingleWorker: RooWorkspace pointer: " << wsp << endl << flush ;
+         //////RooWorkspace* wsp = GetWS() ;
+         //////cout << " ToyMCSampler::GetSamplingDistributionSingleWorker: RooWorkspace pointer: " << wsp << endl << flush ;
 
          delete toydata;
       }else{
