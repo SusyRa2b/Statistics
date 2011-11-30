@@ -1,4 +1,4 @@
-// @(#)root/roostats:$Id: ToyMCSampler.cxx,v 1.3 2011/11/30 13:55:58 owen Exp $
+// @(#)root/roostats:$Id: ToyMCSampler.cxx,v 1.4 2011/11/30 13:57:52 owen Exp $
 // Author: Sven Kreiss    June 2010
 // Author: Kyle Cranmer, Lorenzo Moneta, Gregory Schott, Wouter Verkerke
 /*************************************************************************
@@ -13,6 +13,7 @@
 //#include "RooStats/ToyMCSampler.h"
 #include "ToyMCSampler.h"
 #include "TFile.h"
+#include "TSystem.h"
 //===== DEBUG
 
 #ifndef ROO_MSG_SERVICE
