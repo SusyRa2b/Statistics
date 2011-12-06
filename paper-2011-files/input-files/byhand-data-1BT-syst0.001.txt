@@ -48,11 +48,11 @@ Ztoll_lumi      4684
   fsig_mm_mean   0.866
   fsig_mm_err    0.001
   sf_mc                 1.00
-  sf_mc_err             0.01
+  sf_mc_err             0.001
   sf_qcd_sb             1.00
   sf_qcd_sb_err         0.001
   sf_qcd_sig            1.00
-  sf_qcd_sig_err        1.001
+  sf_qcd_sig_err        0.001
   sf_ttwj_sig           1.00
   sf_ttwj_sig_err       0.001
   sf_ee                 1.00
