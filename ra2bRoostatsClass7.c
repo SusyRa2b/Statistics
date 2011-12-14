@@ -720,14 +720,6 @@
 
 
 
-    //--- Underlying Gaussian variable for log-normal.
-
-   //--- Owen, Aug 30: increase range from +-5 to +-15
-      rv_eff_sf_prim = new RooRealVar("eff_sf_prim", "eff_sf_prim", 0., -15., 15. ) ;
-      rv_eff_sf_nom  = new RooRealVar("eff_sf_nom" , "eff_sf_nom" , 0., -15., 15. ) ;
-      rv_eff_sf_nom->setConstant() ;
-
-
 
     //--- Systematics and other nuisance parameters
       char formula[1024];
@@ -933,14 +925,11 @@
     //--------------------------------------
 
 
-
       RooRealVar eff_sf_prim ( "eff_sf_prim", "eff_sf_prim", 0, -5, 5);
       RooRealVar eff_sf_nom ( "eff_sf_nom", "eff_sf_nom", 0, -5, 5);
-      RooGaussian pdf_eff_sf_prim ("pdf_eff_sf_prim" , "master pdf_eff_sf_prim", *rv_eff_sf_prim, *rv_eff_sf_nom, RooConst(1));
-   // sprintf (formula, "pow(%f,@0)", exp(0.10)); // not used
-   // RooFormulaVar fv_Eff_sf_m ("Eff_sf_m", formula, RooArgList(eff_sf_prim)); // not used
-      rv_eff_sf_nom->setConstant();
-      globalObservables.add (*rv_eff_sf_nom);
+      RooGaussian pdf_eff_sf_prim ("pdf_eff_sf_prim" , "master pdf_eff_sf_prim", eff_sf_prim, eff_sf_nom, RooConst(1));
+      eff_sf_nom.setConstant();
+      globalObservables.add (eff_sf_nom);
       allNuisances.add (eff_sf_prim);
       allNuisancePdfs.add (pdf_eff_sf_prim);
 
@@ -1188,27 +1177,27 @@
 
       rv_eff_sf_sig = new RooFormulaVar( "eff_sf_sig",
                                          "mean_eff_sf_sig * pow( exp( width_eff_sf_sig/mean_eff_sf_sig ), eff_sf_prim )",
-                                         RooArgSet( *rv_mean_eff_sf_sig, *rv_width_eff_sf_sig, *rv_mean_eff_sf_sig, *rv_eff_sf_prim ) ) ;
+                                         RooArgSet( *rv_mean_eff_sf_sig, *rv_width_eff_sf_sig, *rv_mean_eff_sf_sig, eff_sf_prim ) ) ;
 
       rv_eff_sf_sb = new RooFormulaVar( "eff_sf_sb",
                                          "mean_eff_sf_sb * pow( exp( width_eff_sf_sb/mean_eff_sf_sb ), eff_sf_prim )",
-                                         RooArgSet( *rv_mean_eff_sf_sb, *rv_width_eff_sf_sb, *rv_mean_eff_sf_sb, *rv_eff_sf_prim ) ) ;
+                                         RooArgSet( *rv_mean_eff_sf_sb, *rv_width_eff_sf_sb, *rv_mean_eff_sf_sb, eff_sf_prim ) ) ;
 
       rv_eff_sf_sig_sl = new RooFormulaVar( "eff_sf_sig_sl",
                                          "mean_eff_sf_sig_sl * pow( exp( width_eff_sf_sig_sl/mean_eff_sf_sig_sl ), eff_sf_prim )",
-                                         RooArgSet( *rv_mean_eff_sf_sig_sl, *rv_width_eff_sf_sig_sl, *rv_mean_eff_sf_sig_sl, *rv_eff_sf_prim ) ) ;
+                                         RooArgSet( *rv_mean_eff_sf_sig_sl, *rv_width_eff_sf_sig_sl, *rv_mean_eff_sf_sig_sl, eff_sf_prim ) ) ;
 
       rv_eff_sf_sb_sl = new RooFormulaVar( "eff_sf_sb_sl",
                                          "mean_eff_sf_sb_sl * pow( exp( width_eff_sf_sb_sl/mean_eff_sf_sb_sl ), eff_sf_prim )",
-                                         RooArgSet( *rv_mean_eff_sf_sb_sl, *rv_width_eff_sf_sb_sl, *rv_mean_eff_sf_sb_sl, *rv_eff_sf_prim ) ) ;
+                                         RooArgSet( *rv_mean_eff_sf_sb_sl, *rv_width_eff_sf_sb_sl, *rv_mean_eff_sf_sb_sl, eff_sf_prim ) ) ;
 
       rv_eff_sf_sig_ldp = new RooFormulaVar( "eff_sf_sig_ldp",
                                          "mean_eff_sf_sig_ldp * pow( exp( width_eff_sf_sig_ldp/mean_eff_sf_sig_ldp ), eff_sf_prim )",
-                                         RooArgSet( *rv_mean_eff_sf_sig_ldp, *rv_width_eff_sf_sig_ldp, *rv_mean_eff_sf_sig_ldp, *rv_eff_sf_prim ) ) ;
+                                         RooArgSet( *rv_mean_eff_sf_sig_ldp, *rv_width_eff_sf_sig_ldp, *rv_mean_eff_sf_sig_ldp, eff_sf_prim ) ) ;
 
       rv_eff_sf_sb_ldp = new RooFormulaVar( "eff_sf_sb_ldp",
                                          "mean_eff_sf_sb_ldp * pow( exp( width_eff_sf_sb_ldp/mean_eff_sf_sb_ldp ), eff_sf_prim )",
-                                         RooArgSet( *rv_mean_eff_sf_sb_ldp, *rv_width_eff_sf_sb_ldp, *rv_mean_eff_sf_sb_ldp, *rv_eff_sf_prim ) ) ;
+                                         RooArgSet( *rv_mean_eff_sf_sb_ldp, *rv_width_eff_sf_sb_ldp, *rv_mean_eff_sf_sb_ldp, eff_sf_prim ) ) ;
 
 
     //+++++++++++++ Expected counts for observables in terms of parameters ++++++++++++++++++

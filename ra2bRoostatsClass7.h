@@ -168,9 +168,6 @@
 
       //-- Gaussian constraints and constants.
 
-       RooRealVar*    rv_eff_sf_prim ;
-       RooRealVar*    rv_eff_sf_nom ;
-
        RooRealVar*    rv_eff_sf_m ;
        RooFormulaVar* rv_eff_sf_sig ;
        RooFormulaVar* rv_eff_sf_sb ;
@@ -179,7 +176,6 @@
        RooFormulaVar* rv_eff_sf_sig_ldp ;
        RooFormulaVar* rv_eff_sf_sb_ldp ;
 
-       //RooRealVar* rv_width_eff_sf_m ;
        RooRealVar* rv_width_eff_sf_sig ;
        RooRealVar* rv_width_eff_sf_sb ;
        RooRealVar* rv_width_eff_sf_sig_sl ;
