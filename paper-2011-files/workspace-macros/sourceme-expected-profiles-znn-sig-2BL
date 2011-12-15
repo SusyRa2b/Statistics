@@ -5,19 +5,19 @@
 
 
   echo znnSigProf-expected-NoSusy-2BL-sel
-  root -b -q workspace-macros/ws_profile_interval1.c\(\"output-files/expected-ws-lm9-2BL.root\",\"mu_znn_sig\",0.3173,0.,80\) \
+  root -b -q workspace-macros/ws_profile_interval1.c\(\"output-files/expected-ws-lm9-2BL.root\",\"mu_znn_sig\",0.3173,0.,70\) \
          >& log-files/znnSigProf-expected-NoSusy-2BL-sel.log
   mv plplot-mu_znn_sig.png output-files/znnSigProf-expected-NoSusy-2BL-sel.png
 
-  echo znnSigProf-expected-susyFloat-lm9-2BL-sel
-  root -b -q workspace-macros/ws_profile_interval1.c\(\"output-files/expected-ws-lm9-2BL.root\",\"mu_znn_sig\",0.3173,-1.,80\) \
-         >& log-files/znnSigProf-expected-susyFloat-lm9-2BL-sel.log
-  mv plplot-mu_znn_sig.png output-files/znnSigProf-expected-susyFloat-lm9-2BL-sel.png
+# echo znnSigProf-expected-susyFloat-lm9-2BL-sel
+# root -b -q workspace-macros/ws_profile_interval1.c\(\"output-files/expected-ws-lm9-2BL.root\",\"mu_znn_sig\",0.3173,-1.,70\) \
+#        >& log-files/znnSigProf-expected-susyFloat-lm9-2BL-sel.log
+# mv plplot-mu_znn_sig.png output-files/znnSigProf-expected-susyFloat-lm9-2BL-sel.png
 
-  echo znnSigProf-expected-susyFixed-lm9-2BL-sel
-  root -b -q workspace-macros/ws_profile_interval1.c\(\"output-files/expected-ws-lm9-2BL.root\",\"mu_znn_sig\",0.3173,98.4,80\) \
-         >& log-files/znnSigProf-expected-susyFixed-lm9-2BL-sel.log
-  mv plplot-mu_znn_sig.png output-files/znnSigProf-expected-susyFixed-lm9-2BL-sel.png
+# echo znnSigProf-expected-susyFixed-lm9-2BL-sel
+# root -b -q workspace-macros/ws_profile_interval1.c\(\"output-files/expected-ws-lm9-2BL.root\",\"mu_znn_sig\",0.3173,180.6,70\) \
+#        >& log-files/znnSigProf-expected-susyFixed-lm9-2BL-sel.log
+# mv plplot-mu_znn_sig.png output-files/znnSigProf-expected-susyFixed-lm9-2BL-sel.png
 
 
 

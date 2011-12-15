@@ -927,11 +927,11 @@
 
       RooRealVar eff_sf_prim ( "eff_sf_prim", "eff_sf_prim", 0, -5, 5);
       RooRealVar eff_sf_nom ( "eff_sf_nom", "eff_sf_nom", 0, -5, 5);
-      RooGaussian pdf_eff_sf_prim ("pdf_eff_sf_prim" , "master pdf_eff_sf_prim", eff_sf_prim, eff_sf_nom, RooConst(1));
+      RooGaussian pdf_eff_sf ("pdf_eff_sf" , "pdf_eff_sf", eff_sf_prim, eff_sf_nom, RooConst(1));
       eff_sf_nom.setConstant();
       globalObservables.add (eff_sf_nom);
       allNuisances.add (eff_sf_prim);
-      allNuisancePdfs.add (pdf_eff_sf_prim);
+      allNuisancePdfs.add (pdf_eff_sf);
 
 /*       RooRealVar xxx_prim ( "xxx_prim", "xxx_prim", 0, -5, 5); */
 /*       RooRealVar xxx_nom ( "xxx_nom", "xxx_nom", 0, -5, 5); */
