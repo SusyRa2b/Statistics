@@ -87,10 +87,10 @@
            char drawcmd[1000] ;
 
            sprintf( drawcmd, "testStat>>hbgo%d", si ) ;
-           bgochain.Draw( drawcmd,"testStat>0") ;
+           bgochain.Draw( drawcmd,"testStat>=0") ;
            sprintf( drawcmd, "testStat>>hspb%d", si ) ;
            spbchain.Draw( drawcmd,"","same") ;
-           bgochain.Draw("testStat","","same") ;
+           bgochain.Draw("testStat","testStat>=0","same") ;
            bgochain.SetLineColor(1) ;
            bgochain.SetFillColor(1) ;
            bgochain.Draw("dataTestStat","","same") ;
@@ -119,69 +119,57 @@
 
            canv_tstat->Update() ;
 
-         //--- get the numbers for the expected CLs
 
-           double low2sig(-1.0) ;
-           double low1sig(-1.0) ;
-           double median(-1.0) ;
-           double high1sig(-1.0) ;
-           double high2sig(-1.0) ;
 
-           double low2sig_clspb(0.) ;
-           double low1sig_clspb(0.) ;
-           double median_clspb(0.) ;
-           double high1sig_clspb(0.) ;
-           double high2sig_clspb(0.) ;
+         //--- Make the expected CLs histogram for the background hypothesis.
 
-           double low2sig_cls(0.) ;
-           double low1sig_cls(0.) ;
-           double median_cls(0.) ;
-           double high1sig_cls(0.) ;
-           double high2sig_cls(0.) ;
-
+           char clshname[1000] ;
+           sprintf( clshname, "hcls_expected_%.0f", poiVal ) ;
+           TH1F* hcls = new TH1F( clshname, clshname, 10000, 0., 2. ) ;
            int nBins = hbgo->GetNbinsX() ;
-           for ( int bi=1; bi<=nBins; bi++) {
-              double frac = ( hbgo->Integral(1,bi) ) / nbgo_ok ;
-              if ( frac >= 0.0455 && low2sig<0 ) {
-                 low2sig = hbgo->GetBinCenter(bi) ;
-                 low2sig_clspb = (hspb->Integral(bi,nBins+1))/ nspb_ok ;
-                 low2sig_cls = low2sig_clspb / (1.0-frac) ;
-              }
-              if ( frac >= 0.3173 && low1sig<0 ) {
-                 low1sig = hbgo->GetBinCenter(bi) ;
-                 low1sig_clspb = (hspb->Integral(bi,nBins+1))/ nspb_ok ;
-                 low1sig_cls = low1sig_clspb / (1.0-frac) ;
-              }
-              if ( frac >= 0.5    && median <0 ) {
-                 median  = hbgo->GetBinCenter(bi) ;
-                 median_clspb = (hspb->Integral(bi,nBins+1))/ nspb_ok ;
-                 median_cls = median_clspb / (1.0-frac) ;
-              }
-              if ( frac >= (1.0-0.3173) && high1sig<0 ) {
-                 high1sig = hbgo->GetBinCenter(bi) ;
-                 high1sig_clspb = (hspb->Integral(bi,nBins+1))/ nspb_ok ;
-                 high1sig_cls = high1sig_clspb / (1.0-frac) ;
-              }
-              if ( frac >= (1.0-0.0455) && high2sig<0 ) {
-                 high2sig = hbgo->GetBinCenter(bi) ;
-                 high2sig_clspb = (hspb->Integral(bi,nBins+1))/ nspb_ok ;
-                 high2sig_cls = high2sig_clspb / (1.0-frac) ;
-              }
+           for ( int bi=1; bi<=(nBins+1); bi++) {
+              double bgo_pv = ( hbgo->Integral(bi,nBins+1) ) / nbgo_ok ;
+              double spb_pv = ( hspb->Integral(bi,nBins+1) ) / nspb_ok ;
+              double cls(99.) ;
+              if ( bgo_pv > 0. ) { cls = spb_pv / bgo_pv ; }
+              hcls->Fill( cls, hbgo->GetBinContent(bi) ) ;
            } // bi.
 
+           double low2sig_cls(-10.) ;
+           double low1sig_cls(-10.) ;
+           double median_cls(-10.) ;
+           double high1sig_cls(-10.) ;
+           double high2sig_cls(-10.) ;
+
+         //--- get the numbers for the expected CLs
+
+           for ( int bi=1; bi<=(hcls->GetNbinsX()+1); bi++) {
+              double frac = (hcls->Integral(1,bi)) / nbgo_ok ;
+              double cls = hcls->GetBinCenter(bi) ;
+              if ( frac >= 0.0455 && low2sig_cls < 0 ) { low2sig_cls = cls ; }
+              if ( frac >= 0.3173 && low1sig_cls < 0 ) { low1sig_cls = cls ; }
+              if ( frac >= 0.5000 && median_cls  < 0 ) { median_cls  = cls ; }
+              if ( frac >= (1-0.3173) && high1sig_cls < 0 ) { high1sig_cls = cls ; }
+              if ( frac >= (1-0.0455) && high2sig_cls < 0 ) { high2sig_cls = cls ; }
+           } // bi.
+
+
            medianclsvals[si] = median_cls ;
+
            medianclserrlow1[si] = median_cls - low1sig_cls ;
            medianclserrlow2[si] = median_cls - low2sig_cls ;
            medianclserrhigh1[si] = high1sig_cls - median_cls ;
            medianclserrhigh2[si] = high2sig_cls - median_cls ;
+
+
            xerr[si] = deltaPoi/2. ;
 
 
-           printf(" low2sig  : %4.1f,  %5.3f,  %5.3f\n", low2sig,  low2sig_clspb, low2sig_cls ) ;
-           printf(" low1sig  : %4.1f,  %5.3f,  %5.3f\n", low1sig,  low1sig_clspb, low1sig_cls ) ;
-           printf(" median   : %4.1f,  %5.3f,  %5.3f\n", median,   median_clspb, median_cls ) ;
-           printf(" high1sig : %4.1f,  %5.3f,  %5.3f\n", high1sig, high1sig_clspb, high1sig_cls ) ;
-           printf(" high2sig : %4.1f,  %5.3f,  %5.3f\n", high2sig, high2sig_clspb, high2sig_cls ) ;
+           printf(" low2sig  (cls) :  %5.3f\n",  low2sig_cls ) ;
+           printf(" low1sig  (cls) :  %5.3f\n",  low1sig_cls ) ;
+           printf(" median   (cls) :  %5.3f\n",  median_cls ) ;
+           printf(" high1sig (cls) :  %5.3f\n",  high1sig_cls ) ;
+           printf(" high2sig (cls) :  %5.3f\n",  high2sig_cls ) ;
 
         } // si.
 
