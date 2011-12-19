@@ -1,0 +1,10 @@
+
+  mkdir -p log-files
+
+  root -b -q workspace-macros/make_lm9_ws_1BL_sbvars.c |& tee log-files/make_lm9_ws_1BL_sbvars.log
+  root -b -q workspace-macros/make_lm9_ws_1BT_sbvars.c |& tee log-files/make_lm9_ws_1BT_sbvars.log
+  root -b -q workspace-macros/make_lm9_ws_2BL_sbvars.c |& tee log-files/make_lm9_ws_2BL_sbvars.log
+  root -b -q workspace-macros/make_lm9_ws_2BT_sbvars.c |& tee log-files/make_lm9_ws_2BT_sbvars.log
+  root -b -q workspace-macros/make_lm9_ws_3B_sbvars.c  |& tee log-files/make_lm9_ws_3B_sbvars.log
+
+
