@@ -65,11 +65,11 @@
            spbchain.SetFillColor(2) ;
 
            double nbgo_ok = bgochain.Draw("testStat","testStat>=0") ;
-           double nbgo_worse = bgochain.Draw("testStat","testStat>dataTestStat") ;
+           double nbgo_worse = bgochain.Draw("testStat","testStat>=dataTestStat") ;
            double bgo_pval = nbgo_worse / nbgo_ok ;
 
            double nspb_ok = spbchain.Draw("testStat","testStat>=0") ;
-           double nspb_worse = spbchain.Draw("testStat","testStat>dataTestStat") ;
+           double nspb_worse = spbchain.Draw("testStat","testStat>=dataTestStat") ;
            double spb_pval = nspb_worse / nspb_ok ;
 
            printf("\n") ;
