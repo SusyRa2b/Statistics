@@ -21,7 +21,7 @@ This class provides simple and straightforward utilities to plot a LikelihoodInt
 object.
 */
 
-#include "LikelihoodIntervalPlot.h"
+#include "RooStats/LikelihoodIntervalPlot.h"
 
 #include <algorithm>
 #include <iostream>
@@ -272,6 +272,8 @@ void LikelihoodIntervalPlot::Draw(const Option_t *options)
          frame->addObject(Yline_max);
          frame->addObject(Yline_cutoff);
          frame->Draw(opt);
+         printf("\n Cloning RooPlot : LIP_profile\n") ;
+         frame->Clone("LIP_profile") ;
       }
       
 
