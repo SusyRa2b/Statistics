@@ -1,0 +1,17 @@
+
+
+  mkdir -p log-files
+  mkdir -p output-files
+
+
+
+
+  echo susySigProf-susyFloat-newfit-lm9-1BL-sel
+  root -b -q workspace-macros-v1/ws_profile_interval2n.c\(\"output-files/ws-newfit-lm9-1BL.root\",\"mu_susy_sig_1b\",0.10,-1.,30,0.002506,4684.\) \
+         >& log-files/susySigProf-susyFloat-newfit-lm9-1BL-sel.log
+  mv plplot-mu_susy_sig_1b.png output-files/susySigProf-susyFloat-newfit-lm9-1BL-sel.png
+  mv deltall-vs-xsec.png output-files/susyXsecProf-susyFloat-newfit-lm9-1BL-sel.png
+
+
+
+

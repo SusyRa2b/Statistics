@@ -1,0 +1,6 @@
+
+  mkdir -p log-files
+
+  root -b -q workspace-macros/make_newfit_lm9_ws_1BL.c |& tee log-files/make_newfit_lm9_ws_1BL.log
+
+
