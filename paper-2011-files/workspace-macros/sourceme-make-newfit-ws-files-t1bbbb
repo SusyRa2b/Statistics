@@ -1,0 +1,16 @@
+
+  mkdir -p log-files
+
+  root -b -q workspace-macros/make_newfit_t1bbbb_ws_1BL.c\(400.,200.\) |& tee log-files/make_newfit_t1bbbb_ws_1BL-mgl400-mlsp200.log
+  root -b -q workspace-macros/make_newfit_t1bbbb_ws_1BL.c\(600.,200.\) |& tee log-files/make_newfit_t1bbbb_ws_1BL-mgl600-mlsp200.log
+  root -b -q workspace-macros/make_newfit_t1bbbb_ws_1BL.c\(600.,400.\) |& tee log-files/make_newfit_t1bbbb_ws_1BL-mgl600-mlsp400.log
+  root -b -q workspace-macros/make_newfit_t1bbbb_ws_1BL.c\(800.,200.\) |& tee log-files/make_newfit_t1bbbb_ws_1BL-mgl800-mlsp200.log
+  root -b -q workspace-macros/make_newfit_t1bbbb_ws_1BL.c\(800.,400.\) |& tee log-files/make_newfit_t1bbbb_ws_1BL-mgl800-mlsp400.log
+  root -b -q workspace-macros/make_newfit_t1bbbb_ws_1BL.c\(800.,600.\) |& tee log-files/make_newfit_t1bbbb_ws_1BL-mgl800-mlsp600.log
+  root -b -q workspace-macros/make_newfit_t1bbbb_ws_1BL.c\(1000.,200.\) |& tee log-files/make_newfit_t1bbbb_ws_1BL-mgl1000-mlsp200.log
+  root -b -q workspace-macros/make_newfit_t1bbbb_ws_1BL.c\(1000.,400.\) |& tee log-files/make_newfit_t1bbbb_ws_1BL-mgl1000-mlsp400.log
+  root -b -q workspace-macros/make_newfit_t1bbbb_ws_1BL.c\(1000.,600.\) |& tee log-files/make_newfit_t1bbbb_ws_1BL-mgl1000-mlsp600.log
+  root -b -q workspace-macros/make_newfit_t1bbbb_ws_1BL.c\(1000.,800.\) |& tee log-files/make_newfit_t1bbbb_ws_1BL-mgl1000-mlsp800.log
+
+
+

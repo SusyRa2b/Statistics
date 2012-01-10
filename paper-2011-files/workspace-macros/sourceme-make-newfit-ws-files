@@ -3,4 +3,8 @@
 
   root -b -q workspace-macros/make_newfit_lm9_ws_1BL.c |& tee log-files/make_newfit_lm9_ws_1BL.log
 
+  root -b -q workspace-macros/make_newfit_lm9_ws_1BL_withlm9_xsec10.c |& tee log-files/make_newfit_lm9_ws_1BL_withlm9_xsec10.log
 
+  root -b -q workspace-macros/make_newfit_lm9_ws_1BL_withlm9_xsec4.c |& tee log-files/make_newfit_lm9_ws_1BL_withlm9_xsec4.log
+
+  root -b -q workspace-macros/make_newfit_lm9_ws_1BL_withlm9_xsec2.c |& tee log-files/make_newfit_lm9_ws_1BL_withlm9_xsec2.log

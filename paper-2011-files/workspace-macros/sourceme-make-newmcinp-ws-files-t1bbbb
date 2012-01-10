@@ -1,0 +1,15 @@
+
+  mkdir -p log-files
+
+  root -b -q workspace-macros/make_newmcinp_t1bbbb_ws_3B.c\(400.,200.\)  |& tee log-files/make_newmcinp_t1bbbb_ws_3B-mgl400-mlsp200.log
+  root -b -q workspace-macros/make_newmcinp_t1bbbb_ws_3B.c\(600.,200.\)  |& tee log-files/make_newmcinp_t1bbbb_ws_3B-mgl600-mlsp200.log
+  root -b -q workspace-macros/make_newmcinp_t1bbbb_ws_3B.c\(600.,400.\)  |& tee log-files/make_newmcinp_t1bbbb_ws_3B-mgl600-mlsp400.log
+  root -b -q workspace-macros/make_newmcinp_t1bbbb_ws_3B.c\(800.,200.\)  |& tee log-files/make_newmcinp_t1bbbb_ws_3B-mgl800-mlsp200.log
+  root -b -q workspace-macros/make_newmcinp_t1bbbb_ws_3B.c\(800.,400.\)  |& tee log-files/make_newmcinp_t1bbbb_ws_3B-mgl800-mlsp400.log
+  root -b -q workspace-macros/make_newmcinp_t1bbbb_ws_3B.c\(800.,600.\)  |& tee log-files/make_newmcinp_t1bbbb_ws_3B-mgl800-mlsp600.log
+  root -b -q workspace-macros/make_newmcinp_t1bbbb_ws_3B.c\(1000.,200.\)  |& tee log-files/make_newmcinp_t1bbbb_ws_3B-mgl1000-mlsp200.log
+  root -b -q workspace-macros/make_newmcinp_t1bbbb_ws_3B.c\(1000.,400.\)  |& tee log-files/make_newmcinp_t1bbbb_ws_3B-mgl1000-mlsp400.log
+  root -b -q workspace-macros/make_newmcinp_t1bbbb_ws_3B.c\(1000.,600.\)  |& tee log-files/make_newmcinp_t1bbbb_ws_3B-mgl1000-mlsp600.log
+  root -b -q workspace-macros/make_newmcinp_t1bbbb_ws_3B.c\(1000.,800.\)  |& tee log-files/make_newmcinp_t1bbbb_ws_3B-mgl1000-mlsp800.log
+
+
