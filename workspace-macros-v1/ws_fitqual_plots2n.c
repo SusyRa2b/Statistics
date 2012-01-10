@@ -35,7 +35,7 @@
   //------
 
    void ws_fitqual_plots2n( const char* wsfile = "output-files/ws-newfit-lm9-1BL.root",
-                            double mu_susy_sig_1b_val = 0., bool doNorm = false ) {
+                            double mu_susy_sig_1b_val = -1, bool doNorm = false ) {
 
       double hmax = 1.5 ;
 
@@ -1602,6 +1602,7 @@
       cfitqual->Update() ;
 
       cfitqual->SaveAs("fitqual.png") ;
+      cfitqual->SaveAs("fitqual.pdf") ;
 
 
    }
