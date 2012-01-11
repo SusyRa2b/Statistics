@@ -28,8 +28,14 @@
        virtual ~ra2bRoostatsClass9();
 
        bool initialize( const char* infile = "an-11-257-v2-files/input-files/byhand-data-ge2b-loose.txt",
-                        const char* inputScanFile = "an-11-257-v3-files/input-files/signalSyst.T1bbbb.ge1bTight.dat", double m0 = 875., double m12 = 525., bool isT1bbbb = false, double t1bbbbXsec=0. ) ;
-       bool setSusyScanPoint( const char* inputScanFile, double m0, double m12, bool isT1bbbb = false, double t1bbbbXsec=0. ) ;
+                        const char* inputScanFile = "an-11-257-v3-files/input-files/signalSyst.T1bbbb.ge1bTight.dat",
+                        double m0 = 875., double m12 = 525., bool isT1bbbb = false, double t1bbbbXsec=0.,
+                        const char* inputSusy_deff_dbtageff_file = "paper-2011-files/input-files/likelihood-newfit-syst-deff_dbtageff-LM9-HT400-SIGMET250.txt"
+                        ) ;
+       bool setSusyScanPoint( const char* inputScanFile,
+                              double m0, double m12, bool isT1bbbb = false, double t1bbbbXsec=0.,
+                              const char* inputSusy_deff_dbtageff_file = "paper-2011-files/input-files/likelihood-newfit-syst-deff_dbtageff-LM9-HT400-SIGMET250.txt"
+                            ) ;
 
      private :
 
@@ -274,8 +280,6 @@
 
       //-- Gaussian constraints and constants.
 
-       RooRealVar*    rv_eff_sf_m ;
-
 
        RooFormulaVar* rv_eff_sf_sig_1b ;
        RooFormulaVar* rv_eff_sf_sb_1b ;
@@ -323,6 +327,7 @@
 
 
 
+
        RooRealVar* rv_mean_eff_sf_sig_1b ;
        RooRealVar* rv_mean_eff_sf_sb_1b ;
        RooRealVar* rv_mean_eff_sf_sig_sl_1b ;
@@ -344,6 +349,54 @@
        RooRealVar* rv_mean_eff_sf_sig_ldp_3b ;
        RooRealVar* rv_mean_eff_sf_sb_ldp_3b ;
 
+
+
+
+
+       RooRealVar* rv_deff_dbtageff_sig_1b ;
+       RooRealVar* rv_deff_dbtageff_sb_1b ;
+       RooRealVar* rv_deff_dbtageff_sig_sl_1b ;
+       RooRealVar* rv_deff_dbtageff_sb_sl_1b ;
+       RooRealVar* rv_deff_dbtageff_sig_ldp_1b ;
+       RooRealVar* rv_deff_dbtageff_sb_ldp_1b ;
+
+       RooRealVar* rv_deff_dbtageff_sig_2b ;
+       RooRealVar* rv_deff_dbtageff_sb_2b ;
+       RooRealVar* rv_deff_dbtageff_sig_sl_2b ;
+       RooRealVar* rv_deff_dbtageff_sb_sl_2b ;
+       RooRealVar* rv_deff_dbtageff_sig_ldp_2b ;
+       RooRealVar* rv_deff_dbtageff_sb_ldp_2b ;
+
+       RooRealVar* rv_deff_dbtageff_sig_3b ;
+       RooRealVar* rv_deff_dbtageff_sb_3b ;
+       RooRealVar* rv_deff_dbtageff_sig_sl_3b ;
+       RooRealVar* rv_deff_dbtageff_sb_sl_3b ;
+       RooRealVar* rv_deff_dbtageff_sig_ldp_3b ;
+       RooRealVar* rv_deff_dbtageff_sb_ldp_3b ;
+
+
+
+
+       RooFormulaVar* rv_btageff_sf_sig_1b ;
+       RooFormulaVar* rv_btageff_sf_sb_1b ;
+       RooFormulaVar* rv_btageff_sf_sig_sl_1b ;
+       RooFormulaVar* rv_btageff_sf_sb_sl_1b ;
+       RooFormulaVar* rv_btageff_sf_sig_ldp_1b ;
+       RooFormulaVar* rv_btageff_sf_sb_ldp_1b ;
+
+       RooFormulaVar* rv_btageff_sf_sig_2b ;
+       RooFormulaVar* rv_btageff_sf_sb_2b ;
+       RooFormulaVar* rv_btageff_sf_sig_sl_2b ;
+       RooFormulaVar* rv_btageff_sf_sb_sl_2b ;
+       RooFormulaVar* rv_btageff_sf_sig_ldp_2b ;
+       RooFormulaVar* rv_btageff_sf_sb_ldp_2b ;
+
+       RooFormulaVar* rv_btageff_sf_sig_3b ;
+       RooFormulaVar* rv_btageff_sf_sb_3b ;
+       RooFormulaVar* rv_btageff_sf_sig_sl_3b ;
+       RooFormulaVar* rv_btageff_sf_sb_sl_3b ;
+       RooFormulaVar* rv_btageff_sf_sig_ldp_3b ;
+       RooFormulaVar* rv_btageff_sf_sb_ldp_3b ;
 
 
        RooRealVar* rv_znnoverll_bfratio    ;
@@ -443,42 +496,6 @@
 
 
 
-       //=========== Mean values and sigmas for nuisance parameters (things with Gaussian PDFs in likelihood).
-
-       double np_m_Eff_sf_m ;
-       double np_m_sf_mc ;
-       double np_m_sf_qcd_sb ;
-       double np_m_sf_qcd_sig ;
-       double np_m_sf_ttwj_sig ;
-       double np_m_sf_ee ;
-       double np_m_sf_mm ;
-       double np_m_acc_ee ;
-       double np_m_acc_mm ;
-       double np_m_eff_ee ;
-       double np_m_eff_mm ;
-       double np_m_fsig_ee ;
-       double np_m_fsig_mm ;
-       double np_m_knn_sig ;
-       double np_m_knn_sb ;
-       double np_m_Rlsb_passfail ;
-
-
-       double np_s_Eff_sf_m ;
-       double np_s_sf_mc ;
-       double np_s_sf_qcd_sb ;
-       double np_s_sf_qcd_sig ;
-       double np_s_sf_ttwj_sig ;
-       double np_s_sf_ee ;
-       double np_s_sf_mm ;
-       double np_s_acc_ee ;
-       double np_s_acc_mm ;
-       double np_s_eff_ee ;
-       double np_s_eff_mm ;
-       double np_s_fsig_ee ;
-       double np_s_fsig_mm ;
-       double np_s_knn_sig ;
-       double np_s_knn_sb ;
-       double np_s_Rlsb_passfail ;
 
 
        //=========== PDFs for the likelihood ============================================================

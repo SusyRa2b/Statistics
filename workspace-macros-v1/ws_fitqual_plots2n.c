@@ -329,6 +329,7 @@
        double znnVal(0.) ;
        double susyVal(0.) ;
        double lhtotalVal(0.) ;
+       double lhcheckVal(0.) ;
 
        double eff_sf_sig_1b(0.) ;
        double eff_sf_sb_1b(0.) ;
@@ -351,6 +352,31 @@
        double eff_sf_sig_ldp_3b(0.) ;
        double eff_sf_sb_ldp_3b(0.) ;
 
+
+
+       double btageff_sf_sig_1b(0.) ;
+       double btageff_sf_sb_1b(0.) ;
+       double btageff_sf_sig_sl_1b(0.) ;
+       double btageff_sf_sb_sl_1b(0.) ;
+       double btageff_sf_sig_ldp_1b(0.) ;
+       double btageff_sf_sb_ldp_1b(0.) ;
+
+       double btageff_sf_sig_2b(0.) ;
+       double btageff_sf_sb_2b(0.) ;
+       double btageff_sf_sig_sl_2b(0.) ;
+       double btageff_sf_sb_sl_2b(0.) ;
+       double btageff_sf_sig_ldp_2b(0.) ;
+       double btageff_sf_sb_ldp_2b(0.) ;
+
+       double btageff_sf_sig_3b(0.) ;
+       double btageff_sf_sb_3b(0.) ;
+       double btageff_sf_sig_sl_3b(0.) ;
+       double btageff_sf_sb_sl_3b(0.) ;
+       double btageff_sf_sig_ldp_3b(0.) ;
+       double btageff_sf_sb_ldp_3b(0.) ;
+
+
+
        double sf_mc(0.) ;
 
        double znnSigVal ;
@@ -370,11 +396,13 @@
 
        dataVal = dataNsig_1b ;
        eff_sf_sig_1b = ((RooFormulaVar*) ws->obj("eff_sf_sig_1b")) -> getVal() ;
-       susyVal = eff_sf_sig_1b * ( ((RooRealVar*) ws->obj("mu_susy_sig_1b")) -> getVal() ) ;
+       btageff_sf_sig_1b = ((RooFormulaVar*) ws->obj("btageff_sf_sig_1b")) -> getVal() ;
+       susyVal = btageff_sf_sig_1b * eff_sf_sig_1b * ( ((RooRealVar*) ws->obj("mu_susy_sig_1b")) -> getVal() ) ;
        ttwjVal = ttwjSig1bVal ;
        qcdVal  = qcdSig1bVal ;
        znnVal  = ((RooRealVar*) ws->obj("mu_znn_sig_1b"))  -> getVal() ;
        lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+       lhcheckVal = ((RooFormulaVar*) ws->obj("n_sig_1b")) -> getVal() ;
 
        dataErr = sqrt(dataVal) ;
 
@@ -390,6 +418,7 @@
        printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -422,11 +451,13 @@
 
        dataVal = dataNsig_2b ;
        eff_sf_sig_2b = ((RooFormulaVar*) ws->obj("eff_sf_sig_2b")) -> getVal() ;
-       susyVal = eff_sf_sig_2b * ( ((RooRealVar*) ws->obj("mu_susy_sig_2b")) -> getVal() ) ;
+       btageff_sf_sig_2b = ((RooFormulaVar*) ws->obj("btageff_sf_sig_2b")) -> getVal() ;
+       susyVal = btageff_sf_sig_2b * eff_sf_sig_2b * ( ((RooRealVar*) ws->obj("mu_susy_sig_2b")) -> getVal() ) ;
        ttwjVal = ((RooFormulaVar*) ws->obj("mu_ttwj_sig_2b")) -> getVal()  ;
        qcdVal  = ((RooFormulaVar*) ws->obj("mu_qcd_sig_2b")) -> getVal()  ;
        znnVal  = ((RooRealVar*) ws->obj("mu_znn_sig_2b"))  -> getVal() ;
        lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+       lhcheckVal = ((RooFormulaVar*) ws->obj("n_sig_2b")) -> getVal() ;
 
        dataErr = sqrt(dataVal) ;
 
@@ -436,6 +467,7 @@
        printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -468,11 +500,13 @@
 
        dataVal = dataNsig_3b ;
        eff_sf_sig_3b = ((RooFormulaVar*) ws->obj("eff_sf_sig_3b")) -> getVal() ;
-       susyVal = eff_sf_sig_3b * ( ((RooRealVar*) ws->obj("mu_susy_sig_3b")) -> getVal() ) ;
+       btageff_sf_sig_3b = ((RooFormulaVar*) ws->obj("btageff_sf_sig_3b")) -> getVal() ;
+       susyVal = btageff_sf_sig_3b * eff_sf_sig_3b * ( ((RooRealVar*) ws->obj("mu_susy_sig_3b")) -> getVal() ) ;
        ttwjVal = ((RooFormulaVar*) ws->obj("mu_ttwj_sig_3b")) -> getVal()  ;
        qcdVal  = ((RooFormulaVar*) ws->obj("mu_qcd_sig_3b")) -> getVal()  ;
        znnVal  = ((RooRealVar*) ws->obj("mu_znn_sig_3b"))  -> getVal() ;
        lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+       lhcheckVal = ((RooFormulaVar*) ws->obj("n_sig_3b")) -> getVal() ;
 
        dataErr = sqrt(dataVal) ;
 
@@ -482,6 +516,7 @@
        printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -516,11 +551,13 @@
 
        dataVal = dataNsb_1b ;
        eff_sf_sb_1b = ((RooFormulaVar*) ws->obj("eff_sf_sb_1b")) -> getVal() ;
-       susyVal = eff_sf_sb_1b * ( ((RooRealVar*) ws->obj("mu_susy_sb_1b")) -> getVal() ) ;
+       btageff_sf_sb_1b = ((RooFormulaVar*) ws->obj("btageff_sf_sb_1b")) -> getVal() ;
+       susyVal = btageff_sf_sb_1b * eff_sf_sb_1b * ( ((RooRealVar*) ws->obj("mu_susy_sb_1b")) -> getVal() ) ;
        ttwjVal = ttwjSb1bVal ;
        qcdVal  = qcdSb1bVal ;
        znnVal  = ((RooRealVar*) ws->obj("mu_znn_sb_1b"))  -> getVal() ;
        lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+       lhcheckVal = ((RooFormulaVar*) ws->obj("n_sb_1b")) -> getVal() ;
 
        dataErr = sqrt(dataVal) ;
 
@@ -531,6 +568,7 @@
        printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -563,11 +601,13 @@
 
        dataVal = dataNsb_2b ;
        eff_sf_sb_2b = ((RooFormulaVar*) ws->obj("eff_sf_sb_2b")) -> getVal() ;
-       susyVal = eff_sf_sb_2b * ( ((RooRealVar*) ws->obj("mu_susy_sb_2b")) -> getVal() ) ;
+       btageff_sf_sb_2b = ((RooFormulaVar*) ws->obj("btageff_sf_sb_2b")) -> getVal() ;
+       susyVal = btageff_sf_sb_2b * eff_sf_sb_2b * ( ((RooRealVar*) ws->obj("mu_susy_sb_2b")) -> getVal() ) ;
        ttwjVal = ((RooRealVar*) ws->obj("mu_ttwj_sb_2b")) -> getVal() ;
        qcdVal  = ((RooRealVar*) ws->obj("mu_qcd_sb_2b")) -> getVal() ;
        znnVal  = ((RooRealVar*) ws->obj("mu_znn_sb_2b"))  -> getVal() ;
        lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+       lhcheckVal = ((RooFormulaVar*) ws->obj("n_sb_2b")) -> getVal() ;
 
        dataErr = sqrt(dataVal) ;
 
@@ -578,6 +618,7 @@
        printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -610,11 +651,13 @@
 
        dataVal = dataNsb_3b ;
        eff_sf_sb_3b = ((RooFormulaVar*) ws->obj("eff_sf_sb_3b")) -> getVal() ;
-       susyVal = eff_sf_sb_3b * ( ((RooRealVar*) ws->obj("mu_susy_sb_3b")) -> getVal() ) ;
+       btageff_sf_sb_3b = ((RooFormulaVar*) ws->obj("btageff_sf_sb_3b")) -> getVal() ;
+       susyVal = btageff_sf_sb_3b * eff_sf_sb_3b * ( ((RooRealVar*) ws->obj("mu_susy_sb_3b")) -> getVal() ) ;
        ttwjVal = ((RooRealVar*) ws->obj("mu_ttwj_sb_3b")) -> getVal() ;
        qcdVal  = ((RooRealVar*) ws->obj("mu_qcd_sb_3b")) -> getVal() ;
        znnVal  = ((RooRealVar*) ws->obj("mu_znn_sb_3b"))  -> getVal() ;
        lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+       lhcheckVal = ((RooFormulaVar*) ws->obj("n_sb_3b")) -> getVal() ;
 
        dataErr = sqrt(dataVal) ;
 
@@ -625,6 +668,7 @@
        printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -658,11 +702,13 @@
 
        dataVal = dataNsig_sl_1b ;
        eff_sf_sig_sl_1b = ((RooFormulaVar*) ws->obj("eff_sf_sig_sl_1b")) -> getVal() ;
-       susyVal = eff_sf_sig_sl_1b * ( ((RooRealVar*) ws->obj("mu_susy_sig_sl_1b")) -> getVal() ) ;
+       btageff_sf_sig_sl_1b = ((RooFormulaVar*) ws->obj("btageff_sf_sig_sl_1b")) -> getVal() ;
+       susyVal = btageff_sf_sig_sl_1b * eff_sf_sig_sl_1b * ( ((RooRealVar*) ws->obj("mu_susy_sig_sl_1b")) -> getVal() ) ;
        ttwjVal = ((RooRealVar*) ws->obj("mu_ttwj_sig_sl_1b")) -> getVal() ;
        qcdVal  = 0. ;
        znnVal  = 0. ;
        lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+       lhcheckVal = ((RooFormulaVar*) ws->obj("n_sig_sl_1b")) -> getVal() ;
 
        dataErr = sqrt(dataVal) ;
 
@@ -673,6 +719,7 @@
        printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -705,11 +752,13 @@
 
        dataVal = dataNsig_sl_2b ;
        eff_sf_sig_sl_2b = ((RooFormulaVar*) ws->obj("eff_sf_sig_sl_2b")) -> getVal() ;
-       susyVal = eff_sf_sig_sl_2b * ( ((RooRealVar*) ws->obj("mu_susy_sig_sl_2b")) -> getVal() ) ;
+       btageff_sf_sig_sl_2b = ((RooFormulaVar*) ws->obj("btageff_sf_sig_sl_2b")) -> getVal() ;
+       susyVal = btageff_sf_sig_sl_2b * eff_sf_sig_sl_2b * ( ((RooRealVar*) ws->obj("mu_susy_sig_sl_2b")) -> getVal() ) ;
        ttwjVal = ((RooRealVar*) ws->obj("mu_ttwj_sig_sl_2b")) -> getVal() ;
        qcdVal  = 0. ;
        znnVal  = 0. ;
        lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+       lhcheckVal = ((RooFormulaVar*) ws->obj("n_sig_sl_2b")) -> getVal() ;
 
        dataErr = sqrt(dataVal) ;
 
@@ -720,6 +769,7 @@
        printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -752,11 +802,13 @@
 
        dataVal = dataNsig_sl_3b ;
        eff_sf_sig_sl_3b = ((RooFormulaVar*) ws->obj("eff_sf_sig_sl_3b")) -> getVal() ;
-       susyVal = eff_sf_sig_sl_3b * ( ((RooRealVar*) ws->obj("mu_susy_sig_sl_3b")) -> getVal() ) ;
+       btageff_sf_sig_sl_3b = ((RooFormulaVar*) ws->obj("btageff_sf_sig_sl_3b")) -> getVal() ;
+       susyVal = btageff_sf_sig_sl_3b * eff_sf_sig_sl_3b * ( ((RooRealVar*) ws->obj("mu_susy_sig_sl_3b")) -> getVal() ) ;
        ttwjVal = ((RooRealVar*) ws->obj("mu_ttwj_sig_sl_3b")) -> getVal() ;
        qcdVal  = 0. ;
        znnVal  = 0. ;
        lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+       lhcheckVal = ((RooFormulaVar*) ws->obj("n_sig_sl_3b")) -> getVal() ;
 
        dataErr = sqrt(dataVal) ;
 
@@ -767,6 +819,7 @@
        printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -801,11 +854,13 @@
 
        dataVal = dataNsb_sl_1b ;
        eff_sf_sb_sl_1b = ((RooFormulaVar*) ws->obj("eff_sf_sb_sl_1b")) -> getVal() ;
-       susyVal = eff_sf_sb_sl_1b * ( ((RooRealVar*) ws->obj("mu_susy_sb_sl_1b")) -> getVal() ) ;
+       btageff_sf_sb_sl_1b = ((RooFormulaVar*) ws->obj("btageff_sf_sb_sl_1b")) -> getVal() ;
+       susyVal = btageff_sf_sb_sl_1b * eff_sf_sb_sl_1b * ( ((RooRealVar*) ws->obj("mu_susy_sb_sl_1b")) -> getVal() ) ;
        ttwjVal = ((RooRealVar*) ws->obj("mu_ttwj_sb_sl_1b")) -> getVal() ;
        qcdVal  = 0. ;
        znnVal  = 0. ;
        lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+       lhcheckVal = ((RooFormulaVar*) ws->obj("n_sb_sl_1b")) -> getVal() ;
 
        dataErr = sqrt(dataVal) ;
 
@@ -816,6 +871,7 @@
        printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -849,11 +905,13 @@
 
        dataVal = dataNsb_sl_2b ;
        eff_sf_sb_sl_2b = ((RooFormulaVar*) ws->obj("eff_sf_sb_sl_2b")) -> getVal() ;
-       susyVal = eff_sf_sb_sl_2b * ( ((RooRealVar*) ws->obj("mu_susy_sb_sl_2b")) -> getVal() ) ;
+       btageff_sf_sb_sl_2b = ((RooFormulaVar*) ws->obj("btageff_sf_sb_sl_2b")) -> getVal() ;
+       susyVal = btageff_sf_sb_sl_2b * eff_sf_sb_sl_2b * ( ((RooRealVar*) ws->obj("mu_susy_sb_sl_2b")) -> getVal() ) ;
        ttwjVal = ((RooRealVar*) ws->obj("mu_ttwj_sb_sl_2b")) -> getVal() ;
        qcdVal  = 0. ;
        znnVal  = 0. ;
        lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+       lhcheckVal = ((RooFormulaVar*) ws->obj("n_sb_sl_2b")) -> getVal() ;
 
        dataErr = sqrt(dataVal) ;
 
@@ -864,6 +922,7 @@
        printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -897,11 +956,13 @@
 
        dataVal = dataNsb_sl_3b ;
        eff_sf_sb_sl_3b = ((RooFormulaVar*) ws->obj("eff_sf_sb_sl_3b")) -> getVal() ;
-       susyVal = eff_sf_sb_sl_3b * ( ((RooRealVar*) ws->obj("mu_susy_sb_sl_3b")) -> getVal() ) ;
+       btageff_sf_sb_sl_3b = ((RooFormulaVar*) ws->obj("btageff_sf_sb_sl_3b")) -> getVal() ;
+       susyVal = btageff_sf_sb_sl_3b * eff_sf_sb_sl_3b * ( ((RooRealVar*) ws->obj("mu_susy_sb_sl_3b")) -> getVal() ) ;
        ttwjVal = ((RooRealVar*) ws->obj("mu_ttwj_sb_sl_3b")) -> getVal() ;
        qcdVal  = 0. ;
        znnVal  = 0. ;
        lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+       lhcheckVal = ((RooFormulaVar*) ws->obj("n_sb_sl_3b")) -> getVal() ;
 
        dataErr = sqrt(dataVal) ;
 
@@ -912,6 +973,7 @@
        printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -948,12 +1010,14 @@
 
        dataVal = dataNsig_ldp_1b ;
        eff_sf_sig_ldp_1b = ((RooFormulaVar*) ws->obj("eff_sf_sig_ldp_1b")) -> getVal() ;
-       susyVal = eff_sf_sig_ldp_1b * ( ((RooRealVar*) ws->obj("mu_susy_sig_ldp_1b")) -> getVal() ) ;
+       btageff_sf_sig_ldp_1b = ((RooFormulaVar*) ws->obj("btageff_sf_sig_ldp_1b")) -> getVal() ;
+       susyVal = btageff_sf_sig_ldp_1b * eff_sf_sig_ldp_1b * ( ((RooRealVar*) ws->obj("mu_susy_sig_ldp_1b")) -> getVal() ) ;
        sf_mc = ((RooFormulaVar*) ws->obj("sf_mc")) -> getVal() ;
-       ttwjVal = eff_sf_sig_ldp_1b * sf_mc * ( ( ((RooRealVar*) ws->obj("mu_ttbarsingletopzjetsmc_sig_ldp_1b")) -> getVal() )  + ( ((RooRealVar*) ws->obj("mu_WJmc_sig_ldp_1b")) -> getVal() )  ) ;
+       ttwjVal = btageff_sf_sig_ldp_1b * eff_sf_sig_ldp_1b * sf_mc * ( ( ((RooRealVar*) ws->obj("mu_ttbarsingletopzjetsmc_sig_ldp_1b")) -> getVal() )  + ( ((RooRealVar*) ws->obj("mu_WJmc_sig_ldp_1b")) -> getVal() )  ) ;
        qcdVal  = ((RooRealVar*) ws->obj("mu_qcd_sig_ldp_1b")) -> getVal() ;
-       znnVal  = eff_sf_sig_ldp_1b * sf_mc * ( ((RooRealVar*) ws->obj("mu_Znnmc_sig_ldp_1b")) -> getVal()   ) ;
+       znnVal  = btageff_sf_sig_ldp_1b * eff_sf_sig_ldp_1b * sf_mc * ( ((RooRealVar*) ws->obj("mu_Znnmc_sig_ldp_1b")) -> getVal()   ) ;
        lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+       lhcheckVal = ((RooFormulaVar*) ws->obj("n_sig_ldp_1b")) -> getVal() ;
 
        dataErr = sqrt(dataVal) ;
 
@@ -964,6 +1028,7 @@
        printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -996,12 +1061,14 @@
 
        dataVal = dataNsig_ldp_2b ;
        eff_sf_sig_ldp_2b = ((RooFormulaVar*) ws->obj("eff_sf_sig_ldp_2b")) -> getVal() ;
-       susyVal = eff_sf_sig_ldp_2b * ( ((RooRealVar*) ws->obj("mu_susy_sig_ldp_2b")) -> getVal() ) ;
+       btageff_sf_sig_ldp_2b = ((RooFormulaVar*) ws->obj("btageff_sf_sig_ldp_2b")) -> getVal() ;
+       susyVal = btageff_sf_sig_ldp_2b * eff_sf_sig_ldp_2b * ( ((RooRealVar*) ws->obj("mu_susy_sig_ldp_2b")) -> getVal() ) ;
        sf_mc = ((RooFormulaVar*) ws->obj("sf_mc")) -> getVal() ;
-       ttwjVal = eff_sf_sig_ldp_2b * sf_mc * ( ( ((RooRealVar*) ws->obj("mu_ttbarsingletopzjetsmc_sig_ldp_2b")) -> getVal() )  + ( ((RooRealVar*) ws->obj("mu_WJmc_sig_ldp_2b")) -> getVal() )  ) ;
+       ttwjVal = btageff_sf_sig_ldp_2b * eff_sf_sig_ldp_2b * sf_mc * ( ( ((RooRealVar*) ws->obj("mu_ttbarsingletopzjetsmc_sig_ldp_2b")) -> getVal() )  + ( ((RooRealVar*) ws->obj("mu_WJmc_sig_ldp_2b")) -> getVal() )  ) ;
        qcdVal  = ((RooRealVar*) ws->obj("mu_qcd_sig_ldp_2b")) -> getVal() ;
-       znnVal  = eff_sf_sig_ldp_2b * sf_mc * ( ((RooRealVar*) ws->obj("mu_Znnmc_sig_ldp_2b")) -> getVal()   ) ;
+       znnVal  = btageff_sf_sig_ldp_2b * eff_sf_sig_ldp_2b * sf_mc * ( ((RooRealVar*) ws->obj("mu_Znnmc_sig_ldp_2b")) -> getVal()   ) ;
        lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+       lhcheckVal = ((RooFormulaVar*) ws->obj("n_sig_ldp_2b")) -> getVal() ;
 
        dataErr = sqrt(dataVal) ;
 
@@ -1012,6 +1079,7 @@
        printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -1044,12 +1112,14 @@
 
        dataVal = dataNsig_ldp_3b ;
        eff_sf_sig_ldp_3b = ((RooFormulaVar*) ws->obj("eff_sf_sig_ldp_3b")) -> getVal() ;
-       susyVal = eff_sf_sig_ldp_3b * ( ((RooRealVar*) ws->obj("mu_susy_sig_ldp_3b")) -> getVal() ) ;
+       btageff_sf_sig_ldp_3b = ((RooFormulaVar*) ws->obj("btageff_sf_sig_ldp_3b")) -> getVal() ;
+       susyVal = btageff_sf_sig_ldp_3b * eff_sf_sig_ldp_3b * ( ((RooRealVar*) ws->obj("mu_susy_sig_ldp_3b")) -> getVal() ) ;
        sf_mc = ((RooFormulaVar*) ws->obj("sf_mc")) -> getVal() ;
-       ttwjVal = eff_sf_sig_ldp_3b * sf_mc * ( ( ((RooRealVar*) ws->obj("mu_ttbarsingletopzjetsmc_sig_ldp_3b")) -> getVal() )  + ( ((RooRealVar*) ws->obj("mu_WJmc_sig_ldp_3b")) -> getVal() )  ) ;
+       ttwjVal = btageff_sf_sig_ldp_3b * eff_sf_sig_ldp_3b * sf_mc * ( ( ((RooRealVar*) ws->obj("mu_ttbarsingletopzjetsmc_sig_ldp_3b")) -> getVal() )  + ( ((RooRealVar*) ws->obj("mu_WJmc_sig_ldp_3b")) -> getVal() )  ) ;
        qcdVal  = ((RooRealVar*) ws->obj("mu_qcd_sig_ldp_3b")) -> getVal() ;
-       znnVal  = eff_sf_sig_ldp_3b * sf_mc * ( ((RooRealVar*) ws->obj("mu_Znnmc_sig_ldp_3b")) -> getVal()   ) ;
+       znnVal  = btageff_sf_sig_ldp_3b * eff_sf_sig_ldp_3b * sf_mc * ( ((RooRealVar*) ws->obj("mu_Znnmc_sig_ldp_3b")) -> getVal()   ) ;
        lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+       lhcheckVal = ((RooFormulaVar*) ws->obj("n_sig_ldp_3b")) -> getVal() ;
 
        dataErr = sqrt(dataVal) ;
 
@@ -1060,6 +1130,7 @@
        printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -1094,12 +1165,14 @@
 
        dataVal = dataNsb_ldp_1b ;
        eff_sf_sb_ldp_1b = ((RooFormulaVar*) ws->obj("eff_sf_sb_ldp_1b")) -> getVal() ;
-       susyVal = eff_sf_sb_ldp_1b * ( ((RooRealVar*) ws->obj("mu_susy_sb_ldp_1b")) -> getVal() ) ;
+       btageff_sf_sb_ldp_1b = ((RooFormulaVar*) ws->obj("btageff_sf_sb_ldp_1b")) -> getVal() ;
+       susyVal = btageff_sf_sb_ldp_1b * eff_sf_sb_ldp_1b * ( ((RooRealVar*) ws->obj("mu_susy_sb_ldp_1b")) -> getVal() ) ;
        sf_mc = ((RooFormulaVar*) ws->obj("sf_mc")) -> getVal() ;
-       ttwjVal = eff_sf_sb_ldp_1b * sf_mc * ( ( ((RooRealVar*) ws->obj("mu_ttbarsingletopzjetsmc_sb_ldp_1b")) -> getVal() )  + ( ((RooRealVar*) ws->obj("mu_WJmc_sb_ldp_1b")) -> getVal() )  ) ;
+       ttwjVal = btageff_sf_sb_ldp_1b * eff_sf_sb_ldp_1b * sf_mc * ( ( ((RooRealVar*) ws->obj("mu_ttbarsingletopzjetsmc_sb_ldp_1b")) -> getVal() )  + ( ((RooRealVar*) ws->obj("mu_WJmc_sb_ldp_1b")) -> getVal() )  ) ;
        qcdVal  = ((RooRealVar*) ws->obj("mu_qcd_sb_ldp_1b")) -> getVal() ;
-       znnVal  = eff_sf_sb_ldp_1b * sf_mc * ( ((RooRealVar*) ws->obj("mu_Znnmc_sb_ldp_1b")) -> getVal()   ) ;
+       znnVal  = btageff_sf_sb_ldp_1b * eff_sf_sb_ldp_1b * sf_mc * ( ((RooRealVar*) ws->obj("mu_Znnmc_sb_ldp_1b")) -> getVal()   ) ;
        lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+       lhcheckVal = ((RooFormulaVar*) ws->obj("n_sb_ldp_1b")) -> getVal() ;
 
        dataErr = sqrt(dataVal) ;
 
@@ -1110,6 +1183,7 @@
        printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -1143,12 +1217,14 @@
 
        dataVal = dataNsb_ldp_2b ;
        eff_sf_sb_ldp_2b = ((RooFormulaVar*) ws->obj("eff_sf_sb_ldp_2b")) -> getVal() ;
-       susyVal = eff_sf_sb_ldp_2b * ( ((RooRealVar*) ws->obj("mu_susy_sb_ldp_2b")) -> getVal() ) ;
+       btageff_sf_sb_ldp_2b = ((RooFormulaVar*) ws->obj("btageff_sf_sb_ldp_2b")) -> getVal() ;
+       susyVal = btageff_sf_sb_ldp_2b * eff_sf_sb_ldp_2b * ( ((RooRealVar*) ws->obj("mu_susy_sb_ldp_2b")) -> getVal() ) ;
        sf_mc = ((RooFormulaVar*) ws->obj("sf_mc")) -> getVal() ;
-       ttwjVal = eff_sf_sb_ldp_2b * sf_mc * ( ( ((RooRealVar*) ws->obj("mu_ttbarsingletopzjetsmc_sb_ldp_2b")) -> getVal() )  + ( ((RooRealVar*) ws->obj("mu_WJmc_sb_ldp_2b")) -> getVal() )  ) ;
+       ttwjVal = btageff_sf_sb_ldp_2b * eff_sf_sb_ldp_2b * sf_mc * ( ( ((RooRealVar*) ws->obj("mu_ttbarsingletopzjetsmc_sb_ldp_2b")) -> getVal() )  + ( ((RooRealVar*) ws->obj("mu_WJmc_sb_ldp_2b")) -> getVal() )  ) ;
        qcdVal  = ((RooRealVar*) ws->obj("mu_qcd_sb_ldp_2b")) -> getVal() ;
-       znnVal  = eff_sf_sb_ldp_2b * sf_mc * ( ((RooRealVar*) ws->obj("mu_Znnmc_sb_ldp_2b")) -> getVal()   ) ;
+       znnVal  = btageff_sf_sb_ldp_2b * eff_sf_sb_ldp_2b * sf_mc * ( ((RooRealVar*) ws->obj("mu_Znnmc_sb_ldp_2b")) -> getVal()   ) ;
        lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+       lhcheckVal = ((RooFormulaVar*) ws->obj("n_sb_ldp_2b")) -> getVal() ;
 
        dataErr = sqrt(dataVal) ;
 
@@ -1159,6 +1235,7 @@
        printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -1192,12 +1269,14 @@
 
        dataVal = dataNsb_ldp_3b ;
        eff_sf_sb_ldp_3b = ((RooFormulaVar*) ws->obj("eff_sf_sb_ldp_3b")) -> getVal() ;
-       susyVal = eff_sf_sb_ldp_3b * ( ((RooRealVar*) ws->obj("mu_susy_sb_ldp_3b")) -> getVal() ) ;
+       btageff_sf_sb_ldp_3b = ((RooFormulaVar*) ws->obj("btageff_sf_sb_ldp_3b")) -> getVal() ;
+       susyVal = btageff_sf_sb_ldp_3b * eff_sf_sb_ldp_3b * ( ((RooRealVar*) ws->obj("mu_susy_sb_ldp_3b")) -> getVal() ) ;
        sf_mc = ((RooFormulaVar*) ws->obj("sf_mc")) -> getVal() ;
-       ttwjVal = eff_sf_sb_ldp_3b * sf_mc * ( ( ((RooRealVar*) ws->obj("mu_ttbarsingletopzjetsmc_sb_ldp_3b")) -> getVal() )  + ( ((RooRealVar*) ws->obj("mu_WJmc_sb_ldp_3b")) -> getVal() )  ) ;
+       ttwjVal = btageff_sf_sb_ldp_3b * eff_sf_sb_ldp_3b * sf_mc * ( ( ((RooRealVar*) ws->obj("mu_ttbarsingletopzjetsmc_sb_ldp_3b")) -> getVal() )  + ( ((RooRealVar*) ws->obj("mu_WJmc_sb_ldp_3b")) -> getVal() )  ) ;
        qcdVal  = ((RooRealVar*) ws->obj("mu_qcd_sb_ldp_3b")) -> getVal() ;
-       znnVal  = eff_sf_sb_ldp_3b * sf_mc * ( ((RooRealVar*) ws->obj("mu_Znnmc_sb_ldp_3b")) -> getVal()   ) ;
+       znnVal  = btageff_sf_sb_ldp_3b * eff_sf_sb_ldp_3b * sf_mc * ( ((RooRealVar*) ws->obj("mu_Znnmc_sb_ldp_3b")) -> getVal()   ) ;
        lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+       lhcheckVal = ((RooFormulaVar*) ws->obj("n_sb_ldp_3b")) -> getVal() ;
 
        dataErr = sqrt(dataVal) ;
 
@@ -1208,6 +1287,7 @@
        printf(" %8s      qcd  : %8.2f\n", binLabel, qcdVal ) ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -1247,6 +1327,7 @@
 
        dataVal = dataNsig_ee ;
        znnVal  = ( ((RooRealVar*) ws->obj("mu_zee_sig")) -> getVal() ) / ( ((RooRealVar*) ws->obj("fsig_ee"))->getVal() ) ;
+       lhcheckVal = ((RooRealVar*) ws->obj("n_sig_ee")) -> getVal() ;
        lhtotalVal = znnVal  ;
 
        dataErr = sqrt(dataVal) ;
@@ -1255,6 +1336,7 @@
        printf("\n\n") ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -1279,6 +1361,7 @@
 
        dataVal = dataNsb_ee ;
        znnVal  = ( ((RooRealVar*) ws->obj("mu_zee_sb")) -> getVal() ) / ( ((RooRealVar*) ws->obj("fsig_ee"))->getVal() ) ;
+       lhcheckVal = ((RooRealVar*) ws->obj("n_sb_ee")) -> getVal() ;
        lhtotalVal = znnVal  ;
 
        dataErr = sqrt(dataVal) ;
@@ -1287,6 +1370,7 @@
        printf("\n\n") ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -1312,6 +1396,7 @@
 
        dataVal = dataNsig_mm ;
        znnVal  = ( ((RooRealVar*) ws->obj("mu_zmm_sig")) -> getVal() ) / ( ((RooRealVar*) ws->obj("fsig_mm"))->getVal() ) ;
+       lhcheckVal = ((RooRealVar*) ws->obj("n_sig_mm")) -> getVal() ;
        lhtotalVal = znnVal  ;
 
        dataErr = sqrt(dataVal) ;
@@ -1320,6 +1405,7 @@
        printf("\n\n") ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 
@@ -1344,6 +1430,7 @@
 
        dataVal = dataNsb_mm ;
        znnVal  = ( ((RooRealVar*) ws->obj("mu_zmm_sb")) -> getVal() ) / ( ((RooRealVar*) ws->obj("fsig_mm"))->getVal() ) ;
+       lhcheckVal = ((RooRealVar*) ws->obj("n_sb_mm")) -> getVal() ;
        lhtotalVal = znnVal  ;
 
        dataErr = sqrt(dataVal) ;
@@ -1352,6 +1439,7 @@
        printf("\n\n") ;
        printf(" %8s      znn  : %8.2f\n", binLabel, znnVal ) ;
        printf(" %8s  LH total : %8.2f\n", binLabel, lhtotalVal ) ;
+       printf(" %8s  LH check : %8.2f\n", binLabel, lhcheckVal ) ;
        printf(" %8s      data : %5.0f\n"  , binLabel, dataVal ) ;
 
 

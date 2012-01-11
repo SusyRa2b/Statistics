@@ -161,7 +161,7 @@
       gStyle->SetPadRightMargin(0.20) ;
 
 
-       int nbins(35) ;
+       int nbins(36) ;
 
        TH1F* hfitqual_susy = new TH1F("hfitqual_susy", "RA2b likelihood fit results, susy", nbins, 0.5, nbins+0.5 ) ;
        TH1F* hfitqual_ttwj = new TH1F("hfitqual_ttwj", "RA2b likelihood fit results, ttwj", nbins, 0.5, nbins+0.5 ) ;
@@ -197,6 +197,17 @@
        xaxis->SetBinLabel(binIndex, binLabel ) ;
 
        value = ((RooRealVar*) ws->obj("eff_sf_prim")) -> getVal() ;
+
+       hfitqual_susy -> SetBinContent( binIndex, value ) ;
+
+
+       //-- btag Eff sf
+
+       sprintf( binLabel, "SUSY,btag eff" ) ;
+       binIndex++ ;
+       xaxis->SetBinLabel(binIndex, binLabel ) ;
+
+       value = ((RooRealVar*) ws->obj("btageff_sf_prim")) -> getVal() ;
 
        hfitqual_susy -> SetBinContent( binIndex, value ) ;
 

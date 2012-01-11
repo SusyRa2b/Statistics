@@ -81,7 +81,10 @@
   //===================================================================
 
     bool ra2bRoostatsClass9::initialize( const char* infile ,
-                                         const char* inputScanFile, double m0, double m12, bool isT1bbbb, double t1bbbbXsec ) {
+                                         const char* inputScanFile,
+                                         double m0, double m12, bool isT1bbbb, double t1bbbbXsec,
+                                         const char* inputSusy_deff_dbtageff_file
+                                       ) {
 
 
        printf( "\n\n Opening input file : %s\n\n", infile ) ;
@@ -170,7 +173,7 @@
        float  Rlsb_passfail_err ;
 
 
-
+       float  btageff_err ;
 
 
 
@@ -289,6 +292,7 @@
        fscanf( infp, "%s %g", label, &sf_ee_err                           ) ;   printf( "sf_ee_err                           %s %g\n", label, sf_ee_err                          ) ;
        fscanf( infp, "%s %g", label, &sf_mm                               ) ;   printf( "sf_mm                               %s %g\n", label, sf_mm                              ) ;
        fscanf( infp, "%s %g", label, &sf_mm_err                           ) ;   printf( "sf_mm_err                           %s %g\n", label, sf_mm_err                          ) ;
+       fscanf( infp, "%s %g", label, &btageff_err                           ) ;   printf( "btageff_err                           %s %g\n", label, btageff_err                          ) ;
 
 
 
@@ -1239,6 +1243,73 @@
 
 
 
+    //--- Jan 10, 2012: btag efficiency derivatives.
+
+      rv_deff_dbtageff_sig_1b     = new RooRealVar( "deff_dbtageff_sig_1b"    , "deff_dbtageff_sig_1b", -10., 10. ) ;
+      rv_deff_dbtageff_sb_1b      = new RooRealVar( "deff_dbtageff_sb_1b"     , "deff_dbtageff_sb_1b", -10., 10. ) ;
+      rv_deff_dbtageff_sig_sl_1b  = new RooRealVar( "deff_dbtageff_sig_sl_1b" , "deff_dbtageff_sig_sl_1b", -10., 10. ) ;
+      rv_deff_dbtageff_sb_sl_1b   = new RooRealVar( "deff_dbtageff_sb_sl_1b"  , "deff_dbtageff_sb_sl_1b", -10., 10. ) ;
+      rv_deff_dbtageff_sig_ldp_1b = new RooRealVar( "deff_dbtageff_sig_ldp_1b", "deff_dbtageff_sig_ldp_1b", -10., 10. ) ;
+      rv_deff_dbtageff_sb_ldp_1b  = new RooRealVar( "deff_dbtageff_sb_ldp_1b" , "deff_dbtageff_sb_ldp_1b", -10., 10. ) ;
+
+      rv_deff_dbtageff_sig_2b     = new RooRealVar( "deff_dbtageff_sig_2b"    , "deff_dbtageff_sig_2b", -10., 10. ) ;
+      rv_deff_dbtageff_sb_2b      = new RooRealVar( "deff_dbtageff_sb_2b"     , "deff_dbtageff_sb_2b", -10., 10. ) ;
+      rv_deff_dbtageff_sig_sl_2b  = new RooRealVar( "deff_dbtageff_sig_sl_2b" , "deff_dbtageff_sig_sl_2b", -10., 10. ) ;
+      rv_deff_dbtageff_sb_sl_2b   = new RooRealVar( "deff_dbtageff_sb_sl_2b"  , "deff_dbtageff_sb_sl_2b", -10., 10. ) ;
+      rv_deff_dbtageff_sig_ldp_2b = new RooRealVar( "deff_dbtageff_sig_ldp_2b", "deff_dbtageff_sig_ldp_2b", -10., 10. ) ;
+      rv_deff_dbtageff_sb_ldp_2b  = new RooRealVar( "deff_dbtageff_sb_ldp_2b" , "deff_dbtageff_sb_ldp_2b", -10., 10. ) ;
+
+      rv_deff_dbtageff_sig_3b     = new RooRealVar( "deff_dbtageff_sig_3b"    , "deff_dbtageff_sig_3b", -10., 10. ) ;
+      rv_deff_dbtageff_sb_3b      = new RooRealVar( "deff_dbtageff_sb_3b"     , "deff_dbtageff_sb_3b", -10., 10. ) ;
+      rv_deff_dbtageff_sig_sl_3b  = new RooRealVar( "deff_dbtageff_sig_sl_3b" , "deff_dbtageff_sig_sl_3b", -10., 10. ) ;
+      rv_deff_dbtageff_sb_sl_3b   = new RooRealVar( "deff_dbtageff_sb_sl_3b"  , "deff_dbtageff_sb_sl_3b", -10., 10. ) ;
+      rv_deff_dbtageff_sig_ldp_3b = new RooRealVar( "deff_dbtageff_sig_ldp_3b", "deff_dbtageff_sig_ldp_3b", -10., 10. ) ;
+      rv_deff_dbtageff_sb_ldp_3b  = new RooRealVar( "deff_dbtageff_sb_ldp_3b" , "deff_dbtageff_sb_ldp_3b", -10., 10. ) ;
+
+
+      rv_deff_dbtageff_sig_1b     -> setVal( -1.0 ) ;
+      rv_deff_dbtageff_sb_1b      -> setVal( -1.0 ) ;
+      rv_deff_dbtageff_sig_sl_1b  -> setVal( -1.0 ) ;
+      rv_deff_dbtageff_sb_sl_1b   -> setVal( -1.0 ) ;
+      rv_deff_dbtageff_sig_ldp_1b -> setVal( -1.0 ) ;
+      rv_deff_dbtageff_sb_ldp_1b  -> setVal( -1.0 ) ;
+
+      rv_deff_dbtageff_sig_2b     -> setVal( 0.5 ) ;
+      rv_deff_dbtageff_sb_2b      -> setVal( 0.5 ) ;
+      rv_deff_dbtageff_sig_sl_2b  -> setVal( 0.5 ) ;
+      rv_deff_dbtageff_sb_sl_2b   -> setVal( 0.5 ) ;
+      rv_deff_dbtageff_sig_ldp_2b -> setVal( 0.5 ) ;
+      rv_deff_dbtageff_sb_ldp_2b  -> setVal( 0.5 ) ;
+
+      rv_deff_dbtageff_sig_3b     -> setVal( 2.0 ) ;
+      rv_deff_dbtageff_sb_3b      -> setVal( 2.0 ) ;
+      rv_deff_dbtageff_sig_sl_3b  -> setVal( 2.0 ) ;
+      rv_deff_dbtageff_sb_sl_3b   -> setVal( 2.0 ) ;
+      rv_deff_dbtageff_sig_ldp_3b -> setVal( 2.0 ) ;
+      rv_deff_dbtageff_sb_ldp_3b  -> setVal( 2.0 ) ;
+
+
+
+      rv_deff_dbtageff_sig_1b     -> setConstant( kTRUE ) ;
+      rv_deff_dbtageff_sb_1b      -> setConstant( kTRUE ) ;
+      rv_deff_dbtageff_sig_sl_1b  -> setConstant( kTRUE ) ;
+      rv_deff_dbtageff_sb_sl_1b   -> setConstant( kTRUE ) ;
+      rv_deff_dbtageff_sig_ldp_1b -> setConstant( kTRUE ) ;
+      rv_deff_dbtageff_sb_ldp_1b  -> setConstant( kTRUE ) ;
+
+      rv_deff_dbtageff_sig_2b     -> setConstant( kTRUE ) ;
+      rv_deff_dbtageff_sb_2b      -> setConstant( kTRUE ) ;
+      rv_deff_dbtageff_sig_sl_2b  -> setConstant( kTRUE ) ;
+      rv_deff_dbtageff_sb_sl_2b   -> setConstant( kTRUE ) ;
+      rv_deff_dbtageff_sig_ldp_2b -> setConstant( kTRUE ) ;
+      rv_deff_dbtageff_sb_ldp_2b  -> setConstant( kTRUE ) ;
+
+      rv_deff_dbtageff_sig_3b     -> setConstant( kTRUE ) ;
+      rv_deff_dbtageff_sb_3b      -> setConstant( kTRUE ) ;
+      rv_deff_dbtageff_sig_sl_3b  -> setConstant( kTRUE ) ;
+      rv_deff_dbtageff_sb_sl_3b   -> setConstant( kTRUE ) ;
+      rv_deff_dbtageff_sig_ldp_3b -> setConstant( kTRUE ) ;
+      rv_deff_dbtageff_sb_ldp_3b  -> setConstant( kTRUE ) ;
 
 
 
@@ -1247,13 +1318,16 @@
    // Owen : Sept 7, 2011: need to set these here so that it gets into the workspace.
    //
    //++++++++++
-      setSusyScanPoint( inputScanFile,  m0,  m12,  isT1bbbb,  t1bbbbXsec ) ;
+      setSusyScanPoint( inputScanFile,  m0,  m12,  isT1bbbb,  t1bbbbXsec, inputSusy_deff_dbtageff_file ) ;
    //++++++++++
 
 
 
 
 
+      RooRealVar rv_btageff_err ( "btageff_err", "btageff_err", 0., 10. ) ;
+      rv_btageff_err. setVal( btageff_err ) ;
+      rv_btageff_err. setConstant( kTRUE ) ;
 
 
 
@@ -1632,14 +1706,19 @@
       allNuisances.add (eff_sf_prim);
       allNuisancePdfs.add (pdf_eff_sf);
 
-/*       RooRealVar xxx_prim ( "xxx_prim", "xxx_prim", 0, -5, 5); */
-/*       RooRealVar xxx_nom ( "xxx_nom", "xxx_nom", 0, -5, 5); */
-/*       RooGaussian pdf_xxx ("pdf_xxx" , "pdf_xxx", *xxx_prim, *xxx_nom, RooConst(1)); */
-/*       sprintf (formula, "%f*pow(%f,@0)", xxx, exp(xxx_err/xxx)); */
-/*       RooFormulaVar fv_xxx ("xxx", formula, RooArgList(xxx_prim)); */
-/*       globalObservables.add (xxx_nom); */
-/*       allNuisances.add (xxx_prim); */
-/*       allNuisancePdfs.add (pdf_xxx); */
+
+
+    //--------------------------------------
+
+
+      RooRealVar btageff_sf_prim ( "btageff_sf_prim", "btageff_sf_prim", 0, -5, 5);
+      RooRealVar btageff_sf_nom ( "btageff_sf_nom", "btageff_sf_nom", 0, -5, 5);
+      RooGaussian pdf_btageff_sf ("pdf_btageff_sf" , "pdf_btageff_sf", btageff_sf_prim, btageff_sf_nom, RooConst(1));
+      btageff_sf_nom.setConstant();
+      globalObservables.add (btageff_sf_nom);
+      allNuisances.add (btageff_sf_prim);
+      allNuisancePdfs.add (pdf_btageff_sf);
+
 
 
 
@@ -2124,88 +2203,392 @@
 
 
 
+     //--- btag efficiency scale factors.
+
+      if ( rv_deff_dbtageff_sig_1b->getVal() > 0. ) {
+         rv_btageff_sf_sig_1b = new RooFormulaVar( "btageff_sf_sig_1b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sig_1b ), btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_1b, btageff_sf_prim ) ) ;
+      } else {
+         rv_deff_dbtageff_sig_1b->setVal( -1.0*(rv_deff_dbtageff_sig_1b->getVal()) ) ;
+         rv_btageff_sf_sig_1b = new RooFormulaVar( "btageff_sf_sig_1b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sig_1b ), -1.0*btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_1b, btageff_sf_prim ) ) ;
+      }
+
+      if ( rv_deff_dbtageff_sb_1b->getVal() > 0. ) {
+         rv_btageff_sf_sb_1b = new RooFormulaVar( "btageff_sf_sb_1b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sb_1b ), btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_1b, btageff_sf_prim ) ) ;
+      } else {
+         rv_deff_dbtageff_sb_1b->setVal( -1.0*(rv_deff_dbtageff_sb_1b->getVal()) ) ;
+         rv_btageff_sf_sb_1b = new RooFormulaVar( "btageff_sf_sb_1b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sb_1b ), -1.0*btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_1b, btageff_sf_prim ) ) ;
+      }
+
+      if ( rv_deff_dbtageff_sig_sl_1b->getVal() > 0. ) {
+         rv_btageff_sf_sig_sl_1b = new RooFormulaVar( "btageff_sf_sig_sl_1b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sig_sl_1b ), btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_sl_1b, btageff_sf_prim ) ) ;
+      } else {
+         rv_deff_dbtageff_sig_sl_1b->setVal( -1.0*(rv_deff_dbtageff_sig_sl_1b->getVal()) ) ;
+         rv_btageff_sf_sig_sl_1b = new RooFormulaVar( "btageff_sf_sig_sl_1b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sig_sl_1b ), -1.0*btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_sl_1b, btageff_sf_prim ) ) ;
+      }
+
+      if ( rv_deff_dbtageff_sb_sl_1b->getVal() > 0. ) {
+         rv_btageff_sf_sb_sl_1b = new RooFormulaVar( "btageff_sf_sb_sl_1b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sb_sl_1b ), btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_sl_1b, btageff_sf_prim ) ) ;
+      } else {
+         rv_deff_dbtageff_sb_sl_1b->setVal( -1.0*(rv_deff_dbtageff_sb_sl_1b->getVal()) ) ;
+         rv_btageff_sf_sb_sl_1b = new RooFormulaVar( "btageff_sf_sb_sl_1b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sb_sl_1b ), -1.0*btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_sl_1b, btageff_sf_prim ) ) ;
+      }
+
+      if ( rv_deff_dbtageff_sig_ldp_1b->getVal() > 0. ) {
+         rv_btageff_sf_sig_ldp_1b = new RooFormulaVar( "btageff_sf_sig_ldp_1b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sig_ldp_1b ), btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_ldp_1b, btageff_sf_prim ) ) ;
+      } else {
+         rv_deff_dbtageff_sig_ldp_1b->setVal( -1.0*(rv_deff_dbtageff_sig_ldp_1b->getVal()) ) ;
+         rv_btageff_sf_sig_ldp_1b = new RooFormulaVar( "btageff_sf_sig_ldp_1b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sig_ldp_1b ), -1.0*btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_ldp_1b, btageff_sf_prim ) ) ;
+      }
+
+      if ( rv_deff_dbtageff_sb_ldp_1b->getVal() > 0. ) {
+         rv_btageff_sf_sb_ldp_1b = new RooFormulaVar( "btageff_sf_sb_ldp_1b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sb_ldp_1b ), btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_ldp_1b, btageff_sf_prim ) ) ;
+      } else {
+         rv_deff_dbtageff_sb_ldp_1b->setVal( -1.0*(rv_deff_dbtageff_sb_ldp_1b->getVal()) ) ;
+         rv_btageff_sf_sb_ldp_1b = new RooFormulaVar( "btageff_sf_sb_ldp_1b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sb_ldp_1b ), -1.0*btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_ldp_1b, btageff_sf_prim ) ) ;
+      }
+
+
+
+
+
+
+
+
+
+      if ( rv_deff_dbtageff_sig_2b->getVal() > 0. ) {
+         rv_btageff_sf_sig_2b = new RooFormulaVar( "btageff_sf_sig_2b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sig_2b ), btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_2b, btageff_sf_prim ) ) ;
+      } else {
+         rv_deff_dbtageff_sig_2b->setVal( -1.0*(rv_deff_dbtageff_sig_2b->getVal()) ) ;
+         rv_btageff_sf_sig_2b = new RooFormulaVar( "btageff_sf_sig_2b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sig_2b ), -1.0*btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_2b, btageff_sf_prim ) ) ;
+      }
+
+      if ( rv_deff_dbtageff_sb_2b->getVal() > 0. ) {
+         rv_btageff_sf_sb_2b = new RooFormulaVar( "btageff_sf_sb_2b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sb_2b ), btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_2b, btageff_sf_prim ) ) ;
+      } else {
+         rv_deff_dbtageff_sb_2b->setVal( -1.0*(rv_deff_dbtageff_sb_2b->getVal()) ) ;
+         rv_btageff_sf_sb_2b = new RooFormulaVar( "btageff_sf_sb_2b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sb_2b ), -1.0*btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_2b, btageff_sf_prim ) ) ;
+      }
+
+      if ( rv_deff_dbtageff_sig_sl_2b->getVal() > 0. ) {
+         rv_btageff_sf_sig_sl_2b = new RooFormulaVar( "btageff_sf_sig_sl_2b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sig_sl_2b ), btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_sl_2b, btageff_sf_prim ) ) ;
+      } else {
+         rv_deff_dbtageff_sig_sl_2b->setVal( -1.0*(rv_deff_dbtageff_sig_sl_2b->getVal()) ) ;
+         rv_btageff_sf_sig_sl_2b = new RooFormulaVar( "btageff_sf_sig_sl_2b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sig_sl_2b ), -1.0*btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_sl_2b, btageff_sf_prim ) ) ;
+      }
+
+      if ( rv_deff_dbtageff_sb_sl_2b->getVal() > 0. ) {
+         rv_btageff_sf_sb_sl_2b = new RooFormulaVar( "btageff_sf_sb_sl_2b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sb_sl_2b ), btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_sl_2b, btageff_sf_prim ) ) ;
+      } else {
+         rv_deff_dbtageff_sb_sl_2b->setVal( -1.0*(rv_deff_dbtageff_sb_sl_2b->getVal()) ) ;
+         rv_btageff_sf_sb_sl_2b = new RooFormulaVar( "btageff_sf_sb_sl_2b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sb_sl_2b ), -1.0*btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_sl_2b, btageff_sf_prim ) ) ;
+      }
+
+      if ( rv_deff_dbtageff_sig_ldp_2b->getVal() > 0. ) {
+         rv_btageff_sf_sig_ldp_2b = new RooFormulaVar( "btageff_sf_sig_ldp_2b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sig_ldp_2b ), btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_ldp_2b, btageff_sf_prim ) ) ;
+      } else {
+         rv_deff_dbtageff_sig_ldp_2b->setVal( -1.0*(rv_deff_dbtageff_sig_ldp_2b->getVal()) ) ;
+         rv_btageff_sf_sig_ldp_2b = new RooFormulaVar( "btageff_sf_sig_ldp_2b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sig_ldp_2b ), -1.0*btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_ldp_2b, btageff_sf_prim ) ) ;
+      }
+
+      if ( rv_deff_dbtageff_sb_ldp_2b->getVal() > 0. ) {
+         rv_btageff_sf_sb_ldp_2b = new RooFormulaVar( "btageff_sf_sb_ldp_2b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sb_ldp_2b ), btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_ldp_2b, btageff_sf_prim ) ) ;
+      } else {
+         rv_deff_dbtageff_sb_ldp_2b->setVal( -1.0*(rv_deff_dbtageff_sb_ldp_2b->getVal()) ) ;
+         rv_btageff_sf_sb_ldp_2b = new RooFormulaVar( "btageff_sf_sb_ldp_2b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sb_ldp_2b ), -1.0*btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_ldp_2b, btageff_sf_prim ) ) ;
+      }
+
+
+
+
+
+
+
+
+
+      if ( rv_deff_dbtageff_sig_3b->getVal() > 0. ) {
+         rv_btageff_sf_sig_3b = new RooFormulaVar( "btageff_sf_sig_3b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sig_3b ), btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_3b, btageff_sf_prim ) ) ;
+      } else {
+         rv_deff_dbtageff_sig_3b->setVal( -1.0*(rv_deff_dbtageff_sig_3b->getVal()) ) ;
+         rv_btageff_sf_sig_3b = new RooFormulaVar( "btageff_sf_sig_3b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sig_3b ), -1.0*btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_3b, btageff_sf_prim ) ) ;
+      }
+
+      if ( rv_deff_dbtageff_sb_3b->getVal() > 0. ) {
+         rv_btageff_sf_sb_3b = new RooFormulaVar( "btageff_sf_sb_3b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sb_3b ), btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_3b, btageff_sf_prim ) ) ;
+      } else {
+         rv_deff_dbtageff_sb_3b->setVal( -1.0*(rv_deff_dbtageff_sb_3b->getVal()) ) ;
+         rv_btageff_sf_sb_3b = new RooFormulaVar( "btageff_sf_sb_3b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sb_3b ), -1.0*btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_3b, btageff_sf_prim ) ) ;
+      }
+
+      if ( rv_deff_dbtageff_sig_sl_3b->getVal() > 0. ) {
+         rv_btageff_sf_sig_sl_3b = new RooFormulaVar( "btageff_sf_sig_sl_3b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sig_sl_3b ), btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_sl_3b, btageff_sf_prim ) ) ;
+      } else {
+         rv_deff_dbtageff_sig_sl_3b->setVal( -1.0*(rv_deff_dbtageff_sig_sl_3b->getVal()) ) ;
+         rv_btageff_sf_sig_sl_3b = new RooFormulaVar( "btageff_sf_sig_sl_3b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sig_sl_3b ), -1.0*btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_sl_3b, btageff_sf_prim ) ) ;
+      }
+
+      if ( rv_deff_dbtageff_sb_sl_3b->getVal() > 0. ) {
+         rv_btageff_sf_sb_sl_3b = new RooFormulaVar( "btageff_sf_sb_sl_3b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sb_sl_3b ), btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_sl_3b, btageff_sf_prim ) ) ;
+      } else {
+         rv_deff_dbtageff_sb_sl_3b->setVal( -1.0*(rv_deff_dbtageff_sb_sl_3b->getVal()) ) ;
+         rv_btageff_sf_sb_sl_3b = new RooFormulaVar( "btageff_sf_sb_sl_3b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sb_sl_3b ), -1.0*btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_sl_3b, btageff_sf_prim ) ) ;
+      }
+
+      if ( rv_deff_dbtageff_sig_ldp_3b->getVal() > 0. ) {
+         rv_btageff_sf_sig_ldp_3b = new RooFormulaVar( "btageff_sf_sig_ldp_3b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sig_ldp_3b ), btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_ldp_3b, btageff_sf_prim ) ) ;
+      } else {
+         rv_deff_dbtageff_sig_ldp_3b->setVal( -1.0*(rv_deff_dbtageff_sig_ldp_3b->getVal()) ) ;
+         rv_btageff_sf_sig_ldp_3b = new RooFormulaVar( "btageff_sf_sig_ldp_3b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sig_ldp_3b ), -1.0*btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_ldp_3b, btageff_sf_prim ) ) ;
+      }
+
+      if ( rv_deff_dbtageff_sb_ldp_3b->getVal() > 0. ) {
+         rv_btageff_sf_sb_ldp_3b = new RooFormulaVar( "btageff_sf_sb_ldp_3b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sb_ldp_3b ), btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_ldp_3b, btageff_sf_prim ) ) ;
+      } else {
+         rv_deff_dbtageff_sb_ldp_3b->setVal( -1.0*(rv_deff_dbtageff_sb_ldp_3b->getVal()) ) ;
+         rv_btageff_sf_sb_ldp_3b = new RooFormulaVar( "btageff_sf_sb_ldp_3b",
+                                            "pow( exp( btageff_err * deff_dbtageff_sb_ldp_3b ), -1.0*btageff_sf_prim )",
+                                            RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_ldp_3b, btageff_sf_prim ) ) ;
+      }
+
+
+
+
+
+
+
+
+
+
+
+///   rv_btageff_sf_sb_1b = new RooFormulaVar( "btageff_sf_sb_1b",
+///                                      "pow( exp( btageff_err * deff_dbtageff_sb_1b ), btageff_sf_prim )",
+///                                      RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_1b, btageff_sf_prim ) ) ;
+
+///   rv_btageff_sf_sig_sl_1b = new RooFormulaVar( "btageff_sf_sig_sl_1b",
+///                                      "pow( exp( btageff_err * deff_dbtageff_sig_sl_1b ), btageff_sf_prim )",
+///                                      RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_sl_1b, btageff_sf_prim ) ) ;
+
+///   rv_btageff_sf_sb_sl_1b = new RooFormulaVar( "btageff_sf_sb_sl_1b",
+///                                      "pow( exp( btageff_err * deff_dbtageff_sb_sl_1b ), btageff_sf_prim )",
+///                                      RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_sl_1b, btageff_sf_prim ) ) ;
+
+///   rv_btageff_sf_sig_ldp_1b = new RooFormulaVar( "btageff_sf_sig_ldp_1b",
+///                                      "pow( exp( btageff_err * deff_dbtageff_sig_ldp_1b ), btageff_sf_prim )",
+///                                      RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_ldp_1b, btageff_sf_prim ) ) ;
+
+///   rv_btageff_sf_sb_ldp_1b = new RooFormulaVar( "btageff_sf_sb_ldp_1b",
+///                                      "pow( exp( btageff_err * deff_dbtageff_sb_ldp_1b ), btageff_sf_prim )",
+///                                      RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_ldp_1b, btageff_sf_prim ) ) ;
+
+
+
+///   rv_btageff_sf_sig_2b = new RooFormulaVar( "btageff_sf_sig_2b",
+///                                      "pow( exp( btageff_err * deff_dbtageff_sig_2b ), btageff_sf_prim )",
+///                                      RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_2b, btageff_sf_prim ) ) ;
+
+///   rv_btageff_sf_sb_2b = new RooFormulaVar( "btageff_sf_sb_2b",
+///                                      "pow( exp( btageff_err * deff_dbtageff_sb_2b ), btageff_sf_prim )",
+///                                      RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_2b, btageff_sf_prim ) ) ;
+
+///   rv_btageff_sf_sig_sl_2b = new RooFormulaVar( "btageff_sf_sig_sl_2b",
+///                                      "pow( exp( btageff_err * deff_dbtageff_sig_sl_2b ), btageff_sf_prim )",
+///                                      RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_sl_2b, btageff_sf_prim ) ) ;
+
+///   rv_btageff_sf_sb_sl_2b = new RooFormulaVar( "btageff_sf_sb_sl_2b",
+///                                      "pow( exp( btageff_err * deff_dbtageff_sb_sl_2b ), btageff_sf_prim )",
+///                                      RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_sl_2b, btageff_sf_prim ) ) ;
+
+///   rv_btageff_sf_sig_ldp_2b = new RooFormulaVar( "btageff_sf_sig_ldp_2b",
+///                                      "pow( exp( btageff_err * deff_dbtageff_sig_ldp_2b ), btageff_sf_prim )",
+///                                      RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_ldp_2b, btageff_sf_prim ) ) ;
+
+///   rv_btageff_sf_sb_ldp_2b = new RooFormulaVar( "btageff_sf_sb_ldp_2b",
+///                                      "pow( exp( btageff_err * deff_dbtageff_sb_ldp_2b ), btageff_sf_prim )",
+///                                      RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_ldp_2b, btageff_sf_prim ) ) ;
+
+
+
+///   rv_btageff_sf_sig_3b = new RooFormulaVar( "btageff_sf_sig_3b",
+///                                      "pow( exp( btageff_err * deff_dbtageff_sig_3b ), btageff_sf_prim )",
+///                                      RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_3b, btageff_sf_prim ) ) ;
+
+///   rv_btageff_sf_sb_3b = new RooFormulaVar( "btageff_sf_sb_3b",
+///                                      "pow( exp( btageff_err * deff_dbtageff_sb_3b ), btageff_sf_prim )",
+///                                      RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_3b, btageff_sf_prim ) ) ;
+
+///   rv_btageff_sf_sig_sl_3b = new RooFormulaVar( "btageff_sf_sig_sl_3b",
+///                                      "pow( exp( btageff_err * deff_dbtageff_sig_sl_3b ), btageff_sf_prim )",
+///                                      RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_sl_3b, btageff_sf_prim ) ) ;
+
+///   rv_btageff_sf_sb_sl_3b = new RooFormulaVar( "btageff_sf_sb_sl_3b",
+///                                      "pow( exp( btageff_err * deff_dbtageff_sb_sl_3b ), btageff_sf_prim )",
+///                                      RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_sl_3b, btageff_sf_prim ) ) ;
+
+///   rv_btageff_sf_sig_ldp_3b = new RooFormulaVar( "btageff_sf_sig_ldp_3b",
+///                                      "pow( exp( btageff_err * deff_dbtageff_sig_ldp_3b ), btageff_sf_prim )",
+///                                      RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sig_ldp_3b, btageff_sf_prim ) ) ;
+
+///   rv_btageff_sf_sb_ldp_3b = new RooFormulaVar( "btageff_sf_sb_ldp_3b",
+///                                      "pow( exp( btageff_err * deff_dbtageff_sb_ldp_3b ), btageff_sf_prim )",
+///                                      RooArgSet( rv_btageff_err, *rv_deff_dbtageff_sb_ldp_3b, btageff_sf_prim ) ) ;
+
+
+
+
+
+
+
     //+++++++++++++ Expected counts for observables in terms of parameters ++++++++++++++++++
 
        printf(" --- Defining expected counts in terms of parameters.\n" ) ;
 
 
       rv_n_sig_1b         = new RooFormulaVar( "n_sig_1b",
-                                     "mu_ttwj_sig_1b + mu_qcd_sig_1b + mu_znn_sig_1b + eff_sf_sig_1b*( mu_susy_sig_1b)",
-                                     RooArgSet( *rv_mu_ttwj_sig_1b, *rv_mu_qcd_sig_1b, *rv_mu_znn_sig_1b, *rv_eff_sf_sig_1b, *rv_mu_susy_sig_1b ) ) ;
+                                     "mu_ttwj_sig_1b + mu_qcd_sig_1b + mu_znn_sig_1b + btageff_sf_sig_1b*eff_sf_sig_1b*( mu_susy_sig_1b)",
+                                     RooArgSet( *rv_mu_ttwj_sig_1b, *rv_mu_qcd_sig_1b, *rv_mu_znn_sig_1b, *rv_btageff_sf_sig_1b, *rv_eff_sf_sig_1b, *rv_mu_susy_sig_1b ) ) ;
 
       rv_n_sb_1b          = new RooFormulaVar( "n_sb_1b",
-                                     "mu_ttwj_sb_1b  + mu_qcd_sb_1b  + mu_znn_sb_1b  + eff_sf_sb_1b*( mu_susy_sb_1b )",
-                                     RooArgSet( *rv_mu_ttwj_sb_1b , *rv_mu_qcd_sb_1b , *rv_mu_znn_sb_1b , *rv_eff_sf_sb_1b, *rv_mu_susy_sb_1b  ) ) ;
+                                     "mu_ttwj_sb_1b  + mu_qcd_sb_1b  + mu_znn_sb_1b  + btageff_sf_sb_1b*eff_sf_sb_1b*( mu_susy_sb_1b )",
+                                     RooArgSet( *rv_mu_ttwj_sb_1b , *rv_mu_qcd_sb_1b , *rv_mu_znn_sb_1b , *rv_btageff_sf_sb_1b, *rv_eff_sf_sb_1b, *rv_mu_susy_sb_1b  ) ) ;
 
       rv_n_sig_ldp_1b     = new RooFormulaVar( "n_sig_ldp_1b",
-                                     "mu_qcd_sig_ldp_1b + eff_sf_sig_ldp_1b*( sf_mc * (mu_ttwj_sig_ldp_1b + mu_znn_sig_ldp_1b ) + mu_susy_sig_ldp_1b)",
-                                     RooArgSet( *rv_mu_qcd_sig_ldp_1b, *rv_eff_sf_sig_ldp_1b, fv_sf_mc, *rv_mu_ttwj_sig_ldp_1b, *rv_mu_znn_sig_ldp_1b, *rv_mu_susy_sig_ldp_1b ) ) ;
+                                     "mu_qcd_sig_ldp_1b + btageff_sf_sig_ldp_1b*eff_sf_sig_ldp_1b*( sf_mc * (mu_ttwj_sig_ldp_1b + mu_znn_sig_ldp_1b ) + mu_susy_sig_ldp_1b)",
+                                     RooArgSet( *rv_mu_qcd_sig_ldp_1b, *rv_btageff_sf_sig_ldp_1b, *rv_eff_sf_sig_ldp_1b, fv_sf_mc, *rv_mu_ttwj_sig_ldp_1b, *rv_mu_znn_sig_ldp_1b, *rv_mu_susy_sig_ldp_1b ) ) ;
 
       rv_n_sb_ldp_1b      = new RooFormulaVar( "n_sb_ldp_1b",
-                                     "mu_qcd_sb_ldp_1b + eff_sf_sb_ldp_1b*( sf_mc * (mu_ttwj_sb_ldp_1b + mu_znn_sb_ldp_1b ) + mu_susy_sb_ldp_1b)",
-                                     RooArgSet( *rv_mu_qcd_sb_ldp_1b, *rv_eff_sf_sb_ldp_1b, fv_sf_mc, *rv_mu_ttwj_sb_ldp_1b, *rv_mu_znn_sb_ldp_1b, *rv_mu_susy_sb_ldp_1b ) ) ;
+                                     "mu_qcd_sb_ldp_1b + btageff_sf_sb_ldp_1b*eff_sf_sb_ldp_1b*( sf_mc * (mu_ttwj_sb_ldp_1b + mu_znn_sb_ldp_1b ) + mu_susy_sb_ldp_1b)",
+                                     RooArgSet( *rv_mu_qcd_sb_ldp_1b, *rv_btageff_sf_sb_ldp_1b, *rv_eff_sf_sb_ldp_1b, fv_sf_mc, *rv_mu_ttwj_sb_ldp_1b, *rv_mu_znn_sb_ldp_1b, *rv_mu_susy_sb_ldp_1b ) ) ;
 
       rv_n_sig_sl_1b      = new RooFormulaVar( "n_sig_sl_1b",
-                                     "mu_ttwj_sig_sl_1b + eff_sf_sig_sl_1b*mu_susy_sig_sl_1b",
-                                     RooArgSet( *rv_mu_ttwj_sig_sl_1b, *rv_eff_sf_sig_sl_1b, *rv_mu_susy_sig_sl_1b ) ) ;
+                                     "mu_ttwj_sig_sl_1b + btageff_sf_sig_sl_1b*eff_sf_sig_sl_1b*mu_susy_sig_sl_1b",
+                                     RooArgSet( *rv_mu_ttwj_sig_sl_1b, *rv_btageff_sf_sig_sl_1b, *rv_eff_sf_sig_sl_1b, *rv_mu_susy_sig_sl_1b ) ) ;
 
       rv_n_sb_sl_1b       = new RooFormulaVar( "n_sb_sl_1b",
-                                     "mu_ttwj_sb_sl_1b + eff_sf_sb_sl_1b*mu_susy_sb_sl_1b",
-                                     RooArgSet( *rv_mu_ttwj_sb_sl_1b, *rv_eff_sf_sb_sl_1b, *rv_mu_susy_sb_sl_1b ) ) ;
+                                     "mu_ttwj_sb_sl_1b + btageff_sf_sb_sl_1b*eff_sf_sb_sl_1b*mu_susy_sb_sl_1b",
+                                     RooArgSet( *rv_mu_ttwj_sb_sl_1b, *rv_btageff_sf_sb_sl_1b, *rv_eff_sf_sb_sl_1b, *rv_mu_susy_sb_sl_1b ) ) ;
 
 
 
 
       rv_n_sig_2b         = new RooFormulaVar( "n_sig_2b",
-                                     "mu_ttwj_sig_2b + mu_qcd_sig_2b + mu_znn_sig_2b + eff_sf_sig_2b*( mu_susy_sig_2b)",
-                                     RooArgSet( *rv_mu_ttwj_sig_2b, *rv_mu_qcd_sig_2b, *rv_mu_znn_sig_2b, *rv_eff_sf_sig_2b, *rv_mu_susy_sig_2b ) ) ;
+                                     "mu_ttwj_sig_2b + mu_qcd_sig_2b + mu_znn_sig_2b + btageff_sf_sig_2b*eff_sf_sig_2b*( mu_susy_sig_2b)",
+                                     RooArgSet( *rv_mu_ttwj_sig_2b, *rv_mu_qcd_sig_2b, *rv_mu_znn_sig_2b, *rv_btageff_sf_sig_2b, *rv_eff_sf_sig_2b, *rv_mu_susy_sig_2b ) ) ;
 
       rv_n_sb_2b          = new RooFormulaVar( "n_sb_2b",
-                                     "mu_ttwj_sb_2b  + mu_qcd_sb_2b  + mu_znn_sb_2b  + eff_sf_sb_2b*( mu_susy_sb_2b )",
-                                     RooArgSet( *rv_mu_ttwj_sb_2b , *rv_mu_qcd_sb_2b , *rv_mu_znn_sb_2b , *rv_eff_sf_sb_2b, *rv_mu_susy_sb_2b  ) ) ;
+                                     "mu_ttwj_sb_2b  + mu_qcd_sb_2b  + mu_znn_sb_2b  + btageff_sf_sb_2b*eff_sf_sb_2b*( mu_susy_sb_2b )",
+                                     RooArgSet( *rv_mu_ttwj_sb_2b , *rv_mu_qcd_sb_2b , *rv_mu_znn_sb_2b , *rv_btageff_sf_sb_2b, *rv_eff_sf_sb_2b, *rv_mu_susy_sb_2b  ) ) ;
 
       rv_n_sig_ldp_2b     = new RooFormulaVar( "n_sig_ldp_2b",
-                                     "mu_qcd_sig_ldp_2b + eff_sf_sig_ldp_2b*( sf_mc * (mu_ttwj_sig_ldp_2b + mu_znn_sig_ldp_2b ) + mu_susy_sig_ldp_2b)",
-                                     RooArgSet( *rv_mu_qcd_sig_ldp_2b, *rv_eff_sf_sig_ldp_2b, fv_sf_mc, *rv_mu_ttwj_sig_ldp_2b, *rv_mu_znn_sig_ldp_2b, *rv_mu_susy_sig_ldp_2b ) ) ;
+                                     "mu_qcd_sig_ldp_2b + btageff_sf_sig_ldp_2b*eff_sf_sig_ldp_2b*( sf_mc * (mu_ttwj_sig_ldp_2b + mu_znn_sig_ldp_2b ) + mu_susy_sig_ldp_2b)",
+                                     RooArgSet( *rv_mu_qcd_sig_ldp_2b, *rv_btageff_sf_sig_ldp_2b, *rv_eff_sf_sig_ldp_2b, fv_sf_mc, *rv_mu_ttwj_sig_ldp_2b, *rv_mu_znn_sig_ldp_2b, *rv_mu_susy_sig_ldp_2b ) ) ;
 
       rv_n_sb_ldp_2b      = new RooFormulaVar( "n_sb_ldp_2b",
-                                     "mu_qcd_sb_ldp_2b + eff_sf_sb_ldp_2b*( sf_mc * (mu_ttwj_sb_ldp_2b + mu_znn_sb_ldp_2b ) + mu_susy_sb_ldp_2b)",
-                                     RooArgSet( *rv_mu_qcd_sb_ldp_2b, *rv_eff_sf_sb_ldp_2b, fv_sf_mc, *rv_mu_ttwj_sb_ldp_2b, *rv_mu_znn_sb_ldp_2b, *rv_mu_susy_sb_ldp_2b ) ) ;
+                                     "mu_qcd_sb_ldp_2b + btageff_sf_sb_ldp_2b*eff_sf_sb_ldp_2b*( sf_mc * (mu_ttwj_sb_ldp_2b + mu_znn_sb_ldp_2b ) + mu_susy_sb_ldp_2b)",
+                                     RooArgSet( *rv_mu_qcd_sb_ldp_2b, *rv_btageff_sf_sb_ldp_2b, *rv_eff_sf_sb_ldp_2b, fv_sf_mc, *rv_mu_ttwj_sb_ldp_2b, *rv_mu_znn_sb_ldp_2b, *rv_mu_susy_sb_ldp_2b ) ) ;
 
       rv_n_sig_sl_2b      = new RooFormulaVar( "n_sig_sl_2b",
-                                     "mu_ttwj_sig_sl_2b + eff_sf_sig_sl_2b*mu_susy_sig_sl_2b",
-                                     RooArgSet( *rv_mu_ttwj_sig_sl_2b, *rv_eff_sf_sig_sl_2b, *rv_mu_susy_sig_sl_2b ) ) ;
+                                     "mu_ttwj_sig_sl_2b + btageff_sf_sig_sl_2b*eff_sf_sig_sl_2b*mu_susy_sig_sl_2b",
+                                     RooArgSet( *rv_mu_ttwj_sig_sl_2b, *rv_btageff_sf_sig_sl_2b, *rv_eff_sf_sig_sl_2b, *rv_mu_susy_sig_sl_2b ) ) ;
 
       rv_n_sb_sl_2b       = new RooFormulaVar( "n_sb_sl_2b",
-                                     "mu_ttwj_sb_sl_2b + eff_sf_sb_sl_2b*mu_susy_sb_sl_2b",
-                                     RooArgSet( *rv_mu_ttwj_sb_sl_2b, *rv_eff_sf_sb_sl_2b, *rv_mu_susy_sb_sl_2b ) ) ;
+                                     "mu_ttwj_sb_sl_2b + btageff_sf_sb_sl_2b*eff_sf_sb_sl_2b*mu_susy_sb_sl_2b",
+                                     RooArgSet( *rv_mu_ttwj_sb_sl_2b, *rv_btageff_sf_sb_sl_2b, *rv_eff_sf_sb_sl_2b, *rv_mu_susy_sb_sl_2b ) ) ;
 
 
 
 
       rv_n_sig_3b         = new RooFormulaVar( "n_sig_3b",
-                                     "mu_ttwj_sig_3b + mu_qcd_sig_3b + mu_znn_sig_3b + eff_sf_sig_3b*( mu_susy_sig_3b)",
-                                     RooArgSet( *rv_mu_ttwj_sig_3b, *rv_mu_qcd_sig_3b, *rv_mu_znn_sig_3b, *rv_eff_sf_sig_3b, *rv_mu_susy_sig_3b ) ) ;
+                                     "mu_ttwj_sig_3b + mu_qcd_sig_3b + mu_znn_sig_3b + btageff_sf_sig_3b*eff_sf_sig_3b*( mu_susy_sig_3b)",
+                                     RooArgSet( *rv_mu_ttwj_sig_3b, *rv_mu_qcd_sig_3b, *rv_mu_znn_sig_3b, *rv_btageff_sf_sig_3b, *rv_eff_sf_sig_3b, *rv_mu_susy_sig_3b ) ) ;
 
       rv_n_sb_3b          = new RooFormulaVar( "n_sb_3b",
-                                     "mu_ttwj_sb_3b  + mu_qcd_sb_3b  + mu_znn_sb_3b  + eff_sf_sb_3b*( mu_susy_sb_3b )",
-                                     RooArgSet( *rv_mu_ttwj_sb_3b , *rv_mu_qcd_sb_3b , *rv_mu_znn_sb_3b , *rv_eff_sf_sb_3b, *rv_mu_susy_sb_3b  ) ) ;
+                                     "mu_ttwj_sb_3b  + mu_qcd_sb_3b  + mu_znn_sb_3b  + btageff_sf_sb_3b*eff_sf_sb_3b*( mu_susy_sb_3b )",
+                                     RooArgSet( *rv_mu_ttwj_sb_3b , *rv_mu_qcd_sb_3b , *rv_mu_znn_sb_3b , *rv_btageff_sf_sb_3b, *rv_eff_sf_sb_3b, *rv_mu_susy_sb_3b  ) ) ;
 
       rv_n_sig_ldp_3b     = new RooFormulaVar( "n_sig_ldp_3b",
-                                     "mu_qcd_sig_ldp_3b + eff_sf_sig_ldp_3b*( sf_mc * (mu_ttwj_sig_ldp_3b + mu_znn_sig_ldp_3b ) + mu_susy_sig_ldp_3b)",
-                                     RooArgSet( *rv_mu_qcd_sig_ldp_3b, *rv_eff_sf_sig_ldp_3b, fv_sf_mc, *rv_mu_ttwj_sig_ldp_3b, *rv_mu_znn_sig_ldp_3b, *rv_mu_susy_sig_ldp_3b ) ) ;
+                                     "mu_qcd_sig_ldp_3b + btageff_sf_sig_ldp_3b*eff_sf_sig_ldp_3b*( sf_mc * (mu_ttwj_sig_ldp_3b + mu_znn_sig_ldp_3b ) + mu_susy_sig_ldp_3b)",
+                                     RooArgSet( *rv_mu_qcd_sig_ldp_3b, *rv_btageff_sf_sig_ldp_3b, *rv_eff_sf_sig_ldp_3b, fv_sf_mc, *rv_mu_ttwj_sig_ldp_3b, *rv_mu_znn_sig_ldp_3b, *rv_mu_susy_sig_ldp_3b ) ) ;
 
       rv_n_sb_ldp_3b      = new RooFormulaVar( "n_sb_ldp_3b",
-                                     "mu_qcd_sb_ldp_3b + eff_sf_sb_ldp_3b*( sf_mc * (mu_ttwj_sb_ldp_3b + mu_znn_sb_ldp_3b ) + mu_susy_sb_ldp_3b)",
-                                     RooArgSet( *rv_mu_qcd_sb_ldp_3b, *rv_eff_sf_sb_ldp_3b, fv_sf_mc, *rv_mu_ttwj_sb_ldp_3b, *rv_mu_znn_sb_ldp_3b, *rv_mu_susy_sb_ldp_3b ) ) ;
+                                     "mu_qcd_sb_ldp_3b + btageff_sf_sb_ldp_3b*eff_sf_sb_ldp_3b*( sf_mc * (mu_ttwj_sb_ldp_3b + mu_znn_sb_ldp_3b ) + mu_susy_sb_ldp_3b)",
+                                     RooArgSet( *rv_mu_qcd_sb_ldp_3b, *rv_btageff_sf_sb_ldp_3b, *rv_eff_sf_sb_ldp_3b, fv_sf_mc, *rv_mu_ttwj_sb_ldp_3b, *rv_mu_znn_sb_ldp_3b, *rv_mu_susy_sb_ldp_3b ) ) ;
 
       rv_n_sig_sl_3b      = new RooFormulaVar( "n_sig_sl_3b",
-                                     "mu_ttwj_sig_sl_3b + eff_sf_sig_sl_3b*mu_susy_sig_sl_3b",
-                                     RooArgSet( *rv_mu_ttwj_sig_sl_3b, *rv_eff_sf_sig_sl_3b, *rv_mu_susy_sig_sl_3b ) ) ;
+                                     "mu_ttwj_sig_sl_3b + btageff_sf_sig_sl_3b*eff_sf_sig_sl_3b*mu_susy_sig_sl_3b",
+                                     RooArgSet( *rv_mu_ttwj_sig_sl_3b, *rv_btageff_sf_sig_sl_3b, *rv_eff_sf_sig_sl_3b, *rv_mu_susy_sig_sl_3b ) ) ;
 
       rv_n_sb_sl_3b       = new RooFormulaVar( "n_sb_sl_3b",
-                                     "mu_ttwj_sb_sl_3b + eff_sf_sb_sl_3b*mu_susy_sb_sl_3b",
-                                     RooArgSet( *rv_mu_ttwj_sb_sl_3b, *rv_eff_sf_sb_sl_3b, *rv_mu_susy_sb_sl_3b ) ) ;
+                                     "mu_ttwj_sb_sl_3b + btageff_sf_sb_sl_3b*eff_sf_sb_sl_3b*mu_susy_sb_sl_3b",
+                                     RooArgSet( *rv_mu_ttwj_sb_sl_3b, *rv_btageff_sf_sb_sl_3b, *rv_eff_sf_sb_sl_3b, *rv_mu_susy_sb_sl_3b ) ) ;
 
 
 
@@ -2413,7 +2796,10 @@
    //===================================================================================================================================
 
 
-    bool ra2bRoostatsClass9::setSusyScanPoint( const char* inputScanFile, double m0, double m12, bool isT1bbbb, double t1bbbbXsec ) {
+    bool ra2bRoostatsClass9::setSusyScanPoint( const char* inputScanFile,
+                                               double m0, double m12, bool isT1bbbb, double t1bbbbXsec,
+                                               const char* inputSusy_deff_dbtageff_file
+                                             ) {
 
 
        //--- Aug 15, 2011: updated to new format for AN, v3.
@@ -2884,11 +3270,111 @@
 
        fclose( infp ) ;
 
+       if ( !found ) {
+          printf("\n\n *** Point not found in scan.\n\n" ) ;
+          return false ;
+       }
+
+
+
+
+
+
+       //----- Now, read in the deff_dbtageff numbers.
+
+
+       printf("\n\n Opening SUSY deff_dbtageff input file : %s\n", inputSusy_deff_dbtageff_file ) ;
+
+       if ( (infp=fopen( inputSusy_deff_dbtageff_file,"r"))==NULL ) {
+          printf("\n\n *** Problem opening input file: %s.\n\n", inputSusy_deff_dbtageff_file ) ;
+          return false ;
+       }
+
+       while ( !feof( infp ) ) {
+
+          float pointM0, pointM12 ;
+
+          float  deff_dbtageff_sig_1b, deff_dbtageff_sb_1b, deff_dbtageff_sig_sl_1b, deff_dbtageff_sb_sl_1b, deff_dbtageff_sig_ldp_1b, deff_dbtageff_sb_ldp_1b ;
+          float  deff_dbtageff_sig_2b, deff_dbtageff_sb_2b, deff_dbtageff_sig_sl_2b, deff_dbtageff_sb_sl_2b, deff_dbtageff_sig_ldp_2b, deff_dbtageff_sb_ldp_2b ;
+          float  deff_dbtageff_sig_3b, deff_dbtageff_sb_3b, deff_dbtageff_sig_sl_3b, deff_dbtageff_sb_sl_3b, deff_dbtageff_sig_ldp_3b, deff_dbtageff_sb_ldp_3b ;
+
+          fscanf( infp, "%f %f   %f %f %f %f %f %f   %f %f %f %f %f %f   %f %f %f %f %f %f",
+            &pointM0, &pointM12,
+            &deff_dbtageff_sig_1b, &deff_dbtageff_sb_1b, &deff_dbtageff_sig_sl_1b, &deff_dbtageff_sb_sl_1b, &deff_dbtageff_sig_ldp_1b, &deff_dbtageff_sb_ldp_1b,
+            &deff_dbtageff_sig_2b, &deff_dbtageff_sb_2b, &deff_dbtageff_sig_sl_2b, &deff_dbtageff_sb_sl_2b, &deff_dbtageff_sig_ldp_2b, &deff_dbtageff_sb_ldp_2b,
+            &deff_dbtageff_sig_3b, &deff_dbtageff_sb_3b, &deff_dbtageff_sig_sl_3b, &deff_dbtageff_sb_sl_3b, &deff_dbtageff_sig_ldp_3b, &deff_dbtageff_sb_ldp_3b
+          ) ;
+
+          printf("  pointM0 = %g , pointM12 = %g\n", pointM0, pointM12 ) ;
+          if (    fabs( pointM0 - m0 ) <= deltaM0/2.
+               && fabs( pointM12 - m12 ) <= deltaM12/2. ) {
+
+             printf("\n\n") ;
+             printf(" Setting susy deff_dbtageff_sig_1b     to  %7.1f\n", deff_dbtageff_sig_1b       ) ;
+             printf(" Setting susy deff_dbtageff_sb_1b      to  %7.1f\n", deff_dbtageff_sb_1b        ) ;
+             printf(" Setting susy deff_dbtageff_sig_sl_1b  to  %7.1f\n", deff_dbtageff_sig_sl_1b    ) ;
+             printf(" Setting susy deff_dbtageff_sb_sl_1b   to  %7.1f\n", deff_dbtageff_sb_sl_1b     ) ;
+             printf(" Setting susy deff_dbtageff_sig_ldp_1b to  %7.1f\n", deff_dbtageff_sig_ldp_1b   ) ;
+             printf(" Setting susy deff_dbtageff_sb_ldp_1b  to  %7.1f\n", deff_dbtageff_sb_ldp_1b    ) ;
+             printf("\n\n") ;
+             printf(" Setting susy deff_dbtageff_sig_2b     to  %7.1f\n", deff_dbtageff_sig_2b       ) ;
+             printf(" Setting susy deff_dbtageff_sb_2b      to  %7.1f\n", deff_dbtageff_sb_2b        ) ;
+             printf(" Setting susy deff_dbtageff_sig_sl_2b  to  %7.1f\n", deff_dbtageff_sig_sl_2b    ) ;
+             printf(" Setting susy deff_dbtageff_sb_sl_2b   to  %7.1f\n", deff_dbtageff_sb_sl_2b     ) ;
+             printf(" Setting susy deff_dbtageff_sig_ldp_2b to  %7.1f\n", deff_dbtageff_sig_ldp_2b   ) ;
+             printf(" Setting susy deff_dbtageff_sb_ldp_2b  to  %7.1f\n", deff_dbtageff_sb_ldp_2b    ) ;
+             printf("\n\n") ;
+             printf(" Setting susy deff_dbtageff_sig_3b     to  %7.1f\n", deff_dbtageff_sig_3b       ) ;
+             printf(" Setting susy deff_dbtageff_sb_3b      to  %7.1f\n", deff_dbtageff_sb_3b        ) ;
+             printf(" Setting susy deff_dbtageff_sig_sl_3b  to  %7.1f\n", deff_dbtageff_sig_sl_3b    ) ;
+             printf(" Setting susy deff_dbtageff_sb_sl_3b   to  %7.1f\n", deff_dbtageff_sb_sl_3b     ) ;
+             printf(" Setting susy deff_dbtageff_sig_ldp_3b to  %7.1f\n", deff_dbtageff_sig_ldp_3b   ) ;
+             printf(" Setting susy deff_dbtageff_sb_ldp_3b  to  %7.1f\n", deff_dbtageff_sb_ldp_3b    ) ;
+             printf("\n\n") ;
+
+             rv_deff_dbtageff_sig_1b      -> setVal( deff_dbtageff_sig_1b       ) ;
+             rv_deff_dbtageff_sb_1b       -> setVal( deff_dbtageff_sb_1b        ) ;
+             rv_deff_dbtageff_sig_sl_1b   -> setVal( deff_dbtageff_sig_sl_1b    ) ;
+             rv_deff_dbtageff_sb_sl_1b    -> setVal( deff_dbtageff_sb_sl_1b     ) ;
+             rv_deff_dbtageff_sig_ldp_1b  -> setVal( deff_dbtageff_sig_ldp_1b   ) ;
+             rv_deff_dbtageff_sb_ldp_1b   -> setVal( deff_dbtageff_sb_ldp_1b    ) ;
+
+             rv_deff_dbtageff_sig_2b      -> setVal( deff_dbtageff_sig_2b       ) ;
+             rv_deff_dbtageff_sb_2b       -> setVal( deff_dbtageff_sb_2b        ) ;
+             rv_deff_dbtageff_sig_sl_2b   -> setVal( deff_dbtageff_sig_sl_2b    ) ;
+             rv_deff_dbtageff_sb_sl_2b    -> setVal( deff_dbtageff_sb_sl_2b     ) ;
+             rv_deff_dbtageff_sig_ldp_2b  -> setVal( deff_dbtageff_sig_ldp_2b   ) ;
+             rv_deff_dbtageff_sb_ldp_2b   -> setVal( deff_dbtageff_sb_ldp_2b    ) ;
+
+             rv_deff_dbtageff_sig_3b      -> setVal( deff_dbtageff_sig_3b       ) ;
+             rv_deff_dbtageff_sb_3b       -> setVal( deff_dbtageff_sb_3b        ) ;
+             rv_deff_dbtageff_sig_sl_3b   -> setVal( deff_dbtageff_sig_sl_3b    ) ;
+             rv_deff_dbtageff_sb_sl_3b    -> setVal( deff_dbtageff_sb_sl_3b     ) ;
+             rv_deff_dbtageff_sig_ldp_3b  -> setVal( deff_dbtageff_sig_ldp_3b   ) ;
+             rv_deff_dbtageff_sb_ldp_3b   -> setVal( deff_dbtageff_sb_ldp_3b    ) ;
+
+
+
+             found = true ;
+
+             break ;
+
+          }
+
+          if ( feof(infp) ) break ;
+
+       } // not eof
+
+
+
        if ( found ) {
           return true ;
        } else {
           printf("\n\n *** Point not found in scan.\n\n" ) ;
           return false ;
        }
+
+
+
 
     } // setSusyScanPoint.

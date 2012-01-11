@@ -99,4 +99,4 @@ sf_ee            1.000
 sf_ee_err        0.176
 sf_mm            1.000
 sf_mm_err        0.242
-btageff_err        0.127
+btageff_err        0.001

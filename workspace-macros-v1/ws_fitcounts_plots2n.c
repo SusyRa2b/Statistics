@@ -260,6 +260,7 @@
        double mu_qcd_sig_1b      = ((RooRealVar*) ws->obj("mu_qcd_sig_1b"     )) -> getVal() ;
        double mu_susy_sig_1b     = ((RooRealVar*) ws->obj("mu_susy_sig_1b"    )) -> getVal() ;
        double eff_sf_sig_1b      = ((RooRealVar*) ws->obj("eff_sf_sig_1b"     )) -> getVal() ;
+       double btageff_sf_sig_1b      = ((RooRealVar*) ws->obj("btageff_sf_sig_1b"     )) -> getVal() ;
 
        double n_sig_2b     = ((RooRealVar*) ws->obj("n_sig_2b"    )) -> getVal() ;
        double mu_ttwj_sig_2b     = ((RooRealVar*) ws->obj("mu_ttwj_sig_2b"    )) -> getVal() ;
@@ -267,6 +268,7 @@
        double mu_qcd_sig_2b      = ((RooRealVar*) ws->obj("mu_qcd_sig_2b"     )) -> getVal() ;
        double mu_susy_sig_2b     = ((RooRealVar*) ws->obj("mu_susy_sig_2b"    )) -> getVal() ;
        double eff_sf_sig_2b      = ((RooRealVar*) ws->obj("eff_sf_sig_2b"     )) -> getVal() ;
+       double btageff_sf_sig_2b      = ((RooRealVar*) ws->obj("btageff_sf_sig_2b"     )) -> getVal() ;
 
        double n_sig_3b     = ((RooRealVar*) ws->obj("n_sig_3b"    )) -> getVal() ;
        double mu_ttwj_sig_3b     = ((RooRealVar*) ws->obj("mu_ttwj_sig_3b"    )) -> getVal() ;
@@ -274,6 +276,7 @@
        double mu_qcd_sig_3b      = ((RooRealVar*) ws->obj("mu_qcd_sig_3b"     )) -> getVal() ;
        double mu_susy_sig_3b     = ((RooRealVar*) ws->obj("mu_susy_sig_3b"    )) -> getVal() ;
        double eff_sf_sig_3b      = ((RooRealVar*) ws->obj("eff_sf_sig_3b"     )) -> getVal() ;
+       double btageff_sf_sig_3b      = ((RooRealVar*) ws->obj("btageff_sf_sig_3b"     )) -> getVal() ;
 
 
 
@@ -283,6 +286,7 @@
        double mu_qcd_sb_1b      = ((RooRealVar*) ws->obj("mu_qcd_sb_1b"     )) -> getVal() ;
        double mu_susy_sb_1b     = ((RooRealVar*) ws->obj("mu_susy_sb_1b"    )) -> getVal() ;
        double eff_sf_sb_1b      = ((RooRealVar*) ws->obj("eff_sf_sb_1b"     )) -> getVal() ;
+       double btageff_sf_sb_1b      = ((RooRealVar*) ws->obj("btageff_sf_sb_1b"     )) -> getVal() ;
 
        double n_sb_2b     = ((RooRealVar*) ws->obj("n_sb_2b"    )) -> getVal() ;
        double mu_ttwj_sb_2b     = ((RooRealVar*) ws->obj("mu_ttwj_sb_2b"    )) -> getVal() ;
@@ -290,6 +294,7 @@
        double mu_qcd_sb_2b      = ((RooRealVar*) ws->obj("mu_qcd_sb_2b"     )) -> getVal() ;
        double mu_susy_sb_2b     = ((RooRealVar*) ws->obj("mu_susy_sb_2b"    )) -> getVal() ;
        double eff_sf_sb_2b      = ((RooRealVar*) ws->obj("eff_sf_sb_2b"     )) -> getVal() ;
+       double btageff_sf_sb_2b      = ((RooRealVar*) ws->obj("btageff_sf_sb_2b"     )) -> getVal() ;
 
        double n_sb_3b     = ((RooRealVar*) ws->obj("n_sb_3b"    )) -> getVal() ;
        double mu_ttwj_sb_3b     = ((RooRealVar*) ws->obj("mu_ttwj_sb_3b"    )) -> getVal() ;
@@ -297,6 +302,7 @@
        double mu_qcd_sb_3b      = ((RooRealVar*) ws->obj("mu_qcd_sb_3b"     )) -> getVal() ;
        double mu_susy_sb_3b     = ((RooRealVar*) ws->obj("mu_susy_sb_3b"    )) -> getVal() ;
        double eff_sf_sb_3b      = ((RooRealVar*) ws->obj("eff_sf_sb_3b"     )) -> getVal() ;
+       double btageff_sf_sb_3b      = ((RooRealVar*) ws->obj("btageff_sf_sb_3b"     )) -> getVal() ;
 
 
 
@@ -304,16 +310,19 @@
        double mu_ttwj_sig_sl_1b     = ((RooRealVar*) ws->obj("mu_ttwj_sig_sl_1b"    )) -> getVal() ;
        double mu_susy_sig_sl_1b     = ((RooRealVar*) ws->obj("mu_susy_sig_sl_1b"    )) -> getVal() ;
        double eff_sf_sig_sl_1b      = ((RooRealVar*) ws->obj("eff_sf_sig_sl_1b"     )) -> getVal() ;
+       double btageff_sf_sig_sl_1b      = ((RooRealVar*) ws->obj("btageff_sf_sig_sl_1b"     )) -> getVal() ;
 
        double n_sig_sl_2b     = ((RooRealVar*) ws->obj("n_sig_sl_2b"    )) -> getVal() ;
        double mu_ttwj_sig_sl_2b     = ((RooRealVar*) ws->obj("mu_ttwj_sig_sl_2b"    )) -> getVal() ;
        double mu_susy_sig_sl_2b     = ((RooRealVar*) ws->obj("mu_susy_sig_sl_2b"    )) -> getVal() ;
        double eff_sf_sig_sl_2b      = ((RooRealVar*) ws->obj("eff_sf_sig_sl_2b"     )) -> getVal() ;
+       double btageff_sf_sig_sl_2b      = ((RooRealVar*) ws->obj("btageff_sf_sig_sl_2b"     )) -> getVal() ;
 
        double n_sig_sl_3b     = ((RooRealVar*) ws->obj("n_sig_sl_3b"    )) -> getVal() ;
        double mu_ttwj_sig_sl_3b     = ((RooRealVar*) ws->obj("mu_ttwj_sig_sl_3b"    )) -> getVal() ;
        double mu_susy_sig_sl_3b     = ((RooRealVar*) ws->obj("mu_susy_sig_sl_3b"    )) -> getVal() ;
        double eff_sf_sig_sl_3b      = ((RooRealVar*) ws->obj("eff_sf_sig_sl_3b"     )) -> getVal() ;
+       double btageff_sf_sig_sl_3b      = ((RooRealVar*) ws->obj("btageff_sf_sig_sl_3b"     )) -> getVal() ;
 
 
 
@@ -323,16 +332,19 @@
        double mu_ttwj_sb_sl_1b     = ((RooRealVar*) ws->obj("mu_ttwj_sb_sl_1b"    )) -> getVal() ;
        double mu_susy_sb_sl_1b     = ((RooRealVar*) ws->obj("mu_susy_sb_sl_1b"    )) -> getVal() ;
        double eff_sf_sb_sl_1b      = ((RooRealVar*) ws->obj("eff_sf_sb_sl_1b"     )) -> getVal() ;
+       double btageff_sf_sb_sl_1b      = ((RooRealVar*) ws->obj("btageff_sf_sb_sl_1b"     )) -> getVal() ;
 
        double n_sb_sl_2b     = ((RooRealVar*) ws->obj("n_sb_sl_2b"    )) -> getVal() ;
        double mu_ttwj_sb_sl_2b     = ((RooRealVar*) ws->obj("mu_ttwj_sb_sl_2b"    )) -> getVal() ;
        double mu_susy_sb_sl_2b     = ((RooRealVar*) ws->obj("mu_susy_sb_sl_2b"    )) -> getVal() ;
        double eff_sf_sb_sl_2b      = ((RooRealVar*) ws->obj("eff_sf_sb_sl_2b"     )) -> getVal() ;
+       double btageff_sf_sb_sl_2b      = ((RooRealVar*) ws->obj("btageff_sf_sb_sl_2b"     )) -> getVal() ;
 
        double n_sb_sl_3b     = ((RooRealVar*) ws->obj("n_sb_sl_3b"    )) -> getVal() ;
        double mu_ttwj_sb_sl_3b     = ((RooRealVar*) ws->obj("mu_ttwj_sb_sl_3b"    )) -> getVal() ;
        double mu_susy_sb_sl_3b     = ((RooRealVar*) ws->obj("mu_susy_sb_sl_3b"    )) -> getVal() ;
        double eff_sf_sb_sl_3b      = ((RooRealVar*) ws->obj("eff_sf_sb_sl_3b"     )) -> getVal() ;
+       double btageff_sf_sb_sl_3b      = ((RooRealVar*) ws->obj("btageff_sf_sb_sl_3b"     )) -> getVal() ;
 
 
 
@@ -346,6 +358,7 @@
        double mu_qcd_sig_ldp_1b      = ((RooRealVar*) ws->obj("mu_qcd_sig_ldp_1b"     )) -> getVal() ;
        double mu_susy_sig_ldp_1b     = ((RooRealVar*) ws->obj("mu_susy_sig_ldp_1b"    )) -> getVal() ;
        double eff_sf_sig_ldp_1b      = ((RooRealVar*) ws->obj("eff_sf_sig_ldp_1b"     )) -> getVal() ;
+       double btageff_sf_sig_ldp_1b      = ((RooRealVar*) ws->obj("btageff_sf_sig_ldp_1b"     )) -> getVal() ;
 
        double n_sig_ldp_2b     = ((RooRealVar*) ws->obj("n_sig_ldp_2b"    )) -> getVal() ;
        double mu_ttwj_sig_ldp_2b     = ((RooRealVar*) ws->obj("mu_ttwj_sig_ldp_2b"    )) -> getVal() ;
@@ -353,6 +366,7 @@
        double mu_qcd_sig_ldp_2b      = ((RooRealVar*) ws->obj("mu_qcd_sig_ldp_2b"     )) -> getVal() ;
        double mu_susy_sig_ldp_2b     = ((RooRealVar*) ws->obj("mu_susy_sig_ldp_2b"    )) -> getVal() ;
        double eff_sf_sig_ldp_2b      = ((RooRealVar*) ws->obj("eff_sf_sig_ldp_2b"     )) -> getVal() ;
+       double btageff_sf_sig_ldp_2b      = ((RooRealVar*) ws->obj("btageff_sf_sig_ldp_2b"     )) -> getVal() ;
 
        double n_sig_ldp_3b     = ((RooRealVar*) ws->obj("n_sig_ldp_3b"    )) -> getVal() ;
        double mu_ttwj_sig_ldp_3b     = ((RooRealVar*) ws->obj("mu_ttwj_sig_ldp_3b"    )) -> getVal() ;
@@ -360,6 +374,7 @@
        double mu_qcd_sig_ldp_3b      = ((RooRealVar*) ws->obj("mu_qcd_sig_ldp_3b"     )) -> getVal() ;
        double mu_susy_sig_ldp_3b     = ((RooRealVar*) ws->obj("mu_susy_sig_ldp_3b"    )) -> getVal() ;
        double eff_sf_sig_ldp_3b      = ((RooRealVar*) ws->obj("eff_sf_sig_ldp_3b"     )) -> getVal() ;
+       double btageff_sf_sig_ldp_3b      = ((RooRealVar*) ws->obj("btageff_sf_sig_ldp_3b"     )) -> getVal() ;
 
 
 
@@ -370,6 +385,7 @@
        double mu_qcd_sb_ldp_1b      = ((RooRealVar*) ws->obj("mu_qcd_sb_ldp_1b"     )) -> getVal() ;
        double mu_susy_sb_ldp_1b     = ((RooRealVar*) ws->obj("mu_susy_sb_ldp_1b"    )) -> getVal() ;
        double eff_sf_sb_ldp_1b      = ((RooRealVar*) ws->obj("eff_sf_sb_ldp_1b"     )) -> getVal() ;
+       double btageff_sf_sb_ldp_1b      = ((RooRealVar*) ws->obj("btageff_sf_sb_ldp_1b"     )) -> getVal() ;
 
        double n_sb_ldp_2b     = ((RooRealVar*) ws->obj("n_sb_ldp_2b"    )) -> getVal() ;
        double mu_ttwj_sb_ldp_2b     = ((RooRealVar*) ws->obj("mu_ttwj_sb_ldp_2b"    )) -> getVal() ;
@@ -377,6 +393,7 @@
        double mu_qcd_sb_ldp_2b      = ((RooRealVar*) ws->obj("mu_qcd_sb_ldp_2b"     )) -> getVal() ;
        double mu_susy_sb_ldp_2b     = ((RooRealVar*) ws->obj("mu_susy_sb_ldp_2b"    )) -> getVal() ;
        double eff_sf_sb_ldp_2b      = ((RooRealVar*) ws->obj("eff_sf_sb_ldp_2b"     )) -> getVal() ;
+       double btageff_sf_sb_ldp_2b      = ((RooRealVar*) ws->obj("btageff_sf_sb_ldp_2b"     )) -> getVal() ;
 
        double n_sb_ldp_3b     = ((RooRealVar*) ws->obj("n_sb_ldp_3b"    )) -> getVal() ;
        double mu_ttwj_sb_ldp_3b     = ((RooRealVar*) ws->obj("mu_ttwj_sb_ldp_3b"    )) -> getVal() ;
@@ -384,6 +401,7 @@
        double mu_qcd_sb_ldp_3b      = ((RooRealVar*) ws->obj("mu_qcd_sb_ldp_3b"     )) -> getVal() ;
        double mu_susy_sb_ldp_3b     = ((RooRealVar*) ws->obj("mu_susy_sb_ldp_3b"    )) -> getVal() ;
        double eff_sf_sb_ldp_3b      = ((RooRealVar*) ws->obj("eff_sf_sb_ldp_3b"     )) -> getVal() ;
+       double btageff_sf_sb_ldp_3b      = ((RooRealVar*) ws->obj("btageff_sf_sb_ldp_3b"     )) -> getVal() ;
 
 
 
@@ -405,13 +423,13 @@
        hfitcounts_ttwj->SetBinContent(4,2, mu_ttwj_sb_sl_2b ) ;
        hfitcounts_ttwj->SetBinContent(4,3, mu_ttwj_sb_sl_3b ) ;
 
-       hfitcounts_ttwj->SetBinContent(5,1, eff_sf_sig_ldp_1b * sf_mc * mu_ttwj_sig_ldp_1b ) ;
-       hfitcounts_ttwj->SetBinContent(5,2, eff_sf_sig_ldp_2b * sf_mc * mu_ttwj_sig_ldp_2b ) ;
-       hfitcounts_ttwj->SetBinContent(5,3, eff_sf_sig_ldp_3b * sf_mc * mu_ttwj_sig_ldp_3b ) ;
+       hfitcounts_ttwj->SetBinContent(5,1, btageff_sf_sig_ldp_1b * eff_sf_sig_ldp_1b * sf_mc * mu_ttwj_sig_ldp_1b ) ;
+       hfitcounts_ttwj->SetBinContent(5,2, btageff_sf_sig_ldp_2b * eff_sf_sig_ldp_2b * sf_mc * mu_ttwj_sig_ldp_2b ) ;
+       hfitcounts_ttwj->SetBinContent(5,3, btageff_sf_sig_ldp_3b * eff_sf_sig_ldp_3b * sf_mc * mu_ttwj_sig_ldp_3b ) ;
 
-       hfitcounts_ttwj->SetBinContent(6,1, eff_sf_sb_ldp_1b * sf_mc * mu_ttwj_sb_ldp_1b ) ;
-       hfitcounts_ttwj->SetBinContent(6,2, eff_sf_sb_ldp_2b * sf_mc * mu_ttwj_sb_ldp_2b ) ;
-       hfitcounts_ttwj->SetBinContent(6,3, eff_sf_sb_ldp_3b * sf_mc * mu_ttwj_sb_ldp_3b ) ;
+       hfitcounts_ttwj->SetBinContent(6,1, btageff_sf_sb_ldp_1b * eff_sf_sb_ldp_1b * sf_mc * mu_ttwj_sb_ldp_1b ) ;
+       hfitcounts_ttwj->SetBinContent(6,2, btageff_sf_sb_ldp_2b * eff_sf_sb_ldp_2b * sf_mc * mu_ttwj_sb_ldp_2b ) ;
+       hfitcounts_ttwj->SetBinContent(6,3, btageff_sf_sb_ldp_3b * eff_sf_sb_ldp_3b * sf_mc * mu_ttwj_sb_ldp_3b ) ;
 
 
 
@@ -434,13 +452,13 @@
        hfitcounts_znn->SetBinContent(4,2, 0 ) ;
        hfitcounts_znn->SetBinContent(4,3, 0 ) ;
 
-       hfitcounts_znn->SetBinContent(5,1, eff_sf_sig_ldp_1b * sf_mc * mu_znn_sig_ldp_1b ) ;
-       hfitcounts_znn->SetBinContent(5,2, eff_sf_sig_ldp_2b * sf_mc * mu_znn_sig_ldp_2b ) ;
-       hfitcounts_znn->SetBinContent(5,3, eff_sf_sig_ldp_3b * sf_mc * mu_znn_sig_ldp_3b ) ;
+       hfitcounts_znn->SetBinContent(5,1, btageff_sf_sig_ldp_1b * eff_sf_sig_ldp_1b * sf_mc * mu_znn_sig_ldp_1b ) ;
+       hfitcounts_znn->SetBinContent(5,2, btageff_sf_sig_ldp_2b * eff_sf_sig_ldp_2b * sf_mc * mu_znn_sig_ldp_2b ) ;
+       hfitcounts_znn->SetBinContent(5,3, btageff_sf_sig_ldp_3b * eff_sf_sig_ldp_3b * sf_mc * mu_znn_sig_ldp_3b ) ;
 
-       hfitcounts_znn->SetBinContent(6,1, eff_sf_sb_ldp_1b * sf_mc * mu_znn_sb_ldp_1b ) ;
-       hfitcounts_znn->SetBinContent(6,2, eff_sf_sb_ldp_2b * sf_mc * mu_znn_sb_ldp_2b ) ;
-       hfitcounts_znn->SetBinContent(6,3, eff_sf_sb_ldp_3b * sf_mc * mu_znn_sb_ldp_3b ) ;
+       hfitcounts_znn->SetBinContent(6,1, btageff_sf_sb_ldp_1b * eff_sf_sb_ldp_1b * sf_mc * mu_znn_sb_ldp_1b ) ;
+       hfitcounts_znn->SetBinContent(6,2, btageff_sf_sb_ldp_2b * eff_sf_sb_ldp_2b * sf_mc * mu_znn_sb_ldp_2b ) ;
+       hfitcounts_znn->SetBinContent(6,3, btageff_sf_sb_ldp_3b * eff_sf_sb_ldp_3b * sf_mc * mu_znn_sb_ldp_3b ) ;
 
 
 
@@ -475,29 +493,29 @@
 
 
 
-       hfitcounts_susy->SetBinContent(1,1, eff_sf_sig_1b * mu_susy_sig_1b ) ;
-       hfitcounts_susy->SetBinContent(1,2, eff_sf_sig_2b * mu_susy_sig_2b ) ;
-       hfitcounts_susy->SetBinContent(1,3, eff_sf_sig_3b * mu_susy_sig_3b ) ;
+       hfitcounts_susy->SetBinContent(1,1, btageff_sf_sig_1b * eff_sf_sig_1b * mu_susy_sig_1b ) ;
+       hfitcounts_susy->SetBinContent(1,2, btageff_sf_sig_2b * eff_sf_sig_2b * mu_susy_sig_2b ) ;
+       hfitcounts_susy->SetBinContent(1,3, btageff_sf_sig_3b * eff_sf_sig_3b * mu_susy_sig_3b ) ;
 
-       hfitcounts_susy->SetBinContent(2,1, eff_sf_sb_1b * mu_susy_sb_1b ) ;
-       hfitcounts_susy->SetBinContent(2,2, eff_sf_sb_2b * mu_susy_sb_2b ) ;
-       hfitcounts_susy->SetBinContent(2,3, eff_sf_sb_3b * mu_susy_sb_3b ) ;
+       hfitcounts_susy->SetBinContent(2,1, btageff_sf_sb_1b * eff_sf_sb_1b * mu_susy_sb_1b ) ;
+       hfitcounts_susy->SetBinContent(2,2, btageff_sf_sb_2b * eff_sf_sb_2b * mu_susy_sb_2b ) ;
+       hfitcounts_susy->SetBinContent(2,3, btageff_sf_sb_3b * eff_sf_sb_3b * mu_susy_sb_3b ) ;
 
-       hfitcounts_susy->SetBinContent(3,1, eff_sf_sig_sl_1b * mu_susy_sig_sl_1b ) ;
-       hfitcounts_susy->SetBinContent(3,2, eff_sf_sig_sl_2b * mu_susy_sig_sl_2b ) ;
-       hfitcounts_susy->SetBinContent(3,3, eff_sf_sig_sl_3b * mu_susy_sig_sl_3b ) ;
+       hfitcounts_susy->SetBinContent(3,1, btageff_sf_sig_sl_1b * eff_sf_sig_sl_1b * mu_susy_sig_sl_1b ) ;
+       hfitcounts_susy->SetBinContent(3,2, btageff_sf_sig_sl_2b * eff_sf_sig_sl_2b * mu_susy_sig_sl_2b ) ;
+       hfitcounts_susy->SetBinContent(3,3, btageff_sf_sig_sl_3b * eff_sf_sig_sl_3b * mu_susy_sig_sl_3b ) ;
 
-       hfitcounts_susy->SetBinContent(4,1, eff_sf_sb_sl_1b * mu_susy_sb_sl_1b ) ;
-       hfitcounts_susy->SetBinContent(4,2, eff_sf_sb_sl_2b * mu_susy_sb_sl_2b ) ;
-       hfitcounts_susy->SetBinContent(4,3, eff_sf_sb_sl_3b * mu_susy_sb_sl_3b ) ;
+       hfitcounts_susy->SetBinContent(4,1, btageff_sf_sb_sl_1b * eff_sf_sb_sl_1b * mu_susy_sb_sl_1b ) ;
+       hfitcounts_susy->SetBinContent(4,2, btageff_sf_sb_sl_2b * eff_sf_sb_sl_2b * mu_susy_sb_sl_2b ) ;
+       hfitcounts_susy->SetBinContent(4,3, btageff_sf_sb_sl_3b * eff_sf_sb_sl_3b * mu_susy_sb_sl_3b ) ;
 
-       hfitcounts_susy->SetBinContent(5,1, eff_sf_sig_ldp_1b * mu_susy_sig_ldp_1b ) ;
-       hfitcounts_susy->SetBinContent(5,2, eff_sf_sig_ldp_2b * mu_susy_sig_ldp_2b ) ;
-       hfitcounts_susy->SetBinContent(5,3, eff_sf_sig_ldp_3b * mu_susy_sig_ldp_3b ) ;
+       hfitcounts_susy->SetBinContent(5,1, btageff_sf_sig_ldp_1b * eff_sf_sig_ldp_1b * mu_susy_sig_ldp_1b ) ;
+       hfitcounts_susy->SetBinContent(5,2, btageff_sf_sig_ldp_2b * eff_sf_sig_ldp_2b * mu_susy_sig_ldp_2b ) ;
+       hfitcounts_susy->SetBinContent(5,3, btageff_sf_sig_ldp_3b * eff_sf_sig_ldp_3b * mu_susy_sig_ldp_3b ) ;
 
-       hfitcounts_susy->SetBinContent(6,1, eff_sf_sb_ldp_1b * mu_susy_sb_ldp_1b ) ;
-       hfitcounts_susy->SetBinContent(6,2, eff_sf_sb_ldp_2b * mu_susy_sb_ldp_2b ) ;
-       hfitcounts_susy->SetBinContent(6,3, eff_sf_sb_ldp_3b * mu_susy_sb_ldp_3b ) ;
+       hfitcounts_susy->SetBinContent(6,1, btageff_sf_sb_ldp_1b * eff_sf_sb_ldp_1b * mu_susy_sb_ldp_1b ) ;
+       hfitcounts_susy->SetBinContent(6,2, btageff_sf_sb_ldp_2b * eff_sf_sb_ldp_2b * mu_susy_sb_ldp_2b ) ;
+       hfitcounts_susy->SetBinContent(6,3, btageff_sf_sb_ldp_3b * eff_sf_sb_ldp_3b * mu_susy_sb_ldp_3b ) ;
 
 
 
