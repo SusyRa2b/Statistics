@@ -45,10 +45,10 @@
        char sel[100] ;
        if ( strstr( wsfile, "1BL" ) != 0 ) {
           sprintf( sel, "Loose HT,MET" ) ;
-       } else if ( strstr( wsfile, "1BT" ) != 0 ) {
-          sprintf( sel, "1BT" ) ;
-       } else if ( strstr( wsfile, "2BL" ) != 0 ) {
-          sprintf( sel, "2BL" ) ;
+       } else if ( strstr( wsfile, "tightHT" ) != 0 ) {
+          sprintf( sel, "Tight HT" ) ;
+       } else if ( strstr( wsfile, "tightMET" ) != 0 ) {
+          sprintf( sel, "Tight MET" ) ;
        } else if ( strstr( wsfile, "2BT" ) != 0 ) {
           sprintf( sel, "2BT" ) ;
        } else if ( strstr( wsfile, "3B" ) != 0 ) {
