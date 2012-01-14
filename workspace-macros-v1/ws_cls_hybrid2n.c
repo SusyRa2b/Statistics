@@ -1667,12 +1667,25 @@
           double initval_mu_ttwj_sb_1b = rrv_Nsb_1b->getVal() - mu_qcd_sb_1b->getVal() - fv_mu_znn_sb_1b->getVal() - btageff_sf_sb_1b->getVal() * eff_sf_sb_1b->getVal() * mu_susy_sb_1b->getVal() ;
           if ( initval_mu_ttwj_sb_1b < 0. ) { initval_mu_ttwj_sb_1b = 0. ; }
           fv_mu_ttwj_sb_1b -> setVal( initval_mu_ttwj_sb_1b ) ;
+          printf("  initializeFitpars: setting mu_ttwj_sb_1b = Nsb_1b - qcd - znn - susy = %.0f - %.1f - %.1f - %.1f = %.1f\n",
+                 rrv_Nsb_1b->getVal(),  mu_qcd_sb_1b->getVal(), fv_mu_znn_sb_1b->getVal(), btageff_sf_sb_1b->getVal() * eff_sf_sb_1b->getVal() * mu_susy_sb_1b->getVal(),
+                 initval_mu_ttwj_sb_1b
+                  ) ;
+          double computed_ttwj_sig_1b = 0. ;
+          if ( fv_mu_ttwj_sb_sl_1b->getVal() > 0.) {
+             computed_ttwj_sig_1b = initval_mu_ttwj_sb_1b * (sf_ttwj_sig_1b->getVal()) * ( (fv_mu_ttwj_sig_sl_1b->getVal()) / (fv_mu_ttwj_sb_sl_1b->getVal()) ) ;
+          }
+          printf("  initializeFitpars: mu_ttwj_sig_1b = mu_ttwj_sb_1b * sf * (mu_ttwj_sig_sl_1b/mu_ttwj_sb_sl_1b) = %.1f * %.2f * ( %.1f / %.1f ) = %.1f\n\n",
+                     initval_mu_ttwj_sb_1b, sf_ttwj_sig_1b->getVal(), fv_mu_ttwj_sig_sl_1b->getVal(), fv_mu_ttwj_sb_sl_1b->getVal(), computed_ttwj_sig_1b ) ;
+
        }
 
 
-   }
+   } // initializeFitpars
 
   //==============================================================================================
+
+
 
 
 

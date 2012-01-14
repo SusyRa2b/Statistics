@@ -1,10 +1,15 @@
 
   mkdir -p log-files
 
-  root -b -q workspace-macros/make_newmcinp_lm9_ws_1BL.c |& tee log-files/make_newmcinp_lm9_ws_1BL.log
-  root -b -q workspace-macros/make_newmcinp_lm9_ws_1BT.c |& tee log-files/make_newmcinp_lm9_ws_1BT.log
-  root -b -q workspace-macros/make_newmcinp_lm9_ws_2BL.c |& tee log-files/make_newmcinp_lm9_ws_2BL.log
-  root -b -q workspace-macros/make_newmcinp_lm9_ws_2BT.c |& tee log-files/make_newmcinp_lm9_ws_2BT.log
-  root -b -q workspace-macros/make_newmcinp_lm9_ws_3B.c  |& tee log-files/make_newmcinp_lm9_ws_3B.log
+# root -b -q workspace-macros/make_newmcinp_lm9_ws_1BL.c |& tee log-files/make_newmcinp_lm9_ws_1BL.log
+# root -b -q workspace-macros/make_newmcinp_lm9_ws_1BT.c |& tee log-files/make_newmcinp_lm9_ws_1BT.log
+# root -b -q workspace-macros/make_newmcinp_lm9_ws_2BL.c |& tee log-files/make_newmcinp_lm9_ws_2BL.log
+# root -b -q workspace-macros/make_newmcinp_lm9_ws_2BT.c |& tee log-files/make_newmcinp_lm9_ws_2BT.log
+# root -b -q workspace-macros/make_newmcinp_lm9_ws_3B.c  |& tee log-files/make_newmcinp_lm9_ws_3B.log
 
+  root -b -q workspace-macros/make_newmcinp_lm9_ws_1BL_withLM9.c\(10.0\) |& tee log-files/make_newmcinp_lm9_ws_1BL_withLM9_xSec10.0.log
+  root -b -q workspace-macros/make_newmcinp_lm9_ws_1BT_withLM9.c\(10.0\) |& tee log-files/make_newmcinp_lm9_ws_1BT_withLM9_xSec10.0.log
+  root -b -q workspace-macros/make_newmcinp_lm9_ws_2BL_withLM9.c\(10.0\) |& tee log-files/make_newmcinp_lm9_ws_2BL_withLM9_xSec10.0.log
+  root -b -q workspace-macros/make_newmcinp_lm9_ws_2BT_withLM9.c\(10.0\) |& tee log-files/make_newmcinp_lm9_ws_2BT_withLM9_xSec10.0.log
+  root -b -q workspace-macros/make_newmcinp_lm9_ws_3B_withLM9.c\(10.0\)  |& tee log-files/make_newmcinp_lm9_ws_3B_withLM9_xSec10.0.log
 

@@ -6,35 +6,73 @@
 
 
 
-  echo susySigProf-susyFloat-newmcinp-lm9-1BL-sel
-  root -b -q workspace-macros-v1/ws_profile_interval2.c\(\"output-files/ws-newmcinp-lm9-1BL.root\",\"mu_susy_sig\",0.10,-1.,550,0.006839,4684.\) \
-         >& log-files/susySigProf-susyFloat-newmcinp-lm9-1BL-sel.log
-  mv plplot-mu_susy_sig.png output-files/susySigProf-susyFloat-newmcinp-lm9-1BL-sel.png
-  mv deltall-vs-xsec.png output-files/susyXsecProf-susyFloat-newmcinp-lm9-1BL-sel.png
+# echo susySigProf-susyFloat-newmcinp-lm9-1BL-sel
+# root -b -q workspace-macros-v1/ws_profile_interval2.c\(\"output-files/ws-newmcinp-lm9-1BL.root\",\"mu_susy_sig\",0.10,-1.,600,0.006839,4684.\) \
+#        >& log-files/susySigProf-susyFloat-newmcinp-lm9-1BL-sel.log
+# mv plplot-mu_susy_sig.png output-files/susySigProf-susyFloat-newmcinp-lm9-1BL-sel.png
+# mv deltall-vs-xsec.png output-files/susyXsecProf-susyFloat-newmcinp-lm9-1BL-sel.png
 
 
-  echo susySigProf-susyFloat-newmcinp-lm9-1BT-sel
-  root -b -q workspace-macros-v1/ws_profile_interval2.c\(\"output-files/ws-newmcinp-lm9-1BT.root\",\"mu_susy_sig\",0.10,-1.,30,0.000283,4684.\) \
-         >& log-files/susySigProf-susyFloat-newmcinp-lm9-1BT-sel.log
-  mv plplot-mu_susy_sig.png output-files/susySigProf-susyFloat-newmcinp-lm9-1BT-sel.png
-  mv deltall-vs-xsec.png output-files/susyXsecProf-susyFloat-newmcinp-lm9-1BT-sel.png
+# echo susySigProf-susyFloat-newmcinp-lm9-1BT-sel
+# root -b -q workspace-macros-v1/ws_profile_interval2.c\(\"output-files/ws-newmcinp-lm9-1BT.root\",\"mu_susy_sig\",0.10,-1.,30,0.000283,4684.\) \
+#        >& log-files/susySigProf-susyFloat-newmcinp-lm9-1BT-sel.log
+# mv plplot-mu_susy_sig.png output-files/susySigProf-susyFloat-newmcinp-lm9-1BT-sel.png
+# mv deltall-vs-xsec.png output-files/susyXsecProf-susyFloat-newmcinp-lm9-1BT-sel.png
 
-  echo susySigProf-susyFloat-newmcinp-lm9-2BL-sel
-  root -b -q workspace-macros-v1/ws_profile_interval2.c\(\"output-files/ws-newmcinp-lm9-2BL.root\",\"mu_susy_sig\",0.10,-1.,250,0.004025,4684.\) \
-         >& log-files/susySigProf-susyFloat-newmcinp-lm9-2BL-sel.log
-  mv plplot-mu_susy_sig.png output-files/susySigProf-susyFloat-newmcinp-lm9-2BL-sel.png
-  mv deltall-vs-xsec.png output-files/susyXsecProf-susyFloat-newmcinp-lm9-2BL-sel.png
+# echo susySigProf-susyFloat-newmcinp-lm9-2BL-sel
+# root -b -q workspace-macros-v1/ws_profile_interval2.c\(\"output-files/ws-newmcinp-lm9-2BL.root\",\"mu_susy_sig\",0.10,-1.,250,0.004025,4684.\) \
+#        >& log-files/susySigProf-susyFloat-newmcinp-lm9-2BL-sel.log
+# mv plplot-mu_susy_sig.png output-files/susySigProf-susyFloat-newmcinp-lm9-2BL-sel.png
+# mv deltall-vs-xsec.png output-files/susyXsecProf-susyFloat-newmcinp-lm9-2BL-sel.png
 
-  echo susySigProf-susyFloat-newmcinp-lm9-2BT-sel
-  root -b -q workspace-macros-v1/ws_profile_interval2.c\(\"output-files/ws-newmcinp-lm9-2BT.root\",\"mu_susy_sig\",0.10,-1.,100,0.001295,4684.\) \
-         >& log-files/susySigProf-susyFloat-newmcinp-lm9-2BT-sel.log
-  mv plplot-mu_susy_sig.png output-files/susySigProf-susyFloat-newmcinp-lm9-2BT-sel.png
-  mv deltall-vs-xsec.png output-files/susyXsecProf-susyFloat-newmcinp-lm9-2BT-sel.png
+# echo susySigProf-susyFloat-newmcinp-lm9-2BT-sel
+# root -b -q workspace-macros-v1/ws_profile_interval2.c\(\"output-files/ws-newmcinp-lm9-2BT.root\",\"mu_susy_sig\",0.10,-1.,100,0.001295,4684.\) \
+#        >& log-files/susySigProf-susyFloat-newmcinp-lm9-2BT-sel.log
+# mv plplot-mu_susy_sig.png output-files/susySigProf-susyFloat-newmcinp-lm9-2BT-sel.png
+# mv deltall-vs-xsec.png output-files/susyXsecProf-susyFloat-newmcinp-lm9-2BT-sel.png
 
-  echo susySigProf-susyFloat-newmcinp-lm9-3B-sel
-  root -b -q workspace-macros-v1/ws_profile_interval2.c\(\"output-files/ws-newmcinp-lm9-3B.root\",\"mu_susy_sig\",0.10,-1.,40,0.001512,4684.\) \
-         >& log-files/susySigProf-susyFloat-newmcinp-lm9-3B-sel.log
-  mv plplot-mu_susy_sig.png output-files/susySigProf-susyFloat-newmcinp-lm9-3B-sel.png
-  mv deltall-vs-xsec.png output-files/susyXsecProf-susyFloat-newmcinp-lm9-3B-sel.png
+# echo susySigProf-susyFloat-newmcinp-lm9-3B-sel
+# root -b -q workspace-macros-v1/ws_profile_interval2.c\(\"output-files/ws-newmcinp-lm9-3B.root\",\"mu_susy_sig\",0.10,-1.,40,0.001512,4684.\) \
+#        >& log-files/susySigProf-susyFloat-newmcinp-lm9-3B-sel.log
+# mv plplot-mu_susy_sig.png output-files/susySigProf-susyFloat-newmcinp-lm9-3B-sel.png
+# mv deltall-vs-xsec.png output-files/susyXsecProf-susyFloat-newmcinp-lm9-3B-sel.png
+
+
+# #------
+
+# echo susySigProf-susyFloat-newmcinp-lm9-1BL-sel-withLM9-xSec10.0
+# root -b -q workspace-macros-v1/ws_profile_interval2.c\(\"output-files/ws-newmcinp-lm9-1BL-withLM9-xSec10.0.root\",\"mu_susy_sig\",0.10,-1.,1000,0.006839,4684.\) \
+#        >& log-files/susySigProf-susyFloat-newmcinp-lm9-1BL-sel-withLM9-xSec10.0.log
+# mv plplot-mu_susy_sig.png output-files/susySigProf-susyFloat-newmcinp-lm9-1BL-sel-withLM9-xSec10.0.png
+# mv deltall-vs-xsec.png output-files/susyXsecProf-susyFloat-newmcinp-lm9-1BL-sel-withLM9-xSec10.0.png
+
+# echo susySigProf-susyFloat-newmcinp-lm9-1BT-sel-withLM9-xSec10.0
+# root -b -q workspace-macros-v1/ws_profile_interval2.c\(\"output-files/ws-newmcinp-lm9-1BT-withLM9-xSec10.0.root\",\"mu_susy_sig\",0.10,-1.,60,0.000283,4684.\) \
+#        >& log-files/susySigProf-susyFloat-newmcinp-lm9-1BT-sel-withLM9-xSec10.0.log
+# mv plplot-mu_susy_sig.png output-files/susySigProf-susyFloat-newmcinp-lm9-1BT-sel-withLM9-xSec10.0.png
+# mv deltall-vs-xsec.png output-files/susyXsecProf-susyFloat-newmcinp-lm9-1BT-sel-withLM9-xSec10.0.png
+
+# echo susySigProf-susyFloat-newmcinp-lm9-2BL-sel-withLM9-xSec10.0
+# root -b -q workspace-macros-v1/ws_profile_interval2.c\(\"output-files/ws-newmcinp-lm9-2BL-withLM9-xSec10.0.root\",\"mu_susy_sig\",0.10,-1.,500,0.004025,4684.\) \
+#        >& log-files/susySigProf-susyFloat-newmcinp-lm9-2BL-sel-withLM9-xSec10.0.log
+# mv plplot-mu_susy_sig.png output-files/susySigProf-susyFloat-newmcinp-lm9-2BL-sel-withLM9-xSec10.0.png
+# mv deltall-vs-xsec.png output-files/susyXsecProf-susyFloat-newmcinp-lm9-2BL-sel-withLM9-xSec10.0.png
+
+# echo susySigProf-susyFloat-newmcinp-lm9-2BT-sel-withLM9-xSec10.0
+# root -b -q workspace-macros-v1/ws_profile_interval2.c\(\"output-files/ws-newmcinp-lm9-2BT-withLM9-xSec10.0.root\",\"mu_susy_sig\",0.10,-1.,200,0.001295,4684.\) \
+#        >& log-files/susySigProf-susyFloat-newmcinp-lm9-2BT-sel-withLM9-xSec10.0.log
+# mv plplot-mu_susy_sig.png output-files/susySigProf-susyFloat-newmcinp-lm9-2BT-sel-withLM9-xSec10.0.png
+# mv deltall-vs-xsec.png output-files/susyXsecProf-susyFloat-newmcinp-lm9-2BT-sel-withLM9-xSec10.0.png
+
+  echo susySigProf-susyFloat-newmcinp-lm9-3B-sel-withLM9-xSec10.0
+  root -b -q workspace-macros-v1/ws_profile_interval2.c\(\"output-files/ws-newmcinp-lm9-3B-withLM9-xSec10.0.root\",\"mu_susy_sig\",0.10,-1.,200,0.001512,4684.\) \
+         >& log-files/susySigProf-susyFloat-newmcinp-lm9-3B-sel-withLM9-xSec10.0.log
+  mv plplot-mu_susy_sig.png output-files/susySigProf-susyFloat-newmcinp-lm9-3B-sel-withLM9-xSec10.0.png
+  mv deltall-vs-xsec.png output-files/susyXsecProf-susyFloat-newmcinp-lm9-3B-sel-withLM9-xSec10.0.png
+
+
+
+
+
 
 

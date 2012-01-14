@@ -9,7 +9,7 @@
 #include "TGraphAsymmErrors.h"
 #include "TH1.h"
 
-    void plot_ws_cls_hybrid1( const char* infile="cls-expected-2BT.root", int nStep=10, double minPoi=5., double deltaPoi=5. ) {
+    void plot_ws_cls_hybrid1( const char* infile="cls-expected-2BT.root", int nStep=10, double minPoi=5., double deltaPoi=5., double eff=-1., double lumi=-1. ) {
 
         gStyle->SetOptStat(0) ;
         gStyle->SetOptTitle(0) ;
@@ -181,16 +181,32 @@
 
         gStyle->SetLabelSize( 0.04, "x") ;
 
-        TH2F* hdummy = new TH2F("hdummy","",2, minPoi-deltaPoi, minPoi+nStep*deltaPoi, 2, 0., 1. ) ;
+
+        TH2F* hdummy(0x0) ;
+        if ( eff > 0 ) {
+           hdummy = new TH2F("hdummy","",2, (minPoi-deltaPoi)/(eff*lumi), (minPoi+nStep*deltaPoi)/(eff*lumi), 2, 0., 1. ) ;
+        } else {
+           hdummy = new TH2F("hdummy","",2, minPoi-deltaPoi, minPoi+nStep*deltaPoi, 2, 0., 1. ) ;
+        }
         hdummy->SetXTitle("mu_susy_sig") ;
         hdummy->SetYTitle("p-value") ;
 
-        TGraph* bgo_gr = new TGraph( nStep, poivals, bgopvals ) ;
-        TGraph* spb_gr = new TGraph( nStep, poivals, spbpvals ) ;
-        TGraph* cls_gr = new TGraph( nStep, poivals, clsvals ) ;
-        TGraph* mediancls_gr = new TGraph( nStep, poivals, medianclsvals ) ;
-        TGraphAsymmErrors* onesigband_gr = new TGraphAsymmErrors( nStep, poivals, medianclsvals, xerr, xerr, medianclserrlow1, medianclserrhigh1 ) ;
-        TGraphAsymmErrors* twosigband_gr = new TGraphAsymmErrors( nStep, poivals, medianclsvals, xerr, xerr, medianclserrlow2, medianclserrhigh2 ) ;
+        double xvals[100] ;
+
+        for ( int i=0; i<nStep; i++ ) {
+           if ( eff > 0 ) {
+              xvals[i] = poivals[i] / (eff*lumi) ;
+           } else {
+              xvals[i] = poivals[i] ;
+           }
+        } // i
+
+        TGraph* bgo_gr = new TGraph( nStep, xvals, bgopvals ) ;
+        TGraph* spb_gr = new TGraph( nStep, xvals, spbpvals ) ;
+        TGraph* cls_gr = new TGraph( nStep, xvals, clsvals ) ;
+        TGraph* mediancls_gr = new TGraph( nStep, xvals, medianclsvals ) ;
+        TGraphAsymmErrors* onesigband_gr = new TGraphAsymmErrors( nStep, xvals, medianclsvals, xerr, xerr, medianclserrlow1, medianclserrhigh1 ) ;
+        TGraphAsymmErrors* twosigband_gr = new TGraphAsymmErrors( nStep, xvals, medianclsvals, xerr, xerr, medianclserrlow2, medianclserrhigh2 ) ;
 
         bgo_gr->SetMarkerStyle(20) ;
         spb_gr->SetMarkerStyle(20) ;
