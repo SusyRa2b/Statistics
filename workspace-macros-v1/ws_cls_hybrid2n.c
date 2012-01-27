@@ -33,10 +33,14 @@
 
     void initializeFitpars() ;
 
+    double computeChi2( int verbLevel ) ;
+
+
   //==============================================================================================
 
     //--- Global variables.
 
+       RooWorkspace* wsgv(0x0) ;
 
        //--- pointers to the observables.
 
@@ -310,7 +314,13 @@
 
   //==============================================================================================
 
-   void ws_cls_hybrid2n( const char* wsfile = "output-files/expected-ws-lm9-2BL.root", bool isBgonlyStudy=false, double poiVal = 150.0, int nToys=100, bool makeTtree=true, int verbLevel=0 ) {
+   void ws_cls_hybrid2n( const char* wsfile = "output-files/expected-ws-lm9-2BL.root",
+                         bool isBgonlyStudy=false,
+                         double poiVal = 150.0,
+                         int nToys=100,
+                         bool makeTtree=true,
+                         int verbLevel=0,
+                         bool oneSidedTestStat=true ) {
 
 
 
@@ -346,6 +356,9 @@
        double tt_testStat ;
        double tt_dataTestStat ;
        double tt_hypo_mu_susy_sig_1b ;
+
+       double tt_chi2_susyFloat ;
+       double tt_chi2_susyFixed ;
 
        char ttname[1000] ;
        char tttitle[1000] ;
@@ -403,6 +416,9 @@
           toytt -> Branch(  "dataTestStat"     ,       &tt_dataTestStat     ,      "dataTestStat/D"     ) ;
           toytt -> Branch(  "hypo_mu_susy_sig_1b" ,       &tt_hypo_mu_susy_sig_1b ,      "hypo_mu_susy_sig_1b/D" ) ;
 
+          toytt -> Branch(  "chi2_susyFloat" ,       &tt_chi2_susyFloat ,      "chi2_susyFloat/D" ) ;
+          toytt -> Branch(  "chi2_susyFixed" ,       &tt_chi2_susyFixed ,      "chi2_susyFixed/D" ) ;
+
        }
 
 
@@ -419,6 +435,8 @@
        TFile* wstf = new TFile( wsfile ) ;
 
        RooWorkspace* ws = dynamic_cast<RooWorkspace*>( wstf->Get("ws") );
+
+       wsgv = ws ;
 
        ws->Print() ;
 
@@ -1206,6 +1224,7 @@
 
           delete maxLikelihoodFitResult ;
 
+          tt_chi2_susyFloat = computeChi2( verbLevel ) ;
 
 
 
@@ -1219,7 +1238,7 @@
           double testStat(0.0) ;
           double maxL_susyFixed(0.0) ;
 
-          if ( maxL_mu_susy_sig_1b < poiVal ) {
+          if ( (!oneSidedTestStat) || ( oneSidedTestStat && maxL_mu_susy_sig_1b < poiVal ) ) {
 
              if ( verbLevel > 0 ) { printf("\n\n  Evaluating the test statistic for this toy.  Fitting with susy fixed to %8.2f.\n\n", poiVal ) ; }
 
@@ -1267,6 +1286,8 @@
              maxL_susyFixed = susyFixedFitResult->minNll() ;
              testStat = 2. * (maxL_susyFixed - maxL_susyFloat) ;
 
+             tt_chi2_susyFixed = computeChi2( verbLevel ) ;
+
 
              delete susyFixedFitResult ;
 
@@ -1274,6 +1295,8 @@
           } else {
 
              if ( verbLevel > 0 ) { printf("\n\n  Floating value of susy yield greater than hypo value (%8.2f > %8.2f).  Setting test stat to zero.\n\n", maxL_mu_susy_sig_1b, poiVal ) ; }
+
+             tt_chi2_susyFixed = -1. ;
 
              testStat = 0.0 ;
 
@@ -1686,7 +1709,352 @@
   //==============================================================================================
 
 
+   double computeChi2( int verbLevel ) {
+
+      double chi2(0.) ;
+
+      double chi_denom(1.) ;
+
+      float fit_val ;
+      float obs_val ;
+
+      if (verbLevel >0 ) { printf("\n\n\n ===== Chi2 calculation\n\n") ; }
 
 
+    //-- 1b, main 6
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sig_1b")) -> getVal()  ;
+      obs_val =  rrv_Nsig_1b -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_1b", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sb_1b")) -> getVal()  ;
+      obs_val =  rrv_Nsb_1b -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sb_1b", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sig_sl_1b")) -> getVal()  ;
+      obs_val =  rrv_Nsig_sl_1b -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_sl_1b", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sb_sl_1b")) -> getVal()  ;
+      obs_val =  rrv_Nsb_sl_1b -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sb_sl_1b", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sig_ldp_1b")) -> getVal()  ;
+      obs_val =  rrv_Nsig_ldp_1b -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_ldp_1b", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sb_ldp_1b")) -> getVal()  ;
+      obs_val =  rrv_Nsb_ldp_1b -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sb_ldp_1b", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+
+
+
+    //-- 2b, main 6
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sig_2b")) -> getVal()  ;
+      obs_val =  rrv_Nsig_2b -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_2b", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sb_2b")) -> getVal()  ;
+      obs_val =  rrv_Nsb_2b -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sb_2b", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sig_sl_2b")) -> getVal()  ;
+      obs_val =  rrv_Nsig_sl_2b -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_sl_2b", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sb_sl_2b")) -> getVal()  ;
+      obs_val =  rrv_Nsb_sl_2b -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sb_sl_2b", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sig_ldp_2b")) -> getVal()  ;
+      obs_val =  rrv_Nsig_ldp_2b -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_ldp_2b", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sb_ldp_2b")) -> getVal()  ;
+      obs_val =  rrv_Nsb_ldp_2b -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sb_ldp_2b", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+
+
+
+    //-- 3b, main 6
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sig_3b")) -> getVal()  ;
+      obs_val =  rrv_Nsig_3b -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_3b", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sb_3b")) -> getVal()  ;
+      obs_val =  rrv_Nsb_3b -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sb_3b", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sig_sl_3b")) -> getVal()  ;
+      obs_val =  rrv_Nsig_sl_3b -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_sl_3b", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sb_sl_3b")) -> getVal()  ;
+      obs_val =  rrv_Nsb_sl_3b -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sb_sl_3b", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sig_ldp_3b")) -> getVal()  ;
+      obs_val =  rrv_Nsig_ldp_3b -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_ldp_3b", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sb_ldp_3b")) -> getVal()  ;
+      obs_val =  rrv_Nsb_ldp_3b -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sb_ldp_3b", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+
+
+    //-- 4 Zll obs
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sig_ee")) -> getVal()  ;
+      obs_val =  rrv_Nsig_ee -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_ee", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sb_ee")) -> getVal()  ;
+      obs_val =  rrv_Nsb_ee -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sb_ee", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sig_mm")) -> getVal()  ;
+      obs_val =  rrv_Nsig_mm -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_mm", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+      fit_val =  ((RooRealVar*) wsgv->obj("n_sb_mm")) -> getVal()  ;
+      obs_val =  rrv_Nsb_mm -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  obs=%5.0f  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sb_mm", obs_val, fit_val, pow( (fit_val - obs_val)/chi_denom , 2 ) ) ; }
+
+
+
+
+    //-- Zll nuisance pars
+
+      fit_val =  ((RooRealVar*) wsgv->obj("acc_ee_sb_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "acc_ee_sb_prim", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("acc_ee_sig_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "acc_ee_sig_prim", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("acc_mm_sb_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "acc_mm_sb_prim", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("acc_mm_sig_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "acc_mm_sig_prim", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("eff_ee_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "eff_ee_prim", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("eff_mm_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "eff_mm_prim", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("fsig_ee_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "fsig_ee_prim", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("fsig_mm_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "fsig_mm_prim", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("knn_sb_1b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "knn_sb_1b_prim", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("knn_sb_2b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "knn_sb_2b_prim", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("knn_sb_3b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "knn_sb_3b_prim", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("knn_sig_1b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "knn_sig_1b_prim", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("knn_sig_2b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "knn_sig_2b_prim", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("knn_sig_3b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "knn_sig_3b_prim", fit_val, pow( fit_val , 2 ) ) ; }
+
+
+   //-- eff pars
+
+      fit_val =  ((RooRealVar*) wsgv->obj("eff_sf_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "eff_sf_prim", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("btageff_sf_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "btageff_sf_prim", fit_val, pow( fit_val , 2 ) ) ; }
+
+
+   //-- QCD pass/fail ratio
+
+      fit_val =  ((RooRealVar*) wsgv->obj("Rlsb_passfail_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_1b", fit_val, pow( fit_val , 2 ) ) ; }
+
+
+   //-- Systematics.
+
+      fit_val =  ((RooRealVar*) wsgv->obj("sf_ll_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_1b", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("sf_mc_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_1b", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("sf_qcd_sb_1b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_1b", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("sf_qcd_sb_2b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_1b", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("sf_qcd_sb_3b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_1b", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("sf_qcd_sig_1b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_1b", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("sf_qcd_sig_2b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_1b", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("sf_qcd_sig_3b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_1b", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("sf_ttwj_sb_2b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_1b", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("sf_ttwj_sb_3b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_1b", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("sf_ttwj_sig_1b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_1b", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("sf_ttwj_sig_2b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_1b", fit_val, pow( fit_val , 2 ) ) ; }
+
+      fit_val =  ((RooRealVar*) wsgv->obj("sf_ttwj_sig_3b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+      if ( verbLevel > 0 ) { printf( "%30s  fit=%8.1f  chi2 contrib = %6.2f\n", "n_sig_1b", fit_val, pow( fit_val , 2 ) ) ; }
+
+
+      if ( verbLevel > 0 ) { printf("\n\n Overall chi2 = %7.2f\n\n ================================== \n\n", chi2 ) ; }
+
+      return chi2 ;
+
+
+   } // computeChi2
+
+
+  //==============================================================================================
 
 

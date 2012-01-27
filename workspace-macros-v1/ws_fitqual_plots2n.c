@@ -1463,18 +1463,292 @@
 
 
 
-//   //-- Eff sf ---------
+    //--- Compute chi2 ================================================
 
-//    float eff_sf_prim   =  ((RooRealVar*) ws->obj("eff_sf_prim")) -> getVal() ;
+      double chi2(0.) ;
 
-//    hfitqual_np -> SetBinContent( 1, eff_sf_prim ) ;
+      double chi_denom(1.) ;
 
-
-
-
-
+      float fit_val ;
+      float obs_val ;
 
 
+    //-- 1b, main 6
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sig_1b")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsig_1b")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sb_1b")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsb_1b")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sig_sl_1b")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsig_sl_1b")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sb_sl_1b")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsb_sl_1b")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sig_ldp_1b")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsig_ldp_1b")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sb_ldp_1b")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsb_ldp_1b")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+
+
+
+    //-- 2b, main 6
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sig_2b")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsig_2b")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sb_2b")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsb_2b")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sig_sl_2b")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsig_sl_2b")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sb_sl_2b")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsb_sl_2b")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sig_ldp_2b")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsig_ldp_2b")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sb_ldp_2b")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsb_ldp_2b")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+
+
+
+    //-- 3b, main 6
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sig_3b")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsig_3b")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sb_3b")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsb_3b")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sig_sl_3b")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsig_sl_3b")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sb_sl_3b")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsb_sl_3b")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sig_ldp_3b")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsig_ldp_3b")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sb_ldp_3b")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsb_ldp_3b")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+
+
+    //-- 4 Zll obs
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sig_ee")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsig_ee")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sb_ee")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsb_ee")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sig_mm")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsig_mm")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+      fit_val =  ((RooRealVar*) ws->obj("n_sb_mm")) -> getVal()  ;
+      obs_val =  ((RooRealVar*) ws->obj("Nsb_mm")) -> getVal()  ;
+      chi_denom = 1. ;
+      if ( obs_val > 0 ) { chi_denom = sqrt(1.0*obs_val) ; }
+      chi2 += pow( (fit_val - obs_val)/chi_denom , 2 ) ;
+
+
+
+
+    //-- Zll nuisance pars
+
+      fit_val =  ((RooRealVar*) ws->obj("acc_ee_sb_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("acc_ee_sig_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("acc_mm_sb_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("acc_mm_sig_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("eff_ee_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("eff_mm_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("fsig_ee_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("fsig_mm_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("knn_sb_1b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("knn_sb_2b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("knn_sb_3b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("knn_sig_1b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("knn_sig_2b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("knn_sig_3b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+
+   //-- eff pars
+
+      fit_val =  ((RooRealVar*) ws->obj("eff_sf_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("btageff_sf_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+
+   //-- QCD pass/fail ratio
+
+      fit_val =  ((RooRealVar*) ws->obj("Rlsb_passfail_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+
+   //-- Systematics.
+
+      fit_val =  ((RooRealVar*) ws->obj("sf_ll_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("sf_mc_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("sf_qcd_sb_1b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("sf_qcd_sb_2b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("sf_qcd_sb_3b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("sf_qcd_sig_1b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("sf_qcd_sig_2b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("sf_qcd_sig_3b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("sf_ttwj_sb_2b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("sf_ttwj_sb_3b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("sf_ttwj_sig_1b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("sf_ttwj_sig_2b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+      fit_val =  ((RooRealVar*) ws->obj("sf_ttwj_sig_3b_prim")) -> getVal()  ;
+      chi2 += pow( fit_val, 2 ) ;
+
+
+
+      printf("\n\n\n ==== Chi2 : %.2f\n\n", chi2 ) ;
 
 
 
@@ -1527,144 +1801,18 @@
 
 
 
-// //-- Give SIG box values and uncertainties.
+
+    //-------
+
 
       TText* fittext = new TText() ;
       fittext->SetTextSize(0.045) ;
-//    double fitval ;
-//    double fiterr ;
-//    double tx = 0.80 ;
-//    double ty = 0.71 ;
-//    double dy = 0.115 ;
-//    char fitvalchars[1000] ;
-
-
-
-//    if ( mu_susy_sig_1b_val < 0. ) {
-//       fitval = susySigVal ;
-//       fiterr = susySigErr ;
-//       if ( fitval<10.) {
-//          sprintf( fitvalchars, "%3.1f +/- %3.1f", fitval, fiterr ) ;
-//       } else {
-//          sprintf( fitvalchars, "%3.0f +/- %3.0f", fitval, fiterr ) ;
-//       }
-//       fittext->DrawTextNDC( tx, ty, fitvalchars ) ;
-//    } else {
-//       fitval = susySigVal ;
-//       if ( fitval<10.) {
-//          sprintf( fitvalchars, "%3.1f", fitval ) ;
-//       } else {
-//          sprintf( fitvalchars, "%3.0f", fitval ) ;
-//       }
-//       fittext->DrawTextNDC( tx, ty, fitvalchars ) ;
-//    }
-
-
-
-//    if ( ttwjSigErr > 0. ) {
-//       fitval = ttwjSigVal ;
-//       fiterr = ttwjSigErr ;
-//       if ( fitval<10.) {
-//          sprintf( fitvalchars, "%3.1f +/- %3.1f", fitval, fiterr ) ;
-//       } else {
-//          sprintf( fitvalchars, "%3.0f +/- %3.0f", fitval, fiterr ) ;
-//       }
-//    } else {
-//       fitval = ttwjSigVal ;
-//       sprintf( fitvalchars, "%3.0f", fitval ) ;
-//       if ( fitval<10.) {
-//          sprintf( fitvalchars, "%3.1f", fitval ) ;
-//       } else {
-//          sprintf( fitvalchars, "%3.0f", fitval ) ;
-//       }
-//    }
-//    ty = ty - dy ;
-//    fittext->DrawTextNDC( tx, ty, fitvalchars ) ;
-
-
-
-
-//    if ( qcdSigErr > 0. ) {
-//       fitval = qcdSigVal ;
-//       fiterr = qcdSigErr ;
-//       if ( fitval<10.) {
-//          sprintf( fitvalchars, "%3.1f +/- %3.1f", fitval, fiterr ) ;
-//       } else {
-//          sprintf( fitvalchars, "%3.0f +/- %3.0f", fitval, fiterr ) ;
-//       }
-//    } else {
-//       fitval = qcdSigVal ;
-//       if ( fitval<10.) {
-//          sprintf( fitvalchars, "%3.1f", fitval ) ;
-//       } else {
-//          sprintf( fitvalchars, "%3.0f", fitval ) ;
-//       }
-//    }
-//    ty = ty - dy ;
-//    fittext->DrawTextNDC( tx, ty, fitvalchars ) ;
-
-
-
-
-//    fitval = znnSigVal ;
-//    fiterr = znnSigErr ;
-//    if ( fitval<10.) {
-//       sprintf( fitvalchars, "%3.1f +/- %3.1f", fitval, fiterr ) ;
-//    } else {
-//       sprintf( fitvalchars, "%3.0f +/- %3.0f", fitval, fiterr ) ;
-//    }
-//    ty = ty - dy ;
-//    fittext->DrawTextNDC( tx, ty, fitvalchars ) ;
-
-
-
-
-//    fitval =  eff_sf_prim ;
-//    sprintf( fitvalchars, "%4.2f", fitval ) ;
-//    ty = ty - dy ;
-//    fittext->DrawTextNDC( tx, ty, fitvalchars ) ;
 
 
 
 
       TPad* bigPad = (TPad*) gPad ;
 
-
-// //--- Efficiency scale factor primary Gaussian value.
-
-//    hfitqual_np->SetMinimum(-5.) ;
-//    hfitqual_np->SetMaximum( 5.) ;
-
-//    hfitqual_np->SetNdivisions(101,"x") ;
-//    hfitqual_np->SetNdivisions(101,"y") ;
-//    hfitqual_np->SetLabelOffset(99,"y") ;
-
-
-
-//    TPad* tp = new TPad("tp","tp",0.52,0.,0.61,1.0) ;
-
-//    tp->SetRightMargin(0.4) ;
-
-
-
-//    tp->Draw() ;
-//    tp->cd() ;
-//    hfitqual_np->SetLabelSize(0.5,"x") ;
-//    xaxis = hfitqual_np->GetXaxis() ;
-//    xaxis->SetBinLabel(1,"Eff PG") ;
-//    hfitqual_np->GetXaxis()->LabelsOption("v") ;
-//    hfitqual_np->Draw() ;
-
-//    cfitqual->Update() ;
-
-
-//    TGaxis* axis = new TGaxis() ;
-//    axis->SetLabelOffset(0.1) ;
-//    axis->SetLabelSize(0.30) ;
-//    axis->SetTickSize(0.2) ;
-//    axis->DrawAxis( 1.0, -5., 1.0, 5., -5., 5., 510, "+LS") ;
-
-//    cfitqual->Update() ;
 
 
 

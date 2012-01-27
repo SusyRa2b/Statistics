@@ -24,7 +24,8 @@
                               double mu_susy_sig_1b_val = 0.,
                               double xmax = -1.,
                               double efficiency = -1.,
-                              double integratedLumi = 4684.
+                              double integratedLumi = 4684.,
+                              double xmin = -1.
                               ) {
 
        //double efficiency = (3039. / 413270.) * 0.93 = 0.006839 ; // 1BL
@@ -74,6 +75,8 @@
           printf(" current value is : %8.3f\n", rrv_par->getVal() ) ; cout << flush ;
        }
        if ( xmax > 0 ) { rrv_par->setMax( xmax ) ; }
+       if ( xmin > 0 ) { rrv_par->setMin( xmin ) ; }
+
 
        printf("\n\n\n  ===== Grabbing mu_susy_sig_1b rrv ====================\n\n") ;
        RooRealVar* rrv_mu_susy_sig_1b = ws->var("mu_susy_sig_1b") ;
