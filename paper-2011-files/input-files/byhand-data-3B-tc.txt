@@ -59,3 +59,23 @@ Ztoll_lumi      4684
   sf_ee_err             1.049
   sf_mm                 1.00
   sf_mm_err             1.059
+ eps_sb          0.841
+ eps_sig         0.982
+ eps_sb_ldp      0.936
+ eps_sb_sl       0.996
+ eps_sig_sl      0.999
+ epsSF_sb            1.000
+ epsSF_sb_errp       0.070
+ epsSF_sb_errm       0.107
+ epsSF_sig           1.000
+ epsSF_sig_errp      0.012
+ epsSF_sig_errm      0.037
+ epsSF_sb_ldp        1.000
+ epsSF_sb_ldp_errp   0.036
+ epsSF_sb_ldp_errm   0.126
+ epsSF_sb_sl         1.000
+ epsSF_sb_sl_errp    0.002
+ epsSF_sb_sl_errm    0.003
+ epsSF_sig_sl        1.000
+ epsSF_sig_sl_errp   0.001
+ epsSF_sig_sl_errm   0.001

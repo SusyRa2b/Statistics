@@ -1,5 +1,5 @@
   Description : numbers entered by hand
-Nsig              10
+Nsig              11
 Nsb               19
 Nsig_sl            7
 Nsb_sl            20
@@ -9,14 +9,14 @@ Nsb_ldp           10
  Nsig_1b_ee       29
  Nsb_1b_mm        20
  Nsig_1b_mm       32
- Rlsb_passfail         0.1687
- Rlsb_passfail_err     0.0119
-Nttbarsingletopzjetsmc_sig_ldp  2.666
-Nttbarsingletopzjetsmc_sb_ldp   4.532
-NWJmc_sig_ldp     0.0986
-NWJmc_sb_ldp      0.1055
-NZnnmc_sig_ldp    0.0969
-NZnnmc_sb_ldp     0.0861
+ Rlsb_passfail         0.1685
+ Rlsb_passfail_err     0.0041
+Nttbarsingletopzjetsmc_sig_ldp  2.941
+Nttbarsingletopzjetsmc_sb_ldp   5.410
+NWJmc_sig_ldp     0.0988
+NWJmc_sb_ldp      0.1123
+NZnnmc_sig_ldp    0.0971
+NZnnmc_sb_ldp     0.0916
   NEwomc_sig_ldp          0
   NEwomc_sb_ldp           0
   NEwomc_sig              0
@@ -48,13 +48,13 @@ Ztoll_lumi      4684
   fsig_mm_mean   0.866
   fsig_mm_err    0.079
   sf_mc                 1.00
-  sf_mc_err             0.50
+  sf_mc_err             0.40
   sf_qcd_sb             1.00
-  sf_qcd_sb_err         1.332
+  sf_qcd_sb_err         0.858
   sf_qcd_sig            1.00
-  sf_qcd_sig_err        0.585
+  sf_qcd_sig_err        0.526
   sf_ttwj_sig           1.00
-  sf_ttwj_sig_err       0.12 
+  sf_ttwj_sig_err       0.035 
   sf_ee                 1.00
   sf_ee_err             1.049
   sf_mm                 1.00
