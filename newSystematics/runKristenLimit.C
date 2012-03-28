@@ -47,7 +47,7 @@ void runKristenLimit(char* cut , char* model , int m0, int m12, bool isMeasured,
   else {
     if(isHybrid) profileLikelihoodLimit(outputfile.Data(),"ws","SbModel", "BModel","ra2b_observed_rds",name.Data(),false,
 					m0,m12,1000,10000,10,false,true);
-    else profileLikelihoodLimit(outputfile.Data(),"ws","SbModel", "BModel","ra2b_observed_rds",name.Data(),true,
+    else profileLikelihoodLimit(outputfile.Data(),"ws","SbModel", "BModel","ra2b_observed_rds",name.Data(),false,
 				m0,m12,1000,10000,10,true,false);
   }
 
