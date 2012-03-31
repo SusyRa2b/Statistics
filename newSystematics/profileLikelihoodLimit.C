@@ -16,6 +16,7 @@
 #include "RooPlot.h"
 #include "RooCurve.h"
 #include "RooHist.h"
+#include "THStack.h"
 
 #include "RooStats/ModelConfig.h"
 #include "RooStats/ProfileLikelihoodCalculator.h"
@@ -34,6 +35,7 @@
 #include "HybridToyMCSampler.h"
 
 #include <iostream>
+#include <map>
 #include <string>
 #include <fstream>
 
@@ -247,7 +249,7 @@ void profileLikelihoodLimit(const char * fileName =0,
     return;
   }
 
-  double tempMax = ((RooRealVar*)data->get()->find("Nsig"))->getVal() > 0 ? ((RooRealVar*)data->get()->find("Nsig"))->getVal() + 3*sqrt(((RooRealVar*)data->get()->find("Nsig"))->getVal()) : 5 ;
+  double tempMax = ((RooRealVar*)data->get()->find("Nsig"))->getVal() > 0 ? ((RooRealVar*)data->get()->find("Nsig"))->getVal() + 5*sqrt(((RooRealVar*)data->get()->find("Nsig"))->getVal()) : 5 ;
 
   RooRealVar* firstPOI = (RooRealVar*) mc->GetParametersOfInterest()->first();
   firstPOI->setRange(0, tempMax);
@@ -276,7 +278,7 @@ void profileLikelihoodLimit(const char * fileName =0,
 
   TCanvas* c ;
 
-  double mediumTempMax = ((RooRealVar*)data->get()->find("Nsig"))->getVal() > 0 ? ((RooRealVar*)data->get()->find("Nsig"))->getVal() + 5*sqrt(((RooRealVar*)data->get()->find("Nsig"))->getVal()) : 7 ; 
+  double mediumTempMax = ((RooRealVar*)data->get()->find("Nsig"))->getVal() > 0 ? ((RooRealVar*)data->get()->find("Nsig"))->getVal() + 10*sqrt(((RooRealVar*)data->get()->find("Nsig"))->getVal()) : 10 ; 
 
   if(doPlots){
     firstPOI->setRange(0, mediumTempMax );
@@ -285,13 +287,13 @@ void profileLikelihoodLimit(const char * fileName =0,
     LikelihoodIntervalPlot plot(interval);
     plot.SetNPoints(50);  // do not use too many points, it could become very slow for some models
     plot.SetMaximum(4); 
-    plot.SetRange(0.,1.3*asymptoticLimit);
+    plot.SetRange(0.,1.2*asymptoticLimit);
     plot.Draw("");  // use option TF1 if too slow (plot.Draw("tf1")
     c->SaveAs(TString(modelName)+"_profileLikelihoodScan.pdf");
     delete c;
   }
 
-  double bigTempMax = ((RooRealVar*)data->get()->find("Nsig"))->getVal() > 0 ? ((RooRealVar*)data->get()->find("Nsig"))->getVal() + 10*sqrt(((RooRealVar*)data->get()->find("Nsig"))->getVal()) : 10 ; 
+  double bigTempMax = ((RooRealVar*)data->get()->find("Nsig"))->getVal() > 0 ? ((RooRealVar*)data->get()->find("Nsig"))->getVal() + 100*sqrt(((RooRealVar*)data->get()->find("Nsig"))->getVal()) : 100 ; 
 
   firstPOI->setRange(0, bigTempMax );
 
@@ -666,6 +668,52 @@ void profileLikelihoodLimit(const char * fileName =0,
     d.Divide(1,2);
 
     if(isFrequentist){
+
+      map<TString,TH1D> sig_true_histograms;
+      map<TString,TH1D> bkg_true_histograms;
+      map<TString,TH1D> sig_cond_histograms;
+      map<TString,TH1D> bkg_cond_histograms;
+      map<TString,TH1D> sig_uncond_histograms;
+      map<TString,TH1D> bkg_uncond_histograms;
+
+      RooLinkedListIter it = dataSetVars.iterator();
+      RooRealVar* tmpPar  = NULL;
+      while((tmpPar = (RooRealVar*)it.Next())){
+	sig_true_histograms[TString(tmpPar->GetName())]   = TH1D(TString("sig_true_dist_")  +tmpPar->GetName(),TString("True Distribution"),nScanPoints,poimin-width/2,poimax+width/2);
+	bkg_true_histograms[TString(tmpPar->GetName())]   = TH1D(TString("bkg_true_dist_")  +tmpPar->GetName(),TString("True Distribution"),nScanPoints,poimin-width/2,poimax+width/2);
+	sig_cond_histograms[TString(tmpPar->GetName())]   = TH1D(TString("sig_cond_dist_")  +tmpPar->GetName(),TString("Fitted Distribution with Floating SUSY"),nScanPoints,poimin-width/2,poimax+width/2);
+	bkg_cond_histograms[TString(tmpPar->GetName())]   = TH1D(TString("bkg_cond_dist_")  +tmpPar->GetName(),TString("Fitted Distribution with Floating SUSY"),nScanPoints,poimin-width/2,poimax+width/2);
+	sig_uncond_histograms[TString(tmpPar->GetName())] = TH1D(TString("sig_uncond_dist_")+tmpPar->GetName(),TString("Fitted Distribution with Fixed SUSY"),nScanPoints,poimin-width/2,poimax+width/2);
+	bkg_uncond_histograms[TString(tmpPar->GetName())] = TH1D(TString("bkg_uncond_dist_")+tmpPar->GetName(),TString("Fitted Distribution with Fixed SUSY"),nScanPoints,poimin-width/2,poimax+width/2);
+	
+	sig_true_histograms[TString(tmpPar->GetName())]  .SetFillStyle(0);
+	bkg_true_histograms[TString(tmpPar->GetName())]  .SetFillStyle(0);
+	sig_cond_histograms[TString(tmpPar->GetName())]  .SetFillStyle(0);
+	bkg_cond_histograms[TString(tmpPar->GetName())]  .SetFillStyle(0);
+	sig_uncond_histograms[TString(tmpPar->GetName())].SetFillStyle(0);
+	bkg_uncond_histograms[TString(tmpPar->GetName())].SetFillStyle(0);
+
+	sig_true_histograms[TString(tmpPar->GetName())]  .SetMarkerColor(kBlack);
+	bkg_true_histograms[TString(tmpPar->GetName())]  .SetMarkerColor(kBlack);
+	sig_cond_histograms[TString(tmpPar->GetName())]  .SetMarkerColor(kRed);
+	bkg_cond_histograms[TString(tmpPar->GetName())]  .SetMarkerColor(kRed);
+	sig_uncond_histograms[TString(tmpPar->GetName())].SetMarkerColor(kBlue);
+	bkg_uncond_histograms[TString(tmpPar->GetName())].SetMarkerColor(kBlue);
+
+	sig_true_histograms[TString(tmpPar->GetName())]  .SetMarkerStyle(20);
+	bkg_true_histograms[TString(tmpPar->GetName())]  .SetMarkerStyle(20);
+	sig_cond_histograms[TString(tmpPar->GetName())]  .SetMarkerStyle(21);
+	bkg_cond_histograms[TString(tmpPar->GetName())]  .SetMarkerStyle(21);
+	sig_uncond_histograms[TString(tmpPar->GetName())].SetMarkerStyle(22);
+	bkg_uncond_histograms[TString(tmpPar->GetName())].SetMarkerStyle(22);
+
+	sig_true_histograms[TString(tmpPar->GetName())]  .SetLineColor(kBlack);
+	bkg_true_histograms[TString(tmpPar->GetName())]  .SetLineColor(kBlack);
+	sig_cond_histograms[TString(tmpPar->GetName())]  .SetLineColor(kRed);
+	bkg_cond_histograms[TString(tmpPar->GetName())]  .SetLineColor(kRed);
+	sig_uncond_histograms[TString(tmpPar->GetName())].SetLineColor(kBlue);
+	bkg_uncond_histograms[TString(tmpPar->GetName())].SetLineColor(kBlue);
+      }
    
     signalFrame=firstPOI->frame(AutoRange(trueDebugging),Bins(100),Title(TString("s+b Sample Distribution of  for ")));
     trueDebugging.plotOn(signalFrame,Name("true"));
@@ -707,7 +755,8 @@ void profileLikelihoodLimit(const char * fileName =0,
     delete backgroundFrame;
     
     //vector<TString>::iterator rangeName = rangeNames.begin() ;
-    for(vector<pair<double,double> >::iterator thisRange = ranges.begin() ; thisRange != ranges.end() /*|| rangeName!=rangeNames.end()*/ ; thisRange++/*, rangeName++*/)
+    int iBin = 1;
+    for(vector<pair<double,double> >::iterator thisRange = ranges.begin() ; thisRange != ranges.end() /*|| rangeName!=rangeNames.end()*/ ; thisRange++, iBin++/*, rangeName++*/)
       {
 	
 	TString trueCut = (TString(firstPOI->GetName())+">="+=thisRange->first)+(TString("&&")+firstPOI->GetName()+"<"+=thisRange->second);
@@ -736,9 +785,24 @@ void profileLikelihoodLimit(const char * fileName =0,
 	condDebuggingBackground = condDebugging.reduce(SelectVars(dataSetVars),Cut(bgCut));
 	
 	
-	RooLinkedListIter it = dataSetVars.iterator();
-	RooRealVar* tmpPar  = NULL;
+	it = dataSetVars.iterator();
+	tmpPar  = NULL;
 	while((tmpPar = (RooRealVar*)it.Next())){
+
+	  sig_true_histograms[TString(tmpPar->GetName())]  .SetBinContent(iBin , trueDebuggingSignal      ->mean(*tmpPar));
+	  bkg_true_histograms[TString(tmpPar->GetName())]  .SetBinContent(iBin , trueDebuggingBackground  ->mean(*tmpPar));
+	  sig_cond_histograms[TString(tmpPar->GetName())]  .SetBinContent(iBin , condDebuggingSignal      ->mean(*tmpPar));
+	  bkg_cond_histograms[TString(tmpPar->GetName())]  .SetBinContent(iBin , condDebuggingBackground  ->mean(*tmpPar));
+	  sig_uncond_histograms[TString(tmpPar->GetName())].SetBinContent(iBin , uncondDebuggingSignal    ->mean(*tmpPar));
+	  bkg_uncond_histograms[TString(tmpPar->GetName())].SetBinContent(iBin , uncondDebuggingBackground->mean(*tmpPar));
+
+	  sig_true_histograms[TString(tmpPar->GetName())]  .SetBinError(iBin , trueDebuggingSignal      ->sigma(*tmpPar));
+	  bkg_true_histograms[TString(tmpPar->GetName())]  .SetBinError(iBin , trueDebuggingBackground  ->sigma(*tmpPar));
+	  sig_cond_histograms[TString(tmpPar->GetName())]  .SetBinError(iBin , condDebuggingSignal      ->sigma(*tmpPar));
+	  bkg_cond_histograms[TString(tmpPar->GetName())]  .SetBinError(iBin , condDebuggingBackground  ->sigma(*tmpPar));
+	  sig_uncond_histograms[TString(tmpPar->GetName())].SetBinError(iBin , uncondDebuggingSignal    ->sigma(*tmpPar));
+	  bkg_uncond_histograms[TString(tmpPar->GetName())].SetBinError(iBin , uncondDebuggingBackground->sigma(*tmpPar));
+
 	  double lo,hi,lowest,highest;
 	  trueDebuggingSignal->getRange(*tmpPar,lowest,highest);
 	  uncondDebuggingSignal->getRange(*tmpPar,lo,hi);
@@ -777,6 +841,7 @@ void profileLikelihoodLimit(const char * fileName =0,
 	  backgroundLegend->AddEntry(backgroundFrame->findObject("condFit"),"Fitted Distribution with Fixed SUSY");
 	  backgroundLegend->SetFillColor(kWhite);
 	  backgroundLegend->SetFillStyle(0);
+	  backgroundLegend->SetBorderSize(0);
 	  
 	  backgroundFrame->addObject(backgroundLegend);
 	  
@@ -797,15 +862,18 @@ void profileLikelihoodLimit(const char * fileName =0,
 	  signalFrame->addObject(signalLegend);
 	  signalLegend->SetFillColor(kWhite);
 	  signalLegend->SetFillStyle(0);
+	  signalLegend->SetBorderSize(0);
 	  d.cd(1);
 	  backgroundFrame->Draw();
 	  d.cd(2);
 	  signalFrame->Draw();
-	  d.SaveAs(TString("debugging_plots/")+fileNamer+"_"+tmpPar->GetName()+"_dist.pdf");
+	  d.SaveAs(TString("debugging_plots/")+fileNamer+"_"+tmpPar->GetName()+"_frequentist_dist.pdf");
+	  delete signalFrame;
+	  delete backgroundFrame;
 	}
 	//cout << "Doing something with " << tmpPar->GetName() << " in range " << "Signal Yield Hypothesis of " << *rangeName << endl;
-	delete backgroundFrame;
-	delete signalFrame;
+	//delete backgroundFrame;
+	//delete signalFrame;
 	delete trueDebuggingSignal;
 	delete uncondDebuggingSignal;
 	delete condDebuggingSignal;	 
@@ -813,9 +881,104 @@ void profileLikelihoodLimit(const char * fileName =0,
 	delete uncondDebuggingBackground;
 	delete condDebuggingBackground;
       } 
+      it = dataSetVars.iterator();
+      tmpPar  = NULL;
+      while((tmpPar = (RooRealVar*)it.Next())){
+
+	sig_true_histograms[TString(tmpPar->GetName())]  .SetMinimum(0);
+	bkg_true_histograms[TString(tmpPar->GetName())]  .SetMinimum(0);
+	sig_cond_histograms[TString(tmpPar->GetName())]  .SetMinimum(0);
+	bkg_cond_histograms[TString(tmpPar->GetName())]  .SetMinimum(0);
+	sig_uncond_histograms[TString(tmpPar->GetName())].SetMinimum(0);
+	bkg_uncond_histograms[TString(tmpPar->GetName())].SetMinimum(0);
+
+	THStack signalStack("signalStack","signalStack");
+	THStack backgroundStack("backgroundStack","backgroundStack");
+	signalStack.Add(&(sig_true_histograms[TString(tmpPar->GetName())]));
+	signalStack.Add(&(sig_cond_histograms[TString(tmpPar->GetName())]));
+	signalStack.Add(&(sig_uncond_histograms[TString(tmpPar->GetName())]));
+	signalStack.SetMinimum(0.);
+	backgroundStack.Add(&(bkg_true_histograms[TString(tmpPar->GetName())]));
+	backgroundStack.Add(&(bkg_cond_histograms[TString(tmpPar->GetName())]));
+	backgroundStack.Add(&(bkg_uncond_histograms[TString(tmpPar->GetName())]));
+	backgroundStack.SetMinimum(0.);
+	TLegend signalLegend(.6,0.125,1.,0.375,TString("Signal + Background Distribution of ")+tmpPar->GetName());
+	signalLegend.AddEntry(&(bkg_true_histograms[TString(tmpPar->GetName())]));	 
+	signalLegend.AddEntry(&(bkg_cond_histograms[TString(tmpPar->GetName())]));	 
+	signalLegend.AddEntry(&(bkg_uncond_histograms[TString(tmpPar->GetName())]));
+	signalLegend.SetFillColor(kWhite);
+	signalLegend.SetFillStyle(0);
+	signalLegend.SetBorderSize(0);
+	TLegend backgroundLegend(.6,0.125,1.,0.375,TString("Background Only Distribution of ")+tmpPar->GetName());
+	backgroundLegend.AddEntry(&(bkg_true_histograms[TString(tmpPar->GetName())]));	 
+	backgroundLegend.AddEntry(&(bkg_cond_histograms[TString(tmpPar->GetName())]));	 
+	backgroundLegend.AddEntry(&(bkg_uncond_histograms[TString(tmpPar->GetName())]));
+	backgroundLegend.SetFillColor(kWhite);
+	backgroundLegend.SetFillStyle(0);
+	backgroundLegend.SetBorderSize(0);
+	d.cd(1);
+	signalStack.Draw("NOSTACKE1PHIST");
+	signalStack.Draw("NOSTACKEHISTSAME");
+	signalLegend.Draw();
+	d.cd(2);
+	backgroundStack.Draw("NOSTACKE1PHIST");
+	backgroundStack.Draw("NOSTACKHISTSAME");
+	backgroundLegend.Draw();
+	d.cd();
+	d.SaveAs(TString("debugging_plots/")+tmpPar->GetName()+"_frequentist_dist.pdf");
+      }
+
+
     }
     
     if(isHybrid){
+
+      map<TString,TH1D> sig_true_histograms;
+      map<TString,TH1D> bkg_true_histograms;
+      map<TString,TH1D> sig_cond_histograms;
+      map<TString,TH1D> bkg_cond_histograms;
+      map<TString,TH1D> sig_uncond_histograms;
+      map<TString,TH1D> bkg_uncond_histograms;
+
+      RooLinkedListIter it = dataSetVars.iterator();
+      RooRealVar* tmpPar  = NULL;
+      while((tmpPar = (RooRealVar*)it.Next())){
+	sig_true_histograms[TString(tmpPar->GetName())]   = TH1D(TString("sig_true_dist_")  +tmpPar->GetName(),TString("True Distribution"),nScanPoints,poimin-width/2,poimax+width/2);
+	bkg_true_histograms[TString(tmpPar->GetName())]   = TH1D(TString("bkg_true_dist_")  +tmpPar->GetName(),TString("True Distribution"),nScanPoints,poimin-width/2,poimax+width/2);
+	sig_cond_histograms[TString(tmpPar->GetName())]   = TH1D(TString("sig_cond_dist_")  +tmpPar->GetName(),TString("Fitted Distribution with Floating SUSY"),nScanPoints,poimin-width/2,poimax+width/2);
+	bkg_cond_histograms[TString(tmpPar->GetName())]   = TH1D(TString("bkg_cond_dist_")  +tmpPar->GetName(),TString("Fitted Distribution with Floating SUSY"),nScanPoints,poimin-width/2,poimax+width/2);
+	sig_uncond_histograms[TString(tmpPar->GetName())] = TH1D(TString("sig_uncond_dist_")+tmpPar->GetName(),TString("Fitted Distribution with Fixed SUSY"),nScanPoints,poimin-width/2,poimax+width/2);
+	bkg_uncond_histograms[TString(tmpPar->GetName())] = TH1D(TString("bkg_uncond_dist_")+tmpPar->GetName(),TString("Fitted Distribution with Fixed SUSY"),nScanPoints,poimin-width/2,poimax+width/2);
+	
+	sig_true_histograms[TString(tmpPar->GetName())]  .SetFillStyle(0);
+	bkg_true_histograms[TString(tmpPar->GetName())]  .SetFillStyle(0);
+	sig_cond_histograms[TString(tmpPar->GetName())]  .SetFillStyle(0);
+	bkg_cond_histograms[TString(tmpPar->GetName())]  .SetFillStyle(0);
+	sig_uncond_histograms[TString(tmpPar->GetName())].SetFillStyle(0);
+	bkg_uncond_histograms[TString(tmpPar->GetName())].SetFillStyle(0);
+
+	sig_true_histograms[TString(tmpPar->GetName())]  .SetMarkerColor(kBlack);
+	bkg_true_histograms[TString(tmpPar->GetName())]  .SetMarkerColor(kBlack);
+	sig_cond_histograms[TString(tmpPar->GetName())]  .SetMarkerColor(kRed);
+	bkg_cond_histograms[TString(tmpPar->GetName())]  .SetMarkerColor(kRed);
+	sig_uncond_histograms[TString(tmpPar->GetName())].SetMarkerColor(kBlue);
+	bkg_uncond_histograms[TString(tmpPar->GetName())].SetMarkerColor(kBlue);
+
+	sig_true_histograms[TString(tmpPar->GetName())]  .SetMarkerStyle(20);
+	bkg_true_histograms[TString(tmpPar->GetName())]  .SetMarkerStyle(20);
+	sig_cond_histograms[TString(tmpPar->GetName())]  .SetMarkerStyle(21);
+	bkg_cond_histograms[TString(tmpPar->GetName())]  .SetMarkerStyle(21);
+	sig_uncond_histograms[TString(tmpPar->GetName())].SetMarkerStyle(22);
+	bkg_uncond_histograms[TString(tmpPar->GetName())].SetMarkerStyle(22);
+
+	sig_true_histograms[TString(tmpPar->GetName())]  .SetLineColor(kBlack);
+	bkg_true_histograms[TString(tmpPar->GetName())]  .SetLineColor(kBlack);
+	sig_cond_histograms[TString(tmpPar->GetName())]  .SetLineColor(kRed);
+	bkg_cond_histograms[TString(tmpPar->GetName())]  .SetLineColor(kRed);
+	sig_uncond_histograms[TString(tmpPar->GetName())].SetLineColor(kBlue);
+	bkg_uncond_histograms[TString(tmpPar->GetName())].SetLineColor(kBlue);
+      }
+   
     signalFrame=firstPOI->frame(AutoRange(trueHybridDebugging),Bins(100),Title(TString("s+b Sample Distribution of  for ")));
     trueHybridDebugging.plotOn(signalFrame,Name("true"));
     backgroundFrame=poiHyp.frame(AutoRange(trueHybridDebugging),Bins(100),Title(TString("s+b Sample Distribution of  for ")));
@@ -856,7 +1019,8 @@ void profileLikelihoodLimit(const char * fileName =0,
     delete backgroundFrame;
     
     //vector<TString>::iterator rangeName = rangeNames.begin() ;
-    for(vector<pair<double,double> >::iterator thisRange = ranges.begin() ; thisRange != ranges.end() /*|| rangeName!=rangeNames.end()*/ ; thisRange++/*, rangeName++*/)
+    int iBin = 1;
+    for(vector<pair<double,double> >::iterator thisRange = ranges.begin() ; thisRange != ranges.end() /*|| rangeName!=rangeNames.end()*/ ; thisRange++, iBin++/*, rangeName++*/)
       {
 	
 	TString trueCut = (TString(firstPOI->GetName())+">="+=thisRange->first)+(TString("&&")+firstPOI->GetName()+"<"+=thisRange->second);
@@ -865,7 +1029,7 @@ void profileLikelihoodLimit(const char * fileName =0,
 	TString hypoCut = (TString(poiHyp.GetName())+">="+=thisRange->first)+(TString("&&")+poiHyp.GetName()+"<"+=thisRange->second);
 	TString sigCut = trueCut + "&&" + hypoCut;
 	TString bgCut = zeroCut+"&&"+hypoCut;
-	TString fileNamer = TString("mu_susy_hybrid")+=(thisRange->first+0.5*(thisRange->second-thisRange->first));
+	TString fileNamer = TString("mu_susy")+=(thisRange->first+0.5*(thisRange->second-thisRange->first));
 	
 	
 	RooAbsData* trueHybridDebuggingSignal ;
@@ -885,9 +1049,24 @@ void profileLikelihoodLimit(const char * fileName =0,
 	condHybridDebuggingBackground = condHybridDebugging.reduce(SelectVars(dataSetVars),Cut(bgCut));
 	
 	
-	RooLinkedListIter it = dataSetVars.iterator();
-	RooRealVar* tmpPar  = NULL;
+	it = dataSetVars.iterator();
+	tmpPar  = NULL;
 	while((tmpPar = (RooRealVar*)it.Next())){
+
+	  sig_true_histograms[TString(tmpPar->GetName())]  .SetBinContent(iBin , trueHybridDebuggingSignal      ->mean(*tmpPar));
+	  bkg_true_histograms[TString(tmpPar->GetName())]  .SetBinContent(iBin , trueHybridDebuggingBackground  ->mean(*tmpPar));
+	  sig_cond_histograms[TString(tmpPar->GetName())]  .SetBinContent(iBin , condHybridDebuggingSignal      ->mean(*tmpPar));
+	  bkg_cond_histograms[TString(tmpPar->GetName())]  .SetBinContent(iBin , condHybridDebuggingBackground  ->mean(*tmpPar));
+	  sig_uncond_histograms[TString(tmpPar->GetName())].SetBinContent(iBin , uncondHybridDebuggingSignal    ->mean(*tmpPar));
+	  bkg_uncond_histograms[TString(tmpPar->GetName())].SetBinContent(iBin , uncondHybridDebuggingBackground->mean(*tmpPar));
+
+	  sig_true_histograms[TString(tmpPar->GetName())]  .SetBinError(iBin , trueHybridDebuggingSignal      ->sigma(*tmpPar));
+	  bkg_true_histograms[TString(tmpPar->GetName())]  .SetBinError(iBin , trueHybridDebuggingBackground  ->sigma(*tmpPar));
+	  sig_cond_histograms[TString(tmpPar->GetName())]  .SetBinError(iBin , condHybridDebuggingSignal      ->sigma(*tmpPar));
+	  bkg_cond_histograms[TString(tmpPar->GetName())]  .SetBinError(iBin , condHybridDebuggingBackground  ->sigma(*tmpPar));
+	  sig_uncond_histograms[TString(tmpPar->GetName())].SetBinError(iBin , uncondHybridDebuggingSignal    ->sigma(*tmpPar));
+	  bkg_uncond_histograms[TString(tmpPar->GetName())].SetBinError(iBin , uncondHybridDebuggingBackground->sigma(*tmpPar));
+
 	  double lo,hi,lowest,highest;
 	  trueHybridDebuggingSignal->getRange(*tmpPar,lowest,highest);
 	  uncondHybridDebuggingSignal->getRange(*tmpPar,lo,hi);
@@ -926,7 +1105,7 @@ void profileLikelihoodLimit(const char * fileName =0,
 	  backgroundLegend->AddEntry(backgroundFrame->findObject("condFit"),"Fitted Distribution with Fixed SUSY");
 	  backgroundLegend->SetFillColor(kWhite);
 	  backgroundLegend->SetFillStyle(0);
-	  
+	  backgroundLegend->SetBorderSize(0);
 	  backgroundFrame->addObject(backgroundLegend);
 	  
 	  signalFrame=tmpPar->frame(Range(lowest,highest),Bins(nToys/25),Title(TString("s+b Sample Distribution of ")+ tmpPar->GetName()));
@@ -946,15 +1125,18 @@ void profileLikelihoodLimit(const char * fileName =0,
 	  signalFrame->addObject(signalLegend);
 	  signalLegend->SetFillColor(kWhite);
 	  signalLegend->SetFillStyle(0);
+	  signalLegend->SetBorderSize(0);
 	  d.cd(1);
 	  backgroundFrame->Draw();
 	  d.cd(2);
 	  signalFrame->Draw();
-	  d.SaveAs(TString("debugging_plots/")+fileNamer+"_"+tmpPar->GetName()+"_dist.pdf");
+	  d.SaveAs(TString("debugging_plots/")+fileNamer+"_"+tmpPar->GetName()+"_hybrid_dist.pdf");
+	  delete signalFrame;
+	  delete backgroundFrame;
 	}
 	//cout << "Doing something with " << tmpPar->GetName() << " in range " << "Signal Yield Hypothesis of " << *rangeName << endl;
-	delete backgroundFrame;
-	delete signalFrame;
+	//delete backgroundFrame;
+	//delete signalFrame;
 	delete trueHybridDebuggingSignal;
 	delete uncondHybridDebuggingSignal;
 	delete condHybridDebuggingSignal;	 
@@ -962,6 +1144,52 @@ void profileLikelihoodLimit(const char * fileName =0,
 	delete uncondHybridDebuggingBackground;
 	delete condHybridDebuggingBackground;
       } 
+      it = dataSetVars.iterator();
+      tmpPar  = NULL;
+      while((tmpPar = (RooRealVar*)it.Next())){
+
+	sig_true_histograms[TString(tmpPar->GetName())]  .SetMinimum(0);
+	bkg_true_histograms[TString(tmpPar->GetName())]  .SetMinimum(0);
+	sig_cond_histograms[TString(tmpPar->GetName())]  .SetMinimum(0);
+	bkg_cond_histograms[TString(tmpPar->GetName())]  .SetMinimum(0);
+	sig_uncond_histograms[TString(tmpPar->GetName())].SetMinimum(0);
+	bkg_uncond_histograms[TString(tmpPar->GetName())].SetMinimum(0);
+
+	THStack signalStack("signalStack","signalStack");
+	THStack backgroundStack("backgroundStack","backgroundStack");
+	signalStack.Add(&(sig_true_histograms[TString(tmpPar->GetName())]));
+	signalStack.Add(&(sig_cond_histograms[TString(tmpPar->GetName())]));
+	signalStack.Add(&(sig_uncond_histograms[TString(tmpPar->GetName())]));
+	signalStack.SetMinimum(0.);
+	backgroundStack.Add(&(bkg_true_histograms[TString(tmpPar->GetName())]));
+	backgroundStack.Add(&(bkg_cond_histograms[TString(tmpPar->GetName())]));
+	backgroundStack.Add(&(bkg_uncond_histograms[TString(tmpPar->GetName())]));
+	backgroundStack.SetMinimum(0.);
+	TLegend signalLegend(.6,0.125,1.,0.375,TString("Signal + Background Distribution of ")+tmpPar->GetName());
+	signalLegend.AddEntry(&(bkg_true_histograms[TString(tmpPar->GetName())]));	 
+	signalLegend.AddEntry(&(bkg_cond_histograms[TString(tmpPar->GetName())]));	 
+	signalLegend.AddEntry(&(bkg_uncond_histograms[TString(tmpPar->GetName())]));
+	signalLegend.SetFillColor(kWhite);
+	signalLegend.SetFillStyle(0);
+	signalLegend.SetBorderSize(0);
+	TLegend backgroundLegend(.6,0.125,1.,0.375,TString("Background Only Distribution of ")+tmpPar->GetName());
+	backgroundLegend.AddEntry(&(bkg_true_histograms[TString(tmpPar->GetName())]));	 
+	backgroundLegend.AddEntry(&(bkg_cond_histograms[TString(tmpPar->GetName())]));	 
+	backgroundLegend.AddEntry(&(bkg_uncond_histograms[TString(tmpPar->GetName())]));
+	backgroundLegend.SetFillColor(kWhite);
+	backgroundLegend.SetFillStyle(0);
+	backgroundLegend.SetBorderSize(0);
+	d.cd(1);
+	signalStack.Draw("NOSTACKE1PHIST");
+	signalStack.Draw("NOSTACKEHISTSAME");
+	signalLegend.Draw();
+	d.cd(2);
+	backgroundStack.Draw("NOSTACKE1PHIST");
+	backgroundStack.Draw("NOSTACKHISTSAME");
+	backgroundLegend.Draw();
+	d.cd();
+	d.SaveAs(TString("debugging_plots/")+tmpPar->GetName()+"_hybrid_dist.pdf");
+      }
     }
 
     fDebug->Write();

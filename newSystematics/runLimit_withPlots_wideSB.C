@@ -1,5 +1,5 @@
 
-void runLimit(char* cut , char* model , int m0, int m12, bool isMeasured, bool isHybrid)
+void runLimit_withPlots_wideSB(char* cut , char* model , int m0, int m12, bool isMeasured)
 {
   gSystem->CompileMacro("RooBetaPdf.cxx","kO") ;
   gSystem->CompileMacro("RooGammaPdf.cxx","kO") ;
@@ -11,8 +11,6 @@ void runLimit(char* cut , char* model , int m0, int m12, bool isMeasured, bool i
   TString outputfile("/tmp/ra2b/ws_");
   if(isMeasured) outputfile+="measured_";
   else outputfile+="expected_";
-  if(isHybrid) outputfile+="hybrid_";
-  else outputfile+="frequentist_";
   outputfile+=cut;
   outputfile+="_";
   outputfile+=model;
@@ -34,22 +32,15 @@ void runLimit(char* cut , char* model , int m0, int m12, bool isMeasured, bool i
   systematicsfile+=model;
   systematicsfile+=".";
   systematicsfile+=cut;
-  systematicsfile+=".dat";
+  systematicsfile+="WideSB.dat";
   ra.initialize(inputfile,systematicsfile,m0,m12,false,1.0,outputfile,true,false,false);
   TString name(model);
   name+="_";
   name+=cut;
-  if(isMeasured) {
-    if(isHybrid) profileLikelihoodLimit(outputfile.Data(),"ws","SbModel", "BModel","ra2b_observed_rds",name.Data(),true,
-					m0,m12,1000,10000,10,false,true);
-    else profileLikelihoodLimit(outputfile.Data(),"ws","SbModel", "BModel","ra2b_observed_rds",name.Data(),true,
-					m0,m12,1000,10000,10,true,false);
-  }
-  else {
-    if(isHybrid) profileLikelihoodLimit(outputfile.Data(),"ws","SbModel", "BModel","ra2b_observed_rds",name.Data(),false,
-					m0,m12,1000,10000,10,false,true);
-    else profileLikelihoodLimit(outputfile.Data(),"ws","SbModel", "BModel","ra2b_observed_rds",name.Data(),false,
-				m0,m12,1000,10000,10,true,false);
-  }
+  if(isMeasured) profileLikelihoodLimit(outputfile.Data(),"ws","SbModel", "BModel","ra2b_observed_rds",name.Data(),true,
+					m0,m12,1000,10000,10,true,true,true,true,true);
+  else profileLikelihoodLimit(outputfile.Data(),"ws","SbModel", "BModel","ra2b_observed_rds",name.Data(),false,
+			      m0,m12,1000,10000,10,true,true,true,true,true);
+
 
 }

@@ -20,7 +20,7 @@ rm -f submit_scripts/$modelName*nominal_hybrid_sub.sh
 
 for cut in ge1bTight ge1bLoose ge2bTight ge2bLoose ge3bLoose
 do
-    modelFile='/afs/cern.ch/user/j/joshmt/public/RA2bFall2011/signalSyst.'$modelName'.'$cut'.dat'
+    modelFile='/afs/cern.ch/user/j/joshmt/public/RA2bFall2011/signalSyst.'$modelName'.'$cut'WideSB.dat'
     echo $modelFile
     declare -i nLines=0
     declare -i iLine=0

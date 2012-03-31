@@ -37,8 +37,8 @@ do
 	echo 'root -q -l -b runKristenLimit.C'"'"'("'$cut'","'$modelName'",'$m0','$m12',0,0)'"'" >> 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_frequentist_sub.sh'
 	echo 'if [ -e "/tmp/ra2b/ws_expected_frequentist_'$cut'_'$modelName'_'$m0'_'$m12'_kristen.root" ]; then rm /tmp/ra2b/ws_expected_frequentist_'$cut'_'$modelName'_'$m0'_'$m12'_kristen.root; fi' >> 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_frequentist_sub.sh'
 	chmod a+x 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_frequentist_sub.sh'
-	echo "Submitting plot "$modelName'_'$cut'_'$m0'_'$m12"_expected_kristen_frequentist to batch system for processing."
-	bsub -q 1nd -N -o /dev/null -J $modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_frequentist' -Jd $modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_frequentist' $DIR'/submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_frequentist_sub.sh'
+	echo "Submitting job "$modelName'_'$cut'_'$m0'_'$m12"_expected_kristen_frequentist to batch system for processing."
+	#bsub -q 1nd -N -o /dev/null -J $modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_frequentist' -Jd $modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_frequentist' $DIR'/submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_frequentist_sub.sh'
 
 
 	echo '#! /bin/bash -f' > 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_frequentist_sub.sh'
@@ -52,8 +52,8 @@ do
 	echo 'root -q -l -b runKristenLimit.C'"'"'("'$cut'","'$modelName'",'$m0','$m12',1,0)'"'" >> 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_frequentist_sub.sh'
 	echo 'if [ -e "/tmp/ra2b/ws_expected_frequentist_'$cut'_'$modelName'_'$m0'_'$m12'_kristen.root" ]; then rm /tmp/ra2b/ws_measured_frequentist_'$cut'_'$modelName'_'$m0'_'$m12'_kristen.root; fi' >> 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_frequentist_sub.sh'
 	chmod a+x 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_frequentist_sub.sh'
-	echo "Submitting plot "$modelName'_'$cut'_'$m0'_'$m12"_measured_kristen_frequentist to batch system for processing."
-	bsub -q 1nd -N -o /dev/null -J $modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_frequentist' -Jd $modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_frequentist' $DIR'/submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_frequentist_sub.sh'
+	echo "Submitting job "$modelName'_'$cut'_'$m0'_'$m12"_measured_kristen_frequentist to batch system for processing."
+	#bsub -q 1nd -N -o /dev/null -J $modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_frequentist' -Jd $modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_frequentist' $DIR'/submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_frequentist_sub.sh'
 
 
 	echo '#! /bin/bash -f' > 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_hybrid_sub.sh'
@@ -64,10 +64,10 @@ do
 	echo 'source /afs/cern.ch/sw/lcg/contrib/gcc/4.3/x86_64-slc5/setup.sh' >> 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_hybrid_sub.sh'
 	echo 'source /afs/cern.ch/sw/lcg/app/releases/ROOT/5.33.02/x86_64-slc5-gcc43-opt/root/bin/thisroot.sh' >> 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_hybrid_sub.sh'
 	echo '' >> 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_hybrid_sub.sh'
-	echo 'root -q -l -b runKristenLimit.C'"'"'("'$cut'","'$modelName'",'$m0','$m12',0,0)'"'" >> 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_hybrid_sub.sh'
+	echo 'root -q -l -b runKristenLimit.C'"'"'("'$cut'","'$modelName'",'$m0','$m12',0,1)'"'" >> 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_hybrid_sub.sh'
 	echo 'if [ -e "/tmp/ra2b/ws_expected_hybrid_'$cut'_'$modelName'_'$m0'_'$m12'_kristen.root" ]; then rm /tmp/ra2b/ws_expected_hybrid_'$cut'_'$modelName'_'$m0'_'$m12'_kristen.root; fi' >> 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_hybrid_sub.sh'
 	chmod a+x 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_hybrid_sub.sh'
-	echo "Submitting plot "$modelName'_'$cut'_'$m0'_'$m12"_expected_kristen_hybrid to batch system for processing."
+	echo "Submitting job "$modelName'_'$cut'_'$m0'_'$m12"_expected_kristen_hybrid to batch system for processing."
 	bsub -q 1nd -N -o /dev/null -J $modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_hybrid' -Jd $modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_hybrid' $DIR'/submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_expected_kristen_hybrid_sub.sh'
 
 
@@ -79,10 +79,10 @@ do
 	echo 'source /afs/cern.ch/sw/lcg/contrib/gcc/4.3/x86_64-slc5/setup.sh' >> 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_hybrid_sub.sh'
 	echo 'source /afs/cern.ch/sw/lcg/app/releases/ROOT/5.33.02/x86_64-slc5-gcc43-opt/root/bin/thisroot.sh' >> 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_hybrid_sub.sh'
 	echo '' >> 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_hybrid_sub.sh'
-	echo 'root -q -l -b runKristenLimit.C'"'"'("'$cut'","'$modelName'",'$m0','$m12',1,0)'"'" >> 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_hybrid_sub.sh'
+	echo 'root -q -l -b runKristenLimit.C'"'"'("'$cut'","'$modelName'",'$m0','$m12',1,1)'"'" >> 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_hybrid_sub.sh'
 	echo 'if [ -e "/tmp/ra2b/ws_expected_hybrid_'$cut'_'$modelName'_'$m0'_'$m12'_kristen.root" ]; then rm /tmp/ra2b/ws_measured_hybrid_'$cut'_'$modelName'_'$m0'_'$m12'_kristen.root; fi' >> 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_hybrid_sub.sh'
 	chmod a+x 'submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_hybrid_sub.sh'
-	echo "Submitting plot "$modelName'_'$cut'_'$m0'_'$m12"_measured_kristen_hybrid to batch system for processing."
+	echo "Submitting job "$modelName'_'$cut'_'$m0'_'$m12"_measured_kristen_hybrid to batch system for processing."
 	bsub -q 1nd -N -o /dev/null -J $modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_hybrid' -Jd $modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_hybrid' $DIR'/submit_scripts/'$modelName'_'$cut'_'$m0'_'$m12'_measured_kristen_hybrid_sub.sh'
 
 
