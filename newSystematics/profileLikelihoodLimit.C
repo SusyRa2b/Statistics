@@ -259,9 +259,11 @@ void profileLikelihoodLimit(const char * fileName =0,
   // on the parameter of interest as specified
   // in the model config
 
+  cout <<"Starting Profile Likelihood Calculator"<<endl;
+
   //ProfileLikelihoodCalculator pl(*data,*mc);
   ProfileLikelihoodCalculator pl(*data,*pdf, RooArgSet(*firstPOI));
-  pl.SetTestSize( 0.025 ) ;
+  pl.SetTestSize( 0.05 ) ;
   //pl.SetConfidenceLevel(0.975); // 95% one sided limit
   LikelihoodInterval* interval = pl.GetInterval();
   //LikelihoodInterval* interval = new LikelihoodInterval("theInterval",profile,&bestFit,bestFitSnapshot);
@@ -885,6 +887,8 @@ void profileLikelihoodLimit(const char * fileName =0,
       tmpPar  = NULL;
       while((tmpPar = (RooRealVar*)it.Next())){
 
+	
+
 	sig_true_histograms[TString(tmpPar->GetName())]  .SetMinimum(0);
 	bkg_true_histograms[TString(tmpPar->GetName())]  .SetMinimum(0);
 	sig_cond_histograms[TString(tmpPar->GetName())]  .SetMinimum(0);
@@ -892,25 +896,77 @@ void profileLikelihoodLimit(const char * fileName =0,
 	sig_uncond_histograms[TString(tmpPar->GetName())].SetMinimum(0);
 	bkg_uncond_histograms[TString(tmpPar->GetName())].SetMinimum(0);
 
-	double totalMax = max(sig_true_histograms[TString(tmpPar->GetName())]  .GetMaximum(),
-			  max(bkg_true_histograms[TString(tmpPar->GetName())]  .GetMaximum(),
-			  max(sig_cond_histograms[TString(tmpPar->GetName())]  .GetMaximum(),
-			  max(bkg_cond_histograms[TString(tmpPar->GetName())]  .GetMaximum(),
-			  max(sig_uncond_histograms[TString(tmpPar->GetName())].GetMaximum(),
-			      bkg_uncond_histograms[TString(tmpPar->GetName())].GetMaximum())))));
+	double totalMax = 0.01;
+	double tempMax = 0;
+
+	tempMax = sig_true_histograms[TString(tmpPar->GetName())].GetBinContent(sig_true_histograms[TString(tmpPar->GetName())].GetMaximumBin())+sig_true_histograms[TString(tmpPar->GetName())].GetBinError(sig_true_histograms[TString(tmpPar->GetName())].GetMaximumBin());
+	totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	tempMax = bkg_true_histograms[TString(tmpPar->GetName())].GetBinContent(bkg_true_histograms[TString(tmpPar->GetName())].GetMaximumBin())+bkg_true_histograms[TString(tmpPar->GetName())].GetBinError(bkg_true_histograms[TString(tmpPar->GetName())].GetMaximumBin());
+	totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	tempMax = sig_cond_histograms[TString(tmpPar->GetName())].GetBinContent(sig_cond_histograms[TString(tmpPar->GetName())].GetMaximumBin())+sig_cond_histograms[TString(tmpPar->GetName())].GetBinError(sig_cond_histograms[TString(tmpPar->GetName())].GetMaximumBin());
+	totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	tempMax = bkg_cond_histograms[TString(tmpPar->GetName())].GetBinContent(bkg_cond_histograms[TString(tmpPar->GetName())].GetMaximumBin())+bkg_cond_histograms[TString(tmpPar->GetName())].GetBinError(bkg_cond_histograms[TString(tmpPar->GetName())].GetMaximumBin());
+	totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	tempMax = sig_uncond_histograms[TString(tmpPar->GetName())].GetBinContent(sig_uncond_histograms[TString(tmpPar->GetName())].GetMaximumBin())+sig_uncond_histograms[TString(tmpPar->GetName())].GetBinError(sig_uncond_histograms[TString(tmpPar->GetName())].GetMaximumBin());
+	totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	tempMax = bkg_uncond_histograms[TString(tmpPar->GetName())].GetBinContent(bkg_uncond_histograms[TString(tmpPar->GetName())].GetMaximumBin())+bkg_uncond_histograms[TString(tmpPar->GetName())].GetBinError(bkg_uncond_histograms[TString(tmpPar->GetName())].GetMaximumBin());
+	totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+
+	//d.cd(1);
+	//sig_true_histograms[TString(tmpPar->GetName())].Draw();
+	//tempMax = sig_true_histograms[TString(tmpPar->GetName())].GetYaxis()->GetXmax();
+	//totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	//bkg_true_histograms[TString(tmpPar->GetName())].Draw();
+	//tempMax = sig_true_histograms[TString(tmpPar->GetName())].GetYaxis()->GetXmax();
+	//totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	//sig_cond_histograms[TString(tmpPar->GetName())].Draw();
+	//tempMax = sig_cond_histograms[TString(tmpPar->GetName())].GetYaxis()->GetXmax();
+	//totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	//bkg_cond_histograms[TString(tmpPar->GetName())].Draw();
+	//tempMax = sig_cond_histograms[TString(tmpPar->GetName())].GetYaxis()->GetXmax();
+	//totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	//sig_uncond_histograms[TString(tmpPar->GetName())].Draw();
+	//tempMax = sig_uncond_histograms[TString(tmpPar->GetName())].GetYaxis()->GetXmax();
+	//totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	//bkg_uncond_histograms[TString(tmpPar->GetName())].Draw();
+	//tempMax = sig_uncond_histograms[TString(tmpPar->GetName())].GetYaxis()->GetXmax();
+	//totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+
+	
+
+	//double totalMax = max(sig_true_histograms[TString(tmpPar->GetName())]  .GetMaximum(),
+	//		  max(bkg_true_histograms[TString(tmpPar->GetName())]  .GetMaximum(),
+	//		  max(sig_cond_histograms[TString(tmpPar->GetName())]  .GetMaximum(),
+	//		  max(bkg_cond_histograms[TString(tmpPar->GetName())]  .GetMaximum(),
+	//		  max(sig_uncond_histograms[TString(tmpPar->GetName())].GetMaximum(),
+	//		      bkg_uncond_histograms[TString(tmpPar->GetName())].GetMaximum())))));
 
 	THStack signalStack("signalStack","signalStack");
 	THStack backgroundStack("backgroundStack","backgroundStack");
+
 	signalStack.Add(&(sig_true_histograms[TString(tmpPar->GetName())]));
 	signalStack.Add(&(sig_cond_histograms[TString(tmpPar->GetName())]));
 	signalStack.Add(&(sig_uncond_histograms[TString(tmpPar->GetName())]));
-	signalStack.SetMinimum(0.);
-	signalStack.SetMaximum(1.1*totalMax);
+	//signalStack.SetMinimum(0.);
+	//signalStack.SetMaximum(1.1*totalMax);
 	backgroundStack.Add(&(bkg_true_histograms[TString(tmpPar->GetName())]));
 	backgroundStack.Add(&(bkg_cond_histograms[TString(tmpPar->GetName())]));
 	backgroundStack.Add(&(bkg_uncond_histograms[TString(tmpPar->GetName())]));
+	//backgroundStack.SetMinimum(0.);
+	//backgroundStack.SetMaximum(1.1*totalMax);
+
+	//d.cd(1);
+	//signalStack.Draw("NOSTACKE1PHIST");
+	//d.cd(2);
+	//backgroundStack.Draw("NOSTACKE1PHIST");
+	//d.cd();
+	//
+	//double totalMax = max(signalStack.GetMaximum(),backgroundStack.GetMaximum());
+	signalStack.SetMinimum(0.);
+	signalStack.SetMaximum(1.1*totalMax);
 	backgroundStack.SetMinimum(0.);
 	backgroundStack.SetMaximum(1.1*totalMax);
+
 	TLegend signalLegend(.6,0.125,1.,0.375,TString("Signal + Background Distribution of ")+tmpPar->GetName());
 	signalLegend.AddEntry(&(bkg_true_histograms[TString(tmpPar->GetName())]));	 
 	signalLegend.AddEntry(&(bkg_cond_histograms[TString(tmpPar->GetName())]));	 
@@ -1165,25 +1221,75 @@ void profileLikelihoodLimit(const char * fileName =0,
 	sig_uncond_histograms[TString(tmpPar->GetName())].SetMinimum(0);
 	bkg_uncond_histograms[TString(tmpPar->GetName())].SetMinimum(0);
 
-	double totalMax = max(sig_true_histograms[TString(tmpPar->GetName())]  .GetMaximum(),
-			  max(bkg_true_histograms[TString(tmpPar->GetName())]  .GetMaximum(),
-			  max(sig_cond_histograms[TString(tmpPar->GetName())]  .GetMaximum(),
-			  max(bkg_cond_histograms[TString(tmpPar->GetName())]  .GetMaximum(),
-			  max(sig_uncond_histograms[TString(tmpPar->GetName())].GetMaximum(),
-			      bkg_uncond_histograms[TString(tmpPar->GetName())].GetMaximum())))));
+	double totalMax = 0.01;
+	double tempMax = 0;
+
+	tempMax = sig_true_histograms[TString(tmpPar->GetName())].GetBinContent(sig_true_histograms[TString(tmpPar->GetName())].GetMaximumBin())+sig_true_histograms[TString(tmpPar->GetName())].GetBinError(sig_true_histograms[TString(tmpPar->GetName())].GetMaximumBin());
+	totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	tempMax = bkg_true_histograms[TString(tmpPar->GetName())].GetBinContent(bkg_true_histograms[TString(tmpPar->GetName())].GetMaximumBin())+bkg_true_histograms[TString(tmpPar->GetName())].GetBinError(bkg_true_histograms[TString(tmpPar->GetName())].GetMaximumBin());
+	totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	tempMax = sig_cond_histograms[TString(tmpPar->GetName())].GetBinContent(sig_cond_histograms[TString(tmpPar->GetName())].GetMaximumBin())+sig_cond_histograms[TString(tmpPar->GetName())].GetBinError(sig_cond_histograms[TString(tmpPar->GetName())].GetMaximumBin());
+	totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	tempMax = bkg_cond_histograms[TString(tmpPar->GetName())].GetBinContent(bkg_cond_histograms[TString(tmpPar->GetName())].GetMaximumBin())+bkg_cond_histograms[TString(tmpPar->GetName())].GetBinError(bkg_cond_histograms[TString(tmpPar->GetName())].GetMaximumBin());
+	totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	tempMax = sig_uncond_histograms[TString(tmpPar->GetName())].GetBinContent(sig_uncond_histograms[TString(tmpPar->GetName())].GetMaximumBin())+sig_uncond_histograms[TString(tmpPar->GetName())].GetBinError(sig_uncond_histograms[TString(tmpPar->GetName())].GetMaximumBin());
+	totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	tempMax = bkg_uncond_histograms[TString(tmpPar->GetName())].GetBinContent(bkg_uncond_histograms[TString(tmpPar->GetName())].GetMaximumBin())+bkg_uncond_histograms[TString(tmpPar->GetName())].GetBinError(bkg_uncond_histograms[TString(tmpPar->GetName())].GetMaximumBin());
+	totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+
+	//d.cd(1);
+	//sig_true_histograms[TString(tmpPar->GetName())].Draw();
+	//tempMax = sig_true_histograms[TString(tmpPar->GetName())].GetYaxis()->GetXmax();
+	//totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	//bkg_true_histograms[TString(tmpPar->GetName())].Draw();
+	//tempMax = sig_true_histograms[TString(tmpPar->GetName())].GetYaxis()->GetXmax();
+	//totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	//sig_cond_histograms[TString(tmpPar->GetName())].Draw();
+	//tempMax = sig_cond_histograms[TString(tmpPar->GetName())].GetYaxis()->GetXmax();
+	//totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	//bkg_cond_histograms[TString(tmpPar->GetName())].Draw();
+	//tempMax = sig_cond_histograms[TString(tmpPar->GetName())].GetYaxis()->GetXmax();
+	//totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	//sig_uncond_histograms[TString(tmpPar->GetName())].Draw();
+	//tempMax = sig_uncond_histograms[TString(tmpPar->GetName())].GetYaxis()->GetXmax();
+	//totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+	//bkg_uncond_histograms[TString(tmpPar->GetName())].Draw();
+	//tempMax = sig_uncond_histograms[TString(tmpPar->GetName())].GetYaxis()->GetXmax();
+	//totalMax = (tempMax>totalMax) ? tempMax : totalMax;
+
+
+	//double totalMax = max(sig_true_histograms[TString(tmpPar->GetName())]  .GetMaximum(),
+	//		  max(bkg_true_histograms[TString(tmpPar->GetName())]  .GetMaximum(),
+	//		  max(sig_cond_histograms[TString(tmpPar->GetName())]  .GetMaximum(),
+	//		  max(bkg_cond_histograms[TString(tmpPar->GetName())]  .GetMaximum(),
+	//		  max(sig_uncond_histograms[TString(tmpPar->GetName())].GetMaximum(),
+	//		      bkg_uncond_histograms[TString(tmpPar->GetName())].GetMaximum())))));
 
 	THStack signalStack("signalStack","signalStack");
 	THStack backgroundStack("backgroundStack","backgroundStack");
 	signalStack.Add(&(sig_true_histograms[TString(tmpPar->GetName())]));
 	signalStack.Add(&(sig_cond_histograms[TString(tmpPar->GetName())]));
 	signalStack.Add(&(sig_uncond_histograms[TString(tmpPar->GetName())]));
-	signalStack.SetMinimum(0.);
-	signalStack.SetMaximum(1.1*totalMax);
+	//signalStack.SetMinimum(0.);
+	//signalStack.SetMaximum(1.1*totalMax);
 	backgroundStack.Add(&(bkg_true_histograms[TString(tmpPar->GetName())]));
 	backgroundStack.Add(&(bkg_cond_histograms[TString(tmpPar->GetName())]));
 	backgroundStack.Add(&(bkg_uncond_histograms[TString(tmpPar->GetName())]));
+	//backgroundStack.SetMinimum(0.);
+	//backgroundStack.SetMaximum(1.1*totalMax);
+
+	//d.cd(1);
+	//signalStack.Draw("NOSTACKE1PHIST");
+	//d.cd(2);
+	//backgroundStack.Draw("NOSTACKE1PHIST");
+	//d.cd();
+	//
+	//double totalMax = max(signalStack.GetMaximum(),backgroundStack.GetMaximum());
+	signalStack.SetMinimum(0.);
+	signalStack.SetMaximum(1.1*totalMax);
 	backgroundStack.SetMinimum(0.);
 	backgroundStack.SetMaximum(1.1*totalMax);
+
 	TLegend signalLegend(.6,0.125,1.,0.375,TString("Signal + Background Distribution of ")+tmpPar->GetName());
 	signalLegend.AddEntry(&(bkg_true_histograms[TString(tmpPar->GetName())]));	 
 	signalLegend.AddEntry(&(bkg_cond_histograms[TString(tmpPar->GetName())]));	 
