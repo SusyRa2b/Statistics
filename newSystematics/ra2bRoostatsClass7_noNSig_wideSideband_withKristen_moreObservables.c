@@ -6,7 +6,7 @@
 //   a.g. : implementing trigger efficiency corrections 
 //
 
-#include "ra2bRoostatsClass7_noNSig_wideSideband_moreObservables.h"
+#include "ra2bRoostatsClass7_noNSig_wideSideband_withKristen_moreObservables.h"
 
 #include <iostream>
 #include <string.h>
@@ -633,6 +633,52 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
 	  }
        else cout << "File " << infile << " is measured input" << endl;
 
+       //By Hand input of Kristen's Numbers:
+
+       double kristen_ttwj_sig_mean ;
+       double kristen_ttwj_sig_stat ;
+       double kristen_ttwj_sig_syst ;
+
+       if(TString(infile).Contains(TString("1BL")))
+	  {
+	    kristen_ttwj_sig_mean = 322;
+	    kristen_ttwj_sig_stat = 30;
+	    kristen_ttwj_sig_syst = 37;
+	    cout << "Using 1BL Value of Kristen's ttwj : " << kristen_ttwj_sig_mean << endl;
+	  }
+
+       if(TString(infile).Contains(TString("1BT")))
+	  {
+	    kristen_ttwj_sig_mean = 5.0;
+	    kristen_ttwj_sig_stat = 2.3;
+	    kristen_ttwj_sig_syst = 2.2;
+	    cout << "Using 1BT Value of Kristen's ttwj : " << kristen_ttwj_sig_mean << endl;
+	  }
+
+       if(TString(infile).Contains(TString("2BL")))
+	  {
+	    kristen_ttwj_sig_mean = 123;
+	    kristen_ttwj_sig_stat = 16;
+	    kristen_ttwj_sig_syst = 16;
+	    cout << "Using 2BL Value of Kristen's ttwj : " << kristen_ttwj_sig_mean << endl;
+	  }
+
+       if(TString(infile).Contains(TString("2BT")))
+	  {
+	    kristen_ttwj_sig_mean = 21;
+	    kristen_ttwj_sig_stat = 6.3;
+	    kristen_ttwj_sig_syst = 6.3;
+	    cout << "Using 2BT Value of Kristen's ttwj : " << kristen_ttwj_sig_mean << endl;
+	  }
+
+       if(TString(infile).Contains(TString("3B")))
+	  {
+	    kristen_ttwj_sig_mean = 13.7;
+	    kristen_ttwj_sig_stat = 6.1;
+	    kristen_ttwj_sig_syst = 3.1;
+	    cout << "Using 3B Value of Kristen's ttwj : " << kristen_ttwj_sig_mean << endl;
+	  }
+
        cout << "getting the file: " << backgroundSystematicsFileName << endl;
 
        inFile.close();       
@@ -754,9 +800,9 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
       rv_Nsig        = new RooRealVar( "Nsig"        , "Nsig"        , 0.0, 1000000. ) ;
       rv_Nsb         = new RooRealVar( "Nsb"         , "Nsb"         , 0.0, 1000000. ) ;
 
-      rv_Nsig_sl     = new RooRealVar( "Nsig_sl"     , "Nsig_sl"     , 0.0, 1000000. ) ;
-      rv_Nsb_sl_e      = new RooRealVar( "Nsb_sl_e"      , "Nsb_sl_e"      , 0.0, 1000000. ) ;
-      rv_Nsb_sl_mu      = new RooRealVar( "Nsb_sl_mu"      , "Nsb_sl_mu"      , 0.0, 1000000. ) ;
+      //rv_Nsig_sl     = new RooRealVar( "Nsig_sl"     , "Nsig_sl"     , 0.0, 1000000. ) ;
+      //rv_Nsb_sl_e      = new RooRealVar( "Nsb_sl_e"      , "Nsb_sl_e"      , 0.0, 1000000. ) ;
+      //rv_Nsb_sl_mu      = new RooRealVar( "Nsb_sl_mu"      , "Nsb_sl_mu"      , 0.0, 1000000. ) ;
 
       rv_Nsig_ldp    = new RooRealVar( "Nsig_ldp"    , "Nsig_ldp"    , 0.0, 1000000. ) ;
       rv_Nsb_ldp     = new RooRealVar( "Nsb_ldp"     , "Nsb_ldp"     , 0.0, 1000000. ) ;
@@ -779,9 +825,9 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
       rv_Nsig        -> setVal( Nsig ) ;
       rv_Nsb         -> setVal( Nsb ) ;
 
-      rv_Nsig_sl     -> setVal( Nsig_sl ) ;
-      rv_Nsb_sl_e      -> setVal( Nsb_sl_e ) ;
-      rv_Nsb_sl_mu      -> setVal( Nsb_sl_mu ) ;
+      //rv_Nsig_sl     -> setVal( Nsig_sl ) ;
+      //rv_Nsb_sl_e      -> setVal( Nsb_sl_e ) ;
+      //rv_Nsb_sl_mu      -> setVal( Nsb_sl_mu ) ;
 
       rv_Nsig_ldp    -> setVal( Nsig_ldp ) ;
       rv_Nsb_ldp     -> setVal( Nsb_ldp ) ;
@@ -818,21 +864,40 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
       RooArgSet normalNuisancePdfs ("normalNuisancePdfs");
       RooArgSet betaNuisancePdfs ("betaNuisancePdfs");
 
+      //----------------Kristen's Constraints---------------------//
+
+      double alpha,beta;
+
+      double kristen_ttwj_sig_new_syst = kristen_ttwj_sig_syst*kristen_ttwj_sig_syst + kristen_ttwj_sig_stat*kristen_ttwj_sig_stat;
+      kristen_ttwj_sig_new_syst = sqrt(kristen_ttwj_sig_new_syst);
+
+      betaPrimeModeTransform(kristen_ttwj_sig_mean,kristen_ttwj_sig_new_syst,alpha,beta);
+
+      RooRealVar N_pass_mu_ttwj_sig ("N_pass_mu_ttwj_sig", "N_pass_mu_ttwj_sig", alpha-1,0,1e5);
+      observedParametersList.add( N_pass_mu_ttwj_sig );
+      RooRealVar mu_pass_mu_ttwj_sig ("mu_pass_mu_ttwj_sig", "mu_pass_mu_ttwj_sig", alpha-1,1e-9,1e5);
+      allPoissonNuisances.add(mu_pass_mu_ttwj_sig);
+      RooPoisson pdf_pass_mu_ttwj_sig ("pdf_pass_mu_ttwj_sig" , "pdf_pass_mu_ttwj_sig", N_pass_mu_ttwj_sig, mu_pass_mu_ttwj_sig);
+      allNuisancePdfs.add(pdf_pass_mu_ttwj_sig);
+      RooRealVar N_fail_mu_ttwj_sig ("N_fail_mu_ttwj_sig", "N_fail_mu_ttwj_sig", beta-1,0,1e5);
+      observedParametersList.add( N_fail_mu_ttwj_sig );
+      RooRealVar mu_fail_mu_ttwj_sig ("mu_fail_mu_ttwj_sig", "mu_fail_mu_ttwj_sig", beta-1,1e-9,1e5);
+      allPoissonNuisances.add(mu_fail_mu_ttwj_sig);
+      RooPoisson pdf_fail_mu_ttwj_sig ("pdf_fail_mu_ttwj_sig" , "pdf_fail_mu_ttwj_sig", N_fail_mu_ttwj_sig, mu_fail_mu_ttwj_sig);
+      allNuisancePdfs.add(pdf_fail_mu_ttwj_sig);
+      
+      RooFormulaVar kristen_mu_ttwj_sig ("mu_ttwj_sig","@0/(@1)",RooArgList(mu_pass_mu_ttwj_sig,mu_fail_mu_ttwj_sig));
+
     //____ Counts in SIG ______________________
 
       cout << " --- SIG" << endl;
 
       if ( useSigTtwjVar ) {
-         rrv_mu_ttwj_sig = new RooRealVar( "mu_ttwj_sig"   , "mu_ttwj_sig"   , 1e-9, 10000. ) ;
-         rv_mu_ttwj_sig = rrv_mu_ttwj_sig ;
-	 allPoissonNuisances.add(*rv_mu_ttwj_sig);
-         rrv_mu_ttwj_sig   -> setVal( initialval_ttwj_sig ) ;  //-- this is a starting value only.
+	rv_mu_ttwj_sig = &kristen_mu_ttwj_sig;
       }
       if ( !useLdpVars ) {
-         rrv_mu_qcd_sig  = new RooRealVar( "mu_qcd_sig"    , "mu_qcd_sig"    , 1e-9, 200. ) ;
-         rv_mu_qcd_sig = rrv_mu_qcd_sig ;
-	 allPoissonNuisances.add(*rv_mu_qcd_sig);
-         rrv_mu_qcd_sig  -> setVal( initialval_qcd_sig ) ; //-- this is a starting value only.
+	cout <<"This option is invalid, please set useLdpVars to true)"<<endl;
+	return false;
       }
 
 
@@ -856,16 +921,12 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
       cout << " --- SB" << endl;
 
       if ( !useSigTtwjVar ) {
-         rrv_mu_ttwj_sb  = new RooRealVar( "mu_ttwj_sb"    , "mu_ttwj_sb"    , 1e-9, 10000. ) ;
-         rv_mu_ttwj_sb = rrv_mu_ttwj_sb ;
-	 allPoissonNuisances.add(*rv_mu_ttwj_sb);
-         rrv_mu_ttwj_sb   -> setVal( initialval_ttwj_sb ) ;  //-- this is a starting value only.
+	cout << "This option is not valid with this likelihood.  Please set useSigTtwjVar to true." << endl;
+	return false;
       }
       if ( !useLdpVars ) {
-         rrv_mu_qcd_sb  = new RooRealVar( "mu_qcd_sb"    , "mu_qcd_sb"    , 1e-9, 500. ) ;
-         rv_mu_qcd_sb = rrv_mu_qcd_sb ;
-	 allPoissonNuisances.add(*rv_mu_qcd_sb);
-         rrv_mu_qcd_sb  -> setVal( initialval_qcd_sb ) ; //-- this is a starting value only.
+	cout <<"This option is invalid, please set useLdpVars to true"<<endl;
+	return false;
       }
 
       //-- Note: QCD is rfv
@@ -889,15 +950,15 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
 
     //____ Counts in SIG, SL  ______________________
 
-      cout << " --- SIG, SL" << endl;
-
-      rv_mu_ttwj_sig_sl  = new RooRealVar( "mu_ttwj_sig_sl"    , "mu_ttwj_sig_sl"    , 1e-9, 2500. ) ;
-      allPoissonNuisances.add(*rv_mu_ttwj_sig_sl);
-
-      //-- Note: QCD, Ewo, and Znn are assumed to be negligible and are not explicitly included.
-      //-- Note: SUSY is rfv
-
-      rv_mu_ttwj_sig_sl  -> setVal( initialval_ttwj_sig_sl ) ;  //-- this is a starting value only.
+      //cout << " --- SIG, SL" << endl;
+      //
+      //rv_mu_ttwj_sig_sl  = new RooRealVar( "mu_ttwj_sig_sl"    , "mu_ttwj_sig_sl"    , 1e-9, 2500. ) ;
+      //allPoissonNuisances.add(*rv_mu_ttwj_sig_sl);
+      //
+      ////-- Note: QCD, Ewo, and Znn are assumed to be negligible and are not explicitly included.
+      ////-- Note: SUSY is rfv
+      //
+      //rv_mu_ttwj_sig_sl  -> setVal( initialval_ttwj_sig_sl ) ;  //-- this is a starting value only.
 
 
 
@@ -907,18 +968,18 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
 
     //____ Counts in SB, SL  ______________________
 
-      cout << " --- SB, SL" << endl;
-
-      rv_mu_ttwj_sb_sl_e  = new RooRealVar( "mu_ttwj_sb_sl_e"    , "mu_ttwj_sb_sl_e"    , 1e-9, 3000. ) ;
-      rv_mu_ttwj_sb_sl_mu  = new RooRealVar( "mu_ttwj_sb_sl_mu"    , "mu_ttwj_sb_sl_mu"    , 1e-9, 3000. ) ;
-      allPoissonNuisances.add(*rv_mu_ttwj_sb_sl_e);
-      allPoissonNuisances.add(*rv_mu_ttwj_sb_sl_mu);
-
-      //-- Note: QCD, Ewo, and Znn are assumed to be negligible and are not explicitly included.
-      //-- Note: SUSY is rfv
-
-      rv_mu_ttwj_sb_sl_e  -> setVal( initialval_ttwj_sb_sl_e ) ;  //-- this is a starting value only.
-      rv_mu_ttwj_sb_sl_mu  -> setVal( initialval_ttwj_sb_sl_mu ) ;  //-- this is a starting value only.
+      //cout << " --- SB, SL" << endl;
+      //
+      //rv_mu_ttwj_sb_sl_e  = new RooRealVar( "mu_ttwj_sb_sl_e"    , "mu_ttwj_sb_sl_e"    , 1e-9, 3000. ) ;
+      //rv_mu_ttwj_sb_sl_mu  = new RooRealVar( "mu_ttwj_sb_sl_mu"    , "mu_ttwj_sb_sl_mu"    , 1e-9, 3000. ) ;
+      //allPoissonNuisances.add(*rv_mu_ttwj_sb_sl_e);
+      //allPoissonNuisances.add(*rv_mu_ttwj_sb_sl_mu);
+      //
+      ////-- Note: QCD, Ewo, and Znn are assumed to be negligible and are not explicitly included.
+      ////-- Note: SUSY is rfv
+      //
+      //rv_mu_ttwj_sb_sl_e  -> setVal( initialval_ttwj_sb_sl_e ) ;  //-- this is a starting value only.
+      //rv_mu_ttwj_sb_sl_mu  -> setVal( initialval_ttwj_sb_sl_mu ) ;  //-- this is a starting value only.
 
 
 
@@ -1052,29 +1113,29 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
      //-- SUSY
 
       rv_mu_susymc_sig      = new RooRealVar( "mu_susymc_sig"     , "mu_susymc_sig"     , 0.0, 100000. ) ;
-      rv_mu_susymc_sb       = new RooRealVar( "mu_susymc_sb"      , "mu_susymc_sb"      , 0.0, 100000. ) ;
-      rv_mu_susymc_sig_sl_e   = new RooRealVar( "mu_susymc_sig_sl_e"  , "mu_susymc_sig_sl_e"  , 0.0, 100000. ) ;
-      rv_mu_susymc_sig_sl_mu   = new RooRealVar( "mu_susymc_sig_sl_mu"  , "mu_susymc_sig_sl_mu"  , 0.0, 100000. ) ;
-      rv_mu_susymc_sb_sl_e    = new RooRealVar( "mu_susymc_sb_sl_e"   , "mu_susymc_sb_sl_e"   , 0.0, 100000. ) ;
-      rv_mu_susymc_sb_sl_mu    = new RooRealVar( "mu_susymc_sb_sl_mu"   , "mu_susymc_sb_sl_mu"   , 0.0, 100000. ) ;
+      ///rv_mu_susymc_sb       = new RooRealVar( "mu_susymc_sb"      , "mu_susymc_sb"      , 0.0, 100000. ) ;
+      ///rv_mu_susymc_sig_sl_e   = new RooRealVar( "mu_susymc_sig_sl_e"  , "mu_susymc_sig_sl_e"  , 0.0, 100000. ) ;
+      ///rv_mu_susymc_sig_sl_mu   = new RooRealVar( "mu_susymc_sig_sl_mu"  , "mu_susymc_sig_sl_mu"  , 0.0, 100000. ) ;
+      ///rv_mu_susymc_sb_sl_e    = new RooRealVar( "mu_susymc_sb_sl_e"   , "mu_susymc_sb_sl_e"   , 0.0, 100000. ) ;
+      ///rv_mu_susymc_sb_sl_mu    = new RooRealVar( "mu_susymc_sb_sl_mu"   , "mu_susymc_sb_sl_mu"   , 0.0, 100000. ) ;
       rv_mu_susymc_sig_ldp  = new RooRealVar( "mu_susymc_sig_ldp" , "mu_susymc_sig_ldp" , 0.0, 100000. ) ;
       rv_mu_susymc_sb_ldp   = new RooRealVar( "mu_susymc_sb_ldp"  , "mu_susymc_sb_ldp"  , 0.0, 100000. ) ;
 
       rv_mu_susymc_sig     -> setVal( 0.1 ) ;
-      rv_mu_susymc_sb      -> setVal( 0. ) ;
-      rv_mu_susymc_sig_sl_e  -> setVal( 0. ) ;
-      rv_mu_susymc_sig_sl_mu  -> setVal( 0. ) ;
-      rv_mu_susymc_sb_sl_e   -> setVal( 0. ) ;
-      rv_mu_susymc_sb_sl_mu   -> setVal( 0. ) ;
+      //rv_mu_susymc_sb      -> setVal( 0. ) ;
+      //rv_mu_susymc_sig_sl_e  -> setVal( 0. ) ;
+      //rv_mu_susymc_sig_sl_mu  -> setVal( 0. ) ;
+      //rv_mu_susymc_sb_sl_e   -> setVal( 0. ) ;
+      //rv_mu_susymc_sb_sl_mu   -> setVal( 0. ) ;
       rv_mu_susymc_sig_ldp -> setVal( 0. ) ;
       rv_mu_susymc_sb_ldp  -> setVal( 0. ) ;
 
       rv_mu_susymc_sig     -> setConstant(kTRUE) ;
-      rv_mu_susymc_sb      -> setConstant(kTRUE) ;
-      rv_mu_susymc_sig_sl_e  -> setConstant(kTRUE) ;
-      rv_mu_susymc_sig_sl_mu  -> setConstant(kTRUE) ;
-      rv_mu_susymc_sb_sl_e   -> setConstant(kTRUE) ;
-      rv_mu_susymc_sb_sl_mu   -> setConstant(kTRUE) ;
+      //rv_mu_susymc_sb      -> setConstant(kTRUE) ;
+      //rv_mu_susymc_sig_sl_e  -> setConstant(kTRUE) ;
+      //rv_mu_susymc_sig_sl_mu  -> setConstant(kTRUE) ;
+      //rv_mu_susymc_sb_sl_e   -> setConstant(kTRUE) ;
+      //rv_mu_susymc_sb_sl_mu   -> setConstant(kTRUE) ;
       rv_mu_susymc_sig_ldp -> setConstant(kTRUE) ;
       rv_mu_susymc_sb_ldp  -> setConstant(kTRUE) ;
 
@@ -1124,9 +1185,9 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
 
      //-- SB
 
-      rv_mu_Ewomc_sb     = new RooRealVar( "mu_Ewomc_sb"   ,"mu_Ewomc_sb"   , 1e-9, 1000. ) ;
-      rv_mu_Ewomc_sb    -> setVal( NEwomc_sb ) ;
-      rv_mu_Ewomc_sb    -> setConstant( kTRUE ) ;
+      //rv_mu_Ewomc_sb     = new RooRealVar( "mu_Ewomc_sb"   ,"mu_Ewomc_sb"   , 1e-9, 1000. ) ;
+      //rv_mu_Ewomc_sb    -> setVal( NEwomc_sb ) ;
+      //rv_mu_Ewomc_sb    -> setConstant( kTRUE ) ;
 
 
 
@@ -1146,60 +1207,60 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
 
     //--- mean parameters.
       rv_mean_eff_sf_sig     = new RooRealVar( "mean_eff_sf_sig"    , "mean_eff_sf_sig", 0., 10. ) ;
-      rv_mean_eff_sf_sb      = new RooRealVar( "mean_eff_sf_sb"     , "mean_eff_sf_sb", 0., 10. ) ;
-      rv_mean_eff_sf_sig_sl_e  = new RooRealVar( "mean_eff_sf_sig_sl_e" , "mean_eff_sf_sig_sl_e", 0., 10. ) ;
-      rv_mean_eff_sf_sig_sl_mu  = new RooRealVar( "mean_eff_sf_sig_sl_mu" , "mean_eff_sf_sig_sl_mu", 0., 10. ) ;
-      rv_mean_eff_sf_sb_sl_e   = new RooRealVar( "mean_eff_sf_sb_sl_e"  , "mean_eff_sf_sb_sl_e", 0., 10. ) ;
-      rv_mean_eff_sf_sb_sl_mu   = new RooRealVar( "mean_eff_sf_sb_sl_mu"  , "mean_eff_sf_sb_sl_mu", 0., 10. ) ;
+      ///rv_mean_eff_sf_sb      = new RooRealVar( "mean_eff_sf_sb"     , "mean_eff_sf_sb", 0., 10. ) ;
+      ///rv_mean_eff_sf_sig_sl_e  = new RooRealVar( "mean_eff_sf_sig_sl_e" , "mean_eff_sf_sig_sl_e", 0., 10. ) ;
+      ///rv_mean_eff_sf_sig_sl_mu  = new RooRealVar( "mean_eff_sf_sig_sl_mu" , "mean_eff_sf_sig_sl_mu", 0., 10. ) ;
+      ///rv_mean_eff_sf_sb_sl_e   = new RooRealVar( "mean_eff_sf_sb_sl_e"  , "mean_eff_sf_sb_sl_e", 0., 10. ) ;
+      ///rv_mean_eff_sf_sb_sl_mu   = new RooRealVar( "mean_eff_sf_sb_sl_mu"  , "mean_eff_sf_sb_sl_mu", 0., 10. ) ;
       rv_mean_eff_sf_sig_ldp = new RooRealVar( "mean_eff_sf_sig_ldp", "mean_eff_sf_sig_ldp", 0., 10. ) ;
       rv_mean_eff_sf_sb_ldp  = new RooRealVar( "mean_eff_sf_sb_ldp" , "mean_eff_sf_sb_ldp", 0., 10. ) ;
 
     //--- width parameters.
       rv_width_eff_sf_sig     = new RooRealVar( "width_eff_sf_sig"    , "width_eff_sf_sig", 0., 10. ) ;
-      rv_width_eff_sf_sb      = new RooRealVar( "width_eff_sf_sb"     , "width_eff_sf_sb", 0., 10. ) ;
-      rv_width_eff_sf_sig_sl_e  = new RooRealVar( "width_eff_sf_sig_sl_e" , "width_eff_sf_sig_sl_e", 0., 10. ) ;
-      rv_width_eff_sf_sig_sl_mu  = new RooRealVar( "width_eff_sf_sig_sl_mu" , "width_eff_sf_sig_sl_mu", 0., 10. ) ;
-      rv_width_eff_sf_sb_sl_e   = new RooRealVar( "width_eff_sf_sb_sl_e"  , "width_eff_sf_sb_sl_e", 0., 10. ) ;
-      rv_width_eff_sf_sb_sl_mu   = new RooRealVar( "width_eff_sf_sb_sl_mu"  , "width_eff_sf_sb_sl_mu", 0., 10. ) ;
+      ///rv_width_eff_sf_sb      = new RooRealVar( "width_eff_sf_sb"     , "width_eff_sf_sb", 0., 10. ) ;
+      ///rv_width_eff_sf_sig_sl_e  = new RooRealVar( "width_eff_sf_sig_sl_e" , "width_eff_sf_sig_sl_e", 0., 10. ) ;
+      ///rv_width_eff_sf_sig_sl_mu  = new RooRealVar( "width_eff_sf_sig_sl_mu" , "width_eff_sf_sig_sl_mu", 0., 10. ) ;
+      ///rv_width_eff_sf_sb_sl_e   = new RooRealVar( "width_eff_sf_sb_sl_e"  , "width_eff_sf_sb_sl_e", 0., 10. ) ;
+      ///rv_width_eff_sf_sb_sl_mu   = new RooRealVar( "width_eff_sf_sb_sl_mu"  , "width_eff_sf_sb_sl_mu", 0., 10. ) ;
       rv_width_eff_sf_sig_ldp = new RooRealVar( "width_eff_sf_sig_ldp", "width_eff_sf_sig_ldp", 0., 10. ) ;
       rv_width_eff_sf_sb_ldp  = new RooRealVar( "width_eff_sf_sb_ldp" , "width_eff_sf_sb_ldp", 0., 10. ) ;
 
 
       rv_mean_eff_sf_sig     -> setVal( 1.00 ) ;
-      rv_mean_eff_sf_sb      -> setVal( 1.00 ) ;
-      rv_mean_eff_sf_sig_sl_e  -> setVal( 1.00 ) ;
-      rv_mean_eff_sf_sig_sl_mu  -> setVal( 1.00 ) ;
-      rv_mean_eff_sf_sb_sl_e   -> setVal( 1.00 ) ;
-      rv_mean_eff_sf_sb_sl_mu   -> setVal( 1.00 ) ;
+      //rv_mean_eff_sf_sb      -> setVal( 1.00 ) ;
+      //rv_mean_eff_sf_sig_sl_e  -> setVal( 1.00 ) ;
+      //rv_mean_eff_sf_sig_sl_mu  -> setVal( 1.00 ) ;
+      //rv_mean_eff_sf_sb_sl_e   -> setVal( 1.00 ) ;
+      //rv_mean_eff_sf_sb_sl_mu   -> setVal( 1.00 ) ;
       rv_mean_eff_sf_sig_ldp -> setVal( 1.00 ) ;
       rv_mean_eff_sf_sb_ldp  -> setVal( 1.00 ) ;
 
       rv_mean_eff_sf_sig     -> setConstant( kTRUE ) ;
-      rv_mean_eff_sf_sb      -> setConstant( kTRUE ) ;
-      rv_mean_eff_sf_sig_sl_e  -> setConstant( kTRUE ) ;
-      rv_mean_eff_sf_sig_sl_mu  -> setConstant( kTRUE ) ;
-      rv_mean_eff_sf_sb_sl_e   -> setConstant( kTRUE ) ;
-      rv_mean_eff_sf_sb_sl_mu   -> setConstant( kTRUE ) ;
+      //rv_mean_eff_sf_sb      -> setConstant( kTRUE ) ;
+      //rv_mean_eff_sf_sig_sl_e  -> setConstant( kTRUE ) ;
+      //rv_mean_eff_sf_sig_sl_mu  -> setConstant( kTRUE ) ;
+      //rv_mean_eff_sf_sb_sl_e   -> setConstant( kTRUE ) ;
+      //rv_mean_eff_sf_sb_sl_mu   -> setConstant( kTRUE ) ;
       rv_mean_eff_sf_sig_ldp -> setConstant( kTRUE ) ;
       rv_mean_eff_sf_sb_ldp  -> setConstant( kTRUE ) ;
 
 
       //--- Initialize all width parameters to 15%.  They will be reset in the susy scan.
       rv_width_eff_sf_sig     -> setVal( 0.15 ) ;
-      rv_width_eff_sf_sb      -> setVal( 0.15 ) ;
-      rv_width_eff_sf_sig_sl_e  -> setVal( 0.15 ) ;
-      rv_width_eff_sf_sig_sl_mu  -> setVal( 0.15 ) ;
-      rv_width_eff_sf_sb_sl_e   -> setVal( 0.15 ) ;
-      rv_width_eff_sf_sb_sl_mu   -> setVal( 0.15 ) ;
+      //rv_width_eff_sf_sb      -> setVal( 0.15 ) ;
+      //rv_width_eff_sf_sig_sl_e  -> setVal( 0.15 ) ;
+      //rv_width_eff_sf_sig_sl_mu  -> setVal( 0.15 ) ;
+      //rv_width_eff_sf_sb_sl_e   -> setVal( 0.15 ) ;
+      //rv_width_eff_sf_sb_sl_mu   -> setVal( 0.15 ) ;
       rv_width_eff_sf_sig_ldp -> setVal( 0.15 ) ;
       rv_width_eff_sf_sb_ldp  -> setVal( 0.15 ) ;
 
       rv_width_eff_sf_sig     -> setConstant( kTRUE ) ;
-      rv_width_eff_sf_sb      -> setConstant( kTRUE ) ;
-      rv_width_eff_sf_sig_sl_e  -> setConstant( kTRUE ) ;
-      rv_width_eff_sf_sig_sl_mu  -> setConstant( kTRUE ) ;
-      rv_width_eff_sf_sb_sl_e   -> setConstant( kTRUE ) ;
-      rv_width_eff_sf_sb_sl_mu   -> setConstant( kTRUE ) ;
+      //rv_width_eff_sf_sb      -> setConstant( kTRUE ) ;
+      //rv_width_eff_sf_sig_sl_e  -> setConstant( kTRUE ) ;
+      //rv_width_eff_sf_sig_sl_mu  -> setConstant( kTRUE ) ;
+      //rv_width_eff_sf_sb_sl_e   -> setConstant( kTRUE ) ;
+      //rv_width_eff_sf_sb_sl_mu   -> setConstant( kTRUE ) ;
       rv_width_eff_sf_sig_ldp -> setConstant( kTRUE ) ;
       rv_width_eff_sf_sb_ldp  -> setConstant( kTRUE ) ;
 
@@ -1222,7 +1283,6 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
 
       //char formula[1024];
 
-      double alpha,beta;
       double k,theta;
 
        // gammaModeTransform(Rlsb_passfail,Rlsb_passfail_err,k,theta);
@@ -1542,22 +1602,22 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
         //  //sf_ttwj_sig_scale.setConstant();
         //  //RooProduct rp_sf_ttwj_sig ("sf_ttwj_sig","sf_ttwj_sig",RooArgList(mu_comp_sf_ttwj_sig,sf_ttwj_sig_scale));
 
-      betaPrimeModeTransform(sf_ttwj_sig,sf_ttwj_sig_err,alpha,beta);
-
-      RooRealVar N_pass_sf_ttwj_sig ("N_pass_sf_ttwj_sig", "N_pass_sf_ttwj_sig", alpha-1,0,1e5);
-      observedParametersList.add( N_pass_sf_ttwj_sig );
-      RooRealVar mu_pass_sf_ttwj_sig ("mu_pass_sf_ttwj_sig", "mu_pass_sf_ttwj_sig", alpha-1,1e-9,1e5);
-      allPoissonNuisances.add(mu_pass_sf_ttwj_sig);
-      RooPoisson pdf_pass_sf_ttwj_sig ("pdf_pass_sf_ttwj_sig" , "pdf_pass_sf_ttwj_sig", N_pass_sf_ttwj_sig, mu_pass_sf_ttwj_sig);
-      allNuisancePdfs.add(pdf_pass_sf_ttwj_sig);
-      RooRealVar N_fail_sf_ttwj_sig ("N_fail_sf_ttwj_sig", "N_fail_sf_ttwj_sig", beta-1,0,1e5);
-      observedParametersList.add( N_fail_sf_ttwj_sig );
-      RooRealVar mu_fail_sf_ttwj_sig ("mu_fail_sf_ttwj_sig", "mu_fail_sf_ttwj_sig", beta-1,1e-9,1e5);
-      allPoissonNuisances.add(mu_fail_sf_ttwj_sig);
-      RooPoisson pdf_fail_sf_ttwj_sig ("pdf_fail_sf_ttwj_sig" , "pdf_fail_sf_ttwj_sig", N_fail_sf_ttwj_sig, mu_fail_sf_ttwj_sig);
-      allNuisancePdfs.add(pdf_fail_sf_ttwj_sig);
-      
-      RooFormulaVar rrv_sf_ttwj_sig ("sf_ttwj_sig","@0/(@1)",RooArgList(mu_pass_sf_ttwj_sig,mu_fail_sf_ttwj_sig));
+      //betaPrimeModeTransform(sf_ttwj_sig,sf_ttwj_sig_err,alpha,beta);
+      //
+      //RooRealVar N_pass_sf_ttwj_sig ("N_pass_sf_ttwj_sig", "N_pass_sf_ttwj_sig", alpha-1,0,1e5);
+      //observedParametersList.add( N_pass_sf_ttwj_sig );
+      //RooRealVar mu_pass_sf_ttwj_sig ("mu_pass_sf_ttwj_sig", "mu_pass_sf_ttwj_sig", alpha-1,1e-9,1e5);
+      //allPoissonNuisances.add(mu_pass_sf_ttwj_sig);
+      //RooPoisson pdf_pass_sf_ttwj_sig ("pdf_pass_sf_ttwj_sig" , "pdf_pass_sf_ttwj_sig", N_pass_sf_ttwj_sig, mu_pass_sf_ttwj_sig);
+      //allNuisancePdfs.add(pdf_pass_sf_ttwj_sig);
+      //RooRealVar N_fail_sf_ttwj_sig ("N_fail_sf_ttwj_sig", "N_fail_sf_ttwj_sig", beta-1,0,1e5);
+      //observedParametersList.add( N_fail_sf_ttwj_sig );
+      //RooRealVar mu_fail_sf_ttwj_sig ("mu_fail_sf_ttwj_sig", "mu_fail_sf_ttwj_sig", beta-1,1e-9,1e5);
+      //allPoissonNuisances.add(mu_fail_sf_ttwj_sig);
+      //RooPoisson pdf_fail_sf_ttwj_sig ("pdf_fail_sf_ttwj_sig" , "pdf_fail_sf_ttwj_sig", N_fail_sf_ttwj_sig, mu_fail_sf_ttwj_sig);
+      //allNuisancePdfs.add(pdf_fail_sf_ttwj_sig);
+      //
+      //RooFormulaVar rrv_sf_ttwj_sig ("sf_ttwj_sig","@0/(@1)",RooArgList(mu_pass_sf_ttwj_sig,mu_fail_sf_ttwj_sig));
 
       ////Truncated Gaussians for comparisons
       //
@@ -2213,91 +2273,7 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
 
     //-------  add trigger efficiencies as nuisance parameters with Beta Funtions
 
-      betaModeTransform(eps_sb_mean-epsSF_sb_errm+0.5*(epsSF_sb_errm+epsSF_sb_errp),epsSF_sb_errm+epsSF_sb_errp,alpha,beta);
-      //RooRealVar N_pass_epsSF_sb ("N_pass_epsSF_sb", "N_pass_epsSF_sb", alpha-1,0,1e5);
-      //observedParametersList.add( N_pass_epsSF_sb );
-      //RooRealVar N_fail_epsSF_sb ("N_fail_epsSF_sb", "N_fail_epsSF_sb", beta-1,0,1e5);
-      //observedParametersList.add( N_fail_epsSF_sb );
-      //RooRealVar rrv_epsSF_sb ("epsSF_sb","epsSF_sb",eps_sb_mean-epsSF_sb_errm+0.5*(epsSF_sb_errm+epsSF_sb_errp),0,1);
-      //allNonPoissonNuisances.add (rrv_epsSF_sb);
-      //RooBetaPdfWithPoissonGenerator pdf_epsSF_sb ("pdf_epsSF_sb" , "pdf_epsSF_sb", rrv_epsSF_sb, N_pass_epsSF_sb, N_fail_epsSF_sb);
-      //allNuisancePdfs.add(pdf_epsSF_sb);
-
-      //RooRealVar rrv_epsSF_sb ("epsSF_sb","epsSF_sb",eps_sb_mean-epsSF_sb_errm+0.5*(epsSF_sb_errm+epsSF_sb_errp),0,1);
-      //RooRealVar epsSF_sb_alpha ("epsSF_sb_alpha", "epsSF_sb_alpha", alpha);
-      //RooRealVar epsSF_sb_beta ("epsSF_sb_beta", "epsSF_sb_beta", beta);
-      //RooBetaPdf pdf_epsSF_sb ("pdf_epsSF_sb" , "pdf_epsSF_sb", rrv_epsSF_sb, epsSF_sb_alpha, epsSF_sb_beta);
-      //epsSF_sb_alpha.setConstant();
-      //epsSF_sb_beta.setConstant();
-      //allNonPoissonNuisances.add (rrv_epsSF_sb);
-      //if(constantNonPoisson) rrv_epsSF_sb.setConstant();
-      //betaNuisancePdfs.add (pdf_epsSF_sb);
-
-      //RooRealVar N_pass_epsSF_sb ("N_pass_epsSF_sb", "N_pass_epsSF_sb", alpha-1,0,1e5);
-      //observedParametersList.add( N_pass_epsSF_sb );
-      //RooRealVar N_fail_epsSF_sb ("N_fail_epsSF_sb", "N_fail_epsSF_sb", beta-1,0,1e5);
-      //observedParametersList.add( N_fail_epsSF_sb );
-      //RooAddition mu_epsSF_sb ("mu_epsSF_sb", "mu_epsSF_sb", RooArgList(N_pass_epsSF_sb,N_fail_epsSF_sb));
-      //RooRealVar rrv_epsSF_sb ("epsSF_sb","epsSF_sb",eps_sb_mean-epsSF_sb_errm+0.5*(epsSF_sb_errm+epsSF_sb_errp),0,1);
-      //allNonPoissonNuisances.add (rrv_epsSF_sb);
-      //RooFormulaVar oneMinus_epsSF_sb ("oneMinus_epsSF_sb","1.0-@0",RooArgList(rrv_epsSF_sb));
-      //RooProduct mu_pass_epsSF_sb ("mu_pass_epsSF_sb", "mu_pass_epsSF_sb",RooArgList(rrv_epsSF_sb,mu_epsSF_sb));
-      //RooProduct mu_fail_epsSF_sb ("mu_fail_epsSF_sb", "mu_fail_epsSF_sb",RooArgList(oneMinus_epsSF_sb,mu_epsSF_sb));
-      //RooPoissonDummy pdf_pass_epsSF_sb ("pdf_pass_epsSF_sb" , "pdf_pass_epsSF_sb", N_pass_epsSF_sb, mu_pass_epsSF_sb);
-      //allNuisancePdfs.add(pdf_pass_epsSF_sb);
-      //RooPoissonDummy pdf_fail_epsSF_sb ("pdf_fail_epsSF_sb" , "pdf_fail_epsSF_sb", N_fail_epsSF_sb, mu_fail_epsSF_sb);
-      //allNuisancePdfs.add(pdf_fail_epsSF_sb);
-
-      RooRealVar N_pass_epsSF_sb ("N_pass_epsSF_sb", "N_pass_epsSF_sb", alpha-1,0,1e5);
-      observedParametersList.add( N_pass_epsSF_sb );
-      RooRealVar mu_pass_epsSF_sb ("mu_pass_epsSF_sb", "mu_pass_epsSF_sb", alpha-1,1e-9,1e5);
-      allPoissonNuisances.add(mu_pass_epsSF_sb);
-      RooPoisson pdf_pass_epsSF_sb ("pdf_pass_epsSF_sb" , "pdf_pass_epsSF_sb", N_pass_epsSF_sb, mu_pass_epsSF_sb);
-      allNuisancePdfs.add(pdf_pass_epsSF_sb);
-      RooRealVar N_fail_epsSF_sb ("N_fail_epsSF_sb", "N_fail_epsSF_sb", beta-1,0,1e5);
-      observedParametersList.add( N_fail_epsSF_sb );
-      RooRealVar mu_fail_epsSF_sb ("mu_fail_epsSF_sb", "mu_fail_epsSF_sb", beta-1,1e-9,1e5);
-      allPoissonNuisances.add(mu_fail_epsSF_sb);
-      RooPoisson pdf_fail_epsSF_sb ("pdf_fail_epsSF_sb" , "pdf_fail_epsSF_sb", N_fail_epsSF_sb, mu_fail_epsSF_sb);
-      allNuisancePdfs.add(pdf_fail_epsSF_sb);
-      
-      RooFormulaVar rrv_epsSF_sb ("epsSF_sb","@0/(@0+@1)",RooArgList(mu_pass_epsSF_sb,mu_fail_epsSF_sb));
-
       betaModeTransform(eps_sig_mean-epsSF_sig_errm+0.5*(epsSF_sig_errm+epsSF_sig_errp),epsSF_sig_errm+epsSF_sig_errp,alpha,beta);
-      //RooRealVar N_pass_epsSF_sig ("N_pass_epsSF_sig", "N_pass_epsSF_sig", alpha-1,0,1e5);
-      //observedParametersList.add( N_pass_epsSF_sig );
-      //RooRealVar N_fail_epsSF_sig ("N_fail_epsSF_sig", "N_fail_epsSF_sig", beta-1,0,1e5);
-      //observedParametersList.add( N_fail_epsSF_sig );
-      //RooRealVar rrv_epsSF_sig ("epsSF_sig","epsSF_sig",eps_sig_mean-epsSF_sig_errm+0.5*(epsSF_sig_errm+epsSF_sig_errp),0,1);
-      //allNonPoissonNuisances.add (rrv_epsSF_sig);
-      //RooBetaPdfWithPoissonGenerator pdf_epsSF_sig ("pdf_epsSF_sig" , "pdf_epsSF_sig", rrv_epsSF_sig, N_pass_epsSF_sig, N_fail_epsSF_sig);
-      //allNuisancePdfs.add(pdf_epsSF_sig);
-
-      //RooRealVar rrv_epsSF_sig ("epsSF_sig","epsSF_sig",eps_sig_mean-epsSF_sig_errm+0.5*(epsSF_sig_errm+epsSF_sig_errp),0,1);
-      //RooRealVar epsSF_sig_alpha ("epsSF_sig_alpha", "epsSF_sig_alpha", alpha);
-      //RooRealVar epsSF_sig_beta ("epsSF_sig_beta", "epsSF_sig_beta", beta);
-      //RooBetaPdf pdf_epsSF_sig ("pdf_epsSF_sig" , "pdf_epsSF_sig", rrv_epsSF_sig, epsSF_sig_alpha, epsSF_sig_beta);
-      //epsSF_sig_alpha.setConstant();
-      //epsSF_sig_beta.setConstant();
-      //allNonPoissonNuisances.add (rrv_epsSF_sig);
-      //if(constantNonPoisson) rrv_epsSF_sig.setConstant();
-      //betaNuisancePdfs.add (pdf_epsSF_sig);
-
-      //RooRealVar N_pass_epsSF_sig ("N_pass_epsSF_sig", "N_pass_epsSF_sig", alpha-1,0,1e5);
-      //observedParametersList.add( N_pass_epsSF_sig );
-      //RooRealVar N_fail_epsSF_sig ("N_fail_epsSF_sig", "N_fail_epsSF_sig", beta-1,0,1e5);
-      //observedParametersList.add( N_fail_epsSF_sig );
-      //RooAddition mu_epsSF_sig ("mu_epsSF_sig", "mu_epsSF_sig", RooArgList(N_pass_epsSF_sig,N_fail_epsSF_sig));
-      //RooRealVar rrv_epsSF_sig ("epsSF_sig","epsSF_sig",eps_sig_mean-epsSF_sig_errm+0.5*(epsSF_sig_errm+epsSF_sig_errp),0,1);
-      //allNonPoissonNuisances.add (rrv_epsSF_sig);
-      //RooFormulaVar oneMinus_epsSF_sig ("oneMinus_epsSF_sig","1.0-@0",RooArgList(rrv_epsSF_sig));
-      //RooProduct mu_pass_epsSF_sig ("mu_pass_epsSF_sig", "mu_pass_epsSF_sig",RooArgList(rrv_epsSF_sig,mu_epsSF_sig));
-      //RooProduct mu_fail_epsSF_sig ("mu_fail_epsSF_sig", "mu_fail_epsSF_sig",RooArgList(oneMinus_epsSF_sig,mu_epsSF_sig));
-      //RooPoissonDummy pdf_pass_epsSF_sig ("pdf_pass_epsSF_sig" , "pdf_pass_epsSF_sig", N_pass_epsSF_sig, mu_pass_epsSF_sig);
-      //allNuisancePdfs.add(pdf_pass_epsSF_sig);
-      //RooPoissonDummy pdf_fail_epsSF_sig ("pdf_fail_epsSF_sig" , "pdf_fail_epsSF_sig", N_fail_epsSF_sig, mu_fail_epsSF_sig);
-      //allNuisancePdfs.add(pdf_fail_epsSF_sig);
-
       RooRealVar N_pass_epsSF_sig ("N_pass_epsSF_sig", "N_pass_epsSF_sig", alpha-1,0,1e5);
       observedParametersList.add( N_pass_epsSF_sig );
       RooRealVar mu_pass_epsSF_sig ("mu_pass_epsSF_sig", "mu_pass_epsSF_sig", alpha-1,1e-9,1e5);
@@ -2314,39 +2290,6 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
       RooFormulaVar rrv_epsSF_sig ("epsSF_sig","@0/(@0+@1)",RooArgList(mu_pass_epsSF_sig,mu_fail_epsSF_sig));
 
       betaModeTransform(eps_sb_ldp_mean-epsSF_sb_ldp_errm+0.5*(epsSF_sb_ldp_errm+epsSF_sb_ldp_errp),epsSF_sb_ldp_errm+epsSF_sb_ldp_errp,alpha,beta);
-      //RooRealVar N_pass_epsSF_sb_ldp ("N_pass_epsSF_sb_ldp", "N_pass_epsSF_sb_ldp", alpha-1,0,1e5);
-      //observedParametersList.add( N_pass_epsSF_sb_ldp );
-      //RooRealVar N_fail_epsSF_sb_ldp ("N_fail_epsSF_sb_ldp", "N_fail_epsSF_sb_ldp", beta-1,0,1e5);
-      //observedParametersList.add( N_fail_epsSF_sb_ldp );
-      //RooRealVar rrv_epsSF_sb_ldp ("epsSF_sb_ldp","epsSF_sb_ldp",eps_sb_ldp_mean-epsSF_sb_ldp_errm+0.5*(epsSF_sb_ldp_errm+epsSF_sb_ldp_errp),0,1);
-      //allNonPoissonNuisances.add (rrv_epsSF_sb_ldp);
-      //RooBetaPdfWithPoissonGenerator pdf_epsSF_sb_ldp ("pdf_epsSF_sb_ldp" , "pdf_epsSF_sb_ldp", rrv_epsSF_sb_ldp, N_pass_epsSF_sb_ldp, N_fail_epsSF_sb_ldp);
-      //allNuisancePdfs.add(pdf_epsSF_sb_ldp);
-
-      //RooRealVar rrv_epsSF_sb_ldp ("epsSF_sb_ldp","epsSF_sb_ldp",eps_sb_ldp_mean-epsSF_sb_ldp_errm+0.5*(epsSF_sb_ldp_errm+epsSF_sb_ldp_errp),0,1);
-      //RooRealVar epsSF_sb_ldp_alpha ("epsSF_sb_ldp_alpha", "epsSF_sb_ldp_alpha", alpha);
-      //RooRealVar epsSF_sb_ldp_beta ("epsSF_sb_ldp_beta", "epsSF_sb_ldp_beta", beta);
-      //RooBetaPdf pdf_epsSF_sb_ldp ("pdf_epsSF_sb_ldp" , "pdf_epsSF_sb_ldp", rrv_epsSF_sb_ldp, epsSF_sb_ldp_alpha, epsSF_sb_ldp_beta);
-      //epsSF_sb_ldp_alpha.setConstant();
-      //epsSF_sb_ldp_beta.setConstant();
-      //allNonPoissonNuisances.add (rrv_epsSF_sb_ldp);
-      //if(constantNonPoisson) rrv_epsSF_sb_ldp.setConstant();
-      //betaNuisancePdfs.add (pdf_epsSF_sb_ldp);
-
-      //RooRealVar N_pass_epsSF_sb_ldp ("N_pass_epsSF_sb_ldp", "N_pass_epsSF_sb_ldp", alpha-1,0,1e5);
-      //observedParametersList.add( N_pass_epsSF_sb_ldp );
-      //RooRealVar N_fail_epsSF_sb_ldp ("N_fail_epsSF_sb_ldp", "N_fail_epsSF_sb_ldp", beta-1,0,1e5);
-      //observedParametersList.add( N_fail_epsSF_sb_ldp );
-      //RooAddition mu_epsSF_sb_ldp ("mu_epsSF_sb_ldp", "mu_epsSF_sb_ldp", RooArgList(N_pass_epsSF_sb_ldp,N_fail_epsSF_sb_ldp));
-      //RooRealVar rrv_epsSF_sb_ldp ("epsSF_sb_ldp","epsSF_sb_ldp",eps_sig_mean-epsSF_sb_ldp_errm+0.5*(epsSF_sb_ldp_errm+epsSF_sb_ldp_errp),0,1);
-      //allNonPoissonNuisances.add (rrv_epsSF_sb_ldp);
-      //RooFormulaVar oneMinus_epsSF_sb_ldp ("oneMinus_epsSF_sb_ldp","1.0-@0",RooArgList(rrv_epsSF_sb_ldp));
-      //RooProduct mu_pass_epsSF_sb_ldp ("mu_pass_epsSF_sb_ldp", "mu_pass_epsSF_sb_ldp",RooArgList(rrv_epsSF_sb_ldp,mu_epsSF_sb_ldp));
-      //RooProduct mu_fail_epsSF_sb_ldp ("mu_fail_epsSF_sb_ldp", "mu_fail_epsSF_sb_ldp",RooArgList(oneMinus_epsSF_sb_ldp,mu_epsSF_sb_ldp));
-      //RooPoissonDummy pdf_pass_epsSF_sb_ldp ("pdf_pass_epsSF_sb_ldp" , "pdf_pass_epsSF_sb_ldp", N_pass_epsSF_sb_ldp, mu_pass_epsSF_sb_ldp);
-      //allNuisancePdfs.add(pdf_pass_epsSF_sb_ldp);
-      //RooPoissonDummy pdf_fail_epsSF_sb_ldp ("pdf_fail_epsSF_sb_ldp" , "pdf_fail_epsSF_sb_ldp", N_fail_epsSF_sb_ldp, mu_fail_epsSF_sb_ldp);
-      //allNuisancePdfs.add(pdf_fail_epsSF_sb_ldp);
 
       RooRealVar N_pass_epsSF_sb_ldp ("N_pass_epsSF_sb_ldp", "N_pass_epsSF_sb_ldp", alpha-1,0,1e5);
       observedParametersList.add( N_pass_epsSF_sb_ldp );
@@ -2363,257 +2306,77 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
       
       RooFormulaVar rrv_epsSF_sb_ldp ("epsSF_sb_ldp","@0/(@0+@1)",RooArgList(mu_pass_epsSF_sb_ldp,mu_fail_epsSF_sb_ldp));
 
-      betaModeTransform(eps_sb_sl_e_mean-epsSF_sb_sl_e_errm+0.5*(epsSF_sb_sl_e_errm+epsSF_sb_sl_e_errp),epsSF_sb_sl_e_errm+epsSF_sb_sl_e_errp,alpha,beta);
-      //RooRealVar N_pass_epsSF_sb_sl_e ("N_pass_epsSF_sb_sl_e", "N_pass_epsSF_sb_sl_e", alpha-1,0,1e5);
-      //observedParametersList.add( N_pass_epsSF_sb_sl_e );
-      //RooRealVar N_fail_epsSF_sb_sl_e ("N_fail_epsSF_sb_sl_e", "N_fail_epsSF_sb_sl_e", beta-1,0,1e5);
-      //observedParametersList.add( N_fail_epsSF_sb_sl_e );
-      //RooRealVar rrv_epsSF_sb_sl_e ("epsSF_sb_sl_e","epsSF_sb_sl_e",eps_sb_sl_e_mean-epsSF_sb_sl_e_errm+0.5*(epsSF_sb_sl_e_errm+epsSF_sb_sl_e_errp),0,1);
-      //allNonPoissonNuisances.add (rrv_epsSF_sb_sl_e);
-      //RooBetaPdfWithPoissonGenerator pdf_epsSF_sb_sl_e ("pdf_epsSF_sb_sl_e" , "pdf_epsSF_sb_sl_e", rrv_epsSF_sb_sl_e, N_pass_epsSF_sb_sl_e, N_fail_epsSF_sb_sl_e);
-      //allNuisancePdfs.add(pdf_epsSF_sb_sl_e);
-
-      //RooRealVar rrv_epsSF_sb_sl_e ("epsSF_sb_sl_e","epsSF_sb_sl_e",eps_sb_sl_e_mean-epsSF_sb_sl_e_errm+0.5*(epsSF_sb_sl_e_errm+epsSF_sb_sl_e_errp),0,1);
-      //RooRealVar epsSF_sb_sl_e_alpha ("epsSF_sb_sl_e_alpha", "epsSF_sb_sl_e_alpha", alpha);
-      //RooRealVar epsSF_sb_sl_e_beta ("epsSF_sb_sl_e_beta", "epsSF_sb_sl_e_beta", beta);
-      //RooBetaPdf pdf_epsSF_sb_sl_e ("pdf_epsSF_sb_sl_e" , "pdf_epsSF_sb_sl_e", rrv_epsSF_sb_sl_e, epsSF_sb_sl_e_alpha, epsSF_sb_sl_e_beta);
-      //epsSF_sb_sl_e_alpha.setConstant();
-      //epsSF_sb_sl_e_beta.setConstant();
-      //allNonPoissonNuisances.add (rrv_epsSF_sb_sl_e);
-      //if(constantNonPoisson) rrv_epsSF_sb_sl_e.setConstant();
-      //betaNuisancePdfs.add (pdf_epsSF_sb_sl_e);
-
-      //RooRealVar N_pass_epsSF_sb_sl_e ("N_pass_epsSF_sb_sl_e", "N_pass_epsSF_sb_sl_e", alpha-1,0,1e5);
-      //observedParametersList.add( N_pass_epsSF_sb_sl_e );
-      //RooRealVar N_fail_epsSF_sb_sl_e ("N_fail_epsSF_sb_sl_e", "N_fail_epsSF_sb_sl_e", beta-1,0,1e5);
-      //observedParametersList.add( N_fail_epsSF_sb_sl_e );
-      //RooAddition mu_epsSF_sb_sl_e ("mu_epsSF_sb_sl_e", "mu_epsSF_sb_sl_e", RooArgList(N_pass_epsSF_sb_sl_e,N_fail_epsSF_sb_sl_e));
-      //RooRealVar rrv_epsSF_sb_sl_e ("epsSF_sb_sl_e","epsSF_sb_sl_e",eps_sig_mean-epsSF_sb_sl_e_errm+0.5*(epsSF_sb_sl_e_errm+epsSF_sb_sl_e_errp),0,1);
-      //allNonPoissonNuisances.add (rrv_epsSF_sb_sl_e);
-      //RooFormulaVar oneMinus_epsSF_sb_sl_e ("oneMinus_epsSF_sb_sl_e","1.0-@0",RooArgList(rrv_epsSF_sb_sl_e));
-      //RooProduct mu_pass_epsSF_sb_sl_e ("mu_pass_epsSF_sb_sl_e", "mu_pass_epsSF_sb_sl_e",RooArgList(rrv_epsSF_sb_sl_e,mu_epsSF_sb_sl_e));
-      //RooProduct mu_fail_epsSF_sb_sl_e ("mu_fail_epsSF_sb_sl_e", "mu_fail_epsSF_sb_sl_e",RooArgList(oneMinus_epsSF_sb_sl_e,mu_epsSF_sb_sl_e));
-      //RooPoissonDummy pdf_pass_epsSF_sb_sl_e ("pdf_pass_epsSF_sb_sl_e" , "pdf_pass_epsSF_sb_sl_e", N_pass_epsSF_sb_sl_e, mu_pass_epsSF_sb_sl_e);
-      //allNuisancePdfs.add(pdf_pass_epsSF_sb_sl_e);
-      //RooPoissonDummy pdf_fail_epsSF_sb_sl_e ("pdf_fail_epsSF_sb_sl_e" , "pdf_fail_epsSF_sb_sl_e", N_fail_epsSF_sb_sl_e, mu_fail_epsSF_sb_sl_e);
-      //allNuisancePdfs.add(pdf_fail_epsSF_sb_sl_e);
-
-      RooRealVar N_pass_epsSF_sb_sl_e ("N_pass_epsSF_sb_sl_e", "N_pass_epsSF_sb_sl_e", alpha-1,0,1e5);
-      observedParametersList.add( N_pass_epsSF_sb_sl_e );
-      RooRealVar mu_pass_epsSF_sb_sl_e ("mu_pass_epsSF_sb_sl_e", "mu_pass_epsSF_sb_sl_e", alpha-1,1e-9,1e5);
-      allPoissonNuisances.add(mu_pass_epsSF_sb_sl_e);
-      RooPoisson pdf_pass_epsSF_sb_sl_e ("pdf_pass_epsSF_sb_sl_e" , "pdf_pass_epsSF_sb_sl_e", N_pass_epsSF_sb_sl_e, mu_pass_epsSF_sb_sl_e);
-      allNuisancePdfs.add(pdf_pass_epsSF_sb_sl_e);
-      RooRealVar N_fail_epsSF_sb_sl_e ("N_fail_epsSF_sb_sl_e", "N_fail_epsSF_sb_sl_e", beta-1,0,1e5);
-      observedParametersList.add( N_fail_epsSF_sb_sl_e );
-      RooRealVar mu_fail_epsSF_sb_sl_e ("mu_fail_epsSF_sb_sl_e", "mu_fail_epsSF_sb_sl_e", beta-1,1e-9,1e5);
-      allPoissonNuisances.add(mu_fail_epsSF_sb_sl_e);
-      RooPoisson pdf_fail_epsSF_sb_sl_e ("pdf_fail_epsSF_sb_sl_e" , "pdf_fail_epsSF_sb_sl_e", N_fail_epsSF_sb_sl_e, mu_fail_epsSF_sb_sl_e);
-      allNuisancePdfs.add(pdf_fail_epsSF_sb_sl_e);
-      
-      RooFormulaVar rrv_epsSF_sb_sl_e ("epsSF_sb_sl_e","@0/(@0+@1)",RooArgList(mu_pass_epsSF_sb_sl_e,mu_fail_epsSF_sb_sl_e));
-
-      betaModeTransform(eps_sb_sl_mu_mean-epsSF_sb_sl_mu_errm+0.5*(epsSF_sb_sl_mu_errm+epsSF_sb_sl_mu_errp),epsSF_sb_sl_mu_errm+epsSF_sb_sl_mu_errp,alpha,beta);
-      //RooRealVar N_pass_epsSF_sb_sl_mu ("N_pass_epsSF_sb_sl_mu", "N_pass_epsSF_sb_sl_mu", alpha-1,0,1e5);
-      //observedParametersList.add( N_pass_epsSF_sb_sl_mu );
-      //RooRealVar N_fail_epsSF_sb_sl_mu ("N_fail_epsSF_sb_sl_mu", "N_fail_epsSF_sb_sl_mu", beta-1,0,1e5);
-      //observedParametersList.add( N_fail_epsSF_sb_sl_mu );
-      //RooRealVar rrv_epsSF_sb_sl_mu ("epsSF_sb_sl_mu","epsSF_sb_sl_mu",eps_sb_sl_mu_mean-epsSF_sb_sl_mu_errm+0.5*(epsSF_sb_sl_mu_errm+epsSF_sb_sl_mu_errp),0,1);
-      //allNonPoissonNuisances.add (rrv_epsSF_sb_sl_mu);
-      //RooBetaPdfWithPoissonGenerator pdf_epsSF_sb_sl_mu ("pdf_epsSF_sb_sl_mu" , "pdf_epsSF_sb_sl_mu", rrv_epsSF_sb_sl_mu, N_pass_epsSF_sb_sl_mu, N_fail_epsSF_sb_sl_mu);
-      //allNuisancePdfs.add(pdf_epsSF_sb_sl_mu);
-
-      //RooRealVar rrv_epsSF_sb_sl_mu ("epsSF_sb_sl_mu","epsSF_sb_sl_mu",eps_sb_sl_mu_mean-epsSF_sb_sl_mu_errm+0.5*(epsSF_sb_sl_mu_errm+epsSF_sb_sl_mu_errp),0,1);
-      //RooRealVar epsSF_sb_sl_mu_alpha ("epsSF_sb_sl_mu_alpha", "epsSF_sb_sl_mu_alpha", alpha);
-      //RooRealVar epsSF_sb_sl_mu_beta ("epsSF_sb_sl_mu_beta", "epsSF_sb_sl_mu_beta", beta);
-      //RooBetaPdf pdf_epsSF_sb_sl_mu ("pdf_epsSF_sb_sl_mu" , "pdf_epsSF_sb_sl_mu", rrv_epsSF_sb_sl_mu, epsSF_sb_sl_mu_alpha, epsSF_sb_sl_mu_beta);
-      //epsSF_sb_sl_mu_alpha.setConstant();
-      //epsSF_sb_sl_mu_beta.setConstant();
-      //allNonPoissonNuisances.add (rrv_epsSF_sb_sl_mu);
-      //if(constantNonPoisson) rrv_epsSF_sb_sl_mu.setConstant();
-      //betaNuisancePdfs.add (pdf_epsSF_sb_sl_mu);
-
-      //RooRealVar N_pass_epsSF_sb_sl_mu ("N_pass_epsSF_sb_sl_mu", "N_pass_epsSF_sb_sl_mu", alpha-1,0,1e5);
-      //observedParametersList.add( N_pass_epsSF_sb_sl_mu );
-      //RooRealVar N_fail_epsSF_sb_sl_mu ("N_fail_epsSF_sb_sl_mu", "N_fail_epsSF_sb_sl_mu", beta-1,0,1e5);
-      //observedParametersList.add( N_fail_epsSF_sb_sl_mu );
-      //RooAddition mu_epsSF_sb_sl_mu ("mu_epsSF_sb_sl_mu", "mu_epsSF_sb_sl_mu", RooArgList(N_pass_epsSF_sb_sl_mu,N_fail_epsSF_sb_sl_mu));
-      //RooRealVar rrv_epsSF_sb_sl_mu ("epsSF_sb_sl_mu","epsSF_sb_sl_mu",eps_sig_mean-epsSF_sb_sl_mu_errm+0.5*(epsSF_sb_sl_mu_errm+epsSF_sb_sl_mu_errp),0,1);
-      //allNonPoissonNuisances.add (rrv_epsSF_sb_sl_mu);
-      //RooFormulaVar oneMinus_epsSF_sb_sl_mu ("oneMinus_epsSF_sb_sl_mu","1.0-@0",RooArgList(rrv_epsSF_sb_sl_mu));
-      //RooProduct mu_pass_epsSF_sb_sl_mu ("mu_pass_epsSF_sb_sl_mu", "mu_pass_epsSF_sb_sl_mu",RooArgList(rrv_epsSF_sb_sl_mu,mu_epsSF_sb_sl_mu));
-      //RooProduct mu_fail_epsSF_sb_sl_mu ("mu_fail_epsSF_sb_sl_mu", "mu_fail_epsSF_sb_sl_mu",RooArgList(oneMinus_epsSF_sb_sl_mu,mu_epsSF_sb_sl_mu));
-      //RooPoissonDummy pdf_pass_epsSF_sb_sl_mu ("pdf_pass_epsSF_sb_sl_mu" , "pdf_pass_epsSF_sb_sl_mu", N_pass_epsSF_sb_sl_mu, mu_pass_epsSF_sb_sl_mu);
-      //allNuisancePdfs.add(pdf_pass_epsSF_sb_sl_mu);
-      //RooPoissonDummy pdf_fail_epsSF_sb_sl_mu ("pdf_fail_epsSF_sb_sl_mu" , "pdf_fail_epsSF_sb_sl_mu", N_fail_epsSF_sb_sl_mu, mu_fail_epsSF_sb_sl_mu);
-      //allNuisancePdfs.add(pdf_fail_epsSF_sb_sl_mu);
-
-      RooRealVar N_pass_epsSF_sb_sl_mu ("N_pass_epsSF_sb_sl_mu", "N_pass_epsSF_sb_sl_mu", alpha-1,0,1e5);
-      observedParametersList.add( N_pass_epsSF_sb_sl_mu );
-      RooRealVar mu_pass_epsSF_sb_sl_mu ("mu_pass_epsSF_sb_sl_mu", "mu_pass_epsSF_sb_sl_mu", alpha-1,1e-9,1e5);
-      allPoissonNuisances.add(mu_pass_epsSF_sb_sl_mu);
-      RooPoisson pdf_pass_epsSF_sb_sl_mu ("pdf_pass_epsSF_sb_sl_mu" , "pdf_pass_epsSF_sb_sl_mu", N_pass_epsSF_sb_sl_mu, mu_pass_epsSF_sb_sl_mu);
-      allNuisancePdfs.add(pdf_pass_epsSF_sb_sl_mu);
-      RooRealVar N_fail_epsSF_sb_sl_mu ("N_fail_epsSF_sb_sl_mu", "N_fail_epsSF_sb_sl_mu", beta-1,0,1e5);
-      observedParametersList.add( N_fail_epsSF_sb_sl_mu );
-      RooRealVar mu_fail_epsSF_sb_sl_mu ("mu_fail_epsSF_sb_sl_mu", "mu_fail_epsSF_sb_sl_mu", beta-1,1e-9,1e5);
-      allPoissonNuisances.add(mu_fail_epsSF_sb_sl_mu);
-      RooPoisson pdf_fail_epsSF_sb_sl_mu ("pdf_fail_epsSF_sb_sl_mu" , "pdf_fail_epsSF_sb_sl_mu", N_fail_epsSF_sb_sl_mu, mu_fail_epsSF_sb_sl_mu);
-      allNuisancePdfs.add(pdf_fail_epsSF_sb_sl_mu);
-      
-      RooFormulaVar rrv_epsSF_sb_sl_mu ("epsSF_sb_sl_mu","@0/(@0+@1)",RooArgList(mu_pass_epsSF_sb_sl_mu,mu_fail_epsSF_sb_sl_mu));
-
-      betaModeTransform(eps_sig_sl_mean-epsSF_sig_sl_errm+0.5*(epsSF_sig_sl_errm+epsSF_sig_sl_errp),epsSF_sig_sl_errm+epsSF_sig_sl_errp,alpha,beta);
-      //RooRealVar N_pass_epsSF_sig_sl ("N_pass_epsSF_sig_sl", "N_pass_epsSF_sig_sl", alpha-1,0,1e5);
-      //observedParametersList.add( N_pass_epsSF_sig_sl );
-      //RooRealVar N_fail_epsSF_sig_sl ("N_fail_epsSF_sig_sl", "N_fail_epsSF_sig_sl", beta-1,0,1e5);
-      //observedParametersList.add( N_fail_epsSF_sig_sl );
-      //RooRealVar rrv_epsSF_sig_sl ("epsSF_sig_sl","epsSF_sig_sl",eps_sig_sl_mean-epsSF_sig_sl_errm+0.5*(epsSF_sig_sl_errm+epsSF_sig_sl_errp),0,1);
-      //allNonPoissonNuisances.add (rrv_epsSF_sig_sl);
-      //RooBetaPdfWithPoissonGenerator pdf_epsSF_sig_sl ("pdf_epsSF_sig_sl" , "pdf_epsSF_sig_sl", rrv_epsSF_sig_sl, N_pass_epsSF_sig_sl, N_fail_epsSF_sig_sl);
-      //allNuisancePdfs.add(pdf_epsSF_sig_sl);
-
-      //RooRealVar rrv_epsSF_sig_sl ("epsSF_sig_sl","epsSF_sig_sl",eps_sig_sl_mean-epsSF_sig_sl_errm+0.5*(epsSF_sig_sl_errm+epsSF_sig_sl_errp),0,1);
-      //RooRealVar epsSF_sig_sl_alpha ("epsSF_sig_sl_alpha", "epsSF_sig_sl_alpha", alpha);
-      //RooRealVar epsSF_sig_sl_beta ("epsSF_sig_sl_beta", "epsSF_sig_sl_beta", beta);
-      //RooBetaPdf pdf_epsSF_sig_sl ("pdf_epsSF_sig_sl" , "pdf_epsSF_sig_sl", rrv_epsSF_sig_sl, epsSF_sig_sl_alpha, epsSF_sig_sl_beta);
-      //epsSF_sig_sl_alpha.setConstant();
-      //epsSF_sig_sl_beta.setConstant();
-      //allNonPoissonNuisances.add (rrv_epsSF_sig_sl);
-      //if(constantNonPoisson) rrv_epsSF_sig_sl.setConstant();
-      //betaNuisancePdfs.add (pdf_epsSF_sig_sl);
-
-      //RooRealVar N_pass_epsSF_sig_sl ("N_pass_epsSF_sig_sl", "N_pass_epsSF_sig_sl", alpha-1,0,1e5);
-      //observedParametersList.add( N_pass_epsSF_sig_sl );
-      //RooRealVar N_fail_epsSF_sig_sl ("N_fail_epsSF_sig_sl", "N_fail_epsSF_sig_sl", beta-1,0,1e5);
-      //observedParametersList.add( N_fail_epsSF_sig_sl );
-      //RooAddition mu_epsSF_sig_sl ("mu_epsSF_sig_sl", "mu_epsSF_sig_sl", RooArgList(N_pass_epsSF_sig_sl,N_fail_epsSF_sig_sl));
-      //RooRealVar rrv_epsSF_sig_sl ("epsSF_sig_sl","epsSF_sig_sl",eps_sig_mean-epsSF_sig_sl_errm+0.5*(epsSF_sig_sl_errm+epsSF_sig_sl_errp),0,1);
-      //allNonPoissonNuisances.add (rrv_epsSF_sig_sl);
-      //RooFormulaVar oneMinus_epsSF_sig_sl ("oneMinus_epsSF_sig_sl","1.0-@0",RooArgList(rrv_epsSF_sig_sl));
-      //RooProduct mu_pass_epsSF_sig_sl ("mu_pass_epsSF_sig_sl", "mu_pass_epsSF_sig_sl",RooArgList(rrv_epsSF_sig_sl,mu_epsSF_sig_sl));
-      //RooProduct mu_fail_epsSF_sig_sl ("mu_fail_epsSF_sig_sl", "mu_fail_epsSF_sig_sl",RooArgList(oneMinus_epsSF_sig_sl,mu_epsSF_sig_sl));
-      //RooPoissonDummy pdf_pass_epsSF_sig_sl ("pdf_pass_epsSF_sig_sl" , "pdf_pass_epsSF_sig_sl", N_pass_epsSF_sig_sl, mu_pass_epsSF_sig_sl);
-      //allNuisancePdfs.add(pdf_pass_epsSF_sig_sl);
-      //RooPoissonDummy pdf_fail_epsSF_sig_sl ("pdf_fail_epsSF_sig_sl" , "pdf_fail_epsSF_sig_sl", N_fail_epsSF_sig_sl, mu_fail_epsSF_sig_sl);
-      //allNuisancePdfs.add(pdf_fail_epsSF_sig_sl);
-
-      RooRealVar N_pass_epsSF_sig_sl ("N_pass_epsSF_sig_sl", "N_pass_epsSF_sig_sl", alpha-1,0,1e5);
-      observedParametersList.add( N_pass_epsSF_sig_sl );
-      RooRealVar mu_pass_epsSF_sig_sl ("mu_pass_epsSF_sig_sl", "mu_pass_epsSF_sig_sl", alpha-1,1e-9,1e5);
-      allPoissonNuisances.add(mu_pass_epsSF_sig_sl);
-      RooPoisson pdf_pass_epsSF_sig_sl ("pdf_pass_epsSF_sig_sl" , "pdf_pass_epsSF_sig_sl", N_pass_epsSF_sig_sl, mu_pass_epsSF_sig_sl);
-      allNuisancePdfs.add(pdf_pass_epsSF_sig_sl);
-      RooRealVar N_fail_epsSF_sig_sl ("N_fail_epsSF_sig_sl", "N_fail_epsSF_sig_sl", beta-1,0,1e5);
-      observedParametersList.add( N_fail_epsSF_sig_sl );
-      RooRealVar mu_fail_epsSF_sig_sl ("mu_fail_epsSF_sig_sl", "mu_fail_epsSF_sig_sl", beta-1,1e-9,1e5);
-      allPoissonNuisances.add(mu_fail_epsSF_sig_sl);
-      RooPoisson pdf_fail_epsSF_sig_sl ("pdf_fail_epsSF_sig_sl" , "pdf_fail_epsSF_sig_sl", N_fail_epsSF_sig_sl, mu_fail_epsSF_sig_sl);
-      allNuisancePdfs.add(pdf_fail_epsSF_sig_sl);
-      
-      RooFormulaVar rrv_epsSF_sig_sl ("epsSF_sig_sl","@0/(@0+@1)",RooArgList(mu_pass_epsSF_sig_sl,mu_fail_epsSF_sig_sl));
-
 
     //--------------------------------------
 
       // Underlying Gamma Distribution for signal systematics -- taken from average of all errors.
 
       double sigma_eff_sf_sig        = rv_width_eff_sf_sig       ->getVal();
-      double sigma_eff_sf_sb         = rv_width_eff_sf_sb	 ->getVal();
-      double sigma_eff_sf_sig_sl_e   = rv_width_eff_sf_sig_sl_e  ->getVal();
-      double sigma_eff_sf_sig_sl_mu  = rv_width_eff_sf_sig_sl_mu ->getVal();
-      double sigma_eff_sf_sb_sl_e    = rv_width_eff_sf_sb_sl_e   ->getVal();
-      double sigma_eff_sf_sb_sl_mu   = rv_width_eff_sf_sb_sl_mu  ->getVal();
+      //double sigma_eff_sf_sb         = rv_width_eff_sf_sb	 ->getVal();
+      //double sigma_eff_sf_sig_sl_e   = rv_width_eff_sf_sig_sl_e  ->getVal();
+      //double sigma_eff_sf_sig_sl_mu  = rv_width_eff_sf_sig_sl_mu ->getVal();
+      //double sigma_eff_sf_sb_sl_e    = rv_width_eff_sf_sb_sl_e   ->getVal();
+      //double sigma_eff_sf_sb_sl_mu   = rv_width_eff_sf_sb_sl_mu  ->getVal();
       double sigma_eff_sf_sig_ldp    = rv_width_eff_sf_sig_ldp   ->getVal();
       double sigma_eff_sf_sb_ldp     = rv_width_eff_sf_sb_ldp    ->getVal();
 
       //Trying with Beta Distributions for signal efficiency
 
       double mean_eff_sf_sig        = rv_mean_eff_sf_sig       ->getVal();
-      double mean_eff_sf_sb         = rv_mean_eff_sf_sb	       ->getVal();
-      double mean_eff_sf_sig_sl_e   = rv_mean_eff_sf_sig_sl_e  ->getVal();
-      double mean_eff_sf_sig_sl_mu  = rv_mean_eff_sf_sig_sl_mu ->getVal();
-      double mean_eff_sf_sb_sl_e    = rv_mean_eff_sf_sb_sl_e   ->getVal();
-      double mean_eff_sf_sb_sl_mu   = rv_mean_eff_sf_sb_sl_mu  ->getVal();
+      //double mean_eff_sf_sb         = rv_mean_eff_sf_sb	       ->getVal();
+      //double mean_eff_sf_sig_sl_e   = rv_mean_eff_sf_sig_sl_e  ->getVal();
+      //double mean_eff_sf_sig_sl_mu  = rv_mean_eff_sf_sig_sl_mu ->getVal();
+      //double mean_eff_sf_sb_sl_e    = rv_mean_eff_sf_sb_sl_e   ->getVal();
+      //double mean_eff_sf_sb_sl_mu   = rv_mean_eff_sf_sb_sl_mu  ->getVal();
       double mean_eff_sf_sig_ldp    = rv_mean_eff_sf_sig_ldp   ->getVal();
       double mean_eff_sf_sb_ldp     = rv_mean_eff_sf_sb_ldp    ->getVal();
 
       double alpha_eff_sf_sig       ;
-      double alpha_eff_sf_sb        ;
-      double alpha_eff_sf_sig_sl_e  ;
-      double alpha_eff_sf_sig_sl_mu ;
-      double alpha_eff_sf_sb_sl_e   ;
-      double alpha_eff_sf_sb_sl_mu  ;
+      //double alpha_eff_sf_sb        ;
+      //double alpha_eff_sf_sig_sl_e  ;
+      //double alpha_eff_sf_sig_sl_mu ;
+      //double alpha_eff_sf_sb_sl_e   ;
+      //double alpha_eff_sf_sb_sl_mu  ;
       double alpha_eff_sf_sig_ldp   ;
       double alpha_eff_sf_sb_ldp    ;
 
       double beta_eff_sf_sig       ;
-      double beta_eff_sf_sb        ;
-      double beta_eff_sf_sig_sl_e  ;
-      double beta_eff_sf_sig_sl_mu ;
-      double beta_eff_sf_sb_sl_e   ;
-      double beta_eff_sf_sb_sl_mu  ;
+      //double beta_eff_sf_sb        ;
+      //double beta_eff_sf_sig_sl_e  ;
+      //double beta_eff_sf_sig_sl_mu ;
+      //double beta_eff_sf_sb_sl_e   ;
+      //double beta_eff_sf_sb_sl_mu  ;
       double beta_eff_sf_sig_ldp   ;
       double beta_eff_sf_sb_ldp    ;
 
       betaPrimeModeTransform( mean_eff_sf_sig       , mean_eff_sf_sig       * sigma_eff_sf_sig       , alpha_eff_sf_sig       , beta_eff_sf_sig       );
-      betaPrimeModeTransform( mean_eff_sf_sb        , mean_eff_sf_sb        * sigma_eff_sf_sb        , alpha_eff_sf_sb        , beta_eff_sf_sb        );
-      betaPrimeModeTransform( mean_eff_sf_sig_sl_e  , mean_eff_sf_sig_sl_e  * sigma_eff_sf_sig_sl_e  , alpha_eff_sf_sig_sl_e  , beta_eff_sf_sig_sl_e  );
-      betaPrimeModeTransform( mean_eff_sf_sig_sl_mu , mean_eff_sf_sig_sl_mu * sigma_eff_sf_sig_sl_mu , alpha_eff_sf_sig_sl_mu , beta_eff_sf_sig_sl_mu );
-      betaPrimeModeTransform( mean_eff_sf_sb_sl_e   , mean_eff_sf_sb_sl_e   * sigma_eff_sf_sb_sl_e   , alpha_eff_sf_sb_sl_e   , beta_eff_sf_sb_sl_e   );
-      betaPrimeModeTransform( mean_eff_sf_sb_sl_mu  , mean_eff_sf_sb_sl_mu  * sigma_eff_sf_sb_sl_mu  , alpha_eff_sf_sb_sl_mu  , beta_eff_sf_sb_sl_mu  );
+      //betaPrimeModeTransform( mean_eff_sf_sb        , mean_eff_sf_sb        * sigma_eff_sf_sb        , alpha_eff_sf_sb        , beta_eff_sf_sb        );
+      //betaPrimeModeTransform( mean_eff_sf_sig_sl_e  , mean_eff_sf_sig_sl_e  * sigma_eff_sf_sig_sl_e  , alpha_eff_sf_sig_sl_e  , beta_eff_sf_sig_sl_e  );
+      //betaPrimeModeTransform( mean_eff_sf_sig_sl_mu , mean_eff_sf_sig_sl_mu * sigma_eff_sf_sig_sl_mu , alpha_eff_sf_sig_sl_mu , beta_eff_sf_sig_sl_mu );
+      //betaPrimeModeTransform( mean_eff_sf_sb_sl_e   , mean_eff_sf_sb_sl_e   * sigma_eff_sf_sb_sl_e   , alpha_eff_sf_sb_sl_e   , beta_eff_sf_sb_sl_e   );
+      //betaPrimeModeTransform( mean_eff_sf_sb_sl_mu  , mean_eff_sf_sb_sl_mu  * sigma_eff_sf_sb_sl_mu  , alpha_eff_sf_sb_sl_mu  , beta_eff_sf_sb_sl_mu  );
       betaPrimeModeTransform( mean_eff_sf_sig_ldp   , mean_eff_sf_sig_ldp   * sigma_eff_sf_sig_ldp   , alpha_eff_sf_sig_ldp   , beta_eff_sf_sig_ldp   );
       betaPrimeModeTransform( mean_eff_sf_sb_ldp    , mean_eff_sf_sb_ldp    * sigma_eff_sf_sb_ldp    , alpha_eff_sf_sb_ldp    , beta_eff_sf_sb_ldp    );
 
       alpha = max(alpha_eff_sf_sig,
-		  max(alpha_eff_sf_sb,
-		      max(alpha_eff_sf_sig_sl_e,
-			  max(alpha_eff_sf_sig_sl_mu,
-			      max(alpha_eff_sf_sb_sl_e,
-				  max(alpha_eff_sf_sb_sl_mu,
-				      max(alpha_eff_sf_sig_ldp,
-					  alpha_eff_sf_sb_ldp)))))));
+		  max(alpha_eff_sf_sig_ldp,
+		      alpha_eff_sf_sb_ldp));
       
       beta = max(beta_eff_sf_sig,
-		 max(beta_eff_sf_sb,
-		     max(beta_eff_sf_sig_sl_e,
-			 max(beta_eff_sf_sig_sl_mu,
-			     max(beta_eff_sf_sb_sl_e,
-				 max(beta_eff_sf_sb_sl_mu,
-				     max(beta_eff_sf_sig_ldp,
-					 beta_eff_sf_sb_ldp)))))));
+		 max(beta_eff_sf_sig_ldp,
+		     beta_eff_sf_sb_ldp));
 
       RooRealVar N_pass_scale_eff_sf_sig       ("N_pass_scale_eff_sf_sig"       , "N_pass_scale_eff_sf_sig"       , (alpha_eff_sf_sig      -1) / (alpha-1) );
-      RooRealVar N_pass_scale_eff_sf_sb        ("N_pass_scale_eff_sf_sb"        , "N_pass_scale_eff_sf_sb"        , (alpha_eff_sf_sb       -1) / (alpha-1) );
-      RooRealVar N_pass_scale_eff_sf_sig_sl_e  ("N_pass_scale_eff_sf_sig_sl_e"  , "N_pass_scale_eff_sf_sig_sl_e"  , (alpha_eff_sf_sig_sl_e -1) / (alpha-1) );
-      RooRealVar N_pass_scale_eff_sf_sig_sl_mu ("N_pass_scale_eff_sf_sig_sl_mu" , "N_pass_scale_eff_sf_sig_sl_mu" , (alpha_eff_sf_sig_sl_mu-1) / (alpha-1) );
-      RooRealVar N_pass_scale_eff_sf_sb_sl_e   ("N_pass_scale_eff_sf_sb_sl_e"   , "N_pass_scale_eff_sf_sb_sl_e"   , (alpha_eff_sf_sb_sl_e  -1) / (alpha-1) );
-      RooRealVar N_pass_scale_eff_sf_sb_sl_mu  ("N_pass_scale_eff_sf_sb_sl_mu"  , "N_pass_scale_eff_sf_sb_sl_mu"  , (alpha_eff_sf_sb_sl_mu -1) / (alpha-1) );
       RooRealVar N_pass_scale_eff_sf_sig_ldp   ("N_pass_scale_eff_sf_sig_ldp"   , "N_pass_scale_eff_sf_sig_ldp"   , (alpha_eff_sf_sig_ldp  -1) / (alpha-1) );
       RooRealVar N_pass_scale_eff_sf_sb_ldp    ("N_pass_scale_eff_sf_sb_ldp"    , "N_pass_scale_eff_sf_sb_ldp"    , (alpha_eff_sf_sb_ldp   -1) / (alpha-1) );
       RooRealVar N_fail_scale_eff_sf_sig       ("N_fail_scale_eff_sf_sig"       , "N_fail_scale_eff_sf_sig"       , (beta_eff_sf_sig       -1) / (beta -1) );
-      RooRealVar N_fail_scale_eff_sf_sb        ("N_fail_scale_eff_sf_sb"        , "N_fail_scale_eff_sf_sb"        , (beta_eff_sf_sb        -1) / (beta -1) );
-      RooRealVar N_fail_scale_eff_sf_sig_sl_e  ("N_fail_scale_eff_sf_sig_sl_e"  , "N_fail_scale_eff_sf_sig_sl_e"  , (beta_eff_sf_sig_sl_e  -1) / (beta -1) );
-      RooRealVar N_fail_scale_eff_sf_sig_sl_mu ("N_fail_scale_eff_sf_sig_sl_mu" , "N_fail_scale_eff_sf_sig_sl_mu" , (beta_eff_sf_sig_sl_mu -1) / (beta -1) );
-      RooRealVar N_fail_scale_eff_sf_sb_sl_e   ("N_fail_scale_eff_sf_sb_sl_e"   , "N_fail_scale_eff_sf_sb_sl_e"   , (beta_eff_sf_sb_sl_e   -1) / (beta -1) );
-      RooRealVar N_fail_scale_eff_sf_sb_sl_mu  ("N_fail_scale_eff_sf_sb_sl_mu"  , "N_fail_scale_eff_sf_sb_sl_mu"  , (beta_eff_sf_sb_sl_mu  -1) / (beta -1) );
       RooRealVar N_fail_scale_eff_sf_sig_ldp   ("N_fail_scale_eff_sf_sig_ldp"   , "N_fail_scale_eff_sf_sig_ldp"   , (beta_eff_sf_sig_ldp   -1) / (beta -1) );
       RooRealVar N_fail_scale_eff_sf_sb_ldp    ("N_fail_scale_eff_sf_sb_ldp"    , "N_fail_scale_eff_sf_sb_ldp"    , (beta_eff_sf_sb_ldp    -1) / (beta -1) );
 
       N_pass_scale_eff_sf_sig       .setConstant();
-      N_pass_scale_eff_sf_sb        .setConstant();
-      N_pass_scale_eff_sf_sig_sl_e  .setConstant();
-      N_pass_scale_eff_sf_sig_sl_mu .setConstant();
-      N_pass_scale_eff_sf_sb_sl_e   .setConstant();
-      N_pass_scale_eff_sf_sb_sl_mu  .setConstant();
       N_pass_scale_eff_sf_sig_ldp   .setConstant();
       N_pass_scale_eff_sf_sb_ldp    .setConstant();                                    
       N_fail_scale_eff_sf_sig       .setConstant();
-      N_fail_scale_eff_sf_sb        .setConstant();
-      N_fail_scale_eff_sf_sig_sl_e  .setConstant();
-      N_fail_scale_eff_sf_sig_sl_mu .setConstant();
-      N_fail_scale_eff_sf_sb_sl_e   .setConstant();
-      N_fail_scale_eff_sf_sb_sl_mu  .setConstant();
       N_fail_scale_eff_sf_sig_ldp   .setConstant();
       N_fail_scale_eff_sf_sb_ldp    .setConstant();
 
@@ -2631,264 +2394,36 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
       allNuisancePdfs.add(pdf_fail_eff_sf);
 
       RooProduct mu_pass_eff_sf_sig       ("mu_pass_eff_sf_sig"       , "mu_pass_eff_sf_sig"       , RooArgSet(N_pass_scale_eff_sf_sig       , mu_pass_eff_sf));
-      RooProduct mu_pass_eff_sf_sb        ("mu_pass_eff_sf_sb"        , "mu_pass_eff_sf_sb"        , RooArgSet(N_pass_scale_eff_sf_sb        , mu_pass_eff_sf));
-      RooProduct mu_pass_eff_sf_sig_sl_e  ("mu_pass_eff_sf_sig_sl_e"  , "mu_pass_eff_sf_sig_sl_e"  , RooArgSet(N_pass_scale_eff_sf_sig_sl_e  , mu_pass_eff_sf));
-      RooProduct mu_pass_eff_sf_sig_sl_mu ("mu_pass_eff_sf_sig_sl_mu" , "mu_pass_eff_sf_sig_sl_mu" , RooArgSet(N_pass_scale_eff_sf_sig_sl_mu , mu_pass_eff_sf));
-      RooProduct mu_pass_eff_sf_sb_sl_e   ("mu_pass_eff_sf_sb_sl_e"   , "mu_pass_eff_sf_sb_sl_e"   , RooArgSet(N_pass_scale_eff_sf_sb_sl_e   , mu_pass_eff_sf));
-      RooProduct mu_pass_eff_sf_sb_sl_mu  ("mu_pass_eff_sf_sb_sl_mu"  , "mu_pass_eff_sf_sb_sl_mu"  , RooArgSet(N_pass_scale_eff_sf_sb_sl_mu  , mu_pass_eff_sf));
       RooProduct mu_pass_eff_sf_sig_ldp   ("mu_pass_eff_sf_sig_ldp"   , "mu_pass_eff_sf_sig_ldp"   , RooArgSet(N_pass_scale_eff_sf_sig_ldp   , mu_pass_eff_sf));
       RooProduct mu_pass_eff_sf_sb_ldp    ("mu_pass_eff_sf_sb_ldp"    , "mu_pass_eff_sf_sb_ldp"    , RooArgSet(N_pass_scale_eff_sf_sb_ldp    , mu_pass_eff_sf));
       RooProduct mu_fail_eff_sf_sig       ("mu_fail_eff_sf_sig"       , "mu_fail_eff_sf_sig"       , RooArgSet(N_fail_scale_eff_sf_sig       , mu_fail_eff_sf));
-      RooProduct mu_fail_eff_sf_sb        ("mu_fail_eff_sf_sb"        , "mu_fail_eff_sf_sb"        , RooArgSet(N_fail_scale_eff_sf_sb        , mu_fail_eff_sf));
-      RooProduct mu_fail_eff_sf_sig_sl_e  ("mu_fail_eff_sf_sig_sl_e"  , "mu_fail_eff_sf_sig_sl_e"  , RooArgSet(N_fail_scale_eff_sf_sig_sl_e  , mu_fail_eff_sf));
-      RooProduct mu_fail_eff_sf_sig_sl_mu ("mu_fail_eff_sf_sig_sl_mu" , "mu_fail_eff_sf_sig_sl_mu" , RooArgSet(N_fail_scale_eff_sf_sig_sl_mu , mu_fail_eff_sf));
-      RooProduct mu_fail_eff_sf_sb_sl_e   ("mu_fail_eff_sf_sb_sl_e"   , "mu_fail_eff_sf_sb_sl_e"   , RooArgSet(N_fail_scale_eff_sf_sb_sl_e   , mu_fail_eff_sf));
-      RooProduct mu_fail_eff_sf_sb_sl_mu  ("mu_fail_eff_sf_sb_sl_mu"  , "mu_fail_eff_sf_sb_sl_mu"  , RooArgSet(N_fail_scale_eff_sf_sb_sl_mu  , mu_fail_eff_sf));
       RooProduct mu_fail_eff_sf_sig_ldp   ("mu_fail_eff_sf_sig_ldp"   , "mu_fail_eff_sf_sig_ldp"   , RooArgSet(N_fail_scale_eff_sf_sig_ldp   , mu_fail_eff_sf));
       RooProduct mu_fail_eff_sf_sb_ldp    ("mu_fail_eff_sf_sb_ldp"    , "mu_fail_eff_sf_sb_ldp"    , RooArgSet(N_fail_scale_eff_sf_sb_ldp    , mu_fail_eff_sf));
       
       cout << "eff_sf section -- calculation of mu_pass" << endl;
       cout << "eff_sf section -- eff_sf_sig       has mu_pass of: " << mu_pass_eff_sf_sig       .getVal() << endl;
-      cout << "eff_sf section -- eff_sf_sb        has mu_pass of: " << mu_pass_eff_sf_sb        .getVal() << endl;
-      cout << "eff_sf section -- eff_sf_sig_sl_e  has mu_pass of: " << mu_pass_eff_sf_sig_sl_e  .getVal() << endl;
-      cout << "eff_sf section -- eff_sf_sig_sl_mu has mu_pass of: " << mu_pass_eff_sf_sig_sl_mu .getVal() << endl;
-      cout << "eff_sf section -- eff_sf_sb_sl_e   has mu_pass of: " << mu_pass_eff_sf_sb_sl_e   .getVal() << endl;
-      cout << "eff_sf section -- eff_sf_sb_sl_mu  has mu_pass of: " << mu_pass_eff_sf_sb_sl_mu  .getVal() << endl;
       cout << "eff_sf section -- eff_sf_sig_ldp   has mu_pass of: " << mu_pass_eff_sf_sig_ldp   .getVal() << endl;
       cout << "eff_sf section -- eff_sf_sb_ldp    has mu_pass of: " << mu_pass_eff_sf_sb_ldp    .getVal() << endl;
 
       cout << "eff_sf section -- calculation of mu_fail" << endl;
       cout << "eff_sf section -- eff_sf_sig       has mu_fail of: " << mu_fail_eff_sf_sig       .getVal() << endl;
-      cout << "eff_sf section -- eff_sf_sb        has mu_fail of: " << mu_fail_eff_sf_sb        .getVal() << endl;
-      cout << "eff_sf section -- eff_sf_sig_sl_e  has mu_fail of: " << mu_fail_eff_sf_sig_sl_e  .getVal() << endl;
-      cout << "eff_sf section -- eff_sf_sig_sl_mu has mu_fail of: " << mu_fail_eff_sf_sig_sl_mu .getVal() << endl;
-      cout << "eff_sf section -- eff_sf_sb_sl_e   has mu_fail of: " << mu_fail_eff_sf_sb_sl_e   .getVal() << endl;
-      cout << "eff_sf section -- eff_sf_sb_sl_mu  has mu_fail of: " << mu_fail_eff_sf_sb_sl_mu  .getVal() << endl;
       cout << "eff_sf section -- eff_sf_sig_ldp   has mu_fail of: " << mu_fail_eff_sf_sig_ldp   .getVal() << endl;
       cout << "eff_sf section -- eff_sf_sb_ldp    has mu_fail of: " << mu_fail_eff_sf_sb_ldp    .getVal() << endl;
 
       //-- Parametric relations between correlated signal efficiency scale factors.
 
       RooFormulaVar fv_eff_sf_sig       ("eff_sf_sig"         , "@0/(@1)" , RooArgList( mu_pass_eff_sf_sig       , mu_fail_eff_sf_sig       ));
-      RooFormulaVar fv_eff_sf_sb        ("eff_sf_sb"          , "@0/(@1)" , RooArgList( mu_pass_eff_sf_sb        , mu_fail_eff_sf_sb        ));
-      RooFormulaVar fv_eff_sf_sig_sl_e  ("eff_sf_sig_sl_e"    , "@0/(@1)" , RooArgList( mu_pass_eff_sf_sig_sl_e  , mu_fail_eff_sf_sig_sl_e  ));
-      RooFormulaVar fv_eff_sf_sig_sl_mu ("eff_sf_sig_sl_mu"   , "@0/(@1)" , RooArgList( mu_pass_eff_sf_sig_sl_mu , mu_fail_eff_sf_sig_sl_mu ));
-      RooFormulaVar fv_eff_sf_sb_sl_e   ("eff_sf_sb_sl_e"     , "@0/(@1)" , RooArgList( mu_pass_eff_sf_sb_sl_e   , mu_fail_eff_sf_sb_sl_e   ));
-      RooFormulaVar fv_eff_sf_sb_sl_mu  ("eff_sf_sb_sl_mu"    , "@0/(@1)" , RooArgList( mu_pass_eff_sf_sb_sl_mu  , mu_fail_eff_sf_sb_sl_mu  ));
       RooFormulaVar fv_eff_sf_sig_ldp   ("eff_sf_sig_ldp"     , "@0/(@1)" , RooArgList( mu_pass_eff_sf_sig_ldp   , mu_fail_eff_sf_sig_ldp   ));
       RooFormulaVar fv_eff_sf_sb_ldp    ("eff_sf_sb_ldp"      , "@0/(@1)" , RooArgList( mu_pass_eff_sf_sb_ldp    , mu_fail_eff_sf_sb_ldp    ));
 
       cout << "eff_sf section -- calculation of efficiency" << endl;
       cout << "eff_sf section -- eff_sf_sig       has efficiency of: " << fv_eff_sf_sig       .getVal() << endl;
-      cout << "eff_sf section -- eff_sf_sb        has efficiency of: " << fv_eff_sf_sb        .getVal() << endl;
-      cout << "eff_sf section -- eff_sf_sig_sl_e  has efficiency of: " << fv_eff_sf_sig_sl_e  .getVal() << endl;
-      cout << "eff_sf section -- eff_sf_sig_sl_mu has efficiency of: " << fv_eff_sf_sig_sl_mu .getVal() << endl;
-      cout << "eff_sf section -- eff_sf_sb_sl_e   has efficiency of: " << fv_eff_sf_sb_sl_e   .getVal() << endl;
-      cout << "eff_sf section -- eff_sf_sb_sl_mu  has efficiency of: " << fv_eff_sf_sb_sl_mu  .getVal() << endl;
       cout << "eff_sf section -- eff_sf_sig_ldp   has efficiency of: " << fv_eff_sf_sig_ldp   .getVal() << endl;
       cout << "eff_sf section -- eff_sf_sb_ldp    has efficiency of: " << fv_eff_sf_sb_ldp    .getVal() << endl;
 
       //End Beta Distributions
 
-      //double sigma_max = max(sigma_eff_sf_sig,
-      //			     max(sigma_eff_sf_sb,
-      //				 max(sigma_eff_sf_sig_sl_e,
-      //				     max(sigma_eff_sf_sig_sl_mu,
-      //					 max(sigma_eff_sf_sb_sl_e,
-      //					     max(sigma_eff_sf_sb_sl_mu,
-      //						 max(sigma_eff_sf_sig_ldp,
-      //						     sigma_eff_sf_sb_ldp)))))));
-      //
-      //sigma_avg =(sigma_eff_sf_sig + sigma_eff_sf_sb + sigma_eff_sf_sig_sl_e + sigma_eff_sf_sig_sl_mu + sigma_eff_sf_sb_sl_e + sigma_eff_sf_sb_sl_mu + sigma_eff_sf_sig_ldp + sigma_eff_sf_sb_ldp)/8.;
-      //mu_avg = 1.;
-      //
-      //gammaModeTransform(mu_avg,sigma_avg,k,theta);
-
-      //RooRealVar rrv_eff_sf ("eff_sf","eff_sf",mu_avg,0,1e5);
-      //RooRealVar eff_sf_k ("eff_sf_k", "eff_sf_k", k);
-      //RooRealVar eff_sf_theta ("eff_sf_theta", "eff_sf_theta", theta);
-      //RooGammaPdf pdf_eff_sf ("pdf_eff_sf" , "pdf_eff_sf", rrv_eff_sf, eff_sf_k, eff_sf_theta, RooConst(0));
-      //eff_sf_k.setConstant();
-      //eff_sf_theta.setConstant();
-      //if(!effInitFixed) allNonPoissonNuisances.add (rrv_eff_sf); 
-      //if(constantSigEff) rrv_eff_sf.setConstant();
-      //gammaNuisancePdfs.add (pdf_eff_sf);
-
-      //RooRealVar rrv_eff_sf ("eff_sf","eff_sf",mu_avg,0,1e5);
-      //allNonPoissonNuisances.add (rrv_eff_sf);
-      //RooRealVar eff_sf_invScale("eff_sf_invScale","eff_sf_invScale",1.0/theta);
-      //eff_sf_invScale.setConstant();
-      //RooProduct mu_comp_eff_sf("mu_comp_eff_sf","mu_comp_eff_sf",RooArgList(rrv_eff_sf,eff_sf_invScale));
-      //RooRealVar N_comp_eff_sf ("N_comp_eff_sf", "N_comp_eff_sf", k-1,0,1e5);
-      //observedParametersList.add( N_comp_eff_sf );
-      ////RooRealVar mu_comp_eff_sf ("mu_comp_eff_sf", "mu_comp_eff_sf", k-1,1e-9,1e5);
-      ////allPoissonNuisances.add(mu_comp_eff_sf);
-      //RooPoisson pdf_eff_sf ("pdf_eff_sf" , "pdf_eff_sf", N_comp_eff_sf, mu_comp_eff_sf);
-      //allNuisancePdfs.add(pdf_eff_sf);
-      //
-      ////RooRealVar eff_sf_scale("eff_sf_scale","eff_sf_scale",theta);
-      ////eff_sf_scale.setConstant();
-      ////RooProduct rp_eff_sf ("eff_sf","eff_sf",RooArgList(mu_comp_eff_sf,eff_sf_scale));
-      //
-      //alphaFinding.setCurrentSigma(sigma_avg);
-      //
-      //if(sigma_eff_sf_sig > 0){
-      //	alphaFinding.setDesiredSigma(sigma_eff_sf_sig);
-      //	alphaRoot.SetFunction(WrappedAlphaFindingFunction, 1e-6, 5*sigma_max/sigma_avg);
-      //	alphaRoot.Solve();
-      //}
-      //RooRealVar eff_sf_sig_alpha("eff_sf_sig_alpha","eff_sf_sig_alpha", (sigma_eff_sf_sig > 0) ? alphaRoot.Root() : 0 );
-      //eff_sf_sig_alpha.setConstant();
-      //
-      //if(sigma_eff_sf_sb > 0){
-      //	alphaFinding.setDesiredSigma(sigma_eff_sf_sb);
-      //	alphaRoot.SetFunction(WrappedAlphaFindingFunction, 1e-6, 5*sigma_max/sigma_avg);
-      //	alphaRoot.Solve();
-      //}
-      //RooRealVar eff_sf_sb_alpha("eff_sf_sb_alpha","eff_sf_sb_alpha", (sigma_eff_sf_sb > 0) ? alphaRoot.Root() : 0 );
-      //eff_sf_sb_alpha.setConstant();
-      //
-      //if(sigma_eff_sf_sig_sl_e > 0){
-      //	alphaFinding.setDesiredSigma(sigma_eff_sf_sig_sl_e);
-      //	alphaRoot.SetFunction(WrappedAlphaFindingFunction, 1e-6, 5*sigma_max/sigma_avg);
-      //	alphaRoot.Solve();
-      //}
-      //RooRealVar eff_sf_sig_sl_e_alpha("eff_sf_sig_sl_e_alpha","eff_sf_sig_sl_e_alpha", (sigma_eff_sf_sig_sl_e > 0) ? alphaRoot.Root() : 0 );
-      //eff_sf_sig_sl_e_alpha.setConstant();
-      //
-      //if(sigma_eff_sf_sig_sl_mu > 0){
-      //	alphaFinding.setDesiredSigma(sigma_eff_sf_sig_sl_mu);
-      //	alphaRoot.SetFunction(WrappedAlphaFindingFunction, 1e-6, 5*sigma_max/sigma_avg);
-      //	alphaRoot.Solve();
-      //}
-      //RooRealVar eff_sf_sig_sl_mu_alpha("eff_sf_sig_sl_mu_alpha","eff_sf_sig_sl_mu_alpha", (sigma_eff_sf_sig_sl_mu > 0) ? alphaRoot.Root() : 0 );
-      //eff_sf_sig_sl_mu_alpha.setConstant();
-      //
-      //
-      //if(sigma_eff_sf_sb_sl_e > 0){
-      //	alphaFinding.setDesiredSigma(sigma_eff_sf_sb_sl_e);
-      //	alphaRoot.SetFunction(WrappedAlphaFindingFunction, 1e-6, 5*sigma_max/sigma_avg);
-      //	alphaRoot.Solve();
-      //}
-      //RooRealVar eff_sf_sb_sl_e_alpha("eff_sf_sb_sl_e_alpha","eff_sf_sb_sl_e_alpha", (sigma_eff_sf_sb_sl_e > 0) ? alphaRoot.Root() : 0 );
-      //eff_sf_sb_sl_e_alpha.setConstant();
-      //
-      //if(sigma_eff_sf_sb_sl_mu > 0){
-      //	alphaFinding.setDesiredSigma(sigma_eff_sf_sb_sl_mu);
-      //	alphaRoot.SetFunction(WrappedAlphaFindingFunction, 1e-6, 5*sigma_max/sigma_avg);
-      //	alphaRoot.Solve();
-      //}
-      //RooRealVar eff_sf_sb_sl_mu_alpha("eff_sf_sb_sl_mu_alpha","eff_sf_sb_sl_mu_alpha", (sigma_eff_sf_sb_sl_mu > 0) ? alphaRoot.Root() : 0 );
-      //eff_sf_sb_sl_mu_alpha.setConstant();
-      //
-      //
-      //if(sigma_eff_sf_sig_ldp > 0){
-      //	alphaFinding.setDesiredSigma(sigma_eff_sf_sig_ldp);
-      //	alphaRoot.SetFunction(WrappedAlphaFindingFunction, 1e-6, 5*sigma_max/sigma_avg);
-      //	alphaRoot.Solve();
-      //}
-      //RooRealVar eff_sf_sig_ldp_alpha("eff_sf_sig_ldp_alpha","eff_sf_sig_ldp_alpha", (sigma_eff_sf_sig_ldp > 0) ? alphaRoot.Root() : 0 );
-      //eff_sf_sig_ldp_alpha.setConstant();
-      //
-      //if(sigma_eff_sf_sb_ldp > 0){
-      //	alphaFinding.setDesiredSigma(sigma_eff_sf_sb_ldp);
-      //	alphaRoot.SetFunction(WrappedAlphaFindingFunction, 1e-6, 5*sigma_max/sigma_avg);
-      //	alphaRoot.Solve();
-      //}
-      //RooRealVar eff_sf_sb_ldp_alpha("eff_sf_sb_ldp_alpha","eff_sf_sb_ldp_alpha", (sigma_eff_sf_sb_ldp > 0) ? alphaRoot.Root() : 0 );
-      //eff_sf_sb_ldp_alpha.setConstant();
-      //
-      //cout << "eff_sf section -- calculation of power law" << endl;
-      //cout << "eff_sf section -- eff_sf_sig       has alpha of: " << eff_sf_sig_alpha       .getVal() << endl;
-      //cout << "eff_sf section -- eff_sf_sb        has alpha of: " << eff_sf_sb_alpha        .getVal() << endl;
-      //cout << "eff_sf section -- eff_sf_sig_sl_e  has alpha of: " << eff_sf_sig_sl_e_alpha  .getVal() << endl;
-      //cout << "eff_sf section -- eff_sf_sig_sl_mu has alpha of: " << eff_sf_sig_sl_mu_alpha .getVal() << endl;
-      //cout << "eff_sf section -- eff_sf_sb_sl_e   has alpha of: " << eff_sf_sb_sl_e_alpha   .getVal() << endl;
-      //cout << "eff_sf section -- eff_sf_sb_sl_mu  has alpha of: " << eff_sf_sb_sl_mu_alpha  .getVal() << endl;
-      //cout << "eff_sf section -- eff_sf_sig_ldp   has alpha of: " << eff_sf_sig_ldp_alpha   .getVal() << endl;
-      //cout << "eff_sf section -- eff_sf_sb_ldp    has alpha of: " << eff_sf_sb_ldp_alpha    .getVal() << endl;
-      //
-      ////-- Parametric relations between correlated signal efficiency scale factors.
-      //
-      //RooFormulaVar fv_eff_sf_sig       ("eff_sf_sig"         , "pow(@0,@1)" , RooArgList( rrv_eff_sf , eff_sf_sig_alpha      ));
-      //RooFormulaVar fv_eff_sf_sb        ("eff_sf_sb"          , "pow(@0,@1)" , RooArgList( rrv_eff_sf , eff_sf_sb_alpha       ));
-      //RooFormulaVar fv_eff_sf_sig_sl_e  ("eff_sf_sig_sl_e"    , "pow(@0,@1)" , RooArgList( rrv_eff_sf , eff_sf_sig_sl_e_alpha ));
-      //RooFormulaVar fv_eff_sf_sig_sl_mu ("eff_sf_sig_sl_mu"   , "pow(@0,@1)" , RooArgList( rrv_eff_sf , eff_sf_sig_sl_mu_alpha));
-      //RooFormulaVar fv_eff_sf_sb_sl_e   ("eff_sf_sb_sl_e"     , "pow(@0,@1)" , RooArgList( rrv_eff_sf , eff_sf_sb_sl_e_alpha  ));
-      //RooFormulaVar fv_eff_sf_sb_sl_mu  ("eff_sf_sb_sl_mu"    , "pow(@0,@1)" , RooArgList( rrv_eff_sf , eff_sf_sb_sl_mu_alpha ));
-      //RooFormulaVar fv_eff_sf_sig_ldp   ("eff_sf_sig_ldp"     , "pow(@0,@1)" , RooArgList( rrv_eff_sf , eff_sf_sig_ldp_alpha  ));
-      //RooFormulaVar fv_eff_sf_sb_ldp    ("eff_sf_sb_ldp"      , "pow(@0,@1)" , RooArgList( rrv_eff_sf , eff_sf_sb_ldp_alpha   ));
-
-      sigma_avg = 1.;
-      mu_avg = 0.;
-
-      //// Truncated Gaussians for signal systematics:
-      //
-      //RooRealVar rrv_normal_eff_sf ("eff_sf","eff_sf",mu_avg,-1e5,1e5);
-      //RooRealVar eff_sf_mu ("eff_sf_mu", "eff_sf_mu", mu_avg);
-      //RooRealVar eff_sf_sigma ("eff_sf_sigma", "eff_sf_sigma", sigma_avg);
-      //RooGaussian pdf_normal_eff_sf ("pdf_eff_sf" , "pdf_eff_sf", rrv_eff_sf, eff_sf_mu, eff_sf_sigma);
-      //eff_sf_mu.setConstant();
-      //eff_sf_sigma.setConstant();
-      //normalNuisancePdfs.add (pdf_eff_sf);
-      //
-      //RooRealVar eff_sf_all_mu ("eff_sf_all_mu", "eff_sf_all_mu", 1.0);
-      //eff_sf_mu.setConstant();
-      //
-      //RooRealVar eff_sf_sig_sigma     ("eff_sf_sig_sigma"      , "eff_sf_sig_sigma"      , sigma_eff_sf_sig      );
-      //RooRealVar eff_sf_sb_sigma      ("eff_sf_sb_sigma"       , "eff_sf_sb_sigma"       , sigma_eff_sf_sb       );
-      //RooRealVar eff_sf_sig_sl_e_sigma  ("eff_sf_sig_sl_e_sigma"   , "eff_sf_sig_sl_e_sigma"   , sigma_eff_sf_sig_sl_e   );
-      //RooRealVar eff_sf_sig_sl_mu_sigma  ("eff_sf_sig_sl_mu_sigma"   , "eff_sf_sig_sl_mu_sigma"   , sigma_eff_sf_sig_sl_mu   );
-      //RooRealVar eff_sf_sb_sl_e_sigma ("eff_sf_sb_sl_e_sigma"  , "eff_sf_sb_sl_e_sigma"  , sigma_eff_sf_sb_sl_e  );
-      //RooRealVar eff_sf_sb_sl_mu_sigma("eff_sf_sb_sl_mu_sigma" , "eff_sf_sb_sl_mu_sigma" , sigma_eff_sf_sb_sl_mu );
-      //RooRealVar eff_sf_sig_ldp_sigma ("eff_sf_sig_ldp_sigma"  , "eff_sf_sig_ldp_sigma"  , sigma_eff_sf_sig_ldp  );
-      //RooRealVar eff_sf_sb_ldp_sigma  ("eff_sf_sb_ldp_sigma"   , "eff_sf_sb_ldp_sigma"   , sigma_eff_sf_sb_ldp   );
-
-      //RooFormulaVar fv_normal_eff_sf_sig     ("eff_sf_sig"    , "(@1+@0*@2>=0)*(@1+@0*@2)" , RooArgList(rrv_normal_eff_sf, eff_sf_all_mu, eff_sf_sig_sigma    ));
-      //RooFormulaVar fv_normal_eff_sf_sb      ("eff_sf_sb"     , "(@1+@0*@2>=0)*(@1+@0*@2)" , RooArgList(rrv_normal_eff_sf, eff_sf_all_mu, eff_sf_sb_sigma     ));
-      //RooFormulaVar fv_normal_eff_sf_sig_sl  ("eff_sf_sig_sl" , "(@1+@0*@2>=0)*(@1+@0*@2)" , RooArgList(rrv_normal_eff_sf, eff_sf_all_mu, eff_sf_sig_sl_sigma ));
-      //RooFormulaVar fv_normal_eff_sf_sb_sl   ("eff_sf_sb_sl"  , "(@1+@0*@2>=0)*(@1+@0*@2)" , RooArgList(rrv_normal_eff_sf, eff_sf_all_mu, eff_sf_sb_sl_sigma  ));
-      //RooFormulaVar fv_normal_eff_sf_sig_ldp ("eff_sf_sig_ldp", "(@1+@0*@2>=0)*(@1+@0*@2)" , RooArgList(rrv_normal_eff_sf, eff_sf_all_mu, eff_sf_sig_ldp_sigma));
-      //RooFormulaVar fv_normal_eff_sf_sb_ldp  ("eff_sf_sb_ldp" , "(@1+@0*@2>=0)*(@1+@0*@2)" , RooArgList(rrv_normal_eff_sf, eff_sf_all_mu, eff_sf_sb_ldp_sigma ));
-
-
-
-
-     //rv_eff_sf_sig = new RooFormulaVar("eff_sf_sig",
-     //                                   "mean_eff_sf_sig * pow( exp( width_eff_sf_sig/mean_eff_sf_sig ), eff_sf_prim )",
-     //                                   RooArgSet( *rv_mean_eff_sf_sig, *rv_width_eff_sf_sig, *rv_mean_eff_sf_sig, eff_sf_prim ) ) ;
-     //
-     //rv_eff_sf_sb = new RooFormulaVar("eff_sf_sb",
-     //                                   "mean_eff_sf_sb * pow( exp( width_eff_sf_sb/mean_eff_sf_sb ), eff_sf_prim )",
-     //                                   RooArgSet( *rv_mean_eff_sf_sb, *rv_width_eff_sf_sb, *rv_mean_eff_sf_sb, eff_sf_prim ) ) ;
-     //
-     //rv_eff_sf_sig_sl = new RooFormulaVar("eff_sf_sig_sl",
-     //                                   "mean_eff_sf_sig_sl * pow( exp( width_eff_sf_sig_sl/mean_eff_sf_sig_sl ), eff_sf_prim )",
-     //                                   RooArgSet( *rv_mean_eff_sf_sig_sl, *rv_width_eff_sf_sig_sl, *rv_mean_eff_sf_sig_sl, eff_sf_prim ) ) ;
-     //
-     //rv_eff_sf_sb_sl = new RooFormulaVar("eff_sf_sb_sl",
-     //                                   "mean_eff_sf_sb_sl * pow( exp( width_eff_sf_sb_sl/mean_eff_sf_sb_sl ), eff_sf_prim )",
-     //                                   RooArgSet( *rv_mean_eff_sf_sb_sl, *rv_width_eff_sf_sb_sl, *rv_mean_eff_sf_sb_sl, eff_sf_prim ) ) ;
-     //
-     //rv_eff_sf_sig_ldp = new RooFormulaVar("eff_sf_sig_ldp",
-     //                                   "mean_eff_sf_sig_ldp * pow( exp( width_eff_sf_sig_ldp/mean_eff_sf_sig_ldp ), eff_sf_prim )",
-     //                                   RooArgSet( *rv_mean_eff_sf_sig_ldp, *rv_width_eff_sf_sig_ldp, *rv_mean_eff_sf_sig_ldp, eff_sf_prim ) ) ;
-     //
-     //rv_eff_sf_sb_ldp = new RooFormulaVar("eff_sf_sb_ldp",
-     //                                   "mean_eff_sf_sb_ldp * pow( exp( width_eff_sf_sb_ldp/mean_eff_sf_sb_ldp ), eff_sf_prim )",
-     //                                   RooArgSet( *rv_mean_eff_sf_sb_ldp, *rv_width_eff_sf_sb_ldp, *rv_mean_eff_sf_sb_ldp, eff_sf_prim ) ) ;
-
-
-
-/*       RooRealVar xxx_prim ("xxx_prim", "xxx_prim", 0, -5, 5); */
-/*       RooRealVar xxx_nom ("xxx_nom", "xxx_nom", 0, -5, 5); */
-/*       RooGaussian pdf_xxx ("pdf_xxx" , "pdf_xxx", xxx_prim, xxx_nom, RooConst(1)); */
-/*       sprintf (formula, "%f*pow(%f,@0)", xxx, exp(xxx_err/xxx)); */
-/*       RooFormulaVar fv_xxx ("xxx", formula, RooArgList(xxx_prim)); */
-/*       globalObservables.add (xxx_nom); */
-/*       allNuisances.add (xxx_prim); */
-/*       allNuisancePdfs.add (pdf_xxx); */
-
+ 
 
 
     //-- Z to nunu stuff
@@ -2916,15 +2451,11 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
     //-- ttwj
 
       if ( useSigTtwjVar ) {
-         rfv_mu_ttwj_sb = new RooFormulaVar("mu_ttwj_sb",
-					     "mu_ttwj_sig * (1.0/sf_ttwj_sig) * ((mu_ttwj_sb_sl_e+mu_ttwj_sb_sl_mu)/mu_ttwj_sig_sl)",
-					     RooArgSet( *rv_mu_ttwj_sig, rrv_sf_ttwj_sig, *rv_mu_ttwj_sb_sl_e,*rv_mu_ttwj_sb_sl_mu, *rv_mu_ttwj_sig_sl) ) ;
-         rv_mu_ttwj_sb = rfv_mu_ttwj_sb ;
+
       } else {
-         rfv_mu_ttwj_sig = new RooFormulaVar("mu_ttwj_sig",
-					      "mu_ttwj_sb * sf_ttwj_sig * (mu_ttwj_sig_sl/(mu_ttwj_sb_sl_e+mu_ttwj_sb_sl_mu))",
-					      RooArgSet( *rv_mu_ttwj_sb, rrv_sf_ttwj_sig, *rv_mu_ttwj_sig_sl,*rv_mu_ttwj_sb_sl_e,*rv_mu_ttwj_sb_sl_mu) ) ;
-         rv_mu_ttwj_sig = rfv_mu_ttwj_sig ;
+	cout << "This option is not valid with this likelihood.  Please set useSigTtwjVar to true." << endl;
+	return false;
+
       }
 
 
@@ -2979,26 +2510,14 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
       if ( useLdpVars ) {
 
          rfv_mu_qcd_sig = new RooFormulaVar("mu_qcd_sig",
-					     "mu_qcd_sig_ldp * sf_qcd_sig * Rlsb_passfail",
-					     RooArgSet( *rv_mu_qcd_sig_ldp, rrv_sf_qcd_sig, rrv_Rlsb_passfail) ) ;
+					     "mu_qcd_sig_ldp * sf_qcd_sig * Rlsb_passfail * (1.0/epsSF_sig)",
+					     RooArgSet( *rv_mu_qcd_sig_ldp, rrv_sf_qcd_sig, rrv_Rlsb_passfail, rrv_epsSF_sig ) ) ;
          rv_mu_qcd_sig = rfv_mu_qcd_sig ;
 
-         rfv_mu_qcd_sb = new RooFormulaVar("mu_qcd_sb",
-					    "mu_qcd_sb_ldp * sf_qcd_sb * Rlsb_passfail",
-					    RooArgSet( *rv_mu_qcd_sb_ldp, rrv_sf_qcd_sb, rrv_Rlsb_passfail ) ) ;
-         rv_mu_qcd_sb = rfv_mu_qcd_sb ;
 
       } else {
-
-         rfv_mu_qcd_sig_ldp = new RooFormulaVar("mu_qcd_sig_ldp",
-						 "mu_qcd_sig * (1.0/sf_qcd_sig) * ( 1.0 / Rlsb_passfail )",
-						 RooArgSet( *rv_mu_qcd_sig, rrv_sf_qcd_sig, rrv_Rlsb_passfail ) ) ;
-         rv_mu_qcd_sig_ldp = rfv_mu_qcd_sig_ldp ;
-
-         rfv_mu_qcd_sb_ldp = new RooFormulaVar("mu_qcd_sb_ldp",
-						"mu_qcd_sb * (1.0/sf_qcd_sb) * ( 1.0 / Rlsb_passfail ) ",
-						RooArgSet( *rv_mu_qcd_sb, rrv_sf_qcd_sb, rrv_Rlsb_passfail ) ) ;
-         rv_mu_qcd_sb_ldp = rfv_mu_qcd_sb_ldp ;
+	cout <<"This option is invalid, please set useLdpVars to true)"<<endl;
+	return false;
 
       }
 
@@ -3011,22 +2530,6 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
       rv_mu_susy_sb = new RooFormulaVar("mu_susy_sb",
                                         "mu_susymc_sb * (mu_susy_sig/mu_susymc_sig)",
 					 RooArgSet( *rv_mu_susymc_sb, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
-
-      rv_mu_susy_sig_sl_e = new RooFormulaVar("mu_susy_sig_sl_e",
-					      "mu_susymc_sig_sl_e * (mu_susy_sig/mu_susymc_sig)",
-					      RooArgSet( *rv_mu_susymc_sig_sl_e, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
-
-      rv_mu_susy_sig_sl_mu = new RooFormulaVar("mu_susy_sig_sl_mu",
-					      "mu_susymc_sig_sl_mu * (mu_susy_sig/mu_susymc_sig)",
-					      RooArgSet( *rv_mu_susymc_sig_sl_mu, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
-
-      rv_mu_susy_sb_sl_e = new RooFormulaVar("mu_susy_sb_sl_e",
-					    "mu_susymc_sb_sl_e * (mu_susy_sig/mu_susymc_sig)",
-					    RooArgSet( *rv_mu_susymc_sb_sl_e, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
-
-      rv_mu_susy_sb_sl_mu = new RooFormulaVar("mu_susy_sb_sl_mu",
-					    "mu_susymc_sb_sl_mu * (mu_susy_sig/mu_susymc_sig)",
-					    RooArgSet( *rv_mu_susymc_sb_sl_mu, *rv_mu_susy_sig, *rv_mu_susymc_sig ) ) ;
 
       rv_mu_susy_sig_ldp = new RooFormulaVar("mu_susy_sig_ldp",
 					      "mu_susymc_sig_ldp * (mu_susy_sig/mu_susymc_sig)",
@@ -3096,25 +2599,9 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
                                       RooArgSet( *rv_mu_znn_sig, rrv_knn_ee_sig, fv_sf_ee, rrv_acc_ee_sig, rrv_eff_ee, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
 
 
-      rv_mu_zee_sb_ee = new RooFormulaVar("mu_zee_sb_ee",
-                                    "( mu_znn_sb / knn_ee_sb ) * sf_ee * ( (acc_ee_sb * eff_ee ) / ( znnoverll_bfratio * dataoverll_lumiratio ) )",
-                                      RooArgSet( *rv_mu_znn_sb, rrv_knn_ee_sb, fv_sf_ee, rrv_acc_ee_sb, rrv_eff_ee, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
-
       rv_mu_zmm_sig_mm = new RooFormulaVar("mu_zmm_sig_mm",
                                     "( mu_znn_sig / knn_mm_sig ) * sf_mm * ( (acc_mm_sig * eff_mm ) / ( znnoverll_bfratio * dataoverll_lumiratio ) )",
                                       RooArgSet( *rv_mu_znn_sig, rrv_knn_mm_sig, fv_sf_mm, rrv_acc_mm_sig, rrv_eff_mm, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
-
-      rv_mu_zmm_sb_mm = new RooFormulaVar("mu_zmm_sb_mm",
-                                    "( mu_znn_sb / knn_mm_sb ) * sf_mm * ( (acc_mm_sb * eff_mm ) / ( znnoverll_bfratio * dataoverll_lumiratio ) )",
-                                      RooArgSet( *rv_mu_znn_sb, rrv_knn_mm_sb, fv_sf_mm, rrv_acc_mm_sb, rrv_eff_mm, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
-
-
-
-
-
-
-
-
 
 
     //-- EWO
@@ -3136,10 +2623,6 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
 					   "epsSF_sig*(mu_ttwj_sig + mu_qcd_sig + mu_znn_sig + eff_sf_sig*( mu_ewo_sig + mu_susy_sig))",
 					   RooArgSet(rrv_epsSF_sig,*rv_mu_ttwj_sig, *rv_mu_qcd_sig, *rv_mu_znn_sig, fv_eff_sf_sig, *rv_mu_ewo_sig, *rv_mu_susy_sig ) ) ;
       
-      rv_n_sb          = new RooFormulaVar("n_sb",
-					   "epsSF_sb*(mu_ttwj_sb  + mu_qcd_sb  + mu_znn_sb  + eff_sf_sb*( mu_ewo_sb  + mu_susy_sb ))",
-					   RooArgSet(rrv_epsSF_sb, *rv_mu_ttwj_sb , *rv_mu_qcd_sb , *rv_mu_znn_sb , fv_eff_sf_sb, *rv_mu_ewo_sb , *rv_mu_susy_sb  ) ) ;
-      
       rv_n_sig_ldp     = new RooFormulaVar("n_sig_ldp",
 					   "epsSF_sig*(mu_qcd_sig_ldp + sf_mc * (mu_ttwj_sig_ldp + mu_znn_sig_ldp + mu_ewo_sig_ldp) + eff_sf_sig_ldp*(mu_susy_sig_ldp))",
 					   RooArgSet(rrv_epsSF_sig, *rv_mu_qcd_sig_ldp, fv_eff_sf_sig_ldp, rrv_sf_mc, *rv_mu_ttwj_sig_ldp, *rv_mu_znn_sig_ldp, *rv_mu_ewo_sig_ldp, *rv_mu_susy_sig_ldp ) ) ;
@@ -3148,42 +2631,14 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
 					   "epsSF_sb_ldp*(mu_qcd_sb_ldp + sf_mc * (mu_ttwj_sb_ldp + mu_znn_sb_ldp + mu_ewo_sb_ldp) + eff_sf_sb_ldp*(mu_susy_sb_ldp))",
 					   RooArgSet(rrv_epsSF_sb_ldp, *rv_mu_qcd_sb_ldp, fv_eff_sf_sb_ldp, rrv_sf_mc, *rv_mu_ttwj_sb_ldp, *rv_mu_znn_sb_ldp, *rv_mu_ewo_sb_ldp, *rv_mu_susy_sb_ldp ) ) ;
       
-      rv_n_sig_sl      = new RooFormulaVar("n_sig_sl",
-					   "epsSF_sig_sl*(mu_ttwj_sig_sl + eff_sf_sig_sl_e*mu_susy_sig_sl_e + eff_sf_sig_sl_mu*mu_susy_sig_sl_mu)",
-					   RooArgSet(rrv_epsSF_sig_sl, *rv_mu_ttwj_sig_sl, fv_eff_sf_sig_sl_e, *rv_mu_susy_sig_sl_e, fv_eff_sf_sig_sl_mu, *rv_mu_susy_sig_sl_mu ) ) ;
-
-      rv_n_sb_sl_e       = new RooFormulaVar("n_sb_sl_e",
-					     "epsSF_sb_sl_e*(mu_ttwj_sb_sl_e + eff_sf_sb_sl_e*mu_susy_sb_sl_e)",
-					     RooArgSet(rrv_epsSF_sb_sl_e, *rv_mu_ttwj_sb_sl_e, fv_eff_sf_sb_sl_e, *rv_mu_susy_sb_sl_e ) ) ;
-
-      rv_n_sb_sl_mu       = new RooFormulaVar("n_sb_sl_mu",
-					      "epsSF_sb_sl_mu*(mu_ttwj_sb_sl_mu + eff_sf_sb_sl_mu*mu_susy_sb_sl_mu)",
-					      RooArgSet(rrv_epsSF_sb_sl_mu, *rv_mu_ttwj_sb_sl_mu, fv_eff_sf_sb_sl_mu, *rv_mu_susy_sb_sl_mu ) ) ;
-
- ///  rv_n_lsb_0b      = new RooFormulaVar("n_lsb_0b",
- ///                                 "mu_qcd_lsb_0b",
- ///                                 RooArgSet( *rv_mu_qcd_lsb_0b ) ) ;
-
- ///  rv_n_lsb_0b_ldp  = new RooFormulaVar("n_lsb_0b_ldp",
- ///                                 "mu_qcd_lsb_0b_ldp",
- ///                                 RooArgSet( *rv_mu_qcd_lsb_0b_ldp ) ) ;
-
 
       rv_n_sig_ee      = new RooFormulaVar("n_sig_ee",
                                      "mu_zee_sig_ee / fsig_ee",
                                      RooArgSet( *rv_mu_zee_sig_ee, rrv_fsig_ee ) ) ;
 
-      rv_n_sb_ee       = new RooFormulaVar("n_sb_ee",
-                                     "mu_zee_sb_ee / fsig_ee",
-                                     RooArgSet( *rv_mu_zee_sb_ee, rrv_fsig_ee ) ) ;
-
       rv_n_sig_mm      = new RooFormulaVar("n_sig_mm",
                                      "mu_zmm_sig_mm / fsig_mm",
                                      RooArgSet( *rv_mu_zmm_sig_mm, rrv_fsig_mm ) ) ;
-
-      rv_n_sb_mm       = new RooFormulaVar("n_sb_mm",
-                                     "mu_zmm_sb_mm / fsig_mm",
-                                     RooArgSet( *rv_mu_zmm_sb_mm, rrv_fsig_mm ) ) ;
 
 
    //++++++++++++ PDFs for the likelihood +++++++++++++++++++++++++++++++++++++++++++++
@@ -3191,36 +2646,19 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
       printf(" --- Defining PDFs of the likelihood.\n" ) ;
 
       pdf_Nsig        = new RooPoisson("pdf_Nsig"        , "Nsig Poisson PDF"        , *rv_Nsig        , *rv_n_sig ) ;
-      pdf_Nsb         = new RooPoisson("pdf_Nsb"         , "Nsb Poisson PDF"         , *rv_Nsb         , *rv_n_sb ) ;
       pdf_Nsig_ldp    = new RooPoisson("pdf_Nsig_ldp"    , "Nsig_ldp Poisson PDF"    , *rv_Nsig_ldp    , *rv_n_sig_ldp ) ;
       pdf_Nsb_ldp     = new RooPoisson("pdf_Nsb_ldp"     , "Nsb_ldp Poisson PDF"     , *rv_Nsb_ldp     , *rv_n_sb_ldp ) ;
-      pdf_Nsig_sl     = new RooPoisson("pdf_Nsig_sl"     , "Nsig_sl Poisson PDF"     , *rv_Nsig_sl     , *rv_n_sig_sl ) ;
-      pdf_Nsb_sl_e      = new RooPoisson("pdf_Nsb_sl_e"      , "Nsb_sl_e Poisson PDF"      , *rv_Nsb_sl_e      , *rv_n_sb_sl_e ) ;
-      pdf_Nsb_sl_mu      = new RooPoisson("pdf_Nsb_sl_mu"      , "Nsb_sl_mu Poisson PDF"      , *rv_Nsb_sl_mu      , *rv_n_sb_sl_mu ) ;
- ///  pdf_Nlsb_0b     = new RooPoisson("pdf_Nlsb_0b"     , "Nlsb_0b Poisson PDF"     , *rv_Nlsb_0b     , *rv_n_lsb_0b ) ;
- ///  pdf_Nlsb_0b_ldp = new RooPoisson("pdf_Nlsb_0b_ldp" , "Nlsb_0b_ldp Poisson PDF" , *rv_Nlsb_0b_ldp , *rv_n_lsb_0b_ldp ) ;
 
       pdf_Nsig_ee     = new RooPoisson("pdf_Nsig_ee"     , "Nsig_ee Poisson PDF"     , *rv_Nsig_ee     , *rv_n_sig_ee ) ;
-      pdf_Nsb_ee      = new RooPoisson("pdf_Nsb_ee"      , "Nsb_ee Poisson PDF"      , *rv_Nsb_ee      , *rv_n_sb_ee ) ;
       pdf_Nsig_mm     = new RooPoisson("pdf_Nsig_mm"     , "Nsig_mm Poisson PDF"     , *rv_Nsig_mm     , *rv_n_sig_mm ) ;
-      pdf_Nsb_mm      = new RooPoisson("pdf_Nsb_mm"      , "Nsb_mm Poisson PDF"      , *rv_Nsb_mm      , *rv_n_sb_mm ) ;
-
 
       {
          RooArgSet pdflist ;
          pdflist.add( *pdf_Nsig        ) ;
-         pdflist.add( *pdf_Nsb         ) ;
          pdflist.add( *pdf_Nsig_ldp    ) ;
          pdflist.add( *pdf_Nsb_ldp     ) ;
-         pdflist.add( *pdf_Nsig_sl     ) ;
-         pdflist.add( *pdf_Nsb_sl_e      ) ;
-         pdflist.add( *pdf_Nsb_sl_mu      ) ;
-   ////  pdflist.add( *pdf_Nlsb_0b     ) ;
-   ////  pdflist.add( *pdf_Nlsb_0b_ldp ) ;
          pdflist.add( *pdf_Nsig_ee     ) ;
-         pdflist.add( *pdf_Nsb_ee      ) ;
          pdflist.add( *pdf_Nsig_mm     ) ;
-         pdflist.add( *pdf_Nsb_mm      ) ;
 
 	 //pdflist.add(gammaNuisancePdfs);
 	 //pdflist.add(betaNuisancePdfs);
@@ -3230,21 +2668,13 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
 	 likelihood->Print("v");
 
          RooArgSet pdflist_noNSig ;
-         pdflist_noNSig.add( *pdf_Nsb         ) ;
          pdflist_noNSig.add( *pdf_Nsig_ldp    ) ;
          pdflist_noNSig.add( *pdf_Nsb_ldp     ) ;
-         pdflist_noNSig.add( *pdf_Nsig_sl     ) ;
-         pdflist_noNSig.add( *pdf_Nsb_sl_e      ) ;
-         pdflist_noNSig.add( *pdf_Nsb_sl_mu      ) ;
-   ////  pdflist_noNSig.add( *pdf_Nlsb_0b     ) ;
-   ////  pdflist_noNSig.add( *pdf_Nlsb_0b_ldp ) ;
          pdflist_noNSig.add( *pdf_Nsig_ee     ) ;
-         pdflist_noNSig.add( *pdf_Nsb_ee      ) ;
          pdflist_noNSig.add( *pdf_Nsig_mm     ) ;
-         pdflist_noNSig.add( *pdf_Nsb_mm      ) ;
 
 	 //pdflist_noNSig.add(gammaNuisancePdfs);
-	 //pdflist_noNSig.add(betaNuisancePdfs);
+	 pdflist_noNSig.add(allNuisancePdfs);
 
          likelihood_noNSig = new RooProdPdf("likelihood_noNSig", "ra2b likelihood w/out NSig", pdflist_noNSig ) ;
 
@@ -3254,17 +2684,9 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
      //---- Define the list of observables.
 
        observedParametersList.add( *rv_Nsig        ) ;
-       observedParametersList.add( *rv_Nsb         ) ;
-       observedParametersList.add( *rv_Nsig_sl     ) ;
-       observedParametersList.add( *rv_Nsb_sl_e      ) ;
-       observedParametersList.add( *rv_Nsb_sl_mu      ) ;
        observedParametersList.add( *rv_Nsig_ldp    ) ;
        observedParametersList.add( *rv_Nsb_ldp     ) ;
-  //// observedParametersList.add( *rv_Nlsb_0b     ) ;
-  //// observedParametersList.add( *rv_Nlsb_0b_ldp ) ;
-       observedParametersList.add( *rv_Nsb_ee      ) ;
        observedParametersList.add( *rv_Nsig_ee     ) ;
-       observedParametersList.add( *rv_Nsb_mm      ) ;
        observedParametersList.add( *rv_Nsig_mm     ) ;
 
 
@@ -3603,20 +3025,20 @@ void betaMeanTransform(const double& mu_measured , const double& sigma_measured 
 	     //Setup better error definitions with Gamma functions
 
              rv_mu_susymc_sig       -> setVal( setVal_n_sig      ) ;
-             rv_mu_susymc_sb        -> setVal( setVal_n_sb       ) ;
-             rv_mu_susymc_sig_sl_e    -> setVal( setVal_n_sig_sl_e   ) ;
-             rv_mu_susymc_sig_sl_mu    -> setVal( setVal_n_sig_sl_mu   ) ;
-             rv_mu_susymc_sb_sl_e     -> setVal( setVal_n_sb_sl_e    ) ;
-             rv_mu_susymc_sb_sl_mu     -> setVal( setVal_n_sb_sl_mu    ) ;
+             //rv_mu_susymc_sb        -> setVal( setVal_n_sb       ) ;
+             //rv_mu_susymc_sig_sl_e    -> setVal( setVal_n_sig_sl_e   ) ;
+             //rv_mu_susymc_sig_sl_mu    -> setVal( setVal_n_sig_sl_mu   ) ;
+             //rv_mu_susymc_sb_sl_e     -> setVal( setVal_n_sb_sl_e    ) ;
+             //rv_mu_susymc_sb_sl_mu     -> setVal( setVal_n_sb_sl_mu    ) ;
              rv_mu_susymc_sig_ldp   -> setVal( setVal_n_sig_ldp  ) ;
              rv_mu_susymc_sb_ldp    -> setVal( setVal_n_sb_ldp   ) ;
 
              rv_width_eff_sf_sig     -> setVal( n_sig_error     / 100. ) ;
-             rv_width_eff_sf_sb      -> setVal( n_sb_error      / 100. ) ;
-             rv_width_eff_sf_sig_sl_e  -> setVal( n_sig_sl_e_error  / 100. ) ;
-             rv_width_eff_sf_sig_sl_mu  -> setVal( n_sig_sl_mu_error  / 100. ) ;
-             rv_width_eff_sf_sb_sl_e   -> setVal( n_sb_sl_e_error   / 100. ) ;
-             rv_width_eff_sf_sb_sl_mu   -> setVal( n_sb_sl_mu_error   / 100. ) ;
+             //rv_width_eff_sf_sb      -> setVal( n_sb_error      / 100. ) ;
+             //rv_width_eff_sf_sig_sl_e  -> setVal( n_sig_sl_e_error  / 100. ) ;
+             //rv_width_eff_sf_sig_sl_mu  -> setVal( n_sig_sl_mu_error  / 100. ) ;
+             //rv_width_eff_sf_sb_sl_e   -> setVal( n_sb_sl_e_error   / 100. ) ;
+             //rv_width_eff_sf_sb_sl_mu   -> setVal( n_sb_sl_mu_error   / 100. ) ;
              rv_width_eff_sf_sig_ldp -> setVal( n_sig_ldp_error / 100. ) ;
              rv_width_eff_sf_sb_ldp  -> setVal( n_sb_ldp_error  / 100. ) ;
 

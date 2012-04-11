@@ -249,7 +249,7 @@ void profileLikelihoodLimit(const char * fileName =0,
     return;
   }
 
-  double tempMax = ((RooRealVar*)data->get()->find("Nsig"))->getVal() > 0 ? ((RooRealVar*)data->get()->find("Nsig"))->getVal() + 5*sqrt(((RooRealVar*)data->get()->find("Nsig"))->getVal()) : 5 ;
+  double tempMax = ((RooRealVar*)data->get()->find("Nsig"))->getVal() > 0 ? ((RooRealVar*)data->get()->find("Nsig"))->getVal() + 6*sqrt(((RooRealVar*)data->get()->find("Nsig"))->getVal()) : 20 ;
 
   RooRealVar* firstPOI = (RooRealVar*) mc->GetParametersOfInterest()->first();
   firstPOI->setRange(0, tempMax);
@@ -593,32 +593,28 @@ void profileLikelihoodLimit(const char * fileName =0,
   outfile << m0 ;  outfile << " ";
   outfile << m12;  outfile << " ";
   outfile << asymptoticLimit;
-  if(isFrequentist){
-    outfile << " ";
-    outfile << upperLimit_linear;  outfile << " ";
-    outfile << upperLimitError_linear;  outfile << " ";
-    outfile << expectedUpperLimit_linear;  outfile << " ";
-    outfile << expectedUpperLimitHigh_linear;  outfile << " ";
-    outfile << expectedUpperLimitLow_linear;  outfile << " ";
-    outfile << clsplusb_upperLimit_linear;  outfile << " ";
-    outfile << clsplusb_upperLimitError_linear;  outfile << " ";
-    outfile << clsplusb_expectedUpperLimit_linear;  outfile << " ";
-    outfile << clsplusb_expectedUpperLimitHigh_linear;  outfile << " ";
-    outfile << clsplusb_expectedUpperLimitLow_linear;
-  }
-  if(isHybrid){
-    outfile << " ";
-    outfile << hybrid_upperLimit_linear;  outfile << " ";
-    outfile << hybrid_upperLimitError_linear;  outfile << " ";
-    outfile << hybrid_expectedUpperLimit_linear;  outfile << " ";
-    outfile << hybrid_expectedUpperLimitHigh_linear;  outfile << " ";
-    outfile << hybrid_expectedUpperLimitLow_linear;  outfile << " ";
-    outfile << clsplusb_hybrid_upperLimit_linear;  outfile << " ";
-    outfile << clsplusb_hybrid_upperLimitError_linear;  outfile << " ";
-    outfile << clsplusb_hybrid_expectedUpperLimit_linear;  outfile << " ";
-    outfile << clsplusb_hybrid_expectedUpperLimitHigh_linear;  outfile << " ";
-    outfile << clsplusb_hybrid_expectedUpperLimitLow_linear;
-  }
+  outfile << " ";
+  outfile << upperLimit_linear;  outfile << " ";
+  outfile << upperLimitError_linear;  outfile << " ";
+  outfile << expectedUpperLimit_linear;  outfile << " ";
+  outfile << expectedUpperLimitHigh_linear;  outfile << " ";
+  outfile << expectedUpperLimitLow_linear;  outfile << " ";
+  outfile << clsplusb_upperLimit_linear;  outfile << " ";
+  outfile << clsplusb_upperLimitError_linear;  outfile << " ";
+  outfile << clsplusb_expectedUpperLimit_linear;  outfile << " ";
+  outfile << clsplusb_expectedUpperLimitHigh_linear;  outfile << " ";
+  outfile << clsplusb_expectedUpperLimitLow_linear;
+  outfile << " ";
+  outfile << hybrid_upperLimit_linear;  outfile << " ";
+  outfile << hybrid_upperLimitError_linear;  outfile << " ";
+  outfile << hybrid_expectedUpperLimit_linear;  outfile << " ";
+  outfile << hybrid_expectedUpperLimitHigh_linear;  outfile << " ";
+  outfile << hybrid_expectedUpperLimitLow_linear;  outfile << " ";
+  outfile << clsplusb_hybrid_upperLimit_linear;  outfile << " ";
+  outfile << clsplusb_hybrid_upperLimitError_linear;  outfile << " ";
+  outfile << clsplusb_hybrid_expectedUpperLimit_linear;  outfile << " ";
+  outfile << clsplusb_hybrid_expectedUpperLimitHigh_linear;  outfile << " ";
+  outfile << clsplusb_hybrid_expectedUpperLimitLow_linear;
   outfile << "\n";
   outfile.close();
 
@@ -678,6 +674,289 @@ void profileLikelihoodLimit(const char * fileName =0,
       map<TString,TH1D> sig_uncond_histograms;
       map<TString,TH1D> bkg_uncond_histograms;
 
+      //Efficiencies:
+
+      RooRealVar* N_pass_scale_eff_sf_sig        = w->var("N_pass_scale_eff_sf_sig"       );
+      RooRealVar* N_pass_scale_eff_sf_sb         = w->var("N_pass_scale_eff_sf_sb"        );
+      RooRealVar* N_pass_scale_eff_sf_sig_sl_e   = w->var("N_pass_scale_eff_sf_sig_sl_e"  );
+      RooRealVar* N_pass_scale_eff_sf_sig_sl_mu  = w->var("N_pass_scale_eff_sf_sig_sl_mu" );
+      RooRealVar* N_pass_scale_eff_sf_sb_sl_e    = w->var("N_pass_scale_eff_sf_sb_sl_e"   );
+      RooRealVar* N_pass_scale_eff_sf_sb_sl_mu   = w->var("N_pass_scale_eff_sf_sb_sl_mu"  );
+      RooRealVar* N_pass_scale_eff_sf_sig_ldp    = w->var("N_pass_scale_eff_sf_sig_ldp"   );
+      RooRealVar* N_pass_scale_eff_sf_sb_ldp     = w->var("N_pass_scale_eff_sf_sb_ldp"    );
+      RooRealVar* N_fail_scale_eff_sf_sig        = w->var("N_fail_scale_eff_sf_sig"       );
+      RooRealVar* N_fail_scale_eff_sf_sb         = w->var("N_fail_scale_eff_sf_sb"        );
+      RooRealVar* N_fail_scale_eff_sf_sig_sl_e   = w->var("N_fail_scale_eff_sf_sig_sl_e"  );
+      RooRealVar* N_fail_scale_eff_sf_sig_sl_mu  = w->var("N_fail_scale_eff_sf_sig_sl_mu" );
+      RooRealVar* N_fail_scale_eff_sf_sb_sl_e    = w->var("N_fail_scale_eff_sf_sb_sl_e"   );
+      RooRealVar* N_fail_scale_eff_sf_sb_sl_mu   = w->var("N_fail_scale_eff_sf_sb_sl_mu"  );
+      RooRealVar* N_fail_scale_eff_sf_sig_ldp    = w->var("N_fail_scale_eff_sf_sig_ldp"   );
+      RooRealVar* N_fail_scale_eff_sf_sb_ldp     = w->var("N_fail_scale_eff_sf_sb_ldp"    );
+
+      N_pass_scale_eff_sf_sig        ->Print();
+      N_pass_scale_eff_sf_sb         ->Print();
+      N_pass_scale_eff_sf_sig_sl_e   ->Print();
+      N_pass_scale_eff_sf_sig_sl_mu  ->Print();
+      N_pass_scale_eff_sf_sb_sl_e    ->Print();
+      N_pass_scale_eff_sf_sb_sl_mu   ->Print();
+      N_pass_scale_eff_sf_sig_ldp    ->Print();
+      N_pass_scale_eff_sf_sb_ldp     ->Print();
+      N_fail_scale_eff_sf_sig        ->Print();
+      N_fail_scale_eff_sf_sb         ->Print();
+      N_fail_scale_eff_sf_sig_sl_e   ->Print();
+      N_fail_scale_eff_sf_sig_sl_mu  ->Print();
+      N_fail_scale_eff_sf_sb_sl_e    ->Print();
+      N_fail_scale_eff_sf_sb_sl_mu   ->Print();
+      N_fail_scale_eff_sf_sig_ldp    ->Print();
+      N_fail_scale_eff_sf_sb_ldp     ->Print();
+      
+      trueDebugging   .addColumns(*N_pass_scale_eff_sf_sig      );
+      trueDebugging   .addColumns(*N_pass_scale_eff_sf_sb       );
+      trueDebugging   .addColumns(*N_pass_scale_eff_sf_sig_sl_e );
+      trueDebugging   .addColumns(*N_pass_scale_eff_sf_sig_sl_mu);
+      trueDebugging   .addColumns(*N_pass_scale_eff_sf_sb_sl_e  );
+      trueDebugging   .addColumns(*N_pass_scale_eff_sf_sb_sl_mu );
+      trueDebugging   .addColumns(*N_pass_scale_eff_sf_sig_ldp  );
+      trueDebugging   .addColumns(*N_pass_scale_eff_sf_sb_ldp   );
+      trueDebugging   .addColumns(*N_fail_scale_eff_sf_sig      );
+      trueDebugging   .addColumns(*N_fail_scale_eff_sf_sb       );
+      trueDebugging   .addColumns(*N_fail_scale_eff_sf_sig_sl_e );
+      trueDebugging   .addColumns(*N_fail_scale_eff_sf_sig_sl_mu);
+      trueDebugging   .addColumns(*N_fail_scale_eff_sf_sb_sl_e  );
+      trueDebugging   .addColumns(*N_fail_scale_eff_sf_sb_sl_mu );
+      trueDebugging   .addColumns(*N_fail_scale_eff_sf_sig_ldp  );
+      trueDebugging   .addColumns(*N_fail_scale_eff_sf_sb_ldp   );
+
+      condDebugging   .addColumns(*N_pass_scale_eff_sf_sig      );
+      condDebugging   .addColumns(*N_pass_scale_eff_sf_sb       );
+      condDebugging   .addColumns(*N_pass_scale_eff_sf_sig_sl_e );
+      condDebugging   .addColumns(*N_pass_scale_eff_sf_sig_sl_mu);
+      condDebugging   .addColumns(*N_pass_scale_eff_sf_sb_sl_e  );
+      condDebugging   .addColumns(*N_pass_scale_eff_sf_sb_sl_mu );
+      condDebugging   .addColumns(*N_pass_scale_eff_sf_sig_ldp  );
+      condDebugging   .addColumns(*N_pass_scale_eff_sf_sb_ldp   );
+      condDebugging   .addColumns(*N_fail_scale_eff_sf_sig      );
+      condDebugging   .addColumns(*N_fail_scale_eff_sf_sb       );
+      condDebugging   .addColumns(*N_fail_scale_eff_sf_sig_sl_e );
+      condDebugging   .addColumns(*N_fail_scale_eff_sf_sig_sl_mu);
+      condDebugging   .addColumns(*N_fail_scale_eff_sf_sb_sl_e  );
+      condDebugging   .addColumns(*N_fail_scale_eff_sf_sb_sl_mu );
+      condDebugging   .addColumns(*N_fail_scale_eff_sf_sig_ldp  );
+      condDebugging   .addColumns(*N_fail_scale_eff_sf_sb_ldp   );
+
+      uncondDebugging   .addColumns(*N_pass_scale_eff_sf_sig      );
+      cout << "The mean of " << N_pass_scale_eff_sf_sig->GetName() << " is " << uncondDebugging.mean(*N_pass_scale_eff_sf_sig) << endl;
+      uncondDebugging   .addColumns(*N_pass_scale_eff_sf_sb       );
+      uncondDebugging   .addColumns(*N_pass_scale_eff_sf_sig_sl_e );
+      uncondDebugging   .addColumns(*N_pass_scale_eff_sf_sig_sl_mu);
+      uncondDebugging   .addColumns(*N_pass_scale_eff_sf_sb_sl_e  );
+      uncondDebugging   .addColumns(*N_pass_scale_eff_sf_sb_sl_mu );
+      uncondDebugging   .addColumns(*N_pass_scale_eff_sf_sig_ldp  );
+      uncondDebugging   .addColumns(*N_pass_scale_eff_sf_sb_ldp   );
+      uncondDebugging   .addColumns(*N_fail_scale_eff_sf_sig      );
+      uncondDebugging   .addColumns(*N_fail_scale_eff_sf_sb       );
+      uncondDebugging   .addColumns(*N_fail_scale_eff_sf_sig_sl_e );
+      uncondDebugging   .addColumns(*N_fail_scale_eff_sf_sig_sl_mu);
+      uncondDebugging   .addColumns(*N_fail_scale_eff_sf_sb_sl_e  );
+      uncondDebugging   .addColumns(*N_fail_scale_eff_sf_sb_sl_mu );
+      uncondDebugging   .addColumns(*N_fail_scale_eff_sf_sig_ldp  );
+      uncondDebugging   .addColumns(*N_fail_scale_eff_sf_sb_ldp   );
+      
+      RooAbsReal* w_mu_pass_eff_sf_sig       = w->function("mu_pass_eff_sf_sig"       );
+      RooAbsReal* w_mu_pass_eff_sf_sb        = w->function("mu_pass_eff_sf_sb"        );
+      RooAbsReal* w_mu_pass_eff_sf_sig_sl_e  = w->function("mu_pass_eff_sf_sig_sl_e"  );
+      RooAbsReal* w_mu_pass_eff_sf_sig_sl_mu = w->function("mu_pass_eff_sf_sig_sl_mu" );
+      RooAbsReal* w_mu_pass_eff_sf_sb_sl_e   = w->function("mu_pass_eff_sf_sb_sl_e"   );
+      RooAbsReal* w_mu_pass_eff_sf_sb_sl_mu  = w->function("mu_pass_eff_sf_sb_sl_mu"  );
+      RooAbsReal* w_mu_pass_eff_sf_sig_ldp   = w->function("mu_pass_eff_sf_sig_ldp"   );
+      RooAbsReal* w_mu_pass_eff_sf_sb_ldp    = w->function("mu_pass_eff_sf_sb_ldp"    );
+      RooAbsReal* w_mu_fail_eff_sf_sig       = w->function("mu_fail_eff_sf_sig"       );
+      RooAbsReal* w_mu_fail_eff_sf_sb        = w->function("mu_fail_eff_sf_sb"        );
+      RooAbsReal* w_mu_fail_eff_sf_sig_sl_e  = w->function("mu_fail_eff_sf_sig_sl_e"  );
+      RooAbsReal* w_mu_fail_eff_sf_sig_sl_mu = w->function("mu_fail_eff_sf_sig_sl_mu" );
+      RooAbsReal* w_mu_fail_eff_sf_sb_sl_e   = w->function("mu_fail_eff_sf_sb_sl_e"   );
+      RooAbsReal* w_mu_fail_eff_sf_sb_sl_mu  = w->function("mu_fail_eff_sf_sb_sl_mu"  );
+      RooAbsReal* w_mu_fail_eff_sf_sig_ldp   = w->function("mu_fail_eff_sf_sig_ldp"   );
+      RooAbsReal* w_mu_fail_eff_sf_sb_ldp    = w->function("mu_fail_eff_sf_sb_ldp"    );
+
+      w_mu_pass_eff_sf_sig       ->Print();
+      w_mu_pass_eff_sf_sb        ->Print();
+      w_mu_pass_eff_sf_sig_sl_e  ->Print();
+      w_mu_pass_eff_sf_sig_sl_mu ->Print();
+      w_mu_pass_eff_sf_sb_sl_e   ->Print();
+      w_mu_pass_eff_sf_sb_sl_mu  ->Print();
+      w_mu_pass_eff_sf_sig_ldp   ->Print();
+      w_mu_pass_eff_sf_sb_ldp    ->Print();
+      w_mu_fail_eff_sf_sig       ->Print();
+      w_mu_fail_eff_sf_sb        ->Print();
+      w_mu_fail_eff_sf_sig_sl_e  ->Print();
+      w_mu_fail_eff_sf_sig_sl_mu ->Print();
+      w_mu_fail_eff_sf_sb_sl_e   ->Print();
+      w_mu_fail_eff_sf_sb_sl_mu  ->Print();
+      w_mu_fail_eff_sf_sig_ldp   ->Print();
+      w_mu_fail_eff_sf_sb_ldp    ->Print();
+
+      trueDebugging   .addColumn(*w_mu_pass_eff_sf_sig      );
+      trueDebugging   .addColumn(*w_mu_pass_eff_sf_sb       );
+      trueDebugging   .addColumn(*w_mu_pass_eff_sf_sig_sl_e );
+      trueDebugging   .addColumn(*w_mu_pass_eff_sf_sig_sl_mu);
+      trueDebugging   .addColumn(*w_mu_pass_eff_sf_sb_sl_e  );
+      trueDebugging   .addColumn(*w_mu_pass_eff_sf_sb_sl_mu );
+      trueDebugging   .addColumn(*w_mu_pass_eff_sf_sig_ldp  );
+      trueDebugging   .addColumn(*w_mu_pass_eff_sf_sb_ldp   );
+      trueDebugging   .addColumn(*w_mu_fail_eff_sf_sig      );
+      trueDebugging   .addColumn(*w_mu_fail_eff_sf_sb       );
+      trueDebugging   .addColumn(*w_mu_fail_eff_sf_sig_sl_e );
+      trueDebugging   .addColumn(*w_mu_fail_eff_sf_sig_sl_mu);
+      trueDebugging   .addColumn(*w_mu_fail_eff_sf_sb_sl_e  );
+      trueDebugging   .addColumn(*w_mu_fail_eff_sf_sb_sl_mu );
+      trueDebugging   .addColumn(*w_mu_fail_eff_sf_sig_ldp  );
+      trueDebugging   .addColumn(*w_mu_fail_eff_sf_sb_ldp   );
+
+      condDebugging   .addColumn(*w_mu_pass_eff_sf_sig      );
+      condDebugging   .addColumn(*w_mu_pass_eff_sf_sb       );
+      condDebugging   .addColumn(*w_mu_pass_eff_sf_sig_sl_e );
+      condDebugging   .addColumn(*w_mu_pass_eff_sf_sig_sl_mu);
+      condDebugging   .addColumn(*w_mu_pass_eff_sf_sb_sl_e  );
+      condDebugging   .addColumn(*w_mu_pass_eff_sf_sb_sl_mu );
+      condDebugging   .addColumn(*w_mu_pass_eff_sf_sig_ldp  );
+      condDebugging   .addColumn(*w_mu_pass_eff_sf_sb_ldp   );
+      condDebugging   .addColumn(*w_mu_fail_eff_sf_sig      );
+      condDebugging   .addColumn(*w_mu_fail_eff_sf_sb       );
+      condDebugging   .addColumn(*w_mu_fail_eff_sf_sig_sl_e );
+      condDebugging   .addColumn(*w_mu_fail_eff_sf_sig_sl_mu);
+      condDebugging   .addColumn(*w_mu_fail_eff_sf_sb_sl_e  );
+      condDebugging   .addColumn(*w_mu_fail_eff_sf_sb_sl_mu );
+      condDebugging   .addColumn(*w_mu_fail_eff_sf_sig_ldp  );
+      condDebugging   .addColumn(*w_mu_fail_eff_sf_sb_ldp   );
+
+      uncondDebugging   .addColumn(*w_mu_pass_eff_sf_sig      );
+      uncondDebugging   .addColumn(*w_mu_pass_eff_sf_sb       );
+      uncondDebugging   .addColumn(*w_mu_pass_eff_sf_sig_sl_e );
+      uncondDebugging   .addColumn(*w_mu_pass_eff_sf_sig_sl_mu);
+      uncondDebugging   .addColumn(*w_mu_pass_eff_sf_sb_sl_e  );
+      uncondDebugging   .addColumn(*w_mu_pass_eff_sf_sb_sl_mu );
+      uncondDebugging   .addColumn(*w_mu_pass_eff_sf_sig_ldp  );
+      uncondDebugging   .addColumn(*w_mu_pass_eff_sf_sb_ldp   );
+      uncondDebugging   .addColumn(*w_mu_fail_eff_sf_sig      );
+      uncondDebugging   .addColumn(*w_mu_fail_eff_sf_sb       );
+      uncondDebugging   .addColumn(*w_mu_fail_eff_sf_sig_sl_e );
+      uncondDebugging   .addColumn(*w_mu_fail_eff_sf_sig_sl_mu);
+      uncondDebugging   .addColumn(*w_mu_fail_eff_sf_sb_sl_e  );
+      uncondDebugging   .addColumn(*w_mu_fail_eff_sf_sb_sl_mu );
+      uncondDebugging   .addColumn(*w_mu_fail_eff_sf_sig_ldp  );
+      uncondDebugging   .addColumn(*w_mu_fail_eff_sf_sb_ldp   );
+
+      RooAbsReal* fv_eff_sf_sig       = w->function("eff_sf_sig"         );
+      RooAbsReal* fv_eff_sf_sb        = w->function("eff_sf_sb"          );
+      RooAbsReal* fv_eff_sf_sig_sl_e  = w->function("eff_sf_sig_sl_e"    );
+      RooAbsReal* fv_eff_sf_sig_sl_mu = w->function("eff_sf_sig_sl_mu"   );
+      RooAbsReal* fv_eff_sf_sb_sl_e   = w->function("eff_sf_sb_sl_e"     );
+      RooAbsReal* fv_eff_sf_sb_sl_mu  = w->function("eff_sf_sb_sl_mu"    );
+      RooAbsReal* fv_eff_sf_sig_ldp   = w->function("eff_sf_sig_ldp"     );
+      RooAbsReal* fv_eff_sf_sb_ldp    = w->function("eff_sf_sb_ldp"      );
+
+      fv_eff_sf_sig       ->Print();
+      fv_eff_sf_sb        ->Print();
+      fv_eff_sf_sig_sl_e  ->Print();
+      fv_eff_sf_sig_sl_mu ->Print();
+      fv_eff_sf_sb_sl_e   ->Print();
+      fv_eff_sf_sb_sl_mu  ->Print();
+      fv_eff_sf_sig_ldp   ->Print();
+      fv_eff_sf_sb_ldp    ->Print();
+
+      trueDebugging   .addColumn(*fv_eff_sf_sig      );
+      trueDebugging   .addColumn(*fv_eff_sf_sb       );
+      trueDebugging   .addColumn(*fv_eff_sf_sig_sl_e );
+      trueDebugging   .addColumn(*fv_eff_sf_sig_sl_mu);
+      trueDebugging   .addColumn(*fv_eff_sf_sb_sl_e  );
+      trueDebugging   .addColumn(*fv_eff_sf_sb_sl_mu );
+      trueDebugging   .addColumn(*fv_eff_sf_sig_ldp  );
+      trueDebugging   .addColumn(*fv_eff_sf_sb_ldp   );
+
+      condDebugging   .addColumn(*fv_eff_sf_sig      );
+      condDebugging   .addColumn(*fv_eff_sf_sb       );
+      condDebugging   .addColumn(*fv_eff_sf_sig_sl_e );
+      condDebugging   .addColumn(*fv_eff_sf_sig_sl_mu);
+      condDebugging   .addColumn(*fv_eff_sf_sb_sl_e  );
+      condDebugging   .addColumn(*fv_eff_sf_sb_sl_mu );
+      condDebugging   .addColumn(*fv_eff_sf_sig_ldp  );
+      condDebugging   .addColumn(*fv_eff_sf_sb_ldp   );
+
+      uncondDebugging   .addColumn(*fv_eff_sf_sig      );
+      uncondDebugging   .addColumn(*fv_eff_sf_sb       );
+      uncondDebugging   .addColumn(*fv_eff_sf_sig_sl_e );
+      uncondDebugging   .addColumn(*fv_eff_sf_sig_sl_mu);
+      uncondDebugging   .addColumn(*fv_eff_sf_sb_sl_e  );
+      uncondDebugging   .addColumn(*fv_eff_sf_sb_sl_mu );
+      uncondDebugging   .addColumn(*fv_eff_sf_sig_ldp  );
+      uncondDebugging   .addColumn(*fv_eff_sf_sb_ldp   );
+
+      RooRealVar eff_sf_sig       ("eff_sf_sig"         , "eff_sf_sig"       , 0,1e5);
+      RooRealVar eff_sf_sb        ("eff_sf_sb"          , "eff_sf_sb"        , 0,1e5);
+      RooRealVar eff_sf_sig_sl_e  ("eff_sf_sig_sl_e"    , "eff_sf_sig_sl_e"  , 0,1e5);
+      RooRealVar eff_sf_sig_sl_mu ("eff_sf_sig_sl_mu"   , "eff_sf_sig_sl_mu" , 0,1e5);
+      RooRealVar eff_sf_sb_sl_e   ("eff_sf_sb_sl_e"     , "eff_sf_sb_sl_e"   , 0,1e5);
+      RooRealVar eff_sf_sb_sl_mu  ("eff_sf_sb_sl_mu"    , "eff_sf_sb_sl_mu"  , 0,1e5);
+      RooRealVar eff_sf_sig_ldp   ("eff_sf_sig_ldp"     , "eff_sf_sig_ldp"   , 0,1e5);
+      RooRealVar eff_sf_sb_ldp    ("eff_sf_sb_ldp"      , "eff_sf_sb_ldp"    , 0,1e5);
+
+      cout << "The mean of " << eff_sf_sig.GetName() << " is " << uncondDebugging.mean(eff_sf_sig) << endl;
+
+      RooArgList eff_var_list(eff_sf_sig      ,
+			      eff_sf_sb       ,
+			      eff_sf_sig_sl_e ,
+			      eff_sf_sig_sl_mu,
+			      eff_sf_sb_sl_e  ,
+			      eff_sf_sb_sl_mu ,
+			      eff_sf_sig_ldp  ,
+			      eff_sf_sb_ldp   );
+
+      RooRealVar mu_pass_eff_sf_sig       ("mu_pass_eff_sf_sig"       ,"mu_pass_eff_sf_sig"       , 0 , 1e5);
+      RooRealVar mu_pass_eff_sf_sb        ("mu_pass_eff_sf_sb"        ,"mu_pass_eff_sf_sb"        , 0 , 1e5);
+      RooRealVar mu_pass_eff_sf_sig_sl_e  ("mu_pass_eff_sf_sig_sl_e"  ,"mu_pass_eff_sf_sig_sl_e"  , 0 , 1e5);
+      RooRealVar mu_pass_eff_sf_sig_sl_mu ("mu_pass_eff_sf_sig_sl_mu" ,"mu_pass_eff_sf_sig_sl_mu" , 0 , 1e5);
+      RooRealVar mu_pass_eff_sf_sb_sl_e   ("mu_pass_eff_sf_sb_sl_e"   ,"mu_pass_eff_sf_sb_sl_e"   , 0 , 1e5);
+      RooRealVar mu_pass_eff_sf_sb_sl_mu  ("mu_pass_eff_sf_sb_sl_mu"  ,"mu_pass_eff_sf_sb_sl_mu"  , 0 , 1e5);
+      RooRealVar mu_pass_eff_sf_sig_ldp   ("mu_pass_eff_sf_sig_ldp"   ,"mu_pass_eff_sf_sig_ldp"   , 0 , 1e5);
+      RooRealVar mu_pass_eff_sf_sb_ldp    ("mu_pass_eff_sf_sb_ldp"    ,"mu_pass_eff_sf_sb_ldp"    , 0 , 1e5);
+      RooRealVar mu_fail_eff_sf_sig       ("mu_fail_eff_sf_sig"       ,"mu_fail_eff_sf_sig"       , 0 , 1e5);
+      RooRealVar mu_fail_eff_sf_sb        ("mu_fail_eff_sf_sb"        ,"mu_fail_eff_sf_sb"        , 0 , 1e5);
+      RooRealVar mu_fail_eff_sf_sig_sl_e  ("mu_fail_eff_sf_sig_sl_e"  ,"mu_fail_eff_sf_sig_sl_e"  , 0 , 1e5);
+      RooRealVar mu_fail_eff_sf_sig_sl_mu ("mu_fail_eff_sf_sig_sl_mu" ,"mu_fail_eff_sf_sig_sl_mu" , 0 , 1e5);
+      RooRealVar mu_fail_eff_sf_sb_sl_e   ("mu_fail_eff_sf_sb_sl_e"   ,"mu_fail_eff_sf_sb_sl_e"   , 0 , 1e5);
+      RooRealVar mu_fail_eff_sf_sb_sl_mu  ("mu_fail_eff_sf_sb_sl_mu"  ,"mu_fail_eff_sf_sb_sl_mu"  , 0 , 1e5);
+      RooRealVar mu_fail_eff_sf_sig_ldp   ("mu_fail_eff_sf_sig_ldp"   ,"mu_fail_eff_sf_sig_ldp"   , 0 , 1e5);
+      RooRealVar mu_fail_eff_sf_sb_ldp    ("mu_fail_eff_sf_sb_ldp"    ,"mu_fail_eff_sf_sb_ldp"    , 0 , 1e5);
+
+      cout << "The mean of " << mu_pass_eff_sf_sig.GetName() << " is " << uncondDebugging.mean(mu_pass_eff_sf_sig) << endl;
+
+      eff_var_list.add(mu_pass_eff_sf_sig       );
+      eff_var_list.add(mu_pass_eff_sf_sb        );
+      eff_var_list.add(mu_pass_eff_sf_sig_sl_e  );
+      eff_var_list.add(mu_pass_eff_sf_sig_sl_mu );
+      eff_var_list.add(mu_pass_eff_sf_sb_sl_e   );
+      eff_var_list.add(mu_pass_eff_sf_sb_sl_mu  );
+      eff_var_list.add(mu_pass_eff_sf_sig_ldp   );
+      eff_var_list.add(mu_pass_eff_sf_sb_ldp    );
+      eff_var_list.add(mu_fail_eff_sf_sig       );
+      eff_var_list.add(mu_fail_eff_sf_sb        );
+      eff_var_list.add(mu_fail_eff_sf_sig_sl_e  );
+      eff_var_list.add(mu_fail_eff_sf_sig_sl_mu );
+      eff_var_list.add(mu_fail_eff_sf_sb_sl_e   );
+      eff_var_list.add(mu_fail_eff_sf_sb_sl_mu  );
+      eff_var_list.add(mu_fail_eff_sf_sig_ldp   );
+      eff_var_list.add(mu_fail_eff_sf_sb_ldp    );
+
+      RooRealVar eff_sf       ("eff_sf"       ,"eff_sf"       , 0 , 1e5);
+      RooFormulaVar fv_eff_sf ("eff_sf"       ,"@0/@1"        ,RooArgSet(*w->var("mu_pass_eff_sf"),*w->var("mu_fail_eff_sf")));
+      trueDebugging   .addColumn(fv_eff_sf      );
+      condDebugging   .addColumn(fv_eff_sf      );
+      uncondDebugging .addColumn(fv_eff_sf      );
+      dataSetVars.add(eff_var_list);
+
+      dataSetVars.add(eff_sf);
+      
       RooLinkedListIter it = dataSetVars.iterator();
       RooRealVar* tmpPar  = NULL;
       while((tmpPar = (RooRealVar*)it.Next())){
@@ -758,6 +1037,7 @@ void profileLikelihoodLimit(const char * fileName =0,
     
     //vector<TString>::iterator rangeName = rangeNames.begin() ;
     int iBin = 1;
+    cout << "The mean of " << eff_sf_sig.GetName() << " is " << uncondDebugging.mean(eff_sf_sig) << endl;
     for(vector<pair<double,double> >::iterator thisRange = ranges.begin() ; thisRange != ranges.end() /*|| rangeName!=rangeNames.end()*/ ; thisRange++, iBin++/*, rangeName++*/)
       {
 	
@@ -778,13 +1058,24 @@ void profileLikelihoodLimit(const char * fileName =0,
 	RooAbsData* uncondDebuggingBackground ;
 	RooAbsData* condDebuggingBackground ;
 	
-	trueDebuggingSignal = trueDebugging.reduce(SelectVars(dataSetVars),Cut(sigCut));
-	uncondDebuggingSignal = uncondDebugging.reduce(SelectVars(dataSetVars),Cut(sigCut));
-	condDebuggingSignal = condDebugging.reduce(SelectVars(dataSetVars),Cut(sigCut));
+	//trueDebuggingSignal = trueDebugging.reduce(SelectVars(dataSetVars),Cut(sigCut));
+	//uncondDebuggingSignal = uncondDebugging.reduce(SelectVars(dataSetVars),Cut(sigCut));
+	//condDebuggingSignal = condDebugging.reduce(SelectVars(dataSetVars),Cut(sigCut));
+	//
+	//trueDebuggingBackground = trueDebugging.reduce(SelectVars(dataSetVars),Cut(bgCut));
+	//uncondDebuggingBackground = uncondDebugging.reduce(SelectVars(dataSetVars),Cut(bgCut));
+	//condDebuggingBackground = condDebugging.reduce(SelectVars(dataSetVars),Cut(bgCut));
+
+	trueDebuggingSignal = trueDebugging.reduce(Cut(sigCut));
+	uncondDebuggingSignal = uncondDebugging.reduce(Cut(sigCut));
+	condDebuggingSignal = condDebugging.reduce(Cut(sigCut));
 	
-	trueDebuggingBackground = trueDebugging.reduce(SelectVars(dataSetVars),Cut(bgCut));
-	uncondDebuggingBackground = uncondDebugging.reduce(SelectVars(dataSetVars),Cut(bgCut));
-	condDebuggingBackground = condDebugging.reduce(SelectVars(dataSetVars),Cut(bgCut));
+	trueDebuggingBackground = trueDebugging.reduce(Cut(bgCut));
+	uncondDebuggingBackground = uncondDebugging.reduce(Cut(bgCut));
+	condDebuggingBackground = condDebugging.reduce(Cut(bgCut));
+
+	cout << "The signal uncond mean of " << eff_sf_sig.GetName() << " is " << uncondDebuggingSignal->mean(eff_sf_sig) << endl;
+	cout << "The background true mean of " << eff_sf_sig.GetName() << " is " << trueDebuggingBackground->mean(eff_sf_sig) << endl;
 	
 	
 	it = dataSetVars.iterator();

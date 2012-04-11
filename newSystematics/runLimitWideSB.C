@@ -1,14 +1,14 @@
 
 void runLimitWideSB(char* cut , char* model , int m0, int m12, bool isMeasured, bool isHybrid, bool doToys = true)
 {
-  gSystem->CompileMacro("RooBetaPdf.cxx","kO") ;
-  gSystem->CompileMacro("RooGammaPdf.cxx","kO") ;
-  gSystem->CompileMacro("RooBetaPdfWithPoissonGenerator.cxx","kO") ;
+  //gSystem->CompileMacro("RooBetaPdf.cxx","kO") ;
+  //gSystem->CompileMacro("RooGammaPdf.cxx","kO") ;
+  //gSystem->CompileMacro("RooBetaPdfWithPoissonGenerator.cxx","kO") ;
   gSystem->CompileMacro("DebuggingToyMCSampler.cxx","kO") ;
   gSystem->CompileMacro("HybridToyMCSampler.cxx","kO") ;
   gSystem->CompileMacro("ProfileLikelihoodTestStat_New.cxx","kO") ;
   gSystem->CompileMacro("profileLikelihoodLimit.C","kO") ;
-  gSystem->CompileMacro("ra2bRoostatsClass7_noNSig_wideSideband.c","kO") ;
+  gSystem->CompileMacro("ra2bRoostatsClass7_noNSig_wideSideband_moreObservables.c","kO") ;
   TString outputfile("/tmp/ra2b/ws_");
   if(isMeasured) outputfile+="measured_";
   else outputfile+="expected_";
