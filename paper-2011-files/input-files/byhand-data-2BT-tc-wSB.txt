@@ -22,27 +22,27 @@ NZnnmc_sb_ldp     0.8432
   NEwomc_sig              0
   NEwomc_sb               0
 DataLumi                4684
- acc_ee_sig_mean    0.865
- acc_ee_sig_err     0.039
- acc_ee_sb_mean     0.798
- acc_ee_sb_err      0.032
+ acc_ee_sig_mean    0.763
+ acc_ee_sig_err     0.045
+ acc_ee_sb_mean     0.673
+ acc_ee_sb_err      0.019
  acc_mm_sig_mean    0.912
- acc_mm_sig_err     0.036
- acc_mm_sb_mean     0.807
- acc_mm_sb_err      0.031
+ acc_mm_sig_err     0.031
+ acc_mm_sb_mean     0.761
+ acc_mm_sb_err      0.018
  eff_ee_mean    0.538
  eff_ee_err     0.036
  eff_mm_mean    0.602
  eff_mm_err     0.036
 Ztoll_lumi      4684
-  knn_ee_sig_mean   0.064
-  knn_ee_sig_err    0.015
-  knn_ee_sb_mean    0.067
-  knn_ee_sb_err     0.009
-  knn_mm_sig_mean   0.064
-  knn_mm_sig_err    0.034
-  knn_mm_sb_mean    0.067
-  knn_mm_sb_err     0.033
+  knn_ee_sig_mean   0.087
+  knn_ee_sig_err    0.020
+  knn_ee_sb_mean    0.092
+  knn_ee_sb_err     0.012
+  knn_mm_sig_mean   0.087
+  knn_mm_sig_err    0.046
+  knn_mm_sb_mean    0.092
+  knn_mm_sb_err     0.045
   fsig_ee_mean   0.911
   fsig_ee_err    0.104
   fsig_mm_mean   0.866
