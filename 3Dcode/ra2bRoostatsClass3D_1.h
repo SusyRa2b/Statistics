@@ -49,9 +49,14 @@
 
        // number of bins of the analysis
 
-       static const int nBinsMET  = 2 ;
-       static const int nBinsHT   = 2 ;
+       static const int nBinsMET  = 3 ;
+       static const int nBinsHT   = 3 ;
        static const int nBinsBtag = 3 ;    // this must always be 3
+
+
+       // luminosity
+
+       static const float DataLumi = 9999. ;     // integrated luminosity (in pb-1)
 
 
        // observables
