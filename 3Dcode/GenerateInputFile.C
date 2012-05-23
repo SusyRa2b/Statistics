@@ -4,33 +4,37 @@
 
 void GenerateInputFile() {
 
-TFile f1("files5fb/DY.root");
-TTree *dyTree = treeZ;
+  TFile f1("files5fb/DY.root");
+  TTree *dyTree = treeZ;
 
-TChain chain("tree");
-chain.Add("files5fb/QCD-1800.root");
-chain.Add("files5fb/QCD-1400to1800.root");
-chain.Add("files5fb/QCD-1000to1400.root");
-chain.Add("files5fb/QCD-800to1000.root");
-chain.Add("files5fb/QCD-600to800.root");
-chain.Add("files5fb/QCD-470to600.root");
-chain.Add("files5fb/QCD-300to470.root");
-chain.Add("files5fb/QCD-170to300.root");
-chain.Add("files5fb/QCD-120to170.root");
-chain.Add("files5fb/QCD-80to120.root");
-chain.Add("files5fb/QCD-50to80.root");
-chain.Add("files5fb/TT.root");
-chain.Add("files5fb/Zinv.root");
+  TChain chain("tree");
+  chain.Add("files5fb/QCD-1800.root");
+  chain.Add("files5fb/QCD-1400to1800.root");
+  chain.Add("files5fb/QCD-1000to1400.root");
+  chain.Add("files5fb/QCD-800to1000.root");
+  chain.Add("files5fb/QCD-600to800.root");
+  chain.Add("files5fb/QCD-470to600.root");
+  chain.Add("files5fb/QCD-300to470.root");
+  chain.Add("files5fb/QCD-170to300.root");
+  chain.Add("files5fb/QCD-120to170.root");
+  chain.Add("files5fb/QCD-80to120.root");
+  chain.Add("files5fb/QCD-50to80.root");
+  chain.Add("files5fb/TT.root");
+  chain.Add("files5fb/Zinv.root");
+
+  TChain chainTZ("tree");
+  chainTZ.Add("files5fb/TT.root");
+  chainTZ.Add("files5fb/Zinv.root");
 
 
   gROOT->Reset();
 
-  const int nBinsMET   = 3 ;
-  const int nBinsHT    = 3 ;
+  const int nBinsMET   = 2 ;
+  const int nBinsHT    = 1 ;
   const int nBinsBjets = 3 ;   // this must always be 3
 
-  float Mbins[nBinsMET+1] = {150.,250.,400.,99999.};
-  float Hbins[nBinsHT+1] = {400.,600.,800.,99999.};
+  float Mbins[nBinsMET+1] = {150.,250.,99999.};
+  float Hbins[nBinsHT+1] = {400.,99999.};
 
   TString sMbins[nBinsMET];
   TString sHbins[nBinsHT];
@@ -278,7 +282,7 @@ chain.Add("files5fb/Zinv.root");
 	cut += "&&nB==";
 	cut += k+1;
 
-	inFile << obs_ttbarsingletopzjetsmc_ldp << "  \t" << chain.GetEntries(cutsldp+cut) << endl;
+	inFile << obs_ttbarsingletopzjetsmc_ldp << "  \t" << chainTZ.GetEntries(cutsldp+cut) << endl;
 // signal selection, but ldp, so MET>250, HT>400, >=1 b, mindelphi<4, 0L, nJets >= 3
       }
     }
