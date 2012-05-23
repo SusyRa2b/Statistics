@@ -4,8 +4,8 @@ void GenerateDummyDeffDbtag() {
 
   gROOT->Reset();
 
-  int nBinsMET   = 3 ;
-  int nBinsHT    = 3 ;
+  int nBinsMET   = 2 ;
+  int nBinsHT    = 2 ;
   int nBinsBjets = 3 ;   // this must always be 3
 
   // dummy masses

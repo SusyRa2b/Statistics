@@ -507,10 +507,11 @@
 	    
 	    // TTWJ stuff. Reference bin is (1,1,1):
 
-	    ratio_ttwj[i][j][k] = N_1lep[i][j][k] / N_1lep[0][0][0] ;
+	    ratio_ttwj[i][j][k] = (double)N_1lep[i][j][k] / N_1lep[0][0][0] ;
 	    
 	    initialval_ttwj_sl[i][j][k] = N_1lep[i][j][k] ;
-	    initialval_ttwj[i][j][k] = ( N_0lep[i][j][k] - initialval_znn[i][j][k] - initialval_qcd[i][j][k] ) * ratio_ttwj[i][j][k] ;
+	    initialval_ttwj[i][j][k] = ( N_0lep[0][0][0] - initialval_znn[0][0][0] - initialval_qcd[0][0][0] ) * ratio_ttwj[i][j][k] ;
+	    //initialval_ttwj[i][j][k] = N_0lep[i][j][k] - initialval_znn[i][j][k] - initialval_qcd[i][j][k] ; // this is just for debugging !!!
 
 	  }
 	}
@@ -545,7 +546,7 @@
       printf(" --- Defining observables and parameters of the likelihood.\n" ) ;
 
 
-      rv_mu_susy_M1_H1_1b = new RooRealVar( "mu_susy_M1_H1_1b", "mu_susy_M1_H1_1b", 0., 10000. ) ;
+      rv_mu_susy_M1_H1_1b = new RooRealVar( "mu_susy_M1_H1_1b", "mu_susy_M1_H1_1b", 0., 100000. ) ;
       rv_mu_susy_M1_H1_1b->setVal( 1. ) ;
       rv_mu_susy_M1_H1_1b->setConstant( kTRUE ) ;
 
@@ -616,49 +617,49 @@
 	    dEffdBtString  += sMbins[i]+sHbins[j]+sBbins[k] ;
 
 
-	    rrv_mu_ttwj[i][j][k] = new RooRealVar( muTtString, muTtString, 0., 10000. ) ;
+	    rrv_mu_ttwj[i][j][k] = new RooRealVar( muTtString, muTtString, 0., 100000. ) ;
 	    rv_mu_ttwj[i][j][k] = rrv_mu_ttwj[i][j][k];
 	    rrv_mu_ttwj[i][j][k]->setVal( initialval_ttwj[i][j][k] ) ;         // this is a starting value only
 
-	    rv_mu_ttwj_sl[i][j][k] = new RooRealVar( muTtSlString, muTtSlString, 0., 10000. ) ;
+	    rv_mu_ttwj_sl[i][j][k] = new RooRealVar( muTtSlString, muTtSlString, 0., 100000. ) ;
 	    rv_mu_ttwj_sl[i][j][k]->setVal( initialval_ttwj_sl[i][j][k] ) ;    // this is a starting value only
 
-	    rrv_mu_qcd[i][j][k] = new RooRealVar( muQcdString, muQcdString, 0., 10000. ) ;
+	    rrv_mu_qcd[i][j][k] = new RooRealVar( muQcdString, muQcdString, 0., 100000. ) ;
 	    rv_mu_qcd[i][j][k] = rrv_mu_qcd[i][j][k];
 	    rrv_mu_qcd[i][j][k]->setVal( initialval_qcd[i][j][k] ) ;           // this is a starting value only
 
-	    rrv_mu_qcd_ldp[i][j][k] = new RooRealVar( muQcdLdpString, muQcdLdpString, 0., 10000. ) ;
+	    rrv_mu_qcd_ldp[i][j][k] = new RooRealVar( muQcdLdpString, muQcdLdpString, 0., 100000. ) ;
 	    rv_mu_qcd_ldp[i][j][k] = rrv_mu_qcd_ldp[i][j][k];
 	    rrv_mu_qcd_ldp[i][j][k]->setVal( initialval_qcd_ldp[i][j][k] ) ;   // this is a starting value only
 
-	    rrv_mu_znn[i][j][k] = new RooRealVar( muZnnString, muZnnString, 0., 10000. ) ;
+	    rrv_mu_znn[i][j][k] = new RooRealVar( muZnnString, muZnnString, 0., 100000. ) ;
 	    rv_mu_znn[i][j][k] = rrv_mu_znn[i][j][k];
 	    rrv_mu_znn[i][j][k]->setVal( initialval_znn[i][j][k] ) ;           // this is a starting value only
 
 
 	    // MC inputs
 
-	    rv_mu_susymc[i][j][k] = new RooRealVar( muSusMcString, muSusMcString, 0., 10000. ) ;
+	    rv_mu_susymc[i][j][k] = new RooRealVar( muSusMcString, muSusMcString, 0., 100000. ) ;
 	    rv_mu_susymc[i][j][k]->setVal( 1. ) ;
 	    rv_mu_susymc[i][j][k]->setConstant( kTRUE ) ;
 
-	    rv_mu_susymc_sl[i][j][k] = new RooRealVar( muSusSlMcString, muSusSlMcString, 0., 10000. ) ;
+	    rv_mu_susymc_sl[i][j][k] = new RooRealVar( muSusSlMcString, muSusSlMcString, 0., 100000. ) ;
 	    rv_mu_susymc_sl[i][j][k]->setVal( 1. ) ;
 	    rv_mu_susymc_sl[i][j][k]->setConstant( kTRUE ) ;
 
-	    rv_mu_susymc_ldp[i][j][k] = new RooRealVar( muSusLdpMcString, muSusLdpMcString, 0., 10000. ) ;
+	    rv_mu_susymc_ldp[i][j][k] = new RooRealVar( muSusLdpMcString, muSusLdpMcString, 0., 100000. ) ;
 	    rv_mu_susymc_ldp[i][j][k]->setVal( 1. ) ;
 	    rv_mu_susymc_ldp[i][j][k]->setConstant( kTRUE ) ;
 
-	    rv_mu_ttbarsingletopzjetsmc_ldp[i][j][k] = new RooRealVar( muTtLdpString, muTtLdpString, 0., 10000. ) ;
+	    rv_mu_ttbarsingletopzjetsmc_ldp[i][j][k] = new RooRealVar( muTtLdpString, muTtLdpString, 0., 100000. ) ;
 	    rv_mu_ttbarsingletopzjetsmc_ldp[i][j][k]->setVal( Nttbarsingletopzjetsmc_ldp[i][j][k] ) ;
 	    rv_mu_ttbarsingletopzjetsmc_ldp[i][j][k]->setConstant( kTRUE ) ;
 
-	    rv_mu_WJmc_ldp[i][j][k] = new RooRealVar( muWjLdpString, muWjLdpString, 0., 10000. ) ;
+	    rv_mu_WJmc_ldp[i][j][k] = new RooRealVar( muWjLdpString, muWjLdpString, 0., 100000. ) ;
 	    rv_mu_WJmc_ldp[i][j][k]->setVal( NWJmc_ldp[i][j][k] ) ;
 	    rv_mu_WJmc_ldp[i][j][k]->setConstant( kTRUE ) ;
 
-	    rv_mu_Znnmc_ldp[i][j][k] = new RooRealVar( muZnnLdpString, muZnnLdpString, 0., 10000. ) ;
+	    rv_mu_Znnmc_ldp[i][j][k] = new RooRealVar( muZnnLdpString, muZnnLdpString, 0., 100000. ) ;
 	    rv_mu_Znnmc_ldp[i][j][k]->setVal( NZnnmc_ldp[i][j][k] ) ;
 	    rv_mu_Znnmc_ldp[i][j][k]->setConstant( kTRUE ) ;
 
@@ -713,8 +714,8 @@
 	  zeeString += sMbins[i]+sHbins[j];
 	  zmmString += sMbins[i]+sHbins[j];
 
-	  rv_Zee[i][j] = new RooRealVar( zeeString, zeeString, 0., 10000.);
-	  rv_Zmm[i][j] = new RooRealVar( zmmString, zmmString, 0., 10000.);
+	  rv_Zee[i][j] = new RooRealVar( zeeString, zeeString, 0., 100000.);
+	  rv_Zmm[i][j] = new RooRealVar( zmmString, zmmString, 0., 100000.);
 
 	  // set values:
 	  rv_Zee[i][j]->setVal( N_Zee[i][j] );
@@ -1068,10 +1069,10 @@
 	      TString rfvString =  " @0 * @1 * ( @2 / @3 )" ;
 	      
 	      rfv_mu_ttwj[i][j][k] = new RooFormulaVar( ttwjString, rfvString, 
-							RooArgSet( *rv_mu_ttwj[i][j][k], *fv_sf_ttwj[i][j][k], *rv_mu_ttwj_sl[i][j][k], *rv_mu_ttwj_sl[0][0][0] )) ;
+							RooArgSet( *rv_mu_ttwj[0][0][0], *fv_sf_ttwj[i][j][k], *rv_mu_ttwj_sl[i][j][k], *rv_mu_ttwj_sl[0][0][0] )) ;
 	      
 	      rv_mu_ttwj[i][j][k] = rfv_mu_ttwj[i][j][k] ;
-	    
+
 	    }
 	    
 	    TString ttwjLdpString  = "mu_ttwj_ldp" ;
@@ -1314,6 +1315,7 @@
 	    observedParametersList.add( *rv_1lep[i][j][k] ) ;
 	    observedParametersList.add( *rv_ldp[i][j][k] ) ;
 
+
 	  }
 
 	    
@@ -1361,6 +1363,8 @@
 				  observedParametersList ) ;
       dsObserved->add( observedParametersList ) ;
 
+
+
       RooWorkspace workspace ("ws") ;
 
       workspace.import(*dsObserved);
@@ -1381,7 +1385,7 @@
       sbModel.SetObservables(observedParametersList);
       sbModel.SetGlobalObservables(globalObservables);
 
-      
+
       // find global maximum with the signal+background model
       // with conditional MLEs for nuisance parameters
       // and save the parameter point snapshot in the Workspace

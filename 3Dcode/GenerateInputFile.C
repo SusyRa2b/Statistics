@@ -30,11 +30,11 @@ void GenerateInputFile() {
   gROOT->Reset();
 
   const int nBinsMET   = 2 ;
-  const int nBinsHT    = 1 ;
+  const int nBinsHT    = 2 ;
   const int nBinsBjets = 3 ;   // this must always be 3
 
   float Mbins[nBinsMET+1] = {150.,250.,99999.};
-  float Hbins[nBinsHT+1] = {400.,99999.};
+  float Hbins[nBinsHT+1] = {400.,600.,99999.};
 
   TString sMbins[nBinsMET];
   TString sHbins[nBinsHT];
