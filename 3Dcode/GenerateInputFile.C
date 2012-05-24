@@ -119,7 +119,7 @@ void GenerateInputFile() {
 
 	chain.Project("ht","HT",cuts0lep+cut);
 	//inFile << obs_0lep << "  \t" << chain.GetEntries(cuts0lep+cut) << endl;
-        inFile << obs_0lep << "  \t" << ht->GetSumOfWeights() << endl;
+        inFile << obs_0lep << "  \t" << (int)ht->GetSumOfWeights() << endl;
 
         // signal selection, so MET>250, HT>400, >=1 b, mindelphi>4, 0L, nJets >= 3
 
@@ -149,7 +149,7 @@ void GenerateInputFile() {
 	
 	chain.Project("ht","HT",cuts1lep+cut);
 	//inFile << obs_1lep << "  \t" << chain.GetEntries() << endl;
-        inFile << obs_1lep << "  \t" << ht->GetSumOfWeights() << endl;
+        inFile << obs_1lep << "  \t" << (int)ht->GetSumOfWeights() << endl;
 
         // signal selection but with 1L, so MET>250, HT>400, >=1 b, mindelphi>4, 1L, nJets >= 3
 
@@ -179,14 +179,14 @@ void GenerateInputFile() {
 	cut += k+1;
 	
 	chain.Project("ht","HT",cutsldp+cut);
-	inFile << obs_ldp << "  \t" << ht->GetSumOfWeights() << endl;
+	inFile << obs_ldp << "  \t" << (int)ht->GetSumOfWeights() << endl;
 
         // signal selection, but ldp, so MET>250, HT>400, >=1 b, mindelphi<4, 0L, nJets >= 3
 
       }
     }
   }
-
+  
   //inFile << "Note: I've removed the b jet dependance of this result since it's always with zero b jets" << endl;
   // R_lsb  very low met sideband (50-100) ratio of mdp>4/mdp<4 (with zero b ratio)
   TString cutslsb = "MET>50&&MET<100&&nMu==0&&nEl==0&&nB==0&&";
@@ -237,7 +237,7 @@ void GenerateInputFile() {
       cut += Mbins[i+1];
 
       dyTree->Project("ht","HT",cutszee+cut);
-      inFile << obs_Zee << "  \t" << ht->GetSumOfWeights() << endl;
+      inFile << obs_Zee << "  \t" << (int)ht->GetSumOfWeights() << endl;
       //Z->ee counts, with 1 VLb and sig selection, so so MET>250, HT>400, mindelphi>4, 2e, 0mu, nJets >= 3
       
     }
@@ -263,7 +263,7 @@ void GenerateInputFile() {
       cut += Mbins[i+1];
       
       dyTree->Project("ht","HT",cutszmm+cut);
-      inFile << obs_Zmm << "  \t" << ht->GetSumOfWeights() << endl;
+      inFile << obs_Zmm << "  \t" << (int)ht->GetSumOfWeights() << endl;
       //Z->mm counts, with 1 VLb and sig selection, so so MET>250, HT>400, mindelphi>4, 2mu, 0e, nJets >= 3
 
     }
