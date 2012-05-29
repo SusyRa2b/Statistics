@@ -37,7 +37,7 @@ void GenerateSusyFile() {
 
   double dummyYield = 9.9 ;
   double dummyCorr = 1. ;
-  double dummyErr = 10. ; // error is in %
+  double dummyErr = 10. ; // error is in % 
   long dummyEvts = 10000 ;
   
   ofstream inFile;
