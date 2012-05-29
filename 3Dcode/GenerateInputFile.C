@@ -1,11 +1,34 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include "TFile.h"
+#include "TMath.h"
+#include "TTree.h"
+#include "TChain.h"
+#include "TString.h"
+#include "TROOT.h"
+#include "TH1F.h"
+
+  using std::stringstream ;
+  using std::ofstream ;
+  using std::endl ;
 
 // to add in: nMu, nEl, minDelPhi
 
 void GenerateInputFile() {
 
-  TFile f1("files5fb/DY.root");
-  TTree *dyTree = treeZ;
+//TFile f1("files5fb/DY.root");
+//TTree *dyTree = (TTree*) f1.FindObject("treeZ") ;
+//if ( dyTree == 0 ) {
+//   printf(" \n\n\n *** null dyTree pointer.\n\n\n") ;
+//   return ;
+//}
+  TChain* dyTree = new TChain("treeZ") ;
+  int nAdded = dyTree->Add("files5fb/DY.root") ;
+  if ( nAdded <= 0 ) {
+     printf("\n\n\n *** No treeZ in files5fb/DY.root\n\n\n") ;
+     return ;
+  }
 
   TChain chain("tree");
   chain.Add("files5fb/QCD-1800.root");
@@ -35,13 +58,14 @@ void GenerateInputFile() {
   float Mbins[nBinsMET+1] = {150.,250.,99999.};
   float Hbins[nBinsHT+1] = {400.,99999.};
 
+
   TString sMbins[nBinsMET];
   TString sHbins[nBinsHT];
   TString sBbins[3] = {"_1b","_2b","_3b"};
 
   TString cMbins[nBinsMET];
   TString cHbins[nBinsHT];
-  TString cBbins[3] = {"&&nB==1","&&nB==2","&&nB>=3"};
+//TString cBbins[3] = {"&&nB==1","&&nB==2","&&nB>=3"};
 
   for (int i = 0 ; i < nBinsMET ; i++) {
     TString base = "_M";
@@ -69,8 +93,8 @@ void GenerateInputFile() {
     cHbins[j] = base;
   }
 
-  int dummyInt = 99;
-  float dummyFloat = 9.999;
+//int dummyInt = 99;
+//float dummyFloat = 9.999;
   float dummyZero = 0.;
   float dummyOne = 1.;
   float dummyErr = .1;
@@ -97,7 +121,7 @@ void GenerateInputFile() {
 
   // 0lep observables
 
-  TH1F("ht","ht",10,0,10000);
+  TH1F* ht = new TH1F("ht","ht",10,0,10000);
   TString cuts0lep = "minDelPhiN>4&&nMu==0&&nEl==0&&";
   for (int i = 0 ; i < nBinsMET ; i++) {
     for (int j = 0 ; j < nBinsHT ; j++) {
@@ -120,6 +144,7 @@ void GenerateInputFile() {
 	chain.Project("ht","HT",cuts0lep+cut);
 	//inFile << obs_0lep << "  \t" << chain.GetEntries(cuts0lep+cut) << endl;
         inFile << obs_0lep << "  \t" << (int)ht->GetSumOfWeights() << endl;
+        ht->Reset() ;
 
         // signal selection, so MET>250, HT>400, >=1 b, mindelphi>4, 0L, nJets >= 3
 
@@ -150,6 +175,7 @@ void GenerateInputFile() {
 	chain.Project("ht","HT",cuts1lep+cut);
 	//inFile << obs_1lep << "  \t" << chain.GetEntries() << endl;
         inFile << obs_1lep << "  \t" << (int)ht->GetSumOfWeights() << endl;
+        ht->Reset() ;
 
         // signal selection but with 1L, so MET>250, HT>400, >=1 b, mindelphi>4, 1L, nJets >= 3
 
@@ -180,6 +206,7 @@ void GenerateInputFile() {
 	
 	chain.Project("ht","HT",cutsldp+cut);
 	inFile << obs_ldp << "  \t" << (int)ht->GetSumOfWeights() << endl;
+        ht->Reset() ;
 
         // signal selection, but ldp, so MET>250, HT>400, >=1 b, mindelphi<4, 0L, nJets >= 3
 
@@ -190,6 +217,7 @@ void GenerateInputFile() {
   //inFile << "Note: I've removed the b jet dependance of this result since it's always with zero b jets" << endl;
   // R_lsb  very low met sideband (50-100) ratio of mdp>4/mdp<4 (with zero b ratio)
   TString cutslsb = "MET>50&&MET<100&&nMu==0&&nEl==0&&nB==0&&";
+  /////TString cutslsb = "MET>50&&MET<100&&nMu==0&&nEl==0&&";
   for (int j = 0 ; j < nBinsHT ; j++) {
     for (int k = 0 ; k < nBinsBjets ; k++) {
 
@@ -205,12 +233,18 @@ void GenerateInputFile() {
       TString fail = "&&minDelPhiN<4";
       chain.Project("ht","HT",cutslsb+cut+pass);
       float npass = ht->GetSumOfWeights();
+      TString allcutspass = cutslsb+cut+pass ;
+      printf("\n\n R_lsb -- HT,MET bins (%d,%d): cuts=%s, npass=%g\n", j,k,allcutspass.Data(),npass) ;
+        ht->Reset() ;
       chain.Project("ht","HT",cutslsb+cut+fail);
       float nfail = ht->GetSumOfWeights();
+      TString allcutsfail = cutslsb+cut+fail ;
+      printf("\n\n R_lsb -- HT,MET bins (%d,%d): cuts=%s, nfail=%g\n", j,k,allcutsfail.Data(),nfail) ;
+        ht->Reset() ;
       
       inFile << Rlsb << "      \t" << npass/nfail << endl;
       
-      float error = sqrt( (1/npass) + (1/nfail) )*(npass/nfail);
+      float error = TMath::Sqrt( (1/npass) + (1/nfail) )*(npass/nfail);
       Rlsb = Rlsb+"_err" ;
       inFile << Rlsb << "  \t" << error << endl;
 
@@ -238,6 +272,9 @@ void GenerateInputFile() {
 
       dyTree->Project("ht","HT",cutszee+cut);
       inFile << obs_Zee << "  \t" << (int)ht->GetSumOfWeights() << endl;
+        ht->Reset() ;
+      TString allcuts = cutszee+cut ;
+      printf("\n\n N_Zee -- HT,MET bins (%d,%d): cuts=%s, events=%g\n", j,i,allcuts.Data(),ht->GetSumOfWeights() ) ;
       //Z->ee counts, with 1 VLb and sig selection, so so MET>250, HT>400, mindelphi>4, 2e, 0mu, nJets >= 3
       
     }
@@ -264,6 +301,9 @@ void GenerateInputFile() {
       
       dyTree->Project("ht","HT",cutszmm+cut);
       inFile << obs_Zmm << "  \t" << (int)ht->GetSumOfWeights() << endl;
+        ht->Reset() ;
+      TString allcuts = cutszmm+cut ;
+      printf("\n\n N_Zmm -- HT,MET bins (%d,%d): cuts=%s, events=%g\n", j,i,allcuts.Data(),ht->GetSumOfWeights() ) ;
       //Z->mm counts, with 1 VLb and sig selection, so so MET>250, HT>400, mindelphi>4, 2mu, 0e, nJets >= 3
 
     }
@@ -293,6 +333,7 @@ void GenerateInputFile() {
 
       chainTZ.Project("ht","HT",cutsldp+cut);
 	inFile << obs_ttbarsingletopzjetsmc_ldp << "  \t" << ht->GetSumOfWeights() << endl;
+        ht->Reset() ;
 // signal selection, but ldp, so MET>250, HT>400, >=1 b, mindelphi<4, 0L, nJets >= 3
       }
     }
