@@ -145,7 +145,7 @@
 
 
       char label[1000] ;
-      char equal;
+   // char equal;
       
       // read all observables and other parameters
       // first create the TString stubs needed to read the text file:

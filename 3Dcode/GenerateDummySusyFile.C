@@ -1,11 +1,9 @@
 #include <iostream>
 
-void GenerateDummySusyFile() {
+void GenerateDummySusyFile( int nBinsMET=5, int nBinsHT=4 ) {
 
   gROOT->Reset();
 
-  int nBinsMET   = 2 ;
-  int nBinsHT    = 2 ;
   int nBinsBjets = 3 ;   // this must always be 3
 
   // dummy masses
@@ -19,7 +17,9 @@ void GenerateDummySusyFile() {
   long dummyEvts = 10000 ;
   
   ofstream inFile;
-  inFile.open("dummy_Susy.dat");
+  char outfile[10000] ;
+  sprintf( outfile, "dummy_Susy-met%d-ht%d.dat", nBinsMET, nBinsHT ) ;
+  inFile.open( outfile );
 
   // loop over gluino masses
 

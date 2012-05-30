@@ -1,11 +1,9 @@
 #include <iostream>
 
-void GenerateDummyDeffDbtag() {
+void GenerateDummyDeffDbtag( int nBinsMET=5, int nBinsHT=4 ) {
 
   gROOT->Reset();
 
-  int nBinsMET   = 2 ;
-  int nBinsHT    = 2 ;
   int nBinsBjets = 3 ;   // this must always be 3
 
   // dummy masses
@@ -19,7 +17,9 @@ void GenerateDummyDeffDbtag() {
   double dummyDer_ldp[3] = {-0.01,0.0,0.01} ;
   
   ofstream inFile;
-  inFile.open("dummy_DeffDbtag.dat");
+  char outfile[10000] ;
+  sprintf( outfile, "dummy_DeffDbtag-met%d-ht%d.dat", nBinsMET, nBinsHT ) ;
+  inFile.open( outfile );
 
   // loop over gluino masses
 
