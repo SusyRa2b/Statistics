@@ -1322,6 +1322,9 @@
 	  TString nEeString  = "n_ee" ;
 	  TString nMmString  = "n_mm" ;
 
+          nEeString += sMbins[i]+sHbins[j] ;
+          nMmString += sMbins[i]+sHbins[j] ;
+
 	  TString rfvNeeString = "@0 / @1" ;
 
 	  rv_n_ee[i][j] = new RooFormulaVar( nEeString, rfvNeeString,

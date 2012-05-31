@@ -48,16 +48,28 @@ void GenerateInputFile() {
   const int nBinsBjets = 3 ;   // this must always be 3
 
   //-- met2-ht1-v1
-  const int nBinsMET   = 2 ;
-  const int nBinsHT    = 1 ;
-  float Mbins[nBinsMET+1] = {150.,250.,99999.};
-  float Hbins[nBinsHT+1] = {400.,99999.};
+//const int nBinsMET   = 2 ;
+//const int nBinsHT    = 1 ;
+//float Mbins[nBinsMET+1] = {150.,250.,99999.};
+//float Hbins[nBinsHT+1] = {400.,99999.};
 
   //-- met3-ht2-v1
 //const int nBinsMET   = 3 ;
 //const int nBinsHT    = 2 ;
 //float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,800.,99999.};
+
+  //-- met3-ht3-v1
+//const int nBinsMET   = 3 ;
+//const int nBinsHT    = 3 ;
+//float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
+//float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
+
+  //-- met4-ht3-v1
+  const int nBinsMET   = 4 ;
+  const int nBinsHT    = 3 ;
+  float Mbins[nBinsMET+1] = {150.,250.,350.,500.,99999.};
+  float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 
   //-- met5-ht4-v1
 //const int nBinsMET   = 5 ;
