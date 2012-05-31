@@ -736,6 +736,7 @@
       
       //++++++++++
 
+      cout << "\n\n Back from setSusyScanPoint.  Now defining parameters.\n\n" << flush ;
 
       //--- Systematics and other nuisance parameters
       // THIS WILL NEED TO BE CAREFULLY REVISED !!!!
@@ -1042,6 +1043,7 @@
       //+++++++++++++++++ Relationships between parameters ++++++++++++++++++++++++++++++++++++++++++++
       
       printf(" --- Defining relationships between parameters.\n" ) ;
+      cout << flush ;
 
       RooArgSet pdflist ;
 
@@ -1357,6 +1359,7 @@
 	}
       }      
 
+      printf(" --- Constructing likelihood.\n" ) ; cout << flush ;
 
       pdflist.add(allNuisancePdfs);
 	    
@@ -1367,8 +1370,11 @@
       dsObserved->add( observedParametersList ) ;
 
 
+      printf(" --- Creating workspace.\n" ) ; cout << flush ;
 
       RooWorkspace workspace ("ws") ;
+
+      printf(" --- Importing dataset.\n" ) ; cout << flush ;
 
       workspace.import(*dsObserved);
       
@@ -1377,6 +1383,7 @@
       // flat prior for POI
       RooUniform signal_prior ("signal_prior","signal_prior",*rv_mu_susy[0][0][0]);
 
+      printf(" --- Setting up S+B model.\n" ) ; cout << flush ;
 
       // signal+background model
       ModelConfig sbModel ("SbModel");
@@ -1389,6 +1396,7 @@
       sbModel.SetGlobalObservables(globalObservables);
 
 
+      printf(" --- Doing fit for S+B model.\n" ) ; cout << flush ;
       // find global maximum with the signal+background model
       // with conditional MLEs for nuisance parameters
       // and save the parameter point snapshot in the Workspace
@@ -1400,7 +1408,7 @@
       RooArgSet * pPoiAndNuisance = new RooArgSet();
       pPoiAndNuisance->add(*sbModel.GetParametersOfInterest());
       if(sbModel.GetNuisanceParameters()) pPoiAndNuisance->add(*sbModel.GetNuisanceParameters());
-      cout << "\nWill save these parameter points that correspond to the fit to data" << endl;
+      cout << "\n\n  Will save these parameter points that correspond to the fit to data" << endl << flush ;
       pPoiAndNuisance->Print("v");
       sbModel.SetSnapshot(*pPoiAndNuisance);
       workspace.import (sbModel);
@@ -1410,6 +1418,7 @@
       delete pPoiAndNuisance;
 
 
+      printf(" --- Setting up BG-only model.\n" ) ; cout << flush ;
       // background-only model
       // use the same PDF as s+b, with xsec=0
       // POI value under the background hypothesis
@@ -1417,6 +1426,7 @@
       bModel.SetName("BModel");
       bModel.SetWorkspace(workspace);
 
+      printf(" --- Doing fit for BG-only model.\n" ) ; cout << flush ;
       // Find a parameter point for generating pseudo-data
       // with the background-only data.
       // Save the parameter point snapshot in the Workspace
@@ -1430,7 +1440,7 @@
       pPoiAndNuisance = new RooArgSet();
       pPoiAndNuisance->add(*bModel.GetParametersOfInterest());
       if(bModel.GetNuisanceParameters()) pPoiAndNuisance->add(*bModel.GetNuisanceParameters());
-      cout << "\nShould use these parameter points to generate pseudo data for bkg only" << endl;
+      cout << "\n\n  Should use these parameter points to generate pseudo data for bkg only" << endl << flush ;
       pPoiAndNuisance->Print("v");
       bModel.SetSnapshot(*pPoiAndNuisance);
       workspace.import (bModel);
@@ -1441,6 +1451,7 @@
       
 
       workspace.Print() ;
+      printf("\n\n Creating output root file: ws.root\n\n\n") ;
       workspace.writeToFile("ws.root");
 
       return true;

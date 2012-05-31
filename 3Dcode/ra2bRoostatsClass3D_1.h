@@ -61,11 +61,20 @@
    /// static const int nBinsMET  = 3 ;
    /// static const int nBinsHT   = 3 ;
 
-       static const int nBinsMET  = 4 ;
-       static const int nBinsHT   = 3 ;
+   /// static const int nBinsMET  = 4 ;
+   /// static const int nBinsHT   = 3 ;
 
    /// static const int nBinsMET  = 5 ;
    /// static const int nBinsHT   = 4 ;
+
+       static const int nBinsMET  = 6 ;
+       static const int nBinsHT   = 6 ;
+
+   /// static const int nBinsMET  = 7 ;
+   /// static const int nBinsHT   = 7 ;
+
+   /// static const int nBinsMET  = 8 ;
+   /// static const int nBinsHT   = 8 ;
 
 
        static const int nBinsBtag = 3 ;    // this must always be 3
