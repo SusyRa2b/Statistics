@@ -314,7 +314,15 @@
 
      printf("\n\n Done making legend.\n\n\n") ; cout << flush ;
 
-     TCanvas* cfitqual = new TCanvas("cfitqual","RA2b fit quality", 850, 1000 ) ;
+     TCanvas* cfitqual = (TCanvas*) gDirectory->FindObject("cfitqual") ;
+     if ( cfitqual==0 ) {
+        printf("\n\n Creating cfitqual canvas.\n\n") ;
+        cfitqual = new TCanvas("cfitqual","RA2b fit quality", 850, 1000 ) ;
+     } else {
+        printf("\n\n Found existing cfitqual canvas.\n\n") ;
+        cfitqual->Clear() ;
+     }
+
 
      cfitqual->Divide(3,4);
 
