@@ -324,6 +324,7 @@ void loadHist(const char* filename="in.root", const char* pfx=0, const char* pat
 
      TPad* tp = new TPad("tp","tp",0.09,0.,0.18,1.0) ;
 
+     tp->SetLogy(0);
      tp->SetRightMargin(0.4) ;
 
      tp->Draw() ;
