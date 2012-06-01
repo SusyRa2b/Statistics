@@ -24,11 +24,14 @@
  using std::cout ;
 
 
-void loadHist(const char* filename="in.root", const char* pfx=0, const char* pat="*", Bool_t doAdd=kFALSE, Double_t scaleFactor=-1.0) ;
+   void loadHist(const char* filename="in.root", const char* pfx=0, const char* pat="*", Bool_t doAdd=kFALSE, Double_t scaleFactor=-1.0) ;
 
 //----------------
 
-   void ws_redraw_fitqual_plots3D( const char* histfile = "fitqual-hists-ws-met3-ht3-v1.root", bool logy=false ) {
+   void ws_redraw_fitqual_plots3D( const char* histfile = "fitqual-hists-ws-met3-ht3-v1.root", bool logy=false, bool doNorm=false, double normmax=2.0 ) {
+
+
+     if ( doNorm ) { logy = false ; }
 
      gStyle->SetOptStat(0) ;
      gStyle->SetPadTopMargin(0.03) ;
@@ -129,6 +132,106 @@ void loadHist(const char* filename="in.root", const char* pfx=0, const char* pat
      TH1F* hfitqual_fit_zmm_1b  =  (TH1F*) gDirectory->FindObject("hfitqual_fit_zmm_1b") ;
 
      TH1F* hfitqual_np   =  (TH1F*) gDirectory->FindObject("hfitqual_np") ;
+
+
+     int ncomp(5) ;
+     char compname[5][100] = { "data", "susy", "ttwj", "qcd", "znn" } ;
+
+     int nsel(3) ;
+     char selname[3][100] = { "0lep", "1lep", "ldp" } ;
+
+     int nbtagmult(3) ;
+     char btagmultname[3][100] = { "1b", "2b", "3b" } ;
+
+
+
+
+     if ( doNorm ) {
+
+       //--- Divide all bins by the overall model prediction.
+       //    This is slightly different than the way its done
+       //    in the other one, where the normalization is the data entries.
+       //    Doing it this way because we will have several observables
+       //    with no events in the data.  Model should always be non-zero(?)
+       //
+
+        printf("\n\n Renormalizing histograms.\n\n") ;
+
+        int nbins = hfitqual_data_0lep_1b -> GetNbinsX() ;
+
+        for ( int bini=1; bini<=nbins; bini++ ) {
+
+           for ( int seli=0; seli<nsel; seli++ ) {
+              for ( int nbji=0; nbji<nbtagmult; nbji++ ) {
+
+                 double modelsum(0.) ;
+
+                 for ( int ci=1; ci<ncomp; ci++ ) {
+
+                    char hname[100] ;
+                    sprintf( hname, "hfitqual_%s_%s_%s", compname[ci], selname[seli], btagmultname[nbji] ) ;
+
+                    TH1F* hist = (TH1F*) gDirectory->FindObject( hname ) ;
+                    if ( hist == 0 ) { printf("\n\n\n *** Can't find histogram %s\n\n", hname ) ; return ; }
+
+                    modelsum += hist->GetBinContent( bini ) ;
+
+
+                 } // ci
+
+                 if ( modelsum > 0. ) {
+                    for ( int ci=0; ci<ncomp; ci++ ) {
+
+                       char hname[100] ;
+                       sprintf( hname, "hfitqual_%s_%s_%s", compname[ci], selname[seli], btagmultname[nbji] ) ;
+
+
+                       TH1F* hist = (TH1F*) gDirectory->FindObject( hname ) ;
+                       if ( hist == 0 ) { printf("\n\n\n *** Can't find histogram %s\n\n", hname ) ; return ; }
+
+                       if ( ci==0 ) { // this is the data
+                          hist -> SetBinError( bini, (hist->GetBinError(bini))/modelsum ) ;
+                       }
+                       hist -> SetBinContent( bini, (hist->GetBinContent(bini))/modelsum ) ;
+
+                       //// printf(" %d (%d,%d,%d) : %4.2f  %s\n", bini, seli, nbji, ci, hist->GetBinContent( bini ), hname ) ;
+
+                       hist -> SetMaximum(normmax) ;
+
+                    } // ci
+                    //// printf("\n") ;
+                 }
+
+              } // nbji
+           } // seli
+
+           if ( hfitqual_fit_zee_1b->GetBinContent( bini ) > 0. ) {
+              hfitqual_data_zee_1b->SetBinError( bini, (hfitqual_data_zee_1b->GetBinError(bini))/(hfitqual_fit_zee_1b->GetBinContent( bini )) ) ;
+              hfitqual_data_zee_1b->SetBinContent( bini, (hfitqual_data_zee_1b->GetBinContent(bini))/(hfitqual_fit_zee_1b->GetBinContent( bini )) ) ;
+              hfitqual_fit_zee_1b ->SetBinContent( bini, 1. ) ;
+           }
+
+           if ( hfitqual_fit_zmm_1b->GetBinContent( bini ) > 0. ) {
+              hfitqual_data_zmm_1b->SetBinError( bini, (hfitqual_data_zmm_1b->GetBinError(bini))/(hfitqual_fit_zmm_1b->GetBinContent( bini )) ) ;
+              hfitqual_data_zmm_1b->SetBinContent( bini, (hfitqual_data_zmm_1b->GetBinContent(bini))/(hfitqual_fit_zmm_1b->GetBinContent( bini )) ) ;
+              hfitqual_fit_zmm_1b ->SetBinContent( bini, 1. ) ;
+           }
+
+           hfitqual_data_zee_1b -> SetMaximum(normmax) ;
+           hfitqual_data_zmm_1b -> SetMaximum(normmax) ;
+           hfitqual_fit_zee_1b -> SetMaximum(normmax) ;
+           hfitqual_fit_zmm_1b -> SetMaximum(normmax) ;
+
+        } // bini
+
+
+     } // doNorm?
+
+
+
+
+
+
 
 
      printf("\n\n Making stacks...\n") ; cout << flush ;
