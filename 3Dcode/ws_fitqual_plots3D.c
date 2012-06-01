@@ -38,7 +38,7 @@
   //
   //------
 
-   void ws_fitqual_plots3D( const char* wsfile = "ws-met5-ht5-v1.root", double mu_susy_sig_val = 0., bool doNorm = false, int nBinsMET=5, int nBinsHT=5 ) {
+   void ws_fitqual_plots3D( const char* wsfile = "ws-met3-ht3-v1.root", double mu_susy_sig_val = 0., bool doNorm = false, int nBinsMET=3, int nBinsHT=3 ) {
 
 
      // hardcode here the number of bins of the analysis
