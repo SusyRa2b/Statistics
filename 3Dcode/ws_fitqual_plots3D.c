@@ -683,6 +683,7 @@
              
 	      if ( doNorm && dataVal > 0. ) {
 	        dataErr = dataErr / dataVal ;
+		lhtotalVal = lhtotalVal / dataVal ;
 	        dataVal = 1. ;
 	      }
              
@@ -717,6 +718,7 @@
              
 	      if ( doNorm && dataVal > 0. ) {
 	        dataErr = dataErr / dataVal ;
+		lhtotalVal = lhtotalVal / dataVal ;
 	        dataVal = 1. ;
 	      }
              
