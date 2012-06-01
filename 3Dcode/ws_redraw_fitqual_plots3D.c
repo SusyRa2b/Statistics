@@ -40,7 +40,7 @@
      gStyle->SetTitleX(0.95) ;
      gStyle->SetTitleAlign(33) ;
 
-     gDirectory->Delete("*") ;
+     gDirectory->Delete("hfitqual*") ;
 
      loadHist( histfile ) ;
      gDirectory->ls() ;
