@@ -1542,23 +1542,23 @@
 
 	nGen = (int)ArrayContent[2] ;
 
-	int nBins = nBinsMET*nBinsHT*nBinsBtag ;
+	int nBins = nBinsMET*nBinsHT*nBinsBtag*3 ;
 
 	for (int i = 0 ; i < nBinsMET ; i++) {
 	  for (int j = 0 ; j < nBinsHT ; j++) {
 	    for (int k = 0 ; k < nBinsBtag ; k++) {     
 
-	      n_0l_raw[i][j][k]  = ArrayContent[3 + i*nBinsMET + j*nBinsHT + k*nBinsBtag] ;
-	      n_1l_raw[i][j][k]  = ArrayContent[3 + nBins + i*nBinsMET + j*nBinsHT + k*nBinsBtag] ;
-	      n_ldp_raw[i][j][k] = ArrayContent[3 + 2*nBins + i*nBinsMET + j*nBinsHT + k*nBinsBtag] ;
+	      n_0l_raw[i][j][k]  = ArrayContent[3 + i*(nBinsHT*nBinsBtag*3) + j*(nBinsBtag*3) + k*3] ;
+	      n_1l_raw[i][j][k]  = ArrayContent[4 + i*(nBinsHT*nBinsBtag*3) + j*(nBinsBtag*3) + k*3] ;
+	      n_ldp_raw[i][j][k] = ArrayContent[5 + i*(nBinsHT*nBinsBtag*3) + j*(nBinsBtag*3) + k*3] ;
 
-	      n_0l_correction[i][j][k]  = ArrayContent[3 + 3*nBins + i*nBinsMET + j*nBinsHT + k*nBinsBtag] ;
-	      n_1l_correction[i][j][k]  = ArrayContent[3 + 4*nBins + i*nBinsMET + j*nBinsHT + k*nBinsBtag] ;
-	      n_ldp_correction[i][j][k] = ArrayContent[3 + 5*nBins + i*nBinsMET + j*nBinsHT + k*nBinsBtag] ;
+	      n_0l_correction[i][j][k]  = ArrayContent[3 + nBins + i*(nBinsHT*nBinsBtag*3) + j*(nBinsBtag*3) + k*3] ;
+	      n_1l_correction[i][j][k]  = ArrayContent[4 + nBins + i*(nBinsHT*nBinsBtag*3) + j*(nBinsBtag*3) + k*3] ;
+	      n_ldp_correction[i][j][k] = ArrayContent[5 + nBins + i*(nBinsHT*nBinsBtag*3) + j*(nBinsBtag*3) + k*3] ;
 
-	      n_0l_error[i][j][k]  = ArrayContent[3 + 6*nBins + i*nBinsMET + j*nBinsHT + k*nBinsBtag] ;
-	      n_1l_error[i][j][k]  = ArrayContent[3 + 7*nBins + i*nBinsMET + j*nBinsHT + k*nBinsBtag] ;
-	      n_ldp_error[i][j][k] = ArrayContent[3 + 8*nBins + i*nBinsMET + j*nBinsHT + k*nBinsBtag] ;
+	      n_0l_error[i][j][k]  = ArrayContent[3 + 2*nBins + i*(nBinsHT*nBinsBtag*3) + j*(nBinsBtag*3) + k*3] ;
+	      n_1l_error[i][j][k]  = ArrayContent[4 + 2*nBins + i*(nBinsHT*nBinsBtag*3) + j*(nBinsBtag*3) + k*3] ;
+	      n_ldp_error[i][j][k] = ArrayContent[5 + 2*nBins + i*(nBinsHT*nBinsBtag*3) + j*(nBinsBtag*3) + k*3] ;
 
 	    }
 	  }
@@ -1761,9 +1761,9 @@
 	  for (int j = 0 ; j < nBinsHT ; j++) {
 	    for (int k = 0 ; k < nBinsBtag ; k++) {     
 
-	      deff_dbtageff_0l[i][j][k]  = ArrayContent[2 + i*nBinsMET + j*nBinsHT + k*nBinsBtag] ;
-	      deff_dbtageff_1l[i][j][k]  = ArrayContent[2 + nBins + i*nBinsMET + j*nBinsHT + k*nBinsBtag] ;
-	      deff_dbtageff_ldp[i][j][k] = ArrayContent[2 + 2*nBins + i*nBinsMET + j*nBinsHT + k*nBinsBtag] ;
+	      deff_dbtageff_0l[i][j][k]  = ArrayContent[2 + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
+	      deff_dbtageff_1l[i][j][k]  = ArrayContent[2 + nBins + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
+	      deff_dbtageff_ldp[i][j][k] = ArrayContent[2 + 2*nBins + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
 
 	    }
 	  }
