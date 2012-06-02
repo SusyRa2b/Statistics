@@ -16,11 +16,11 @@ void GenerateSusyFile() {
   gROOT->Reset();
 
   const int nBinsMET   = 2 ;
-  const int nBinsHT    = 1 ;
+  const int nBinsHT    = 2 ;
   const int nBinsBjets = 3 ;   // this must always be 3
 
   float Mbins[nBinsMET+1] = {150.,250.,99999.};
-  float Hbins[nBinsHT+1] = {400.,99999.};
+  float Hbins[nBinsHT+1] = {400.,600.,99999.};
 
   TString sMbins[nBinsMET];
   TString sHbins[nBinsHT];
@@ -32,8 +32,8 @@ void GenerateSusyFile() {
 
 
   // dummy masses
-  int minGlMass = 200 ;
-  int maxGlMass = 1200 ;
+  int minGlMass = 900 ;
+  int maxGlMass = 910 ;
 
   double dummyYield = 9.9 ;
   double dummyCorr = 1. ;
@@ -45,7 +45,7 @@ void GenerateSusyFile() {
 
   // loop over gluino masses
 
-  TH1F("ht","ht",10,0,10000);
+  TH1F* ht = new TH1F("ht","ht",10,0,10000);
   TString cutsSig = "minDelPhiN>4&&nMu==0&&nEl==0&&";
   TString cutsSB = "minDelPhiN>4&&(nMu==1||nEl==1)&&";
   TString cutsLSB = "minDelPhiN>4&&nMu==0&&nEl==0&&MET>50&&MET<100&&";
@@ -53,7 +53,8 @@ void GenerateSusyFile() {
   float xsec = -1.;
   for ( int mGl = minGlMass ; mGl < maxGlMass ; mGl = mGl + 25 ) {
   xsec = gluinoxsec->GetBinContent((mGl-75)/25);
-    for ( int mLsp = 50 ; mLsp < ( mGl - 25 ) ; mLsp = mLsp + 25 ) {
+//    for ( int mLsp = 50 ; mLsp < ( mGl - 25 ) ; mLsp = mLsp + 25 ) {
+    for ( int mLsp = 300 ; mLsp < 310 ; mLsp = mLsp + 25 ) {
 
       inFile << mGl << " " << mLsp << " " << dummyEvts << " " ;
 
@@ -98,11 +99,13 @@ void GenerateSusyFile() {
 
 	    chainT1bbbb.Project("ht","HT",cutSMS+cutsSig+cut);
             inFile << 0.5*xsec*ht->GetSumOfWeights() << " ";
+            ht->Reset() ;
 	    chainT1bbbb.Project("ht","HT",cutSMS+cutsSB+cut);
             inFile << 0.5*xsec*ht->GetSumOfWeights() << " ";
+            ht->Reset() ;
 	    chainT1bbbb.Project("ht","HT",cutSMS+cutsLSB+cutNoMET);
             inFile << 0.5*xsec*ht->GetSumOfWeights() << " ";
-
+            ht->Reset() ;
 
 	  }
 	}
@@ -129,6 +132,20 @@ void GenerateSusyFile() {
     }
   }
 
+  
+  // print out header line:
+  inFile << "Using HT bins:  " ;
+  for (int j = 0 ; j <= nBinsHT ; j++ ) {
+    inFile << Hbins[j] ;
+    if ( j < nBinsHT ) inFile << "-" ;
+  }
+  
+  inFile << "\t Using MET bins: " ;
+  for (int i = 0 ; i <= nBinsMET ; i++ ) {
+    inFile << Mbins[i] ;
+    if ( i < nBinsMET ) inFile << "-" ;
+  }
+  inFile << endl ;
 
 
   return;
