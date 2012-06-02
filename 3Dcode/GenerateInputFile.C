@@ -100,7 +100,7 @@ void GenerateInputFile() {
 //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,99999.};
 
-  //-- met5-ht5-v1
+  //-- met4-ht4-v1
 //const int nBinsMET   = 4 ;
 //const int nBinsHT    = 4 ;
 //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
@@ -112,7 +112,7 @@ void GenerateInputFile() {
 //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,500.,600.,800.,1000.,99999.};
 
-  //-- met8-ht8-v1
+  //-- met6-ht6-v1
 //const int nBinsMET   = 6 ;
 //const int nBinsHT    = 6 ;
 //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,400.,99999.};

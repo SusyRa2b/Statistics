@@ -28,7 +28,11 @@
 
 //----------------
 
-   void draw_mctruth_plots3D( const char* histfile = "gi-plots.root", bool logy=false, bool doNorm=false, double normmax=2.0 ) {
+   void draw_mctruth_plots3D( const char* histfile = "gi-plots.root",
+                              bool logy=false,
+                              bool doNorm=false,
+                              double normmax=2.0,
+                              int metgroupzoom=1 ) {
 
 
      if ( doNorm ) { logy = false ; }
@@ -381,6 +385,44 @@
         printf("\n\n Found existing cmctruth canvas.\n\n") ;
         cmctruth->Clear() ;
      }
+
+
+
+
+
+     if ( metgroupzoom>1 && !logy ) {
+
+        int nhistbins = hmctruth_ttwj_0lep_1b->GetNbinsX() ;
+
+        int nBinsHT(0) ;
+        for ( int bi=2; bi<nhistbins; bi++ ) {
+           if ( hmctruth_ttwj_0lep_1b->GetBinContent( bi ) <= 0. ) break ;
+           nBinsHT++ ;
+        }
+
+        int zoomRefBin = 1 + (nBinsHT+1)*(metgroupzoom-1) + 1 ;
+
+        printf("\n\n Number of HT bins=%d, met group ref bin=%d\n\n", nBinsHT, zoomRefBin ) ;
+
+        double maxSF(1.3) ;
+
+        hmctruth_allsm_0lep_1b->SetMaximum( maxSF*(hmctruth_allsm_0lep_1b->GetBinContent( zoomRefBin )) ) ;
+        hmctruth_allsm_0lep_2b->SetMaximum( maxSF*(hmctruth_allsm_0lep_2b->GetBinContent( zoomRefBin )) ) ;
+        hmctruth_allsm_0lep_3b->SetMaximum( maxSF*(hmctruth_allsm_0lep_3b->GetBinContent( zoomRefBin )) ) ;
+
+        hmctruth_allsm_1lep_1b->SetMaximum( maxSF*(hmctruth_allsm_1lep_1b->GetBinContent( zoomRefBin )) ) ;
+        hmctruth_allsm_1lep_2b->SetMaximum( maxSF*(hmctruth_allsm_1lep_2b->GetBinContent( zoomRefBin )) ) ;
+        hmctruth_allsm_1lep_3b->SetMaximum( maxSF*(hmctruth_allsm_1lep_3b->GetBinContent( zoomRefBin )) ) ;
+
+        hmctruth_allsm_ldp_1b->SetMaximum( maxSF*(hmctruth_allsm_ldp_1b->GetBinContent( zoomRefBin+2 )) ) ;
+        hmctruth_allsm_ldp_2b->SetMaximum( maxSF*(hmctruth_allsm_ldp_2b->GetBinContent( zoomRefBin+2 )) ) ;
+        hmctruth_allsm_ldp_3b->SetMaximum( maxSF*(hmctruth_allsm_ldp_3b->GetBinContent( zoomRefBin+2 )) ) ;
+
+        hmctruth_fit_zee_1b->SetMaximum( maxSF*(hmctruth_fit_zee_1b->GetBinContent( zoomRefBin )) ) ;
+        hmctruth_fit_zmm_1b->SetMaximum( maxSF*(hmctruth_fit_zmm_1b->GetBinContent( zoomRefBin )) ) ;
+
+     }
+
 
 
      cmctruth->Divide(3,4);

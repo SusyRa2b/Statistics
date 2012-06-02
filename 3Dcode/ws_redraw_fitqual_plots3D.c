@@ -28,7 +28,11 @@
 
 //----------------
 
-   void ws_redraw_fitqual_plots3D( const char* histfile = "fitqual-hists-ws-met3-ht3-v1.root", bool logy=false, bool doNorm=false, double normmax=2.0 ) {
+   void ws_redraw_fitqual_plots3D( const char* histfile = "fitqual-hists-ws-met3-ht3-v1.root",
+                                   bool logy=false,
+                                   bool doNorm=false,
+                                   double normmax=2.0,
+                                   int metgroupzoom=1 ) {
 
 
      if ( doNorm ) { logy = false ; }
@@ -321,6 +325,41 @@
      } else {
         printf("\n\n Found existing cfitqual canvas.\n\n") ;
         cfitqual->Clear() ;
+     }
+
+
+
+     if ( metgroupzoom>1 && !logy ) {
+
+        int nhistbins = hfitqual_ttwj_0lep_1b->GetNbinsX() ;
+
+        int nBinsHT(0) ;
+        for ( int bi=2; bi<nhistbins; bi++ ) {
+           if ( hfitqual_ttwj_0lep_1b->GetBinContent( bi ) <= 0. ) break ;
+           nBinsHT++ ;
+        }
+
+        int zoomRefBin = 1 + (nBinsHT+1)*(metgroupzoom-1) + 1 ;
+
+        printf("\n\n Number of HT bins=%d, met group ref bin=%d\n\n", nBinsHT, zoomRefBin ) ;
+
+        double maxSF(1.3) ;
+
+        hfitqual_data_0lep_1b->SetMaximum( maxSF*(hfitqual_data_0lep_1b->GetBinContent( zoomRefBin )) ) ;
+        hfitqual_data_0lep_2b->SetMaximum( maxSF*(hfitqual_data_0lep_2b->GetBinContent( zoomRefBin )) ) ;
+        hfitqual_data_0lep_3b->SetMaximum( maxSF*(hfitqual_data_0lep_3b->GetBinContent( zoomRefBin )) ) ;
+
+        hfitqual_data_1lep_1b->SetMaximum( maxSF*(hfitqual_data_1lep_1b->GetBinContent( zoomRefBin )) ) ;
+        hfitqual_data_1lep_2b->SetMaximum( maxSF*(hfitqual_data_1lep_2b->GetBinContent( zoomRefBin )) ) ;
+        hfitqual_data_1lep_3b->SetMaximum( maxSF*(hfitqual_data_1lep_3b->GetBinContent( zoomRefBin )) ) ;
+
+        hfitqual_data_ldp_1b->SetMaximum( maxSF*(hfitqual_data_ldp_1b->GetBinContent( zoomRefBin+2 )) ) ;
+        hfitqual_data_ldp_2b->SetMaximum( maxSF*(hfitqual_data_ldp_2b->GetBinContent( zoomRefBin+2 )) ) ;
+        hfitqual_data_ldp_3b->SetMaximum( maxSF*(hfitqual_data_ldp_3b->GetBinContent( zoomRefBin+2 )) ) ;
+
+        hfitqual_data_zee_1b->SetMaximum( maxSF*(hfitqual_data_zee_1b->GetBinContent( zoomRefBin )) ) ;
+        hfitqual_data_zmm_1b->SetMaximum( maxSF*(hfitqual_data_zmm_1b->GetBinContent( zoomRefBin )) ) ;
+
      }
 
 
