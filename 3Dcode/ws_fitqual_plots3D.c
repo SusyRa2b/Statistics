@@ -589,7 +589,7 @@
 	   binLabel += sMbins[i]+sHbins[j]+sBbins[k] ;
 
 	   TString EffSfLdpString  = "eff_sf_ldp" ;
-	   TString MuSusyLdpString = "mu_susy" ;
+	   TString MuSusyLdpString = "mu_susy_ldp" ;
 	   TString MuTtwjLdpString = "mu_ttwj_ldp" ;
 	   TString MuWJmcLdpString = "mu_WJmc" ;
 	   TString MuQcdLdpString  = "mu_qcd_ldp" ;
