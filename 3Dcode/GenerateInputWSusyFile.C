@@ -62,10 +62,10 @@ void GenerateInputWSusyFile() {
 //float Hbins[nBinsHT+1] = {400.,99999.};
 
   //-- met2-ht2-v1
-const int nBinsMET   = 2 ;
-const int nBinsHT    = 2 ;
-float Mbins[nBinsMET+1] = {150.,250.,99999.};
-float Hbins[nBinsHT+1] = {400.,600.,99999.};
+//const int nBinsMET   = 2 ;
+//const int nBinsHT    = 2 ;
+//float Mbins[nBinsMET+1] = {150.,250.,99999.};
+//float Hbins[nBinsHT+1] = {400.,600.,99999.};
 
   //-- met3-ht2-v1
 //const int nBinsMET   = 3 ;
@@ -91,11 +91,11 @@ float Hbins[nBinsHT+1] = {400.,600.,99999.};
 //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,99999.};
 
-  //-- met5-ht5-v1
-  //const int nBinsMET   = 4 ;
-  //const int nBinsHT    = 4 ;
-  //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
-  //float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
+  //-- met4-ht4-v1
+    const int nBinsMET   = 4 ;
+    const int nBinsHT    = 4 ;
+    float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
+    float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
 
   //-- met5-ht5-v1
 //const int nBinsMET   = 5 ;

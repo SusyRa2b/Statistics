@@ -1,11 +1,27 @@
 #include <iostream>
+#include <fstream>
+
+#include "TH1.h"
+#include "TFile.h"
+#include "TChain.h"
+#include "TString.h"
+#include "TRoot.h"
 
 void GenerateSusyFile() {
 
 //gluino cross sections in pb.
 
+//  TFile prospino("referenceXSecs.root");
+//  TH1F *gluinoxsec = gluino;
+
   TFile prospino("referenceXSecs.root");
-  TH1F *gluinoxsec = gluino;
+  TH1F *gluinoxsec = (TH1F*) prospino.Get("gluino") ;
+  if ( gluinoxsec == 0 ) {
+     printf("\n\n *** Can't find histogram with name gluino in referenceXSecs.root.\n\n") ;
+     return ;
+  } else {
+     gluinoxsec->Print("all") ;
+  }
 
 // bin 1 = gluino mass = 100 GeV, 2 = 125, 3 = 150, 4 = 175, ...
 // so gluino mass = 75+nbin*25; or nbin = (gluinomass-75)/25.
@@ -15,31 +31,43 @@ void GenerateSusyFile() {
 
   gROOT->Reset();
 
-  const int nBinsMET   = 2 ;
-  const int nBinsHT    = 2 ;
   const int nBinsBjets = 3 ;   // this must always be 3
 
-  float Mbins[nBinsMET+1] = {150.,250.,99999.};
-  float Hbins[nBinsHT+1] = {400.,600.,99999.};
 
-  TString sMbins[nBinsMET];
-  TString sHbins[nBinsHT];
-  TString sBbins[3] = {"_1b","_2b","_3b"};
+  // const int nBinsMET   = 2 ;
+  // const int nBinsHT    = 2 ;
+  // float Mbins[nBinsMET+1] = {150.,250.,99999.};
+  // float Hbins[nBinsHT+1] = {400.,600.,99999.};
 
-  TString cMbins[nBinsMET];
-  TString cHbins[nBinsHT];
+  //-- met4-ht4-v1
+    const int nBinsMET   = 4 ;
+    const int nBinsHT    = 4 ;
+    float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
+    float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
+
+
+
+//TString sMbins[nBinsMET];
+//TString sHbins[nBinsHT];
+//TString sBbins[3] = {"_1b","_2b","_3b"};
+
+//TString cMbins[nBinsMET];
+//TString cHbins[nBinsHT];
   TString cBbins[3] = {"&&nB==1","&&nB==2","&&nB>=3"};
 
 
   // dummy masses
-  int minGlMass = 900 ;
-  int maxGlMass = 910 ;
+  //int minGlMass = 900 ;
+  //int maxGlMass = 910 ;
 
-  double dummyYield = 9.9 ;
+  int minGlMass = 300 ;
+  int maxGlMass = 310 ;
+
+//double dummyYield = 9.9 ;
   double dummyCorr = 1. ;
   double dummyErr = 10. ; // error is in % 
   long dummyEvts = 10000 ;
-  
+
   ofstream inFile;
   inFile.open("Susy.dat");
 
@@ -54,9 +82,10 @@ void GenerateSusyFile() {
   for ( int mGl = minGlMass ; mGl < maxGlMass ; mGl = mGl + 25 ) {
   xsec = gluinoxsec->GetBinContent((mGl-75)/25);
 //    for ( int mLsp = 50 ; mLsp < ( mGl - 25 ) ; mLsp = mLsp + 25 ) {
-    for ( int mLsp = 300 ; mLsp < 310 ; mLsp = mLsp + 25 ) {
+    for ( int mLsp = 200 ; mLsp < 210 ; mLsp = mLsp + 25 ) {
 
       inFile << mGl << " " << mLsp << " " << dummyEvts << " " ;
+      printf(" mGl=%4d, mLsp=%4d\n", mGl, mLsp ) ;
 
       for (int i = 0 ; i < nBinsMET ; i++) {
 	for (int j = 0 ; j < nBinsHT ; j++) {
@@ -89,15 +118,40 @@ void GenerateSusyFile() {
 // each point has 10k events generated. The sigma is in pb and I want to normalized to 5 fb-1. 
 // so multiple cross section by 0.5 to get events in 5 fb-1
 
-	    chainT1bbbb.Project("ht","HT",cutSMS+cutsSig+cut);
-            inFile << 0.5*xsec*ht->GetSumOfWeights() << " ";
+	 // chainT1bbbb.Project("ht","HT",cutSMS+cutsSig+cut);
+         // inFile << 0.5*xsec*ht->GetSumOfWeights() << " ";
+         // ht->Reset() ;
+	 // chainT1bbbb.Project("ht","HT",cutSMS+cutsSL+cut);
+         // inFile << 0.5*xsec*ht->GetSumOfWeights() << " ";
+         // ht->Reset() ;
+	 // chainT1bbbb.Project("ht","HT",cutSMS+cutsLDP+cut);
+         // inFile << 0.5*xsec*ht->GetSumOfWeights() << " ";
+         // ht->Reset() ;
+
+            TString allSigCuts = cutSMS+cutsSig+cut ;
+            TString allSLCuts  = cutSMS+cutsSL+cut ;
+            TString allLDPCuts = cutSMS+cutsLDP+cut ;
+
+	    chainT1bbbb.Project("ht","HT",allSigCuts);
+            double nselSig = 0.5*xsec*ht->GetSumOfWeights() ;
+            inFile << nselSig << " ";
             ht->Reset() ;
-	    chainT1bbbb.Project("ht","HT",cutSMS+cutsSL+cut);
-            inFile << 0.5*xsec*ht->GetSumOfWeights() << " ";
+            printf("  mGl=%4d, mLsp=%4d : bins in met,HT,nB (%d,%d,%d) : nSig = %7.1f : cuts=%s\n",
+                 mGl, mLsp, i, j, k, nselSig, allSigCuts.Data() ) ; cout << flush ;
+
+	    chainT1bbbb.Project("ht","HT",allSLCuts);
+            double nselSL = 0.5*xsec*ht->GetSumOfWeights() ;
+            inFile << nselSL << " ";
             ht->Reset() ;
-	    chainT1bbbb.Project("ht","HT",cutSMS+cutsLDP+cut);
-            inFile << 0.5*xsec*ht->GetSumOfWeights() << " ";
+            printf("  mGl=%4d, mLsp=%4d : bins in met,HT,nB (%d,%d,%d) : nSL  = %7.1f : cuts=%s\n",
+                 mGl, mLsp, i, j, k, nselSL, allSLCuts.Data() ) ; cout << flush ;
+
+	    chainT1bbbb.Project("ht","HT",allLDPCuts);
+            double nselLDP = 0.5*xsec*ht->GetSumOfWeights() ;
+            inFile << nselLDP << " ";
             ht->Reset() ;
+            printf("  mGl=%4d, mLsp=%4d : bins in met,HT,nB (%d,%d,%d) : nLDP = %7.1f : cuts=%s\n",
+                 mGl, mLsp, i, j, k, nselLDP, allLDPCuts.Data() ) ; cout << flush ;
 
 	  }
 	}
