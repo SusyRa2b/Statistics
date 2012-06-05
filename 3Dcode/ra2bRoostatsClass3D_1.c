@@ -608,6 +608,9 @@
 	    muZnnString    += sMbins[i]+sHbins[j]+sBbins[k] ;
 
 	    muSusMcString  += sMbins[i]+sHbins[j]+sBbins[k] ;
+	    muSusSlMcString  += sMbins[i]+sHbins[j]+sBbins[k] ;
+	    muSusLdpMcString  += sMbins[i]+sHbins[j]+sBbins[k] ;
+
 	    muTtLdpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    muWjLdpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    muZnnLdpString += sMbins[i]+sHbins[j]+sBbins[k] ;
