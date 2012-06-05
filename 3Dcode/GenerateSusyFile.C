@@ -47,8 +47,8 @@ void GenerateSusyFile() {
 
   TH1F* ht = new TH1F("ht","ht",10,0,10000);
   TString cutsSig = "minDelPhiN>4&&nMu==0&&nEl==0&&";
-  TString cutsSB = "minDelPhiN>4&&(nMu==1||nEl==1)&&";
-  TString cutsLSB = "minDelPhiN>4&&nMu==0&&nEl==0&&MET>50&&MET<100&&";
+  TString cutsSL = "minDelPhiN>4&&(nMu==1||nEl==1)&&";
+  TString cutsLDP = "minDelPhiN<4&&nMu==0&&nEl==0&&";
 
   float xsec = -1.;
   for ( int mGl = minGlMass ; mGl < maxGlMass ; mGl = mGl + 25 ) {
@@ -81,15 +81,7 @@ void GenerateSusyFile() {
 	    cut += Mbins[i];
 	    cut += "&&MET<";
 	    cut += Mbins[i+1];
-	    cut += "&&nB==";
-	    cut += k+1;
-
-	    TString cutNoMET = "HT>";
-	    cutNoMET += Hbins[j];
-	    cutNoMET += "&&HT<";
-	    cutNoMET += Hbins[j+1];
-	    cutNoMET += "&&nB==";
-	    cutNoMET += k+1;
+	    cut += cBbins[k];
 
 // cross section in pb = gluinoxsec->GetBinContent((mGl-75)/25);
 //cout << " bin = " << (mGl-75)/25 << " for mGl = " << mGl << " and xsec = " << gluinoxsec->GetBinContent((mGl-75)/25) << endl;
@@ -100,10 +92,10 @@ void GenerateSusyFile() {
 	    chainT1bbbb.Project("ht","HT",cutSMS+cutsSig+cut);
             inFile << 0.5*xsec*ht->GetSumOfWeights() << " ";
             ht->Reset() ;
-	    chainT1bbbb.Project("ht","HT",cutSMS+cutsSB+cut);
+	    chainT1bbbb.Project("ht","HT",cutSMS+cutsSL+cut);
             inFile << 0.5*xsec*ht->GetSumOfWeights() << " ";
             ht->Reset() ;
-	    chainT1bbbb.Project("ht","HT",cutSMS+cutsLSB+cutNoMET);
+	    chainT1bbbb.Project("ht","HT",cutSMS+cutsLDP+cut);
             inFile << 0.5*xsec*ht->GetSumOfWeights() << " ";
             ht->Reset() ;
 
