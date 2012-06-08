@@ -504,6 +504,8 @@
 	    initialval_qcd_ldp[i][j][k] = (N_ldp[i][j][k]) - ( Nttbarsingletopzjetsmc_ldp[i][j][k] + NWJmc_ldp[i][j][k] + NZnnmc_ldp[i][j][k] ) ;
 	    initialval_qcd[i][j][k] = R_lsb[j][k] * initialval_qcd_ldp[i][j][k] ;
 
+            if ( initialval_qcd_ldp[i][j][k] < 0.) { initialval_qcd_ldp[i][j][k] = 0. ; }
+            if ( initialval_qcd[i][j][k]     < 0.) { initialval_qcd[i][j][k]     = 0. ; }
 	    
 	    // TTWJ stuff. Reference bin is (1,1,1):
 
@@ -519,24 +521,6 @@
 
 
       // print out initial values:
-
-//      printf("\n\n\n --------- Observables and floating parameter initial values. ------------\n\n") ;
-//      
-//      printf("           |  Nobs   ||  ttwj  |  QCD  |  Znn  |\n") ;
-//      printf("----------------------------------------------------\n") ;
-//
-//      for (int i = 0 ; i < nBinsMET ; i++) {
-//	for (int j = 0 ; j < nBinsHT ; j++) {
-//	  for (int k = 0 ; k < nBinsBtag ; k++) {     
-//
-//	    cout << " MET bin " << i+1 << ", HT bin " << j+1 << ", Btag bin " << k+1 << endl;
-//	    printf(" 0-lep     | %5d   || %5.1f | %5.1f | %5.1f |\n", N_0lep[i][j][k], initialval_ttwj[i][j][k], initialval_qcd[i][j][k], initialval_znn[i][j][k] ) ;
-//	    printf(" ldp       | %5d   || *%5.1f | %5.1f |*%5.1f |\n", N_ldp[i][j][k], Nttbarsingletopzjetsmc_ldp[i][j][k], initialval_qcd_ldp[i][j][k], NZnnmc_ldp[i][j][k] ) ;
-//	    printf("----------------------------------------------------\n") ;
-//
-//	  }
-//	}
-//      }
 
       printf("\n * means fixed MC value.\n\n\n") ;
 
@@ -1421,7 +1405,66 @@
       printf(" --- Importing dataset.\n" ) ; cout << flush ;
 
       workspace.import(*dsObserved);
-      
+
+
+      //--- Do a simple pre-fit to tune initial values of key parameters.
+      printf(" --- Performing simple pre-fit of 0-lep ttwj normalization.\n") ; cout << flush ;
+
+      { // begin scoping bracket.
+         double initialGuess = ((RooRealVar*) rv_mu_ttwj[0][0][0]) -> getVal() ;
+
+         // printf("\n\n Susy set to: %6.1f\n\n", ((RooRealVar*)rv_mu_susy[0][0][0]) -> getVal() ) ;
+
+         ((RooRealVar*)rv_mu_susy[0][0][0]) -> setVal(0.) ;
+
+           {
+            double logL(0.) ;
+            for (int i = 0 ; i < nBinsMET ; i++) {
+               for (int j = 0 ; j < nBinsHT ; j++) {
+                  for (int k = 0 ; k < nBinsBtag ; k++) {     
+                     double pdfVal = pdf_N_0lep[i][j][k] -> getVal() ;
+                     if ( pdfVal > 0. ) { logL += log( pdfVal ) ; } else { printf(" *** PDF %s evaluates to %g\n", pdf_N_0lep[i][j][k] -> GetName(), pdfVal ) ; }
+                     printf("       PDF %20s, val=%8.6f,  N=%5.0f,  n=%6.1f\n", pdf_N_0lep[i][j][k] -> GetName(), pdfVal, rv_0lep[i][j][k]->getVal(), rv_n[i][j][k]->getVal() ) ;
+                  }
+               }
+            }
+            printf( "\n val = %6.1f, ln L = %g\n\n\n", initialGuess, logL ) ;
+           }
+
+         printf("\n\n Initial guess for 0-lep ttwj first bin: %6.1f\n\n", initialGuess ) ;
+
+         double scanLow  = initialGuess - 6 * sqrt( initialGuess ) ;
+         double scanHigh = initialGuess + 6 * sqrt( initialGuess ) ;
+         double bestVal = initialGuess ;
+         double bestlnL( -1.e99 ) ;
+         int nScanPoints(20) ;
+         if ( scanLow < 0. ) { scanLow = 1. ; }
+         for ( int spi=0 ; spi<nScanPoints; spi++ ) {
+            double logL(0.) ;
+            double scanVal = scanLow + (scanHigh-scanLow)/(nScanPoints-1.)*spi ;
+            ((RooRealVar*)rv_mu_ttwj[0][0][0]) -> setVal( scanVal ) ;
+            for (int i = 0 ; i < nBinsMET ; i++) {
+               for (int j = 0 ; j < nBinsHT ; j++) {
+                  for (int k = 0 ; k < nBinsBtag ; k++) {     
+                     double pdfVal = pdf_N_0lep[i][j][k] -> getVal() ;
+                     if ( pdfVal > 0. ) { logL += log( pdfVal ) ; } else { printf(" *** PDF %s evaluates to %g\n", pdf_N_0lep[i][j][k] -> GetName(), pdfVal ) ; }
+                ///  printf("       PDF %20s, val=%8.6f,  N=%5.0f,  n=%6.1f\n", pdf_N_0lep[i][j][k] -> GetName(), pdfVal, rv_0lep[i][j][k]->getVal(), rv_n[i][j][k]->getVal() ) ;
+                  }
+               }
+            }
+            if ( logL > bestlnL ) {
+               bestlnL = logL ;
+               bestVal = scanVal ;
+            }
+            printf( " val = %6.1f, ln L = %g\n", scanVal, logL ) ;
+         } // spi.
+
+         printf("\n\n  Best val = %6.1f, ln L = %g\n\n\n", bestVal, bestlnL ) ;
+
+         ((RooRealVar*) rv_mu_ttwj[0][0][0]) -> setVal(bestVal) ;
+
+      } // end scoping bracket.
+
       // parameters of interest
       RooArgSet poi(*rv_mu_susy[0][0][0], "poi");
       // flat prior for POI

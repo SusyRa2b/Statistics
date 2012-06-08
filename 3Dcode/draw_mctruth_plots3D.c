@@ -423,6 +423,17 @@
 
      }
 
+     hmctruth_allsm_0lep_1b->SetLineWidth(2) ;
+     hmctruth_allsm_0lep_2b->SetLineWidth(2) ;
+     hmctruth_allsm_0lep_3b->SetLineWidth(2) ;
+
+     hmctruth_allsm_1lep_1b->SetLineWidth(2) ;
+     hmctruth_allsm_1lep_2b->SetLineWidth(2) ;
+     hmctruth_allsm_1lep_3b->SetLineWidth(2) ;
+
+     hmctruth_allsm_ldp_1b->SetLineWidth(2) ;
+     hmctruth_allsm_ldp_2b->SetLineWidth(2) ;
+     hmctruth_allsm_ldp_3b->SetLineWidth(2) ;
 
 
      cmctruth->Divide(3,4);

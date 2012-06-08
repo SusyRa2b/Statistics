@@ -73,7 +73,7 @@ void GenerateInputWSusyFile() {
 //float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,800.,99999.};
 
-  //-- met3-ht3-v1
+////-- met3-ht3-v1
 //const int nBinsMET   = 3 ;
 //const int nBinsHT    = 3 ;
 //float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
@@ -92,16 +92,16 @@ void GenerateInputWSusyFile() {
 //float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,99999.};
 
   //-- met4-ht4-v1
-    const int nBinsMET   = 4 ;
-    const int nBinsHT    = 4 ;
-    float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
-    float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
+//  const int nBinsMET   = 4 ;
+//  const int nBinsHT    = 4 ;
+//  float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
+//  float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
 
   //-- met5-ht5-v1
-//const int nBinsMET   = 5 ;
-//const int nBinsHT    = 5 ;
-//float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,99999.};
-//float Hbins[nBinsHT+1] = {400.,500.,600.,800.,1000.,99999.};
+  const int nBinsMET   = 5 ;
+  const int nBinsHT    = 5 ;
+  float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,99999.};
+  float Hbins[nBinsHT+1] = {400.,500.,600.,800.,1000.,99999.};
 
   //-- met8-ht8-v1
 //const int nBinsMET   = 6 ;
@@ -160,14 +160,14 @@ void GenerateInputWSusyFile() {
   //TString SUSYcut = "&&mgluino==1000&&mlsp==150" ;
   //float t1bbbbxsec = 0.5*0.00870; //in pb. scan has 10k events, so nScan*0.5*xsec = events in 5fb-1
   
-  //TString SUSYcut = "&&mgluino==900&&mlsp==300" ;
-  //float t1bbbbxsec = 0.5*0.0233; //in pb. scan has 10k events, so nScan*0.5*xsec = events in 5fb-1
+    TString SUSYcut = "&&mgluino==900&&mlsp==300" ;
+    float t1bbbbxsec = 0.5*0.0233; //in pb. scan has 10k events, so nScan*0.5*xsec = events in 5fb-1
 
   //TString SUSYcut = "&&mgluino==850&&mlsp==550" ;
   //float t1bbbbxsec = 0.5*0.0387; //in pb. scan has 10k events, so nScan*0.5*xsec = events in 5fb-1
 
-  TString SUSYcut = "&&mgluino==300&&mlsp==200" ;
-  float t1bbbbxsec = 0.5*62.10; //in pb. scan has 10k events, so nScan*0.5*xsec = events in 5fb-1
+  //TString SUSYcut = "&&mgluino==300&&mlsp==200" ;
+  //float t1bbbbxsec = 0.5*62.10; //in pb. scan has 10k events, so nScan*0.5*xsec = events in 5fb-1
 
 
 
@@ -201,7 +201,7 @@ void GenerateInputWSusyFile() {
 
   // 0lep observables
 
-  printf("\n\n-----------------------------------------------------------------\n\n") ;
+  printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
 
   TH1F* ht = new TH1F("ht","ht",10,0,10000);
   TH1F* htSUSY = new TH1F("htSUSY","htSUSY",10,0,10000);
@@ -230,7 +230,7 @@ void GenerateInputWSusyFile() {
 	t1bbbbTree->Project("htSUSY","HT",cuts0lep+cut+SUSYcut);
         inFile << obs_0lep << "  \t" << (int)ht->GetSumOfWeights() + (int)(t1bbbbxsec*htSUSY->GetSumOfWeights()) << endl;
         TString allcuts = cuts0lep+cut ;
-        printf(" N_0lep -- HT,MET,nbjet bins (%d,%d,%d): npassSM=%7.1f, npassSUSY=%7.1f, cuts=%s\n", j,i,k,ht->GetSumOfWeights(), (t1bbbbxsec*(htSUSY->GetSumOfWeights())), allcuts.Data()) ;
+        printf(" N_0lep -- HT,MET,nbjet bins (%d,%d,%d): npassSM=%7.1f, npassSUSY=%7.1f, cuts=%s\n", j,i,k,ht->GetSumOfWeights(), (t1bbbbxsec*(htSUSY->GetSumOfWeights())), allcuts.Data()) ; cout << flush ;
 	ht->Reset() ;
 	htSUSY->Reset();
 
@@ -241,7 +241,7 @@ void GenerateInputWSusyFile() {
   }
 
 
-  printf("\n\n-----------------------------------------------------------------\n\n") ;
+  printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
 
   // single lepton observables
   TString cuts1lep = "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&";
@@ -266,7 +266,7 @@ void GenerateInputWSusyFile() {
 	chain.Project("ht","HT",cuts1lep+cut);
         inFile << obs_1lep << "  \t" << (int)ht->GetSumOfWeights() << endl;
         TString allcuts = cuts1lep+cut ;
-        printf(" N_1lep -- HT,MET,nbjet bins (%d,%d,%d): npassSM=%7.1f, cuts=%s\n", j,i,k,ht->GetSumOfWeights(),allcuts.Data()) ;
+        printf(" N_1lep -- HT,MET,nbjet bins (%d,%d,%d): npassSM=%7.1f, cuts=%s\n", j,i,k,ht->GetSumOfWeights(),allcuts.Data()) ; cout << flush ;
         ht->Reset() ;
 	htSUSY->Reset();
 
@@ -276,7 +276,7 @@ void GenerateInputWSusyFile() {
     }
   }
 
-  printf("\n\n-----------------------------------------------------------------\n\n") ;
+  printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
 
   // ldp observables
   TString cutsldp = "minDelPhiN<4&&nMu==0&&nEl==0&&";
@@ -302,7 +302,7 @@ void GenerateInputWSusyFile() {
 	t1bbbbTree->Project("htSUSY","HT",cutsldp+cut+SUSYcut);
 	inFile << obs_ldp << "  \t" << (int)ht->GetSumOfWeights() + (int)(t1bbbbxsec*htSUSY->GetSumOfWeights()) << endl;
         TString allcuts = cutsldp+cut ;
-        printf(" N_ldp -- HT,MET,nbjet bins (%d,%d,%d): npassSM=%7.1f, npassSUSY=%7.1f, cuts=%s\n", j,i,k,ht->GetSumOfWeights(),t1bbbbxsec*htSUSY->GetSumOfWeights(),allcuts.Data()) ;
+        printf(" N_ldp -- HT,MET,nbjet bins (%d,%d,%d): npassSM=%7.1f, npassSUSY=%7.1f, cuts=%s\n", j,i,k,ht->GetSumOfWeights(),t1bbbbxsec*htSUSY->GetSumOfWeights(),allcuts.Data()) ; cout << flush ;
         ht->Reset() ;
 	htSUSY->Reset();
 
@@ -312,7 +312,7 @@ void GenerateInputWSusyFile() {
     }
   }
   
-  printf("\n\n-----------------------------------------------------------------\n\n") ;
+  printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
 
   //inFile << "Note: I've removed the b jet dependance of this result since it's always with zero b jets" << endl;
   // R_lsb  very low met sideband (50-100) ratio of mdp>4/mdp<4 (with zero b ratio)
@@ -335,14 +335,14 @@ void GenerateInputWSusyFile() {
       t1bbbbTree->Project("htSUSY","HT",cutslsb+cut+pass+SUSYcut);
       float npass = ht->GetSumOfWeights()+(htSUSY->GetSumOfWeights()*t1bbbbxsec);
       TString allcutspass = cutslsb+cut+pass ;
-      printf(" R_lsb -- HT,MET bins (%d,%d): npass=%10.1f, cuts=%s\n", j,k,npass, allcutspass.Data()) ;
+      printf(" R_lsb -- HT,MET bins (%d,%d): npass=%10.1f, cuts=%s\n", j,k,npass, allcutspass.Data()) ; cout << flush ;
         ht->Reset() ;
 	htSUSY->Reset();
       chain.Project("ht","HT",cutslsb+cut+fail);
       t1bbbbTree->Project("htSUSY","HT",cutslsb+cut+fail+SUSYcut);
       float nfail = ht->GetSumOfWeights()+(htSUSY->GetSumOfWeights()*t1bbbbxsec);
       TString allcutsfail = cutslsb+cut+fail ;
-      printf(" R_lsb -- HT,MET bins (%d,%d): nfail=%10.1f, cuts=%s\n", j,k,nfail, allcutsfail.Data()) ;
+      printf(" R_lsb -- HT,MET bins (%d,%d): nfail=%10.1f, cuts=%s\n", j,k,nfail, allcutsfail.Data()) ; cout << flush ;
         ht->Reset() ;
 	htSUSY->Reset();
       
@@ -356,7 +356,7 @@ void GenerateInputWSusyFile() {
   }
 
   
-  printf("\n\n-----------------------------------------------------------------\n\n") ;
+  printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
 
   // Z -> ee observables 
 
@@ -379,7 +379,7 @@ void GenerateInputWSusyFile() {
       dyTree->Project("ht","HT",cutszee+cut);
       inFile << obs_Zee << "  \t" << (int)ht->GetSumOfWeights() + (int)(t1bbbbxsec*htSUSY->GetSumOfWeights()) << endl;
       TString allcuts = cutszee+cut ;
-      printf(" N_Zee -- HT,MET bins (%d,%d): events=%7.1f, cuts=%s\n", j,i,ht->GetSumOfWeights(),allcuts.Data() ) ;
+      printf(" N_Zee -- HT,MET bins (%d,%d): events=%7.1f, cuts=%s\n", j,i,ht->GetSumOfWeights(),allcuts.Data() ) ; cout << flush ;
         ht->Reset() ;
 	htSUSY->Reset();
       //Z->ee counts, with 1 VLb and sig selection, so so MET>250, HT>400, mindelphi>4, 2e, 0mu, nJets >= 3
@@ -388,7 +388,7 @@ void GenerateInputWSusyFile() {
   }
 
   
-  printf("\n\n-----------------------------------------------------------------\n\n") ;
+  printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
 
   // Z -> mm observables
 
@@ -411,7 +411,7 @@ void GenerateInputWSusyFile() {
       dyTree->Project("ht","HT",cutszmm+cut);
       inFile << obs_Zmm << "  \t" << (int)ht->GetSumOfWeights() + (int)(t1bbbbxsec*htSUSY->GetSumOfWeights()) << endl;
       TString allcuts = cutszmm+cut ;
-      printf(" N_Zmm -- HT,MET bins (%d,%d): events=%7.1f, cuts=%s\n", j,i,ht->GetSumOfWeights(),allcuts.Data() ) ;
+      printf(" N_Zmm -- HT,MET bins (%d,%d): events=%7.1f, cuts=%s\n", j,i,ht->GetSumOfWeights(),allcuts.Data() ) ; cout << flush ;
         ht->Reset() ;
 	htSUSY->Reset();
       //Z->mm counts, with 1 VLb and sig selection, so so MET>250, HT>400, mindelphi>4, 2mu, 0e, nJets >= 3
@@ -423,7 +423,7 @@ void GenerateInputWSusyFile() {
   // Nttbarsingletopzjetsmc_ldp
 
 
-  printf("\n\n-----------------------------------------------------------------\n\n") ;
+  printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
 
   for (int i = 0 ; i < nBinsMET ; i++) {
     for (int j = 0 ; j < nBinsHT ; j++) {

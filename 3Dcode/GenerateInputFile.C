@@ -70,7 +70,7 @@ void GenerateInputFile() {
 
   const int nBinsBjets = 3 ;   // this must always be 3
 
-  //-- met2-ht1-v1
+////-- met2-ht1-v1
 //const int nBinsMET   = 2 ;
 //const int nBinsHT    = 1 ;
 //float Mbins[nBinsMET+1] = {150.,250.,99999.};
@@ -82,11 +82,11 @@ void GenerateInputFile() {
 //float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,800.,99999.};
 
-  //-- met3-ht3-v1
-  const int nBinsMET   = 3 ;
-  const int nBinsHT    = 3 ;
-  float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
-  float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
+////-- met3-ht3-v1
+//const int nBinsMET   = 3 ;
+//const int nBinsHT    = 3 ;
+//float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
+//float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 
 ////-- met4-ht3-v1
 //const int nBinsMET   = 4 ;
@@ -107,10 +107,10 @@ void GenerateInputFile() {
 //float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
 
   //-- met5-ht5-v1
-//const int nBinsMET   = 5 ;
-//const int nBinsHT    = 5 ;
-//float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,99999.};
-//float Hbins[nBinsHT+1] = {400.,500.,600.,800.,1000.,99999.};
+  const int nBinsMET   = 5 ;
+  const int nBinsHT    = 5 ;
+  float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,99999.};
+  float Hbins[nBinsHT+1] = {400.,500.,600.,800.,1000.,99999.};
 
   //-- met6-ht6-v1
 //const int nBinsMET   = 6 ;
@@ -312,24 +312,24 @@ void GenerateInputFile() {
 
         TString allcuts = cuts0lep+cut ;
 
-        printf(" N_0lep -- HT,MET,nbjet bins (%d,%d,%d): cuts=%s\n", j,i,k, allcuts.Data()) ;
+        printf(" N_0lep -- HT,MET,nbjet bins (%d,%d,%d): cuts=%s\n", j,i,k, allcuts.Data()) ; cout << flush ;
 
         chainTT.Project("ht_tt","HT",allcuts);
         double tterr(0.) ;
         double ttval = ht_tt->IntegralAndError(1,10,tterr) ;
-        printf(" N_0lep, tt   --  npass=%7.1f +/- %6.1f\n", ttval,tterr) ;
+        printf(" N_0lep, tt   --  npass=%7.1f +/- %6.1f\n", ttval,tterr) ; cout << flush ;
         ht_tt->Reset() ;
 
         chainQCD.Project("ht_qcd","HT",allcuts);
         double qcderr(0.) ;
         double qcdval = ht_qcd->IntegralAndError(1,10,qcderr) ;
-        printf(" N_0lep, qcd  --  npass=%7.1f +/- %6.1f\n", qcdval,qcderr) ;
+        printf(" N_0lep, qcd  --  npass=%7.1f +/- %6.1f\n", qcdval,qcderr) ; cout << flush ;
         ht_qcd->Reset() ;
 
         chainZnn.Project("ht_znn","HT",allcuts);
         double znnerr(0.) ;
         double znnval = ht_znn->IntegralAndError(1,10,znnerr) ;
-        printf(" N_0lep, znn  --  npass=%7.1f +/- %6.1f\n", znnval,znnerr) ;
+        printf(" N_0lep, znn  --  npass=%7.1f +/- %6.1f\n", znnval,znnerr) ; cout << flush ;
         ht_znn->Reset() ;
 
         double allval = ttval+qcdval+znnval ;
@@ -414,24 +414,24 @@ void GenerateInputFile() {
 
         TString allcuts = cuts1lep+cut ;
 
-        printf(" N_1lep -- HT,MET,nbjet bins (%d,%d,%d): cuts=%s\n", j,i,k, allcuts.Data()) ;
+        printf(" N_1lep -- HT,MET,nbjet bins (%d,%d,%d): cuts=%s\n", j,i,k, allcuts.Data()) ; cout << flush ;
 
         chainTT.Project("ht_tt","HT",allcuts);
         double tterr(0.) ;
         double ttval = ht_tt->IntegralAndError(1,10,tterr) ;
-        printf(" N_1lep, tt   --  npass=%7.1f +/- %6.1f\n", ttval,tterr) ;
+        printf(" N_1lep, tt   --  npass=%7.1f +/- %6.1f\n", ttval,tterr) ; cout << flush ;
         ht_tt->Reset() ;
 
         chainQCD.Project("ht_qcd","HT",allcuts);
         double qcderr(0.) ;
         double qcdval = ht_qcd->IntegralAndError(1,10,qcderr) ;
-        printf(" N_1lep, qcd  --  npass=%7.1f +/- %6.1f\n", qcdval,qcderr) ;
+        printf(" N_1lep, qcd  --  npass=%7.1f +/- %6.1f\n", qcdval,qcderr) ; cout << flush ;
         ht_qcd->Reset() ;
 
         chainZnn.Project("ht_znn","HT",allcuts);
         double znnerr(0.) ;
         double znnval = ht_znn->IntegralAndError(1,10,znnerr) ;
-        printf(" N_1lep, znn  --  npass=%7.1f +/- %6.1f\n", znnval,znnerr) ;
+        printf(" N_1lep, znn  --  npass=%7.1f +/- %6.1f\n", znnval,znnerr) ; cout << flush ;
         ht_znn->Reset() ;
 
         double allval = ttval+qcdval+znnval ;
@@ -513,24 +513,24 @@ void GenerateInputFile() {
 
         TString allcuts = cutsldp+cut ;
 
-        printf(" N_ldp -- HT,MET,nbjet bins (%d,%d,%d): cuts=%s\n", j,i,k, allcuts.Data()) ;
+        printf(" N_ldp -- HT,MET,nbjet bins (%d,%d,%d): cuts=%s\n", j,i,k, allcuts.Data()) ; cout << flush ;
 
         chainTT.Project("ht_tt","HT",allcuts);
         double tterr(0.) ;
         double ttval = ht_tt->IntegralAndError(1,10,tterr) ;
-        printf(" N_ldp, tt   --  npass=%7.1f +/- %6.1f\n", ttval,tterr) ;
+        printf(" N_ldp, tt   --  npass=%7.1f +/- %6.1f\n", ttval,tterr) ; cout << flush ;
         ht_tt->Reset() ;
 
         chainQCD.Project("ht_qcd","HT",allcuts);
         double qcderr(0.) ;
         double qcdval = ht_qcd->IntegralAndError(1,10,qcderr) ;
-        printf(" N_ldp, qcd  --  npass=%7.1f +/- %6.1f\n", qcdval,qcderr) ;
+        printf(" N_ldp, qcd  --  npass=%7.1f +/- %6.1f\n", qcdval,qcderr) ; cout << flush ;
         ht_qcd->Reset() ;
 
         chainZnn.Project("ht_znn","HT",allcuts);
         double znnerr(0.) ;
         double znnval = ht_znn->IntegralAndError(1,10,znnerr) ;
-        printf(" N_ldp, znn  --  npass=%7.1f +/- %6.1f\n", znnval,znnerr) ;
+        printf(" N_ldp, znn  --  npass=%7.1f +/- %6.1f\n", znnval,znnerr) ; cout << flush ;
         ht_znn->Reset() ;
 
         double allval = ttval+qcdval+znnval ;
@@ -603,12 +603,12 @@ void GenerateInputFile() {
       chainAll.Project("ht","HT",cutslsb+cut+pass);
       float npass = ht->GetSumOfWeights();
       TString allcutspass = cutslsb+cut+pass ;
-      printf(" R_lsb -- HT,MET bins (%d,%d): npass=%10.1f, cuts=%s\n", j,k,npass, allcutspass.Data()) ;
+      printf(" R_lsb -- HT,MET bins (%d,%d): npass=%10.1f, cuts=%s\n", j,k,npass, allcutspass.Data()) ; cout << flush ;
         ht->Reset() ;
       chainAll.Project("ht","HT",cutslsb+cut+fail);
       float nfail = ht->GetSumOfWeights();
       TString allcutsfail = cutslsb+cut+fail ;
-      printf(" R_lsb -- HT,MET bins (%d,%d): nfail=%10.1f, cuts=%s\n", j,k,nfail, allcutsfail.Data()) ;
+      printf(" R_lsb -- HT,MET bins (%d,%d): nfail=%10.1f, cuts=%s\n", j,k,nfail, allcutsfail.Data()) ; cout << flush ;
         ht->Reset() ;
       
       inFile << Rlsb << "      \t" << npass/nfail << endl;
@@ -621,7 +621,7 @@ void GenerateInputFile() {
   }
 
   
-  printf("\n\n-----------------------------------------------------------------\n\n") ;
+  printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
 
   // Z -> ee observables 
 
@@ -646,7 +646,7 @@ void GenerateInputFile() {
       dyTree->Project("ht","HT",allcuts);
       double allerr(0.) ;
       double allval = ht->IntegralAndError(1,10,allerr) ;
-      printf(" N_Zee -- HT,MET bins (%d,%d): events=%7.1f +/- %6.1f, cuts=%s\n", j,i,allval,allerr,allcuts.Data() ) ;
+      printf(" N_Zee -- HT,MET bins (%d,%d): events=%7.1f +/- %6.1f, cuts=%s\n", j,i,allval,allerr,allcuts.Data() ) ; cout << flush ;
         ht->Reset() ;
 
       inFile << obs_Zee << "  \t" << (int)allval << endl;
@@ -661,7 +661,7 @@ void GenerateInputFile() {
   }
 
   
-  printf("\n\n-----------------------------------------------------------------\n\n") ;
+  printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
 
   // Z -> mm observables
 
@@ -686,7 +686,7 @@ void GenerateInputFile() {
       dyTree->Project("ht","HT",allcuts);
       double allerr(0.) ;
       double allval = ht->IntegralAndError(1,10,allerr) ;
-      printf(" N_Zmm -- HT,MET bins (%d,%d): events=%7.1f +/- %6.1f, cuts=%s\n", j,i,allval,allerr,allcuts.Data() ) ;
+      printf(" N_Zmm -- HT,MET bins (%d,%d): events=%7.1f +/- %6.1f, cuts=%s\n", j,i,allval,allerr,allcuts.Data() ) ; cout << flush ;
         ht->Reset() ;
 
       inFile << obs_Zmm << "  \t" << (int)allval << endl;
@@ -705,7 +705,7 @@ void GenerateInputFile() {
   // Nttbarsingletopzjetsmc_ldp
 
 
-  printf("\n\n-----------------------------------------------------------------\n\n") ;
+  printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
 
   for (int i = 0 ; i < nBinsMET ; i++) {
     for (int j = 0 ; j < nBinsHT ; j++) {
