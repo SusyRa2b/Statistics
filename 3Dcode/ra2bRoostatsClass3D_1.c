@@ -520,19 +520,55 @@
 
       // print out initial values:
 
+//      printf("\n\n\n --------- Observables and floating parameter initial values. ------------\n\n") ;
+//      
+//      printf("           |  Nobs   ||  ttwj  |  QCD  |  Znn  |\n") ;
+//      printf("----------------------------------------------------\n") ;
+//
+//      for (int i = 0 ; i < nBinsMET ; i++) {
+//	for (int j = 0 ; j < nBinsHT ; j++) {
+//	  for (int k = 0 ; k < nBinsBtag ; k++) {     
+//
+//	    cout << " MET bin " << i+1 << ", HT bin " << j+1 << ", Btag bin " << k+1 << endl;
+//	    printf(" 0-lep     | %5d   || %5.1f | %5.1f | %5.1f |\n", N_0lep[i][j][k], initialval_ttwj[i][j][k], initialval_qcd[i][j][k], initialval_znn[i][j][k] ) ;
+//	    printf(" ldp       | %5d   || *%5.1f | %5.1f |*%5.1f |\n", N_ldp[i][j][k], Nttbarsingletopzjetsmc_ldp[i][j][k], initialval_qcd_ldp[i][j][k], NZnnmc_ldp[i][j][k] ) ;
+//	    printf("----------------------------------------------------\n") ;
+//
+//	  }
+//	}
+//      }
+
+      printf("\n * means fixed MC value.\n\n\n") ;
+
       printf("\n\n\n --------- Observables and floating parameter initial values. ------------\n\n") ;
       
-      printf("           |  Nobs   ||  ttwj  |  QCD  |  Znn  |\n") ;
-      printf("----------------------------------------------------\n") ;
+      printf("           |  Nobs   |  Model |    PDF       ||  ttwj  |  QCD  |  Znn  |\n") ;
+      printf("-----------+---------+--------+--------------++--------+-------+-------+\n") ;
 
       for (int i = 0 ; i < nBinsMET ; i++) {
 	for (int j = 0 ; j < nBinsHT ; j++) {
 	  for (int k = 0 ; k < nBinsBtag ; k++) {     
 
+            double model_0lep = initialval_ttwj[i][j][k] + initialval_qcd[i][j][k] + initialval_znn[i][j][k] ;
+            double model_ldp  = Nttbarsingletopzjetsmc_ldp[i][j][k] + initialval_qcd_ldp[i][j][k] + NZnnmc_ldp[i][j][k] ;
+            double pdf_0lep = TMath::PoissonI( N_0lep[i][j][k], model_0lep ) ;
+            double pdf_ldp  = TMath::PoissonI( N_ldp[i][j][k] , model_ldp  ) ;
+            char warning0lep[3] ;
+            char warningldp[3] ;
+            sprintf( warning0lep,"   ") ;
+            sprintf( warningldp,"   ") ;
+            if ( pdf_0lep < 0.0001   ) { sprintf( warning0lep, "*  ") ; }
+            if ( pdf_0lep < 0.00001  ) { sprintf( warning0lep, "** ") ; }
+            if ( pdf_0lep < 0.000001 ) { sprintf( warning0lep, "***") ; }
+            if ( pdf_ldp < 0.0001   ) { sprintf( warningldp, "*  ") ; }
+            if ( pdf_ldp < 0.00001  ) { sprintf( warningldp, "** ") ; }
+            if ( pdf_ldp < 0.000001 ) { sprintf( warningldp, "***") ; }
 	    cout << " MET bin " << i+1 << ", HT bin " << j+1 << ", Btag bin " << k+1 << endl;
-	    printf(" 0-lep     | %5d   || %5.1f | %5.1f | %5.1f |\n", N_0lep[i][j][k], initialval_ttwj[i][j][k], initialval_qcd[i][j][k], initialval_znn[i][j][k] ) ;
-	    printf(" ldp       | %5d   || *%5.1f | %5.1f |*%5.1f |\n", N_ldp[i][j][k], Nttbarsingletopzjetsmc_ldp[i][j][k], initialval_qcd_ldp[i][j][k], NZnnmc_ldp[i][j][k] ) ;
-	    printf("----------------------------------------------------\n") ;
+	    printf(" 0-lep     | %5d   | %6.1f | %8.6f %3s ||  %5.1f | %5.1f | %5.1f |\n", N_0lep[i][j][k], model_0lep, pdf_0lep, warning0lep,
+                                                                                       initialval_ttwj[i][j][k], initialval_qcd[i][j][k], initialval_znn[i][j][k] ) ;
+	    printf(" ldp       | %5d   | %6.1f | %8.6f %3s || *%5.1f | %5.1f |*%5.1f |\n", N_ldp[i][j][k], model_ldp, pdf_ldp, warningldp,
+                                                                                       Nttbarsingletopzjetsmc_ldp[i][j][k], initialval_qcd_ldp[i][j][k], NZnnmc_ldp[i][j][k] ) ;
+            printf("-----------+---------+--------+--------------++--------+-------+-------+\n") ;
 
 	  }
 	}
@@ -735,7 +771,12 @@
 
       //++++++++++
 
-      setSusyScanPoint( inputScanFile,  m0,  m12,  isT1bbbb,  t1bbbbXsec, inputSusy_deff_dbtageff_file ) ;
+      bool ssspOk = setSusyScanPoint( inputScanFile,  m0,  m12,  isT1bbbb,  t1bbbbXsec, inputSusy_deff_dbtageff_file ) ;
+
+      if ( !ssspOk ) {
+         printf("\n\n\n *** setSusyScanPoint failed.  I quit.\n\n\n") ;
+         return false ;
+      }
       
       //++++++++++
 
@@ -1462,6 +1503,7 @@
     }  // end of initialize
 
 
+   //=====================================================================================================================
 
     bool ra2bRoostatsClass3D_1::setSusyScanPoint( const char* inputScanFile,
 						  double m0, double m12, bool isT1bbbb, double t1bbbbXsec,
@@ -1722,7 +1764,7 @@
       infp.close() ;
 
       if ( !found ) {
-	printf("\n\n *** Point not found in scan.\n\n" ) ;
+	printf("\n\n *** Point not found in scan.  Check this file %s\n  to see if this point is there: mgl=%4.0f, mlsp=%4.0f\n\n", inputScanFile, m0, m12 ) ;
 	return false ;
       }
 
@@ -1738,6 +1780,7 @@
 	return false ;
       } 
 
+      found = false ;
 
       while ( infb.good() ) {
 
@@ -1809,12 +1852,13 @@
       if ( found ) {
 	return true ;
       } else {
-	printf("\n\n *** Point not found in scan.\n\n" ) ;
+	printf("\n\n *** Point not found in scan.  Check this file %s\n  to see if this point is there: mgl=%4.0f, mlsp=%4.0f\n\n", inputSusy_deff_dbtageff_file, m0, m12 ) ;
 	return false ;
       }
 
     }  // end of setSusyScanPoint
 
+   //==============================================================================================================
 
     void ra2bRoostatsClass3D_1::mismatchErr( char* label, TString inPar ) {
 
@@ -1826,3 +1870,13 @@
       return;
 
     }
+
+   //==============================================================================================================
+
+
+
+
+
+
+
+
