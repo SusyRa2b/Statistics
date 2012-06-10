@@ -526,8 +526,8 @@
 
       printf("\n\n\n --------- Observables and floating parameter initial values. ------------\n\n") ;
       
-      printf("           |  Nobs   |  Model |    PDF       ||  ttwj  |  QCD  |  Znn  |\n") ;
-      printf("-----------+---------+--------+--------------++--------+-------+-------+\n") ;
+      printf("           |  Nobs   |  Model |    PDF        ||  ttwj  |  QCD  |  Znn  |\n") ;
+      printf("-----------+---------+--------+---------------++--------+-------+-------+\n") ;
 
       for (int i = 0 ; i < nBinsMET ; i++) {
 	for (int j = 0 ; j < nBinsHT ; j++) {
@@ -537,8 +537,8 @@
             double model_ldp  = Nttbarsingletopzjetsmc_ldp[i][j][k] + initialval_qcd_ldp[i][j][k] + NZnnmc_ldp[i][j][k] ;
             double pdf_0lep = TMath::PoissonI( N_0lep[i][j][k], model_0lep ) ;
             double pdf_ldp  = TMath::PoissonI( N_ldp[i][j][k] , model_ldp  ) ;
-            char warning0lep[3] ;
-            char warningldp[3] ;
+            char warning0lep[4] ;
+            char warningldp[4] ;
             sprintf( warning0lep,"   ") ;
             sprintf( warningldp,"   ") ;
             if ( pdf_0lep < 0.0001   ) { sprintf( warning0lep, "*  ") ; }
@@ -548,11 +548,11 @@
             if ( pdf_ldp < 0.00001  ) { sprintf( warningldp, "** ") ; }
             if ( pdf_ldp < 0.000001 ) { sprintf( warningldp, "***") ; }
 	    cout << " MET bin " << i+1 << ", HT bin " << j+1 << ", Btag bin " << k+1 << endl;
-	    printf(" 0-lep     | %5d   | %6.1f | %8.6f %3s ||  %5.1f | %5.1f | %5.1f |\n", N_0lep[i][j][k], model_0lep, pdf_0lep, warning0lep,
+	    printf(" 0-lep     | %5d   | %6.1f | %8.6f %4s ||  %5.1f | %5.1f | %5.1f |\n", N_0lep[i][j][k], model_0lep, pdf_0lep, warning0lep,
                                                                                        initialval_ttwj[i][j][k], initialval_qcd[i][j][k], initialval_znn[i][j][k] ) ;
-	    printf(" ldp       | %5d   | %6.1f | %8.6f %3s || *%5.1f | %5.1f |*%5.1f |\n", N_ldp[i][j][k], model_ldp, pdf_ldp, warningldp,
+	    printf(" ldp       | %5d   | %6.1f | %8.6f %4s || *%5.1f | %5.1f |*%5.1f |\n", N_ldp[i][j][k], model_ldp, pdf_ldp, warningldp,
                                                                                        Nttbarsingletopzjetsmc_ldp[i][j][k], initialval_qcd_ldp[i][j][k], NZnnmc_ldp[i][j][k] ) ;
-            printf("-----------+---------+--------+--------------++--------+-------+-------+\n") ;
+            printf("-----------+---------+--------+---------------++--------+-------+-------+\n") ;
 
 	  }
 	}
