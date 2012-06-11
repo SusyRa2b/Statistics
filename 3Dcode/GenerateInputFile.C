@@ -9,12 +9,14 @@
 #include "TROOT.h"
 #include "TH1F.h"
 #include "TRegexp.h"
+#include "TSystem.h"
 
   using std::stringstream ;
   using std::ofstream ;
   using std::endl ;
 
   void saveHist(const char* filename, const char* pat) ;
+  TH1F* bookHist(const char* hname, const char* htitle, const char* selstring, int nbjet, int nBinsMET, int nBinsHT ) ;
 
 // to add in: nMu, nEl, minDelPhi
 
@@ -100,17 +102,17 @@ void GenerateInputFile() {
 //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,99999.};
 
-  //-- met4-ht4-v1
+////-- met4-ht4-v1
 //const int nBinsMET   = 4 ;
 //const int nBinsHT    = 4 ;
 //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
 //float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
 
-  //-- met5-ht5-v1
-  const int nBinsMET   = 5 ;
-  const int nBinsHT    = 5 ;
-  float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,99999.};
-  float Hbins[nBinsHT+1] = {400.,500.,600.,800.,1000.,99999.};
+////-- met5-ht5-v1
+//const int nBinsMET   = 5 ;
+//const int nBinsHT    = 5 ;
+//float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,99999.};
+//float Hbins[nBinsHT+1] = {400.,500.,600.,800.,1000.,99999.};
 
   //-- met6-ht6-v1
 //const int nBinsMET   = 6 ;
@@ -118,17 +120,17 @@ void GenerateInputFile() {
 //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,400.,99999.};
 //float Hbins[nBinsHT+1] = {400.,500.,600.,700.,800.,900.,99999.};
 
-  //-- met8-ht8-v1
+  //-- met7-ht7-v1
 //const int nBinsMET   = 7 ;
 //const int nBinsHT    = 7 ;
 //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,400.,500.,99999.};
 //float Hbins[nBinsHT+1] = {400.,500.,600.,700.,800.,900.,1000.,99999.};
 
   //-- met8-ht8-v1
-//const int nBinsMET   = 8 ;
-//const int nBinsHT    = 8 ;
-//float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,400.,450.,600.,99999.};
-//float Hbins[nBinsHT+1] = {400.,500.,600.,700.,800.,900.,1000.,1200.,99999.};
+  const int nBinsMET   = 8 ;
+  const int nBinsHT    = 8 ;
+  float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,400.,450.,600.,99999.};
+  float Hbins[nBinsHT+1] = {400.,500.,600.,700.,800.,900.,1000.,1200.,99999.};
 
 
   TString sMbins[nBinsMET];
@@ -195,69 +197,77 @@ void GenerateInputFile() {
 
   //--- Output histograms.
 
-     int nbins = nBinsMET*(nBinsHT+1) + 1 ;
 
-     TH1F* hmctruth_susy_0lep_1b = new TH1F("hmctruth_susy_0lep_1b", "0 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_ttwj_0lep_1b = new TH1F("hmctruth_ttwj_0lep_1b", "0 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_qcd_0lep_1b  = new TH1F("hmctruth_qcd_0lep_1b" , "0 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_znn_0lep_1b  = new TH1F("hmctruth_znn_0lep_1b" , "0 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_allsm_0lep_1b  = new TH1F("hmctruth_allsm_0lep_1b" , "0 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     TH1F* hmctruth_susy_0lep_1b = bookHist( "hmctruth_susy_0lep_1b", "0 Lep, 1 btag", "0lep", 1, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_ttwj_0lep_1b = bookHist( "hmctruth_ttwj_0lep_1b", "0 Lep, 1 btag", "0lep", 1, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_qcd_0lep_1b  = bookHist( "hmctruth_qcd_0lep_1b" , "0 Lep, 1 btag", "0lep", 1, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_znn_0lep_1b  = bookHist( "hmctruth_znn_0lep_1b" , "0 Lep, 1 btag", "0lep", 1, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_allsm_0lep_1b  = bookHist( "hmctruth_allsm_0lep_1b", "0 Lep, 1 btag", "0lep", 1, nBinsMET, nBinsHT ) ;
 
-     TH1F* hmctruth_susy_0lep_2b = new TH1F("hmctruth_susy_0lep_2b", "0 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_ttwj_0lep_2b = new TH1F("hmctruth_ttwj_0lep_2b", "0 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_qcd_0lep_2b  = new TH1F("hmctruth_qcd_0lep_2b" , "0 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_znn_0lep_2b  = new TH1F("hmctruth_znn_0lep_2b" , "0 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_allsm_0lep_2b  = new TH1F("hmctruth_allsm_0lep_2b" , "0 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     TH1F* hmctruth_susy_0lep_2b = bookHist( "hmctruth_susy_0lep_2b", "0 Lep, 2 btag", "0lep", 2, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_ttwj_0lep_2b = bookHist( "hmctruth_ttwj_0lep_2b", "0 Lep, 2 btag", "0lep", 2, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_qcd_0lep_2b  = bookHist( "hmctruth_qcd_0lep_2b" , "0 Lep, 2 btag", "0lep", 2, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_znn_0lep_2b  = bookHist( "hmctruth_znn_0lep_2b" , "0 Lep, 2 btag", "0lep", 2, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_allsm_0lep_2b  = bookHist( "hmctruth_allsm_0lep_2b", "0 Lep, 2 btag", "0lep", 2, nBinsMET, nBinsHT ) ;
 
-     TH1F* hmctruth_susy_0lep_3b = new TH1F("hmctruth_susy_0lep_3b", "0 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_ttwj_0lep_3b = new TH1F("hmctruth_ttwj_0lep_3b", "0 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_qcd_0lep_3b  = new TH1F("hmctruth_qcd_0lep_3b" , "0 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_znn_0lep_3b  = new TH1F("hmctruth_znn_0lep_3b" , "0 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_allsm_0lep_3b  = new TH1F("hmctruth_allsm_0lep_3b" , "0 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-
-
-
-     TH1F* hmctruth_susy_1lep_1b = new TH1F("hmctruth_susy_1lep_1b", "1 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_ttwj_1lep_1b = new TH1F("hmctruth_ttwj_1lep_1b", "1 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_qcd_1lep_1b  = new TH1F("hmctruth_qcd_1lep_1b" , "1 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_znn_1lep_1b  = new TH1F("hmctruth_znn_1lep_1b" , "1 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_allsm_1lep_1b  = new TH1F("hmctruth_allsm_1lep_1b" , "1 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-
-     TH1F* hmctruth_susy_1lep_2b = new TH1F("hmctruth_susy_1lep_2b", "1 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_ttwj_1lep_2b = new TH1F("hmctruth_ttwj_1lep_2b", "1 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_qcd_1lep_2b  = new TH1F("hmctruth_qcd_1lep_2b" , "1 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_znn_1lep_2b  = new TH1F("hmctruth_znn_1lep_2b" , "1 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_allsm_1lep_2b  = new TH1F("hmctruth_allsm_1lep_2b" , "1 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-
-     TH1F* hmctruth_susy_1lep_3b = new TH1F("hmctruth_susy_1lep_3b", "1 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_ttwj_1lep_3b = new TH1F("hmctruth_ttwj_1lep_3b", "1 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_qcd_1lep_3b  = new TH1F("hmctruth_qcd_1lep_3b" , "1 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_znn_1lep_3b  = new TH1F("hmctruth_znn_1lep_3b" , "1 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_allsm_1lep_3b  = new TH1F("hmctruth_allsm_1lep_3b" , "1 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     TH1F* hmctruth_susy_0lep_3b = bookHist( "hmctruth_susy_0lep_3b", "0 Lep, 3 btag", "0lep", 3, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_ttwj_0lep_3b = bookHist( "hmctruth_ttwj_0lep_3b", "0 Lep, 3 btag", "0lep", 3, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_qcd_0lep_3b  = bookHist( "hmctruth_qcd_0lep_3b" , "0 Lep, 3 btag", "0lep", 3, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_znn_0lep_3b  = bookHist( "hmctruth_znn_0lep_3b" , "0 Lep, 3 btag", "0lep", 3, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_allsm_0lep_3b  = bookHist( "hmctruth_allsm_0lep_3b", "0 Lep, 3 btag", "0lep", 3, nBinsMET, nBinsHT ) ;
 
 
 
-     TH1F* hmctruth_susy_ldp_1b = new TH1F("hmctruth_susy_ldp_1b", "LDP, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_ttwj_ldp_1b = new TH1F("hmctruth_ttwj_ldp_1b", "LDP, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_qcd_ldp_1b  = new TH1F("hmctruth_qcd_ldp_1b" , "LDP, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_znn_ldp_1b  = new TH1F("hmctruth_znn_ldp_1b" , "LDP, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_allsm_ldp_1b  = new TH1F("hmctruth_allsm_ldp_1b" , "LDP, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
 
-     TH1F* hmctruth_susy_ldp_2b = new TH1F("hmctruth_susy_ldp_2b", "LDP, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_ttwj_ldp_2b = new TH1F("hmctruth_ttwj_ldp_2b", "LDP, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_qcd_ldp_2b  = new TH1F("hmctruth_qcd_ldp_2b" , "LDP, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_znn_ldp_2b  = new TH1F("hmctruth_znn_ldp_2b" , "LDP, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_allsm_ldp_2b  = new TH1F("hmctruth_allsm_ldp_2b" , "LDP, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     TH1F* hmctruth_susy_1lep_1b = bookHist( "hmctruth_susy_1lep_1b", "1 Lep, 1 btag", "1lep", 1, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_ttwj_1lep_1b = bookHist( "hmctruth_ttwj_1lep_1b", "1 Lep, 1 btag", "1lep", 1, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_qcd_1lep_1b  = bookHist( "hmctruth_qcd_1lep_1b" , "1 Lep, 1 btag", "1lep", 1, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_znn_1lep_1b  = bookHist( "hmctruth_znn_1lep_1b" , "1 Lep, 1 btag", "1lep", 1, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_allsm_1lep_1b  = bookHist( "hmctruth_allsm_1lep_1b", "1 Lep, 1 btag", "1lep", 1, nBinsMET, nBinsHT ) ;
 
-     TH1F* hmctruth_susy_ldp_3b = new TH1F("hmctruth_susy_ldp_3b", "LDP, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_ttwj_ldp_3b = new TH1F("hmctruth_ttwj_ldp_3b", "LDP, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_qcd_ldp_3b  = new TH1F("hmctruth_qcd_ldp_3b" , "LDP, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_znn_ldp_3b  = new TH1F("hmctruth_znn_ldp_3b" , "LDP, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_allsm_ldp_3b  = new TH1F("hmctruth_allsm_ldp_3b" , "LDP, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+     TH1F* hmctruth_susy_1lep_2b = bookHist( "hmctruth_susy_1lep_2b", "1 Lep, 2 btag", "1lep", 2, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_ttwj_1lep_2b = bookHist( "hmctruth_ttwj_1lep_2b", "1 Lep, 2 btag", "1lep", 2, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_qcd_1lep_2b  = bookHist( "hmctruth_qcd_1lep_2b" , "1 Lep, 2 btag", "1lep", 2, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_znn_1lep_2b  = bookHist( "hmctruth_znn_1lep_2b" , "1 Lep, 2 btag", "1lep", 2, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_allsm_1lep_2b  = bookHist( "hmctruth_allsm_1lep_2b", "1 Lep, 2 btag", "1lep", 2, nBinsMET, nBinsHT ) ;
+
+     TH1F* hmctruth_susy_1lep_3b = bookHist( "hmctruth_susy_1lep_3b", "1 Lep, 3 btag", "1lep", 3, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_ttwj_1lep_3b = bookHist( "hmctruth_ttwj_1lep_3b", "1 Lep, 3 btag", "1lep", 3, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_qcd_1lep_3b  = bookHist( "hmctruth_qcd_1lep_3b" , "1 Lep, 3 btag", "1lep", 3, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_znn_1lep_3b  = bookHist( "hmctruth_znn_1lep_3b" , "1 Lep, 3 btag", "1lep", 3, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_allsm_1lep_3b  = bookHist( "hmctruth_allsm_1lep_3b", "1 Lep, 3 btag", "1lep", 3, nBinsMET, nBinsHT ) ;
 
 
-     TH1F* hmctruth_fit_zee_1b  = new TH1F("hmctruth_fit_zee_1b" , "Zee" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hmctruth_fit_zmm_1b  = new TH1F("hmctruth_fit_zmm_1b" , "Zmm" , nbins, 0.5, nbins+0.5 ) ;
+
+
+     TH1F* hmctruth_susy_ldp_1b = bookHist( "hmctruth_susy_ldp_1b", "LDP, 1 btag", "ldp", 1, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_ttwj_ldp_1b = bookHist( "hmctruth_ttwj_ldp_1b", "LDP, 1 btag", "ldp", 1, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_qcd_ldp_1b  = bookHist( "hmctruth_qcd_ldp_1b" , "LDP, 1 btag", "ldp", 1, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_znn_ldp_1b  = bookHist( "hmctruth_znn_ldp_1b" , "LDP, 1 btag", "ldp", 1, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_allsm_ldp_1b  = bookHist( "hmctruth_allsm_ldp_1b", "LDP, 1 btag", "ldp", 1, nBinsMET, nBinsHT ) ;
+
+     TH1F* hmctruth_susy_ldp_2b = bookHist( "hmctruth_susy_ldp_2b", "LDP, 2 btag", "ldp", 2, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_ttwj_ldp_2b = bookHist( "hmctruth_ttwj_ldp_2b", "LDP, 2 btag", "ldp", 2, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_qcd_ldp_2b  = bookHist( "hmctruth_qcd_ldp_2b" , "LDP, 2 btag", "ldp", 2, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_znn_ldp_2b  = bookHist( "hmctruth_znn_ldp_2b" , "LDP, 2 btag", "ldp", 2, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_allsm_ldp_2b  = bookHist( "hmctruth_allsm_ldp_2b", "LDP, 2 btag", "ldp", 2, nBinsMET, nBinsHT ) ;
+
+     TH1F* hmctruth_susy_ldp_3b = bookHist( "hmctruth_susy_ldp_3b", "LDP, 3 btag", "ldp", 3, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_ttwj_ldp_3b = bookHist( "hmctruth_ttwj_ldp_3b", "LDP, 3 btag", "ldp", 3, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_qcd_ldp_3b  = bookHist( "hmctruth_qcd_ldp_3b" , "LDP, 3 btag", "ldp", 3, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_znn_ldp_3b  = bookHist( "hmctruth_znn_ldp_3b" , "LDP, 3 btag", "ldp", 3, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_allsm_ldp_3b  = bookHist( "hmctruth_allsm_ldp_3b", "LDP, 3 btag", "ldp", 3, nBinsMET, nBinsHT ) ;
+
+
+
+
+     TH1F* hmctruth_qcd_lsb_pass = new TH1F("hmctruth_qcd_lsb_pass","LSB, QCD pass", 1+nBinsBjets*(nBinsHT+1), 0.5, 1+nBinsBjets*(nBinsHT+1)+0.5 )  ;
+     TH1F* hmctruth_qcd_lsb_fail = new TH1F("hmctruth_qcd_lsb_fail","LSB, QCD fail", 1+nBinsBjets*(nBinsHT+1), 0.5, 1+nBinsBjets*(nBinsHT+1)+0.5 )  ;
+
+
+
+     TH1F* hmctruth_fit_zee_1b  = bookHist("hmctruth_fit_zee_1b" , "Zee" , "Zee", 1, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_fit_zmm_1b  = bookHist("hmctruth_fit_zmm_1b" , "Zmm" , "Zmm", 1, nBinsMET, nBinsHT ) ;
 
 
 
@@ -600,15 +610,29 @@ void GenerateInputFile() {
       
       TString pass = "&&minDelPhiN>4";
       TString fail = "&&minDelPhiN<4";
-      chainAll.Project("ht","HT",cutslsb+cut+pass);
-      float npass = ht->GetSumOfWeights();
       TString allcutspass = cutslsb+cut+pass ;
+      chainAll.Project("ht","HT",allcutspass);
+      double npasserr(0.) ;
+      float npass = ht->IntegralAndError(1,10,npasserr) ;
       printf(" R_lsb -- HT,MET bins (%d,%d): npass=%10.1f, cuts=%s\n", j,k,npass, allcutspass.Data()) ; cout << flush ;
+      hmctruth_qcd_lsb_pass->SetBinContent( 1+k*(nBinsHT+1)+j+1, npass ) ;
+      hmctruth_qcd_lsb_pass->SetBinError(   1+k*(nBinsHT+1)+j+1, npasserr ) ;
+      char passbinlabel[1000] ;
+      sprintf( passbinlabel, "ldp_H%d_%db_pass", j+1, k+1 ) ;
+      hmctruth_qcd_lsb_pass->GetXaxis()->SetBinLabel( 1+k*(nBinsHT+1)+j+1, passbinlabel ) ;
         ht->Reset() ;
-      chainAll.Project("ht","HT",cutslsb+cut+fail);
-      float nfail = ht->GetSumOfWeights();
+
+
       TString allcutsfail = cutslsb+cut+fail ;
+      chainAll.Project("ht","HT",allcutsfail);
+      double nfailerr(0.) ;
+      float nfail = ht->IntegralAndError(1,10,nfailerr) ;
       printf(" R_lsb -- HT,MET bins (%d,%d): nfail=%10.1f, cuts=%s\n", j,k,nfail, allcutsfail.Data()) ; cout << flush ;
+      hmctruth_qcd_lsb_fail->SetBinContent( 1+k*(nBinsHT+1)+j+1, nfail ) ;
+      hmctruth_qcd_lsb_fail->SetBinError(   1+k*(nBinsHT+1)+j+1, nfailerr ) ;
+      char failbinlabel[1000] ;
+      sprintf( failbinlabel, "ldp_H%d_%db_fail", j+1, k+1 ) ;
+      hmctruth_qcd_lsb_fail->GetXaxis()->SetBinLabel( 1+k*(nBinsHT+1)+j+1, failbinlabel ) ;
         ht->Reset() ;
       
       inFile << Rlsb << "      \t" << npass/nfail << endl;
@@ -911,7 +935,10 @@ void GenerateInputFile() {
 
   }
 
-  saveHist( "gi-plots.root", "hmc*" ) ;
+  gSystem->Exec("mkdir -p rootfiles") ;
+  char outHistName[1000] ;
+  sprintf( outHistName, "rootfiles/gi-plots-met%d-ht%d.root", nBinsMET, nBinsHT ) ;
+  saveHist( outHistName, "hmc*" ) ;
 
 
   inFile.close();
@@ -945,6 +972,40 @@ void saveHist(const char* filename, const char* pat)
 }
 
 //==========================================================================================
+
+
+  TH1F* bookHist(const char* hname, const char* htitle, const char* selstring, int nbjet, int nBinsMET, int nBinsHT ) {
+
+     int nbins = nBinsMET*(nBinsHT+1) + 1 ;
+
+     TH1F* retVal = new TH1F( hname, htitle, nbins, 0.5 + 0.1*(nbjet-2), nbins+0.5 + 0.1*(nbjet-2) ) ;
+     TAxis* xaxis = retVal->GetXaxis() ;
+
+     for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+        for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+           int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+           char binlabel[1000] ;
+           sprintf( binlabel, "%s_M%d_H%d_%db", selstring, mbi+1, hbi+1, nbjet ) ;
+           xaxis->SetBinLabel( histbin, binlabel ) ;
+        } // hbi.
+     } // mbi.
+
+     retVal->SetLabelSize(0.055,"x") ;
+     xaxis->LabelsOption("v") ;
+
+     return retVal ;
+
+  }
+
+//==========================================================================================
+
+
+
+
+
+
+
+
 
 
 
