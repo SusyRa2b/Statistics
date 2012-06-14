@@ -502,6 +502,73 @@
 
 
 
+
+
+     //--- some numerical output below here.
+
+     int nbins = hfitqual_ttwj_0lep_1b -> GetNbinsX() ;
+
+
+
+
+     double ttwj0lep1btotal(0.) ;
+     double ttwj0lep2btotal(0.) ;
+     double ttwj0lep3btotal(0.) ;
+     double ttwj0leptotal(0.) ;
+
+     double ttwj1lep1btotal(0.) ;
+     double ttwj1lep2btotal(0.) ;
+     double ttwj1lep3btotal(0.) ;
+     double ttwj1leptotal(0.) ;
+
+     for ( int bi=1; bi<=nbins; bi++ ) {
+        ttwj0lep1btotal += hfitqual_ttwj_0lep_1b->GetBinContent(bi) ;
+        ttwj0lep2btotal += hfitqual_ttwj_0lep_2b->GetBinContent(bi) ;
+        ttwj0lep3btotal += hfitqual_ttwj_0lep_3b->GetBinContent(bi) ;
+        ttwj0leptotal += hfitqual_ttwj_0lep_1b->GetBinContent(bi) + hfitqual_ttwj_0lep_2b->GetBinContent(bi) + hfitqual_ttwj_0lep_3b->GetBinContent(bi) ;
+        ttwj1lep1btotal += hfitqual_ttwj_1lep_1b->GetBinContent(bi) ;
+        ttwj1lep2btotal += hfitqual_ttwj_1lep_2b->GetBinContent(bi) ;
+        ttwj1lep3btotal += hfitqual_ttwj_1lep_3b->GetBinContent(bi) ;
+        ttwj1leptotal += hfitqual_ttwj_1lep_1b->GetBinContent(bi) + hfitqual_ttwj_1lep_2b->GetBinContent(bi) + hfitqual_ttwj_1lep_3b->GetBinContent(bi) ;
+     }
+
+     printf("\n\n 1b, ttwj 0lep/1lep ratio: %6.1f / %6.1f = %6.3f\n", ttwj0lep1btotal, ttwj1lep1btotal, ttwj0lep1btotal/ttwj1lep1btotal ) ;
+     printf(" 2b, ttwj 0lep/1lep ratio: %6.1f / %6.1f = %6.3f\n", ttwj0lep2btotal, ttwj1lep2btotal, ttwj0lep2btotal/ttwj1lep2btotal ) ;
+     printf(" 3b, ttwj 0lep/1lep ratio: %6.1f / %6.1f = %6.3f\n", ttwj0lep3btotal, ttwj1lep3btotal, ttwj0lep3btotal/ttwj1lep3btotal ) ;
+     printf("     ttwj 0lep/1lep ratio: %6.1f / %6.1f = %6.3f\n\n\n", ttwj0leptotal, ttwj1leptotal, ttwj0leptotal/ttwj1leptotal ) ;
+
+
+
+
+
+
+     double qcd0lep1btotal(0.) ;
+     double qcd0lep2btotal(0.) ;
+     double qcd0lep3btotal(0.) ;
+     double qcd0leptotal(0.) ;
+
+     double qcdldp1btotal(0.) ;
+     double qcdldp2btotal(0.) ;
+     double qcdldp3btotal(0.) ;
+     double qcdldptotal(0.) ;
+
+     for ( int bi=1; bi<=nbins; bi++ ) {
+        qcd0lep1btotal += hfitqual_qcd_0lep_1b->GetBinContent(bi) ;
+        qcd0lep2btotal += hfitqual_qcd_0lep_2b->GetBinContent(bi) ;
+        qcd0lep3btotal += hfitqual_qcd_0lep_3b->GetBinContent(bi) ;
+        qcd0leptotal += hfitqual_qcd_0lep_1b->GetBinContent(bi) + hfitqual_qcd_0lep_2b->GetBinContent(bi) + hfitqual_qcd_0lep_3b->GetBinContent(bi) ;
+        qcdldp1btotal += hfitqual_qcd_ldp_1b->GetBinContent(bi) ;
+        qcdldp2btotal += hfitqual_qcd_ldp_2b->GetBinContent(bi) ;
+        qcdldp3btotal += hfitqual_qcd_ldp_3b->GetBinContent(bi) ;
+        qcdldptotal += hfitqual_qcd_ldp_1b->GetBinContent(bi) + hfitqual_qcd_ldp_2b->GetBinContent(bi) + hfitqual_qcd_ldp_3b->GetBinContent(bi) ;
+     }
+
+     printf("\n\n 1b, qcd 0lep/ldp ratio: %6.1f / %6.1f = %6.3f\n", qcd0lep1btotal, qcdldp1btotal, qcd0lep1btotal/qcdldp1btotal ) ;
+     printf(" 2b, qcd 0lep/ldp ratio: %6.1f / %6.1f = %6.3f\n", qcd0lep2btotal, qcdldp2btotal, qcd0lep2btotal/qcdldp2btotal ) ;
+     printf(" 3b, qcd 0lep/ldp ratio: %6.1f / %6.1f = %6.3f\n", qcd0lep3btotal, qcdldp3btotal, qcd0lep3btotal/qcdldp3btotal ) ;
+     printf("     qcd 0lep/ldp ratio: %6.1f / %6.1f = %6.3f\n\n\n", qcd0leptotal, qcdldptotal, qcd0leptotal/qcdldptotal ) ;
+
+
    }
 
 

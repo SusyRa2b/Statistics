@@ -20,7 +20,7 @@
 
 // to add in: nMu, nEl, minDelPhi
 
-void GenerateInputFile() {
+void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
 
   TChain* dyTree = new TChain("treeZ") ;
   int nAdded = dyTree->Add("files5fb/DY.root") ;
@@ -28,6 +28,32 @@ void GenerateInputFile() {
      printf("\n\n\n *** No treeZ in files5fb/DY.root\n\n\n") ;
      return ;
   }
+
+  double t1bbbbWeight(0.) ;
+  TChain chainT1bbbb("tree") ;
+  char susycutstring[1000] ;
+  sprintf( susycutstring, "&&mgluino==%.0f&&mlsp==%.0f", mgl, mlsp ) ;
+  TString susycut( susycutstring ) ;
+  if ( mgl>0. && mlsp>0. ) {
+     nAdded = chainT1bbbb.Add("files5fb/T1bbbb.root") ;
+     if ( nAdded <= 0 ) {
+        printf("\n\n\n *** No tree in files5fb/T1bbbb.root\n\n\n") ;
+        return ;
+     }
+     TFile f("referenceXSecs.root") ;
+     TH1F* xsechist = (TH1F*) f.Get("gluino") ;
+     if ( xsechist==0x0 ) { printf("\n\n *** can't find reference Xsec histogram in referenceXSecs.root.\n\n") ; return ; }
+     int theBin = xsechist->FindBin( mgl ) ;
+     if ( theBin <=0 || theBin > xsechist->GetNbinsX() ) {
+        printf("\n\n *** can't find bin for mgl=%g.  Returned %d\n\n", mgl, theBin ) ;
+        return ;
+     }
+     double xsec = xsechist->GetBinContent( theBin ) ;
+     printf("\n\n T1bbbb xsec for mgl=%g is %g\n\n", mgl, xsec ) ;
+     t1bbbbWeight = 0.5*xsec ;  //in pb. scan has 10k events, so nScan*0.5*xsec = events in 5fb-1
+     printf("\n\n Susy ttree cut: %s\n\n", susycutstring ) ;
+  }
+
 
   TChain chainQCD("tree") ;
   chainQCD.Add("files5fb/QCD-1800.root");
@@ -72,7 +98,7 @@ void GenerateInputFile() {
 
   const int nBinsBjets = 3 ;   // this must always be 3
 
-////-- met2-ht1-v1
+  //-- met2-ht1-v1
 //const int nBinsMET   = 2 ;
 //const int nBinsHT    = 1 ;
 //float Mbins[nBinsMET+1] = {150.,250.,99999.};
@@ -102,11 +128,17 @@ void GenerateInputFile() {
 //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,99999.};
 
-////-- met4-ht4-v1
+  //-- met4-ht4-v1
+  const int nBinsMET   = 4 ;
+  const int nBinsHT    = 4 ;
+  float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
+  float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
+
+////-- met4-ht5-v1
 //const int nBinsMET   = 4 ;
-//const int nBinsHT    = 4 ;
-//float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
-//float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
+//const int nBinsHT    = 5 ;
+//float Mbins[nBinsMET+1] = {150.,200.,300.,400.,99999.};
+//float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,1200.,99999.};
 
 ////-- met5-ht5-v1
 //const int nBinsMET   = 5 ;
@@ -126,11 +158,11 @@ void GenerateInputFile() {
 //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,400.,500.,99999.};
 //float Hbins[nBinsHT+1] = {400.,500.,600.,700.,800.,900.,1000.,99999.};
 
-  //-- met8-ht8-v1
-  const int nBinsMET   = 8 ;
-  const int nBinsHT    = 8 ;
-  float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,400.,450.,600.,99999.};
-  float Hbins[nBinsHT+1] = {400.,500.,600.,700.,800.,900.,1000.,1200.,99999.};
+////-- met8-ht8-v1
+//const int nBinsMET   = 8 ;
+//const int nBinsHT    = 8 ;
+//float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,400.,450.,600.,99999.};
+//float Hbins[nBinsHT+1] = {400.,500.,600.,700.,800.,900.,1000.,1200.,99999.};
 
 
   TString sMbins[nBinsMET];
@@ -175,7 +207,11 @@ void GenerateInputFile() {
 
   ofstream inFile;
   char outfile[10000] ;
-  sprintf( outfile, "Input-met%d-ht%d.dat", nBinsMET, nBinsHT ) ;
+  if ( mgl > 0. && mlsp > 0. ) {
+     sprintf( outfile, "InputWSusy-mgl%.0f-mlsp%.0f-met%d-ht%d.dat", mgl, mlsp, nBinsMET, nBinsHT ) ;
+  } else {
+     sprintf( outfile, "Input-met%d-ht%d.dat", nBinsMET, nBinsHT ) ;
+  }
   inFile.open( outfile );
 
   // print out header line:
@@ -203,18 +239,21 @@ void GenerateInputFile() {
      TH1F* hmctruth_qcd_0lep_1b  = bookHist( "hmctruth_qcd_0lep_1b" , "0 Lep, 1 btag", "0lep", 1, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_znn_0lep_1b  = bookHist( "hmctruth_znn_0lep_1b" , "0 Lep, 1 btag", "0lep", 1, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_allsm_0lep_1b  = bookHist( "hmctruth_allsm_0lep_1b", "0 Lep, 1 btag", "0lep", 1, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_all_0lep_1b  = bookHist( "hmctruth_all_0lep_1b", "0 Lep, 1 btag", "0lep", 1, nBinsMET, nBinsHT ) ;
 
      TH1F* hmctruth_susy_0lep_2b = bookHist( "hmctruth_susy_0lep_2b", "0 Lep, 2 btag", "0lep", 2, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_ttwj_0lep_2b = bookHist( "hmctruth_ttwj_0lep_2b", "0 Lep, 2 btag", "0lep", 2, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_qcd_0lep_2b  = bookHist( "hmctruth_qcd_0lep_2b" , "0 Lep, 2 btag", "0lep", 2, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_znn_0lep_2b  = bookHist( "hmctruth_znn_0lep_2b" , "0 Lep, 2 btag", "0lep", 2, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_allsm_0lep_2b  = bookHist( "hmctruth_allsm_0lep_2b", "0 Lep, 2 btag", "0lep", 2, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_all_0lep_2b  = bookHist( "hmctruth_all_0lep_2b", "0 Lep, 2 btag", "0lep", 2, nBinsMET, nBinsHT ) ;
 
      TH1F* hmctruth_susy_0lep_3b = bookHist( "hmctruth_susy_0lep_3b", "0 Lep, 3 btag", "0lep", 3, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_ttwj_0lep_3b = bookHist( "hmctruth_ttwj_0lep_3b", "0 Lep, 3 btag", "0lep", 3, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_qcd_0lep_3b  = bookHist( "hmctruth_qcd_0lep_3b" , "0 Lep, 3 btag", "0lep", 3, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_znn_0lep_3b  = bookHist( "hmctruth_znn_0lep_3b" , "0 Lep, 3 btag", "0lep", 3, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_allsm_0lep_3b  = bookHist( "hmctruth_allsm_0lep_3b", "0 Lep, 3 btag", "0lep", 3, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_all_0lep_3b  = bookHist( "hmctruth_all_0lep_3b", "0 Lep, 3 btag", "0lep", 3, nBinsMET, nBinsHT ) ;
 
 
 
@@ -224,18 +263,21 @@ void GenerateInputFile() {
      TH1F* hmctruth_qcd_1lep_1b  = bookHist( "hmctruth_qcd_1lep_1b" , "1 Lep, 1 btag", "1lep", 1, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_znn_1lep_1b  = bookHist( "hmctruth_znn_1lep_1b" , "1 Lep, 1 btag", "1lep", 1, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_allsm_1lep_1b  = bookHist( "hmctruth_allsm_1lep_1b", "1 Lep, 1 btag", "1lep", 1, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_all_1lep_1b  = bookHist( "hmctruth_all_1lep_1b", "1 Lep, 1 btag", "1lep", 1, nBinsMET, nBinsHT ) ;
 
      TH1F* hmctruth_susy_1lep_2b = bookHist( "hmctruth_susy_1lep_2b", "1 Lep, 2 btag", "1lep", 2, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_ttwj_1lep_2b = bookHist( "hmctruth_ttwj_1lep_2b", "1 Lep, 2 btag", "1lep", 2, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_qcd_1lep_2b  = bookHist( "hmctruth_qcd_1lep_2b" , "1 Lep, 2 btag", "1lep", 2, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_znn_1lep_2b  = bookHist( "hmctruth_znn_1lep_2b" , "1 Lep, 2 btag", "1lep", 2, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_allsm_1lep_2b  = bookHist( "hmctruth_allsm_1lep_2b", "1 Lep, 2 btag", "1lep", 2, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_all_1lep_2b  = bookHist( "hmctruth_all_1lep_2b", "1 Lep, 2 btag", "1lep", 2, nBinsMET, nBinsHT ) ;
 
      TH1F* hmctruth_susy_1lep_3b = bookHist( "hmctruth_susy_1lep_3b", "1 Lep, 3 btag", "1lep", 3, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_ttwj_1lep_3b = bookHist( "hmctruth_ttwj_1lep_3b", "1 Lep, 3 btag", "1lep", 3, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_qcd_1lep_3b  = bookHist( "hmctruth_qcd_1lep_3b" , "1 Lep, 3 btag", "1lep", 3, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_znn_1lep_3b  = bookHist( "hmctruth_znn_1lep_3b" , "1 Lep, 3 btag", "1lep", 3, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_allsm_1lep_3b  = bookHist( "hmctruth_allsm_1lep_3b", "1 Lep, 3 btag", "1lep", 3, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_all_1lep_3b  = bookHist( "hmctruth_all_1lep_3b", "1 Lep, 3 btag", "1lep", 3, nBinsMET, nBinsHT ) ;
 
 
 
@@ -245,18 +287,21 @@ void GenerateInputFile() {
      TH1F* hmctruth_qcd_ldp_1b  = bookHist( "hmctruth_qcd_ldp_1b" , "LDP, 1 btag", "ldp", 1, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_znn_ldp_1b  = bookHist( "hmctruth_znn_ldp_1b" , "LDP, 1 btag", "ldp", 1, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_allsm_ldp_1b  = bookHist( "hmctruth_allsm_ldp_1b", "LDP, 1 btag", "ldp", 1, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_all_ldp_1b  = bookHist( "hmctruth_all_ldp_1b", "LDP, 1 btag", "ldp", 1, nBinsMET, nBinsHT ) ;
 
      TH1F* hmctruth_susy_ldp_2b = bookHist( "hmctruth_susy_ldp_2b", "LDP, 2 btag", "ldp", 2, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_ttwj_ldp_2b = bookHist( "hmctruth_ttwj_ldp_2b", "LDP, 2 btag", "ldp", 2, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_qcd_ldp_2b  = bookHist( "hmctruth_qcd_ldp_2b" , "LDP, 2 btag", "ldp", 2, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_znn_ldp_2b  = bookHist( "hmctruth_znn_ldp_2b" , "LDP, 2 btag", "ldp", 2, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_allsm_ldp_2b  = bookHist( "hmctruth_allsm_ldp_2b", "LDP, 2 btag", "ldp", 2, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_all_ldp_2b  = bookHist( "hmctruth_all_ldp_2b", "LDP, 2 btag", "ldp", 2, nBinsMET, nBinsHT ) ;
 
      TH1F* hmctruth_susy_ldp_3b = bookHist( "hmctruth_susy_ldp_3b", "LDP, 3 btag", "ldp", 3, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_ttwj_ldp_3b = bookHist( "hmctruth_ttwj_ldp_3b", "LDP, 3 btag", "ldp", 3, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_qcd_ldp_3b  = bookHist( "hmctruth_qcd_ldp_3b" , "LDP, 3 btag", "ldp", 3, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_znn_ldp_3b  = bookHist( "hmctruth_znn_ldp_3b" , "LDP, 3 btag", "ldp", 3, nBinsMET, nBinsHT ) ;
      TH1F* hmctruth_allsm_ldp_3b  = bookHist( "hmctruth_allsm_ldp_3b", "LDP, 3 btag", "ldp", 3, nBinsMET, nBinsHT ) ;
+     TH1F* hmctruth_all_ldp_3b  = bookHist( "hmctruth_all_ldp_3b", "LDP, 3 btag", "ldp", 3, nBinsMET, nBinsHT ) ;
 
 
 
@@ -290,11 +335,13 @@ void GenerateInputFile() {
   TH1F* ht_tt = new TH1F("ht_tt","ht_tt",10,0,10000);
   TH1F* ht_qcd = new TH1F("ht_qcd","ht_qcd",10,0,10000);
   TH1F* ht_znn = new TH1F("ht_znn","ht_znn",10,0,10000);
+  TH1F* ht_susy = new TH1F("ht_susy","ht",10,0,10000);
 
   ht     ->Sumw2() ;
   ht_tt  ->Sumw2() ;
   ht_qcd ->Sumw2() ;
   ht_znn ->Sumw2() ;
+  ht_susy->Sumw2() ;
 
 
   // 0lep observables
@@ -321,6 +368,7 @@ void GenerateInputFile() {
 	cut += k+1;
 
         TString allcuts = cuts0lep+cut ;
+        TString allsusycuts = allcuts+susycut ;
 
         printf(" N_0lep -- HT,MET,nbjet bins (%d,%d,%d): cuts=%s\n", j,i,k, allcuts.Data()) ; cout << flush ;
 
@@ -342,7 +390,17 @@ void GenerateInputFile() {
         printf(" N_0lep, znn  --  npass=%7.1f +/- %6.1f\n", znnval,znnerr) ; cout << flush ;
         ht_znn->Reset() ;
 
-        double allval = ttval+qcdval+znnval ;
+
+        double susyval(0.), susyerr(0.) ;
+        if ( mgl > 0. ) {
+           chainT1bbbb.Project("ht_susy","HT",allsusycuts);
+           susyval = t1bbbbWeight * ( ht_susy->IntegralAndError(1,10,susyerr) ) ;
+           susyerr = t1bbbbWeight * susyerr ;
+           printf(" N_0lep, susy --  npass=%7.1f +/- %6.1f\n", susyval,susyerr) ; cout << flush ;
+           ht_susy->Reset() ;
+        }
+
+        double allval = ttval+qcdval+znnval+susyval ;
 
     //  chainAll.Project("ht","HT",cuts0lep+cut);
     //  double allerr(0.) ;
@@ -362,8 +420,12 @@ void GenerateInputFile() {
            hmctruth_qcd_0lep_1b  -> SetBinError(   histbin, qcderr ) ;
            hmctruth_znn_0lep_1b  -> SetBinContent( histbin, znnval ) ;
            hmctruth_znn_0lep_1b  -> SetBinError(   histbin, znnerr ) ;
+           hmctruth_susy_0lep_1b -> SetBinContent( histbin, susyval  ) ;
+           hmctruth_susy_0lep_1b -> SetBinError(   histbin, susyerr  ) ;
            hmctruth_allsm_0lep_1b -> SetBinContent( histbin, ttval+qcdval+znnval ) ;
            hmctruth_allsm_0lep_1b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
+           hmctruth_all_0lep_1b -> SetBinContent( histbin, ttval+qcdval+znnval+susyval ) ;
+           hmctruth_all_0lep_1b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
         } else if ( k == 1 ) {
            hmctruth_ttwj_0lep_2b -> SetBinContent( histbin, ttval  ) ;
            hmctruth_ttwj_0lep_2b -> SetBinError(   histbin, tterr  ) ;
@@ -371,8 +433,12 @@ void GenerateInputFile() {
            hmctruth_qcd_0lep_2b  -> SetBinError(   histbin, qcderr ) ;
            hmctruth_znn_0lep_2b  -> SetBinContent( histbin, znnval ) ;
            hmctruth_znn_0lep_2b  -> SetBinError(   histbin, znnerr ) ;
+           hmctruth_susy_0lep_2b -> SetBinContent( histbin, susyval  ) ;
+           hmctruth_susy_0lep_2b -> SetBinError(   histbin, susyerr  ) ;
            hmctruth_allsm_0lep_2b -> SetBinContent( histbin, ttval+qcdval+znnval ) ;
            hmctruth_allsm_0lep_2b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
+           hmctruth_all_0lep_2b -> SetBinContent( histbin, ttval+qcdval+znnval+susyval ) ;
+           hmctruth_all_0lep_2b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
         } else if ( k == 2 ) {
            hmctruth_ttwj_0lep_3b -> SetBinContent( histbin, ttval  ) ;
            hmctruth_ttwj_0lep_3b -> SetBinError(   histbin, tterr  ) ;
@@ -380,8 +446,12 @@ void GenerateInputFile() {
            hmctruth_qcd_0lep_3b  -> SetBinError(   histbin, qcderr ) ;
            hmctruth_znn_0lep_3b  -> SetBinContent( histbin, znnval ) ;
            hmctruth_znn_0lep_3b  -> SetBinError(   histbin, znnerr ) ;
+           hmctruth_susy_0lep_3b -> SetBinContent( histbin, susyval  ) ;
+           hmctruth_susy_0lep_3b -> SetBinError(   histbin, susyerr  ) ;
            hmctruth_allsm_0lep_3b -> SetBinContent( histbin, ttval+qcdval+znnval ) ;
            hmctruth_allsm_0lep_3b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
+           hmctruth_all_0lep_3b -> SetBinContent( histbin, ttval+qcdval+znnval+susyval ) ;
+           hmctruth_all_0lep_3b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
         }
 
 
@@ -423,6 +493,7 @@ void GenerateInputFile() {
 //        ht->Reset() ;
 
         TString allcuts = cuts1lep+cut ;
+        TString allsusycuts = allcuts+susycut ;
 
         printf(" N_1lep -- HT,MET,nbjet bins (%d,%d,%d): cuts=%s\n", j,i,k, allcuts.Data()) ; cout << flush ;
 
@@ -444,7 +515,16 @@ void GenerateInputFile() {
         printf(" N_1lep, znn  --  npass=%7.1f +/- %6.1f\n", znnval,znnerr) ; cout << flush ;
         ht_znn->Reset() ;
 
-        double allval = ttval+qcdval+znnval ;
+        double susyval(0.), susyerr(0.) ;
+        if ( mgl > 0. ) {
+           chainT1bbbb.Project("ht_susy","HT",allsusycuts);
+           susyval = t1bbbbWeight * ( ht_susy->IntegralAndError(1,10,susyerr) ) ;
+           susyerr = t1bbbbWeight * susyerr ;
+           printf(" N_1lep, susy --  npass=%7.1f +/- %6.1f\n", susyval,susyerr) ; cout << flush ;
+           ht_susy->Reset() ;
+        }
+
+        double allval = ttval+qcdval+znnval+susyval ;
 
     /// chainAll.Project("ht","HT",cuts1lep+cut);
     /// double allerr(0.) ;
@@ -466,6 +546,8 @@ void GenerateInputFile() {
            hmctruth_znn_1lep_1b  -> SetBinError(   histbin, znnerr ) ;
            hmctruth_allsm_1lep_1b -> SetBinContent( histbin, ttval+qcdval+znnval ) ;
            hmctruth_allsm_1lep_1b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
+           hmctruth_all_1lep_1b -> SetBinContent( histbin, ttval+qcdval+znnval+susyval ) ;
+           hmctruth_all_1lep_1b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
         } else if ( k == 1 ) {
            hmctruth_ttwj_1lep_2b -> SetBinContent( histbin, ttval  ) ;
            hmctruth_ttwj_1lep_2b -> SetBinError(   histbin, tterr  ) ;
@@ -475,6 +557,8 @@ void GenerateInputFile() {
            hmctruth_znn_1lep_2b  -> SetBinError(   histbin, znnerr ) ;
            hmctruth_allsm_1lep_2b -> SetBinContent( histbin, ttval+qcdval+znnval ) ;
            hmctruth_allsm_1lep_2b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
+           hmctruth_all_1lep_2b -> SetBinContent( histbin, ttval+qcdval+znnval+susyval ) ;
+           hmctruth_all_1lep_2b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
         } else if ( k == 2 ) {
            hmctruth_ttwj_1lep_3b -> SetBinContent( histbin, ttval  ) ;
            hmctruth_ttwj_1lep_3b -> SetBinError(   histbin, tterr  ) ;
@@ -484,6 +568,8 @@ void GenerateInputFile() {
            hmctruth_znn_1lep_3b  -> SetBinError(   histbin, znnerr ) ;
            hmctruth_allsm_1lep_3b -> SetBinContent( histbin, ttval+qcdval+znnval ) ;
            hmctruth_allsm_1lep_3b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
+           hmctruth_all_1lep_3b -> SetBinContent( histbin, ttval+qcdval+znnval+susyval ) ;
+           hmctruth_all_1lep_3b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
         }
 
 
@@ -522,6 +608,7 @@ void GenerateInputFile() {
 //        ht->Reset() ;
 
         TString allcuts = cutsldp+cut ;
+        TString allsusycuts = allcuts+susycut ;
 
         printf(" N_ldp -- HT,MET,nbjet bins (%d,%d,%d): cuts=%s\n", j,i,k, allcuts.Data()) ; cout << flush ;
 
@@ -543,7 +630,16 @@ void GenerateInputFile() {
         printf(" N_ldp, znn  --  npass=%7.1f +/- %6.1f\n", znnval,znnerr) ; cout << flush ;
         ht_znn->Reset() ;
 
-        double allval = ttval+qcdval+znnval ;
+        double susyval(0.), susyerr(0.) ;
+        if ( mgl > 0. ) {
+           chainT1bbbb.Project("ht_susy","HT",allsusycuts);
+           susyval = t1bbbbWeight * ( ht_susy->IntegralAndError(1,10,susyerr) ) ;
+           susyerr = t1bbbbWeight * susyerr ;
+           printf(" N_ldp, susy --  npass=%7.1f +/- %6.1f\n", susyval,susyerr) ; cout << flush ;
+           ht_susy->Reset() ;
+        }
+
+        double allval = ttval+qcdval+znnval+susyval ;
 
     /// chainAll.Project("ht","HT",cutsldp+cut);
     /// double allerr(0.) ;
@@ -566,6 +662,8 @@ void GenerateInputFile() {
            hmctruth_znn_ldp_1b  -> SetBinError(   histbin, znnerr ) ;
            hmctruth_allsm_ldp_1b -> SetBinContent( histbin, ttval+qcdval+znnval ) ;
            hmctruth_allsm_ldp_1b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
+           hmctruth_all_ldp_1b -> SetBinContent( histbin, ttval+qcdval+znnval+susyval ) ;
+           hmctruth_all_ldp_1b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
         } else if ( k == 1 ) {
            hmctruth_ttwj_ldp_2b -> SetBinContent( histbin, ttval  ) ;
            hmctruth_ttwj_ldp_2b -> SetBinError(   histbin, tterr  ) ;
@@ -575,6 +673,8 @@ void GenerateInputFile() {
            hmctruth_znn_ldp_2b  -> SetBinError(   histbin, znnerr ) ;
            hmctruth_allsm_ldp_2b -> SetBinContent( histbin, ttval+qcdval+znnval ) ;
            hmctruth_allsm_ldp_2b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
+           hmctruth_all_ldp_2b -> SetBinContent( histbin, ttval+qcdval+znnval+susyval ) ;
+           hmctruth_all_ldp_2b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
         } else if ( k == 2 ) {
            hmctruth_ttwj_ldp_3b -> SetBinContent( histbin, ttval  ) ;
            hmctruth_ttwj_ldp_3b -> SetBinError(   histbin, tterr  ) ;
@@ -584,6 +684,8 @@ void GenerateInputFile() {
            hmctruth_znn_ldp_3b  -> SetBinError(   histbin, znnerr ) ;
            hmctruth_allsm_ldp_3b -> SetBinContent( histbin, ttval+qcdval+znnval ) ;
            hmctruth_allsm_ldp_3b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
+           hmctruth_all_ldp_3b -> SetBinContent( histbin, ttval+qcdval+znnval+susyval ) ;
+           hmctruth_all_ldp_3b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
         }
 
 
@@ -937,7 +1039,11 @@ void GenerateInputFile() {
 
   gSystem->Exec("mkdir -p rootfiles") ;
   char outHistName[1000] ;
-  sprintf( outHistName, "rootfiles/gi-plots-met%d-ht%d.root", nBinsMET, nBinsHT ) ;
+  if ( mgl>0. && mlsp>0. ) {
+     sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-met%d-ht%d.root", mgl, mlsp, nBinsMET, nBinsHT ) ;
+  } else {
+     sprintf( outHistName, "rootfiles/gi-plots-met%d-ht%d.root", nBinsMET, nBinsHT ) ;
+  }
   saveHist( outHistName, "hmc*" ) ;
 
 

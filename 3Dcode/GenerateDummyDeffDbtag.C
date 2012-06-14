@@ -8,7 +8,7 @@ void GenerateDummyDeffDbtag( int nBinsMET=5, int nBinsHT=4 ) {
 
   // dummy masses
   int minGlMass = 200 ;
-  int maxGlMass = 1000 ;
+  int maxGlMass = 1100 ;
   int mLsp = 0 ;
 
   // derivatives for the 1b, 2b, 3b cases:

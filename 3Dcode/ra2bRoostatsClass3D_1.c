@@ -1779,6 +1779,8 @@
 	  // print out signal values
 
 	  cout << "\n\nSetting susy signal: \n" << endl ;
+
+          double total0lep(0.) ;
 	  
 	  for (int i = 0 ; i < nBinsMET ; i++) {
 	    for (int j = 0 ; j < nBinsHT ; j++) {
@@ -1791,9 +1793,13 @@
 		cout << binString + " - 1 lep - setting susy signal to " << setVal_n_1l[i][j][k] << endl ;
 		cout << binString + " - ldp   - setting susy signal to " << setVal_n_ldp[i][j][k] << endl ;
 
+                total0lep += setVal_n_0l[i][j][k] ;
+
 	      }
 	    }
 	  }
+
+          printf("\n\n SUSY 0lep total: %7.2f\n\n", total0lep ) ;
 
 	  found = true ;
 

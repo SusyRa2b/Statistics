@@ -28,13 +28,16 @@
 
 //----------------
 
-   void draw_mctruth_plots3D_reconfig( const char* histfile = "gi-plots.root",
+   void draw_mctruth_plots3D_reconfig( const char* histfile = "rootfiles/gi-plots-met5-ht5.root",
                               const char* primaryGroupingVar = "ht",
                               const char* secondaryGroupingVar = "met",
                               bool logy=false,
                               bool doNorm=false,
                               double normmax=2.0,
                               int metgroupzoom=1 ) {
+
+
+
 
 
      if ( doNorm ) { logy = false ; }
@@ -199,7 +202,7 @@
             char htitle[1000] ;
 
 
-            sprintf( htitle, "0 Lep, %s %d", thirdGroupingVar, v3bi+1 ) ;
+            sprintf( htitle, "%s, %s %d", selname[si], thirdGroupingVar, v3bi+1 ) ;
 
             for ( int ci=0; ci<ncomp; ci++ ) {
 
@@ -225,6 +228,7 @@
                      int oldhbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
 
                      hnew_[si][v3bi][ci] -> SetBinContent( newhbin, hinput_[si][bbi][ci]->GetBinContent( oldhbin ) ) ;
+                     hnew_[si][v3bi][ci] -> SetBinError(   newhbin, hinput_[si][bbi][ci]->GetBinError( oldhbin ) ) ;
                      hnew_[si][v3bi][ci] -> GetXaxis() -> SetBinLabel( newhbin, hinput_[si][bbi][ci] -> GetXaxis() -> GetBinLabel( oldhbin ) ) ;
 
                   } // v1bi
@@ -247,9 +251,11 @@
 
             cmctruth -> cd( padIndex++ ) ;
 
+            hnew_[si][v3bi][0] -> SetLineWidth(2) ;
+
             hnew_[si][v3bi][0] -> Draw("histpe") ;
             hstack_[si][v3bi] -> Draw("histsame") ;
-            hnew_[si][v3bi][0] -> Draw("same") ;
+            hnew_[si][v3bi][0] -> Draw("samee") ;
             gPad->SetGridy(1) ;
 
          } // v3bi
@@ -259,6 +265,15 @@
 
 
 
+     gSystem->Exec("mkdir -p outputfiles") ;
+
+     TString saveFile( histfile ) ;
+     saveFile.ReplaceAll( "rootfiles", "outputfiles" ) ;
+     char newstring[1000] ;
+     sprintf( newstring, "-%s-%s-%s.pdf", primaryGroupingVar, secondaryGroupingVar, thirdGroupingVar ) ;
+     saveFile.ReplaceAll( ".root", newstring ) ;
+
+     cmctruth->SaveAs( saveFile ) ;
 
 
 
