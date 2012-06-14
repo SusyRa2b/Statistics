@@ -49,7 +49,7 @@
      gStyle->SetTitleX(0.95) ;
      gStyle->SetTitleAlign(33) ;
 
-     gDirectory->Delete("hmctruth*") ;
+     gDirectory->Delete("h*") ;
 
      loadHist1( histfile ) ;
      gDirectory->ls() ;
@@ -69,7 +69,7 @@
      int nsel(3) ;
      char selname[3][100] = { "0lep", "1lep", "ldp" } ;
 
-     int nbtagmult(3) ;
+     //int nbtagmult(3) ;
      char btagmultname[3][100] = { "1b", "2b", "3b" } ;
 
      int compcolor[5] ;
@@ -238,7 +238,30 @@
                hnew_[si][v3bi][ci] -> SetLabelSize(0.055,"x") ;
                hnew_[si][v3bi][ci] -> GetXaxis() -> LabelsOption("v") ;
 
+
             } // ci.
+
+            if ( doNorm ) {
+               for ( int v2bi=0; v2bi<nbv2; v2bi++ ) {
+                  for ( int v1bi=0; v1bi<nbv1; v1bi++ ) {
+                     int newhbin = 1 + (nbv1+1)*v2bi + v1bi + 1 ;
+                     double modelTotal(0.) ;
+                     for ( int ci=1; ci<=4; ci++ ) {
+                        modelTotal += hnew_[si][v3bi][ci] -> GetBinContent( newhbin ) ;
+                     } // ci.
+                     for ( int ci=0; ci<ncomp; ci++ ) {
+                        if ( modelTotal > 0. ) {
+                           hnew_[si][v3bi][ci] -> SetBinContent( newhbin, (hnew_[si][v3bi][ci] -> GetBinContent( newhbin ))/modelTotal ) ;
+                           hnew_[si][v3bi][ci] -> SetBinError(   newhbin, (hnew_[si][v3bi][ci] -> GetBinError( newhbin ))/modelTotal ) ;
+                        } else {
+                           hnew_[si][v3bi][ci] -> SetBinContent( newhbin, 0. ) ;
+                           hnew_[si][v3bi][ci] -> SetBinError( newhbin, 0. ) ;
+                        }
+                        hnew_[si][v3bi][ci] -> SetMaximum( normmax ) ;
+                     } // ci.
+                  } // v1bi
+               } // v2bi
+            }
 
             sprintf( hname, "hmctruth_fit_%s_%s%d", selname[si], thirdGroupingVar, v3bi+1 ) ;
             sprintf( htitle, " " ) ;
@@ -250,6 +273,7 @@
             hstack_[si][v3bi] -> Add( hnew_[si][v3bi][1] ) ;
 
             cmctruth -> cd( padIndex++ ) ;
+            gPad->SetTicks(1,0) ;
 
             hnew_[si][v3bi][0] -> SetLineWidth(2) ;
 
@@ -261,6 +285,36 @@
          } // v3bi
 
       } // si.
+
+
+     cmctruth->cd(padIndex++) ;
+     hmctruth_fit_zee_1b->SetFillColor(kGreen-3) ;
+     hmctruth_fit_zee_1b->SetLineWidth(1) ;
+     hmctruth_fit_zee_1b->Draw("hist") ;
+     hmctruth_fit_zee_1b->Draw("esame") ;
+     gPad->SetGridy(1) ;
+
+     cmctruth->cd(padIndex++) ;
+     hmctruth_fit_zmm_1b->SetFillColor(kGreen-3) ;
+     hmctruth_fit_zmm_1b->SetLineWidth(1) ;
+     hmctruth_fit_zmm_1b->Draw("histe") ;
+     hmctruth_fit_zmm_1b->Draw("esame") ;
+     gPad->SetGridy(1) ;
+
+
+
+     printf("\n Making legend...\n") ; cout << flush ;
+     TLegend* legend = new TLegend(0.4,0.35,0.7,0.85) ;
+     for ( int ci=0; ci<ncomp; ci++ ) {
+        legend->AddEntry( hnew_[0][0][ci], compname[ci] ) ;
+     }
+
+     printf("\n\n Done making legend.\n\n\n") ; cout << flush ;
+
+     cmctruth->cd(padIndex++);
+     legend->Draw() ;
+
+     cmctruth->Update() ;
 
 
 
@@ -285,242 +339,12 @@
 
 
 
-//   if ( doNorm ) {
-
-//     //--- Divide all bins by the overall model prediction.
-//     //    This is slightly different than the way its done
-//     //    in the other one, where the normalization is the allsm entries.
-//     //    Doing it this way because we will have several observables
-//     //    with no events in the allsm.  Model should always be non-zero(?)
-//     //
-
-//      printf("\n\n Renormalizing histograms.\n\n") ;
-
-//      int nbins = hmctruth_allsm_0lep_1b -> GetNbinsX() ;
-
-//      for ( int bini=1; bini<=nbins; bini++ ) {
-//         for ( int seli=0; seli<nsel; seli++ ) {
-//            for ( int nbji=0; nbji<nbtagmult; nbji++ ) {
-
-//               double modelsum(0.) ;
-
-//               for ( int ci=1; ci<ncomp; ci++ ) {
-
-//                  char hname[100] ;
-//                  sprintf( hname, "hmctruth_%s_%s_%s", compname[ci], selname[seli], btagmultname[nbji] ) ;
-
-//                  TH1F* hist = (TH1F*) gDirectory->FindObject( hname ) ;
-//                  if ( hist == 0 ) { printf("\n\n\n *** Can't find histogram %s\n\n", hname ) ; return ; }
-
-//                  modelsum += hist->GetBinContent( bini ) ;
-
-
-//               } // ci
-
-
-//               if ( modelsum > 0. ) {
-//                  for ( int ci=0; ci<ncomp; ci++ ) {
-
-//                     char hname[100] ;
-//                     sprintf( hname, "hmctruth_%s_%s_%s", compname[ci], selname[seli], btagmultname[nbji] ) ;
-
-
-//                     TH1F* hist = (TH1F*) gDirectory->FindObject( hname ) ;
-//                     if ( hist == 0 ) { printf("\n\n\n *** Can't find histogram %s\n\n", hname ) ; return ; }
-
-//                     if ( ci==0 ) { // this is the allsm
-//                        hist -> SetBinError( bini, (hist->GetBinError(bini))/modelsum ) ;
-//                     }
-//                     hist -> SetBinContent( bini, (hist->GetBinContent(bini))/modelsum ) ;
-
-//                     ///// printf(" %d (%d,%d,%d) : %4.2f  %s\n", bini, seli, nbji, ci, hist->GetBinContent( bini ), hname ) ;
-
-//                     hist -> SetMaximum(normmax) ;
-
-//                  } // ci
-//                  /////// printf("\n") ;
-//               }
-
-
-//            } // nbji
-//         } // seli
-
-//         printf("\n\n debug 1 : after loops.\n\n") ;
-
-//         if ( hmctruth_fit_zee_1b->GetBinContent( bini ) > 0. ) {
-//            hmctruth_fit_zee_1b ->SetBinContent( bini, 1. ) ;
-//         }
-
-//         if ( hmctruth_fit_zmm_1b->GetBinContent( bini ) > 0. ) {
-//            hmctruth_fit_zmm_1b ->SetBinContent( bini, 1. ) ;
-//         }
-
-//         hmctruth_fit_zee_1b -> SetMaximum(normmax) ;
-//         hmctruth_fit_zmm_1b -> SetMaximum(normmax) ;
-
-//      } // bini
-
-
-//   } // doNorm?
-
-
-
-
-//   hmctruth_fit_zee_1b->SetFillColor(kGreen-3) ;
-//   hmctruth_fit_zmm_1b->SetFillColor(kGreen-3) ;
-
-
-
-//   hmctruth_ttwj_0lep_1b  -> SetFillColor(kBlue-9) ;
-//   hmctruth_qcd_0lep_1b   -> SetFillColor(2) ;
-//   hmctruth_znn_0lep_1b   -> SetFillColor(kGreen-3) ;
-//   hmctruth_susy_0lep_1b  -> SetFillColor(6) ;
-//   
-//   hmctruth_ttwj_0lep_2b  -> SetFillColor(kBlue-9) ;
-//   hmctruth_qcd_0lep_2b   -> SetFillColor(2) ;
-//   hmctruth_znn_0lep_2b   -> SetFillColor(kGreen-3) ;
-//   hmctruth_susy_0lep_2b  -> SetFillColor(6) ;
-//   
-//   hmctruth_ttwj_0lep_3b  -> SetFillColor(kBlue-9) ;
-//   hmctruth_qcd_0lep_3b   -> SetFillColor(2) ;
-//   hmctruth_znn_0lep_3b   -> SetFillColor(kGreen-3) ;
-//   hmctruth_susy_0lep_3b  -> SetFillColor(6) ;
-
-
-
-//   
-//   hmctruth_ttwj_1lep_1b  -> SetFillColor(kBlue-9) ;
-//   hmctruth_qcd_1lep_1b   -> SetFillColor(2) ;
-//   hmctruth_znn_1lep_1b   -> SetFillColor(kGreen-3) ;
-//   hmctruth_susy_1lep_1b  -> SetFillColor(6) ;
-
-//   hmctruth_ttwj_1lep_2b  -> SetFillColor(kBlue-9) ;
-//   hmctruth_qcd_1lep_2b   -> SetFillColor(2) ;
-//   hmctruth_znn_1lep_2b   -> SetFillColor(kGreen-3) ;
-//   hmctruth_susy_1lep_2b  -> SetFillColor(6) ;
-
-//   hmctruth_ttwj_1lep_3b  -> SetFillColor(kBlue-9) ;
-//   hmctruth_qcd_1lep_3b   -> SetFillColor(2) ;
-//   hmctruth_znn_1lep_3b   -> SetFillColor(kGreen-3) ;
-//   hmctruth_susy_1lep_3b  -> SetFillColor(6) ;
-
-
-
-
-//   
-//   hmctruth_ttwj_ldp_1b  -> SetFillColor(kBlue-9) ;
-//   hmctruth_qcd_ldp_1b   -> SetFillColor(2) ;
-//   hmctruth_znn_ldp_1b   -> SetFillColor(kGreen-3) ;
-//   hmctruth_susy_ldp_1b  -> SetFillColor(6) ;
-
-//   hmctruth_ttwj_ldp_2b  -> SetFillColor(kBlue-9) ;
-//   hmctruth_qcd_ldp_2b   -> SetFillColor(2) ;
-//   hmctruth_znn_ldp_2b   -> SetFillColor(kGreen-3) ;
-//   hmctruth_susy_ldp_2b  -> SetFillColor(6) ;
-
-//   hmctruth_ttwj_ldp_3b  -> SetFillColor(kBlue-9) ;
-//   hmctruth_qcd_ldp_3b   -> SetFillColor(2) ;
-//   hmctruth_znn_ldp_3b   -> SetFillColor(kGreen-3) ;
-//   hmctruth_susy_ldp_3b  -> SetFillColor(6) ;
-
-
-
-
-
-
-//   printf("\n\n Making stacks...\n") ; cout << flush ;
-
-//   THStack* hmctruth_fit_0lep_1b = new THStack( "hmctruth_fit_0lep_1b", "RA2b likelihood fit results, fit" ) ;
-//   THStack* hmctruth_fit_0lep_2b = new THStack( "hmctruth_fit_0lep_2b", "RA2b likelihood fit results, fit" ) ;
-//   THStack* hmctruth_fit_0lep_3b = new THStack( "hmctruth_fit_0lep_3b", "RA2b likelihood fit results, fit" ) ;
-
-//   THStack* hmctruth_fit_1lep_1b = new THStack( "hmctruth_fit_1lep_1b", "RA2b likelihood fit results, fit" ) ;
-//   THStack* hmctruth_fit_1lep_2b = new THStack( "hmctruth_fit_1lep_2b", "RA2b likelihood fit results, fit" ) ;
-//   THStack* hmctruth_fit_1lep_3b = new THStack( "hmctruth_fit_1lep_3b", "RA2b likelihood fit results, fit" ) ;
-
-//   THStack* hmctruth_fit_ldp_1b  = new THStack( "hmctruth_fit_ldp_1b",  "RA2b likelihood fit results, fit" ) ;
-//   THStack* hmctruth_fit_ldp_2b  = new THStack( "hmctruth_fit_ldp_2b",  "RA2b likelihood fit results, fit" ) ;
-//   THStack* hmctruth_fit_ldp_3b  = new THStack( "hmctruth_fit_ldp_3b",  "RA2b likelihood fit results, fit" ) ;
-
-//   hmctruth_fit_0lep_1b->Add( hmctruth_znn_0lep_1b ) ;
-//   hmctruth_fit_0lep_1b->Add( hmctruth_qcd_0lep_1b ) ;
-//   hmctruth_fit_0lep_1b->Add( hmctruth_ttwj_0lep_1b ) ;
-//   hmctruth_fit_0lep_1b->Add( hmctruth_susy_0lep_1b ) ;
-
-//   hmctruth_fit_0lep_2b->Add( hmctruth_znn_0lep_2b ) ;
-//   hmctruth_fit_0lep_2b->Add( hmctruth_qcd_0lep_2b ) ;
-//   hmctruth_fit_0lep_2b->Add( hmctruth_ttwj_0lep_2b ) ;
-//   hmctruth_fit_0lep_2b->Add( hmctruth_susy_0lep_2b ) ;
-
-//   hmctruth_fit_0lep_3b->Add( hmctruth_znn_0lep_3b ) ;
-//   hmctruth_fit_0lep_3b->Add( hmctruth_qcd_0lep_3b ) ;
-//   hmctruth_fit_0lep_3b->Add( hmctruth_ttwj_0lep_3b ) ;
-//   hmctruth_fit_0lep_3b->Add( hmctruth_susy_0lep_3b ) ;
-
-
-
-//   hmctruth_fit_1lep_1b->Add( hmctruth_znn_1lep_1b ) ;
-//   hmctruth_fit_1lep_1b->Add( hmctruth_qcd_1lep_1b ) ;
-//   hmctruth_fit_1lep_1b->Add( hmctruth_ttwj_1lep_1b ) ;
-//   hmctruth_fit_1lep_1b->Add( hmctruth_susy_1lep_1b ) ;
-
-//   hmctruth_fit_1lep_2b->Add( hmctruth_znn_1lep_2b ) ;
-//   hmctruth_fit_1lep_2b->Add( hmctruth_qcd_1lep_2b ) ;
-//   hmctruth_fit_1lep_2b->Add( hmctruth_ttwj_1lep_2b ) ;
-//   hmctruth_fit_1lep_2b->Add( hmctruth_susy_1lep_2b ) ;
-
-//   hmctruth_fit_1lep_3b->Add( hmctruth_znn_1lep_3b ) ;
-//   hmctruth_fit_1lep_3b->Add( hmctruth_qcd_1lep_3b ) ;
-//   hmctruth_fit_1lep_3b->Add( hmctruth_ttwj_1lep_3b ) ;
-//   hmctruth_fit_1lep_3b->Add( hmctruth_susy_1lep_3b ) ;
-
-
-
-
-//   hmctruth_fit_ldp_1b->Add( hmctruth_znn_ldp_1b ) ;
-//   hmctruth_fit_ldp_1b->Add( hmctruth_qcd_ldp_1b ) ;
-//   hmctruth_fit_ldp_1b->Add( hmctruth_ttwj_ldp_1b ) ;
-//   hmctruth_fit_ldp_1b->Add( hmctruth_susy_ldp_1b ) ;
-
-//   hmctruth_fit_ldp_2b->Add( hmctruth_znn_ldp_2b ) ;
-//   hmctruth_fit_ldp_2b->Add( hmctruth_qcd_ldp_2b ) ;
-//   hmctruth_fit_ldp_2b->Add( hmctruth_ttwj_ldp_2b ) ;
-//   hmctruth_fit_ldp_2b->Add( hmctruth_susy_ldp_2b ) ;
-
-//   hmctruth_fit_ldp_3b->Add( hmctruth_znn_ldp_3b ) ;
-//   hmctruth_fit_ldp_3b->Add( hmctruth_qcd_ldp_3b ) ;
-//   hmctruth_fit_ldp_3b->Add( hmctruth_ttwj_ldp_3b ) ;
-//   hmctruth_fit_ldp_3b->Add( hmctruth_susy_ldp_3b ) ;
-
-
-
-//   printf("\n\n Done making stacks.\n\n") ; cout << flush ;
-
-//   printf("\n Making legend...\n") ; cout << flush ;
-//   TLegend* legend = new TLegend(0.4,0.35,0.7,0.85) ;
-
-//   legend->AddEntry( hmctruth_allsm_0lep_1b, "allsm" ) ;
-//   legend->AddEntry( hmctruth_susy_0lep_1b, "SUSY" ) ;
-//   legend->AddEntry( hmctruth_ttwj_0lep_1b, "ttwj" ) ;
-//   legend->AddEntry( hmctruth_qcd_0lep_1b,  "QCD" ) ;
-//   legend->AddEntry( hmctruth_znn_0lep_1b,  "Znunu" ) ;
-//   legend->AddEntry( hmctruth_np,           "Eff PG" ) ;
-
-//   printf("\n\n Done making legend.\n\n\n") ; cout << flush ;
-
-
 
 
 
 //   if ( metgroupzoom>1 && !logy ) {
 
 //      int nhistbins = hmctruth_ttwj_0lep_1b->GetNbinsX() ;
-
-//   // int nBinsHT(0) ;
-//   // for ( int bi=2; bi<nhistbins; bi++ ) {
-//   //    if ( hmctruth_ttwj_0lep_1b->GetBinContent( bi ) <= 0. ) break ;
-//   //    nBinsHT++ ;
-//   // }
 
 //      int zoomRefBin = 1 + (nBinsHT+1)*(metgroupzoom-1) + 1 ;
 
@@ -545,120 +369,12 @@
 
 //   }
 
-//   hmctruth_allsm_0lep_1b->SetLineWidth(2) ;
-//   hmctruth_allsm_0lep_2b->SetLineWidth(2) ;
-//   hmctruth_allsm_0lep_3b->SetLineWidth(2) ;
-
-//   hmctruth_allsm_1lep_1b->SetLineWidth(2) ;
-//   hmctruth_allsm_1lep_2b->SetLineWidth(2) ;
-//   hmctruth_allsm_1lep_3b->SetLineWidth(2) ;
-
-//   hmctruth_allsm_ldp_1b->SetLineWidth(2) ;
-//   hmctruth_allsm_ldp_2b->SetLineWidth(2) ;
-//   hmctruth_allsm_ldp_3b->SetLineWidth(2) ;
-
-
-//   cmctruth->Divide(3,4);
-
-//   gPad->SetTicks(1,0) ;
-
-
-//   printf(" pad 1\n") ; cout << flush ;
-//   cmctruth->cd(1);
-//   hmctruth_allsm_0lep_1b->Draw("histpe") ;
-//   hmctruth_fit_0lep_1b->Draw("histsame") ;
-//   hmctruth_allsm_0lep_1b->Draw("same") ;
-//   gPad->SetGridy(1) ;
-//   
-//   printf(" pad 2\n") ; cout << flush ;
-//   cmctruth->cd(2);
-//   hmctruth_allsm_0lep_2b->Draw("histpe") ;
-//   hmctruth_fit_0lep_2b->Draw("histsame") ;
-//   hmctruth_allsm_0lep_2b->Draw("same") ;
-//   gPad->SetGridy(1) ;
-//   
-//   printf(" pad 3\n") ; cout << flush ;
-//   cmctruth->cd(3);
-//   hmctruth_allsm_0lep_3b->Draw("histpe") ;
-//   hmctruth_fit_0lep_3b->Draw("histsame") ;
-//   hmctruth_allsm_0lep_3b->Draw("same") ;
-//   gPad->SetGridy(1) ;
-//   
-
-
-//   printf(" pad 4\n") ; cout << flush ;
-//   cmctruth->cd(4);
-//   hmctruth_allsm_1lep_1b->Draw("histpe") ;
-//   hmctruth_fit_1lep_1b->Draw("histsame") ;
-//   hmctruth_allsm_1lep_1b->Draw("same") ;
-//   gPad->SetGridy(1) ;
-//   
-//   printf(" pad 5\n") ; cout << flush ;
-//   cmctruth->cd(5);
-//   hmctruth_allsm_1lep_2b->Draw("histpe") ;
-//   hmctruth_fit_1lep_2b->Draw("histsame") ;
-//   hmctruth_allsm_1lep_2b->Draw("same") ;
-//   gPad->SetGridy(1) ;
-//   
-//   printf(" pad 6\n") ; cout << flush ;
-//   cmctruth->cd(6);
-//   hmctruth_allsm_1lep_3b->Draw("histpe") ;
-//   hmctruth_fit_1lep_3b->Draw("histsame") ;
-//   hmctruth_allsm_1lep_3b->Draw("same") ;
-//   gPad->SetGridy(1) ;
 
 
 
 
-//   
-//   printf(" pad 7\n") ; cout << flush ;
-//   cmctruth->cd(7);
-//   hmctruth_allsm_ldp_1b->Draw("histpe") ;
-//   hmctruth_fit_ldp_1b->Draw("histsame") ;
-//   hmctruth_allsm_ldp_1b->Draw("same") ;
-//   gPad->SetGridy(1) ;
-
-//   printf(" pad 8\n") ; cout << flush ;
-//   cmctruth->cd(8);
-//   hmctruth_allsm_ldp_2b->Draw("histpe") ;
-//   hmctruth_fit_ldp_2b->Draw("histsame") ;
-//   hmctruth_allsm_ldp_2b->Draw("same") ;
-//   gPad->SetGridy(1) ;
-
-//   printf(" pad 9\n") ; cout << flush ;
-//   cmctruth->cd(9);
-//   hmctruth_allsm_ldp_3b->Draw("histpe") ;
-//   hmctruth_fit_ldp_3b->Draw("histsame") ;
-//   hmctruth_allsm_ldp_3b->Draw("same") ;
-//   gPad->SetGridy(1) ;
 
 
-
-
-//   printf(" pad 10\n") ; cout << flush ;
-//   cmctruth->cd(10) ;
-//   hmctruth_fit_zee_1b->Draw("hist") ;
-//   hmctruth_fit_zee_1b->Draw("esame") ;
-//   gPad->SetGridy(1) ;
-
-//   printf(" pad 11\n") ; cout << flush ;
-//   cmctruth->cd(11) ;
-//   hmctruth_fit_zmm_1b->Draw("histe") ;
-//   hmctruth_fit_zmm_1b->Draw("esame") ;
-//   gPad->SetGridy(1) ;
-
-
-
-
-//   cmctruth->cd(12);
-//   legend->Draw() ;
-
-//   cmctruth->Update() ;
-
-
-
-
-//   cmctruth->SaveAs("mctruth.gif") ;
 
 
 
