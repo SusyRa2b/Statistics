@@ -57,17 +57,19 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
 
 
   TChain chainQCD("tree") ;
-  chainQCD.Add("files5fb/QCD-1800.root");
-  chainQCD.Add("files5fb/QCD-1400to1800.root");
-  chainQCD.Add("files5fb/QCD-1000to1400.root");
-  chainQCD.Add("files5fb/QCD-800to1000.root");
-  chainQCD.Add("files5fb/QCD-600to800.root");
-  chainQCD.Add("files5fb/QCD-470to600.root");
-  chainQCD.Add("files5fb/QCD-300to470.root");
-  chainQCD.Add("files5fb/QCD-170to300.root");
-  chainQCD.Add("files5fb/QCD-120to170.root");
-  chainQCD.Add("files5fb/QCD-80to120.root");
+   //--- these have high weight
   chainQCD.Add("files5fb/QCD-50to80.root");
+  chainQCD.Add("files5fb/QCD-80to120.root");
+  chainQCD.Add("files5fb/QCD-120to170.root");
+  chainQCD.Add("files5fb/QCD-170to300.root");
+   //--- below here, these have weight less than one.
+  chainQCD.Add("files5fb/QCD-300to470.root");
+  chainQCD.Add("files5fb/QCD-470to600.root");
+  chainQCD.Add("files5fb/QCD-600to800.root");
+  chainQCD.Add("files5fb/QCD-800to1000.root");
+  chainQCD.Add("files5fb/QCD-1000to1400.root");
+  chainQCD.Add("files5fb/QCD-1400to1800.root");
+  chainQCD.Add("files5fb/QCD-1800.root");
 
   TChain chainTT("tree") ;
   chainTT.Add("files5fb/TT.root") ;
@@ -75,19 +77,21 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
   TChain chainZnn("tree") ;
   chainZnn.Add("files5fb/Zinv.root") ;
 
+  TChain chainWJets("tree") ;
+  chainWJets.Add("files5fb/WJets.root") ;
 
   TChain chainAll("tree");
-  chainAll.Add("files5fb/QCD-1800.root");
-  chainAll.Add("files5fb/QCD-1400to1800.root");
-  chainAll.Add("files5fb/QCD-1000to1400.root");
-  chainAll.Add("files5fb/QCD-800to1000.root");
-  chainAll.Add("files5fb/QCD-600to800.root");
-  chainAll.Add("files5fb/QCD-470to600.root");
-  chainAll.Add("files5fb/QCD-300to470.root");
-  chainAll.Add("files5fb/QCD-170to300.root");
-  chainAll.Add("files5fb/QCD-120to170.root");
-  chainAll.Add("files5fb/QCD-80to120.root");
   chainAll.Add("files5fb/QCD-50to80.root");
+  chainAll.Add("files5fb/QCD-80to120.root");
+  chainAll.Add("files5fb/QCD-120to170.root");
+  chainAll.Add("files5fb/QCD-170to300.root");
+  chainAll.Add("files5fb/QCD-300to470.root");
+  chainAll.Add("files5fb/QCD-470to600.root");
+  chainAll.Add("files5fb/QCD-600to800.root");
+  chainAll.Add("files5fb/QCD-800to1000.root");
+  chainAll.Add("files5fb/QCD-1000to1400.root");
+  chainAll.Add("files5fb/QCD-1400to1800.root");
+  chainAll.Add("files5fb/QCD-1800.root");
   chainAll.Add("files5fb/TT.root");
   chainAll.Add("files5fb/Zinv.root");
 
@@ -232,77 +236,59 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
   inFile << endl ;
 
 
+   int nSel(3) ;
+   char selname[3][100] = { "0lep", "1lep", "ldp" } ;
+
+   char selcuts[3][10000] = {
+        "minDelPhiN>4&&nMu==0&&nEl==0&&",
+        "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&",
+        "minDelPhiN<4&&nMu==0&&nEl==0&&" } ;
+
   //--- Output histograms.
 
+   TH1F* hmctruth_susy[3][3] ;
+   TH1F* hmctruth_ttwj[3][3] ;
+   TH1F* hmctruth_ttbar[3][3] ;
+   TH1F* hmctruth_wjets[3][3] ;
+   TH1F* hmctruth_qcd[3][3] ;
+   TH1F* hmctruth_znn[3][3] ;
+   TH1F* hmctruth_allsm[3][3] ;
+   TH1F* hmctruth_all[3][3] ;
 
-     TH1F* hmctruth_susy_0lep_1b = bookHist( "hmctruth_susy_0lep_1b", "0 Lep, 1 btag", "0lep", 1, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_ttwj_0lep_1b = bookHist( "hmctruth_ttwj_0lep_1b", "0 Lep, 1 btag", "0lep", 1, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_qcd_0lep_1b  = bookHist( "hmctruth_qcd_0lep_1b" , "0 Lep, 1 btag", "0lep", 1, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_znn_0lep_1b  = bookHist( "hmctruth_znn_0lep_1b" , "0 Lep, 1 btag", "0lep", 1, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_allsm_0lep_1b  = bookHist( "hmctruth_allsm_0lep_1b", "0 Lep, 1 btag", "0lep", 1, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_all_0lep_1b  = bookHist( "hmctruth_all_0lep_1b", "0 Lep, 1 btag", "0lep", 1, nBinsMET, nBinsHT ) ;
+   for ( int si=0; si<nSel; si++ ) {
+      for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
-     TH1F* hmctruth_susy_0lep_2b = bookHist( "hmctruth_susy_0lep_2b", "0 Lep, 2 btag", "0lep", 2, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_ttwj_0lep_2b = bookHist( "hmctruth_ttwj_0lep_2b", "0 Lep, 2 btag", "0lep", 2, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_qcd_0lep_2b  = bookHist( "hmctruth_qcd_0lep_2b" , "0 Lep, 2 btag", "0lep", 2, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_znn_0lep_2b  = bookHist( "hmctruth_znn_0lep_2b" , "0 Lep, 2 btag", "0lep", 2, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_allsm_0lep_2b  = bookHist( "hmctruth_allsm_0lep_2b", "0 Lep, 2 btag", "0lep", 2, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_all_0lep_2b  = bookHist( "hmctruth_all_0lep_2b", "0 Lep, 2 btag", "0lep", 2, nBinsMET, nBinsHT ) ;
+         char hname[1000] ;
+         char htitle[1000] ;
+         sprintf( htitle, "%s, %d btag", selname[si], bbi+1 ) ;
 
-     TH1F* hmctruth_susy_0lep_3b = bookHist( "hmctruth_susy_0lep_3b", "0 Lep, 3 btag", "0lep", 3, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_ttwj_0lep_3b = bookHist( "hmctruth_ttwj_0lep_3b", "0 Lep, 3 btag", "0lep", 3, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_qcd_0lep_3b  = bookHist( "hmctruth_qcd_0lep_3b" , "0 Lep, 3 btag", "0lep", 3, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_znn_0lep_3b  = bookHist( "hmctruth_znn_0lep_3b" , "0 Lep, 3 btag", "0lep", 3, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_allsm_0lep_3b  = bookHist( "hmctruth_allsm_0lep_3b", "0 Lep, 3 btag", "0lep", 3, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_all_0lep_3b  = bookHist( "hmctruth_all_0lep_3b", "0 Lep, 3 btag", "0lep", 3, nBinsMET, nBinsHT ) ;
+         sprintf( hname, "hmctruth_susy_%s_%db", selname[si], bbi+1 ) ;
+         hmctruth_susy[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
 
+         sprintf( hname, "hmctruth_ttwj_%s_%db", selname[si], bbi+1 ) ;
+         hmctruth_ttwj[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
 
+         sprintf( hname, "hmctruth_ttbar_%s_%db", selname[si], bbi+1 ) ;
+         hmctruth_ttbar[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
 
+         sprintf( hname, "hmctruth_wjets_%s_%db", selname[si], bbi+1 ) ;
+         hmctruth_wjets[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
 
-     TH1F* hmctruth_susy_1lep_1b = bookHist( "hmctruth_susy_1lep_1b", "1 Lep, 1 btag", "1lep", 1, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_ttwj_1lep_1b = bookHist( "hmctruth_ttwj_1lep_1b", "1 Lep, 1 btag", "1lep", 1, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_qcd_1lep_1b  = bookHist( "hmctruth_qcd_1lep_1b" , "1 Lep, 1 btag", "1lep", 1, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_znn_1lep_1b  = bookHist( "hmctruth_znn_1lep_1b" , "1 Lep, 1 btag", "1lep", 1, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_allsm_1lep_1b  = bookHist( "hmctruth_allsm_1lep_1b", "1 Lep, 1 btag", "1lep", 1, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_all_1lep_1b  = bookHist( "hmctruth_all_1lep_1b", "1 Lep, 1 btag", "1lep", 1, nBinsMET, nBinsHT ) ;
+         sprintf( hname, "hmctruth_qcd_%s_%db", selname[si], bbi+1 ) ;
+         hmctruth_qcd[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
 
-     TH1F* hmctruth_susy_1lep_2b = bookHist( "hmctruth_susy_1lep_2b", "1 Lep, 2 btag", "1lep", 2, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_ttwj_1lep_2b = bookHist( "hmctruth_ttwj_1lep_2b", "1 Lep, 2 btag", "1lep", 2, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_qcd_1lep_2b  = bookHist( "hmctruth_qcd_1lep_2b" , "1 Lep, 2 btag", "1lep", 2, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_znn_1lep_2b  = bookHist( "hmctruth_znn_1lep_2b" , "1 Lep, 2 btag", "1lep", 2, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_allsm_1lep_2b  = bookHist( "hmctruth_allsm_1lep_2b", "1 Lep, 2 btag", "1lep", 2, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_all_1lep_2b  = bookHist( "hmctruth_all_1lep_2b", "1 Lep, 2 btag", "1lep", 2, nBinsMET, nBinsHT ) ;
+         sprintf( hname, "hmctruth_znn_%s_%db", selname[si], bbi+1 ) ;
+         hmctruth_znn[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
 
-     TH1F* hmctruth_susy_1lep_3b = bookHist( "hmctruth_susy_1lep_3b", "1 Lep, 3 btag", "1lep", 3, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_ttwj_1lep_3b = bookHist( "hmctruth_ttwj_1lep_3b", "1 Lep, 3 btag", "1lep", 3, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_qcd_1lep_3b  = bookHist( "hmctruth_qcd_1lep_3b" , "1 Lep, 3 btag", "1lep", 3, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_znn_1lep_3b  = bookHist( "hmctruth_znn_1lep_3b" , "1 Lep, 3 btag", "1lep", 3, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_allsm_1lep_3b  = bookHist( "hmctruth_allsm_1lep_3b", "1 Lep, 3 btag", "1lep", 3, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_all_1lep_3b  = bookHist( "hmctruth_all_1lep_3b", "1 Lep, 3 btag", "1lep", 3, nBinsMET, nBinsHT ) ;
+         sprintf( hname, "hmctruth_allsm_%s_%db", selname[si], bbi+1 ) ;
+         hmctruth_allsm[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
+
+         sprintf( hname, "hmctruth_all_%s_%db", selname[si], bbi+1 ) ;
+         hmctruth_all[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
 
 
-
-
-     TH1F* hmctruth_susy_ldp_1b = bookHist( "hmctruth_susy_ldp_1b", "LDP, 1 btag", "ldp", 1, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_ttwj_ldp_1b = bookHist( "hmctruth_ttwj_ldp_1b", "LDP, 1 btag", "ldp", 1, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_qcd_ldp_1b  = bookHist( "hmctruth_qcd_ldp_1b" , "LDP, 1 btag", "ldp", 1, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_znn_ldp_1b  = bookHist( "hmctruth_znn_ldp_1b" , "LDP, 1 btag", "ldp", 1, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_allsm_ldp_1b  = bookHist( "hmctruth_allsm_ldp_1b", "LDP, 1 btag", "ldp", 1, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_all_ldp_1b  = bookHist( "hmctruth_all_ldp_1b", "LDP, 1 btag", "ldp", 1, nBinsMET, nBinsHT ) ;
-
-     TH1F* hmctruth_susy_ldp_2b = bookHist( "hmctruth_susy_ldp_2b", "LDP, 2 btag", "ldp", 2, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_ttwj_ldp_2b = bookHist( "hmctruth_ttwj_ldp_2b", "LDP, 2 btag", "ldp", 2, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_qcd_ldp_2b  = bookHist( "hmctruth_qcd_ldp_2b" , "LDP, 2 btag", "ldp", 2, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_znn_ldp_2b  = bookHist( "hmctruth_znn_ldp_2b" , "LDP, 2 btag", "ldp", 2, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_allsm_ldp_2b  = bookHist( "hmctruth_allsm_ldp_2b", "LDP, 2 btag", "ldp", 2, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_all_ldp_2b  = bookHist( "hmctruth_all_ldp_2b", "LDP, 2 btag", "ldp", 2, nBinsMET, nBinsHT ) ;
-
-     TH1F* hmctruth_susy_ldp_3b = bookHist( "hmctruth_susy_ldp_3b", "LDP, 3 btag", "ldp", 3, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_ttwj_ldp_3b = bookHist( "hmctruth_ttwj_ldp_3b", "LDP, 3 btag", "ldp", 3, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_qcd_ldp_3b  = bookHist( "hmctruth_qcd_ldp_3b" , "LDP, 3 btag", "ldp", 3, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_znn_ldp_3b  = bookHist( "hmctruth_znn_ldp_3b" , "LDP, 3 btag", "ldp", 3, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_allsm_ldp_3b  = bookHist( "hmctruth_allsm_ldp_3b", "LDP, 3 btag", "ldp", 3, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_all_ldp_3b  = bookHist( "hmctruth_all_ldp_3b", "LDP, 3 btag", "ldp", 3, nBinsMET, nBinsHT ) ;
+      } // bbi.
+   } // si.
 
 
 
@@ -317,22 +303,13 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
 
 
 
-     //--- do something passive with susy pointers so compiler won't give unused variable warnings.
-     hmctruth_susy_0lep_1b->SetLineColor(1) ;
-     hmctruth_susy_0lep_2b->SetLineColor(1) ;
-     hmctruth_susy_0lep_3b->SetLineColor(1) ;
-     hmctruth_susy_1lep_1b->SetLineColor(1) ;
-     hmctruth_susy_1lep_2b->SetLineColor(1) ;
-     hmctruth_susy_1lep_3b->SetLineColor(1) ;
-     hmctruth_susy_ldp_1b->SetLineColor(1) ;
-     hmctruth_susy_ldp_2b->SetLineColor(1) ;
-     hmctruth_susy_ldp_3b->SetLineColor(1) ;
 
 
 
   //--- histograms used in getting the observables.
 
     TH2F* h_tt[10] ;
+    TH2F* h_wjets[10] ;
     TH2F* h_qcd[10] ;
     TH2F* h_znn[10] ;
     TH2F* h_susy[10] ;
@@ -344,6 +321,10 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
        sprintf( hname, "h_tt_%db", bi+1 ) ;
        h_tt[bi]   = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
        h_tt[bi] -> Sumw2() ;
+
+       sprintf( hname, "h_wjets_%db", bi+1 ) ;
+       h_wjets[bi]   = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
+       h_wjets[bi] -> Sumw2() ;
 
        sprintf( hname, "h_qcd_%db", bi+1 ) ;
        h_qcd[bi]  = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
@@ -360,45 +341,48 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
     }
 
 
+  for ( int si=0 ; si<nSel ; si++ ) {
 
-  //=== 0lep observables ==================================================
 
   printf("\n\n-----------------------------------------------------------------\n\n") ;
 
-  TString cuts0lep = "minDelPhiN>4&&nMu==0&&nEl==0&&";
       for (int k = 0 ; k < nBinsBjets ; k++) {
 
         char allcuts[10000] ;
         char allsusycuts[10000] ;
         if ( k < (nBinsBjets-1) ) {
-           sprintf( allcuts, "%snB==%d", cuts0lep.Data(), k+1 ) ;
-           sprintf( allsusycuts, "%snB==%d%s", cuts0lep.Data(), k+1, susycut.Data() ) ;
+           sprintf( allcuts, "%snB==%d", selcuts[si], k+1 ) ;
+           sprintf( allsusycuts, "%snB==%d%s", selcuts[si], k+1, susycut.Data() ) ;
         } else {
-           sprintf( allcuts, "%snB>=%d", cuts0lep.Data(), k+1 ) ;
-           sprintf( allsusycuts, "%snB>=%d%s", cuts0lep.Data(), k+1, susycut.Data() ) ;
+           sprintf( allcuts, "%snB>=%d", selcuts[si], k+1 ) ;
+           sprintf( allsusycuts, "%snB>=%d%s", selcuts[si], k+1, susycut.Data() ) ;
         }
 
 
-        printf("\n\n N_0lep -- nbjet bin (%d): cuts=%s\n\n", k, allcuts) ; cout << flush ;
+        printf("\n\n N_%s -- nbjet bin (%d): cuts=%s\n\n", selname[si], k, allcuts) ; cout << flush ;
 
         char hname[100] ;
 
         sprintf( hname, "h_tt_%db", k+1 ) ;
         chainTT.Project(hname,"HT:MET",allcuts);
-        printf("    %9s %7.1f events\n", hname, h_tt[k]->Integral() ) ; cout << flush ;
+        printf("    %12s %7.1f events\n", hname, h_tt[k]->Integral() ) ; cout << flush ;
+
+        sprintf( hname, "h_wjets_%db", k+1 ) ;
+        chainWJets.Project(hname,"HT:MET",allcuts);
+        printf("    %12s %7.1f events\n", hname, h_wjets[k]->Integral() ) ; cout << flush ;
 
         sprintf( hname, "h_qcd_%db", k+1 ) ;
         chainQCD.Project(hname,"HT:MET",allcuts);
-        printf("    %9s %7.1f events\n", hname, h_qcd[k]->Integral() ) ; cout << flush ;
+        printf("    %12s %7.1f events\n", hname, h_qcd[k]->Integral() ) ; cout << flush ;
 
         sprintf( hname, "h_znn_%db", k+1 ) ;
         chainZnn.Project(hname,"HT:MET",allcuts);
-        printf("    %9s %7.1f events\n", hname, h_znn[k]->Integral() ) ; cout << flush ;
+        printf("    %12s %7.1f events\n", hname, h_znn[k]->Integral() ) ; cout << flush ;
         if ( mgl > 0. ) {
            sprintf( hname, "h_susy_%db", k+1 ) ;
            chainT1bbbb.Project(hname,"HT:MET",allsusycuts);
            h_susy[k]->Scale( t1bbbbWeight ) ;
-           printf("    %9s %7.1f events\n", hname, h_susy[k]->Integral() ) ; cout << flush ;
+           printf("    %12s %7.1f events\n", hname, h_susy[k]->Integral() ) ; cout << flush ;
 
         }
 
@@ -411,11 +395,15 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
           for (int k = 0 ; k < nBinsBjets ; k++) {
 
 
-             TString obs_0lep = "N_0lep" ;
-             obs_0lep = obs_0lep+sMbins[i]+sHbins[j]+sBbins[k] ;
+             char obsname[1000] ;
+             sprintf( obsname, "N_%s_M%d_H%d_%db", selname[si], i+1, j+1, k+1 ) ;
+
 
              double ttval = h_tt[k] -> GetBinContent( i+1, j+1 ) ;
              double tterr = h_tt[k] -> GetBinError(   i+1, j+1 ) ;
+
+             double wjetsval = h_wjets[k] -> GetBinContent( i+1, j+1 ) ;
+             double wjetserr = h_wjets[k] -> GetBinError(   i+1, j+1 ) ;
 
              double qcdval = h_qcd[k] -> GetBinContent( i+1, j+1 ) ;
              double qcderr = h_qcd[k] -> GetBinError(   i+1, j+1 ) ;
@@ -426,58 +414,36 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
              double susyval = h_susy[k] -> GetBinContent( i+1, j+1 ) ;
              double susyerr = h_susy[k] -> GetBinError(   i+1, j+1 ) ;
 
-             printf(" N_0lep, tt     met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", i,j,k, ttval,tterr) ; cout << flush ;
-             printf(" N_0lep, qcd    met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", i,j,k, qcdval,qcderr) ; cout << flush ;
-             printf(" N_0lep, znn    met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", i,j,k, znnval,znnerr) ; cout << flush ;
-             if ( mgl>0. ) { printf(" N_0lep, susy   met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", i,j,k, susyval,susyerr) ; cout << flush ; }
+             printf(" N_%s, tt     met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, ttval,tterr) ; cout << flush ;
+             printf(" N_%s, wjets  met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, wjetsval,wjetserr) ; cout << flush ;
+             printf(" N_%s, qcd    met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, qcdval,qcderr) ; cout << flush ;
+             printf(" N_%s, znn    met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, znnval,znnerr) ; cout << flush ;
+             if ( mgl>0. ) { printf(" N_%s, susy   met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, susyval,susyerr) ; cout << flush ; }
              printf("\n") ;
 
-             double allval = ttval + qcdval + znnval + susyval ;
+             double allval = ttval + wjetsval + qcdval + znnval + susyval ;
 
-             inFile << obs_0lep << "  \t" << (int)allval << endl;
+             inFile << obsname << "  \t" << (int)allval << endl;
 
              int histbin = 1 + (nBinsHT+1)*i + j + 1 ;
 
-             if ( k == 0 ) {
-                hmctruth_ttwj_0lep_1b -> SetBinContent( histbin, ttval  ) ;
-                hmctruth_ttwj_0lep_1b -> SetBinError(   histbin, tterr  ) ;
-                hmctruth_qcd_0lep_1b  -> SetBinContent( histbin, qcdval ) ;
-                hmctruth_qcd_0lep_1b  -> SetBinError(   histbin, qcderr ) ;
-                hmctruth_znn_0lep_1b  -> SetBinContent( histbin, znnval ) ;
-                hmctruth_znn_0lep_1b  -> SetBinError(   histbin, znnerr ) ;
-                hmctruth_susy_0lep_1b -> SetBinContent( histbin, susyval  ) ;
-                hmctruth_susy_0lep_1b -> SetBinError(   histbin, susyerr  ) ;
-                hmctruth_allsm_0lep_1b -> SetBinContent( histbin, ttval+qcdval+znnval ) ;
-                hmctruth_allsm_0lep_1b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
-                hmctruth_all_0lep_1b -> SetBinContent( histbin, ttval+qcdval+znnval+susyval ) ;
-                hmctruth_all_0lep_1b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
-             } else if ( k == 1 ) {
-                hmctruth_ttwj_0lep_2b -> SetBinContent( histbin, ttval  ) ;
-                hmctruth_ttwj_0lep_2b -> SetBinError(   histbin, tterr  ) ;
-                hmctruth_qcd_0lep_2b  -> SetBinContent( histbin, qcdval ) ;
-                hmctruth_qcd_0lep_2b  -> SetBinError(   histbin, qcderr ) ;
-                hmctruth_znn_0lep_2b  -> SetBinContent( histbin, znnval ) ;
-                hmctruth_znn_0lep_2b  -> SetBinError(   histbin, znnerr ) ;
-                hmctruth_susy_0lep_2b -> SetBinContent( histbin, susyval  ) ;
-                hmctruth_susy_0lep_2b -> SetBinError(   histbin, susyerr  ) ;
-                hmctruth_allsm_0lep_2b -> SetBinContent( histbin, ttval+qcdval+znnval ) ;
-                hmctruth_allsm_0lep_2b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
-                hmctruth_all_0lep_2b -> SetBinContent( histbin, ttval+qcdval+znnval+susyval ) ;
-                hmctruth_all_0lep_2b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
-             } else if ( k == 2 ) {
-                hmctruth_ttwj_0lep_3b -> SetBinContent( histbin, ttval  ) ;
-                hmctruth_ttwj_0lep_3b -> SetBinError(   histbin, tterr  ) ;
-                hmctruth_qcd_0lep_3b  -> SetBinContent( histbin, qcdval ) ;
-                hmctruth_qcd_0lep_3b  -> SetBinError(   histbin, qcderr ) ;
-                hmctruth_znn_0lep_3b  -> SetBinContent( histbin, znnval ) ;
-                hmctruth_znn_0lep_3b  -> SetBinError(   histbin, znnerr ) ;
-                hmctruth_susy_0lep_3b -> SetBinContent( histbin, susyval  ) ;
-                hmctruth_susy_0lep_3b -> SetBinError(   histbin, susyerr  ) ;
-                hmctruth_allsm_0lep_3b -> SetBinContent( histbin, ttval+qcdval+znnval ) ;
-                hmctruth_allsm_0lep_3b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
-                hmctruth_all_0lep_3b -> SetBinContent( histbin, ttval+qcdval+znnval+susyval ) ;
-                hmctruth_all_0lep_3b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
-             }
+             hmctruth_ttwj[si][k]  -> SetBinContent( histbin, ttval + wjetsval  ) ;
+             hmctruth_ttwj[si][k]  -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(wjetserr,2) )  ) ;
+             hmctruth_ttbar[si][k] -> SetBinContent( histbin, ttval ) ;
+             hmctruth_ttbar[si][k] -> SetBinError(   histbin, tterr ) ;
+             hmctruth_wjets[si][k] -> SetBinContent( histbin, wjetsval  ) ;
+             hmctruth_wjets[si][k] -> SetBinError(   histbin, wjetserr  ) ;
+             hmctruth_qcd[si][k]   -> SetBinContent( histbin, qcdval ) ;
+             hmctruth_qcd[si][k]   -> SetBinError(   histbin, qcderr ) ;
+             hmctruth_znn[si][k]   -> SetBinContent( histbin, znnval ) ;
+             hmctruth_znn[si][k]   -> SetBinError(   histbin, znnerr ) ;
+             hmctruth_susy[si][k]  -> SetBinContent( histbin, susyval  ) ;
+             hmctruth_susy[si][k]  -> SetBinError(   histbin, susyerr  ) ;
+             hmctruth_allsm[si][k] -> SetBinContent( histbin, ttval+wjetsval+qcdval+znnval ) ;
+             hmctruth_allsm[si][k] -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(wjetserr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
+             hmctruth_all[si][k]   -> SetBinContent( histbin, ttval+wjetsval+qcdval+znnval+susyval ) ;
+             hmctruth_all[si][k]   -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(wjetserr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
+
 
             } // k
           } // j
@@ -487,277 +453,15 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
 
           for (int k = 0 ; k < nBinsBjets ; k++) {
              h_tt[k] -> Reset() ;
+             h_wjets[k] -> Reset() ;
              h_qcd[k] -> Reset() ;
              h_znn[k] -> Reset() ;
              h_susy[k] -> Reset() ;
           }
 
 
+     } // si.
 
-
-
-  //=== 1lep observables ==================================================
-
-  printf("\n\n-----------------------------------------------------------------\n\n") ;
-
-  TString cuts1lep = "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&";
-      for (int k = 0 ; k < nBinsBjets ; k++) {
-
-        char allcuts[10000] ;
-        char allsusycuts[10000] ;
-        if ( k < (nBinsBjets-1) ) {
-           sprintf( allcuts, "%snB==%d", cuts1lep.Data(), k+1 ) ;
-           sprintf( allsusycuts, "%snB==%d%s", cuts1lep.Data(), k+1, susycut.Data() ) ;
-        } else {
-           sprintf( allcuts, "%snB>=%d", cuts1lep.Data(), k+1 ) ;
-           sprintf( allsusycuts, "%snB>=%d%s", cuts1lep.Data(), k+1, susycut.Data() ) ;
-        }
-
-
-        printf("\n\n N_1lep -- nbjet bin (%d): cuts=%s\n\n", k, allcuts) ; cout << flush ;
-
-        char hname[100] ;
-
-        sprintf( hname, "h_tt_%db", k+1 ) ;
-        chainTT.Project(hname,"HT:MET",allcuts);
-        printf("    %9s %7.1f events\n", hname, h_tt[k]->Integral() ) ; cout << flush ;
-
-        sprintf( hname, "h_qcd_%db", k+1 ) ;
-        chainQCD.Project(hname,"HT:MET",allcuts);
-        printf("    %9s %7.1f events\n", hname, h_qcd[k]->Integral() ) ; cout << flush ;
-
-        sprintf( hname, "h_znn_%db", k+1 ) ;
-        chainZnn.Project(hname,"HT:MET",allcuts);
-        printf("    %9s %7.1f events\n", hname, h_znn[k]->Integral() ) ; cout << flush ;
-        if ( mgl > 0. ) {
-           sprintf( hname, "h_susy_%db", k+1 ) ;
-           chainT1bbbb.Project(hname,"HT:MET",allsusycuts);
-           h_susy[k]->Scale( t1bbbbWeight ) ;
-           printf("    %9s %7.1f events\n", hname, h_susy[k]->Integral() ) ; cout << flush ;
-
-        }
-
-      } // k
-
-
-      for (int i = 0 ; i < nBinsMET ; i++) {
-        for (int j = 0 ; j < nBinsHT ; j++) {
-          for (int k = 0 ; k < nBinsBjets ; k++) {
-
-
-             TString obs_1lep = "N_1lep" ;
-             obs_1lep = obs_1lep+sMbins[i]+sHbins[j]+sBbins[k] ;
-
-             double ttval = h_tt[k] -> GetBinContent( i+1, j+1 ) ;
-             double tterr = h_tt[k] -> GetBinError(   i+1, j+1 ) ;
-
-             double qcdval = h_qcd[k] -> GetBinContent( i+1, j+1 ) ;
-             double qcderr = h_qcd[k] -> GetBinError(   i+1, j+1 ) ;
-
-             double znnval = h_znn[k] -> GetBinContent( i+1, j+1 ) ;
-             double znnerr = h_znn[k] -> GetBinError(   i+1, j+1 ) ;
-
-             double susyval = h_susy[k] -> GetBinContent( i+1, j+1 ) ;
-             double susyerr = h_susy[k] -> GetBinError(   i+1, j+1 ) ;
-
-             printf(" N_1lep, tt     met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", i,j,k, ttval,tterr) ; cout << flush ;
-             printf(" N_1lep, qcd    met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", i,j,k, qcdval,qcderr) ; cout << flush ;
-             printf(" N_1lep, znn    met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", i,j,k, znnval,znnerr) ; cout << flush ;
-             if ( mgl>0. ) { printf(" N_1lep, susy   met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", i,j,k, susyval,susyerr) ; cout << flush ; }
-             printf("\n") ;
-
-             double allval = ttval + qcdval + znnval + susyval ;
-
-             inFile << obs_1lep << "  \t" << (int)allval << endl;
-
-             int histbin = 1 + (nBinsHT+1)*i + j + 1 ;
-
-             if ( k == 0 ) {
-                hmctruth_ttwj_1lep_1b -> SetBinContent( histbin, ttval  ) ;
-                hmctruth_ttwj_1lep_1b -> SetBinError(   histbin, tterr  ) ;
-                hmctruth_qcd_1lep_1b  -> SetBinContent( histbin, qcdval ) ;
-                hmctruth_qcd_1lep_1b  -> SetBinError(   histbin, qcderr ) ;
-                hmctruth_znn_1lep_1b  -> SetBinContent( histbin, znnval ) ;
-                hmctruth_znn_1lep_1b  -> SetBinError(   histbin, znnerr ) ;
-                hmctruth_susy_1lep_1b -> SetBinContent( histbin, susyval  ) ;
-                hmctruth_susy_1lep_1b -> SetBinError(   histbin, susyerr  ) ;
-                hmctruth_allsm_1lep_1b -> SetBinContent( histbin, ttval+qcdval+znnval ) ;
-                hmctruth_allsm_1lep_1b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
-                hmctruth_all_1lep_1b -> SetBinContent( histbin, ttval+qcdval+znnval+susyval ) ;
-                hmctruth_all_1lep_1b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
-             } else if ( k == 1 ) {
-                hmctruth_ttwj_1lep_2b -> SetBinContent( histbin, ttval  ) ;
-                hmctruth_ttwj_1lep_2b -> SetBinError(   histbin, tterr  ) ;
-                hmctruth_qcd_1lep_2b  -> SetBinContent( histbin, qcdval ) ;
-                hmctruth_qcd_1lep_2b  -> SetBinError(   histbin, qcderr ) ;
-                hmctruth_znn_1lep_2b  -> SetBinContent( histbin, znnval ) ;
-                hmctruth_znn_1lep_2b  -> SetBinError(   histbin, znnerr ) ;
-                hmctruth_susy_1lep_2b -> SetBinContent( histbin, susyval  ) ;
-                hmctruth_susy_1lep_2b -> SetBinError(   histbin, susyerr  ) ;
-                hmctruth_allsm_1lep_2b -> SetBinContent( histbin, ttval+qcdval+znnval ) ;
-                hmctruth_allsm_1lep_2b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
-                hmctruth_all_1lep_2b -> SetBinContent( histbin, ttval+qcdval+znnval+susyval ) ;
-                hmctruth_all_1lep_2b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
-             } else if ( k == 2 ) {
-                hmctruth_ttwj_1lep_3b -> SetBinContent( histbin, ttval  ) ;
-                hmctruth_ttwj_1lep_3b -> SetBinError(   histbin, tterr  ) ;
-                hmctruth_qcd_1lep_3b  -> SetBinContent( histbin, qcdval ) ;
-                hmctruth_qcd_1lep_3b  -> SetBinError(   histbin, qcderr ) ;
-                hmctruth_znn_1lep_3b  -> SetBinContent( histbin, znnval ) ;
-                hmctruth_znn_1lep_3b  -> SetBinError(   histbin, znnerr ) ;
-                hmctruth_susy_1lep_3b -> SetBinContent( histbin, susyval  ) ;
-                hmctruth_susy_1lep_3b -> SetBinError(   histbin, susyerr  ) ;
-                hmctruth_allsm_1lep_3b -> SetBinContent( histbin, ttval+qcdval+znnval ) ;
-                hmctruth_allsm_1lep_3b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
-                hmctruth_all_1lep_3b -> SetBinContent( histbin, ttval+qcdval+znnval+susyval ) ;
-                hmctruth_all_1lep_3b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
-             }
-
-            } // k
-          } // j
-        } // i
-
-          for (int k = 0 ; k < nBinsBjets ; k++) {
-             h_tt[k] -> Reset() ;
-             h_qcd[k] -> Reset() ;
-             h_znn[k] -> Reset() ;
-             h_susy[k] -> Reset() ;
-          }
-
-
-
-
-
-
-
-
-  //=== ldp observables ==================================================
-
-  printf("\n\n-----------------------------------------------------------------\n\n") ;
-
-  TString cutsldp = "minDelPhiN<4&&nMu==0&&nEl==0&&";
-      for (int k = 0 ; k < nBinsBjets ; k++) {
-
-        char allcuts[10000] ;
-        char allsusycuts[10000] ;
-        if ( k < (nBinsBjets-1) ) {
-           sprintf( allcuts, "%snB==%d", cutsldp.Data(), k+1 ) ;
-           sprintf( allsusycuts, "%snB==%d%s", cutsldp.Data(), k+1, susycut.Data() ) ;
-        } else {
-           sprintf( allcuts, "%snB>=%d", cutsldp.Data(), k+1 ) ;
-           sprintf( allsusycuts, "%snB>=%d%s", cutsldp.Data(), k+1, susycut.Data() ) ;
-        }
-
-
-        printf("\n\n N_ldp -- nbjet bin (%d): cuts=%s\n\n", k, allcuts) ; cout << flush ;
-
-        char hname[100] ;
-
-        sprintf( hname, "h_tt_%db", k+1 ) ;
-        chainTT.Project(hname,"HT:MET",allcuts);
-        printf("    %9s %7.1f events\n", hname, h_tt[k]->Integral() ) ; cout << flush ;
-
-        sprintf( hname, "h_qcd_%db", k+1 ) ;
-        chainQCD.Project(hname,"HT:MET",allcuts);
-        printf("    %9s %7.1f events\n", hname, h_qcd[k]->Integral() ) ; cout << flush ;
-
-        sprintf( hname, "h_znn_%db", k+1 ) ;
-        chainZnn.Project(hname,"HT:MET",allcuts);
-        printf("    %9s %7.1f events\n", hname, h_znn[k]->Integral() ) ; cout << flush ;
-        if ( mgl > 0. ) {
-           sprintf( hname, "h_susy_%db", k+1 ) ;
-           chainT1bbbb.Project(hname,"HT:MET",allsusycuts);
-           h_susy[k]->Scale( t1bbbbWeight ) ;
-           printf("    %9s %7.1f events\n", hname, h_susy[k]->Integral() ) ; cout << flush ;
-
-        }
-
-      } // k
-
-
-      for (int i = 0 ; i < nBinsMET ; i++) {
-        for (int j = 0 ; j < nBinsHT ; j++) {
-          for (int k = 0 ; k < nBinsBjets ; k++) {
-
-
-             TString obs_ldp = "N_ldp" ;
-             obs_ldp = obs_ldp+sMbins[i]+sHbins[j]+sBbins[k] ;
-
-             double ttval = h_tt[k] -> GetBinContent( i+1, j+1 ) ;
-             double tterr = h_tt[k] -> GetBinError(   i+1, j+1 ) ;
-
-             double qcdval = h_qcd[k] -> GetBinContent( i+1, j+1 ) ;
-             double qcderr = h_qcd[k] -> GetBinError(   i+1, j+1 ) ;
-
-             double znnval = h_znn[k] -> GetBinContent( i+1, j+1 ) ;
-             double znnerr = h_znn[k] -> GetBinError(   i+1, j+1 ) ;
-
-             double susyval = h_susy[k] -> GetBinContent( i+1, j+1 ) ;
-             double susyerr = h_susy[k] -> GetBinError(   i+1, j+1 ) ;
-
-             printf(" N_ldp, tt     met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", i,j,k, ttval,tterr) ; cout << flush ;
-             printf(" N_ldp, qcd    met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", i,j,k, qcdval,qcderr) ; cout << flush ;
-             printf(" N_ldp, znn    met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", i,j,k, znnval,znnerr) ; cout << flush ;
-             if ( mgl>0. ) { printf(" N_ldp, susy   met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", i,j,k, susyval,susyerr) ; cout << flush ; }
-             printf("\n") ;
-
-             double allval = ttval + qcdval + znnval + susyval ;
-
-             inFile << obs_ldp << "  \t" << (int)allval << endl;
-
-             int histbin = 1 + (nBinsHT+1)*i + j + 1 ;
-
-             if ( k == 0 ) {
-                hmctruth_ttwj_ldp_1b -> SetBinContent( histbin, ttval  ) ;
-                hmctruth_ttwj_ldp_1b -> SetBinError(   histbin, tterr  ) ;
-                hmctruth_qcd_ldp_1b  -> SetBinContent( histbin, qcdval ) ;
-                hmctruth_qcd_ldp_1b  -> SetBinError(   histbin, qcderr ) ;
-                hmctruth_znn_ldp_1b  -> SetBinContent( histbin, znnval ) ;
-                hmctruth_znn_ldp_1b  -> SetBinError(   histbin, znnerr ) ;
-                hmctruth_susy_ldp_1b -> SetBinContent( histbin, susyval  ) ;
-                hmctruth_susy_ldp_1b -> SetBinError(   histbin, susyerr  ) ;
-                hmctruth_allsm_ldp_1b -> SetBinContent( histbin, ttval+qcdval+znnval ) ;
-                hmctruth_allsm_ldp_1b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
-                hmctruth_all_ldp_1b -> SetBinContent( histbin, ttval+qcdval+znnval+susyval ) ;
-                hmctruth_all_ldp_1b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
-             } else if ( k == 1 ) {
-                hmctruth_ttwj_ldp_2b -> SetBinContent( histbin, ttval  ) ;
-                hmctruth_ttwj_ldp_2b -> SetBinError(   histbin, tterr  ) ;
-                hmctruth_qcd_ldp_2b  -> SetBinContent( histbin, qcdval ) ;
-                hmctruth_qcd_ldp_2b  -> SetBinError(   histbin, qcderr ) ;
-                hmctruth_znn_ldp_2b  -> SetBinContent( histbin, znnval ) ;
-                hmctruth_znn_ldp_2b  -> SetBinError(   histbin, znnerr ) ;
-                hmctruth_susy_ldp_2b -> SetBinContent( histbin, susyval  ) ;
-                hmctruth_susy_ldp_2b -> SetBinError(   histbin, susyerr  ) ;
-                hmctruth_allsm_ldp_2b -> SetBinContent( histbin, ttval+qcdval+znnval ) ;
-                hmctruth_allsm_ldp_2b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
-                hmctruth_all_ldp_2b -> SetBinContent( histbin, ttval+qcdval+znnval+susyval ) ;
-                hmctruth_all_ldp_2b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
-             } else if ( k == 2 ) {
-                hmctruth_ttwj_ldp_3b -> SetBinContent( histbin, ttval  ) ;
-                hmctruth_ttwj_ldp_3b -> SetBinError(   histbin, tterr  ) ;
-                hmctruth_qcd_ldp_3b  -> SetBinContent( histbin, qcdval ) ;
-                hmctruth_qcd_ldp_3b  -> SetBinError(   histbin, qcderr ) ;
-                hmctruth_znn_ldp_3b  -> SetBinContent( histbin, znnval ) ;
-                hmctruth_znn_ldp_3b  -> SetBinError(   histbin, znnerr ) ;
-                hmctruth_susy_ldp_3b -> SetBinContent( histbin, susyval  ) ;
-                hmctruth_susy_ldp_3b -> SetBinError(   histbin, susyerr  ) ;
-                hmctruth_allsm_ldp_3b -> SetBinContent( histbin, ttval+qcdval+znnval ) ;
-                hmctruth_allsm_ldp_3b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
-                hmctruth_all_ldp_3b -> SetBinContent( histbin, ttval+qcdval+znnval+susyval ) ;
-                hmctruth_all_ldp_3b -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
-             }
-
-            } // k
-          } // j
-        } // i
-
-          for (int k = 0 ; k < nBinsBjets ; k++) {
-             h_tt[k] -> Reset() ;
-             h_qcd[k] -> Reset() ;
-             h_znn[k] -> Reset() ;
-             h_susy[k] -> Reset() ;
-          }
 
 
 
@@ -914,6 +618,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
   
     printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
   
+  TString cutsldp = "minDelPhiN<4&&nMu==0&&nEl==0&&";
     for (int i = 0 ; i < nBinsMET ; i++) {
       for (int j = 0 ; j < nBinsHT ; j++) {
         for (int k = 0 ; k < nBinsBjets ; k++) {

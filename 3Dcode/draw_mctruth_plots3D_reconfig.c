@@ -34,7 +34,8 @@
                               bool logy=false,
                               bool doNorm=false,
                               double normmax=2.0,
-                              int metgroupzoom=1 ) {
+                              int metgroupzoom=1,
+                              bool splitttwj=false ) {
 
 
 
@@ -63,8 +64,8 @@
 
 
 
-     int ncomp(5) ;
-     char compname[5][100] = { "allsm", "susy", "ttwj", "qcd", "znn" } ;
+     int ncomp(7) ;
+     char compname[7][100] = { "allsm", "susy", "ttwj", "qcd", "znn", "ttbar", "wjets" } ;
 
      int nsel(3) ;
      char selname[3][100] = { "0lep", "1lep", "ldp" } ;
@@ -72,12 +73,15 @@
      //int nbtagmult(3) ;
      char btagmultname[3][100] = { "1b", "2b", "3b" } ;
 
-     int compcolor[5] ;
+     int compcolor[7] ;
      compcolor[0] = -1 ;
      compcolor[1] = 6 ;
      compcolor[2] = kBlue-9 ;
      compcolor[3] = 2 ;
      compcolor[4] = kGreen-3 ;
+     compcolor[5] = kBlue-9 ;
+     compcolor[6] = kBlue-7 ;
+
 
 
      //-- figure out the binning from a couple of histograms in the input file.
@@ -93,9 +97,12 @@
      printf("\n\n Number of MET bins : %d\n\n", nBinsMET ) ;
 
 
+
+
+
      //-- read in the input histograms and save pointers.
 
-     TH1F* hinput_[3][3][5] ;
+     TH1F* hinput_[3][3][7] ;
      for ( int si=0; si<nsel; si++ ) {
         for ( int bbi=0 ; bbi<nBinsBjets; bbi++ ) {
            for ( int ci=0; ci<ncomp; ci++ ) {
@@ -182,7 +189,7 @@
 
 
       if ( nBinsMET > 10 || nBinsHT > 10 ) { printf("\n\n *** too many bins.\n\n") ; return ; }
-      TH1F*    hnew_[3][10][5] ; // first index selection, second is variable bin, third is component index.
+      TH1F*    hnew_[3][10][7] ; // first index selection, second is variable bin, third is component index.
       THStack* hstack_[3][10] ;
 
       int mbi(0), hbi(0), bbi(0) ;
@@ -267,10 +274,18 @@
             sprintf( htitle, " " ) ;
             hstack_[si][v3bi] = new THStack( hname, htitle ) ;
 
-            hstack_[si][v3bi] -> Add( hnew_[si][v3bi][4] ) ;
-            hstack_[si][v3bi] -> Add( hnew_[si][v3bi][3] ) ;
-            hstack_[si][v3bi] -> Add( hnew_[si][v3bi][2] ) ;
-            hstack_[si][v3bi] -> Add( hnew_[si][v3bi][1] ) ;
+            if ( splitttwj ) {
+               hstack_[si][v3bi] -> Add( hnew_[si][v3bi][4] ) ;
+               hstack_[si][v3bi] -> Add( hnew_[si][v3bi][3] ) ;
+               hstack_[si][v3bi] -> Add( hnew_[si][v3bi][6] ) ;
+               hstack_[si][v3bi] -> Add( hnew_[si][v3bi][5] ) ;
+               hstack_[si][v3bi] -> Add( hnew_[si][v3bi][1] ) ;
+            } else {
+               hstack_[si][v3bi] -> Add( hnew_[si][v3bi][4] ) ;
+               hstack_[si][v3bi] -> Add( hnew_[si][v3bi][3] ) ;
+               hstack_[si][v3bi] -> Add( hnew_[si][v3bi][2] ) ;
+               hstack_[si][v3bi] -> Add( hnew_[si][v3bi][1] ) ;
+            }
 
             cmctruth -> cd( padIndex++ ) ;
             gPad->SetTicks(1,0) ;
@@ -305,8 +320,17 @@
 
      printf("\n Making legend...\n") ; cout << flush ;
      TLegend* legend = new TLegend(0.4,0.35,0.7,0.85) ;
-     for ( int ci=0; ci<ncomp; ci++ ) {
-        legend->AddEntry( hnew_[0][0][ci], compname[ci] ) ;
+     if ( splitttwj ) {
+        legend->AddEntry( hnew_[0][0][1], compname[1] ) ;
+        legend->AddEntry( hnew_[0][0][5], compname[5] ) ;
+        legend->AddEntry( hnew_[0][0][6], compname[6] ) ;
+        legend->AddEntry( hnew_[0][0][3], compname[3] ) ;
+        legend->AddEntry( hnew_[0][0][4], compname[4] ) ;
+     } else {
+        legend->AddEntry( hnew_[0][0][1], compname[1] ) ;
+        legend->AddEntry( hnew_[0][0][2], compname[2] ) ;
+        legend->AddEntry( hnew_[0][0][3], compname[3] ) ;
+        legend->AddEntry( hnew_[0][0][4], compname[4] ) ;
      }
 
      printf("\n\n Done making legend.\n\n\n") ; cout << flush ;
