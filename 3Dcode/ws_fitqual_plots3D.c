@@ -40,13 +40,42 @@
 
    void ws_fitqual_plots3D( const char* wsfile = "ws.root",
                             double mu_susy_sig_val = 0.,
-                            bool doNorm = false,
-                            int nBinsMET=5, int nBinsHT=5 ) {
+                            bool doNorm = false  ) {
 
 
      // hardcode here the number of bins of the analysis
      int nBinsBtag = 3 ;
 
+
+
+     double hmax = 1.25 ;
+
+     TFile* wstf = new TFile( wsfile ) ;
+
+     RooWorkspace* ws = dynamic_cast<RooWorkspace*>( wstf->Get("ws") );
+     ws->Print() ;
+
+
+     // figure out the binning from the variables in the likelihood
+     int nBinsMET(1) ;
+     for ( int bi=2; bi<20; bi++ ) {
+        char vname[1000] ;
+        sprintf( vname, "mu_ttwj_sl_M%d_H1_1b", bi ) ;
+        RooRealVar* rrv = ws->var( vname ) ;
+        if ( rrv == 0x0 ) break ;
+        nBinsMET = bi ;
+     }
+
+     int nBinsHT(1) ;
+     for ( int bi=2; bi<20; bi++ ) {
+        char vname[1000] ;
+        sprintf( vname, "mu_ttwj_sl_M1_H%d_1b", bi ) ;
+        RooRealVar* rrv = ws->var( vname ) ;
+        if ( rrv == 0x0 ) break ;
+        nBinsHT = bi ;
+     }
+
+     printf("\n\n Binning: nBinsMET = %d, nBinsHT = %d\n\n", nBinsMET, nBinsHT ) ;
 
      TString sMbins[nBinsMET];
      TString sHbins[nBinsHT];
@@ -69,12 +98,6 @@
      }
 
 
-     double hmax = 1.25 ;
-
-     TFile* wstf = new TFile( wsfile ) ;
-
-     RooWorkspace* ws = dynamic_cast<RooWorkspace*>( wstf->Get("ws") );
-     ws->Print() ;
 
      ModelConfig* modelConfig = (ModelConfig*) ws->obj( "SbModel" ) ;
 
@@ -107,7 +130,7 @@
 
      printf("\n\n\n  ===== Doing a fit with SUSY component floating ====================\n\n") ;
 
-     RooFitResult* fitResult = likelihood->fitTo( *rds, Save(true) ) ;
+     RooFitResult* fitResult = likelihood->fitTo( *rds, Save(true), PrintLevel(0) ) ;
      double logLikelihoodSusyFloat = fitResult->minNll() ;
      
      double logLikelihoodSusyFixed(0.) ;
@@ -118,7 +141,7 @@
        rrv_mu_susy_sig->setVal( mu_susy_sig_val ) ;
        rrv_mu_susy_sig->setConstant(kTRUE) ;
        
-       fitResult = likelihood->fitTo( *rds, Save(true) ) ;
+       fitResult = likelihood->fitTo( *rds, Save(true), PrintLevel(0) ) ;
        logLikelihoodSusyFixed = fitResult->minNll() ;
        testStatVal = 2.*(logLikelihoodSusyFixed - logLikelihoodSusyFloat) ;
        printf("\n\n\n ======= test statistic : -2 * ln (L_fixed / ln L_max) = %8.3f\n\n\n", testStatVal ) ;
