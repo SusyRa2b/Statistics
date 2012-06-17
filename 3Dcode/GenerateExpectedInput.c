@@ -466,15 +466,19 @@
             printf("\n\n  pointMgl = %g , pointMlsp = %g,  total 0lep events = %g\n", pointMgl, pointMlsp, input0lepSusyTotal ) ;
             printf("   reset susy 0lep total to %g\n\n", nsusy0leptarget ) ;
 
+            float newTotal(0.) ;
             for (int i = 0 ; i < nBinsMET ; i++) {
               for (int j = 0 ; j < nBinsHT ; j++) {
                 for (int k = 0 ; k < nBinsBjets ; k++) {
                    susy_0lep[i][j][k] = (nsusy0leptarget/input0lepSusyTotal) * susy_0lep[i][j][k] ;
                    susy_1lep[i][j][k] = (nsusy0leptarget/input0lepSusyTotal) * susy_1lep[i][j][k] ;
                    susy_ldp[i][j][k]  = (nsusy0leptarget/input0lepSusyTotal) * susy_ldp[i][j][k] ;
+                   printf(" %d,%d,%d  %8.2f\n", i,j,k, susy_0lep[i][j][k] ) ;
+                   newTotal += susy_0lep[i][j][k] ;
                 }
               }
             }
+            printf("\n\n New total is %7.2f\n", newTotal ) ;
 
             printf("\n\n susy 0lepton 1,1,1 bin value for target is %9.4f\n\n", susy_0lep[0][0][0] ) ;
 

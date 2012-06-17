@@ -178,7 +178,9 @@
 	  for ( int k = 0 ; k < nBinsBtag ; k++ ) {
 
 	    TString inPar = "N_0lep"+sMbins[i]+sHbins[j]+sBbins[k] ;
-	    fscanf( infp, "%s %d", label, &N_0lep[i][j][k] ) ;
+            float value ;
+	    fscanf( infp, "%s %g", label, &value ) ;
+            N_0lep[i][j][k] = TMath::Nint( value ) ;
 
 	    if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
 	    cout << inPar << " = " << N_0lep[i][j][k] << endl ;
@@ -195,7 +197,9 @@
 	  for ( int k = 0 ; k < nBinsBtag ; k++ ) {
 
 	    TString inPar = "N_1lep"+sMbins[i]+sHbins[j]+sBbins[k] ;
-	    fscanf( infp, "%s %d", label, &N_1lep[i][j][k] ) ;
+            float value ;
+	    fscanf( infp, "%s %g", label, &value ) ;
+            N_1lep[i][j][k] = TMath::Nint( value ) ;
 
 	    if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
 	    cout << inPar << " = " << N_1lep[i][j][k] << endl ;
@@ -212,7 +216,9 @@
 	  for ( int k = 0 ; k < nBinsBtag ; k++ ) {
 
 	    TString inPar = "N_ldp"+sMbins[i]+sHbins[j]+sBbins[k] ;
-	    fscanf( infp, "%s %d", label, &N_ldp[i][j][k] ) ;
+            float value ;
+	    fscanf( infp, "%s %g", label, &value ) ;
+            N_ldp[i][j][k] = TMath::Nint( value ) ;
 
 	    if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
 	    cout << inPar << " = " << N_ldp[i][j][k] << endl ;
@@ -248,7 +254,9 @@
 	for ( int j = 0 ; j < nBinsHT ; j++ ) {
 
 	  TString inPar = "N_Zee"+sMbins[i]+sHbins[j] ;
-	  fscanf( infp, "%s %d", label, &N_Zee[i][j] ) ;
+          float value ;
+	  fscanf( infp, "%s %g", label, &value ) ;
+          N_Zee[i][j] = TMath::Nint( value ) ;
 
 	  if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
 	  cout << inPar << " = " << N_Zee[i][j] << endl ;	  
@@ -260,7 +268,9 @@
 	for ( int j = 0 ; j < nBinsHT ; j++ ) {
 
 	  TString inPar = "N_Zmm"+sMbins[i]+sHbins[j] ;
-	  fscanf( infp, "%s %d", label, &N_Zmm[i][j] ) ;
+          float value ;
+	  fscanf( infp, "%s %g", label, &value ) ;
+          N_Zmm[i][j] = TMath::Nint( value ) ;
 
 	  if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
 	  cout << inPar << " = " << N_Zmm[i][j] << endl ;	  

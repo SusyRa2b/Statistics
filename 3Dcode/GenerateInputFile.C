@@ -423,7 +423,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
 
              double allval = ttval + wjetsval + qcdval + znnval + susyval ;
 
-             inFile << obsname << "  \t" << (int)allval << endl;
+             //// inFile << obsname << "  \t" << (int)allval << endl;
+             inFile << obsname << "  \t" << allval << endl;
 
              int histbin = 1 + (nBinsHT+1)*i + j + 1 ;
 
@@ -560,7 +561,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
         printf(" N_Zee -- HT,MET bins (%d,%d): events=%7.1f +/- %6.1f, cuts=%s\n", j,i,allval,allerr,allcuts.Data() ) ; cout << flush ;
           ht->Reset() ;
   
-        inFile << obs_Zee << "  \t" << (int)allval << endl;
+        ////// inFile << obs_Zee << "  \t" << (int)allval << endl;
+        inFile << obs_Zee << "  \t" << allval << endl;
+
         //Z->ee counts, with 1 VLb and sig selection, so so MET>250, HT>400, mindelphi>4, 2e, 0mu, nJets >= 3
   
         int histbin = 1 + (nBinsHT+1)*i + j + 1 ;
@@ -600,7 +603,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
         printf(" N_Zmm -- HT,MET bins (%d,%d): events=%7.1f +/- %6.1f, cuts=%s\n", j,i,allval,allerr,allcuts.Data() ) ; cout << flush ;
           ht->Reset() ;
   
-        inFile << obs_Zmm << "  \t" << (int)allval << endl;
+        ////// inFile << obs_Zmm << "  \t" << (int)allval << endl;
+        inFile << obs_Zmm << "  \t" << allval << endl;
+
         //Z->mm counts, with 1 VLb and sig selection, so so MET>250, HT>400, mindelphi>4, 2mu, 0e, nJets >= 3
   
         int histbin = 1 + (nBinsHT+1)*i + j + 1 ;

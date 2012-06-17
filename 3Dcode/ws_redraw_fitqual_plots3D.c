@@ -521,6 +521,8 @@
      double ttwj1lep3btotal(0.) ;
      double ttwj1leptotal(0.) ;
 
+     double susy0leptotal(0.) ;
+
      for ( int bi=1; bi<=nbins; bi++ ) {
         ttwj0lep1btotal += hfitqual_ttwj_0lep_1b->GetBinContent(bi) ;
         ttwj0lep2btotal += hfitqual_ttwj_0lep_2b->GetBinContent(bi) ;
@@ -530,12 +532,15 @@
         ttwj1lep2btotal += hfitqual_ttwj_1lep_2b->GetBinContent(bi) ;
         ttwj1lep3btotal += hfitqual_ttwj_1lep_3b->GetBinContent(bi) ;
         ttwj1leptotal += hfitqual_ttwj_1lep_1b->GetBinContent(bi) + hfitqual_ttwj_1lep_2b->GetBinContent(bi) + hfitqual_ttwj_1lep_3b->GetBinContent(bi) ;
+        susy0leptotal += hfitqual_susy_0lep_1b->GetBinContent(bi) + hfitqual_susy_0lep_2b->GetBinContent(bi) + hfitqual_susy_0lep_3b->GetBinContent(bi) ;
      }
 
      printf("\n\n 1b, ttwj 0lep/1lep ratio: %6.1f / %6.1f = %6.3f\n", ttwj0lep1btotal, ttwj1lep1btotal, ttwj0lep1btotal/ttwj1lep1btotal ) ;
      printf(" 2b, ttwj 0lep/1lep ratio: %6.1f / %6.1f = %6.3f\n", ttwj0lep2btotal, ttwj1lep2btotal, ttwj0lep2btotal/ttwj1lep2btotal ) ;
      printf(" 3b, ttwj 0lep/1lep ratio: %6.1f / %6.1f = %6.3f\n", ttwj0lep3btotal, ttwj1lep3btotal, ttwj0lep3btotal/ttwj1lep3btotal ) ;
      printf("     ttwj 0lep/1lep ratio: %6.1f / %6.1f = %6.3f\n\n\n", ttwj0leptotal, ttwj1leptotal, ttwj0leptotal/ttwj1leptotal ) ;
+
+     printf("\n\n SUSY 0lep total : %7.2f\n", susy0leptotal ) ;
 
 
 
