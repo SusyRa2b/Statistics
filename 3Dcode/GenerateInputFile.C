@@ -58,10 +58,10 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
 
   TChain chainQCD("tree") ;
    //--- these have high weight
-  chainQCD.Add("files5fb/QCD-50to80.root");
-  chainQCD.Add("files5fb/QCD-80to120.root");
-  chainQCD.Add("files5fb/QCD-120to170.root");
-  chainQCD.Add("files5fb/QCD-170to300.root");
+//chainQCD.Add("files5fb/QCD-50to80.root");
+//chainQCD.Add("files5fb/QCD-80to120.root");
+//chainQCD.Add("files5fb/QCD-120to170.root");
+//chainQCD.Add("files5fb/QCD-170to300.root");
    //--- below here, these have weight less than one.
   chainQCD.Add("files5fb/QCD-300to470.root");
   chainQCD.Add("files5fb/QCD-470to600.root");
@@ -81,10 +81,10 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
   chainWJets.Add("files5fb/WJets.root") ;
 
   TChain chainAll("tree");
-  chainAll.Add("files5fb/QCD-50to80.root");
-  chainAll.Add("files5fb/QCD-80to120.root");
-  chainAll.Add("files5fb/QCD-120to170.root");
-  chainAll.Add("files5fb/QCD-170to300.root");
+//chainAll.Add("files5fb/QCD-50to80.root");
+//chainAll.Add("files5fb/QCD-80to120.root");
+//chainAll.Add("files5fb/QCD-120to170.root");
+//chainAll.Add("files5fb/QCD-170to300.root");
   chainAll.Add("files5fb/QCD-300to470.root");
   chainAll.Add("files5fb/QCD-470to600.root");
   chainAll.Add("files5fb/QCD-600to800.root");

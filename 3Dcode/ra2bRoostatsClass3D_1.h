@@ -24,7 +24,8 @@
        bool initialize( const char* infile = "inFile.txt",
                         const char* inputScanFile = "scanFile.txt",
                         double m0 = 875., double m12 = 525., bool isT1bbbb = false, double t1bbbbXsec=0.,
-                        const char* inputSusy_deff_dbtageff_file = "deff_dbtag_file.txt"
+                        const char* inputSusy_deff_dbtageff_file = "deff_dbtag_file.txt",
+                        int   qcdModelIndex = 1
                         ) ;
        bool setSusyScanPoint( const char* inputScanFile,
                               double m0, double m12, bool isT1bbbb = false, double t1bbbbXsec=0.,
@@ -58,8 +59,8 @@
    /// static const int nBinsMET  = 3 ;
    /// static const int nBinsHT   = 2 ;
 
-       static const int nBinsMET  = 3 ;
-       static const int nBinsHT   = 3 ;
+   /// static const int nBinsMET  = 3 ;
+   /// static const int nBinsHT   = 3 ;
 
    /// static const int nBinsMET  = 4 ;
    /// static const int nBinsHT   = 3 ;
@@ -67,8 +68,8 @@
    /// static const int nBinsMET  = 5 ;
    /// static const int nBinsHT   = 4 ;
 
-   /// static const int nBinsMET  = 4 ;
-   /// static const int nBinsHT   = 4 ;
+       static const int nBinsMET  = 4 ;
+       static const int nBinsHT   = 4 ;
 
    /// static const int nBinsMET  = 5 ;
    /// static const int nBinsHT   = 5 ;

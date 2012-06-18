@@ -61,7 +61,8 @@
     bool ra2bRoostatsClass3D_1::initialize( const char* infile ,
 					    const char* inputScanFile,
 					    double m0, double m12, bool isT1bbbb, double t1bbbbXsec,
-					    const char* inputSusy_deff_dbtageff_file
+					    const char* inputSusy_deff_dbtageff_file,
+                                            int   qcdModelIndex
 					    ) {
 
       printf( "\n\n Opening input file : %s\n\n", infile ) ;
@@ -786,39 +787,62 @@
       RooArgSet allNuisancePdfs ("allNuisancePdfs");
 
 
-      // Rlsb_passfail
 
+      //--- QCD model 1:  Use LSB pass/fail ratio for QCD 0lep/LDP ratio.
       RooRealVar* Rlsb_passfail_prim[nBinsHT][nBinsBtag];
       RooRealVar* Rlsb_passfail_nom[nBinsHT][nBinsBtag];
       RooGaussian* pdf_Rlsb_passfail[nBinsHT][nBinsBtag];
       RooFormulaVar* fv_Rlsb_passfail[nBinsHT][nBinsBtag];
 
-      for (int j = 0 ; j < nBinsHT ; j++) {
-	for (int k = 0 ; k < nBinsBtag ; k++) {     
+      //--- QCD model 2:  Fit for QCD 0lep/LDP ratio in each HT bin.
+      RooRealVar* rv_qcd_0lepLDP_ratio[20] ;
 
-	  TString RlsbPfString     = "Rlsb_passfail";
-	  TString RlsbPfPrimString = "Rlsb_passfail_prim";
-	  TString RlsbPfNomString  = "Rlsb_passfail_nom";
-	  TString RlsbPfPdfString  = "pdf_Rlsb_passfail";
-	  
-	  RlsbPfString     += sHbins[j]+sBbins[k] ;
-	  RlsbPfPrimString += sHbins[j]+sBbins[k] ;
-	  RlsbPfNomString  += sHbins[j]+sBbins[k] ;
-	  RlsbPfPdfString  += sHbins[j]+sBbins[k] ;
+      if ( qcdModelIndex == 1 ) {
 
-	  Rlsb_passfail_prim[j][k] = new RooRealVar( RlsbPfPrimString, RlsbPfPrimString, 0., -5., 5.);
-	  Rlsb_passfail_nom[j][k] = new RooRealVar( RlsbPfNomString, RlsbPfNomString, 0., -5., 5.);
-	  pdf_Rlsb_passfail[j][k] = new RooGaussian( RlsbPfPdfString, RlsbPfPdfString, *Rlsb_passfail_prim[j][k], *Rlsb_passfail_nom[j][k], RooConst(1) );
-	  sprintf (formula, "%f*pow(%f,@0)", R_lsb[j][k], exp(R_lsb_err[j][k]/R_lsb[j][k]));
-	  fv_Rlsb_passfail[j][k] = new RooFormulaVar(RlsbPfString, formula, RooArgList(*Rlsb_passfail_prim[j][k]));
-	  Rlsb_passfail_nom[j][k]->setConstant();
-	  globalObservables.add (*Rlsb_passfail_nom[j][k]);
-	  allNuisances.add (*Rlsb_passfail_prim[j][k]);
-	  allNuisancePdfs.add (*pdf_Rlsb_passfail[j][k]);
+         printf("\n\n  QCD Model 1 : Use LSB pass/fail ratio for QCD 0lep/LDP ratio.\n\n") ;
 
-	}
+         for (int j = 0 ; j < nBinsHT ; j++) {
+           for (int k = 0 ; k < nBinsBtag ; k++) {     
+
+             TString RlsbPfString     = "Rlsb_passfail";
+             TString RlsbPfPrimString = "Rlsb_passfail_prim";
+             TString RlsbPfNomString  = "Rlsb_passfail_nom";
+             TString RlsbPfPdfString  = "pdf_Rlsb_passfail";
+
+             RlsbPfString     += sHbins[j]+sBbins[k] ;
+             RlsbPfPrimString += sHbins[j]+sBbins[k] ;
+             RlsbPfNomString  += sHbins[j]+sBbins[k] ;
+             RlsbPfPdfString  += sHbins[j]+sBbins[k] ;
+
+             Rlsb_passfail_prim[j][k] = new RooRealVar( RlsbPfPrimString, RlsbPfPrimString, 0., -5., 5.);
+             Rlsb_passfail_nom[j][k] = new RooRealVar( RlsbPfNomString, RlsbPfNomString, 0., -5., 5.);
+             pdf_Rlsb_passfail[j][k] = new RooGaussian( RlsbPfPdfString, RlsbPfPdfString, *Rlsb_passfail_prim[j][k], *Rlsb_passfail_nom[j][k], RooConst(1) );
+             sprintf (formula, "%f*pow(%f,@0)", R_lsb[j][k], exp(R_lsb_err[j][k]/R_lsb[j][k]));
+             fv_Rlsb_passfail[j][k] = new RooFormulaVar(RlsbPfString, formula, RooArgList(*Rlsb_passfail_prim[j][k]));
+             Rlsb_passfail_nom[j][k]->setConstant();
+             globalObservables.add (*Rlsb_passfail_nom[j][k]);
+             allNuisances.add (*Rlsb_passfail_prim[j][k]);
+             allNuisancePdfs.add (*pdf_Rlsb_passfail[j][k]);
+
+           }
+         }
+
+      } else if ( qcdModelIndex == 2 ) {
+
+         printf("\n\n  QCD Model 2 : One floating 0lep/LDP ratio for each HT bin..\n\n") ;
+
+         for ( int htbi=0; htbi < nBinsHT ; htbi++ ) {
+            char vname[1000] ;
+            sprintf( vname, "qcd_0lepLDP_ratio_H%d", htbi+1 ) ;
+            rv_qcd_0lepLDP_ratio[htbi] = new RooRealVar( vname, vname, 0.05, 0., 10. ) ;
+         }
+
+      } else {
+
+         printf("\n\n *** Unknown QCD model index : %d\n\n", qcdModelIndex ) ;
+         return false ;
+
       }
-
 
       // Z -> ll acceptance
 
@@ -1126,16 +1150,24 @@
 
 	    //---- QCD
 
-	    TString qcdString    = "mu_qcd" ;
-	    qcdString    += sMbins[i]+sHbins[j]+sBbins[k] ;
+            TString qcdString    = "mu_qcd" ;
+            qcdString    += sMbins[i]+sHbins[j]+sBbins[k] ;
 
-	    TString rfvQcdString = "@0 * @1 * @2" ;
+            TString rfvQcdString = "@0 * @1 * @2" ;
 
-	    rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
-						     RooArgSet( *rv_mu_qcd_ldp[i][j][k], *fv_sf_qcd[i][j][k], *fv_Rlsb_passfail[j][k] ) ) ;
+            if ( qcdModelIndex == 1 ) {
 
-	    rv_mu_qcd[i][j][k] = rfv_mu_qcd[i][j][k] ;
+               rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
+                                                        RooArgSet( *rv_mu_qcd_ldp[i][j][k], *fv_sf_qcd[i][j][k], *fv_Rlsb_passfail[j][k] ) ) ;
 
+            } else if ( qcdModelIndex == 2 ) {
+
+               rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
+                                                        RooArgSet( *rv_mu_qcd_ldp[i][j][k], *fv_sf_qcd[i][j][k], *rv_qcd_0lepLDP_ratio[j] ) ) ;
+
+            }
+
+            rv_mu_qcd[i][j][k] = rfv_mu_qcd[i][j][k] ;
 
 	    //---- SUSY
 
