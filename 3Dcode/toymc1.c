@@ -63,6 +63,8 @@
    bool doSignif ;
    bool doUL ;
 
+   bool useExpected0lep ;
+
    //-- Prototypes
 
    bool readMCvals() ;
@@ -83,7 +85,7 @@
                 const char* input_susyfile = "Susy-mgl900-mlsp300-met4-ht4-v2.dat",
                 double input_mgl=900, double input_mlsp=300.,
                 const char* input_deffdbtagfile = "dummy_DeffDbtag-met4-ht4-v2.dat",
-                double input_nSusy0lep = 0.,
+                double input_nSusy0lep = 60.,
                 const char* input_outputDir = "output-toymc1"
                         ) {
 
@@ -103,7 +105,9 @@
        true_susy_0lep = 0. ;
 
        doSignif = true ;
-       doUL = true ;
+       doUL = false ;
+
+       useExpected0lep = true ;
 
 
        tran = new TRandom(12345) ;
@@ -182,7 +186,7 @@
 
        //--- Loop over toy experiments.
 
-       for ( int ti=0; ti<10; ti++ ) {
+       for ( int ti=0; ti<50; ti++ ) {
 
           printf("\n\n\n\n ====== Begin toy experiment %d\n\n\n", ti ) ;
 
@@ -638,13 +642,19 @@
 
                float exp_0lep = exp_0lep_ttwj + exp_0lep_qcd + exp_0lep_znn ;
 
-               toy_mean_N_0lep[mbi][hbi][bbi] = exp_0lep ;
+               if ( useExpected0lep ) {
+                  toy_mean_N_0lep[mbi][hbi][bbi] = exp_0lep ;
+               } else {
+                  toy_mean_N_0lep[mbi][hbi][bbi] = N_0lep_input[mbi][hbi][bbi] ;
+               }
                toy_mean_N_1lep[mbi][hbi][bbi] = N_1lep[mbi][hbi][bbi] ;
                toy_mean_N_ldp [mbi][hbi][bbi] = N_ldp [mbi][hbi][bbi] ;
 
-               true_ttwj_0lep += exp_0lep_ttwj ;
-               true_qcd_0lep  += exp_0lep_qcd  ;
-               true_znn_0lep  += exp_0lep_znn  ;
+               if ( useExpected0lep ) { // these are only well defined if using expected values for 0lep.
+                  true_ttwj_0lep += exp_0lep_ttwj ;
+                  true_qcd_0lep  += exp_0lep_qcd  ;
+                  true_znn_0lep  += exp_0lep_znn  ;
+               }
 
                printf(" 0lep: m,h,b (%d,%d,%d): ttwj=%5.1f, qcd=%5.1f, Znn=%5.1f,  expected total=%5.1f\n",
                     mbi, hbi, bbi, exp_0lep_ttwj, exp_0lep_qcd, exp_0lep_znn, toy_mean_N_0lep[mbi][hbi][bbi] ) ;
