@@ -109,6 +109,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
 //float Mbins[nBinsMET+1] = {150.,250.,99999.};
 //float Hbins[nBinsHT+1] = {400.,99999.};
 
+  //-- met2-ht2-v1
+const int nBinsMET   = 2 ;
+const int nBinsHT    = 2 ;
+float Mbins[nBinsMET+1] = {150.,250.,99999.};
+float Hbins[nBinsHT+1] = {400.,600.,99999.};
+
   //-- met3-ht2-v1
 //const int nBinsMET   = 3 ;
 //const int nBinsHT    = 2 ;
@@ -134,10 +140,10 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
 //float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,99999.};
 
   //-- met4-ht4-v1
-  const int nBinsMET   = 4 ;
-  const int nBinsHT    = 4 ;
-  float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
-  float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
+//  const int nBinsMET   = 4 ;
+//  const int nBinsHT	 = 4 ;
+//  float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
+//  float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
 
 ////-- met4-ht5-v1
 //const int nBinsMET   = 4 ;
@@ -213,7 +219,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
   ofstream inFile;
   char outfile[10000] ;
   if ( mgl > 0. && mlsp > 0. ) {
-     sprintf( outfile, "InputWSusy-mgl%.0f-mlsp%.0f-met%d-ht%d.dat", mgl, mlsp, nBinsMET, nBinsHT ) ;
+     sprintf( outfile, "InputWT1bbbb-mgl%.0f-mlsp%.0f-met%d-ht%d.dat", mgl, mlsp, nBinsMET, nBinsHT ) ;
   } else {
      sprintf( outfile, "Input-met%d-ht%d.dat", nBinsMET, nBinsHT ) ;
   }
@@ -340,6 +346,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
 
     }
 
+  float nSusyTotal = 0;
 
   for ( int si=0 ; si<nSel ; si++ ) {
 
@@ -383,10 +390,10 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
            chainT1bbbb.Project(hname,"HT:MET",allsusycuts);
            h_susy[k]->Scale( t1bbbbWeight ) ;
            printf("    %12s %7.1f events\n", hname, h_susy[k]->Integral() ) ; cout << flush ;
-
+	   if (si==0) nSusyTotal += h_susy[k]->Integral();
         }
-
       } // k
+      if (si==0) printf("N_Susy_Total = %7.1f events", nSusyTotal); cout << flush;
       printf("\n\n") ;
 
 
@@ -553,12 +560,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
         cut += "&&METee<";
         cut += Mbins[i+1];
   
-        TString allcuts = cutszee+cut ;
+        TString allcutsZ = cutszee+cut ;
   
-        dyTree->Project("ht","HT",allcuts);
+        dyTree->Project("ht","HT",allcutsZ);
         double allerr(0.) ;
         double allval = ht->IntegralAndError(1,10,allerr) ;
-        printf(" N_Zee -- HT,MET bins (%d,%d): events=%7.1f +/- %6.1f, cuts=%s\n", j,i,allval,allerr,allcuts.Data() ) ; cout << flush ;
+        printf(" N_Zee -- HT,MET bins (%d,%d): events=%7.1f +/- %6.1f, cuts=%s\n", j,i,allval,allerr,allcutsZ.Data() ) ; cout << flush ;
           ht->Reset() ;
   
         ////// inFile << obs_Zee << "  \t" << (int)allval << endl;
@@ -595,12 +602,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
         cut += "&&METmm<";
         cut += Mbins[i+1];
         
-        TString allcuts = cutszmm+cut ;
+        TString allcutsZ = cutszmm+cut ;
   
-        dyTree->Project("ht","HT",allcuts);
+        dyTree->Project("ht","HT",allcutsZ);
         double allerr(0.) ;
         double allval = ht->IntegralAndError(1,10,allerr) ;
-        printf(" N_Zmm -- HT,MET bins (%d,%d): events=%7.1f +/- %6.1f, cuts=%s\n", j,i,allval,allerr,allcuts.Data() ) ; cout << flush ;
+        printf(" N_Zmm -- HT,MET bins (%d,%d): events=%7.1f +/- %6.1f, cuts=%s\n", j,i,allval,allerr,allcutsZ.Data() ) ; cout << flush ;
           ht->Reset() ;
   
         ////// inFile << obs_Zmm << "  \t" << (int)allval << endl;
@@ -895,15 +902,4 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
     }
   
   //==========================================================================================
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+ 
