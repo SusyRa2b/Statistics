@@ -1,0 +1,15 @@
+diElectronCount                45                 
+diMuonCount                    55	       
+ZtollOverZtoNuNuRatio          0.168067227           
+ZtoeePurity                    0.5	       
+ZtoeePurityError               0.01        
+ZtomumuPurity                  0.05  	         
+ZtomumuPurityError             0.01           
+ZtoeeEfficiency                0.9            
+ZtoeeEfficiencyError           0.01           
+ZtomumuEfficiency              0.9           
+ZtomumuEfficiencyError         0.01           	
+deltaPhiNRatio                 0.01   	        
+deltaPhiNRatioError            0.001           	  
+MCUncertainty                  0.4   	         	   
+Luminosity                     5.0  	       
