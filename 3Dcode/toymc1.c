@@ -53,6 +53,7 @@
    float fit_qcd_0lep ;
    float true_znn_0lep ;
    float fit_znn_0lep ;
+   int   fit_covqual_susyfloat ;
 
    float fit_susy_signif ;
 
@@ -227,7 +228,7 @@
 
        //--- Loop over toy experiments.
 
-       for ( int ti=0; ti<5; ti++ ) {
+       for ( int ti=0; ti<50; ti++ ) {
 
           printf("\n\n\n\n ====== Begin toy experiment %d\n\n\n", ti ) ;
 
@@ -970,9 +971,12 @@
          } // hbi.
       } // mbi.
 
+      fit_covqual_susyfloat = rfr -> covQual() ;
+
       printf(" toy %4d : Fit total 0lep ttwj : %6.1f  (ave true %6.1f)\n", ti, fit_ttwj_0lep, true_ttwj_0lep ) ;
       printf(" toy %4d : Fit total 0lep qcd  : %6.1f  (ave true %6.1f)\n", ti, fit_qcd_0lep, true_qcd_0lep ) ;
       printf(" toy %4d : Fit total 0lep znn  : %6.1f  (ave true %6.1f)\n", ti, fit_znn_0lep, true_znn_0lep ) ;
+      printf(" toy %4d : Fit covariance matrix quality: %d\n", fit_covqual_susyfloat ) ;
 
 
       return true ;
@@ -1004,6 +1008,7 @@
       toytt -> Branch( "fit_qcd_0lep", &fit_qcd_0lep, "fit_qcd_0lep/F" ) ;
       toytt -> Branch( "true_znn_0lep", &true_znn_0lep, "true_znn_0lep/F" ) ;
       toytt -> Branch( "fit_znn_0lep", &fit_znn_0lep, "fit_znn_0lep/F" ) ;
+      toytt -> Branch( "fit_covqual_susyfloat", &fit_covqual_susyfloat, "fit_covqual_susyfloat/I" ) ;
 
       if ( doSignif ) {
          toytt -> Branch( "fit_susy_signif", &fit_susy_signif, "fit_susy_signif/F" ) ;
