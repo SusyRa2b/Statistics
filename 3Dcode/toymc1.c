@@ -26,6 +26,10 @@
    char susyfile[10000] ;
    char outputDir[10000] ;
 
+   int   nFloatParInitVal ;
+   char  floatParName[5000][100] ;
+   float floatParInitVal[5000] ;
+
    float mgl, mlsp ;
 
    float nSusy0lep ;
@@ -65,6 +69,9 @@
 
    bool useExpected0lep ;
 
+
+
+
    //-- Prototypes
 
    bool readMCvals() ;
@@ -73,6 +80,9 @@
    bool processToyResult( int ti, RooFitResult* fitResult ) ;
    bool bookTree() ;
    float findUL( RooDataSet* toyds ) ;
+   bool setReinitValues( RooFitResult* fitResult ) ;
+   bool reinitFloatPars() ;
+
 
    TRandom* tran ;
 
@@ -138,6 +148,48 @@
 
 
 
+
+       //--- Access some workspace stuff needed later.
+       rrv_susy_poi = workspace -> var( "mu_susy_M1_H1_1b" ) ;
+       if ( rrv_susy_poi == 0x0 ) {
+          printf("\n\n *** can't find susy poi mu_susy_M1_H1_1b.\n\n") ; return ;
+       }
+
+       ModelConfig* modelConfig = (ModelConfig*) workspace -> obj( "SbModel" ) ;
+       if ( modelConfig == 0x0 ) { printf("\n\n *** can't find ModelConfig with name SbModel.\n\n") ; return ; }
+       likelihood = modelConfig->GetPdf() ;
+
+
+
+
+
+
+
+
+       //--- Do an initial fit to determine reasonable starting values for all floating parameters.
+
+       RooDataSet* rdsMCvals = (RooDataSet*) workspace->obj( "ra2b_observed_rds" ) ;
+       if ( rdsMCvals == 0x0 ) {
+          printf("\n\n *** can't find dataset with name ra2b_observed_rds in workspace.\n\n") ;
+          return ;
+       }
+
+       rrv_susy_poi -> setVal(0.) ;
+       rrv_susy_poi -> setConstant( kTRUE ) ;
+
+       RooFitResult* mcfitResult = likelihood->fitTo( *rdsMCvals, Save(true), PrintLevel(0) ) ;
+
+       if ( ! setReinitValues( mcfitResult ) ) {
+          printf("\n\n *** Problem in collecting inital vals for floating parameters from MC fit.\n\n") ; return ;
+       }
+
+
+
+
+
+
+
+
        //--- Read in MC predictions from Input*.dat file and set the expected values for all observables.
 
        if ( ! readMCvals() ) {
@@ -161,17 +213,6 @@
 
 
 
-       //--- Access some workspace stuff needed later.
-       rrv_susy_poi = workspace -> var( "mu_susy_M1_H1_1b" ) ;
-       if ( rrv_susy_poi == 0x0 ) {
-          printf("\n\n *** can't find susy poi mu_susy_M1_H1_1b.\n\n") ; return ;
-       }
-       rrv_susy_poi -> setConstant( kFALSE ) ;
-
-       ModelConfig* modelConfig = (ModelConfig*) workspace -> obj( "SbModel" ) ;
-       if ( modelConfig == 0x0 ) { printf("\n\n *** can't find ModelConfig with name SbModel.\n\n") ; return ; }
-       likelihood = modelConfig->GetPdf() ;
-
 
 
 
@@ -186,7 +227,7 @@
 
        //--- Loop over toy experiments.
 
-       for ( int ti=0; ti<50; ti++ ) {
+       for ( int ti=0; ti<5; ti++ ) {
 
           printf("\n\n\n\n ====== Begin toy experiment %d\n\n\n", ti ) ;
 
@@ -202,6 +243,11 @@
           RooArgSet ras ;
           ras.add( *rrv_susy_poi ) ;
           rrv_susy_poi->setConstant( kFALSE ) ;
+
+          if ( ! reinitFloatPars() ) {
+             printf("\n\n *** problem reinitializing floating pars.\n\n") ; return ;
+          }
+
           RooFitResult* fitResult = likelihood -> fitTo( *toyds, Save(true), Hesse(true), Minos(ras), Strategy(1), PrintLevel(0) ) ;
           minNllSusyFloat = fitResult->minNll() ;
 
@@ -1040,8 +1086,55 @@
       return fit_susy_ul ;
 
 
-   }
+   } // findUL.
 
    //==================================================================================
+
+   bool setReinitValues( RooFitResult* fitResult ) {
+
+      const RooArgList floatPars = fitResult -> floatParsFinal() ;
+
+      printf("\n\n ==== Will reinitialize to these values before every toy.\n\n") ;
+
+      nFloatParInitVal = 0 ;
+
+      TIterator* parIter = floatPars.createIterator() ;
+      while ( RooRealVar* par = (RooRealVar*) parIter->Next() ) {
+
+         sprintf( floatParName[nFloatParInitVal], "%s", par->GetName() ) ;
+         floatParInitVal[nFloatParInitVal] = par->getVal() ;
+
+         nFloatParInitVal++ ;
+
+         printf(" %20s : %8.2f\n", par->GetName(), par->getVal() ) ;
+
+      }
+      printf("\n\n") ;
+
+      return true ;
+
+   } // setReinitValues.
+
+   //==================================================================================
+
+   bool reinitFloatPars() {
+
+      for ( int pi=0; pi<nFloatParInitVal; pi++ ) {
+         RooRealVar* par = workspace->var( floatParName[pi] ) ;
+         if ( par == 0x0 ) {
+            printf("\n\n *** can't find float par %s in workspace.\n\n", floatParName[pi] ) ;
+            return false ;
+         }
+         par->setVal( floatParInitVal[pi] ) ;
+      } // pi.
+      rrv_susy_poi -> setVal( 0. ) ;
+
+      return true ;
+
+   } // reinitFloatPars.
+
+   //==================================================================================
+
+
 
 
