@@ -253,7 +253,7 @@ RooAbsArg* getBetaPrimeConstraint(RooWorkspace& ws,const TString varName,const T
 
   RooRealVar passObservable (varName+binName+"_PassObs", varName+binName+"_PassObs", alpha-1,1e-5,1e5);
   passObservable.setConstant();
-  RooRealVar failObservable (varName+binName+"_FailObs", varName+binName+"_FailObs", alpha-1,1e-5,1e5);
+  RooRealVar failObservable (varName+binName+"_FailObs", varName+binName+"_FailObs", beta -1,1e-5,1e5);
   failObservable.setConstant();
 
   ws.import(passObservable);
@@ -327,7 +327,7 @@ RooAbsArg* getBetaConstraint(RooWorkspace& ws,const TString varName,const TStrin
 
   RooRealVar passObservable (varName+binName+"_PassObs", varName+binName+"_PassObs", alpha-1,1e-5,1e5);
   passObservable.setConstant();
-  RooRealVar failObservable (varName+binName+"_FailObs", varName+binName+"_FailObs", alpha-1,1e-5,1e5);
+  RooRealVar failObservable (varName+binName+"_FailObs", varName+binName+"_FailObs", beta -1,1e-5,1e5);
   failObservable.setConstant();
 
   ws.import(passObservable);
@@ -374,7 +374,7 @@ RooAbsArg* getInverseBetaConstraint(RooWorkspace& ws,const TString varName,const
 
   RooRealVar passObservable (varName+binName+"_PassObs", varName+binName+"_PassObs", alpha-1,1e-5,1e5);
   passObservable.setConstant();
-  RooRealVar failObservable (varName+binName+"_FailObs", varName+binName+"_FailObs", alpha-1,1e-5,1e5);
+  RooRealVar failObservable (varName+binName+"_FailObs", varName+binName+"_FailObs", beta -1,1e-5,1e5);
   failObservable.setConstant();
 
   ws.import(passObservable);
