@@ -1,5 +1,4 @@
-
-#include "ra2bRooStatsClass3D_1.c"
+#include "ra2bRoostatsClass3D_1.c"
 #include "TRoot.h"
 #include "TSystem.h"
 #include "TRandom.h"
@@ -93,11 +92,13 @@
    //=====================================
 
    void toymc1( const char* input_datfile = "Input-met4-ht4.dat",
-                const char* input_susyfile = "Susy-mgl900-mlsp300-met4-ht4-v2.dat",
+//                const char* input_susyfile = "Susy-mgl900-mlsp300-met4-ht4-v2.dat",
+                const char* input_susyfile = "T1bbbb-met4-ht4-v2.dat",
                 double input_mgl=900, double input_mlsp=300.,
                 const char* input_deffdbtagfile = "dummy_DeffDbtag-met4-ht4-v2.dat",
                 double input_nSusy0lep = 60.,
-                const char* input_outputDir = "output-toymc1"
+                const char* input_outputDir = "output-toymc1",
+		int nToy = 10
                         ) {
 
        char command[10000] ;
@@ -129,7 +130,7 @@
 
        ra2bRoostatsClass3D_1 ra2b ;
 
-       int qcdModelIndex = 2 ;
+       int qcdModelIndex = 1 ;
        ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, qcdModelIndex ) ;
 
        sprintf( command, "mkdir -p %s", outputDir ) ;
@@ -228,9 +229,9 @@
 
        //--- Loop over toy experiments.
 
-       for ( int ti=0; ti<50; ti++ ) {
+       for ( int ti=0; ti<nToy; ti++ ) {
 
-          printf("\n\n\n\n ====== Begin toy experiment %d\n\n\n", ti ) ;
+          printf("\n\n\n\n ====== Begin toy experiment %d\n\n\n out of %d", ti, nToy ) ;
 
 
 
@@ -555,7 +556,7 @@
 
 
       //--- Read acc_Zee lines
-      for ( int mbi=0; mbi<nBinsHT; mbi++ ) {
+      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
          nread = fscanf( infp, "%s %g", pname, &pval ) ;
          int metbin ;
          int nmatch = sscanf( pname, "acc_Zee_M%d", &metbin ) ;
@@ -570,7 +571,7 @@
 
 
       //--- Read acc_Zmm lines
-      for ( int mbi=0; mbi<nBinsHT; mbi++ ) {
+      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
          nread = fscanf( infp, "%s %g", pname, &pval ) ;
          int metbin ;
          int nmatch = sscanf( pname, "acc_Zmm_M%d", &metbin ) ;
@@ -659,8 +660,8 @@
       float Zmm_factor[nBinsBjets] ;
 
       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-         Zee_factor[bbi] = ( 5.94 * Z_ee_pur * knn[bbi] ) / ( acc_Zee[0] * Z_ee_eff ) ; //*** ignoring MET dependence of acceptance.
-         Zmm_factor[bbi] = ( 5.94 * Z_mm_pur * knn[bbi] ) / ( acc_Zmm[0] * Z_mm_eff ) ; //*** ignoring MET dependence of acceptance.
+         Zee_factor[bbi] = ( 5.94 * Z_ee_pur * knn[bbi] ) / ( acc_Zee[0] * Z_ee_eff ) ; // ignoring MET dependence of acceptance.
+         Zmm_factor[bbi] = ( 5.94 * Z_mm_pur * knn[bbi] ) / ( acc_Zmm[0] * Z_mm_eff ) ; // ignoring MET dependence of acceptance.
          printf("  nB=%d Zll scale factors:  ee=%g, mm=%g\n", bbi, Zee_factor[bbi], Zmm_factor[bbi] ) ;
       } // bbi.
 
@@ -976,7 +977,7 @@
       printf(" toy %4d : Fit total 0lep ttwj : %6.1f  (ave true %6.1f)\n", ti, fit_ttwj_0lep, true_ttwj_0lep ) ;
       printf(" toy %4d : Fit total 0lep qcd  : %6.1f  (ave true %6.1f)\n", ti, fit_qcd_0lep, true_qcd_0lep ) ;
       printf(" toy %4d : Fit total 0lep znn  : %6.1f  (ave true %6.1f)\n", ti, fit_znn_0lep, true_znn_0lep ) ;
-      printf(" toy %4d : Fit covariance matrix quality: %d\n", fit_covqual_susyfloat ) ;
+      printf(" toy %4d : Fit covariance matrix quality: %d\n", ti, fit_covqual_susyfloat ) ;
 
 
       return true ;
