@@ -1,5 +1,5 @@
-#ifndef ra2bRoostatsClass3D_1_h
-#define ra2bRoostatsClass3D_1_h
+#ifndef ra2bRoostatsClass3D_2_h
+#define ra2bRoostatsClass3D_2_h
 
 #include "TRandom2.h"
 #include "RooRealVar.h"
@@ -11,15 +11,16 @@
 #include "RooWorkspace.h"
 #include "RooDataSet.h"
 #include "RooFitResult.h"
+#include "RooArgSet.h"
 
 
-   class ra2bRoostatsClass3D_1 {
+   class ra2bRoostatsClass3D_2 {
 
      public :
 
-       ra2bRoostatsClass3D_1() ;
+       ra2bRoostatsClass3D_2() ;
 
-       virtual ~ra2bRoostatsClass3D_1();
+       virtual ~ra2bRoostatsClass3D_2();
 
        bool initialize( const char* infile = "inFile.txt",
                         const char* inputScanFile = "scanFile.txt",
@@ -36,16 +37,23 @@
 
      private :
 
+       RooAbsReal* makeBetaPrimeConstraint( const char* NP_name, double NP_val, double NP_err ) ;
+       RooAbsReal* makeBetaConstraint( const char* NP_name, double NP_val, double NP_err ) ;
+
        char initializeFile[10000] ;
 
        bool varsAtFitVals ;
        bool initialized ;
 
-       RooArgSet observedParametersList ;
-       RooDataSet* dsObserved ;
-
 
        RooFitResult* fitResult ;
+
+
+       RooArgSet* globalObservables ;
+       RooArgSet* allNuisances ;
+       RooArgSet* allNuisancePdfs ;
+       RooArgSet* observedParametersList ;
+
 
 
        // number of bins of the analysis

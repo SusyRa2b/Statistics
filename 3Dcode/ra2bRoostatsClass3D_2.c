@@ -1,9 +1,21 @@
-#include "ra2bRoostatsClass3D_1.h"
+#include "ra2bRoostatsClass3D_2.h"
+
+//
+//  Owen: The difference between ra2bRoostatsClass3D_1 and ra2bRoostatsClass3D_2
+//        is in the implementation of the nuisance parameters.
+//
+//          ra2bRoostatsClass3D_1 : uses log normals
+//
+//          ra2bRoostatsClass3D_2 : uses beta and beta prime distributions.
+//
+//
+
 
 #include <iostream>
 #include <sstream>
 #include <string.h>
 
+#include "TRoot.h"
 #include "TCanvas.h"
 #include "TStyle.h"
 #include "THStack.h"
@@ -28,6 +40,9 @@
 #include "RooStats/LikelihoodIntervalPlot.h"
 #include "RooStats/HypoTestResult.h"
 
+#include "RooRatio.h"
+#include "betaPrimeConstraint.c"
+
   using namespace RooFit ;
   using namespace RooStats ;
 
@@ -35,7 +50,7 @@
   //=====================================================================================================
 
 
-   ra2bRoostatsClass3D_1::ra2bRoostatsClass3D_1() {
+   ra2bRoostatsClass3D_2::ra2bRoostatsClass3D_2() {
 
       gStyle->SetOptStat(0) ;
 
@@ -52,13 +67,13 @@
 
   //===================================================================
 
-   ra2bRoostatsClass3D_1::~ra2bRoostatsClass3D_1() { }
+   ra2bRoostatsClass3D_2::~ra2bRoostatsClass3D_2() { }
 
 
 
   //===================================================================
 
-    bool ra2bRoostatsClass3D_1::initialize( const char* infile ,
+    bool ra2bRoostatsClass3D_2::initialize( const char* infile ,
 					    const char* inputScanFile,
 					    double m0, double m12, bool isT1bbbb, double t1bbbbXsec,
 					    const char* inputSusy_deff_dbtageff_file,
@@ -572,6 +587,33 @@
       printf("\n * means fixed MC value.\n\n\n") ;
 
 
+
+
+
+
+
+
+
+
+      printf(" --- Creating workspace.\n" ) ; cout << flush ;
+
+      RooWorkspace workspace ("ws") ;
+      workspace.autoImportClassCode(true);
+
+
+      globalObservables      = new RooArgSet("globalObservables");
+      allNuisances           = new RooArgSet("allNuisances");
+      allNuisancePdfs        = new RooArgSet("allNuisancePdfs");
+      observedParametersList = new RooArgSet("observables") ;
+
+
+
+
+
+
+
+
+
       //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       printf(" --- Defining observables and parameters of the likelihood.\n" ) ;
@@ -580,6 +622,7 @@
       rv_mu_susy_M1_H1_1b = new RooRealVar( "mu_susy_M1_H1_1b", "mu_susy_M1_H1_1b", 0., 100000. ) ;
       rv_mu_susy_M1_H1_1b->setVal( 1. ) ;
       rv_mu_susy_M1_H1_1b->setConstant( kTRUE ) ;
+
 
             
       for (int i = 0 ; i < nBinsMET ; i++) {
@@ -603,6 +646,9 @@
 	    rv_1lep[i][j][k]->setVal( N_1lep[i][j][k] );
 	    rv_ldp[i][j][k]->setVal( N_ldp[i][j][k] );
 
+	    observedParametersList -> add( *rv_0lep[i][j][k] ) ;
+	    observedParametersList -> add( *rv_1lep[i][j][k] ) ;
+	    observedParametersList -> add( *rv_ldp[i][j][k] ) ;
 	    
 	    // parameters of the likelihood:
 	    TString muTtString     = "mu_ttwj";
@@ -755,8 +801,26 @@
 	  rv_Zee[i][j]->setVal( N_Zee[i][j] );
 	  rv_Zmm[i][j]->setVal( N_Zmm[i][j] );
 
+	  observedParametersList -> add( *rv_Zee[i][j] ) ;
+	  observedParametersList -> add( *rv_Zmm[i][j] ) ;
+
 	}
       }
+
+      RooDataSet* dsObserved ;
+      dsObserved = new RooDataSet("ra2b_observed_rds", "RA2b observed data values",
+				  *observedParametersList ) ;
+      dsObserved->add( *observedParametersList ) ;
+
+      printf(" --- Importing dataset.\n" ) ; cout << flush ;
+
+      workspace.import(*dsObserved);
+
+
+
+      char NP_name[1000] ;
+
+
 
 
       RooRealVar* rv_btageff_err = new RooRealVar( "btageff_err", "btageff_err", 0., 10. ) ;
@@ -772,7 +836,7 @@
          printf("\n\n\n *** setSusyScanPoint failed.  I quit.\n\n\n") ;
          return false ;
       }
-      
+
       //++++++++++
 
       cout << "\n\n Back from setSusyScanPoint.  Now defining parameters.\n\n" << flush ;
@@ -782,9 +846,6 @@
       // STILL USING THE LOG-NORMALS TO GET STARTED
 
       char formula[1024];
-      RooArgSet globalObservables ("globalObservables");
-      RooArgSet allNuisances ("allNuisances");
-      RooArgSet allNuisancePdfs ("allNuisancePdfs");
 
 
 
@@ -820,9 +881,9 @@
              sprintf (formula, "%f*pow(%f,@0)", R_lsb[j][k], exp(R_lsb_err[j][k]/R_lsb[j][k]));
              fv_Rlsb_passfail[j][k] = new RooFormulaVar(RlsbPfString, formula, RooArgList(*Rlsb_passfail_prim[j][k]));
              Rlsb_passfail_nom[j][k]->setConstant();
-             globalObservables.add (*Rlsb_passfail_nom[j][k]);
-             allNuisances.add (*Rlsb_passfail_prim[j][k]);
-             allNuisancePdfs.add (*pdf_Rlsb_passfail[j][k]);
+             globalObservables -> add (*Rlsb_passfail_nom[j][k]);
+             allNuisances -> add (*Rlsb_passfail_prim[j][k]);
+             allNuisancePdfs -> add (*pdf_Rlsb_passfail[j][k]);
 
            }
          }
@@ -874,9 +935,9 @@
 	sprintf (formula, "%f*pow(%f,@0)", acc_Zee[i], exp(acc_Zee_err[i]/acc_Zee[i]));
 	fv_acc_Zee[i] = new RooFormulaVar(acc_ZeeString, formula, RooArgList(*acc_Zee_prim[i]));
 	acc_Zee_nom[i]->setConstant();
-	globalObservables.add (*acc_Zee_nom[i]);
-	allNuisances.add (*acc_Zee_prim[i]);
-	allNuisancePdfs.add (*pdf_acc_Zee[i]);
+	globalObservables -> add (*acc_Zee_nom[i]);
+	allNuisances -> add (*acc_Zee_prim[i]);
+	allNuisancePdfs -> add (*pdf_acc_Zee[i]);
 	
 	TString acc_ZmmString     = "acc_Zmm";
 	TString acc_ZmmPrimString = "acc_Zmm_prim";
@@ -894,9 +955,9 @@
 	sprintf (formula, "%f*pow(%f,@0)", acc_Zmm[i], exp(acc_Zmm_err[i]/acc_Zmm[i]));
 	fv_acc_Zmm[i] = new RooFormulaVar(acc_ZmmString, formula, RooArgList(*acc_Zmm_prim[i]));
 	acc_Zmm_nom[i]->setConstant();
-	globalObservables.add (*acc_Zmm_nom[i]);
-	allNuisances.add (*acc_Zmm_prim[i]);
-	allNuisancePdfs.add (*pdf_acc_Zmm[i]);
+	globalObservables -> add (*acc_Zmm_nom[i]);
+	allNuisances -> add (*acc_Zmm_prim[i]);
+	allNuisancePdfs -> add (*pdf_acc_Zmm[i]);
 	
       }
 
@@ -909,9 +970,9 @@
       sprintf (formula, "%f*pow(%f,@0)", eff_Zee, exp(eff_Zee_err/eff_Zee));
       RooFormulaVar* fv_eff_Zee = new RooFormulaVar("fv_eff_Zee", formula, RooArgList(*eff_Zee_prim));
       eff_Zee_nom->setConstant();
-      globalObservables.add (*eff_Zee_nom);
-      allNuisances.add (*eff_Zee_prim);
-      allNuisancePdfs.add (*pdf_eff_Zee);
+      globalObservables -> add (*eff_Zee_nom);
+      allNuisances -> add (*eff_Zee_prim);
+      allNuisancePdfs -> add (*pdf_eff_Zee);
 	
       RooRealVar *eff_Zmm_prim = new RooRealVar( "eff_Zmm_prim", "eff_Zmm_prim", 0., -5., 5.);
       RooRealVar *eff_Zmm_nom = new RooRealVar( "eff_Zmm_nom", "eff_Zmm_nom", 0., -5., 5.);
@@ -919,9 +980,9 @@
       sprintf (formula, "%f*pow(%f,@0)", eff_Zmm, exp(eff_Zmm_err/eff_Zmm));
       RooFormulaVar* fv_eff_Zmm = new RooFormulaVar("fv_eff_Zmm", formula, RooArgList(*eff_Zmm_prim));
       eff_Zmm_nom->setConstant();
-      globalObservables.add (*eff_Zmm_nom);
-      allNuisances.add (*eff_Zmm_prim);
-      allNuisancePdfs.add (*pdf_eff_Zmm);
+      globalObservables -> add (*eff_Zmm_nom);
+      allNuisances -> add (*eff_Zmm_prim);
+      allNuisancePdfs -> add (*pdf_eff_Zmm);
 
 
       // Z -> ll purities
@@ -932,51 +993,86 @@
       sprintf (formula, "%f*pow(%f,@0)", pur_Zee, exp(pur_Zee_err/pur_Zee));
       RooFormulaVar* fv_pur_Zee = new RooFormulaVar("fv_pur_Zee", formula, RooArgList(*pur_Zee_prim));
       pur_Zee_nom->setConstant();
-      globalObservables.add (*pur_Zee_nom);
-      allNuisances.add (*pur_Zee_prim);
-      allNuisancePdfs.add (*pdf_pur_Zee);
+      globalObservables -> add (*pur_Zee_nom);
+      allNuisances -> add (*pur_Zee_prim);
+      allNuisancePdfs -> add (*pdf_pur_Zee);
 	
-      RooRealVar *pur_Zmm_prim = new RooRealVar( "pur_Zmm_prim", "pur_Zmm_prim", 0., -5., 5.);
-      RooRealVar *pur_Zmm_nom = new RooRealVar( "pur_Zmm_nom", "pur_Zmm_nom", 0., -5., 5.);
-      RooGaussian *pdf_pur_Zmm = new RooGaussian( "pdf_pur_Zmm", "pdf_pur_Zmm", *pur_Zmm_prim, *pur_Zmm_nom, RooConst(1) );
-      sprintf (formula, "%f*pow(%f,@0)", pur_Zmm, exp(pur_Zmm_err/pur_Zmm));
-      RooFormulaVar* fv_pur_Zmm = new RooFormulaVar("fv_pur_Zmm", formula, RooArgList(*pur_Zmm_prim));
-      pur_Zmm_nom->setConstant();
-      globalObservables.add (*pur_Zmm_nom);
-      allNuisances.add (*pur_Zmm_prim);
-      allNuisancePdfs.add (*pdf_pur_Zmm);
+  /// RooRealVar *pur_Zmm_prim = new RooRealVar( "pur_Zmm_prim", "pur_Zmm_prim", 0., -5., 5.);
+  /// RooRealVar *pur_Zmm_nom = new RooRealVar( "pur_Zmm_nom", "pur_Zmm_nom", 0., -5., 5.);
+  /// RooGaussian *pdf_pur_Zmm = new RooGaussian( "pdf_pur_Zmm", "pdf_pur_Zmm", *pur_Zmm_prim, *pur_Zmm_nom, RooConst(1) );
+  /// sprintf (formula, "%f*pow(%f,@0)", pur_Zmm, exp(pur_Zmm_err/pur_Zmm));
+  /// RooFormulaVar* fv_pur_Zmm = new RooFormulaVar("fv_pur_Zmm", formula, RooArgList(*pur_Zmm_prim));
+  /// pur_Zmm_nom->setConstant();
+  /// globalObservables -> add (*pur_Zmm_nom);
+  /// allNuisances -> add (*pur_Zmm_prim);
+  /// allNuisancePdfs -> add (*pdf_pur_Zmm);
+
+
+       sprintf( NP_name, "pur_Zmm" ) ;
+       RooAbsReal* rar_pur_Zmm = makeBetaConstraint( NP_name, pur_Zmm, pur_Zmm_err ) ;
+
+
+
+
 
 
       // VL -> nominal scale factors
 
-      RooRealVar* knn_prim[nBinsBtag];
-      RooRealVar* knn_nom[nBinsBtag];
-      RooGaussian* pdf_knn[nBinsBtag];
-      RooFormulaVar* fv_knn[nBinsBtag];
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++ old way, below ++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  /// RooRealVar* knn_prim[nBinsBtag];
+  /// RooRealVar* knn_nom[nBinsBtag];
+  /// RooGaussian* pdf_knn[nBinsBtag];
+  /// RooFormulaVar* fv_knn[nBinsBtag];
+  ///
+  /// for (int k = 0 ; k < nBinsBtag ; k++) {
+  ///
+  ///   TString knnString     = "knn";
+  ///   TString knnPrimString = "knn_prim";
+  ///   TString knnNomString  = "knn_nom";
+  ///   TString knnPdfString  = "pdf_knn";
+  ///
+  ///   knnString     += sBbins[k] ;
+  ///   knnPrimString += sBbins[k] ;
+  ///   knnNomString  += sBbins[k] ;
+  ///   knnPdfString  += sBbins[k] ;
+  ///
+  ///   knn_prim[k] = new RooRealVar( knnPrimString, knnPrimString, 0., -5., 5.);
+  ///   knn_nom[k] = new RooRealVar( knnNomString, knnNomString, 0., -5., 5.);
+  ///   pdf_knn[k] = new RooGaussian( knnPdfString, knnPdfString, *knn_prim[k], *knn_nom[k], RooConst(1) );
+  ///   sprintf (formula, "%f*pow(%f,@0)", knn[k], exp(knn_err[k]/knn[k]));
+  ///   fv_knn[k] = new RooFormulaVar(knnString, formula, RooArgList(*knn_prim[k]));
+  ///   knn_nom[k]->setConstant();
+  ///   globalObservables -> add (*knn_nom[k]);
+  ///   allNuisances -> add (*knn_prim[k]);
+  ///   allNuisancePdfs -> add (*pdf_knn[k]);
+  ///
+  /// }
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++ old way, above ++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++ new way, below ++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+      RooAbsReal* rar_knn[nBinsBtag] ;
 
       for (int k = 0 ; k < nBinsBtag ; k++) {
 
-	TString knnString     = "knn";
-	TString knnPrimString = "knn_prim";
-	TString knnNomString  = "knn_nom";
-	TString knnPdfString  = "pdf_knn";
-	
-	knnString     += sBbins[k] ;
-	knnPrimString += sBbins[k] ;
-	knnNomString  += sBbins[k] ;
-	knnPdfString  += sBbins[k] ;
-	
-	knn_prim[k] = new RooRealVar( knnPrimString, knnPrimString, 0., -5., 5.);
-	knn_nom[k] = new RooRealVar( knnNomString, knnNomString, 0., -5., 5.);
-	pdf_knn[k] = new RooGaussian( knnPdfString, knnPdfString, *knn_prim[k], *knn_nom[k], RooConst(1) );
-	sprintf (formula, "%f*pow(%f,@0)", knn[k], exp(knn_err[k]/knn[k]));
-	fv_knn[k] = new RooFormulaVar(knnString, formula, RooArgList(*knn_prim[k]));
-	knn_nom[k]->setConstant();
-	globalObservables.add (*knn_nom[k]);
-	allNuisances.add (*knn_prim[k]);
-	allNuisancePdfs.add (*pdf_knn[k]);
+       sprintf( NP_name, "knn_%db", k+1 ) ;
+       rar_knn[k] = makeBetaPrimeConstraint( NP_name, knn[k], knn_err[k] ) ;
 
       }
+
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++ new way, above ++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+
+
 
 
       // sf_ee and sf_mm derived from a common underlying gaussian
@@ -985,9 +1081,9 @@
       RooRealVar* sf_ll_nom = new RooRealVar( "sf_ll_nom", "sf_ll_nom", 0, -5, 5);
       RooGaussian* pdf_sf_ll = new RooGaussian("pdf_sf_ll" , "pdf_sf_ll", *sf_ll_prim, *sf_ll_nom, RooConst(1));
       sf_ll_nom->setConstant();
-      globalObservables.add (*sf_ll_nom);
-      allNuisances.add (*sf_ll_prim);
-      allNuisancePdfs.add (*pdf_sf_ll);
+      globalObservables -> add (*sf_ll_nom);
+      allNuisances -> add (*sf_ll_prim);
+      allNuisancePdfs -> add (*pdf_sf_ll);
 
       RooFormulaVar* fv_sf_ee[nBinsBtag];
       RooFormulaVar* fv_sf_mm[nBinsBtag];
@@ -1009,97 +1105,166 @@
       }
 
 
+
+
+
+
+
+
       // MC scale factor
 
-      RooRealVar* sf_mc_prim = new RooRealVar( "sf_mc_prim", "sf_mc_prim", 0, -5, 5);
-      RooRealVar* sf_mc_nom = new RooRealVar( "sf_mc_nom", "sf_mc_nom", 0, -5, 5);
-      RooGaussian* pdf_sf_mc = new RooGaussian("pdf_sf_mc" , "pdf_sf_mc", *sf_mc_prim, *sf_mc_nom, RooConst(1));
-      sprintf (formula, "%f*pow(%f,@0)", sf_mc, exp(sf_mc_err/sf_mc));
-      RooFormulaVar* fv_sf_mc = new RooFormulaVar("sf_mc", formula, RooArgList(*sf_mc_prim));
-      sf_mc_nom->setConstant();
-      globalObservables.add (*sf_mc_nom);
-      allNuisances.add (*sf_mc_prim);
-      allNuisancePdfs.add (*pdf_sf_mc);
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++ old way, below ++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  /// RooRealVar* sf_mc_prim = new RooRealVar( "sf_mc_prim", "sf_mc_prim", 0, -5, 5);
+  /// RooRealVar* sf_mc_nom = new RooRealVar( "sf_mc_nom", "sf_mc_nom", 0, -5, 5);
+  /// RooGaussian* pdf_sf_mc = new RooGaussian("pdf_sf_mc" , "pdf_sf_mc", *sf_mc_prim, *sf_mc_nom, RooConst(1));
+  /// sprintf (formula, "%f*pow(%f,@0)", sf_mc, exp(sf_mc_err/sf_mc));
+  /// RooFormulaVar* fv_sf_mc = new RooFormulaVar("sf_mc", formula, RooArgList(*sf_mc_prim));
+  /// sf_mc_nom->setConstant();
+  /// globalObservables -> add (*sf_mc_nom);
+  /// allNuisances -> add (*sf_mc_prim);
+  /// allNuisancePdfs -> add (*pdf_sf_mc);
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++ old way, above ++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++ new way, below ++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+       sprintf( NP_name, "sf_mc" ) ;
+       RooAbsReal* rar_sf_mc = makeBetaPrimeConstraint( NP_name, sf_mc, sf_mc_err ) ;
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++ new way, above ++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+
+
+
 
 
       // QCD and TTWJ scale factors
 
-      RooRealVar* sf_qcd_prim[nBinsMET][nBinsHT][nBinsBtag];
-      RooRealVar* sf_qcd_nom[nBinsMET][nBinsHT][nBinsBtag];
-      RooGaussian* pdf_sf_qcd[nBinsMET][nBinsHT][nBinsBtag];
-      RooFormulaVar* fv_sf_qcd[nBinsMET][nBinsHT][nBinsBtag];
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++ old way, below ++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  /// RooRealVar* sf_qcd_prim[nBinsMET][nBinsHT][nBinsBtag];
+  /// RooRealVar* sf_qcd_nom[nBinsMET][nBinsHT][nBinsBtag];
+  /// RooGaussian* pdf_sf_qcd[nBinsMET][nBinsHT][nBinsBtag];
+  /// RooFormulaVar* fv_sf_qcd[nBinsMET][nBinsHT][nBinsBtag];
 
-      RooRealVar* sf_ttwj_prim[nBinsMET][nBinsHT][nBinsBtag];
-      RooRealVar* sf_ttwj_nom[nBinsMET][nBinsHT][nBinsBtag];
-      RooGaussian* pdf_sf_ttwj[nBinsMET][nBinsHT][nBinsBtag];
-      RooFormulaVar* fv_sf_ttwj[nBinsMET][nBinsHT][nBinsBtag];
+  /// RooRealVar* sf_ttwj_prim[nBinsMET][nBinsHT][nBinsBtag];
+  /// RooRealVar* sf_ttwj_nom[nBinsMET][nBinsHT][nBinsBtag];
+  /// RooGaussian* pdf_sf_ttwj[nBinsMET][nBinsHT][nBinsBtag];
+  /// RooFormulaVar* fv_sf_ttwj[nBinsMET][nBinsHT][nBinsBtag];
+
+  /// for (int i = 0 ; i < nBinsMET ; i++) {
+  ///   for (int j = 0 ; j < nBinsHT ; j++) {
+  ///     for (int k = 0 ; k < nBinsBtag ; k++) {     
+
+  ///       TString sfQcdString     = "sf_qcd";
+  ///       TString sfQcdPrimString = "sf_qcd_prim";
+  ///       TString sfQcdNomString  = "sf_qcd_nom";
+  ///       TString sfQcdPdfString  = "pdf_sf_qcd";
+
+  ///       sfQcdString     += sMbins[i]+sHbins[j]+sBbins[k] ;
+  ///       sfQcdPrimString += sMbins[i]+sHbins[j]+sBbins[k] ;
+  ///       sfQcdNomString  += sMbins[i]+sHbins[j]+sBbins[k] ;
+  ///       sfQcdPdfString  += sMbins[i]+sHbins[j]+sBbins[k] ;
+
+  ///       sf_qcd_prim[i][j][k] = new RooRealVar( sfQcdPrimString, sfQcdPrimString, 0., -5., 5.);
+  ///       sf_qcd_nom[i][j][k] = new RooRealVar( sfQcdNomString, sfQcdNomString, 0., -5., 5.);
+  ///       pdf_sf_qcd[i][j][k] = new RooGaussian( sfQcdPdfString, sfQcdPdfString, *sf_qcd_prim[i][j][k], *sf_qcd_nom[i][j][k], RooConst(1) );
+  ///       sprintf (formula, "%f*pow(%f,@0)", sf_qcd[i][j][k], exp(sf_qcd_err[i][j][k]/sf_qcd[i][j][k]));
+  ///       fv_sf_qcd[i][j][k] = new RooFormulaVar(sfQcdString, formula, RooArgList(*sf_qcd_prim[i][j][k]));
+  ///       sf_qcd_nom[i][j][k]->setConstant();
+  ///       globalObservables -> add (*sf_qcd_nom[i][j][k]);
+  ///       allNuisances -> add (*sf_qcd_prim[i][j][k]);
+  ///       allNuisancePdfs -> add (*pdf_sf_qcd[i][j][k]);
+
+
+  ///       TString sfTtwjString     = "sf_ttwj";
+  ///       TString sfTtwjPrimString = "sf_ttwj_prim";
+  ///       TString sfTtwjNomString  = "sf_ttwj_nom";
+  ///       TString sfTtwjPdfString  = "pdf_sf_ttwj";
+
+  ///       sfTtwjString     += sMbins[i]+sHbins[j]+sBbins[k] ;
+  ///       sfTtwjPrimString += sMbins[i]+sHbins[j]+sBbins[k] ;
+  ///       sfTtwjNomString  += sMbins[i]+sHbins[j]+sBbins[k] ;
+  ///       sfTtwjPdfString  += sMbins[i]+sHbins[j]+sBbins[k] ;
+
+  ///       sf_ttwj_prim[i][j][k] = new RooRealVar( sfTtwjPrimString, sfTtwjPrimString, 0., -5., 5.);
+  ///       sf_ttwj_nom[i][j][k] = new RooRealVar( sfTtwjNomString, sfTtwjNomString, 0., -5., 5.);
+  ///       pdf_sf_ttwj[i][j][k] = new RooGaussian( sfTtwjPdfString, sfTtwjPdfString, *sf_ttwj_prim[i][j][k], *sf_ttwj_nom[i][j][k], RooConst(1) );
+  ///       sprintf (formula, "%f*pow(%f,@0)", sf_ttwj[i][j][k], exp(sf_ttwj_err[i][j][k]/sf_ttwj[i][j][k]));
+  ///       fv_sf_ttwj[i][j][k] = new RooFormulaVar(sfTtwjString, formula, RooArgList(*sf_ttwj_prim[i][j][k]));
+  ///       sf_ttwj_nom[i][j][k]->setConstant();
+  ///       globalObservables -> add (*sf_ttwj_nom[i][j][k]);
+  ///       allNuisances -> add (*sf_ttwj_prim[i][j][k]);
+  ///       allNuisancePdfs -> add (*pdf_sf_ttwj[i][j][k]);
+
+  ///     }
+  ///   }
+  /// }
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++ old way, above ++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++ new way, below ++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+      RooAbsReal* rar_sf_qcd [nBinsMET][nBinsHT][nBinsBtag];
+      RooAbsReal* rar_sf_ttwj[nBinsMET][nBinsHT][nBinsBtag];
 
       for (int i = 0 ; i < nBinsMET ; i++) {
-	for (int j = 0 ; j < nBinsHT ; j++) {
-	  for (int k = 0 ; k < nBinsBtag ; k++) {     
-
-	    TString sfQcdString     = "sf_qcd";
-	    TString sfQcdPrimString = "sf_qcd_prim";
-	    TString sfQcdNomString  = "sf_qcd_nom";
-	    TString sfQcdPdfString  = "pdf_sf_qcd";
-	    
-	    sfQcdString     += sMbins[i]+sHbins[j]+sBbins[k] ;
-	    sfQcdPrimString += sMbins[i]+sHbins[j]+sBbins[k] ;
-	    sfQcdNomString  += sMbins[i]+sHbins[j]+sBbins[k] ;
-	    sfQcdPdfString  += sMbins[i]+sHbins[j]+sBbins[k] ;
-	    
-	    sf_qcd_prim[i][j][k] = new RooRealVar( sfQcdPrimString, sfQcdPrimString, 0., -5., 5.);
-	    sf_qcd_nom[i][j][k] = new RooRealVar( sfQcdNomString, sfQcdNomString, 0., -5., 5.);
-	    pdf_sf_qcd[i][j][k] = new RooGaussian( sfQcdPdfString, sfQcdPdfString, *sf_qcd_prim[i][j][k], *sf_qcd_nom[i][j][k], RooConst(1) );
-	    sprintf (formula, "%f*pow(%f,@0)", sf_qcd[i][j][k], exp(sf_qcd_err[i][j][k]/sf_qcd[i][j][k]));
-	    fv_sf_qcd[i][j][k] = new RooFormulaVar(sfQcdString, formula, RooArgList(*sf_qcd_prim[i][j][k]));
-	    sf_qcd_nom[i][j][k]->setConstant();
-	    globalObservables.add (*sf_qcd_nom[i][j][k]);
-	    allNuisances.add (*sf_qcd_prim[i][j][k]);
-	    allNuisancePdfs.add (*pdf_sf_qcd[i][j][k]);
+        for (int j = 0 ; j < nBinsHT ; j++) {
+          for (int k = 0 ; k < nBinsBtag ; k++) {
 
 
-	    TString sfTtwjString     = "sf_ttwj";
-	    TString sfTtwjPrimString = "sf_ttwj_prim";
-	    TString sfTtwjNomString  = "sf_ttwj_nom";
-	    TString sfTtwjPdfString  = "pdf_sf_ttwj";
-	    
-	    sfTtwjString     += sMbins[i]+sHbins[j]+sBbins[k] ;
-	    sfTtwjPrimString += sMbins[i]+sHbins[j]+sBbins[k] ;
-	    sfTtwjNomString  += sMbins[i]+sHbins[j]+sBbins[k] ;
-	    sfTtwjPdfString  += sMbins[i]+sHbins[j]+sBbins[k] ;
-	    
-	    sf_ttwj_prim[i][j][k] = new RooRealVar( sfTtwjPrimString, sfTtwjPrimString, 0., -5., 5.);
-	    sf_ttwj_nom[i][j][k] = new RooRealVar( sfTtwjNomString, sfTtwjNomString, 0., -5., 5.);
-	    pdf_sf_ttwj[i][j][k] = new RooGaussian( sfTtwjPdfString, sfTtwjPdfString, *sf_ttwj_prim[i][j][k], *sf_ttwj_nom[i][j][k], RooConst(1) );
-	    sprintf (formula, "%f*pow(%f,@0)", sf_ttwj[i][j][k], exp(sf_ttwj_err[i][j][k]/sf_ttwj[i][j][k]));
-	    fv_sf_ttwj[i][j][k] = new RooFormulaVar(sfTtwjString, formula, RooArgList(*sf_ttwj_prim[i][j][k]));
-	    sf_ttwj_nom[i][j][k]->setConstant();
-	    globalObservables.add (*sf_ttwj_nom[i][j][k]);
-	    allNuisances.add (*sf_ttwj_prim[i][j][k]);
-	    allNuisancePdfs.add (*pdf_sf_ttwj[i][j][k]);
+             //--- QCD
 
-	  }
-	}
-      }
+             sprintf( NP_name, "sf_qcd_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+             rar_sf_qcd[i][j][k] = makeBetaPrimeConstraint( NP_name, sf_qcd[i][j][k], sf_qcd_err[i][j][k] ) ;
 
+
+             //--- ttwj
+
+             if ( ! (i==0 && j==0 && k==0 ) ) {
+
+                sprintf( NP_name, "sf_ttwj_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+                rar_sf_ttwj[i][j][k] = makeBetaPrimeConstraint( NP_name, sf_ttwj[i][j][k], sf_ttwj_err[i][j][k] ) ;
+
+             }
+
+             printf("--------\n") ;
+
+          } // i (met)
+             printf("++++++++++++++++\n") ;
+        } // j (ht)
+             printf("=========================\n") ;
+      } // k (nbtag)
+
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++ new way, above ++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       RooRealVar* eff_sf_prim = new RooRealVar( "eff_sf_prim", "eff_sf_prim", 0, -5, 5);
       RooRealVar* eff_sf_nom = new RooRealVar( "eff_sf_nom", "eff_sf_nom", 0, -5, 5);
       RooGaussian* pdf_eff_sf = new RooGaussian( "pdf_eff_sf" , "pdf_eff_sf", *eff_sf_prim, *eff_sf_nom, RooConst(1));
       eff_sf_nom->setConstant();
-      globalObservables.add (*eff_sf_nom);
-      allNuisances.add (*eff_sf_prim);
-      allNuisancePdfs.add (*pdf_eff_sf);
+      globalObservables -> add (*eff_sf_nom);
+      allNuisances -> add (*eff_sf_prim);
+      allNuisancePdfs -> add (*pdf_eff_sf);
 
 
       RooRealVar* btageff_sf_prim = new RooRealVar( "btageff_sf_prim", "btageff_sf_prim", 0, -5, 5);
       RooRealVar* btageff_sf_nom = new RooRealVar( "btageff_sf_nom", "btageff_sf_nom", 0, -5, 5);
       RooGaussian* pdf_btageff_sf = new RooGaussian( "pdf_btageff_sf", "pdf_btageff_sf", *btageff_sf_prim, *btageff_sf_nom, RooConst(1));
       btageff_sf_nom->setConstant();
-      globalObservables.add (*btageff_sf_nom);
-      allNuisances.add (*btageff_sf_prim);
-      allNuisancePdfs.add (*pdf_btageff_sf);
+      globalObservables -> add (*btageff_sf_nom);
+      allNuisances -> add (*btageff_sf_prim);
+      allNuisancePdfs -> add (*pdf_btageff_sf);
 
 
       //+++++++++++++++++ Relationships between parameters ++++++++++++++++++++++++++++++++++++++++++++
@@ -1131,9 +1296,8 @@
 	    if ( !(i == 0 && j == 0 && k == 0) ) {
 	       
 	      TString rfvString =  " @0 * @1 * ( @2 / @3 )" ;
-	      
 	      rfv_mu_ttwj[i][j][k] = new RooFormulaVar( ttwjString, rfvString, 
-							RooArgSet( *rv_mu_ttwj[0][0][0], *fv_sf_ttwj[i][j][k], *rv_mu_ttwj_sl[i][j][k], *rv_mu_ttwj_sl[0][0][0] )) ;
+	                      RooArgSet( *rv_mu_ttwj[0][0][0], *rar_sf_ttwj[i][j][k], *rv_mu_ttwj_sl[i][j][k], *rv_mu_ttwj_sl[0][0][0] )) ;
 	      
 	      rv_mu_ttwj[i][j][k] = rfv_mu_ttwj[i][j][k] ;
 
@@ -1158,12 +1322,14 @@
             if ( qcdModelIndex == 1 ) {
 
                rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
-                                                        RooArgSet( *rv_mu_qcd_ldp[i][j][k], *fv_sf_qcd[i][j][k], *fv_Rlsb_passfail[j][k] ) ) ;
+                                                        RooArgSet( *rv_mu_qcd_ldp[i][j][k], *rar_sf_qcd[i][j][k], *fv_Rlsb_passfail[j][k] ) ) ;
+
 
             } else if ( qcdModelIndex == 2 ) {
 
                rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
-                                                        RooArgSet( *rv_mu_qcd_ldp[i][j][k], *fv_sf_qcd[i][j][k], *rv_qcd_0lepLDP_ratio[j] ) ) ;
+                                                        RooArgSet( *rv_mu_qcd_ldp[i][j][k], *rar_sf_qcd[i][j][k], *rv_qcd_0lepLDP_ratio[j] ) ) ;
+
 
             }
 
@@ -1228,14 +1394,14 @@
 	      TString rfvZeeString = "( @0 / @1 ) * @2 * ( ( @3 * @4 ) / ( @5 * @6 ) )" ;
 
 	      rv_mu_zee[i][j] = new RooFormulaVar( muZeeString, rfvZeeString,
-						   RooArgSet( *rv_mu_znn[i][j][k], *fv_knn[k], *fv_sf_ee[k], *fv_acc_Zee[i], 
+						   RooArgSet( *rv_mu_znn[i][j][k], *rar_knn[k], *fv_sf_ee[k], *fv_acc_Zee[i], 
 							      *fv_eff_Zee, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
 
 
 	      TString rfvZmmString = "( @0 / @1 ) * @2 * ( ( @3 * @4 ) / ( @5 * @6 ) )" ;
 
 	      rv_mu_zmm[i][j] = new RooFormulaVar( muZmmString, rfvZmmString,
-						   RooArgSet( *rv_mu_znn[i][j][k], *fv_knn[k], *fv_sf_mm[k], *fv_acc_Zmm[i], 
+						   RooArgSet( *rv_mu_znn[i][j][k], *rar_knn[k], *fv_sf_mm[k], *fv_acc_Zmm[i], 
 							      *fv_eff_Zmm, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
 
 	    }
@@ -1244,7 +1410,7 @@
 	      TString rfvZnnString = "@0 * ( @1 / @2 )" ;
 
 	      rv_mu_znn[i][j][k] = new RooFormulaVar( muZnnString, rfvZnnString,
-						      RooArgSet( *rv_mu_znn[i][j][0], *fv_knn[k], *fv_knn[0] ) ) ;
+						      RooArgSet( *rv_mu_znn[i][j][0], *rar_knn[k], *rar_knn[0] ) ) ;
 	      
 	    }
 
@@ -1362,7 +1528,7 @@
 	      
 	    rv_n_ldp[i][j][k] = new RooFormulaVar( nLdpString, rfvNLdpString,
 						   RooArgSet( *rv_mu_qcd_ldp[i][j][k], *rv_btageff_sf_ldp[i][j][k], *rv_eff_sf_ldp[i][j][k], 
-							      *fv_sf_mc, *rv_mu_ttwj_ldp[i][j][k], *rv_mu_znn_ldp[i][j][k], *rv_mu_susy_ldp[i][j][k] ) ) ;
+							      *rar_sf_mc, *rv_mu_ttwj_ldp[i][j][k], *rv_mu_znn_ldp[i][j][k], *rv_mu_susy_ldp[i][j][k] ) ) ;
 
 
 	    // pdf's
@@ -1383,9 +1549,6 @@
 	    pdflist.add( *pdf_N_1lep[i][j][k] ) ;
 	    pdflist.add( *pdf_N_ldp[i][j][k] ) ;
 
-	    observedParametersList.add( *rv_0lep[i][j][k] ) ;
-	    observedParametersList.add( *rv_1lep[i][j][k] ) ;
-	    observedParametersList.add( *rv_ldp[i][j][k] ) ;
 
 
 	  }
@@ -1406,7 +1569,7 @@
 	  TString rfvNmmString = "@0 / @1" ;
 
 	  rv_n_mm[i][j] = new RooFormulaVar( nMmString, rfvNmmString,
-					     RooArgSet( *rv_mu_zmm[i][j], *fv_pur_Zmm ) ) ;
+					     RooArgSet( *rv_mu_zmm[i][j], *rar_pur_Zmm ) ) ;
 
 
 	  // pdf's
@@ -1423,32 +1586,21 @@
 	  pdflist.add( *pdf_N_Zee[i][j] ) ;
 	  pdflist.add( *pdf_N_Zmm[i][j] ) ;
 
-	  observedParametersList.add( *rv_Zee[i][j] ) ;
-	  observedParametersList.add( *rv_Zmm[i][j] ) ;
 
 	}
       }      
 
       printf(" --- Constructing likelihood.\n" ) ; cout << flush ;
 
-      pdflist.add(allNuisancePdfs);
-
-      pdflist.Print() ;
+      pdflist.add( *allNuisancePdfs );
 	    
+      pdflist.Print() ;
+
       likelihood = new RooProdPdf( "likelihood", "ra2b likelihood", pdflist ) ;
 
-      dsObserved = new RooDataSet("ra2b_observed_rds", "RA2b observed data values",
-				  observedParametersList ) ;
-      dsObserved->add( observedParametersList ) ;
 
 
-      printf(" --- Creating workspace.\n" ) ; cout << flush ;
-
-      RooWorkspace workspace ("ws") ;
-
-      printf(" --- Importing dataset.\n" ) ; cout << flush ;
-
-      workspace.import(*dsObserved);
+      /// likelihood->printMultiline( cout, 1, kTRUE, "" ) ;
 
 
       //--- Do a simple pre-fit to tune initial values of key parameters.
@@ -1522,15 +1674,11 @@
       sbModel.SetPdf(*likelihood);
       sbModel.SetParametersOfInterest(poi);
       sbModel.SetPriorPdf(signal_prior);
-      sbModel.SetNuisanceParameters(allNuisances);
-      sbModel.SetObservables(observedParametersList);
-      sbModel.SetGlobalObservables(globalObservables);
+      sbModel.SetNuisanceParameters( *allNuisances );
+      sbModel.SetObservables( *observedParametersList );
+      sbModel.SetGlobalObservables( *globalObservables );
 
       workspace.Print() ;
-
-      /// RooMsgService::instance().getStream(1).addTopic(Integration) ;
-      /// RooMsgService::instance().addStream(DEBUG,Topic(Tracing),ClassName("RooPoisson")) ;
-
 
       printf(" --- Doing fit for S+B model.\n" ) ; cout << flush ;
       // find global maximum with the signal+background model
@@ -1597,7 +1745,7 @@
 
    //=====================================================================================================================
 
-    bool ra2bRoostatsClass3D_1::setSusyScanPoint( const char* inputScanFile,
+    bool ra2bRoostatsClass3D_2::setSusyScanPoint( const char* inputScanFile,
 						  double m0, double m12, bool isT1bbbb, double t1bbbbXsec,
 						  const char* inputSusy_deff_dbtageff_file
 						  ) {
@@ -1958,7 +2106,7 @@
 
    //==============================================================================================================
 
-    void ra2bRoostatsClass3D_1::mismatchErr( char* label, TString inPar ) {
+    void ra2bRoostatsClass3D_2::mismatchErr( char* label, TString inPar ) {
 
       cout << "Mismatch in input file:" << endl;
       cout << "Expecting: " << inPar << endl;
@@ -1972,9 +2120,165 @@
    //==============================================================================================================
 
 
+    RooAbsReal* ra2bRoostatsClass3D_2::makeBetaPrimeConstraint( const char* NP_name, double NP_val, double NP_err ) {
+
+       double alpha, beta ;
+       char varname[1000] ;
+
+       RooRealVar *rrv_passObs, *rrv_failObs, *rrv_passPar, *rrv_failPar ;
+       RooPoisson *passConstraint, *failConstraint ;
+
+       double parVal, parErr, upperLimit, lowerLimit ;
+
+       betaPrimeModeTransform( NP_val, NP_err, alpha, beta ) ;
+
+       sprintf( varname, "passObs_%s", NP_name ) ;
+       rrv_passObs = new RooRealVar( varname, varname, alpha-1., 1e-5, 1e5 ) ;
+       rrv_passObs -> setConstant( kTRUE ) ;
+
+       sprintf( varname, "failObs_%s", NP_name ) ;
+       rrv_failObs = new RooRealVar( varname, varname, beta -1., 1e-5, 1e5 ) ;
+       rrv_failObs -> setConstant( kTRUE ) ;
+
+       globalObservables -> add( *rrv_passObs ) ;
+       globalObservables -> add( *rrv_failObs ) ;
+
+
+       parVal = alpha-1. ;
+       lowerLimit = parVal - 6*sqrt(parVal) ;
+       if ( lowerLimit <= 0. ) { lowerLimit = 1e-5 ; }
+       upperLimit = parVal + 6*sqrt(parVal) ;
+       if ( parVal > 0. ) { parErr = sqrt( parVal ) ; } else { parErr = 0. ; }
+       sprintf( varname, "passPar_%s", NP_name ) ;
+       rrv_passPar = new RooRealVar( varname, varname, parVal, lowerLimit, upperLimit ) ;
+       rrv_passPar -> setError( parErr ) ;
+       rrv_passPar->setConstant( kFALSE ) ;
+       printf(" floating nuisance parameter: %s = %g +/- %g, [%g, %g]\n",
+           varname, parVal, parErr, lowerLimit, upperLimit ) ;
+
+       parVal = beta-1. ;
+       lowerLimit = parVal - 6*sqrt(parVal) ;
+       if ( lowerLimit <= 0. ) { lowerLimit = 1e-5 ; }
+       upperLimit = parVal + 6*sqrt(parVal) ;
+       if ( parVal > 0. ) { parErr = sqrt( parVal ) ; } else { parErr = 0. ; }
+       sprintf( varname, "failPar_%s", NP_name ) ;
+       rrv_failPar = new RooRealVar( varname, varname, parVal, lowerLimit, upperLimit ) ;
+       rrv_failPar -> setError( parErr ) ;
+       rrv_failPar->setConstant( kFALSE ) ;
+       printf(" floating nuisance parameter: %s = %g +/- %g, [%g, %g]\n",
+           varname, parVal, parErr, lowerLimit, upperLimit ) ;
+
+       allNuisances -> add( *rrv_passPar ) ;
+       allNuisances -> add( *rrv_failPar ) ;
+
+
+       sprintf( varname, "passConstraint_%s", NP_name ) ;
+       passConstraint = new RooPoisson( varname, varname, *rrv_passObs, *rrv_passPar ) ;
+       printf("  Created constraint PDF : %s, val = %g, logval = %g\n",
+         varname, passConstraint->getVal(), passConstraint->getLogVal() ) ;
+
+       sprintf( varname, "failConstraint_%s", NP_name ) ;
+       failConstraint = new RooPoisson( varname, varname, *rrv_failObs, *rrv_failPar ) ;
+       printf("  Created constraint PDF : %s, val = %g, logval = %g\n",
+         varname, failConstraint->getVal(), failConstraint->getLogVal() ) ;
+
+       allNuisancePdfs -> add( *passConstraint ) ;
+       allNuisancePdfs -> add( *failConstraint ) ;
+
+       sprintf( varname, "%s", NP_name ) ;
+       RooAbsReal* rar = new RooRatio( varname, varname, *rrv_passPar, *rrv_failPar ) ;
+       printf("  Created nuisance parameter %s : val = %g\n", varname, rar -> getVal() ) ;
+
+       return rar ;
+
+    } // makeBetaPrimeConstraint.
+
+
+   //==============================================================================================================
 
 
 
+    RooAbsReal* ra2bRoostatsClass3D_2::makeBetaConstraint( const char* NP_name, double NP_val, double NP_err ) {
+
+       double alpha, beta ;
+       char varname[1000] ;
+
+       RooRealVar *rrv_passObs, *rrv_failObs, *rrv_passPar, *rrv_failPar ;
+       RooPoisson *passConstraint, *failConstraint ;
+
+       double parVal, parErr, upperLimit, lowerLimit ;
+
+       betaModeTransform( NP_val, NP_err, alpha, beta ) ;
+
+       sprintf( varname, "passObs_%s", NP_name ) ;
+       rrv_passObs = new RooRealVar( varname, varname, alpha-1., 1e-5, 1e5 ) ;
+       rrv_passObs -> setConstant( kTRUE ) ;
+
+       sprintf( varname, "failObs_%s", NP_name ) ;
+       ///// rrv_failObs = new RooRealVar( varname, varname, alpha+beta -2., 1e-5, 1e5 ) ;
+       rrv_failObs = new RooRealVar( varname, varname, beta +1., 1e-5, 1e5 ) ;
+       rrv_failObs -> setConstant( kTRUE ) ;
+
+       globalObservables -> add( *rrv_passObs ) ;
+       globalObservables -> add( *rrv_failObs ) ;
+
+
+       parVal = alpha-1. ;
+       lowerLimit = parVal - 6*sqrt(parVal) ;
+       if ( lowerLimit <= 0. ) { lowerLimit = 1e-5 ; }
+       upperLimit = parVal + 6*sqrt(parVal) ;
+       if ( parVal > 0. ) { parErr = sqrt( parVal ) ; } else { parErr = 0. ; }
+       sprintf( varname, "passPar_%s", NP_name ) ;
+       rrv_passPar = new RooRealVar( varname, varname, parVal, lowerLimit, upperLimit ) ;
+       rrv_passPar -> setError( parErr ) ;
+       rrv_passPar->setConstant( kFALSE ) ;
+       printf(" floating nuisance parameter: %s = %g +/- %g, [%g, %g]\n",
+           varname, parVal, parErr, lowerLimit, upperLimit ) ;
+
+       ////// parVal = alpha+beta-2. ;
+       parVal = beta+1. ;
+       lowerLimit = parVal - 6*sqrt(parVal) ;
+       if ( lowerLimit <= 0. ) { lowerLimit = 1e-5 ; }
+       upperLimit = parVal + 6*sqrt(parVal) ;
+       if ( parVal > 0. ) { parErr = sqrt( parVal ) ; } else { parErr = 0. ; }
+       sprintf( varname, "failPar_%s", NP_name ) ;
+       rrv_failPar = new RooRealVar( varname, varname, parVal, lowerLimit, upperLimit ) ;
+       rrv_failPar -> setError( parErr ) ;
+       rrv_failPar->setConstant( kFALSE ) ;
+       printf(" floating nuisance parameter: %s = %g +/- %g, [%g, %g]\n",
+           varname, parVal, parErr, lowerLimit, upperLimit ) ;
+
+       allNuisances -> add( *rrv_passPar ) ;
+       allNuisances -> add( *rrv_failPar ) ;
+
+
+       sprintf( varname, "passConstraint_%s", NP_name ) ;
+       passConstraint = new RooPoisson( varname, varname, *rrv_passObs, *rrv_passPar ) ;
+       printf("  Created constraint PDF : %s, val = %g, logval = %g\n",
+         varname, passConstraint->getVal(), passConstraint->getLogVal() ) ;
+
+       sprintf( varname, "failConstraint_%s", NP_name ) ;
+       failConstraint = new RooPoisson( varname, varname, *rrv_failObs, *rrv_failPar ) ;
+       printf("  Created constraint PDF : %s, val = %g, logval = %g\n",
+         varname, failConstraint->getVal(), failConstraint->getLogVal() ) ;
+
+       allNuisancePdfs -> add( *passConstraint ) ;
+       allNuisancePdfs -> add( *failConstraint ) ;
+
+       sprintf( varname, "%s_passPlusFail", NP_name ) ;
+       RooAddition* passPlusFail = new RooAddition( varname, varname, RooArgSet(*rrv_passPar, *rrv_failPar) ) ;
+
+
+       sprintf( varname, "%s", NP_name ) ;
+       RooAbsReal* rar = new RooRatio( varname, varname, *rrv_passPar, *passPlusFail ) ;
+       printf("  Created nuisance parameter %s : val = %g\n", varname, rar -> getVal() ) ;
+
+       return rar ;
+
+    } // makeBetaConstraint.
+
+
+   //==============================================================================================================
 
 
 

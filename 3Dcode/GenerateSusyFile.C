@@ -39,11 +39,12 @@ void GenerateSusyFile() {
 //float Mbins[nBinsMET+1] = {150.,250.,99999.};
 //float Hbins[nBinsHT+1] = {400.,99999.};
 
+  //-- met2-ht2-v1
+  const int nBinsMET   = 2 ;
+  const int nBinsHT    = 2 ;
+  float Mbins[nBinsMET+1] = {150.,250.,99999.};
+  float Hbins[nBinsHT+1] = {400.,600.,99999.};
 
-//// const int nBinsMET   = 2 ;
-//// const int nBinsHT    = 2 ;
-//// float Mbins[nBinsMET+1] = {150.,250.,99999.};
-//// float Hbins[nBinsHT+1] = {400.,600.,99999.};
 
   //-- met3-ht3-v1
 //const int nBinsMET   = 3 ;
@@ -52,10 +53,10 @@ void GenerateSusyFile() {
 //float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 
     //-- met4-ht4-v1
-    const int nBinsMET   = 4 ;
-    const int nBinsHT    = 4 ;
-    float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
-    float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
+/// const int nBinsMET   = 4 ;
+/// const int nBinsHT    = 4 ;
+/// float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
+/// float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
 
 ////-- met5-ht5-v1
 //const int nBinsMET   = 5 ;
@@ -75,8 +76,8 @@ void GenerateSusyFile() {
 
 
   // dummy masses
-  int minGlMass = 1000 ;
-  int maxGlMass = 1010 ;
+  int minGlMass = 900 ;
+  int maxGlMass = 910 ;
 
 
 //double dummyYield = 9.9 ;
@@ -98,7 +99,7 @@ void GenerateSusyFile() {
   for ( int mGl = minGlMass ; mGl < maxGlMass ; mGl = mGl + 25 ) {
   xsec = gluinoxsec->GetBinContent((mGl-75)/25);
 //    for ( int mLsp = 50 ; mLsp < ( mGl - 25 ) ; mLsp = mLsp + 25 ) {
-    for ( int mLsp = 600 ; mLsp < 610 ; mLsp = mLsp + 25 ) {
+    for ( int mLsp = 300 ; mLsp < 310 ; mLsp = mLsp + 25 ) {
 
       inFile << mGl << " " << mLsp << " " << dummyEvts << " " ;
       printf(" mGl=%4d, mLsp=%4d\n", mGl, mLsp ) ; cout << flush ;
