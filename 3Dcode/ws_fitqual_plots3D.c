@@ -38,7 +38,7 @@
   //
   //------
 
-   void ws_fitqual_plots3D( const char* wsfile = "ws.root",
+   void ws_fitqual_plots3D( const char* wsfile = "ws2.root",
                             double mu_susy_sig_val = 0.,
                             bool doNorm = false  ) {
 
