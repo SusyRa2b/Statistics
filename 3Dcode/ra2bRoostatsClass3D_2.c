@@ -819,6 +819,7 @@
 
 
       char NP_name[1000] ;
+      char NP_base_name[1000] ;
 
 
 
@@ -970,6 +971,7 @@
 
 
 
+
       // VL -> nominal scale factors
 
       RooAbsReal* rar_knn[nBinsBtag] ;
@@ -989,33 +991,23 @@
 
 
 
-      // sf_ee and sf_mm derived from a common underlying gaussian
-      //zzzzzzz   needs updating to beta prime.  zzzzzzz
+      // sf_ee and sf_mm derived from a common underlying parameter
 
-      RooRealVar* sf_ll_prim = new RooRealVar( "sf_ll_prim", "sf_ll_prim", 0, -5, 5);
-      RooRealVar* sf_ll_nom = new RooRealVar( "sf_ll_nom", "sf_ll_nom", 0, -5, 5);
-      RooGaussian* pdf_sf_ll = new RooGaussian("pdf_sf_ll" , "pdf_sf_ll", *sf_ll_prim, *sf_ll_nom, RooConst(1));
-      sf_ll_nom->setConstant();
-      globalObservables -> add (*sf_ll_nom);
-      allNuisances -> add (*sf_ll_prim);
-      allNuisancePdfs -> add (*pdf_sf_ll);
+      sprintf( NP_name, "sf_ll" ) ;
+      makeBetaPrimeConstraint( NP_name, 1.0, 0.1 ) ;
 
-      RooFormulaVar* fv_sf_ee[nBinsBtag];
-      RooFormulaVar* fv_sf_mm[nBinsBtag];
+      RooAbsReal* rar_sf_ee[nBinsBtag] ;
+      RooAbsReal* rar_sf_mm[nBinsBtag] ;
+
+      sprintf( NP_base_name, "sf_ll" ) ;
 
       for (int k = 0 ; k < nBinsBtag ; k++) {
 
-	TString sf_eeString = "sf_ee";
-	TString sf_mmString = "sf_mm";
-	
-	sf_eeString += sBbins[k] ;
-	sf_mmString += sBbins[k] ;
+         sprintf( NP_name, "sf_ee_%db", k+1 ) ;
+         rar_sf_ee[k] = makeCorrelatedBetaPrimeConstraint( NP_name, sf_ee[k], sf_ee_err[k], NP_base_name ) ;
 
-	sprintf (formula, "%f*pow(%f,@0)", sf_ee[k], exp(sf_ee_err[k]/sf_ee[k]));
-	fv_sf_ee[k] = new RooFormulaVar( sf_eeString, formula, RooArgList(*sf_ll_prim));
-
-	sprintf (formula, "%f*pow(%f,@0)", sf_mm[k], exp(sf_mm_err[k]/sf_mm[k]));
-	fv_sf_mm[k] = new RooFormulaVar( sf_mmString, formula, RooArgList(*sf_ll_prim));
+         sprintf( NP_name, "sf_mm_%db", k+1 ) ;
+         rar_sf_mm[k] = makeCorrelatedBetaPrimeConstraint( NP_name, sf_mm[k], sf_mm_err[k], NP_base_name ) ;
 
       }
 
@@ -1025,12 +1017,10 @@
 
 
 
-
       // MC scale factor
 
-       sprintf( NP_name, "sf_mc" ) ;
-       RooAbsReal* rar_sf_mc = makeBetaPrimeConstraint( NP_name, sf_mc, sf_mc_err ) ;
-
+      sprintf( NP_name, "sf_mc" ) ;
+      RooAbsReal* rar_sf_mc = makeBetaPrimeConstraint( NP_name, sf_mc, sf_mc_err ) ;
 
 
 
@@ -1244,14 +1234,14 @@
 	      TString rfvZeeString = "( @0 / @1 ) * @2 * ( ( @3 * @4 ) / ( @5 * @6 ) )" ;
 
 	      rv_mu_zee[i][j] = new RooFormulaVar( muZeeString, rfvZeeString,
-						   RooArgSet( *rv_mu_znn[i][j][k], *rar_knn[k], *fv_sf_ee[k], *rar_acc_Zee[i], 
+						   RooArgSet( *rv_mu_znn[i][j][k], *rar_knn[k], *rar_sf_ee[k], *rar_acc_Zee[i], 
 							      *rar_eff_Zee, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
 
 
 	      TString rfvZmmString = "( @0 / @1 ) * @2 * ( ( @3 * @4 ) / ( @5 * @6 ) )" ;
 
 	      rv_mu_zmm[i][j] = new RooFormulaVar( muZmmString, rfvZmmString,
-						   RooArgSet( *rv_mu_znn[i][j][k], *rar_knn[k], *fv_sf_mm[k], *rar_acc_Zmm[i], 
+						   RooArgSet( *rv_mu_znn[i][j][k], *rar_knn[k], *rar_sf_mm[k], *rar_acc_Zmm[i], 
 							      *rar_eff_Zmm, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
 
 	    }
@@ -2137,5 +2127,186 @@
 
    //==============================================================================================================
 
+
+
+
+    RooAbsReal* ra2bRoostatsClass3D_2::makeCorrelatedBetaPrimeConstraint( const char* NP_name, double NP_val, double NP_err, const char* NP_base_name ) {
+
+       double alpha, beta ;
+       char varname[1000] ;
+
+       betaPrimeModeTransform( NP_val, NP_err, alpha, beta ) ;
+
+
+
+
+       sprintf( varname, "failPar_%s", NP_base_name ) ;
+       RooAbsReal* baseFailPar = (RooAbsReal*) allNuisances -> find( varname ) ;
+       if ( baseFailPar != 0x0 ) {
+          printf("  base fail parameter : %s = %g\n", baseFailPar->GetName(), baseFailPar->getVal() ) ;
+       } else {
+          printf("\n\n *** ra2bRoostatsClass3D_2::makeCorrelatedBetaPrimeConstraint: can't find base fail parameter.\n\n") ;
+          return 0x0 ;
+       }
+
+       sprintf( varname, "passPar_%s", NP_base_name ) ;
+       RooAbsReal* basePassPar = (RooAbsReal*) allNuisances -> find( varname ) ;
+       if ( basePassPar != 0x0 ) {
+          printf("  base pass parameter : %s = %g\n", basePassPar->GetName(), basePassPar->getVal() ) ;
+       } else {
+          printf("\n\n *** ra2bRoostatsClass3D_2::makeCorrelatedBetaPrimeConstraint: can't find base pass parameter.\n\n") ;
+          return 0x0 ;
+       }
+
+
+
+
+
+       sprintf( varname, "failObs_%s", NP_base_name ) ;
+       RooAbsReal* baseFailObs = (RooAbsReal*) globalObservables -> find( varname ) ;
+       if ( baseFailObs != 0x0 ) {
+          printf("  base fail obs : %s = %g\n", baseFailObs->GetName(), baseFailObs->getVal() ) ;
+       } else {
+          printf("\n\n *** ra2bRoostatsClass3D_2::makeCorrelatedBetaPrimeConstraint: can't find base fail obs.\n\n") ;
+          return 0x0 ;
+       }
+
+       sprintf( varname, "passObs_%s", NP_base_name ) ;
+       RooAbsReal* basePassObs = (RooAbsReal*) globalObservables -> find( varname ) ;
+       if ( basePassObs != 0x0 ) {
+          printf("  base pass obs : %s = %g\n", basePassObs->GetName(), basePassObs->getVal() ) ;
+       } else {
+          printf("\n\n *** ra2bRoostatsClass3D_2::makeCorrelatedBetaPrimeConstraint: can't find base pass obs.\n\n") ;
+          return 0x0 ;
+       }
+
+
+
+
+
+       sprintf( varname, "passScale_%s", NP_name ) ;
+       RooRealVar* passScale = new RooRealVar( varname, varname, (alpha-1)/(basePassObs->getVal()) ) ;
+       passScale->setConstant(kTRUE) ;
+
+       sprintf( varname, "failScale_%s", NP_name ) ;
+       RooRealVar* failScale = new RooRealVar( varname, varname, (beta-1)/(baseFailObs->getVal()) ) ;
+       failScale->setConstant(kTRUE) ;
+
+
+
+
+       sprintf( varname, "passPar_%s", NP_name ) ;
+       RooProduct* passPar = new RooProduct( varname, varname, RooArgSet( *basePassPar, *passScale ) ) ;
+
+       sprintf( varname, "failPar_%s", NP_name ) ;
+       RooProduct* failPar = new RooProduct( varname, varname, RooArgSet( *baseFailPar, *failScale ) ) ;
+
+
+
+
+
+
+       sprintf( varname, "%s", NP_name ) ;
+       RooAbsReal* rar = new RooRatio( varname, varname, *passPar, *failPar ) ;
+       printf("  Created nuisance parameter %s : val = %g\n", varname, rar -> getVal() ) ;
+
+       return rar ;
+
+    } // makeCorrelatedBetaPrimeConstraint.
+
+
+   //==============================================================================================================
+
+
+    RooAbsReal* ra2bRoostatsClass3D_2::makeCorrelatedBetaConstraint( const char* NP_name, double NP_val, double NP_err, const char* NP_base_name ) {
+
+       double alpha, beta ;
+       char varname[1000] ;
+
+       betaModeTransform( NP_val, NP_err, alpha, beta ) ;
+
+
+
+
+       sprintf( varname, "failPar_%s", NP_base_name ) ;
+       RooAbsReal* baseFailPar = (RooAbsReal*) allNuisances -> find( varname ) ;
+       if ( baseFailPar != 0x0 ) {
+          printf("  base fail parameter : %s = %g\n", baseFailPar->GetName(), baseFailPar->getVal() ) ;
+       } else {
+          printf("\n\n *** ra2bRoostatsClass3D_2::makeCorrelatedBetaPrimeConstraint: can't find base fail parameter.\n\n") ;
+          return 0x0 ;
+       }
+
+       sprintf( varname, "passPar_%s", NP_base_name ) ;
+       RooAbsReal* basePassPar = (RooAbsReal*) allNuisances -> find( varname ) ;
+       if ( basePassPar != 0x0 ) {
+          printf("  base pass parameter : %s = %g\n", basePassPar->GetName(), basePassPar->getVal() ) ;
+       } else {
+          printf("\n\n *** ra2bRoostatsClass3D_2::makeCorrelatedBetaPrimeConstraint: can't find base pass parameter.\n\n") ;
+          return 0x0 ;
+       }
+
+
+
+
+
+       sprintf( varname, "failObs_%s", NP_base_name ) ;
+       RooAbsReal* baseFailObs = (RooAbsReal*) globalObservables -> find( varname ) ;
+       if ( baseFailObs != 0x0 ) {
+          printf("  base fail obs : %s = %g\n", baseFailObs->GetName(), baseFailObs->getVal() ) ;
+       } else {
+          printf("\n\n *** ra2bRoostatsClass3D_2::makeCorrelatedBetaPrimeConstraint: can't find base fail obs.\n\n") ;
+          return 0x0 ;
+       }
+
+       sprintf( varname, "passObs_%s", NP_base_name ) ;
+       RooAbsReal* basePassObs = (RooAbsReal*) globalObservables -> find( varname ) ;
+       if ( basePassObs != 0x0 ) {
+          printf("  base pass obs : %s = %g\n", basePassObs->GetName(), basePassObs->getVal() ) ;
+       } else {
+          printf("\n\n *** ra2bRoostatsClass3D_2::makeCorrelatedBetaPrimeConstraint: can't find base pass obs.\n\n") ;
+          return 0x0 ;
+       }
+
+
+
+
+
+       sprintf( varname, "passScale_%s", NP_name ) ;
+       RooRealVar* passScale = new RooRealVar( varname, varname, (alpha-1)/(basePassObs->getVal()) ) ;
+       passScale->setConstant(kTRUE) ;
+
+       sprintf( varname, "failScale_%s", NP_name ) ;
+       RooRealVar* failScale = new RooRealVar( varname, varname, (beta-1)/(baseFailObs->getVal()) ) ;
+       failScale->setConstant(kTRUE) ;
+
+
+
+
+       sprintf( varname, "passPar_%s", NP_name ) ;
+       RooProduct* passPar = new RooProduct( varname, varname, RooArgSet( *basePassPar, *passScale ) ) ;
+
+       sprintf( varname, "failPar_%s", NP_name ) ;
+       RooProduct* failPar = new RooProduct( varname, varname, RooArgSet( *baseFailPar, *failScale ) ) ;
+
+
+
+
+
+
+       sprintf( varname, "%s_passPlusFail", NP_name ) ;
+       RooAddition* passPlusFail = new RooAddition( varname, varname, RooArgSet(*passPar, *failPar) ) ;
+
+
+       sprintf( varname, "%s", NP_name ) ;
+       RooAbsReal* rar = new RooRatio( varname, varname, *passPar, *passPlusFail ) ;
+       printf("  Created nuisance parameter %s : val = %g\n", varname, rar -> getVal() ) ;
+
+       return rar ;
+
+    } // makeCorrelatedBetaPrimeConstraint.
+
+
+   //==============================================================================================================
 
 
