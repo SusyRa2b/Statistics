@@ -39,8 +39,8 @@
 
        RooAbsReal* makeBetaPrimeConstraint( const char* NP_name, double NP_val, double NP_err ) ;
        RooAbsReal* makeBetaConstraint( const char* NP_name, double NP_val, double NP_err ) ;
-       RooAbsReal* makeCorrelatedBetaPrimeConstraint( const char* NP_name, double NP_val, double NP_err, const char* NP_base_name ) ;
-       RooAbsReal* makeCorrelatedBetaConstraint( const char* NP_name, double NP_val, double NP_err, const char* NP_base_name ) ;
+       RooAbsReal* makeCorrelatedBetaPrimeConstraint( const char* NP_name, double NP_val, double NP_err, const char* NP_base_name, bool changeSign=false ) ;
+       RooAbsReal* makeCorrelatedBetaConstraint( const char* NP_name, double NP_val, double NP_err, const char* NP_base_name, bool changeSign=false ) ;
 
        char initializeFile[10000] ;
 
@@ -157,9 +157,9 @@
        RooRealVar* rv_mean_eff_sf_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
        RooRealVar* rv_width_eff_sf_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
 
-       RooFormulaVar* rv_eff_sf[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooFormulaVar* rv_eff_sf_sl[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooFormulaVar* rv_eff_sf_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
+  //   RooFormulaVar* rv_eff_sf[nBinsMET][nBinsHT][nBinsBtag] ;
+  //   RooFormulaVar* rv_eff_sf_sl[nBinsMET][nBinsHT][nBinsBtag] ;
+  //   RooFormulaVar* rv_eff_sf_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
 
        
        // btag efficiency derivatives

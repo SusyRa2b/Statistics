@@ -819,7 +819,6 @@
 
 
       char NP_name[1000] ;
-      char NP_base_name[1000] ;
 
 
 
@@ -993,23 +992,30 @@
 
       // sf_ee and sf_mm derived from a common underlying parameter
 
+      //-- sf_ll is the underlying constraint.  The correlated
+      //   constraints on the ee and mumu components are derived from it.
+      //   The underlying constraint is no correction with a 10% uncertainty,
+      //   which gives pseudo observables of around 200, which makes the
+      //   Poisson for the pseudo observables close to Gaussian.
+      //
       sprintf( NP_name, "sf_ll" ) ;
       makeBetaPrimeConstraint( NP_name, 1.0, 0.1 ) ;
 
       RooAbsReal* rar_sf_ee[nBinsBtag] ;
       RooAbsReal* rar_sf_mm[nBinsBtag] ;
 
-      sprintf( NP_base_name, "sf_ll" ) ;
-
       for (int k = 0 ; k < nBinsBtag ; k++) {
 
          sprintf( NP_name, "sf_ee_%db", k+1 ) ;
-         rar_sf_ee[k] = makeCorrelatedBetaPrimeConstraint( NP_name, sf_ee[k], sf_ee_err[k], NP_base_name ) ;
+         rar_sf_ee[k] = makeCorrelatedBetaPrimeConstraint( NP_name, sf_ee[k], sf_ee_err[k], "sf_ll" ) ;
 
          sprintf( NP_name, "sf_mm_%db", k+1 ) ;
-         rar_sf_mm[k] = makeCorrelatedBetaPrimeConstraint( NP_name, sf_mm[k], sf_mm_err[k], NP_base_name ) ;
+         rar_sf_mm[k] = makeCorrelatedBetaPrimeConstraint( NP_name, sf_mm[k], sf_mm_err[k], "sf_ll" ) ;
 
       }
+
+
+
 
 
 
@@ -1072,26 +1078,86 @@
 
 
 
-      //zzzzz needs updating to beta zzzzzzzzzz
 
-      RooRealVar* eff_sf_prim = new RooRealVar( "eff_sf_prim", "eff_sf_prim", 0, -5, 5);
-      RooRealVar* eff_sf_nom = new RooRealVar( "eff_sf_nom", "eff_sf_nom", 0, -5, 5);
-      RooGaussian* pdf_eff_sf = new RooGaussian( "pdf_eff_sf" , "pdf_eff_sf", *eff_sf_prim, *eff_sf_nom, RooConst(1));
-      eff_sf_nom->setConstant();
-      globalObservables -> add (*eff_sf_nom);
-      allNuisances -> add (*eff_sf_prim);
-      allNuisancePdfs -> add (*pdf_eff_sf);
+      //-- Using beta prime here since this is a scale factor, not the actual
+      //   efficiency, and the efficiency is far from 1 (much closer to zero).
+      //
+      //-- eff_sf is the underlying constraint.  The correlated
+      //   constraints on the ee and mumu components are derived from it.
+      //   The underlying constraint is no correction with a 10% uncertainty,
+      //   which gives pseudo observables of around 200, which makes the
+      //   Poisson for the pseudo observables close to Gaussian.
+      //
+      sprintf( NP_name, "eff_sf" ) ;
+      makeBetaPrimeConstraint( NP_name, 1.0, 0.1 ) ;
+
+      RooAbsReal* rar_eff_sf[nBinsMET][nBinsHT][nBinsBtag] ;
+      RooAbsReal* rar_eff_sf_sl[nBinsMET][nBinsHT][nBinsBtag] ;
+      RooAbsReal* rar_eff_sf_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
+
+      for (int i = 0 ; i < nBinsMET ; i++) {
+         for (int j = 0 ; j < nBinsHT ; j++) {
+            for (int k = 0 ; k < nBinsBtag ; k++) {
+
+               sprintf( NP_name, "eff_sf_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+               rar_eff_sf[i][j][k] = makeCorrelatedBetaPrimeConstraint( NP_name, rv_mean_eff_sf[i][j][k]->getVal(), rv_width_eff_sf[i][j][k]->getVal(), "eff_sf" ) ;
+
+               sprintf( NP_name, "eff_sf_sl_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+               rar_eff_sf_sl[i][j][k] = makeCorrelatedBetaPrimeConstraint( NP_name, rv_mean_eff_sf_sl[i][j][k]->getVal(), rv_width_eff_sf_sl[i][j][k]->getVal(), "eff_sf" ) ;
+
+               sprintf( NP_name, "eff_sf_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+               rar_eff_sf_ldp[i][j][k] = makeCorrelatedBetaPrimeConstraint( NP_name, rv_mean_eff_sf_ldp[i][j][k]->getVal(), rv_width_eff_sf_ldp[i][j][k]->getVal(), "eff_sf" ) ;
+
+            } // k
+         } // j
+      } // i
 
 
-      RooRealVar* btageff_sf_prim = new RooRealVar( "btageff_sf_prim", "btageff_sf_prim", 0, -5, 5);
-      RooRealVar* btageff_sf_nom = new RooRealVar( "btageff_sf_nom", "btageff_sf_nom", 0, -5, 5);
-      RooGaussian* pdf_btageff_sf = new RooGaussian( "pdf_btageff_sf", "pdf_btageff_sf", *btageff_sf_prim, *btageff_sf_nom, RooConst(1));
-      btageff_sf_nom->setConstant();
-      globalObservables -> add (*btageff_sf_nom);
-      allNuisances -> add (*btageff_sf_prim);
-      allNuisancePdfs -> add (*pdf_btageff_sf);
 
 
+
+
+
+      //-- Using beta prime here since this is a scale factor, not the actual
+      //   efficiency, and the efficiency is far from 1 (much closer to zero).
+      //
+      //-- btageff_sf is the underlying constraint.  The correlated
+      //   constraints on the ee and mumu components are derived from it.
+      //   The underlying constraint is no correction with a 10% uncertainty,
+      //   which gives pseudo observables of around 200, which makes the
+      //   Poisson for the pseudo observables close to Gaussian.
+      //
+      sprintf( NP_name, "btageff_sf" ) ;
+      makeBetaPrimeConstraint( NP_name, 1.0, 0.1 ) ;
+
+      RooAbsReal* rar_btageff_sf[nBinsMET][nBinsHT][nBinsBtag] ;
+      RooAbsReal* rar_btageff_sf_sl[nBinsMET][nBinsHT][nBinsBtag] ;
+      RooAbsReal* rar_btageff_sf_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
+
+      for (int i = 0 ; i < nBinsMET ; i++) {
+         for (int j = 0 ; j < nBinsHT ; j++) {
+            for (int k = 0 ; k < nBinsBtag ; k++) {
+
+               bool changeSign ;
+
+               sprintf( NP_name, "btageff_sf_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+               changeSign = false ;
+               if ( rv_deff_dbtageff[i][j][k]->getVal() < 0. ) { changeSign = true ; }
+               rar_btageff_sf[i][j][k] = makeCorrelatedBetaPrimeConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff[i][j][k]->getVal()), "btageff_sf", changeSign ) ;
+
+               sprintf( NP_name, "btageff_sf_sl_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+               changeSign = false ;
+               if ( rv_deff_dbtageff_sl[i][j][k]->getVal() < 0. ) { changeSign = true ; }
+               rar_btageff_sf_sl[i][j][k] = makeCorrelatedBetaPrimeConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff_sl[i][j][k]->getVal()), "btageff_sf", changeSign ) ;
+
+               sprintf( NP_name, "btageff_sf_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+               changeSign = false ;
+               if ( rv_deff_dbtageff_ldp[i][j][k]->getVal() < 0. ) { changeSign = true ; }
+               rar_btageff_sf_ldp[i][j][k] = makeCorrelatedBetaPrimeConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff_ldp[i][j][k]->getVal()), "btageff_sf", changeSign ) ;
+
+            } // k
+         } // j
+      } // i
 
 
 
@@ -1255,92 +1321,9 @@
 	    }
 
       
-	    //-- Parametric relations between correlated efficiency scale factors.
-
-	    TString effSfString      = "eff_sf" ;
-	    TString effSfSlString    = "eff_sf_sl" ;
-	    TString effSfLdpString   = "eff_sf_ldp" ;
-
-	    effSfString      += sMbins[i]+sHbins[j]+sBbins[k] ;
-	    effSfSlString    += sMbins[i]+sHbins[j]+sBbins[k] ;
-	    effSfLdpString   += sMbins[i]+sHbins[j]+sBbins[k] ;
-
-	    
-	    TString rfvSfString = "@0 * pow( exp( @1 / @0 ), @2 )" ;
-
-	    rv_eff_sf[i][j][k] = new RooFormulaVar( effSfString, rfvSfString,
-						    RooArgSet( *rv_mean_eff_sf[i][j][k], *rv_width_eff_sf[i][j][k], 
-							       *rv_mean_eff_sf[i][j][k], *eff_sf_prim ) ) ;
 
 
-	    TString rfvSfSlString = "@0 * pow( exp( @1 / @0 ), @2 )" ;
-
-	    rv_eff_sf_sl[i][j][k] = new RooFormulaVar( effSfSlString, rfvSfSlString,
-						       RooArgSet( *rv_mean_eff_sf_sl[i][j][k], *rv_width_eff_sf_sl[i][j][k], 
-								  *rv_mean_eff_sf_sl[i][j][k], *eff_sf_prim ) ) ;
-
-
-	    TString rfvSfLdpString = "@0 * pow( exp( @1 / @0 ), @2 )" ;
-
-	    rv_eff_sf_ldp[i][j][k] = new RooFormulaVar( effSfLdpString, rfvSfLdpString,
-							RooArgSet( *rv_mean_eff_sf_ldp[i][j][k], *rv_width_eff_sf_ldp[i][j][k], 
-								   *rv_mean_eff_sf_ldp[i][j][k], *eff_sf_prim ) ) ;
-
-
-	    // b-tag efficiency scale factors
-
-	    TString bteffString    = "btageff_sf" ;
-	    TString bteffSlString  = "btageff_sf_sl" ;
-	    TString bteffLdpString = "btageff_sf_ldp" ;
-	    
-	    bteffString    += sMbins[i]+sHbins[j]+sBbins[k] ;
-	    bteffSlString  += sMbins[i]+sHbins[j]+sBbins[k] ;
-	    bteffLdpString += sMbins[i]+sHbins[j]+sBbins[k] ;
-
-
-	    // 0-lep
-
-	    if ( rv_deff_dbtageff[i][j][k]->getVal() > 0. ) {
-	      TString rfvDeffDbtString = "pow( exp( @0 * @1 ), @2 )" ;
-	      rv_btageff_sf[i][j][k] = new RooFormulaVar( bteffString, rfvDeffDbtString,
-							  RooArgSet( *rv_btageff_err, *rv_deff_dbtageff[i][j][k], *btageff_sf_prim ) ) ;
-	    } else {
-	      rv_deff_dbtageff[i][j][k]->setVal( -1.0 * rv_deff_dbtageff[i][j][k]->getVal() ) ;
-	      TString rfvDeffDbtString = "pow( exp( @0 * @1 ), -1.0*@2 )" ;
-	      rv_btageff_sf[i][j][k] = new RooFormulaVar( bteffString, rfvDeffDbtString,
-							  RooArgSet( *rv_btageff_err, *rv_deff_dbtageff[i][j][k], *btageff_sf_prim ) ) ;
-	    }
-
-
-	    // 1-lep
-
-	    if ( rv_deff_dbtageff_sl[i][j][k]->getVal() > 0. ) {
-	      TString rfvDeffDbtSlString = "pow( exp( @0 * @1 ), @2 )" ;
-	      rv_btageff_sf_sl[i][j][k] = new RooFormulaVar( bteffSlString, rfvDeffDbtSlString,
-							  RooArgSet( *rv_btageff_err, *rv_deff_dbtageff_sl[i][j][k], *btageff_sf_prim ) ) ;
-	    } else {
-	      rv_deff_dbtageff_sl[i][j][k]->setVal( -1.0 * rv_deff_dbtageff_sl[i][j][k]->getVal() ) ;
-	      TString rfvDeffDbtSlString = "pow( exp( @0 * @1 ), -1.0*@2 )" ;
-	      rv_btageff_sf_sl[i][j][k] = new RooFormulaVar( bteffSlString, rfvDeffDbtSlString,
-							  RooArgSet( *rv_btageff_err, *rv_deff_dbtageff_sl[i][j][k], *btageff_sf_prim ) ) ;
-	    }
-
-
-	    // ldp
-
-	    if ( rv_deff_dbtageff_ldp[i][j][k]->getVal() > 0. ) {
-	      TString rfvDeffDbtLdpString = "pow( exp( @0 * @1 ), @2 )" ;
-	      rv_btageff_sf_ldp[i][j][k] = new RooFormulaVar( bteffLdpString, rfvDeffDbtLdpString,
-							  RooArgSet( *rv_btageff_err, *rv_deff_dbtageff_ldp[i][j][k], *btageff_sf_prim ) ) ;
-	    } else {
-	      rv_deff_dbtageff_ldp[i][j][k]->setVal( -1.0 * rv_deff_dbtageff_ldp[i][j][k]->getVal() ) ;
-	      TString rfvDeffDbtLdpString = "pow( exp( @0 * @1 ), -1.0*@2 )" ;
-	      rv_btageff_sf_ldp[i][j][k] = new RooFormulaVar( bteffLdpString, rfvDeffDbtLdpString,
-							  RooArgSet( *rv_btageff_err, *rv_deff_dbtageff_ldp[i][j][k], *btageff_sf_prim ) ) ;
-	    }
-
-
-	    //+++++++++++++ Expected counts for observables in terms of parameters ++++++++++++++++++
+            //+++++++++++++ Expected counts for observables in terms of parameters ++++++++++++++++++
 
 	    TString nString    = "n" ;
 	    TString nSlString  = "n_sl" ;
@@ -1354,20 +1337,20 @@
 
 	    rv_n[i][j][k] = new RooFormulaVar( nString, rfvNString,
 	    				       RooArgSet( *rv_mu_ttwj[i][j][k], *rv_mu_qcd[i][j][k], *rv_mu_znn[i][j][k],  
-							  *rv_btageff_sf[i][j][k], *rv_eff_sf[i][j][k], *rv_mu_susy[i][j][k] ) ) ;
+							  *rar_btageff_sf[i][j][k], *rar_eff_sf[i][j][k], *rv_mu_susy[i][j][k] ) ) ;
 
 
 	    TString rfvNSlString = "@0 + (@1 * @2 * @3)" ;
 
 	    rv_n_sl[i][j][k] = new RooFormulaVar( nSlString, rfvNSlString,
-						  RooArgSet( *rv_mu_ttwj_sl[i][j][k], *rv_btageff_sf_sl[i][j][k], 
-							     *rv_eff_sf_sl[i][j][k], *rv_mu_susy_sl[i][j][k] ) ) ;
+						  RooArgSet( *rv_mu_ttwj_sl[i][j][k], *rar_btageff_sf_sl[i][j][k], 
+							     *rar_eff_sf_sl[i][j][k], *rv_mu_susy_sl[i][j][k] ) ) ;
 
 	    
 	    TString rfvNLdpString = "@0 + @1 * @2 * ( @3 * ( @4 + @5 ) + @6 )" ;
 	      
 	    rv_n_ldp[i][j][k] = new RooFormulaVar( nLdpString, rfvNLdpString,
-						   RooArgSet( *rv_mu_qcd_ldp[i][j][k], *rv_btageff_sf_ldp[i][j][k], *rv_eff_sf_ldp[i][j][k], 
+						   RooArgSet( *rv_mu_qcd_ldp[i][j][k], *rar_btageff_sf_ldp[i][j][k], *rar_eff_sf_ldp[i][j][k], 
 							      *rar_sf_mc, *rv_mu_ttwj_ldp[i][j][k], *rv_mu_znn_ldp[i][j][k], *rv_mu_susy_ldp[i][j][k] ) ) ;
 
 
@@ -1962,6 +1945,12 @@
 
     RooAbsReal* ra2bRoostatsClass3D_2::makeBetaPrimeConstraint( const char* NP_name, double NP_val, double NP_err ) {
 
+       if ( NP_err <= 0. ) {
+          printf("  Uncertainty is zero.  Will return constant scale factor of 1.  Input val = %g, err = %g.\n", NP_val, NP_err ) ;
+          return new RooConstVar( NP_name, NP_name, 1. ) ;
+       }
+
+
        double alpha, beta ;
        char varname[1000] ;
 
@@ -2045,6 +2034,12 @@
           NP_val = 0.999 ;
        }
 
+       if ( NP_err <= 0. ) {
+          printf("  Uncertainty is zero.  Will return constant scale factor of 1.  Input val = %g, err = %g.\n", NP_val, NP_err ) ;
+          return new RooConstVar( NP_name, NP_name, 1. ) ;
+       }
+
+
        double alpha, beta ;
        char varname[1000] ;
 
@@ -2060,8 +2055,6 @@
        rrv_passObs -> setConstant( kTRUE ) ;
 
        sprintf( varname, "failObs_%s", NP_name ) ;
-       ///// rrv_failObs = new RooRealVar( varname, varname, alpha+beta -2., 1e-5, 1e5 ) ;
-       ///// rrv_failObs = new RooRealVar( varname, varname, beta +1., 1e-5, 1e5 ) ;
        rrv_failObs = new RooRealVar( varname, varname, beta -1., 1e-5, 1e5 ) ;
        rrv_failObs -> setConstant( kTRUE ) ;
 
@@ -2081,8 +2074,6 @@
        printf(" floating nuisance parameter: %s = %g +/- %g, [%g, %g]\n",
            varname, parVal, parErr, lowerLimit, upperLimit ) ;
 
-       ////// parVal = alpha+beta-2. ;
-       ////// parVal = beta+1. ;
        parVal = beta-1. ;
        lowerLimit = parVal - 6*sqrt(parVal) ;
        if ( lowerLimit <= 0. ) { lowerLimit = 1e-5 ; }
@@ -2130,7 +2121,16 @@
 
 
 
-    RooAbsReal* ra2bRoostatsClass3D_2::makeCorrelatedBetaPrimeConstraint( const char* NP_name, double NP_val, double NP_err, const char* NP_base_name ) {
+    RooAbsReal* ra2bRoostatsClass3D_2::makeCorrelatedBetaPrimeConstraint( 
+            const char* NP_name, double NP_val, double NP_err, const char* NP_base_name, bool changeSign ) {
+
+
+
+       if ( NP_err <= 0. ) {
+          printf("  Uncertainty is zero.  Will return constant scale factor of 1.  Input val = %g, err = %g.\n", NP_val, NP_err ) ;
+          return new RooConstVar( NP_name, NP_name, 1. ) ;
+       }
+
 
        double alpha, beta ;
        char varname[1000] ;
@@ -2184,25 +2184,50 @@
 
 
 
-       sprintf( varname, "passScale_%s", NP_name ) ;
-       RooRealVar* passScale = new RooRealVar( varname, varname, (alpha-1)/(basePassObs->getVal()) ) ;
-       passScale->setConstant(kTRUE) ;
-
-       sprintf( varname, "failScale_%s", NP_name ) ;
-       RooRealVar* failScale = new RooRealVar( varname, varname, (beta-1)/(baseFailObs->getVal()) ) ;
-       failScale->setConstant(kTRUE) ;
 
 
+       if ( basePassObs->getVal() < 0. ) {
+          printf("\n\n\n *** makeCorrelatedBetaPrimeConstraint : illegal base pass observable value : %g\n\n",
+             basePassObs->getVal() ) ; cout << flush ;
+          return 0x0 ;
+       }
 
-
-       sprintf( varname, "passPar_%s", NP_name ) ;
-       RooProduct* passPar = new RooProduct( varname, varname, RooArgSet( *basePassPar, *passScale ) ) ;
-
-       sprintf( varname, "failPar_%s", NP_name ) ;
-       RooProduct* failPar = new RooProduct( varname, varname, RooArgSet( *baseFailPar, *failScale ) ) ;
+       if ( baseFailObs->getVal() < 0. ) {
+          printf("\n\n\n *** makeCorrelatedBetaPrimeConstraint : illegal base fail observable value : %g\n\n",
+             baseFailObs->getVal() ) ; cout << flush ;
+          return 0x0 ;
+       }
 
 
 
+       char formula[10000] ;
+       RooAbsReal *passPar(0x0), *failPar(0x0) ;
+
+       if ( !changeSign ) {
+
+          sprintf( formula, "%g+(@0-%g)*(%g)", (alpha-1), basePassObs->getVal(), sqrt((alpha-1)/( basePassObs->getVal() )) ) ;
+          printf(" creating transformed pass parameter with formula : %s\n", formula ) ;
+          sprintf( varname, "passPar_%s", NP_name ) ;
+          passPar = new RooFormulaVar( varname, formula, RooArgSet( *basePassPar ) ) ;
+
+          sprintf( formula, "%g+(@0-%g)*(%g)", (beta-1), baseFailObs->getVal(), sqrt((beta-1)/( baseFailObs->getVal() )) ) ;
+          printf(" creating transformed fail parameter with formula : %s\n", formula ) ;
+          sprintf( varname, "failPar_%s", NP_name ) ;
+          failPar = new RooFormulaVar( varname, formula, RooArgSet( *baseFailPar ) ) ;
+
+       } else {
+
+          sprintf( formula, "%g-(@0-%g)*(%g)", (alpha-1), basePassObs->getVal(), sqrt((alpha-1)/( basePassObs->getVal() )) ) ;
+          printf(" creating transformed pass parameter with formula : %s\n", formula ) ;
+          sprintf( varname, "passPar_%s", NP_name ) ;
+          passPar = new RooFormulaVar( varname, formula, RooArgSet( *basePassPar ) ) ;
+
+          sprintf( formula, "%g-(@0-%g)*(%g)", (beta-1), baseFailObs->getVal(), sqrt((beta-1)/( baseFailObs->getVal() )) ) ;
+          printf(" creating transformed fail parameter with formula : %s\n", formula ) ;
+          sprintf( varname, "failPar_%s", NP_name ) ;
+          failPar = new RooFormulaVar( varname, formula, RooArgSet( *baseFailPar ) ) ;
+
+       }
 
 
 
@@ -2218,7 +2243,16 @@
    //==============================================================================================================
 
 
-    RooAbsReal* ra2bRoostatsClass3D_2::makeCorrelatedBetaConstraint( const char* NP_name, double NP_val, double NP_err, const char* NP_base_name ) {
+    RooAbsReal* ra2bRoostatsClass3D_2::makeCorrelatedBetaConstraint(
+        const char* NP_name, double NP_val, double NP_err, const char* NP_base_name, bool changeSign ) {
+
+
+       if ( NP_err <= 0. ) {
+          printf("  Uncertainty is zero.  Will return constant scale factor of 1.  Input val = %g, err = %g.\n", NP_val, NP_err ) ;
+          return new RooConstVar( NP_name, NP_name, 1. ) ;
+       }
+
+
 
        double alpha, beta ;
        char varname[1000] ;
@@ -2272,22 +2306,50 @@
 
 
 
-       sprintf( varname, "passScale_%s", NP_name ) ;
-       RooRealVar* passScale = new RooRealVar( varname, varname, (alpha-1)/(basePassObs->getVal()) ) ;
-       passScale->setConstant(kTRUE) ;
 
-       sprintf( varname, "failScale_%s", NP_name ) ;
-       RooRealVar* failScale = new RooRealVar( varname, varname, (beta-1)/(baseFailObs->getVal()) ) ;
-       failScale->setConstant(kTRUE) ;
+       if ( basePassObs->getVal() < 0. ) {
+          printf("\n\n\n *** makeCorrelatedBetaPrimeConstraint : illegal base pass observable value : %g\n\n",
+             basePassObs->getVal() ) ; cout << flush ;
+          return 0x0 ;
+       }
+
+       if ( baseFailObs->getVal() < 0. ) {
+          printf("\n\n\n *** makeCorrelatedBetaPrimeConstraint : illegal base fail observable value : %g\n\n",
+             baseFailObs->getVal() ) ; cout << flush ;
+          return 0x0 ;
+       }
 
 
 
+       char formula[10000] ;
+       RooAbsReal *passPar(0x0), *failPar(0x0) ;
 
-       sprintf( varname, "passPar_%s", NP_name ) ;
-       RooProduct* passPar = new RooProduct( varname, varname, RooArgSet( *basePassPar, *passScale ) ) ;
+       if ( !changeSign ) {
 
-       sprintf( varname, "failPar_%s", NP_name ) ;
-       RooProduct* failPar = new RooProduct( varname, varname, RooArgSet( *baseFailPar, *failScale ) ) ;
+          sprintf( formula, "%g+(@0-%g)*(%g)", (alpha-1), basePassObs->getVal(), sqrt((alpha-1)/( basePassObs->getVal() )) ) ;
+          printf(" creating transformed pass parameter with formula : %s\n", formula ) ;
+          sprintf( varname, "passPar_%s", NP_name ) ;
+          passPar = new RooFormulaVar( varname, formula, RooArgSet( *basePassPar ) ) ;
+
+          sprintf( formula, "%g+(@0-%g)*(%g)", (beta-1), baseFailObs->getVal(), sqrt((beta-1)/( baseFailObs->getVal() )) ) ;
+          printf(" creating transformed fail parameter with formula : %s\n", formula ) ;
+          sprintf( varname, "failPar_%s", NP_name ) ;
+          failPar = new RooFormulaVar( varname, formula, RooArgSet( *baseFailPar ) ) ;
+
+       } else {
+
+          sprintf( formula, "%g-(@0-%g)*(%g)", (alpha-1), basePassObs->getVal(), sqrt((alpha-1)/( basePassObs->getVal() )) ) ;
+          printf(" creating transformed pass parameter with formula : %s\n", formula ) ;
+          sprintf( varname, "passPar_%s", NP_name ) ;
+          passPar = new RooFormulaVar( varname, formula, RooArgSet( *basePassPar ) ) ;
+
+          sprintf( formula, "%g-(@0-%g)*(%g)", (beta-1), baseFailObs->getVal(), sqrt((beta-1)/( baseFailObs->getVal() )) ) ;
+          printf(" creating transformed fail parameter with formula : %s\n", formula ) ;
+          sprintf( varname, "failPar_%s", NP_name ) ;
+          failPar = new RooFormulaVar( varname, formula, RooArgSet( *baseFailPar ) ) ;
+
+       }
+
 
 
 

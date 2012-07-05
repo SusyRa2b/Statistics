@@ -763,9 +763,9 @@
 
      //-- Eff sf ---------
 
-     float eff_sf_prim = ((RooRealVar*) ws->obj("eff_sf_prim")) -> getVal() ;
+ /// float eff_sf_prim = ((RooRealVar*) ws->obj("eff_sf_prim")) -> getVal() ;
 
-     hfitqual_np -> SetBinContent( 1, eff_sf_prim ) ;
+ /// hfitqual_np -> SetBinContent( 1, eff_sf_prim ) ;
 
 
      printf("\n\n\n") ;
