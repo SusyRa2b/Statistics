@@ -1,0 +1,26 @@
+CVS checkout:
+========================================
+cvs co -r HEAD -d LikelihoodBuilder UserCode/SusyAnalysis/RA2b/Statistics/LikelihoodBuilder
+
+
+The way to run this is:
+========================================
+If you are on lxplus, you can get root by doing 'source setupRooFit.csh'.
+root -l
+.L RooRatio.cxx+
+.L likelihoodBuilder.C+
+buildLikelihood("setupFile.dat","binFilesFile.dat","signalModelFile.dat",1,"workspace","test.root")
+
+
+Some additional info:
+=========================================
+The .dat files define a likelihood.  The setupFile.dat is just a dummy
+setup of numbers
+used in every bin.  The bin1, bin2, and bin3 files are just dummy
+files of 3 identical
+count selections that would need to be modified to be real selections.
+
+The signalModelFile.dat is setup as:
+
+m0 m12 numberOfEvents bin1SignalCount bin1SignalUncertainty bin2SignalCount
+bin2SignalUncertainty bin3SignalCount bin3SignalUncertainty
