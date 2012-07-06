@@ -152,6 +152,9 @@ struct abcdBinParameters
   double ZtoNuNubTagScalingError;
   double ZtollAcceptance;
   double ZtollAcceptanceError;
+  TString deltaPhiNRatioName;
+  double deltaPhiNRatio;
+  double deltaPhiNRatioError;
   double qcdClosure;
   double qcdClosureError;
   double topWJetsClosure;
@@ -163,7 +166,6 @@ struct abcdBinParameters
 struct allBinNames
 {
   TString ZtoNuNu;
-  TString deltaPhiNRatio;
   TString singleLeptonScaling;
   TString MCUncertainty;
   TString signalCrossSection;
@@ -200,8 +202,6 @@ struct allBins
   double ZtoeeEfficiencyError;
   double ZtomumuEfficiency;
   double ZtomumuEfficiencyError;
-  double deltaPhiNRatio;
-  double deltaPhiNRatioError;
   double qcdClosure;
   double qcdClosureError;
   double topWJetsClosure;
@@ -448,7 +448,13 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , chann
 
   //Define QCD component
 
-  RooAbsArg* deltaPhiNRatio = ws.arg(names.deltaPhiNRatio);
+  RooAbsArg* deltaPhiNRatio = ws.arg(abcd.deltaPhiNRatioName+"_Ratio");
+  if(deltaPhiNRatio == NULL) {
+    deltaPhiNRatio = 
+      getBetaConstraint(ws,abcd.deltaPhiNRatioName,"",
+			abcd.deltaPhiNRatio,abcd.deltaPhiNRatioError,
+			names.observables,names.nuisances);
+  }
   double qcdGuess = observed.zeroLeptonLowDeltaPhiN - abcd.zeroLeptonLowDeltaPhiNMC;
   if(qcdGuess < 0) qcdGuess = 0;
   RooRealVar zeroLeptonLowDeltaPhiNQCDYield(zeroLeptonLowDeltaPhiNName+"_QCDYield",zeroLeptonLowDeltaPhiNName+"_QCDYield",qcdGuess,1e-5,10000);
@@ -590,12 +596,6 @@ void setupUnderlyingLikelihood(RooWorkspace& ws ,allBinNames& names, allBins& nu
   names.nuisances = "nuisances";
 
   //Universal parameters
-
-  RooAbsArg* deltaPhiNRatio = 
-    getBetaConstraint(ws,"deltaPhiNRatio","",
-		      numbers.deltaPhiNRatio,numbers.deltaPhiNRatioError,
-		      names.observables,names.nuisances);
-  names.deltaPhiNRatio = deltaPhiNRatio->GetName();
 
   RooRealVar MCUncertainty("MCUncertainty","MCUncertainty",numbers.MCUncertainty);
   MCUncertainty.setConstant();
@@ -766,8 +766,8 @@ void setupObservations(TString binName, TString binFileName, map<TString,abcdBin
   string fileLine;
   
   TString index;
-  double value;
-       
+  TString value;
+  
   while(!binFile.eof())
     {
       getline(binFile,fileLine);
@@ -777,31 +777,34 @@ void setupObservations(TString binName, TString binFileName, map<TString,abcdBin
       nameAndNumber.NextToken();
       index = nameAndNumber;
       nameAndNumber.NextToken();
-      value = nameAndNumber.Atof();
-      cout << index << " : " << nameAndNumber << endl;
-      if(index == "zeroLeptonCount"                                   ) counts.zeroLepton = value;		 
-      else if(index == "zeroLeptonLowDeltaPhiNCount"                  ) counts.zeroLeptonLowDeltaPhiN = value;
-      else if(index == "oneMuonCount"                                 ) counts.oneMuon = value;		 
-      else if(index == "oneElectronCount"                             ) counts.oneElectron = value;           
-      else if(index == "zeroLeptonTriggerEfficiency"		      ) abcd.zeroLeptonTriggerEfficiency = value;			
-      else if(index == "zeroLeptonTriggerEfficiencyError"	      ) abcd.zeroLeptonTriggerEfficiencyError = value;		
-      else if(index == "zeroLeptonLowDeltaPhiNTriggerEfficiency"      ) abcd.zeroLeptonLowDeltaPhiNTriggerEfficiency = value;	
-      else if(index == "zeroLeptonLowDeltaPhiNTriggerEfficiencyError" ) abcd.zeroLeptonLowDeltaPhiNTriggerEfficiencyError = value;	
-      else if(index == "oneElectronTriggerEfficiency"		      ) abcd.oneElectronTriggerEfficiency = value;			
-      else if(index == "oneElectronTriggerEfficiencyError"    	      ) abcd.oneElectronTriggerEfficiencyError = value;		
-      else if(index == "oneMuonTriggerEfficiency"	              ) abcd.oneMuonTriggerEfficiency = value;			
-      else if(index == "oneMuonTriggerEfficiencyError"		      ) abcd.oneMuonTriggerEfficiencyError = value;			
-      else if(index == "zeroLeptonLowDeltaPhiNMC"		      ) abcd.zeroLeptonLowDeltaPhiNMC = value;			
-      else if(index == "ZtoNuNubTagScaling"			      ) abcd.ZtoNuNubTagScaling = value;				
-      else if(index == "ZtoNuNubTagScalingError"		      ) abcd.ZtoNuNubTagScalingError = value;			
-      else if(index == "ZtollAcceptance"			      ) abcd.ZtollAcceptance = value;				
-      else if(index == "ZtollAcceptanceError"		              ) abcd.ZtollAcceptanceError = value;				
-      else if(index == "qcdClosure"		        	      ) abcd.qcdClosure = value;					
-      else if(index == "qcdClosureError"			      ) abcd.qcdClosureError = value;				
-      else if(index == "topWJetsClosure"		              ) abcd.topWJetsClosure = value;				
-      else if(index == "topWJetsClosureError"			      ) abcd.topWJetsClosureError = value;				
-      else if(index == "ZtoNuNuClosure"				      ) abcd.ZtoNuNuClosure = value;					
-      else if(index == "ZtoNuNuClosureError"                          ) abcd.ZtoNuNuClosureError = value;                            
+      value = nameAndNumber;
+      cout << index << " : " << value << endl;
+      if(index == "zeroLeptonCount"                                   ) counts.zeroLepton = value.Atof();		 
+      else if(index == "zeroLeptonLowDeltaPhiNCount"                  ) counts.zeroLeptonLowDeltaPhiN = value.Atof();
+      else if(index == "oneMuonCount"                                 ) counts.oneMuon = value.Atof();		 
+      else if(index == "oneElectronCount"                             ) counts.oneElectron = value.Atof();           
+      else if(index == "zeroLeptonTriggerEfficiency"		      ) abcd.zeroLeptonTriggerEfficiency = value.Atof();			
+      else if(index == "zeroLeptonTriggerEfficiencyError"	      ) abcd.zeroLeptonTriggerEfficiencyError = value.Atof();		
+      else if(index == "zeroLeptonLowDeltaPhiNTriggerEfficiency"      ) abcd.zeroLeptonLowDeltaPhiNTriggerEfficiency = value.Atof();	
+      else if(index == "zeroLeptonLowDeltaPhiNTriggerEfficiencyError" ) abcd.zeroLeptonLowDeltaPhiNTriggerEfficiencyError = value.Atof();	
+      else if(index == "oneElectronTriggerEfficiency"		      ) abcd.oneElectronTriggerEfficiency = value.Atof();			
+      else if(index == "oneElectronTriggerEfficiencyError"    	      ) abcd.oneElectronTriggerEfficiencyError = value.Atof();		
+      else if(index == "oneMuonTriggerEfficiency"	              ) abcd.oneMuonTriggerEfficiency = value.Atof();			
+      else if(index == "oneMuonTriggerEfficiencyError"		      ) abcd.oneMuonTriggerEfficiencyError = value.Atof();			
+      else if(index == "zeroLeptonLowDeltaPhiNMC"		      ) abcd.zeroLeptonLowDeltaPhiNMC = value.Atof();			
+      else if(index == "ZtoNuNubTagScaling"			      ) abcd.ZtoNuNubTagScaling = value.Atof();				
+      else if(index == "ZtoNuNubTagScalingError"		      ) abcd.ZtoNuNubTagScalingError = value.Atof();			
+      else if(index == "ZtollAcceptance"			      ) abcd.ZtollAcceptance = value.Atof();				
+      else if(index == "ZtollAcceptanceError"		              ) abcd.ZtollAcceptanceError = value.Atof();				
+      else if(index == "deltaPhiNRatioName"                           ) abcd.deltaPhiNRatioName = value;	     
+      else if(index == "deltaPhiNRatio"	                              ) abcd.deltaPhiNRatio = value.Atof();	     
+      else if(index == "deltaPhiNRatioError"                          ) abcd.deltaPhiNRatioError = value.Atof();  	  
+      else if(index == "qcdClosure"		        	      ) abcd.qcdClosure = value.Atof();					
+      else if(index == "qcdClosureError"			      ) abcd.qcdClosureError = value.Atof();				
+      else if(index == "topWJetsClosure"		              ) abcd.topWJetsClosure = value.Atof();				
+      else if(index == "topWJetsClosureError"			      ) abcd.topWJetsClosureError = value.Atof();				
+      else if(index == "ZtoNuNuClosure"				      ) abcd.ZtoNuNuClosure = value.Atof();					
+      else if(index == "ZtoNuNuClosureError"                          ) abcd.ZtoNuNuClosureError = value.Atof();                            
     }
 
   binFile.close();
@@ -845,8 +848,6 @@ void setupUnderlyingModel(map<TString,TString>& binFileNames, vector<TString>& b
       else if(index == "ZtoeeEfficiencyError"   ) numbers.ZtoeeEfficiencyError = value; 
       else if(index == "ZtomumuEfficiency"      ) numbers.ZtomumuEfficiency = value;    
       else if(index == "ZtomumuEfficiencyError" ) numbers.ZtomumuEfficiencyError = value;	
-      else if(index == "deltaPhiNRatio"	        ) numbers.deltaPhiNRatio = value;	     
-      else if(index == "deltaPhiNRatioError"    ) numbers.deltaPhiNRatioError = value;  	  
       else if(index == "MCUncertainty" 	        ) numbers.MCUncertainty = value;	      	   
       else if(index == "Luminosity"   	        ) luminosity = value;	      	   
     }
@@ -965,11 +966,24 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString s
 
   RooArgSet allpdfs = ws.allPdfs();
   
+  cout << "*#*#*#*#*#* allpdfs *#*#*#*#*#*" << endl;
+  cout << "size: " << allpdfs.getSize() << endl;
+  allpdfs.Print();
+  
   RooProdPdf likelihood("likelihood","likelihood",allpdfs);
   
   ws.import(likelihood, RecycleConflictNodes());
 
   ws.defineSet("poi",names.signalCrossSection);  
+
+  cout << "*#*#*#*#*#* poi *#*#*#*#*#*" << endl;
+  cout << "size: " << (*ws.set("poi")).getSize() << endl;
+  (*ws.set("poi")).Print();
+
+  cout << "*#*#*#*#*#* data *#*#*#*#*#*" << endl;
+  cout << "size: " << (*ws.set(names.observables)).getSize() << endl;
+  (*ws.set(names.observables)).Print("v");
+  //same output as allpdfs, except Constraint->Obs or Count
 
   RooDataSet data("data","data",*ws.set(names.observables));
 

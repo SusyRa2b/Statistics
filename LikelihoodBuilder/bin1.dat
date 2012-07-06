@@ -15,6 +15,9 @@ ZtoNuNubTagScaling 0.2
 ZtoNuNubTagScalingError 0.01
 ZtollAcceptance 0.9
 ZtollAcceptanceError 0.01
+deltaPhiNRatioName deltaPhiNRatio_H1         
+deltaPhiNRatio 0.01
+deltaPhiNRatioError 0.001
 qcdClosure 1.0
 qcdClosureError 1.2
 topWJetsClosure 1.0
