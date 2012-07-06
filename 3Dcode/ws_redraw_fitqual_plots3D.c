@@ -45,6 +45,7 @@
      gStyle->SetTitleAlign(33) ;
 
      gDirectory->Delete("hfitqual*") ;
+     gDirectory->Delete("hnp*") ;
 
      loadHist( histfile ) ;
      gDirectory->ls() ;
@@ -602,6 +603,7 @@
      if ( cnp == 0x0 ) {
         cnp = new TCanvas("cnp","RA2b nuisance pars", 850, 1000 ) ;
      }
+     cnp->Clear() ;
      cnp->Divide(3,4) ;
 
    //---
@@ -647,6 +649,8 @@
      cnp->cd(12) ;
      hnp_qcd_3b_pull->Draw() ;
 
+
+     cnp->Update() ;
 
 
 

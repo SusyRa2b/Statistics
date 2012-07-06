@@ -4,8 +4,8 @@ void GenerateDummyInputFile() {
 
   gROOT->Reset();
 
-  int nBinsMET   = 2 ;
-  int nBinsHT    = 2 ;
+  int nBinsMET   = 4 ;
+  int nBinsHT    = 4 ;
   int nBinsBjets = 3 ;   // this must always be 3
 
   TString sMbins[nBinsMET];

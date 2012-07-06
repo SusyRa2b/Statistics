@@ -1,7 +1,8 @@
-#include "ra2bRoostatsClass3D_1.c"
 #include "TRoot.h"
 #include "TSystem.h"
 #include "TRandom.h"
+#include "ra2bRoostatsClass3D_2.c"
+#include "updateFileValue.c"
 
    static const int nBinsMET  = 4 ;
    static const int nBinsHT   = 4 ;
@@ -23,6 +24,7 @@
 
    char datfile[10000] ;
    char susyfile[10000] ;
+   char deffdbtagfile[10000] ;
    char outputDir[10000] ;
 
    int   nFloatParInitVal ;
@@ -82,6 +84,7 @@
    float findUL( RooDataSet* toyds ) ;
    bool setReinitValues( RooFitResult* fitResult ) ;
    bool reinitFloatPars() ;
+   bool saveToyDatfile( int toyIndex, RooDataSet* toyds ) ;
 
 
    TRandom* tran ;
@@ -91,22 +94,38 @@
 
    //=====================================
 
-   void toymc1( const char* input_datfile = "Input-met4-ht4.dat",
-//                const char* input_susyfile = "Susy-mgl900-mlsp300-met4-ht4-v2.dat",
-                const char* input_susyfile = "T1bbbb-met4-ht4-v2.dat",
+   void toymc1( const char* input_datfile = "datfiles/Input-met4-ht4-wsyst1.dat",
+                const char* input_susyfile = "datfiles/Susy-mgl900-mlsp300-met4-ht4.dat",
                 double input_mgl=900, double input_mlsp=300.,
-                const char* input_deffdbtagfile = "dummy_DeffDbtag-met4-ht4-v2.dat",
+                const char* input_deffdbtagfile = "datfiles/dummy_DeffDbtag-met4-ht4.dat",
                 double input_nSusy0lep = 60.,
                 const char* input_outputDir = "output-toymc1",
-		int nToy = 10
+                int nToy = 10
                         ) {
 
        char command[10000] ;
 
 
+
        sprintf( datfile, "%s", input_datfile ) ;
        sprintf( susyfile, "%s", input_susyfile ) ;
        sprintf( outputDir, "%s", input_outputDir ) ;
+       sprintf( deffdbtagfile, "%s", input_deffdbtagfile ) ;
+
+       sprintf( command, "mkdir -p %s", outputDir ) ;
+       gSystem->Exec( command ) ;
+
+       sprintf( command, "cp %s %s", datfile, outputDir ) ;
+       gSystem->Exec( command ) ;
+
+       sprintf( command, "cp %s %s", susyfile, outputDir ) ;
+       gSystem->Exec( command ) ;
+
+       sprintf( command, "cp %s %s", deffdbtagfile, outputDir ) ;
+       gSystem->Exec( command ) ;
+
+
+
 
        mgl  = input_mgl ;
        mlsp = input_mlsp ;
@@ -116,10 +135,10 @@
        susyPoi0lepRatio = 0. ;
        true_susy_0lep = 0. ;
 
-       doSignif = true ;
+       doSignif = false ;
        doUL = false ;
 
-       useExpected0lep = true ;
+       useExpected0lep = false ;
 
 
        tran = new TRandom(12345) ;
@@ -128,13 +147,11 @@
 
        //--- Create workspace.
 
-       ra2bRoostatsClass3D_1 ra2b ;
+       ra2bRoostatsClass3D_2 ra2b ;
 
-       int qcdModelIndex = 1 ;
+       int qcdModelIndex = 2 ;
        ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, qcdModelIndex ) ;
 
-       sprintf( command, "mkdir -p %s", outputDir ) ;
-       gSystem->Exec( command ) ;
        sprintf( command, "mv ws.root %s/", outputDir ) ;
        gSystem->Exec( command ) ;
 
@@ -289,6 +306,12 @@
              findUL( toyds ) ;
 
           }
+
+
+
+
+
+          saveToyDatfile( ti, toyds ) ;
 
 
 
@@ -1140,6 +1163,34 @@
    } // reinitFloatPars.
 
    //==================================================================================
+
+   bool saveToyDatfile( int toyIndex, RooDataSet* toyds ) {
+
+      TString toyoutfilename( datfile ) ;
+      char replacestring[1000] ;
+      sprintf( replacestring, "-toy%04d.dat", toyIndex ) ;
+      toyoutfilename.ReplaceAll( ".dat", replacestring ) ;
+      toyoutfilename.ReplaceAll( "datfiles", outputDir ) ;
+
+      printf("\n\n Saving toy dataset in %s\n\n", toyoutfilename.Data() ) ;
+      char command[1000] ;
+      sprintf( command, "cp %s %s", datfile, toyoutfilename.Data() );
+      gSystem->Exec( command ) ;
+
+      const RooArgSet* dsras = toyds->get() ;
+      TIterator* obsIter = dsras->createIterator() ;
+
+      while ( RooRealVar* obs = (RooRealVar*) obsIter->Next() ) {
+         updateFileValue( toyoutfilename, obs->GetName(), obs->getVal() ) ;
+      }
+
+      return true ;
+
+   } // saveToyDatfile
+
+   //==================================================================================
+
+
 
 
 

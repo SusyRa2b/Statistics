@@ -1261,8 +1261,8 @@
 
 
 
-     char histfile[10000] ;
-     sprintf( histfile, "fitqual-hists-%s", wsfile ) ;
+     TString histfile(wsfile) ;
+     histfile.ReplaceAll(".root","-fitqual.root") ;
      saveHist( histfile,"h*") ;
 
 

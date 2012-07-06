@@ -1,0 +1,7 @@
+
+  echo fitqual-ws-smonly-mgl900-mlsp300-met4-ht4-10psyst
+  root -b -q ws_fitqual_plots3D.c+\(\"rootfiles/ws-smonly-mgl900-mlsp300-met4-ht4-10psyst.root\"\) >& logfiles/fitqual-ws-smonly-mgl900-mlsp300-met4-ht4-10psyst.log
+
+  echo fitqual-ws-smonly-mgl900-mlsp300-met4-ht4-wsyst1
+  root -b -q ws_fitqual_plots3D.c+\(\"rootfiles/ws-smonly-mgl900-mlsp300-met4-ht4-wsyst1.root\"\) >& logfiles/fitqual-ws-smonly-mgl900-mlsp300-met4-ht4-wsyst1.log
+
