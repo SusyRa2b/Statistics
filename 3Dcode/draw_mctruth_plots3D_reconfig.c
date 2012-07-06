@@ -28,9 +28,9 @@
 
 //----------------
 
-   void draw_mctruth_plots3D_reconfig( const char* histfile = "rootfiles/gi-plots-met5-ht5.root",
-                              const char* primaryGroupingVar = "ht",
-                              const char* secondaryGroupingVar = "met",
+   void draw_mctruth_plots3D_reconfig( const char* histfile = "rootfiles/gi-plots-met4-ht4.root",
+                              const char* primaryGroupingVar = "met",
+                              const char* secondaryGroupingVar = "ht",
                               bool logy=false,
                               bool doNorm=false,
                               double normmax=2.0,

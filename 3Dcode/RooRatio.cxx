@@ -36,10 +36,14 @@ ClassImp(RooRatio)
 
 
  Double_t RooRatio::evaluate() const 
- { 
+ {
    // ENTER EXPRESSION IN TERMS OF VARIABLE ARGUMENTS HERE 
-   return numerator/denominator ; 
- } 
+   if ( numerator/denominator >= 0. ) {
+      return numerator/denominator ;
+   } else {
+      return 0. ;
+   }
+ }
 
 
 

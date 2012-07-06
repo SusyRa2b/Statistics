@@ -1,4 +1,5 @@
 
+#include "TMath.h"
 #include "TFile.h"
 #include "TPad.h"
 #include "TCanvas.h"
@@ -28,7 +29,10 @@
   using namespace RooFit;
   using namespace RooStats;
 
+
   void saveHist(const char* filename, const char* pat) ;
+
+  bool getBetaPrimeModeRMS( const char* parName, RooWorkspace* ws, double &mode, double &rms, double &alpha, double &beta ) ;
 
   //------
   //
@@ -898,9 +902,10 @@
      hfitqual_data_zmm_1b->SetLabelSize(0.055,"x") ;
      hfitqual_data_zmm_1b->GetXaxis()->LabelsOption("v") ;
 
-     char histfile[10000] ;
-     sprintf( histfile, "fitqual-hists-%s", wsfile ) ;
-     saveHist( histfile,"h*") ;
+
+
+
+
 
      cfitqual->cd(1);
      hfitqual_data_0lep_1b->Draw("histpe") ;
@@ -1022,6 +1027,198 @@
      cfitqual->SaveAs("fitqual.gif") ;
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+    //----------  Now, do nuisance parameters.
+
+     RooAbsReal* npcheck = (RooAbsReal*) ws->obj( "passObs_sf_qcd_M1_H1_1b" ) ;
+     if ( npcheck != 0 ) {
+
+        TH1F* hnp_qcd_1b_val  = new TH1F("hnp_qcd_1b_val" , "Nuisance parameters, qcd, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_qcd_1b_pull = new TH1F("hnp_qcd_1b_pull", "Nuisance parameters, qcd, 1b, pull"  , nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_qcd_2b_val  = new TH1F("hnp_qcd_2b_val" , "Nuisance parameters, qcd, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_qcd_2b_pull = new TH1F("hnp_qcd_2b_pull", "Nuisance parameters, qcd, 2b, pull"  , nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_qcd_3b_val  = new TH1F("hnp_qcd_3b_val" , "Nuisance parameters, qcd, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_qcd_3b_pull = new TH1F("hnp_qcd_3b_pull", "Nuisance parameters, qcd, 3b, pull"  , nbins, 0.5, nbins+0.5 ) ;
+
+        TH1F* hnp_ttwj_1b_val  = new TH1F("hnp_ttwj_1b_val" , "Nuisance parameters, ttwj, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_ttwj_1b_pull = new TH1F("hnp_ttwj_1b_pull", "Nuisance parameters, ttwj, 1b, pull"  , nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_ttwj_2b_val  = new TH1F("hnp_ttwj_2b_val" , "Nuisance parameters, ttwj, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_ttwj_2b_pull = new TH1F("hnp_ttwj_2b_pull", "Nuisance parameters, ttwj, 2b, pull"  , nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_ttwj_3b_val  = new TH1F("hnp_ttwj_3b_val" , "Nuisance parameters, ttwj, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_ttwj_3b_pull = new TH1F("hnp_ttwj_3b_pull", "Nuisance parameters, ttwj, 3b, pull"  , nbins, 0.5, nbins+0.5 ) ;
+
+
+        for ( int mbi=0 ; mbi < nBinsMET; mbi ++ ) {
+           for ( int hbi=0 ; hbi < nBinsHT; hbi ++ ) {
+              for ( int bbi=0 ; bbi < nBinsBtag; bbi ++ ) {
+                 char parName[1000] ;
+                 sprintf( parName, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                 double mode, rms ;
+                 double alpha, beta ;
+                 getBetaPrimeModeRMS( parName, ws, mode, rms, alpha, beta ) ;
+                 RooAbsReal* np = (RooAbsReal*) ws->obj( parName ) ;
+                 if ( np == 0x0 ) {
+                    printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+                    return ;
+                 }
+                 double npVal = np->getVal() ;
+                 double pull = (npVal-mode)/rms ;
+                 double pdf = pow(npVal,alpha-1) * pow( 1+npVal, -alpha-beta ) / TMath::Beta(alpha,beta) ;
+                 printf("  %s : mode=%7.3f, rms=%7.3f, val=%7.3f, pull=%7.3f, pdf=%9.6f\n", parName, mode, rms, npVal, pull, pdf ) ;
+                 binIndex = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+                 if ( bbi==0 ) hnp_qcd_1b_val->SetBinContent( binIndex, npVal ) ;
+                 if ( bbi==1 ) hnp_qcd_2b_val->SetBinContent( binIndex, npVal ) ;
+                 if ( bbi==2 ) hnp_qcd_3b_val->SetBinContent( binIndex, npVal ) ;
+                 if ( bbi==0 ) hnp_qcd_1b_pull->SetBinContent( binIndex, pull ) ;
+                 if ( bbi==1 ) hnp_qcd_2b_pull->SetBinContent( binIndex, pull ) ;
+                 if ( bbi==2 ) hnp_qcd_3b_pull->SetBinContent( binIndex, pull ) ;
+              }
+           } // hbi
+        } // mbi.
+
+
+
+
+        for ( int mbi=0 ; mbi < nBinsMET; mbi ++ ) {
+           for ( int hbi=0 ; hbi < nBinsHT; hbi ++ ) {
+              for ( int bbi=0 ; bbi < nBinsBtag; bbi ++ ) {
+                 if ( mbi==0 && hbi==0 && bbi==0 ) continue ;
+                 char parName[1000] ;
+                 sprintf( parName, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                 double mode, rms ;
+                 double alpha, beta ;
+                 getBetaPrimeModeRMS( parName, ws, mode, rms, alpha, beta ) ;
+                 RooAbsReal* np = (RooAbsReal*) ws->obj( parName ) ;
+                 if ( np == 0x0 ) {
+                    printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+                    return ;
+                 }
+                 double npVal = np->getVal() ;
+                 double pull = (npVal-mode)/rms ;
+                 double pdf = pow(npVal,alpha-1) * pow( 1+npVal, -alpha-beta ) / TMath::Beta(alpha,beta) ;
+                 printf("  %s : mode=%7.3f, rms=%7.3f, val=%7.3f, pull=%7.3f, pdf=%9.6f\n", parName, mode, rms, npVal, pull, pdf ) ;
+                 binIndex = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+                 if ( bbi==0 ) hnp_ttwj_1b_val->SetBinContent( binIndex, npVal ) ;
+                 if ( bbi==1 ) hnp_ttwj_2b_val->SetBinContent( binIndex, npVal ) ;
+                 if ( bbi==2 ) hnp_ttwj_3b_val->SetBinContent( binIndex, npVal ) ;
+                 if ( bbi==0 ) hnp_ttwj_1b_pull->SetBinContent( binIndex, pull ) ;
+                 if ( bbi==1 ) hnp_ttwj_2b_pull->SetBinContent( binIndex, pull ) ;
+                 if ( bbi==2 ) hnp_ttwj_3b_pull->SetBinContent( binIndex, pull ) ;
+              }
+           } // hbi
+        } // mbi.
+
+
+        hnp_ttwj_1b_val->SetFillColor(kBlue-9) ;
+        hnp_ttwj_2b_val->SetFillColor(kBlue-9) ;
+        hnp_ttwj_3b_val->SetFillColor(kBlue-9) ;
+
+        hnp_ttwj_1b_pull->SetFillColor(kBlue-9) ;
+        hnp_ttwj_2b_pull->SetFillColor(kBlue-9) ;
+        hnp_ttwj_3b_pull->SetFillColor(kBlue-9) ;
+
+        hnp_qcd_1b_val->SetFillColor(2) ;
+        hnp_qcd_2b_val->SetFillColor(2) ;
+        hnp_qcd_3b_val->SetFillColor(2) ;
+
+        hnp_qcd_1b_pull->SetFillColor(2) ;
+        hnp_qcd_2b_pull->SetFillColor(2) ;
+        hnp_qcd_3b_pull->SetFillColor(2) ;
+
+
+        hnp_ttwj_1b_val->SetMaximum(5.) ;
+        hnp_ttwj_2b_val->SetMaximum(5.) ;
+        hnp_ttwj_3b_val->SetMaximum(5.) ;
+        hnp_qcd_1b_val->SetMaximum(5.) ;
+        hnp_qcd_2b_val->SetMaximum(5.) ;
+        hnp_qcd_3b_val->SetMaximum(5.) ;
+
+        hnp_ttwj_1b_pull->SetMinimum(-2.) ;
+        hnp_ttwj_2b_pull->SetMinimum(-2.) ;
+        hnp_ttwj_3b_pull->SetMinimum(-2.) ;
+        hnp_qcd_1b_pull->SetMinimum(-2.) ;
+        hnp_qcd_2b_pull->SetMinimum(-2.) ;
+        hnp_qcd_3b_pull->SetMinimum(-2.) ;
+
+        hnp_ttwj_1b_pull->SetMaximum(2.) ;
+        hnp_ttwj_2b_pull->SetMaximum(2.) ;
+        hnp_ttwj_3b_pull->SetMaximum(2.) ;
+        hnp_qcd_1b_pull->SetMaximum(2.) ;
+        hnp_qcd_2b_pull->SetMaximum(2.) ;
+        hnp_qcd_3b_pull->SetMaximum(2.) ;
+
+        gStyle->SetPadGridY(1) ;
+        TCanvas* cnp = new TCanvas("cnp","RA2b nuisance pars", 850, 1000 ) ;
+        cnp->Divide(3,4) ;
+
+      //---
+        cnp->cd(1) ;
+        hnp_ttwj_1b_val->Draw() ;
+
+        cnp->cd(2) ;
+        hnp_ttwj_2b_val->Draw() ;
+
+        cnp->cd(3) ;
+        hnp_ttwj_3b_val->Draw() ;
+
+
+      //---
+        cnp->cd(4) ;
+        hnp_ttwj_1b_pull->Draw() ;
+
+        cnp->cd(5) ;
+        hnp_ttwj_2b_pull->Draw() ;
+
+        cnp->cd(6) ;
+        hnp_ttwj_3b_pull->Draw() ;
+
+
+      //---
+        cnp->cd(7) ;
+        hnp_qcd_1b_val->Draw() ;
+
+        cnp->cd(8) ;
+        hnp_qcd_2b_val->Draw() ;
+
+        cnp->cd(9) ;
+        hnp_qcd_3b_val->Draw() ;
+
+
+      //---
+        cnp->cd(10) ;
+        hnp_qcd_1b_pull->Draw() ;
+
+        cnp->cd(11) ;
+        hnp_qcd_2b_pull->Draw() ;
+
+        cnp->cd(12) ;
+        hnp_qcd_3b_pull->Draw() ;
+
+     } else {
+        printf("\n\n *** Skipping nuisance parameters.\n\n") ;
+     }
+
+
+
+
+
+
+
+
+
+
+
      // print out results
 
 //   cout << "\n\n Results: \n" << endl ;
@@ -1063,6 +1260,13 @@
 
 
 
+
+     char histfile[10000] ;
+     sprintf( histfile, "fitqual-hists-%s", wsfile ) ;
+     saveHist( histfile,"h*") ;
+
+
+
    }
 
 //==========================================================================================
@@ -1092,6 +1296,54 @@ void saveHist(const char* filename, const char* pat)
 }
 
 //==========================================================================================
+
+
+  bool getBetaPrimeModeRMS( const char* parName, RooWorkspace* ws, double &mode, double &rms, double &alpha, double &beta ) {
+
+     mode = 1.0 ;
+     rms = 0.0 ;
+
+     char varname[1000] ;
+
+     sprintf( varname, "passObs_%s", parName ) ;
+     RooAbsReal* passObs = (RooAbsReal*) ws->obj( varname ) ;
+     if ( passObs == 0x0 ) {
+        printf("\n\n *** getNPModeRMS : can't find pass obs for %s\n\n", parName ) ;
+        return false ;
+     }
+     alpha = passObs->getVal() + 1. ;
+
+     sprintf( varname, "failObs_%s", parName ) ;
+     RooAbsReal* failObs = (RooAbsReal*) ws->obj( varname ) ;
+     if ( failObs == 0x0 ) {
+        printf("\n\n *** getNPModeRMS : can't find fail obs for %s\n\n", parName ) ;
+        return false ;
+     }
+     beta = failObs->getVal() + 1. ;
+
+     mode = (alpha - 1.)/(beta + 1.) ;
+
+     rms = sqrt( alpha * (alpha + beta - 1 ) / ( pow(beta - 1 , 2 ) * (beta - 2) ) ) ;
+
+     return true ;
+
+  } // getNPModeRMS.
+
+
+//==========================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

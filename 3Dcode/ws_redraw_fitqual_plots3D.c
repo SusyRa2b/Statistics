@@ -574,7 +574,86 @@
      printf("     qcd 0lep/ldp ratio: %6.1f / %6.1f = %6.3f\n\n\n", qcd0leptotal, qcdldptotal, qcd0leptotal/qcdldptotal ) ;
 
 
-   }
+
+
+
+
+
+
+
+   //--- nuisance parameters
+     TH1F* hnp_qcd_1b_val = (TH1F*) gDirectory->FindObject("hnp_qcd_1b_val") ;
+     if ( hnp_qcd_1b_val == 0x0 ) { printf("\n\n *** No nuisance parameter plots.\n\n") ; return ; }
+     TH1F* hnp_qcd_2b_val = (TH1F*) gDirectory->FindObject("hnp_qcd_2b_val") ;
+     TH1F* hnp_qcd_3b_val = (TH1F*) gDirectory->FindObject("hnp_qcd_3b_val") ;
+     TH1F* hnp_qcd_1b_pull = (TH1F*) gDirectory->FindObject("hnp_qcd_1b_pull") ;
+     TH1F* hnp_qcd_2b_pull = (TH1F*) gDirectory->FindObject("hnp_qcd_2b_pull") ;
+     TH1F* hnp_qcd_3b_pull = (TH1F*) gDirectory->FindObject("hnp_qcd_3b_pull") ;
+
+     TH1F* hnp_ttwj_1b_val = (TH1F*) gDirectory->FindObject("hnp_ttwj_1b_val") ;
+     TH1F* hnp_ttwj_2b_val = (TH1F*) gDirectory->FindObject("hnp_ttwj_2b_val") ;
+     TH1F* hnp_ttwj_3b_val = (TH1F*) gDirectory->FindObject("hnp_ttwj_3b_val") ;
+     TH1F* hnp_ttwj_1b_pull = (TH1F*) gDirectory->FindObject("hnp_ttwj_1b_pull") ;
+     TH1F* hnp_ttwj_2b_pull = (TH1F*) gDirectory->FindObject("hnp_ttwj_2b_pull") ;
+     TH1F* hnp_ttwj_3b_pull = (TH1F*) gDirectory->FindObject("hnp_ttwj_3b_pull") ;
+
+     gStyle->SetPadGridY(1) ;
+     TCanvas* cnp = (TCanvas*) gDirectory->FindObject("cnp") ;
+     if ( cnp == 0x0 ) {
+        cnp = new TCanvas("cnp","RA2b nuisance pars", 850, 1000 ) ;
+     }
+     cnp->Divide(3,4) ;
+
+   //---
+     cnp->cd(1) ;
+     hnp_ttwj_1b_val->Draw() ;
+
+     cnp->cd(2) ;
+     hnp_ttwj_2b_val->Draw() ;
+
+     cnp->cd(3) ;
+     hnp_ttwj_3b_val->Draw() ;
+
+
+   //---
+     cnp->cd(4) ;
+     hnp_ttwj_1b_pull->Draw() ;
+
+     cnp->cd(5) ;
+     hnp_ttwj_2b_pull->Draw() ;
+
+     cnp->cd(6) ;
+     hnp_ttwj_3b_pull->Draw() ;
+
+
+   //---
+     cnp->cd(7) ;
+     hnp_qcd_1b_val->Draw() ;
+
+     cnp->cd(8) ;
+     hnp_qcd_2b_val->Draw() ;
+
+     cnp->cd(9) ;
+     hnp_qcd_3b_val->Draw() ;
+
+
+   //---
+     cnp->cd(10) ;
+     hnp_qcd_1b_pull->Draw() ;
+
+     cnp->cd(11) ;
+     hnp_qcd_2b_pull->Draw() ;
+
+     cnp->cd(12) ;
+     hnp_qcd_3b_pull->Draw() ;
+
+
+
+
+
+
+
+ }
 
 
 
