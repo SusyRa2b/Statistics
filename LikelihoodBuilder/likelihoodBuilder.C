@@ -669,7 +669,7 @@ void setupUnderlyingLikelihood(RooWorkspace& ws ,allBinNames& names, allBins& nu
 			     names.observables,names.nuisances);
 
   RooAbsArg* ZtomumuEfficiency = 
-    getBetaConstraint(ws,"Efficiency","",
+    getBetaConstraint(ws,"ZtomumuEfficiency","",
 		      numbers.ZtomumuEfficiency,numbers.ZtomumuEfficiencyError,
 		      names.observables,names.nuisances);
 
@@ -679,7 +679,7 @@ void setupUnderlyingLikelihood(RooWorkspace& ws ,allBinNames& names, allBins& nu
 			     names.observables,names.nuisances);
 
   RooAbsArg* ZtoeeEfficiency = 
-    getBetaConstraint(ws,"Efficiency","",
+    getBetaConstraint(ws,"ZtoeeEfficiency","",
 		      numbers.ZtoeeEfficiency,numbers.ZtoeeEfficiencyError,
 		      names.observables,names.nuisances);
 
