@@ -102,6 +102,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
   gROOT->Reset();
 
   const int nBinsBjets = 3 ;   // this must always be 3
+  const int nJetsCut = 3 ;     // #jets >= nJetsCut
 
   //-- met2-ht1-v1
 //const int nBinsMET   = 2 ;
@@ -250,6 +251,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
         "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&",
         "minDelPhiN<4&&nMu==0&&nEl==0&&" } ;
 
+
   //--- Output histograms.
 
    TH1F* hmctruth_susy[3][3] ;
@@ -357,12 +359,13 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
 
         char allcuts[10000] ;
         char allsusycuts[10000] ;
+
         if ( k < (nBinsBjets-1) ) {
-           sprintf( allcuts, "%snB==%d", selcuts[si], k+1 ) ;
-           sprintf( allsusycuts, "%snB==%d%s", selcuts[si], k+1, susycut.Data() ) ;
+	  sprintf( allcuts, "%snB==%d&&nJets>=%d", selcuts[si], k+1, nJetsCut ) ;
+           sprintf( allsusycuts, "%snB==%d&&nJets>=%d%s", selcuts[si], k+1, nJetsCut, susycut.Data() ) ;
         } else {
-           sprintf( allcuts, "%snB>=%d", selcuts[si], k+1 ) ;
-           sprintf( allsusycuts, "%snB>=%d%s", selcuts[si], k+1, susycut.Data() ) ;
+           sprintf( allcuts, "%snB>=%d&&nJets>=%d", selcuts[si], k+1, nJetsCut ) ;
+           sprintf( allsusycuts, "%snB>=%d&&nJets>=%d%s", selcuts[si], k+1, nJetsCut, susycut.Data() ) ;
         }
 
 
@@ -486,8 +489,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
 
     //inFile << "Note: I've removed the b jet dependance of this result since it's always with zero b jets" << endl;
     // R_lsb  very low met sideband (50-100) ratio of mdp>4/mdp<4 (with zero b ratio)
-    TString cutslsb = "MET>50&&MET<100&&nMu==0&&nEl==0&&nB==0&&";
-    /////TString cutslsb = "MET>50&&MET<100&&nMu==0&&nEl==0&&";
+
+    stringstream njcut ; njcut << nJetsCut ;
+    TString cutslsb = "MET>50&&MET<100&&nMu==0&&nEl==0&&nB==0&&nJets>=";
+    cutslsb += njcut.str();
+    cutslsb += "&&";
+
     for (int j = 0 ; j < nBinsHT ; j++) {
       for (int k = 0 ; k < nBinsBjets ; k++) {
   

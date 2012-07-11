@@ -1,11 +1,12 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include "TH1.h"
 #include "TFile.h"
 #include "TChain.h"
 #include "TString.h"
-#include "TRoot.h"
+#include "TROOT.h"
 
 void GenerateSusyFile() {
 
@@ -32,6 +33,8 @@ void GenerateSusyFile() {
   gROOT->Reset();
 
   const int nBinsBjets = 3 ;   // this must always be 3
+  const int nJetsCut = 3 ;     // #jets >= nJetsCut
+
 
   //-- met2-ht1-v1
 //const int nBinsMET   = 2 ;
@@ -76,8 +79,8 @@ void GenerateSusyFile() {
 
 
   // dummy masses
-  int minGlMass = 900 ;
-  int maxGlMass = 910 ;
+  int minGlMass = 850 ;
+  int maxGlMass = 860 ;
 
 
 //double dummyYield = 9.9 ;
@@ -95,11 +98,15 @@ void GenerateSusyFile() {
   TString cutsSL = "minDelPhiN>4&&(nMu==1||nEl==1)&&";
   TString cutsLDP = "minDelPhiN<4&&nMu==0&&nEl==0&&";
 
+  stringstream njcut ; njcut << nJetsCut;
+  TString cutsNjets = "&&nJets>=";
+  cutsNjets += njcut.str();
+
   float xsec = -1.;
   for ( int mGl = minGlMass ; mGl < maxGlMass ; mGl = mGl + 25 ) {
   xsec = gluinoxsec->GetBinContent((mGl-75)/25);
 //    for ( int mLsp = 50 ; mLsp < ( mGl - 25 ) ; mLsp = mLsp + 25 ) {
-    for ( int mLsp = 300 ; mLsp < 310 ; mLsp = mLsp + 25 ) {
+    for ( int mLsp = 200 ; mLsp < 210 ; mLsp = mLsp + 25 ) {
 
       inFile << mGl << " " << mLsp << " " << dummyEvts << " " ;
       printf(" mGl=%4d, mLsp=%4d\n", mGl, mLsp ) ; cout << flush ;
@@ -145,9 +152,9 @@ void GenerateSusyFile() {
          // inFile << 0.5*xsec*ht->GetSumOfWeights() << " ";
          // ht->Reset() ;
 
-            TString allSigCuts = cutSMS+cutsSig+cut ;
-            TString allSLCuts  = cutSMS+cutsSL+cut ;
-            TString allLDPCuts = cutSMS+cutsLDP+cut ;
+            TString allSigCuts = cutSMS+cutsSig+cut+cutsNjets ;
+            TString allSLCuts  = cutSMS+cutsSL+cut+cutsNjets ;
+            TString allLDPCuts = cutSMS+cutsLDP+cut+cutsNjets ;
 
 	    chainT1bbbb.Project("ht","HT",allSigCuts);
             double nselSig = 0.5*xsec*ht->GetSumOfWeights() ;

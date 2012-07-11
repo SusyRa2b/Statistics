@@ -1,4 +1,4 @@
-#include "TRoot.h"
+#include "TROOT.h"
 #include "TSystem.h"
 #include "TRandom.h"
 #include "ra2bRoostatsClass3D_2.c"
@@ -136,7 +136,7 @@
        true_susy_0lep = 0. ;
 
        doSignif = false ;
-       doUL = false ;
+       doUL = true ;
 
        useExpected0lep = false ;
 
@@ -1180,8 +1180,11 @@
       const RooArgSet* dsras = toyds->get() ;
       TIterator* obsIter = dsras->createIterator() ;
 
+      TString ufvname = outputDir ;
+      ufvname += ".txt";
+
       while ( RooRealVar* obs = (RooRealVar*) obsIter->Next() ) {
-         updateFileValue( toyoutfilename, obs->GetName(), obs->getVal() ) ;
+	updateFileValue( toyoutfilename, obs->GetName(), obs->getVal(), ufvname ) ;
       }
 
       return true ;

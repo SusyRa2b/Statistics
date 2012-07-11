@@ -3,7 +3,8 @@
 
    bool updateFileValue( const char* inFile,
                          const char* parameterName,
-                         double newValue ) {
+                         double newValue, 
+			 const char* ufvname) {
 
 
       FILE* infp ;
@@ -13,7 +14,7 @@
       }
 
       FILE* outfp ;
-      if ( (outfp=fopen( "ufv-output.txt","w"))==NULL ) {
+      if ( (outfp=fopen( ufvname,"w"))==NULL ) {
          printf("\n\n *** Problem opening output file.\n\n" ) ;
          return false ;
       }
@@ -43,7 +44,7 @@
       fclose( outfp ) ;
 
       char command[10000] ;
-      sprintf( command, "mv ufv-output.txt  %s\n", inFile ) ;
+      sprintf( command, "mv %s  %s\n", ufvname, inFile ) ;
       gSystem->Exec( command ) ;
 
       return true ;
