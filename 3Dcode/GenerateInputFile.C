@@ -214,8 +214,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
 //int dummyInt = 99;
 //float dummyFloat = 9.999;
   float dummyZero = 0.;
-  float dummyOne = 1.;
-  float dummyErr = .1;
+  float dummyOne = 1.0;
+  float dummyPoint999 = 0.999 ;
+  float dummyErr = 0.1;
 
   ofstream inFile;
   char outfile[10000] ;
@@ -712,7 +713,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
       TString Zee_acc = "acc_Zee";
       Zee_acc = Zee_acc+sMbins[i];
   
-      inFile << Zee_acc << "  \t" << dummyOne << endl;
+      inFile << Zee_acc << "  \t" << dummyPoint999 << endl;
   
       Zee_acc = Zee_acc+"_err";
       inFile << Zee_acc << "  \t" << dummyErr << endl;
@@ -727,7 +728,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
       TString Zmm_acc = "acc_Zmm";
       Zmm_acc = Zmm_acc+sMbins[i];
   
-      inFile << Zmm_acc << "  \t" << dummyOne << endl;
+      inFile << Zmm_acc << "  \t" << dummyPoint999 << endl;
   
       Zmm_acc = Zmm_acc+"_err";
       inFile << Zmm_acc << "  \t" << dummyErr << endl;
