@@ -471,12 +471,12 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   ws.import(zeroLeptonLowDeltaPhiNQCDYield);
   ws.extendSet(names.nuisances,zeroLeptonLowDeltaPhiNQCDYield.GetName());
   RooAbsArg* zeroLeptonQCDClosure = 
-    getCorrelatedBetaPrimeConstraint(ws,"zeroLeptonQCDClosure_",binName,
-				     abcd.qcdClosure,abcd.qcdClosureError,
-				     names.qcdClosurePassObs,names.qcdClosureFailObs,
-				     names.qcdClosurePassPar,names.qcdClosureFailPar);
+    getBetaPrimeConstraint(ws,"zeroLeptonQCDClosure_", binName,
+			   abcd.qcdClosure,abcd.qcdClosureError,
+			   names.observables,names.nuisances);
+  //RooAbsArg* zeroLeptonQCDClosure = getCorrelatedBetaPrimeConstraint(ws,"zeroLeptonQCDClosure_",binName, abcd.qcdClosure,abcd.qcdClosureError, names.qcdClosurePassObs, names.qcdClosureFailObs, names.qcdClosurePassPar,names.qcdClosureFailPar);//Correlated
   RooProduct zeroLeptonQCDYield(zeroLeptonName+"_QCDYield",zeroLeptonName+"_QCDYield",RooArgSet(*deltaPhiNRatio,*zeroLeptonQCDClosure,zeroLeptonLowDeltaPhiNQCDYield));
-
+  
   //Define top and W+jets component:
   
   RooRealVar* singleLeptonScaling = ws.var(names.singleLeptonScaling);
@@ -485,12 +485,12 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   ws.extendSet(names.nuisances,oneLeptonTopWJetsYield.GetName());
   oneLeptonTotal += oneLeptonTopWJetsYield.getVal();
   RooAbsArg*  zeroLeptonTopWJetsClosure = 
-    getCorrelatedBetaPrimeConstraint(ws,"zeroLeptonTopWJetsClosure_",binName,
-				     abcd.topWJetsClosure,abcd.topWJetsClosureError,
-				     names.topWJetsClosurePassObs,names.topWJetsClosureFailObs,
-				     names.topWJetsClosurePassPar,names.topWJetsClosureFailPar);
+    getBetaPrimeConstraint(ws,"zeroLeptonTopWJetsClosure_", binName,
+			   abcd.topWJetsClosure,abcd.topWJetsClosureError,
+			   names.observables,names.nuisances);
+  //RooAbsArg*  zeroLeptonTopWJetsClosure = getCorrelatedBetaPrimeConstraint(ws,"zeroLeptonTopWJetsClosure_",binName, abcd.topWJetsClosure,abcd.topWJetsClosureError, names.topWJetsClosurePassObs,names.topWJetsClosureFailObs, names.topWJetsClosurePassPar,names.topWJetsClosureFailPar);//Correlated
   RooProduct  zeroLeptonTopWJetsYield(zeroLeptonName+"_TopWJetsYield",zeroLeptonName+"_TopWJetsYield",RooArgSet(*singleLeptonScaling,*zeroLeptonTopWJetsClosure,oneLeptonTopWJetsYield));
-
+  
   //Define Z to invisible component:
   
   //-----Define Z->ll observables
@@ -734,7 +734,8 @@ void setupUnderlyingLikelihood(RooWorkspace& ws ,allBinNames& names, allBins& nu
   names.singleLeptonScaling = singleLeptonScaling.GetName();
 
   //Closure Tests:
-
+  /*
+  //Commented out for now to assume they are uncorrelated
   RooAbsArg* qcdClosure = 
     getBetaPrimeConstraint(ws,"qcdClosure","",
 			   numbers.qcdClosure,numbers.qcdClosureError,
@@ -748,7 +749,8 @@ void setupUnderlyingLikelihood(RooWorkspace& ws ,allBinNames& names, allBins& nu
 			   names.observables, names.nuisances,
 			   &names.topWJetsClosurePassObs,&names.topWJetsClosureFailObs,
 			   &names.topWJetsClosurePassPar,&names.topWJetsClosureFailPar);
-  
+  */
+
   //Objects for Z->invisible background:
 
   RooRealVar ZtollOverZtoNuNuRatio("ZtollOverZtoNuNuRatio","ZtollOverZtoNuNuRatio",numbers.ZtollOverZtoNuNuRatio);
@@ -985,6 +987,8 @@ void setupUnderlyingModel(map<TString,TString>& binFileNames, vector<TString>& b
 
 void chooseUnderlyingUncertainties(allBins& numbers , map<TString,abcdBinParameters> bins, map<TString,yields> signal, map<TString,yields> signalError)
 {
+  //Stuff for correlated closure systematics 
+  //--Currently not used because we assume they are uncorrelated!
   double qcdAlpha(0.);
   double qcdBeta(0.);
   double topWJetsAlpha(0.);
@@ -1004,6 +1008,7 @@ void chooseUnderlyingUncertainties(allBins& numbers , map<TString,abcdBinParamet
   numbers.topWJetsClosure = (topWJetsAlpha - 1) / ( topWJetsBeta + 1 );
   numbers.topWJetsClosureError = sqrt( topWJetsAlpha * (topWJetsAlpha + topWJetsBeta - 1 ) / ( pow(topWJetsBeta - 1 , 2 ) * (topWJetsBeta - 2) ) );
   
+  //Signal
   map<TString,yields>::iterator thisSignal      = signal     .begin();
   map<TString,yields>::iterator thisSignalError = signalError.begin();
 
