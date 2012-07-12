@@ -4,7 +4,7 @@
    bool updateFileValue( const char* inFile,
                          const char* parameterName,
                          double newValue, 
-			 const char* ufvname) {
+			 const char* ufvname = "ufv-output.txt" ) {
 
 
       FILE* infp ;

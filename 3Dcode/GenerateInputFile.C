@@ -24,9 +24,9 @@
 void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
 
   TChain* dyTree = new TChain("treeZ") ;
-  int nAdded = dyTree->Add("files5fb/DY.root") ;
+  int nAdded = dyTree->Add("files5fb_lowHT/DY.root") ;
   if ( nAdded <= 0 ) {
-     printf("\n\n\n *** No treeZ in files5fb/DY.root\n\n\n") ;
+     printf("\n\n\n *** No treeZ in files5fb_lowHT/DY.root\n\n\n") ;
      return ;
   }
 
@@ -36,9 +36,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
   sprintf( susycutstring, "&&mgluino==%.0f&&mlsp==%.0f", mgl, mlsp ) ;
   TString susycut( susycutstring ) ;
   if ( mgl>0. && mlsp>0. ) {
-     nAdded = chainT1bbbb.Add("files5fb/T1bbbb.root") ;
+     nAdded = chainT1bbbb.Add("files5fb_lowHT/T1bbbb.root") ;
      if ( nAdded <= 0 ) {
-        printf("\n\n\n *** No tree in files5fb/T1bbbb.root\n\n\n") ;
+        printf("\n\n\n *** No tree in files5fb_lowHT/T1bbbb.root\n\n\n") ;
         return ;
      }
      TFile f("referenceXSecs.root") ;
@@ -58,46 +58,46 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
 
   TChain chainQCD("tree") ;
    //--- these have high weight
-//chainQCD.Add("files5fb/QCD-50to80.root");
-//chainQCD.Add("files5fb/QCD-80to120.root");
-//chainQCD.Add("files5fb/QCD-120to170.root");
-//chainQCD.Add("files5fb/QCD-170to300.root");
+//chainQCD.Add("files5fb_lowHT/QCD-50to80.root");
+//chainQCD.Add("files5fb_lowHT/QCD-80to120.root");
+//chainQCD.Add("files5fb_lowHT/QCD-120to170.root");
+//chainQCD.Add("files5fb_lowHT/QCD-170to300.root");
    //--- below here, these have weight less than one.
-  chainQCD.Add("files5fb/QCD-300to470.root");
-  chainQCD.Add("files5fb/QCD-470to600.root");
-  chainQCD.Add("files5fb/QCD-600to800.root");
-  chainQCD.Add("files5fb/QCD-800to1000.root");
-  chainQCD.Add("files5fb/QCD-1000to1400.root");
-  chainQCD.Add("files5fb/QCD-1400to1800.root");
-  chainQCD.Add("files5fb/QCD-1800.root");
+  chainQCD.Add("files5fb_lowHT/QCD-300to470.root");
+  chainQCD.Add("files5fb_lowHT/QCD-470to600.root");
+  chainQCD.Add("files5fb_lowHT/QCD-600to800.root");
+  chainQCD.Add("files5fb_lowHT/QCD-800to1000.root");
+  chainQCD.Add("files5fb_lowHT/QCD-1000to1400.root");
+  chainQCD.Add("files5fb_lowHT/QCD-1400to1800.root");
+  chainQCD.Add("files5fb_lowHT/QCD-1800.root");
 
   TChain chainTT("tree") ;
-  chainTT.Add("files5fb/TT.root") ;
+  chainTT.Add("files5fb_lowHT/TT.root") ;
 
   TChain chainZnn("tree") ;
-  chainZnn.Add("files5fb/Zinv.root") ;
+  chainZnn.Add("files5fb_lowHT/Zinv.root") ;
 
   TChain chainWJets("tree") ;
-  chainWJets.Add("files5fb/WJets.root") ;
+  chainWJets.Add("files5fb_lowHT/WJets.root") ;
 
   TChain chainAll("tree");
-//chainAll.Add("files5fb/QCD-50to80.root");
-//chainAll.Add("files5fb/QCD-80to120.root");
-//chainAll.Add("files5fb/QCD-120to170.root");
-//chainAll.Add("files5fb/QCD-170to300.root");
-  chainAll.Add("files5fb/QCD-300to470.root");
-  chainAll.Add("files5fb/QCD-470to600.root");
-  chainAll.Add("files5fb/QCD-600to800.root");
-  chainAll.Add("files5fb/QCD-800to1000.root");
-  chainAll.Add("files5fb/QCD-1000to1400.root");
-  chainAll.Add("files5fb/QCD-1400to1800.root");
-  chainAll.Add("files5fb/QCD-1800.root");
-  chainAll.Add("files5fb/TT.root");
-  chainAll.Add("files5fb/Zinv.root");
+//chainAll.Add("files5fb_lowHT/QCD-50to80.root");
+//chainAll.Add("files5fb_lowHT/QCD-80to120.root");
+//chainAll.Add("files5fb_lowHT/QCD-120to170.root");
+//chainAll.Add("files5fb_lowHT/QCD-170to300.root");
+  chainAll.Add("files5fb_lowHT/QCD-300to470.root");
+  chainAll.Add("files5fb_lowHT/QCD-470to600.root");
+  chainAll.Add("files5fb_lowHT/QCD-600to800.root");
+  chainAll.Add("files5fb_lowHT/QCD-800to1000.root");
+  chainAll.Add("files5fb_lowHT/QCD-1000to1400.root");
+  chainAll.Add("files5fb_lowHT/QCD-1400to1800.root");
+  chainAll.Add("files5fb_lowHT/QCD-1800.root");
+  chainAll.Add("files5fb_lowHT/TT.root");
+  chainAll.Add("files5fb_lowHT/Zinv.root");
 
   TChain chainTZ("tree");
-  chainTZ.Add("files5fb/TT.root");
-  chainTZ.Add("files5fb/Zinv.root");
+  chainTZ.Add("files5fb_lowHT/TT.root");
+  chainTZ.Add("files5fb_lowHT/Zinv.root");
 
   gROOT->Reset();
 
