@@ -551,7 +551,10 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
   
     ht -> Sumw2() ;
 
-    TString cutszee = "cat==2&&minDelPhiNee>4&&nVLB>=1&&";
+    TString cutszee = "cat==2&&minDelPhiNee>4&&nVLB>=1&&nJets>=";
+    cutszee += njcut.str();
+    cutszee += "&&";
+
     for (int i = 0 ; i < nBinsMET ; i++) {
       for (int j = 0 ; j < nBinsHT ; j++) {
   
@@ -593,7 +596,10 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
   
     // Z -> mm observables
   
-    TString cutszmm = "cat==1&&minDelPhiNmm>4&&nVLB>=1&&";
+    TString cutszmm = "cat==1&&minDelPhiNmm>4&&nVLB>=1&&nJets>=";
+    cutszmm += njcut.str();
+    cutszmm += "&&";
+
     for (int i = 0 ; i < nBinsMET ; i++) {
       for (int j = 0 ; j < nBinsHT ; j++) {
   
