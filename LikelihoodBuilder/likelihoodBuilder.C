@@ -519,7 +519,7 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   RooRealVar* ZtoNuNu = (RooRealVar*)ws.arg("ZtoNuNu_"+observed.diMuonName);//use MuonName, which should be the same as ElectronName
   if(ZtoNuNu == NULL) 
     {
-      ZtoNuNu = new RooRealVar("ZtoNuNu_"+observed.diMuonName,"ZtoNuNu_"+observed.diMuonName,numbers.ZtollOverZtoNuNuRatio*0.5*(observed.diMuon*numbers.ZtomumuEfficiency/numbers.ZtomumuPurity + observed.diElectron*numbers.ZtoeeEfficiency/numbers.ZtoeePurity),0.0,1e5);//BEN FIXME - put in acceptance?
+      ZtoNuNu = new RooRealVar("ZtoNuNu_"+observed.diMuonName,"ZtoNuNu_"+observed.diMuonName,numbers.ZtollOverZtoNuNuRatio*0.5*(observed.diMuon*numbers.ZtomumuEfficiency*abcd.ZtomumuAcceptance/numbers.ZtomumuPurity + observed.diElectron*numbers.ZtoeeEfficiency*abcd.ZtoeeAcceptance/numbers.ZtoeePurity),0.0,1e5);
       ws.import(*ZtoNuNu);
       ws.extendSet(names.nuisances,ZtoNuNu->GetName());
   }
@@ -553,7 +553,9 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
 			  names.observables,names.nuisances);
     }
   
-  RooAbsArg*  ZtoeeSystematic = ws.arg("ZtoeeSystematic_"+abcd.ZtoeeSystematicName+"_Ratio");//BEN FIXME - systematics not implemented yet
+  /*
+  //BEN FIXME - systematics not implemented yet
+  RooAbsArg*  ZtoeeSystematic = ws.arg("ZtoeeSystematic_"+abcd.ZtoeeSystematicName+"_Ratio");
   if(ZtoeeSystematic == NULL) 
     {
       ZtoeeSystematic = 
@@ -569,7 +571,8 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
 			       abcd.ZtomumuSystematic,abcd.ZtomumuSystematicError,
 			       names.observables,names.nuisances);
     }
-  
+  */
+
   RooProduct* diMuonYield = (RooProduct*)ws.arg("diMuon_"+observed.diMuonName+"_Yield");//Assumes acceptance is only binned in zero or more dimensions of the count.
   if(diMuonYield == NULL) 
     {
