@@ -498,17 +498,19 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   RooRealVar* diElectronCount = (RooRealVar*)ws.arg("diElectron_"+observed.diElectronName+"_Count");
   if(diElectronCount == NULL) 
     {
-      diElectronCount = new RooRealVar("diElectron_"+observed.diElectronName+"_Count","diElectron_"+observed.diElectronName+"_Count",observed.diElectron); 
-      diElectronCount->setConstant();
-      ws.import(*diElectronCount);
+      RooRealVar diElectronCount_temp("diElectron_"+observed.diElectronName+"_Count","diElectron_"+observed.diElectronName+"_Count",observed.diElectron); 
+      diElectronCount_temp.setConstant();
+      ws.import(diElectronCount_temp);
+      diElectronCount = (RooRealVar*)ws.arg("diElectron_"+observed.diElectronName+"_Count");
       ws.extendSet(names.observables,diElectronCount->GetName());
     }
   RooRealVar* diMuonCount = (RooRealVar*)ws.arg("diMuon_"+observed.diMuonName+"_Count");
   if(diMuonCount == NULL) 
     {
-      diMuonCount = new RooRealVar("diMuon_"+observed.diMuonName+"_Count","diMuon_"+observed.diMuonName+"_Count",observed.diMuon);
-      diMuonCount->setConstant();
-      ws.import(*diMuonCount);
+      RooRealVar diMuonCount_temp("diMuon_"+observed.diMuonName+"_Count","diMuon_"+observed.diMuonName+"_Count",observed.diMuon);
+      diMuonCount_temp.setConstant();
+      ws.import(diMuonCount_temp);
+      diMuonCount = (RooRealVar*)ws.arg("diMuon_"+observed.diMuonName+"_Count");
       ws.extendSet(names.observables,diMuonCount->GetName());
     }
   
@@ -519,16 +521,18 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   RooRealVar* ZtoNuNu = (RooRealVar*)ws.arg("ZtoNuNu_"+observed.diMuonName);//use MuonName, which should be the same as ElectronName
   if(ZtoNuNu == NULL) 
     {
-      ZtoNuNu = new RooRealVar("ZtoNuNu_"+observed.diMuonName,"ZtoNuNu_"+observed.diMuonName,numbers.ZtollOverZtoNuNuRatio*0.5*(observed.diMuon*numbers.ZtomumuEfficiency*abcd.ZtomumuAcceptance/numbers.ZtomumuPurity + observed.diElectron*numbers.ZtoeeEfficiency*abcd.ZtoeeAcceptance/numbers.ZtoeePurity),0.0,1e5);
-      ws.import(*ZtoNuNu);
+      RooRealVar ZtoNuNu_temp("ZtoNuNu_"+observed.diMuonName,"ZtoNuNu_"+observed.diMuonName,numbers.ZtollOverZtoNuNuRatio*0.5*(observed.diMuon*numbers.ZtomumuEfficiency*abcd.ZtomumuAcceptance/numbers.ZtomumuPurity + observed.diElectron*numbers.ZtoeeEfficiency*abcd.ZtoeeAcceptance/numbers.ZtoeePurity),0.0,1e5);
+      ws.import(ZtoNuNu_temp);
+      ZtoNuNu = (RooRealVar*)ws.arg("ZtoNuNu_"+observed.diMuonName);
       ws.extendSet(names.nuisances,ZtoNuNu->GetName());
-  }
+    }
   
   RooProduct* Ztoll = (RooProduct*)ws.arg("Ztoll_"+observed.diMuonName);//use MuonName, which should be the same as ElectronName
   if(Ztoll == NULL) 
     {
-      Ztoll = new RooProduct("Ztoll_"+observed.diMuonName,"Ztoll_"+observed.diMuonName,RooArgSet(*ZtoNuNu,*ZtollOverZtoNuNuRatio));
-      ws.import(*Ztoll, RecycleConflictNodes());
+      RooProduct Ztoll_temp("Ztoll_"+observed.diMuonName,"Ztoll_"+observed.diMuonName,RooArgSet(*ZtoNuNu,*ZtollOverZtoNuNuRatio));
+      ws.import(Ztoll_temp, RecycleConflictNodes());
+      Ztoll = (RooProduct*)ws.arg("Ztoll_"+observed.diMuonName);//use MuonName, which should be the same as ElectronName
     }
   
   RooAbsArg* ZtomumuEfficiency = ws.arg(names.ZtomumuEfficiency);
@@ -576,15 +580,17 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   RooProduct* diMuonYield = (RooProduct*)ws.arg("diMuon_"+observed.diMuonName+"_Yield");//Assumes acceptance is only binned in zero or more dimensions of the count.
   if(diMuonYield == NULL) 
     {
-      diMuonYield = new RooProduct("diMuon_"+observed.diMuonName+"_Yield","diMuon_"+observed.diMuonName+"_Yield",RooArgSet(*Ztoll,*ZtomumuAcceptance,*ZtomumuEfficiency,*ZtomumuInvPurity));
-      ws.import(*diMuonYield, RecycleConflictNodes());
+      RooProduct diMuonYield_temp("diMuon_"+observed.diMuonName+"_Yield","diMuon_"+observed.diMuonName+"_Yield",RooArgSet(*Ztoll,*ZtomumuAcceptance,*ZtomumuEfficiency,*ZtomumuInvPurity));
+      ws.import(diMuonYield_temp, RecycleConflictNodes());
+      diMuonYield = (RooProduct*)ws.arg("diMuon_"+observed.diMuonName+"_Yield");//Assumes acceptance is only binned in zero or more dimensions of the count.
     }
   
   RooProduct* diElectronYield = (RooProduct*)ws.arg("diElectron_"+observed.diElectronName+"_Yield");//Assumes acceptance is only binned in zero or more dimensions of the count.
   if(diElectronYield == NULL) 
     {
-      diElectronYield = new RooProduct("diElectron_"+observed.diElectronName+"_Yield","diElectron_"+observed.diElectronName+"_Yield",RooArgSet(*Ztoll,*ZtoeeAcceptance,*ZtoeeEfficiency,*ZtoeeInvPurity));
-      ws.import(*diElectronYield, RecycleConflictNodes());
+      RooProduct diElectronYield_temp("diElectron_"+observed.diElectronName+"_Yield","diElectron_"+observed.diElectronName+"_Yield",RooArgSet(*Ztoll,*ZtoeeAcceptance,*ZtoeeEfficiency,*ZtoeeInvPurity));
+      ws.import(diElectronYield_temp, RecycleConflictNodes());
+      diElectronYield = (RooProduct*)ws.arg("diElectron_"+observed.diElectronName+"_Yield");//Assumes acceptance is only binned in zero or more dimensions of the count.
     }
   
   //-----Define Z->ll Poisson constraints
@@ -592,15 +598,17 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   RooPoisson* diMuonConstraint = (RooPoisson*)ws.arg("diMuon_"+observed.diMuonName+"_Constraint");
   if(diMuonConstraint == NULL) 
     {
-      diMuonConstraint = new RooPoisson("diMuon_"+observed.diMuonName+"_Constraint","diMuon_"+observed.diMuonName+"_Constraint",*diMuonYield,*diMuonCount);
-      ws.import(*diMuonConstraint, RecycleConflictNodes());
+      RooPoisson diMuonConstraint_temp("diMuon_"+observed.diMuonName+"_Constraint","diMuon_"+observed.diMuonName+"_Constraint",*diMuonYield,*diMuonCount);
+      ws.import(diMuonConstraint_temp, RecycleConflictNodes());
+      diMuonConstraint = (RooPoisson*)ws.arg("diMuon_"+observed.diMuonName+"_Constraint");
     }
   
   RooPoisson* diElectronConstraint = (RooPoisson*)ws.arg("diElectron_"+observed.diElectronName+"_Constraint");
   if(diElectronConstraint == NULL) 
     {
-      diElectronConstraint = new RooPoisson("diElectron_"+observed.diElectronName+"_Constraint","diElectron_"+observed.diElectronName+"_Constraint",*diElectronYield,*diElectronCount);
-      ws.import(*diElectronConstraint, RecycleConflictNodes());
+      RooPoisson diElectronConstraint_temp("diElectron_"+observed.diElectronName+"_Constraint","diElectron_"+observed.diElectronName+"_Constraint",*diElectronYield,*diElectronCount);
+      ws.import(diElectronConstraint_temp, RecycleConflictNodes());
+      diElectronConstraint = (RooPoisson*)ws.arg("diElectron_"+observed.diElectronName+"_Constraint");
     }
   
   //-----Define Z->nunu yield
