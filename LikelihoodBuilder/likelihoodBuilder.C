@@ -699,6 +699,23 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   ws.import(oneMuonConstraint, RecycleConflictNodes());
   ws.import(oneElectronConstraint, RecycleConflictNodes());
 
+  diElectronCount = 0;
+  diMuonCount = 0;
+  ZtoNuNu = 0;
+  Ztoll = 0;
+  diElectronYield = 0;
+  diMuonYield = 0;
+  diElectronConstraint = 0;
+  diMuonYield = 0;
+  delete diElectronCount;
+  delete diMuonCount;
+  delete ZtoNuNu;
+  delete Ztoll;
+  delete diElectronYield;
+  delete diMuonYield;
+  delete diElectronConstraint;
+  delete diMuonYield;
+
   return true;
 
 }
