@@ -222,6 +222,7 @@ struct allBins
   double signalError;
 } ;
 
+
 RooAbsArg* getCorrelatedBetaPrimeConstraint(RooWorkspace& ws,const TString varName,const TString binName,
 					    const double value ,const double error,
 					    const TString correlatedPassObs,const TString correlatedFailObs,
@@ -422,7 +423,7 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
 {
 
   //Make sure that names are unique to this bin
-
+  
   TString zeroLeptonName("zeroLepton_");
   zeroLeptonName+=binName;
   TString zeroLeptonLowDeltaPhiNName("zeroLeptonLowDeltaPhiN_");
@@ -433,7 +434,7 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   oneMuonName+=binName;
   TString oneElectronName("oneElectron_");
   oneElectronName+=binName;
-
+  
   //Define unique counts and add them to the workspace
 
   RooRealVar zeroLeptonCount(zeroLeptonName+"_Count",zeroLeptonName+"_Count",observed.zeroLepton);
@@ -665,48 +666,75 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   RooAddition oneLeptonYieldSum(oneLeptonName+"_YieldSum",oneLeptonName+"_YieldSum",RooArgSet(oneLeptonSignalYield,oneLeptonTopWJetsYield));
   
   // Setup trigger efficiencies
-  
-  RooAbsArg* zeroLeptonTriggerEfficiency = 
-    getBetaConstraint(ws,"zeroLeptonTriggerEfficiency_",binName,
-		      abcd.zeroLeptonTriggerEfficiency,abcd.zeroLeptonTriggerEfficiencyError,
-		      names.observables,names.nuisances);
-  
-  RooAbsArg* zeroLeptonLowDeltaPhiNTriggerEfficiency = 
-    getBetaConstraint(ws,"zeroLeptonLowDeltaPhiNTriggerEfficiency_",binName,
-		      abcd.zeroLeptonLowDeltaPhiNTriggerEfficiency,abcd.zeroLeptonLowDeltaPhiNTriggerEfficiencyError,
-		      names.observables,names.nuisances);
-  
-  RooAbsArg* oneMuonTriggerEfficiency = 
-    getBetaConstraint(ws,"oneMuonTriggerEfficiency_",binName,
-		      abcd.oneMuonTriggerEfficiency,abcd.oneMuonTriggerEfficiencyError,
-		      names.observables,names.nuisances);
-  
-  RooAbsArg* oneElectronTriggerEfficiency = 
-    getBetaConstraint(ws,"oneElectronTriggerEfficiency_",binName,
-		      abcd.oneElectronTriggerEfficiency,abcd.oneElectronTriggerEfficiencyError,
-		      names.observables,names.nuisances);
-  
-  // Total Yields in bins
-  
-  RooProduct zeroLeptonYield(zeroLeptonName+"_Yield",zeroLeptonName+"_Yield",RooArgSet(*zeroLeptonTriggerEfficiency,zeroLeptonYieldSum));
-  RooProduct zeroLeptonLowDeltaPhiNYield(zeroLeptonLowDeltaPhiNName+"_Yield",zeroLeptonLowDeltaPhiNName+"_Yield",RooArgSet(*zeroLeptonLowDeltaPhiNTriggerEfficiency,zeroLeptonLowDeltaPhiNYieldSum));
-  RooProduct oneMuonYield(oneMuonName+"_Yield",oneMuonName+"_Yield",RooArgSet(*oneMuonTriggerEfficiency,oneLeptonYieldSum));
-  RooProduct oneElectronYield(oneElectronName+"_Yield",oneElectronName+"_Yield",RooArgSet(*oneElectronTriggerEfficiency,oneLeptonYieldSum));
-  
-  // Define poisson constraints
+  bool skipTriggerEfficiency = true; //BEN FIXME -- consider making this a global variable
+  if (skipTriggerEfficiency == true)
+    {
+      
+      // Total Yields in bins
+      
+      RooProduct zeroLeptonYield(zeroLeptonName+"_Yield",zeroLeptonName+"_Yield",RooArgSet(zeroLeptonYieldSum));
+      RooProduct zeroLeptonLowDeltaPhiNYield(zeroLeptonLowDeltaPhiNName+"_Yield",zeroLeptonLowDeltaPhiNName+"_Yield",RooArgSet(zeroLeptonLowDeltaPhiNYieldSum));
+      RooProduct oneMuonYield(oneMuonName+"_Yield",oneMuonName+"_Yield",RooArgSet(oneLeptonYieldSum));
+      RooProduct oneElectronYield(oneElectronName+"_Yield",oneElectronName+"_Yield",RooArgSet(oneLeptonYieldSum));
+      
+      // Define poisson constraints
+      
+      RooPoisson zeroLeptonConstraint(zeroLeptonName+"_Constraint",zeroLeptonName+"_Constraint",zeroLeptonYield,zeroLeptonCount);
+      RooPoisson zeroLeptonLowDeltaPhiNConstraint(zeroLeptonLowDeltaPhiNName+"_Constraint",zeroLeptonLowDeltaPhiNName+"_Constraint",zeroLeptonLowDeltaPhiNYield,zeroLeptonLowDeltaPhiNCount);
+      RooPoisson oneMuonConstraint(oneMuonName+"_Constraint",oneMuonName+"_Constraint",oneMuonYield,oneMuonCount);
+      RooPoisson oneElectronConstraint(oneElectronName+"_Constraint",oneElectronName+"_Constraint",oneElectronYield,oneElectronCount);
+      
+      // Cleanup
+      
+      ws.import(zeroLeptonConstraint, RecycleConflictNodes());
+      ws.import(zeroLeptonLowDeltaPhiNConstraint, RecycleConflictNodes());
+      ws.import(oneMuonConstraint, RecycleConflictNodes());
+      ws.import(oneElectronConstraint, RecycleConflictNodes());
 
-  RooPoisson zeroLeptonConstraint(zeroLeptonName+"_Constraint",zeroLeptonName+"_Constraint",zeroLeptonYield,zeroLeptonCount);
-  RooPoisson zeroLeptonLowDeltaPhiNConstraint(zeroLeptonLowDeltaPhiNName+"_Constraint",zeroLeptonLowDeltaPhiNName+"_Constraint",zeroLeptonLowDeltaPhiNYield,zeroLeptonLowDeltaPhiNCount);
-  RooPoisson oneMuonConstraint(oneMuonName+"_Constraint",oneMuonName+"_Constraint",oneMuonYield,oneMuonCount);
-  RooPoisson oneElectronConstraint(oneElectronName+"_Constraint",oneElectronName+"_Constraint",oneElectronYield,oneElectronCount);
-
-  // Cleanup
-
-  ws.import(zeroLeptonConstraint, RecycleConflictNodes());
-  ws.import(zeroLeptonLowDeltaPhiNConstraint, RecycleConflictNodes());
-  ws.import(oneMuonConstraint, RecycleConflictNodes());
-  ws.import(oneElectronConstraint, RecycleConflictNodes());
-
+    }
+  else
+    {
+      RooAbsArg* zeroLeptonTriggerEfficiency = 
+	getBetaConstraint(ws,"zeroLeptonTriggerEfficiency_",binName,
+			  abcd.zeroLeptonTriggerEfficiency,abcd.zeroLeptonTriggerEfficiencyError,
+			  names.observables,names.nuisances);
+      
+      RooAbsArg* zeroLeptonLowDeltaPhiNTriggerEfficiency = 
+	getBetaConstraint(ws,"zeroLeptonLowDeltaPhiNTriggerEfficiency_",binName,
+			  abcd.zeroLeptonLowDeltaPhiNTriggerEfficiency,abcd.zeroLeptonLowDeltaPhiNTriggerEfficiencyError,
+			  names.observables,names.nuisances);
+      
+      RooAbsArg* oneMuonTriggerEfficiency = 
+	getBetaConstraint(ws,"oneMuonTriggerEfficiency_",binName,
+			  abcd.oneMuonTriggerEfficiency,abcd.oneMuonTriggerEfficiencyError,
+			  names.observables,names.nuisances);
+      
+      RooAbsArg* oneElectronTriggerEfficiency = 
+	getBetaConstraint(ws,"oneElectronTriggerEfficiency_",binName,
+			  abcd.oneElectronTriggerEfficiency,abcd.oneElectronTriggerEfficiencyError,
+			  names.observables,names.nuisances);
+      
+      // Total Yields in bins
+      
+      RooProduct zeroLeptonYield(zeroLeptonName+"_Yield",zeroLeptonName+"_Yield",RooArgSet(*zeroLeptonTriggerEfficiency,zeroLeptonYieldSum));
+      RooProduct zeroLeptonLowDeltaPhiNYield(zeroLeptonLowDeltaPhiNName+"_Yield",zeroLeptonLowDeltaPhiNName+"_Yield",RooArgSet(*zeroLeptonLowDeltaPhiNTriggerEfficiency,zeroLeptonLowDeltaPhiNYieldSum));
+      RooProduct oneMuonYield(oneMuonName+"_Yield",oneMuonName+"_Yield",RooArgSet(*oneMuonTriggerEfficiency,oneLeptonYieldSum));
+      RooProduct oneElectronYield(oneElectronName+"_Yield",oneElectronName+"_Yield",RooArgSet(*oneElectronTriggerEfficiency,oneLeptonYieldSum));
+      
+      // Define poisson constraints
+      
+      RooPoisson zeroLeptonConstraint(zeroLeptonName+"_Constraint",zeroLeptonName+"_Constraint",zeroLeptonYield,zeroLeptonCount);
+      RooPoisson zeroLeptonLowDeltaPhiNConstraint(zeroLeptonLowDeltaPhiNName+"_Constraint",zeroLeptonLowDeltaPhiNName+"_Constraint",zeroLeptonLowDeltaPhiNYield,zeroLeptonLowDeltaPhiNCount);
+      RooPoisson oneMuonConstraint(oneMuonName+"_Constraint",oneMuonName+"_Constraint",oneMuonYield,oneMuonCount);
+      RooPoisson oneElectronConstraint(oneElectronName+"_Constraint",oneElectronName+"_Constraint",oneElectronYield,oneElectronCount);
+      
+      // Cleanup
+      
+      ws.import(zeroLeptonConstraint, RecycleConflictNodes());
+      ws.import(zeroLeptonLowDeltaPhiNConstraint, RecycleConflictNodes());
+      ws.import(oneMuonConstraint, RecycleConflictNodes());
+      ws.import(oneElectronConstraint, RecycleConflictNodes());
+    }
 
   return true;
 
@@ -1081,8 +1109,7 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString s
 
   RooArgSet allpdfs = ws.allPdfs();
   
-  cout << "*#*#*#*#*#* allpdfs *#*#*#*#*#*" << endl;
-  cout << "size: " << allpdfs.getSize() << endl;
+  cout << "allpdfs, size: " << allpdfs.getSize() << endl;
   allpdfs.Print("v");
   
   RooProdPdf likelihood("likelihood","likelihood",allpdfs);
@@ -1091,14 +1118,11 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString s
 
   ws.defineSet("poi",names.signalCrossSection);  
 
-  cout << "*#*#*#*#*#* poi *#*#*#*#*#*" << endl;
-  cout << "size: " << (*ws.set("poi")).getSize() << endl;
+  cout << "poi, size: " << (*ws.set("poi")).getSize() << endl;
   (*ws.set("poi")).Print("v");
 
-  cout << "*#*#*#*#*#* data *#*#*#*#*#*" << endl;
-  cout << "size: " << (*ws.set(names.observables)).getSize() << endl;
+  cout << "data, size: " << (*ws.set(names.observables)).getSize() << endl;
   (*ws.set(names.observables)).Print("v");
-  //same output as allpdfs, except Constraint->Obs or Count
 
   RooDataSet data("data","data",*ws.set(names.observables));
 
