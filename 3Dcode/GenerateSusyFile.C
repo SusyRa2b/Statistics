@@ -17,7 +17,8 @@ void GenerateSusyFile() {
 //  TH1F *gluinoxsec = gluino;
 
   TFile prospino("referenceXSecs.root");
-  TH1F *gluinoxsec = (TH1F*) prospino.Get("gluino") ;
+  ///// TH1F *gluinoxsec = (TH1F*) prospino.Get("gluino") ;
+  TH1F *gluinoxsec = (TH1F*) prospino.Get("gluino_NLONLL") ;
   if ( gluinoxsec == 0 ) {
      printf("\n\n *** Can't find histogram with name gluino in referenceXSecs.root.\n\n") ;
      return ;
