@@ -2,6 +2,7 @@
 #include <string.h>
 #include <complex>
 #include <map>
+#include <cassert>
 
 #include "TCanvas.h"
 #include "TStyle.h"
@@ -909,6 +910,7 @@ void setupObservations(TString binName, TString binFileName, map<TString,abcdBin
   cout << "getting the file: " << binFileName << " to fill bin " << binName << endl;
        
   binFile.open(binFileName.Data(),fstream::in);
+  assert(binFile.is_open());
   
   string fileLine;
   
@@ -917,6 +919,7 @@ void setupObservations(TString binName, TString binFileName, map<TString,abcdBin
   
   while(!binFile.eof())
     {
+
       getline(binFile,fileLine);
       TString thisLine(fileLine.c_str());
 
@@ -1039,6 +1042,7 @@ void setupUnderlyingModel(map<TString,TString>& binFileNames, vector<TString>& b
       nameAndNumber.NextToken();
       fileName = nameAndNumber;
       cout << index << " : " << fileName << endl;
+      if(index == "") continue;
       binNames.push_back(index);
       binFileNames[index] = fileName;
     }
@@ -1132,8 +1136,9 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString s
 
   RooArgSet allpdfs = ws.allPdfs();
   
+  cout << endl; cout << endl;
   cout << "allpdfs, size: " << allpdfs.getSize() << endl;
-  allpdfs.Print();
+  allpdfs.Print("v");
   
   RooProdPdf likelihood("likelihood","likelihood",allpdfs);
   
@@ -1141,11 +1146,13 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString s
 
   ws.defineSet("poi",names.signalCrossSection);  
 
+  cout << endl; cout << endl;
   cout << "poi, size: " << (*ws.set("poi")).getSize() << endl;
-  (*ws.set("poi")).Print();
+  (*ws.set("poi")).Print("v");
 
+  cout << endl; cout << endl;
   cout << "data, size: " << (*ws.set(names.observables)).getSize() << endl;
-  (*ws.set(names.observables)).Print();
+  (*ws.set(names.observables)).Print("v");
 
   RooDataSet data("data","data",*ws.set(names.observables));
 
