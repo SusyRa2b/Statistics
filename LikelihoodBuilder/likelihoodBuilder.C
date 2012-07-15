@@ -164,6 +164,7 @@ struct abcdBinParameters
   TString deltaPhiNRatioName;
   double deltaPhiNRatio;
   double deltaPhiNRatioError;
+  TString lowDeltaPhiNScalingName;
   double qcdClosure;
   double qcdClosureError;
   double topWJetsClosure;
@@ -457,7 +458,8 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   ws.extendSet(names.observables,oneElectronCount.GetName());
 
   //Define QCD component
-
+  /*
+  //BEN FIXME -- old method commented out for now. should make a switch instead
   RooAbsArg* deltaPhiNRatio = ws.arg("deltaPhiNRatio_"+abcd.deltaPhiNRatioName+"_Ratio");
   if(deltaPhiNRatio == NULL) 
     {
@@ -477,7 +479,27 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
 			   names.observables,names.nuisances);
   //RooAbsArg* zeroLeptonQCDClosure = getCorrelatedBetaPrimeConstraint(ws,"zeroLeptonQCDClosure_",binName, abcd.qcdClosure,abcd.qcdClosureError, names.qcdClosurePassObs, names.qcdClosureFailObs, names.qcdClosurePassPar,names.qcdClosureFailPar);//Correlated
   RooProduct zeroLeptonQCDYield(zeroLeptonName+"_QCDYield",zeroLeptonName+"_QCDYield",RooArgSet(*deltaPhiNRatio,*zeroLeptonQCDClosure,zeroLeptonLowDeltaPhiNQCDYield));
-  
+  */
+
+  RooRealVar* lowDeltaPhiNScaling = ws.var("lowDeltaPhiNScaling_"+abcd.lowDeltaPhiNScalingName);
+  if(lowDeltaPhiNScaling == NULL) {
+    RooRealVar lowDeltaPhiNScaling_temp("lowDeltaPhiNScaling_"+abcd.lowDeltaPhiNScalingName, "lowDeltaPhiNScaling_"+abcd.lowDeltaPhiNScalingName, 0.0, 1e5);
+    lowDeltaPhiNScaling_temp.setVal(0.1);//BEN FIXME -should get an automatic initial guess, but how? it's easy to get the lowDeltaPhiN part, but what about the 0L?
+    ws.import(lowDeltaPhiNScaling_temp);
+    lowDeltaPhiNScaling = ws.var("lowDeltaPhiNScaling_"+abcd.lowDeltaPhiNScalingName);
+  }
+  double qcdGuess = observed.zeroLeptonLowDeltaPhiN - abcd.zeroLeptonLowDeltaPhiNMC;
+  if(qcdGuess < 0) qcdGuess = 0;
+  RooRealVar zeroLeptonLowDeltaPhiNQCDYield(zeroLeptonLowDeltaPhiNName+"_QCDYield",zeroLeptonLowDeltaPhiNName+"_QCDYield",qcdGuess,1e-5,10000);
+  ws.import(zeroLeptonLowDeltaPhiNQCDYield);
+  ws.extendSet(names.nuisances,zeroLeptonLowDeltaPhiNQCDYield.GetName());
+  RooAbsArg* zeroLeptonQCDClosure = 
+    getBetaPrimeConstraint(ws,"zeroLeptonQCDClosure_", binName,
+			   abcd.qcdClosure,abcd.qcdClosureError,
+			   names.observables,names.nuisances);
+  //RooAbsArg* zeroLeptonQCDClosure = getCorrelatedBetaPrimeConstraint(ws,"zeroLeptonQCDClosure_",binName, abcd.qcdClosure,abcd.qcdClosureError, names.qcdClosurePassObs, names.qcdClosureFailObs, names.qcdClosurePassPar,names.qcdClosureFailPar);//Correlated
+  RooProduct zeroLeptonQCDYield(zeroLeptonName+"_QCDYield",zeroLeptonName+"_QCDYield",RooArgSet(*lowDeltaPhiNScaling,*zeroLeptonQCDClosure,zeroLeptonLowDeltaPhiNQCDYield));
+
   //Define top and W+jets component:
   
   RooRealVar* singleLeptonScaling = ws.var(names.singleLeptonScaling);
@@ -943,7 +965,8 @@ void setupObservations(TString binName, TString binFileName, map<TString,abcdBin
       else if(index == "ZtoeeAcceptanceError"		              ) abcd.ZtoeeAcceptanceError = value.Atof();				
       else if(index == "deltaPhiNRatioName"                           ) abcd.deltaPhiNRatioName = value;	     
       else if(index == "deltaPhiNRatio"	                              ) abcd.deltaPhiNRatio = value.Atof();	     
-      else if(index == "deltaPhiNRatioError"                          ) abcd.deltaPhiNRatioError = value.Atof();  	  
+      else if(index == "deltaPhiNRatioError"                          ) abcd.deltaPhiNRatioError = value.Atof();  	
+      else if(index == "lowDeltaPhiNScalingName"                      ) abcd.lowDeltaPhiNScalingName = value;	       
       else if(index == "qcdClosure"		        	      ) abcd.qcdClosure = value.Atof();					
       else if(index == "qcdClosureError"			      ) abcd.qcdClosureError = value.Atof();				
       else if(index == "topWJetsClosure"		              ) abcd.topWJetsClosure = value.Atof();				
@@ -1110,7 +1133,7 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString s
   RooArgSet allpdfs = ws.allPdfs();
   
   cout << "allpdfs, size: " << allpdfs.getSize() << endl;
-  allpdfs.Print("v");
+  allpdfs.Print();
   
   RooProdPdf likelihood("likelihood","likelihood",allpdfs);
   
@@ -1119,10 +1142,10 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString s
   ws.defineSet("poi",names.signalCrossSection);  
 
   cout << "poi, size: " << (*ws.set("poi")).getSize() << endl;
-  (*ws.set("poi")).Print("v");
+  (*ws.set("poi")).Print();
 
   cout << "data, size: " << (*ws.set(names.observables)).getSize() << endl;
-  (*ws.set(names.observables)).Print("v");
+  (*ws.set(names.observables)).Print();
 
   RooDataSet data("data","data",*ws.set(names.observables));
 
