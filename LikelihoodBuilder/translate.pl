@@ -112,6 +112,7 @@ while(<$fin>) {
 	    }
 	    else{
 	      print {$binFileHandles[$binFileHash{$binFileName}]} "deltaPhiNRatioError $value\n";
+	      print {$binFileHandles[$binFileHash{$binFileName}]} "lowDeltaPhiNScalingName $dim\n";
 	    }
 	  }
 	}
