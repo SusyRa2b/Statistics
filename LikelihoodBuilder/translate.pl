@@ -301,7 +301,7 @@ while(<$fin>) {
 foreach(@binFileNames) {
   my $binFileName = $_;
   my $value = $ldpMCSum[$binFileHash{$binFileName}];
-  print {$binFileHandles[$binFileHash{$binFileName}]} "zeroLeptonLowDeltaPhiMC $value\n";
+  print {$binFileHandles[$binFileHash{$binFileName}]} "zeroLeptonLowDeltaPhiNMC $value\n";
 }
 
 
