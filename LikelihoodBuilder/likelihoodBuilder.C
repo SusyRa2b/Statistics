@@ -655,7 +655,7 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   RooProduct  zeroLeptonLowDeltaPhiNMCYield(zeroLeptonLowDeltaPhiNName+"_MCYield",zeroLeptonLowDeltaPhiNName+"_MCYield",RooArgSet(*MCUncertainty,zeroLeptonLowDeltaPhiNMCCount));
   
   // Setup signal yields
-  
+
   RooRealVar* signalCrossSection = ws.var(names.signalCrossSection);
   
   RooAbsArg*  zeroLeptonSignalYieldFraction = 
@@ -980,6 +980,7 @@ void setupObservations(TString binName, TString binFileName, map<TString,abcdBin
       else if(index == "ZtomumuSystematicName"		       	      ) abcd.ZtomumuSystematicName = value;					
       else if(index == "ZtomumuSystematic"			      ) abcd.ZtomumuSystematic = value.Atof();					
       else if(index == "ZtomumuSystematicError"                       ) abcd.ZtomumuSystematicError = value.Atof();                            
+      else if(index != "") assert(0);
     }
 
   binFile.close();
@@ -1023,6 +1024,7 @@ void setupUnderlyingModel(map<TString,TString>& binFileNames, vector<TString>& b
       else if(index == "ZtomumuEfficiencyError" ) numbers.ZtomumuEfficiencyError = value;	
       else if(index == "MCUncertainty" 	        ) numbers.MCUncertainty = value;	      	   
       else if(index == "Luminosity"   	        ) luminosity = value;	      	   
+      else if(index != ""                       ) assert(0);
     }
 
   setupFile.close();
