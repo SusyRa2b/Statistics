@@ -1,0 +1,11 @@
+{
+  gSystem->CompileMacro("RooRatio.cxx"               ,"kO") ;
+  gSystem->CompileMacro("betaHelperFunctions.h"      ,"kO") ;
+  gSystem->CompileMacro("RooNormalFromFlatPdf.cxx"   ,"kO") ;
+  gSystem->CompileMacro("RooBetaInverseCDF.cxx"      ,"kO") ;
+  gSystem->CompileMacro("RooBetaPrimeInverseCDF.cxx" ,"kO") ;
+  gSystem->CompileMacro("RooCorrelatedBetaGeneratorHelper.cxx"  ,"kO") ;
+  gSystem->CompileMacro("RooCorrelatedBetaPrimeGeneratorHelper.cxx"  ,"kO") ;
+  gSystem->CompileMacro("rooFitBetaHelperFunctions.h","kO") ;
+  gSystem->CompileMacro("likelihoodBuilder.C","kO") ;
+}
