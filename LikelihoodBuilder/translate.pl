@@ -92,7 +92,7 @@ while(<$fin>) {
       if($fullOKAname =~ /(N_1lep)(_M)(\d)(_H)(\d)(_)(\d)(b)/) {
       	my $bin = "M$3_H$5_$7"."b";
 	print {$binFileHandles[$binFileHash{$bin}]} "oneMuonCount $value\n";
-	print {$binFileHandles[$binFileHash{$bin}]} "oneElectronCount 0\n";
+	print {$binFileHandles[$binFileHash{$bin}]} "oneElectronCount $value\n";
       }
       
       if($fullOKAname =~ /(N_ldp)(_M)(\d)(_H)(\d)(_)(\d)(b)/) {
