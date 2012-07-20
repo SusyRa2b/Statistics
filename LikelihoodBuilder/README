@@ -12,6 +12,15 @@ root -l
 buildLikelihood("setupFile.dat","binFilesFile.dat","signalModelFile.dat",1,"workspace","test.root")
 
 
+The way to fit is:
+=========================================
+If you are on lxplus, you can get a compatible version of root by doing 'source setupRooFit.csh'.
+
+root -l
+.x setup.C
+.x minimalFit.C+
+
+
 Some additional info:
 =========================================
 The .dat files define a likelihood.  The setupFile.dat is just a dummy
