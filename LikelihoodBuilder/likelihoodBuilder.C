@@ -203,14 +203,14 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
 
   RooRealVar* lowDeltaPhiNScaling = ws.var("lowDeltaPhiNScaling_"+abcd.lowDeltaPhiNScalingName);
   if(lowDeltaPhiNScaling == NULL) {
-    RooRealVar lowDeltaPhiNScaling_temp("lowDeltaPhiNScaling_"+abcd.lowDeltaPhiNScalingName, "lowDeltaPhiNScaling_"+abcd.lowDeltaPhiNScalingName, 0.0, 1e5);
+    RooRealVar lowDeltaPhiNScaling_temp("lowDeltaPhiNScaling_"+abcd.lowDeltaPhiNScalingName, "lowDeltaPhiNScaling_"+abcd.lowDeltaPhiNScalingName, 0.0, 1e3);
     lowDeltaPhiNScaling_temp.setVal(0.1);//BEN FIXME -should get an automatic initial guess, but how? it's easy to get the lowDeltaPhiN part, but what about the 0L?
     ws.import(lowDeltaPhiNScaling_temp);
     lowDeltaPhiNScaling = ws.var("lowDeltaPhiNScaling_"+abcd.lowDeltaPhiNScalingName);
   }
   double qcdGuess = observed.zeroLeptonLowDeltaPhiN - abcd.zeroLeptonLowDeltaPhiNMC;
-  if(qcdGuess < 0) qcdGuess = 0;
-  RooRealVar zeroLeptonLowDeltaPhiNQCDYield(zeroLeptonLowDeltaPhiNName+"_QCDYield",zeroLeptonLowDeltaPhiNName+"_QCDYield",qcdGuess,1e-5,10000);
+  if(qcdGuess < 1e-5) qcdGuess = 1e-5;
+  RooRealVar zeroLeptonLowDeltaPhiNQCDYield(zeroLeptonLowDeltaPhiNName+"_QCDYield",zeroLeptonLowDeltaPhiNName+"_QCDYield",qcdGuess,1e-5,1e5);
   ws.import(zeroLeptonLowDeltaPhiNQCDYield);
   ws.extendSet(names.nuisances,zeroLeptonLowDeltaPhiNQCDYield.GetName());
   RooAbsArg* zeroLeptonQCDClosure = 
@@ -222,7 +222,7 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   //Define top and W+jets component:
   
   RooRealVar* singleLeptonScaling = ws.var(names.singleLeptonScaling);
-  RooRealVar  oneLeptonTopWJetsYield(oneLeptonName+"_TopWJetsYield",oneLeptonName+"_TopWJetsYield",0.5*(observed.oneMuon+observed.oneElectron),1e-5,100000);
+  RooRealVar  oneLeptonTopWJetsYield(oneLeptonName+"_TopWJetsYield",oneLeptonName+"_TopWJetsYield",0.5*(observed.oneMuon+observed.oneElectron),1e-5,1e5);
   ws.import(oneLeptonTopWJetsYield);
   ws.extendSet(names.nuisances,oneLeptonTopWJetsYield.GetName());
   oneLeptonTotal += oneLeptonTopWJetsYield.getVal();
@@ -262,7 +262,7 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   RooRealVar* ZtoNuNu = (RooRealVar*)ws.arg("ZtoNuNu_"+observed.diMuonName);//use MuonName, which should be the same as ElectronName
   if(ZtoNuNu == NULL) 
     {
-      RooRealVar ZtoNuNu_temp("ZtoNuNu_"+observed.diMuonName,"ZtoNuNu_"+observed.diMuonName,numbers.ZtollOverZtoNuNuRatio*0.5*(observed.diMuon*numbers.ZtomumuEfficiency*abcd.ZtomumuAcceptance/numbers.ZtomumuPurity + observed.diElectron*numbers.ZtoeeEfficiency*abcd.ZtoeeAcceptance/numbers.ZtoeePurity),0.0,1e5);
+      RooRealVar ZtoNuNu_temp("ZtoNuNu_"+observed.diMuonName,"ZtoNuNu_"+observed.diMuonName,(1./numbers.ZtollOverZtoNuNuRatio)*0.5*(observed.diMuon*numbers.ZtomumuPurity/(numbers.ZtomumuEfficiency*abcd.ZtomumuAcceptance) + observed.diElectron*numbers.ZtoeePurity/(numbers.ZtoeeEfficiency*abcd.ZtoeeAcceptance)),0.0,1e3);
       ws.import(ZtoNuNu_temp);
       ZtoNuNu = (RooRealVar*)ws.arg("ZtoNuNu_"+observed.diMuonName);
       ws.extendSet(names.nuisances,ZtoNuNu->GetName());
@@ -281,22 +281,15 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   RooAbsArg* ZtoeeEfficiency = ws.arg(names.ZtoeeEfficiency);
   RooAbsArg* ZtoeeInvPurity = ws.arg(names.ZtoeeInvPurity);
   
-  RooAbsArg* ZtoeeAcceptance = ws.arg("ZtoeeAcceptance_"+abcd.ZtoeeAcceptanceName+"_Ratio");
-  if(ZtoeeAcceptance == NULL) 
-    {
-      ZtoeeAcceptance = 
-	getBetaConstraint(ws,"ZtoeeAcceptance_",abcd.ZtoeeAcceptanceName,
-			  abcd.ZtoeeAcceptance,abcd.ZtoeeAcceptanceError,
-			  names.observables,names.nuisances);
-    }
-  RooAbsArg* ZtomumuAcceptance = ws.arg("ZtomumuAcceptance_"+abcd.ZtomumuAcceptanceName+"_Ratio");
-  if(ZtomumuAcceptance == NULL) 
-    {
-      ZtomumuAcceptance = 
+  RooAbsArg* ZtoeeAcceptance = 
+    getBetaConstraint(ws,"ZtoeeAcceptance_",abcd.ZtoeeAcceptanceName,
+		      abcd.ZtoeeAcceptance,abcd.ZtoeeAcceptanceError,
+		      names.observables,names.nuisances);
+
+  RooAbsArg* ZtomumuAcceptance = 
 	getBetaConstraint(ws,"ZtomumuAcceptance_",abcd.ZtomumuAcceptanceName,
 			  abcd.ZtomumuAcceptance,abcd.ZtomumuAcceptanceError,
 			  names.observables,names.nuisances);
-    }
   
   /*
   //BEN FIXME - systematics not implemented yet
@@ -339,7 +332,7 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   RooPoisson* diMuonConstraint = (RooPoisson*)ws.arg("diMuon_"+observed.diMuonName+"_Constraint");
   if(diMuonConstraint == NULL) 
     {
-      RooPoisson diMuonConstraint_temp("diMuon_"+observed.diMuonName+"_Constraint","diMuon_"+observed.diMuonName+"_Constraint",*diMuonYield,*diMuonCount);
+      RooPoisson diMuonConstraint_temp("diMuon_"+observed.diMuonName+"_Constraint","diMuon_"+observed.diMuonName+"_Constraint",*diMuonCount,*diMuonYield);
       ws.import(diMuonConstraint_temp, RecycleConflictNodes());
       diMuonConstraint = (RooPoisson*)ws.arg("diMuon_"+observed.diMuonName+"_Constraint");
     }
@@ -347,20 +340,16 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   RooPoisson* diElectronConstraint = (RooPoisson*)ws.arg("diElectron_"+observed.diElectronName+"_Constraint");
   if(diElectronConstraint == NULL) 
     {
-      RooPoisson diElectronConstraint_temp("diElectron_"+observed.diElectronName+"_Constraint","diElectron_"+observed.diElectronName+"_Constraint",*diElectronYield,*diElectronCount);
+      RooPoisson diElectronConstraint_temp("diElectron_"+observed.diElectronName+"_Constraint","diElectron_"+observed.diElectronName+"_Constraint",*diElectronCount,*diElectronYield);
       ws.import(diElectronConstraint_temp, RecycleConflictNodes());
       diElectronConstraint = (RooPoisson*)ws.arg("diElectron_"+observed.diElectronName+"_Constraint");
     }
   
   //-----Define Z->nunu yield
   
-  RooAbsArg* zeroLeptonZtoNuNubTagScaling = ws.arg("zeroLeptonZtoNuNubTagScaling_"+abcd.ZtoNuNubTagScalingName+"_Ratio");
-  if(zeroLeptonZtoNuNubTagScaling == NULL) 
-    {
-      zeroLeptonZtoNuNubTagScaling = getBetaConstraint(ws,"zeroLeptonZtoNuNubTagScaling_",abcd.ZtoNuNubTagScalingName,
-						       abcd.ZtoNuNubTagScaling,abcd.ZtoNuNubTagScalingError,
-						       names.observables,names.nuisances);
-    }
+  RooAbsArg* zeroLeptonZtoNuNubTagScaling = getBetaConstraint(ws,"zeroLeptonZtoNuNubTagScaling_",abcd.ZtoNuNubTagScalingName,
+							      abcd.ZtoNuNubTagScaling,abcd.ZtoNuNubTagScalingError,
+							      names.observables,names.nuisances);
   
   RooProduct zeroLeptonZtoNuNuYield(zeroLeptonName+"_ZtoNuNuYield",zeroLeptonName+"_ZtoNuNuYield",RooArgSet(*zeroLeptonZtoNuNubTagScaling,*ZtoNuNu));
   
@@ -419,10 +408,10 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
       
       // Define poisson constraints
       
-      RooPoisson zeroLeptonConstraint(zeroLeptonName+"_Constraint",zeroLeptonName+"_Constraint",zeroLeptonYield,zeroLeptonCount);
-      RooPoisson zeroLeptonLowDeltaPhiNConstraint(zeroLeptonLowDeltaPhiNName+"_Constraint",zeroLeptonLowDeltaPhiNName+"_Constraint",zeroLeptonLowDeltaPhiNYield,zeroLeptonLowDeltaPhiNCount);
-      RooPoisson oneMuonConstraint(oneMuonName+"_Constraint",oneMuonName+"_Constraint",oneMuonYield,oneMuonCount);
-      RooPoisson oneElectronConstraint(oneElectronName+"_Constraint",oneElectronName+"_Constraint",oneElectronYield,oneElectronCount);
+      RooPoisson zeroLeptonConstraint(zeroLeptonName+"_Constraint",zeroLeptonName+"_Constraint",zeroLeptonCount,zeroLeptonYield);
+      RooPoisson zeroLeptonLowDeltaPhiNConstraint(zeroLeptonLowDeltaPhiNName+"_Constraint",zeroLeptonLowDeltaPhiNName+"_Constraint",zeroLeptonLowDeltaPhiNCount,zeroLeptonLowDeltaPhiNYield);
+      RooPoisson oneMuonConstraint(oneMuonName+"_Constraint",oneMuonName+"_Constraint",oneMuonCount,oneMuonYield);
+      RooPoisson oneElectronConstraint(oneElectronName+"_Constraint",oneElectronName+"_Constraint",oneElectronCount,oneElectronYield);
       
       // Cleanup
       
@@ -490,23 +479,19 @@ void setupUnderlyingLikelihood(RooWorkspace& ws ,allBinNames& names, allBins& nu
 
   //Universal parameters
 
-  RooRealVar MCUncertainty("MCUncertainty","MCUncertainty",numbers.MCUncertainty);
-  MCUncertainty.setConstant();
-  ws.import(MCUncertainty);
-  names.MCUncertainty = MCUncertainty.GetName();
-
-  RooRealVar signalCrossSection("signalCrossSection","signalCrossSection",0.0,0.0,1e5);
+  RooAbsArg* MCUncertainty = 
+    getBetaPrimeConstraint(ws,"MCUncertainty","",
+			     1.0,numbers.MCUncertainty,
+			     names.observables,names.nuisances);
+  names.MCUncertainty = MCUncertainty->GetName();
+  
+  RooRealVar signalCrossSection("signalCrossSection","signalCrossSection",0.0,0.0,1e3);
   ws.import(signalCrossSection);
   names.signalCrossSection = signalCrossSection.GetName();
 
   names.signalUncertainty = "signalUncertainty";
-  RooAbsArg* signalUncertainty = 
-    getCorrelatedBetaPrimeConstraint(ws,"signalUncertainty","",
-				     numbers.signal,numbers.signalError,
-				     names.observables, names.nuisances,
-				     names.signalUncertainty);//BEN FIXME -- confirm with luke that this is correct
 
-  RooRealVar singleLeptonScaling("singleLeptonScaling","singleLeptonScaling",0.0,1e5);
+  RooRealVar singleLeptonScaling("singleLeptonScaling","singleLeptonScaling",0.0,1e3);
   ws.import(singleLeptonScaling);
   names.singleLeptonScaling = singleLeptonScaling.GetName();
 
@@ -751,34 +736,6 @@ void setupUnderlyingModel(map<TString,TString>& binFileNames, vector<TString>& b
   setupFile.close();
 }
 
-void chooseUnderlyingUncertainties(allBins& numbers , map<TString,abcdBinParameters> bins, map<TString,yields> signal, map<TString,yields> signalError)
-{
-  
-  //Signal
-  map<TString,yields>::iterator thisSignal      = signal     .begin();
-  map<TString,yields>::iterator thisSignalError = signalError.begin();
-
-  double signalAlpha(0.);
-  double signalBeta(0.);
-
-  for(; thisSignal != signal.end() && thisSignalError != signalError.end(); thisSignal++, thisSignalError++)
-    {
-      double alpha,beta;
-      betaPrimeModeTransform(thisSignal->second.zeroLepton,thisSignalError->second.zeroLepton,alpha,beta);
-      if(alpha > signalAlpha) signalAlpha = alpha;
-      if(beta  > signalBeta ) signalBeta  = beta ;
-      betaPrimeModeTransform(thisSignal->second.zeroLeptonLowDeltaPhiN,thisSignalError->second.zeroLeptonLowDeltaPhiN,alpha,beta);
-      if(alpha > signalAlpha) signalAlpha = alpha;
-      if(beta  > signalBeta ) signalBeta  = beta ;
-      betaPrimeModeTransform(thisSignal->second.oneLepton,thisSignalError->second.oneLepton,alpha,beta);
-      if(alpha > signalAlpha) signalAlpha = alpha;
-      if(beta  > signalBeta ) signalBeta  = beta ;
-    }
-  numbers.signal = (signalAlpha - 1) / ( signalBeta + 1 );
-  numbers.signalError = sqrt( signalAlpha * (signalAlpha + signalBeta - 1 ) / ( pow(signalBeta - 1 , 2 ) * (signalBeta - 2) ) );
-}
-
-
 
 void buildLikelihood( TString setupFileName, TString binFilesFileName, TString signalModelFileName, int signalModelFileLine, TString workspaceName, TString outputFileName ) 
 {
@@ -804,8 +761,6 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString s
     }
 
   setupSignalModel(binNames , signalModelFileName , signalModelFileLine , signal , signalError , luminosity);
-
-  chooseUnderlyingUncertainties(numbers , bins, signal, signalError);
 
   setupUnderlyingLikelihood(ws , names, numbers);
 
@@ -837,6 +792,8 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString s
   (*ws.set(names.observables)).Print("v");
 
   RooDataSet data("data","data",*ws.set(names.observables));
+
+  data.add(*ws.set(names.observables));
 
   ws.import(data);
 
