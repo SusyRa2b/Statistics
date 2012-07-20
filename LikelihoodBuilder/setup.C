@@ -1,5 +1,7 @@
 {
   gSystem->CompileMacro("RooRatio.cxx"               ,"kO") ;
+  gSystem->CompileMacro("RooBetaPdf.cxx"             ,"kO") ;
+  gSystem->CompileMacro("RooBetaPrimePdf.cxx"        ,"kO") ;
   gSystem->CompileMacro("betaHelperFunctions.h"      ,"kO") ;
   gSystem->CompileMacro("RooNormalFromFlatPdf.cxx"   ,"kO") ;
   gSystem->CompileMacro("RooBetaInverseCDF.cxx"      ,"kO") ;
