@@ -82,8 +82,8 @@ void GenerateSusyFile() {
 
 
   // dummy masses
-  int minGlMass = 850 ;
-  int maxGlMass = 910 ;
+  int minGlMass = 800 ;
+  int maxGlMass = 1100 ;
 
 
 //double dummyYield = 9.9 ;
@@ -126,7 +126,8 @@ void GenerateSusyFile() {
   for ( int mGl = minGlMass ; mGl < maxGlMass ; mGl = mGl + 25 ) {
   xsec = gluinoxsec->GetBinContent((mGl-75)/25);
     ////// for ( int mLsp = 50 ; mLsp < ( mGl - 25 ) ; mLsp = mLsp + 25 ) {
-    for ( int mLsp = 200 ; mLsp < 310 ; mLsp = mLsp + 25 ) {
+    /////  for ( int mLsp = 200 ; mLsp < 310 ; mLsp = mLsp + 25 ) {
+    for ( int mLsp = 125 ; mLsp < 610 ; mLsp = mLsp + 25 ) {
 
       inFile << mGl << " " << mLsp << " " << dummyEvts << " " ;
       printf(" mGl=%4d, mLsp=%4d\n", mGl, mLsp ) ; cout << flush ;

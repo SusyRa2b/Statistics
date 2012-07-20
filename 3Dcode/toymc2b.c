@@ -1,7 +1,7 @@
 #include "TROOT.h"
 #include "TSystem.h"
 #include "TRandom.h"
-#include "ra2bRoostatsClass3D_2.c"
+#include "ra2bRoostatsClass3D_2b.c"
 #include "updateFileValue.c"
 
    static const int nBinsMET  = 4 ;
@@ -35,7 +35,7 @@
 
    float nSusy0lep ;
 
-   float susyPoi0lepRatio ;
+   ///// float susyPoi0lepRatio ;
 
    RooWorkspace* workspace ;
 
@@ -94,12 +94,12 @@
 
    //=====================================
 
-   void toymc1( const char* input_datfile = "datfiles/Input-met4-ht4-wsyst1.dat",
+   void toymc2b( const char* input_datfile = "datfiles/Input-met4-ht4-wsyst1.dat",
                 const char* input_susyfile = "datfiles/Susy-mgl900-mlsp300-met4-ht4.dat",
                 double input_mgl=900, double input_mlsp=300.,
                 const char* input_deffdbtagfile = "datfiles/dummy_DeffDbtag-met4-ht4.dat",
                 double input_nSusy0lep = 60.,
-                const char* input_outputDir = "output-toymc1",
+                const char* input_outputDir = "output-toymc2b",
                 int nToy = 10
                         ) {
 
@@ -132,13 +132,14 @@
 
        nSusy0lep = input_nSusy0lep ;
 
-       susyPoi0lepRatio = 0. ;
+       ///// susyPoi0lepRatio = 0. ;
        true_susy_0lep = 0. ;
 
        doSignif = false ;
        doUL = false ;
 
-       useExpected0lep = false ;
+       //// useExpected0lep = false ;
+       useExpected0lep = true ;
 
 
        tran = new TRandom(12345) ;
@@ -147,7 +148,7 @@
 
        //--- Create workspace.
 
-       ra2bRoostatsClass3D_2 ra2b ;
+       ra2bRoostatsClass3D_2b ra2b ;
 
        int qcdModelIndex = 2 ;
        ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, qcdModelIndex ) ;
@@ -169,9 +170,14 @@
 
 
        //--- Access some workspace stuff needed later.
-       rrv_susy_poi = workspace -> var( "mu_susy_M1_H1_1b" ) ;
+  //// rrv_susy_poi = workspace -> var( "mu_susy_M1_H1_1b" ) ;
+  //// if ( rrv_susy_poi == 0x0 ) {
+  ////    printf("\n\n *** can't find susy poi mu_susy_M1_H1_1b.\n\n") ; return ;
+  //// }
+
+       rrv_susy_poi = workspace -> var( "mu_susy_all0lep" ) ;
        if ( rrv_susy_poi == 0x0 ) {
-          printf("\n\n *** can't find susy poi mu_susy_M1_H1_1b.\n\n") ; return ;
+          printf("\n\n *** can't find susy poi mu_susy_all0lep.\n\n") ; return ;
        }
 
        ModelConfig* modelConfig = (ModelConfig*) workspace -> obj( "SbModel" ) ;
@@ -804,7 +810,7 @@
               }
             }
 
-            susyPoi0lepRatio = input0lepSusyTotal / susy_0lep[0][0][0] ;
+            ///// susyPoi0lepRatio = input0lepSusyTotal / susy_0lep[0][0][0] ;
 
             printf("\n\n  pointMgl = %g , pointMlsp = %g,  total 0lep events = %g\n", pointMgl, pointMlsp, input0lepSusyTotal ) ;
             printf("   reset susy 0lep total to %g\n\n", nSusy0lep ) ;
@@ -937,20 +943,34 @@
 
       if ( rfr == 0x0 ) { return false ; }
 
+  /// printf(" toy %4d : Fit nSusy 0lep : %4.1f +/- %4.1f (%4.1f, %4.1f)\n", ti,
+  ///     susyPoi0lepRatio * (rrv_susy_poi->getVal()),
+  ///     susyPoi0lepRatio * (rrv_susy_poi->getError()),
+  ///     susyPoi0lepRatio * (rrv_susy_poi->getErrorHi()),
+  ///     susyPoi0lepRatio * (rrv_susy_poi->getErrorLo())
+  ///     ) ;
+
       printf(" toy %4d : Fit nSusy 0lep : %4.1f +/- %4.1f (%4.1f, %4.1f)\n", ti,
-          susyPoi0lepRatio * (rrv_susy_poi->getVal()),
-          susyPoi0lepRatio * (rrv_susy_poi->getError()),
-          susyPoi0lepRatio * (rrv_susy_poi->getErrorHi()),
-          susyPoi0lepRatio * (rrv_susy_poi->getErrorLo())
+           (rrv_susy_poi->getVal()),
+           (rrv_susy_poi->getError()),
+           (rrv_susy_poi->getErrorHi()),
+           (rrv_susy_poi->getErrorLo())
           ) ;
 
       susy_poi_atMinNll = rrv_susy_poi->getVal() ;
       susy_poi_plusErr  = rrv_susy_poi->getErrorHi() ;
 
-      fit_susy_0lep     = susyPoi0lepRatio * (rrv_susy_poi->getVal()) ;
-      fit_susy_0lep_err = susyPoi0lepRatio * (rrv_susy_poi->getError()) ;
-      fit_susy_0lep_err_low = susyPoi0lepRatio * (rrv_susy_poi->getErrorLo()) ;
-      fit_susy_0lep_err_high = susyPoi0lepRatio * (rrv_susy_poi->getErrorHi()) ;
+  /// fit_susy_0lep     = susyPoi0lepRatio * (rrv_susy_poi->getVal()) ;
+  /// fit_susy_0lep_err = susyPoi0lepRatio * (rrv_susy_poi->getError()) ;
+  /// fit_susy_0lep_err_low = susyPoi0lepRatio * (rrv_susy_poi->getErrorLo()) ;
+  /// fit_susy_0lep_err_high = susyPoi0lepRatio * (rrv_susy_poi->getErrorHi()) ;
+
+      fit_susy_0lep     =  (rrv_susy_poi->getVal()) ;
+      fit_susy_0lep_err =  (rrv_susy_poi->getError()) ;
+      fit_susy_0lep_err_low =  (rrv_susy_poi->getErrorLo()) ;
+      fit_susy_0lep_err_high =  (rrv_susy_poi->getErrorHi()) ;
+
+
       if ( fit_susy_0lep > true_susy_0lep ) {
          fit_susy_0lep_err_forpull = fit_susy_0lep_err_low ;
       } else {
@@ -1107,7 +1127,8 @@
       delete fitResult_g2 ;
       printf("  Test stat at second guess is %5.2f\n", testStat_g2 ) ;
 
-      fit_susy_ul = susyPoi0lepRatio * susy_poi_g2 ;
+      ////// fit_susy_ul = susyPoi0lepRatio * susy_poi_g2 ;
+      fit_susy_ul = susy_poi_g2 ;
       fit_susy_ts_at_ul = testStat_g2 ;
 
       printf("  SUSY upper limit is : %5.2f 0lep events.\n", fit_susy_ul ) ;

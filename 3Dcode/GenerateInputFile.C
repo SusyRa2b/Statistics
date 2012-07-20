@@ -21,7 +21,7 @@
 
 // to add in: nMu, nEl, minDelPhi
 
-void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
+void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0lep=-1. ) {
 
   TChain* dyTree = new TChain("treeZ") ;
   int nAdded = dyTree->Add("files5fb_lowHT/DY.root") ;
@@ -42,7 +42,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
         return ;
      }
      TFile f("referenceXSecs.root") ;
-     TH1F* xsechist = (TH1F*) f.Get("gluino") ;
+     TH1F* xsechist = (TH1F*) f.Get("gluino_NLONLL") ;
      if ( xsechist==0x0 ) { printf("\n\n *** can't find reference Xsec histogram in referenceXSecs.root.\n\n") ; return ; }
      int theBin = xsechist->FindBin( mgl ) ;
      if ( theBin <=0 || theBin > xsechist->GetNbinsX() ) {
@@ -221,7 +221,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
   ofstream inFile;
   char outfile[10000] ;
   if ( mgl > 0. && mlsp > 0. ) {
-     sprintf( outfile, "InputWT1bbbb-mgl%.0f-mlsp%.0f-met%d-ht%d.dat", mgl, mlsp, nBinsMET, nBinsHT ) ;
+     if ( target_susy_all0lep > 0. ) {
+        sprintf( outfile, "InputWT1bbbb-mgl%.0f-mlsp%.0f-%.0fevts-met%d-ht%d.dat", mgl, mlsp, target_susy_all0lep, nBinsMET, nBinsHT ) ;
+     } else {
+        sprintf( outfile, "InputWT1bbbb-mgl%.0f-mlsp%.0f-met%d-ht%d.dat", mgl, mlsp, nBinsMET, nBinsHT ) ;
+     }
   } else {
      sprintf( outfile, "Input-met%d-ht%d.dat", nBinsMET, nBinsHT ) ;
   }
@@ -429,7 +433,13 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
              printf(" N_%s, wjets  met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, wjetsval,wjetserr) ; cout << flush ;
              printf(" N_%s, qcd    met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, qcdval,qcderr) ; cout << flush ;
              printf(" N_%s, znn    met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, znnval,znnerr) ; cout << flush ;
-             if ( mgl>0. ) { printf(" N_%s, susy   met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, susyval,susyerr) ; cout << flush ; }
+             if ( mgl>0. ) {
+                if ( target_susy_all0lep > 0. ) {
+                   susyval = susyval * (target_susy_all0lep/nSusyTotal);
+                   susyerr = susyerr * (target_susy_all0lep/nSusyTotal);
+                }
+                printf(" N_%s, susy   met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, susyval,susyerr) ; cout << flush ;
+             }
              printf("\n") ;
 
              double allval = ttval + wjetsval + qcdval + znnval + susyval ;
@@ -852,7 +862,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1. ) {
     gSystem->Exec("mkdir -p rootfiles") ;
     char outHistName[1000] ;
     if ( mgl>0. && mlsp>0. ) {
-       sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-met%d-ht%d.root", mgl, mlsp, nBinsMET, nBinsHT ) ;
+       if ( target_susy_all0lep > 0 ) {
+          sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%.0fevts-met%d-ht%d.root", mgl, mlsp, target_susy_all0lep, nBinsMET, nBinsHT ) ;
+       } else {
+          sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-met%d-ht%d.root", mgl, mlsp, nBinsMET, nBinsHT ) ;
+       }
     } else {
        sprintf( outHistName, "rootfiles/gi-plots-met%d-ht%d.root", nBinsMET, nBinsHT ) ;
     }
