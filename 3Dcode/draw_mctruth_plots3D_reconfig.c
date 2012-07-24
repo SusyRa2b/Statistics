@@ -171,8 +171,10 @@
          sprintf( thirdGroupingVar, "ht" ) ;
       }
 
+      cout << "\n Checking for canvas.\n\n" << flush ;
+
       TCanvas* cmctruth = (TCanvas*) gDirectory->FindObject("cmctruth") ;
-      if ( cmctruth==0 ) {
+      if ( cmctruth==0x0 ) {
          printf("\n\n Creating cmctruth canvas.\n\n") ;
          cmctruth = new TCanvas("cmctruth","RA2b fit quality", 850, 1000 ) ;
       } else {
@@ -210,6 +212,8 @@
 
 
             sprintf( htitle, "%s, %s %d", selname[si], thirdGroupingVar, v3bi+1 ) ;
+
+            printf( "%s\n", htitle ) ;
 
             for ( int ci=0; ci<ncomp; ci++ ) {
 

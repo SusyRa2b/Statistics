@@ -52,6 +52,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
      double xsec = xsechist->GetBinContent( theBin ) ;
      printf("\n\n T1bbbb xsec for mgl=%g is %g\n\n", mgl, xsec ) ;
      t1bbbbWeight = 0.5*xsec ;  //in pb. scan has 10k events, so nScan*0.5*xsec = events in 5fb-1
+     //////  t1bbbbWeight = 0.1*xsec ;  //in pb. T1tttt scan has 50k events, so nScan*0.1*xsec = events in 5fb-1
      printf("\n\n Susy ttree cut: %s\n\n", susycutstring ) ;
   }
 
@@ -103,6 +104,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
   const int nBinsBjets = 3 ;   // this must always be 3
   const int nJetsCut = 3 ;     // #jets >= nJetsCut
+
+  double minLeadJetPt = 50. ;
 
   //-- met2-ht1-v1
 //const int nBinsMET   = 2 ;
@@ -183,7 +186,6 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
   TString cMbins[nBinsMET];
   TString cHbins[nBinsHT];
-//TString cBbins[3] = {"&&nB==1","&&nB==2","&&nB>=3"};
 
   for (int i = 0 ; i < nBinsMET ; i++) {
     TString base = "_M";
@@ -209,6 +211,17 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     cbin << Hbins[j] << "&&HT<" << Hbins[j+1];
     base += cbin.str();
     cHbins[j] = base;
+  }
+
+  TString leadJetPtCutString ;
+  {
+     leadJetPtCutString = "(pt_1st_leadJet>" ;
+     stringstream number ;
+     number << minLeadJetPt ;
+     leadJetPtCutString += number.str() ;
+     leadJetPtCutString += "&&pt_2nd_leadJet>" ;
+     leadJetPtCutString += number.str() ;
+     leadJetPtCutString += ")" ;
   }
 
 //int dummyInt = 99;
@@ -252,9 +265,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
    char selname[3][100] = { "0lep", "1lep", "ldp" } ;
 
    char selcuts[3][10000] = {
-        "(pt_1st_leadJet>50&&pt_2nd_leadJet>50)&&minDelPhiN>4&&nMu==0&&nEl==0&&",
-        "(pt_1st_leadJet>50&&pt_2nd_leadJet>50)&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&",
-        "(pt_1st_leadJet>50&&pt_2nd_leadJet>50)&&minDelPhiN<4&&nMu==0&&nEl==0&&" } ;
+        "minDelPhiN>4&&nMu==0&&nEl==0&&",
+        "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&",
+        "minDelPhiN<4&&nMu==0&&nEl==0&&" } ;
 
 
   //--- Output histograms.
@@ -326,6 +339,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     TH2F* h_qcd[10] ;
     TH2F* h_znn[10] ;
     TH2F* h_susy[10] ;
+    TH2F* h_mc[10] ;
 
     for ( int bi=0; bi<nBinsBjets; bi++ ) {
 
@@ -351,6 +365,10 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
        h_susy[bi] = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
        h_susy[bi] -> Sumw2() ;
 
+       sprintf( hname, "h_mc_%db", bi+1 ) ;
+       h_mc[bi]   = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
+       h_mc[bi] -> Sumw2() ;
+
     }
 
   float nSusyTotal = 0;
@@ -366,11 +384,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
         char allsusycuts[10000] ;
 
         if ( k < (nBinsBjets-1) ) {
-	  sprintf( allcuts, "%snB==%d&&nJets>=%d", selcuts[si], k+1, nJetsCut ) ;
-           sprintf( allsusycuts, "%snB==%d&&nJets>=%d%s", selcuts[si], k+1, nJetsCut, susycut.Data() ) ;
+           sprintf( allcuts, "%snB==%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt ) ;
+           sprintf( allsusycuts, "%snB==%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)%s", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, susycut.Data() ) ;
         } else {
-           sprintf( allcuts, "%snB>=%d&&nJets>=%d", selcuts[si], k+1, nJetsCut ) ;
-           sprintf( allsusycuts, "%snB>=%d&&nJets>=%d%s", selcuts[si], k+1, nJetsCut, susycut.Data() ) ;
+           sprintf( allcuts, "%snB>=%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt ) ;
+           sprintf( allsusycuts, "%snB>=%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)%s", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, susycut.Data() ) ;
         }
 
 
@@ -520,9 +538,10 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
         TString pass = "&&minDelPhiN>4";
         TString fail = "&&minDelPhiN<4";
         TString allcutspass = cutslsb+cut+pass ;
-        if ( k==0 ) { chainAll.Project("ht_pass","HT",allcutspass); } // only do it once in bjet loop, since using nB==0.
+     // if ( k==0 ) { chainAll.Project("ht_pass","HT",allcutspass); } // only do it once in bjet loop, since using nB==0.
         double npasserr(0.) ;
-        float npass = ht_pass->IntegralAndError(1,10,npasserr) ;
+        float npass = 100. ;
+     // npass = ht_pass->IntegralAndError(1,10,npasserr) ;
         printf(" R_lsb -- HT,MET bins (%d,%d): npass=%10.1f, cuts=%s\n", j,k,npass, allcutspass.Data()) ; cout << flush ;
         hmctruth_qcd_lsb_pass->SetBinContent( 1+k*(nBinsHT+1)+j+1, npass ) ;
         hmctruth_qcd_lsb_pass->SetBinError(   1+k*(nBinsHT+1)+j+1, npasserr ) ;
@@ -532,9 +551,10 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   
   
         TString allcutsfail = cutslsb+cut+fail ;
-        if ( k==0 ) { chainAll.Project("ht_fail","HT",allcutsfail); } // only do it once in the bjet loop, since using nB==0.
+     // if ( k==0 ) { chainAll.Project("ht_fail","HT",allcutsfail); } // only do it once in the bjet loop, since using nB==0.
         double nfailerr(0.) ;
-        float nfail = ht_fail->IntegralAndError(1,10,nfailerr) ;
+        float nfail = 1000. ;
+     // nfail = ht_fail->IntegralAndError(1,10,nfailerr) ;
         printf(" R_lsb -- HT,MET bins (%d,%d): nfail=%10.1f, cuts=%s\n", j,k,nfail, allcutsfail.Data()) ; cout << flush ;
         hmctruth_qcd_lsb_fail->SetBinContent( 1+k*(nBinsHT+1)+j+1, nfail ) ;
         hmctruth_qcd_lsb_fail->SetBinError(   1+k*(nBinsHT+1)+j+1, nfailerr ) ;
@@ -582,6 +602,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
         cut += Mbins[i+1];
   
         TString allcutsZ = cutszee+cut ;
+        allcutsZ += "&&" ;
+        allcutsZ += leadJetPtCutString ;
   
         dyTree->Project("ht","HT",allcutsZ);
         double allerr(0.) ;
@@ -627,6 +649,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
         cut += Mbins[i+1];
         
         TString allcutsZ = cutszmm+cut ;
+        allcutsZ += "&&" ;
+        allcutsZ += leadJetPtCutString ;
   
         dyTree->Project("ht","HT",allcutsZ);
         double allerr(0.) ;
@@ -653,35 +677,56 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   
   
     printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
-  
-  TString cutsldp = "minDelPhiN<4&&nMu==0&&nEl==0&&";
+
+
+
+    for (int k = 0 ; k < nBinsBjets ; k++) {
+
+       char allcuts[100000] ;
+       if ( k < (nBinsBjets-1) ) {
+          sprintf( allcuts, "nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)&&minDelPhiN<4&&nMu==0&&nEl==0&&nB==%d", nJetsCut, minLeadJetPt, minLeadJetPt, k+1 ) ;
+       } else {
+          sprintf( allcuts, "nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)&&minDelPhiN<4&&nMu==0&&nEl==0&&nB>=%d", nJetsCut, minLeadJetPt, minLeadJetPt, k+1 ) ;
+       }
+
+       printf("\n cuts : %s\n", allcuts ) ; cout << flush ;
+
+       char hname[1000] ;
+       sprintf( hname, "h_mc_%db", k+1 ) ;
+       chainTZ.Project( hname, "HT:MET", allcuts ) ;
+       printf(" ttbar+singletop+zjets  %12s %7.1f events\n", hname, h_mc[k]->Integral() ) ; cout << flush ;
+
+    } // k.
+    printf("\n\n") ;
+
     for (int i = 0 ; i < nBinsMET ; i++) {
       for (int j = 0 ; j < nBinsHT ; j++) {
         for (int k = 0 ; k < nBinsBjets ; k++) {
-  
-  	TString obs_ttbarsingletopzjetsmc_ldp = "N_ttbarsingletopzjetsmc_ldp" ;
-  	obs_ttbarsingletopzjetsmc_ldp = obs_ttbarsingletopzjetsmc_ldp+sMbins[i]+sHbins[j]+sBbins[k] ;
-  	
-  	TString cut = "HT>";
-  	cut += Hbins[j];
-  	cut += "&&HT<";
-  	cut += Hbins[j+1];
-  	cut += "&&MET>";
-  	cut += Mbins[i];
-  	cut += "&&MET<";
-  	cut += Mbins[i+1];
-  	cut += "&&nB==";
-  	cut += k+1;
-  
-        chainTZ.Project("ht","HT",cutsldp+cut);
-  	inFile << obs_ttbarsingletopzjetsmc_ldp << "  \t" << ht->GetSumOfWeights() << endl;
-          ht->Reset() ;
-  // signal selection, but ldp, so MET>250, HT>400, >=1 b, mindelphi<4, 0L, nJets >= 3
+
+           char obsname[1000] ;
+           sprintf( obsname, "N_ttbarsingletopzjetsmc_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+
+           double val, err ;
+           val = h_mc[k] -> GetBinContent( i+1, j+1 ) ;
+           err = h_mc[k] -> GetBinError(   i+1, j+1 ) ;
+
+           printf(" %s : %7.1f +/- %7.1f\n", obsname, val, err ) ;
+
+           inFile << obsname << "  \t" << val << endl ;
+
         }
+        printf("\n") ;
       }
+      printf("\n") ;
     }
-  
-  
+
+
+
+
+
+
+
+
     // NWJmc_ldp
   
     for (int i = 0 ; i < nBinsMET ; i++) {
@@ -871,8 +916,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
        sprintf( outHistName, "rootfiles/gi-plots-met%d-ht%d.root", nBinsMET, nBinsHT ) ;
     }
     saveHist( outHistName, "hmc*" ) ;
-  
-  
+
+
     inFile.close();
     return;
   

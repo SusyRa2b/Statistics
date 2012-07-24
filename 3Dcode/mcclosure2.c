@@ -32,9 +32,11 @@
       gStyle->SetOptStat(0) ;
       gStyle->SetPadTopMargin(0.03) ;
       gStyle->SetPadBottomMargin(0.30) ;
-      gStyle->SetPadRightMargin(0.10) ;
+      gStyle->SetPadRightMargin(0.05) ;
+      gStyle->SetPadLeftMargin(0.15) ;
       gStyle->SetTitleX(0.98) ;
       gStyle->SetTitleAlign(33) ;
+
 
       gStyle->SetPadGridY(1) ;
 
@@ -150,7 +152,7 @@
 
 
 
-
+      gStyle->SetPadRightMargin(0.08) ;
       TCanvas* cttwj = (TCanvas*) gDirectory->FindObject("cttwj") ;
       if ( cttwj == 0x0 ) {
          cttwj = new TCanvas("cttwj","ttwj closure", 700, 950) ;
@@ -158,7 +160,7 @@
       cttwj->Clear() ;
       cttwj->Divide(1,2) ;
 
-      TLegend* legend_ttwj = new TLegend( 0.88, 0.77,  0.97, 0.93 ) ;
+      TLegend* legend_ttwj = new TLegend( 0.91, 0.77,  0.99, 0.93 ) ;
       legend_ttwj->SetFillColor(kWhite) ;
       legend_ttwj->AddEntry( hmctruth_ttwj_0over1ratio_1b, "=1b") ;
       legend_ttwj->AddEntry( hmctruth_ttwj_0over1ratio_2b, "=2b") ;
@@ -187,6 +189,7 @@
 
 
 
+   //----
 
 
       TCanvas* cttwj3 = (TCanvas*) gDirectory->FindObject("cttwj3") ;
@@ -228,6 +231,72 @@
       outttwj3.ReplaceAll(".root","-mcclosure-ttwj3.pdf") ;
       cttwj3->SaveAs( outttwj3 ) ;
 
+   //----
+   
+
+      hmctruth_ttwj_0lep_1b->SetFillColor(kBlue-9) ;
+      hmctruth_ttwj_0lep_2b->SetFillColor(kBlue-9) ;
+      hmctruth_ttwj_0lep_3b->SetFillColor(kBlue-9) ;
+
+      hmctruth_ttwj_1lep_1b->SetFillColor(kBlue-9) ;
+      hmctruth_ttwj_1lep_2b->SetFillColor(kBlue-9) ;
+      hmctruth_ttwj_1lep_3b->SetFillColor(kBlue-9) ;
+
+      hmctruth_ttwj_0lep_1b->SetLineWidth(2) ;
+      hmctruth_ttwj_0lep_2b->SetLineWidth(2) ;
+      hmctruth_ttwj_0lep_3b->SetLineWidth(2) ;
+
+      hmctruth_ttwj_1lep_1b->SetLineWidth(2) ;
+      hmctruth_ttwj_1lep_2b->SetLineWidth(2) ;
+      hmctruth_ttwj_1lep_3b->SetLineWidth(2) ;
+
+      TCanvas* cttwj3b = (TCanvas*) gDirectory->FindObject("cttwj3b") ;
+      if ( cttwj3b == 0x0 ) {
+         cttwj3b = new TCanvas("cttwj3b","ttwj closure", 1200, 950) ;
+      }
+      cttwj3b->Clear() ;
+      cttwj3b->Divide(3,2) ;
+
+      cttwj3b->cd(1) ;
+      hmctruth_ttwj_0lep_1b->SetTitle("ttwj =1b: 0 Lepton") ;
+      hmctruth_ttwj_0lep_1b->Draw() ;
+      hmctruth_ttwj_0lep_1b->Draw("histsame") ;
+      hmctruth_ttwj_0lep_1b->Draw("esame") ;
+      cttwj3b->cd(2) ;
+      hmctruth_ttwj_0lep_2b->SetTitle("ttwj =2b: 0 Lepton") ;
+      hmctruth_ttwj_0lep_2b->Draw() ;
+      hmctruth_ttwj_0lep_2b->Draw("histsame") ;
+      hmctruth_ttwj_0lep_2b->Draw("esame") ;
+      cttwj3b->cd(3) ;
+      hmctruth_ttwj_0lep_3b->SetTitle("ttwj >=3b: 0 Lepton") ;
+      hmctruth_ttwj_0lep_3b->Draw() ;
+      hmctruth_ttwj_0lep_3b->Draw("histsame") ;
+      hmctruth_ttwj_0lep_3b->Draw("esame") ;
+
+      cttwj3b->cd(4) ;
+      hmctruth_ttwj_1lep_1b->SetTitle("ttwj =1b: 1 Lepton") ;
+      hmctruth_ttwj_1lep_1b->Draw() ;
+      hmctruth_ttwj_1lep_1b->Draw("histsame") ;
+      hmctruth_ttwj_1lep_1b->Draw("esame") ;
+      cttwj3b->cd(5) ;
+      hmctruth_ttwj_1lep_2b->SetTitle("ttwj =2b: 1 Lepton") ;
+      hmctruth_ttwj_1lep_2b->Draw() ;
+      hmctruth_ttwj_1lep_2b->Draw("histsame") ;
+      hmctruth_ttwj_1lep_2b->Draw("esame") ;
+      cttwj3b->cd(6) ;
+      hmctruth_ttwj_1lep_3b->SetTitle("ttwj >=3b: 1 Lepton") ;
+      hmctruth_ttwj_1lep_3b->Draw() ;
+      hmctruth_ttwj_1lep_3b->Draw("histsame") ;
+      hmctruth_ttwj_1lep_3b->Draw("esame") ;
+
+
+
+      TString outttwj3b( infileStr ) ;
+      outttwj3b.ReplaceAll("rootfiles","outputfiles") ;
+      outttwj3b.ReplaceAll(".root","-mcclosure-ttwj3b.pdf") ;
+      cttwj3b->SaveAs( outttwj3b ) ;
+
+   //----
 
 
 
@@ -250,7 +319,7 @@
             correction = hscalefactor_ttwj_0over1ratio_1b->GetBinContent(hbin)  ;
             diff = correction - 1. ;
             if ( err > 0. ) {
-               systValue = sqrt( pow(err,2) + pow(diff,2) ) ;
+               systValue = sqrt( pow(err,2) + pow(0.5*diff,2) ) ;
             } else {
                systValue = 3.0 ;
             }
@@ -263,7 +332,7 @@
             correction = hscalefactor_ttwj_0over1ratio_2b->GetBinContent(hbin) ;
             diff = correction - 1. ;
             if ( err > 0. ) {
-               systValue = sqrt( pow(err,2) + pow(diff,2) ) ;
+               systValue = sqrt( pow(err,2) + pow(0.5*diff,2) ) ;
             } else {
                systValue = 3.0 ;
             }
@@ -276,7 +345,7 @@
             correction = hscalefactor_ttwj_0over1ratio_3b->GetBinContent(hbin)  ;
             diff = correction - 1. ;
             if ( err > 0. ) {
-               systValue = sqrt( pow(err,2) + pow(diff,2) ) ;
+               systValue = sqrt( pow(err,2) + pow(0.5*diff,2) ) ;
             } else {
                systValue = 3.0 ;
             }
@@ -347,6 +416,13 @@
       TH1F* hmctruth_qcd_0lepoverldpratio_2b_htgrouping = (TH1F*) hmctruth_qcd_0lepoverldpratio_2b->Clone("hmctruth_qcd_0lepoverldpratio_2b_htgrouping") ;
       TH1F* hmctruth_qcd_0lepoverldpratio_3b_htgrouping = (TH1F*) hmctruth_qcd_0lepoverldpratio_3b->Clone("hmctruth_qcd_0lepoverldpratio_3b_htgrouping") ;
 
+      TH1F* hmctruth_qcd_0lep_1b_htgrouping = (TH1F*) hmctruth_qcd_0lep_1b->Clone("hmctruth_qcd_0lep_1b_htgrouping") ;
+      TH1F* hmctruth_qcd_0lep_2b_htgrouping = (TH1F*) hmctruth_qcd_0lep_2b->Clone("hmctruth_qcd_0lep_2b_htgrouping") ;
+      TH1F* hmctruth_qcd_0lep_3b_htgrouping = (TH1F*) hmctruth_qcd_0lep_3b->Clone("hmctruth_qcd_0lep_3b_htgrouping") ;
+
+      TH1F* hmctruth_qcd_ldp_1b_htgrouping = (TH1F*) hmctruth_qcd_ldp_1b->Clone("hmctruth_qcd_ldp_1b_htgrouping") ;
+      TH1F* hmctruth_qcd_ldp_2b_htgrouping = (TH1F*) hmctruth_qcd_ldp_2b->Clone("hmctruth_qcd_ldp_2b_htgrouping") ;
+      TH1F* hmctruth_qcd_ldp_3b_htgrouping = (TH1F*) hmctruth_qcd_ldp_3b->Clone("hmctruth_qcd_ldp_3b_htgrouping") ;
 
 
 
@@ -446,6 +522,42 @@
             hmctruth_qcd_0lepoverldpratio_3b_htgrouping->GetXaxis()->SetBinLabel( hbinout,
                  hmctruth_qcd_0lepoverldpratio_3b->GetXaxis()->GetBinLabel( hbinin ) ) ;
 
+
+
+            hmctruth_qcd_0lep_1b_htgrouping->SetBinContent( hbinout, hmctruth_qcd_0lep_1b->GetBinContent( hbinin ) ) ;
+            hmctruth_qcd_0lep_1b_htgrouping->SetBinError(   hbinout, hmctruth_qcd_0lep_1b->GetBinError(   hbinin ) ) ;
+            hmctruth_qcd_0lep_1b_htgrouping->GetXaxis()->SetBinLabel( hbinout,
+                 hmctruth_qcd_0lep_1b->GetXaxis()->GetBinLabel( hbinin ) ) ;
+
+            hmctruth_qcd_0lep_2b_htgrouping->SetBinContent( hbinout, hmctruth_qcd_0lep_2b->GetBinContent( hbinin ) ) ;
+            hmctruth_qcd_0lep_2b_htgrouping->SetBinError(   hbinout, hmctruth_qcd_0lep_2b->GetBinError(   hbinin ) ) ;
+            hmctruth_qcd_0lep_2b_htgrouping->GetXaxis()->SetBinLabel( hbinout,
+                 hmctruth_qcd_0lep_2b->GetXaxis()->GetBinLabel( hbinin ) ) ;
+
+            hmctruth_qcd_0lep_3b_htgrouping->SetBinContent( hbinout, hmctruth_qcd_0lep_3b->GetBinContent( hbinin ) ) ;
+            hmctruth_qcd_0lep_3b_htgrouping->SetBinError(   hbinout, hmctruth_qcd_0lep_3b->GetBinError(   hbinin ) ) ;
+            hmctruth_qcd_0lep_3b_htgrouping->GetXaxis()->SetBinLabel( hbinout,
+                 hmctruth_qcd_0lep_3b->GetXaxis()->GetBinLabel( hbinin ) ) ;
+
+
+
+            hmctruth_qcd_ldp_1b_htgrouping->SetBinContent( hbinout, hmctruth_qcd_ldp_1b->GetBinContent( hbinin ) ) ;
+            hmctruth_qcd_ldp_1b_htgrouping->SetBinError(   hbinout, hmctruth_qcd_ldp_1b->GetBinError(   hbinin ) ) ;
+            hmctruth_qcd_ldp_1b_htgrouping->GetXaxis()->SetBinLabel( hbinout,
+                 hmctruth_qcd_ldp_1b->GetXaxis()->GetBinLabel( hbinin ) ) ;
+
+            hmctruth_qcd_ldp_2b_htgrouping->SetBinContent( hbinout, hmctruth_qcd_ldp_2b->GetBinContent( hbinin ) ) ;
+            hmctruth_qcd_ldp_2b_htgrouping->SetBinError(   hbinout, hmctruth_qcd_ldp_2b->GetBinError(   hbinin ) ) ;
+            hmctruth_qcd_ldp_2b_htgrouping->GetXaxis()->SetBinLabel( hbinout,
+                 hmctruth_qcd_ldp_2b->GetXaxis()->GetBinLabel( hbinin ) ) ;
+
+            hmctruth_qcd_ldp_3b_htgrouping->SetBinContent( hbinout, hmctruth_qcd_ldp_3b->GetBinContent( hbinin ) ) ;
+            hmctruth_qcd_ldp_3b_htgrouping->SetBinError(   hbinout, hmctruth_qcd_ldp_3b->GetBinError(   hbinin ) ) ;
+            hmctruth_qcd_ldp_3b_htgrouping->GetXaxis()->SetBinLabel( hbinout,
+                 hmctruth_qcd_ldp_3b->GetXaxis()->GetBinLabel( hbinin ) ) ;
+
+
+
          } // hbi
       } // mbi
 
@@ -459,6 +571,7 @@
       TH1F* hscalefactor_qcd_0lepoverldpratio_1b_htgrouping = (TH1F*) hmctruth_qcd_0lepoverldpratio_1b_htgrouping->Clone("hscalefactor_qcd_0lep_1b_htgrouping") ;
       TH1F* hscalefactor_qcd_0lepoverldpratio_2b_htgrouping = (TH1F*) hmctruth_qcd_0lepoverldpratio_2b_htgrouping->Clone("hscalefactor_qcd_0lep_2b_htgrouping") ;
       TH1F* hscalefactor_qcd_0lepoverldpratio_3b_htgrouping = (TH1F*) hmctruth_qcd_0lepoverldpratio_3b_htgrouping->Clone("hscalefactor_qcd_0lep_3b_htgrouping") ;
+
 
       for ( int mbi=0; mbi<nBinsMET ; mbi++ ) {
          for ( int hbi=0; hbi<nBinsHT ; hbi++ ) {
@@ -519,12 +632,73 @@
       hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->SetMaximum(8.) ;
       hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->SetMaximum(8.) ;
 
+      hmctruth_qcd_0lep_1b_htgrouping->GetYaxis()->SetNdivisions(505) ;
+      hmctruth_qcd_0lep_2b_htgrouping->GetYaxis()->SetNdivisions(505) ;
+      hmctruth_qcd_0lep_3b_htgrouping->GetYaxis()->SetNdivisions(505) ;
+
+      hmctruth_qcd_ldp_1b_htgrouping->GetYaxis()->SetNdivisions(505) ;
+      hmctruth_qcd_ldp_2b_htgrouping->GetYaxis()->SetNdivisions(505) ;
+      hmctruth_qcd_ldp_3b_htgrouping->GetYaxis()->SetNdivisions(505) ;
+
+      hmctruth_qcd_0lep_1b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
+      hmctruth_qcd_0lep_2b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
+      hmctruth_qcd_0lep_3b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
+
+      hmctruth_qcd_ldp_1b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
+      hmctruth_qcd_ldp_2b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
+      hmctruth_qcd_ldp_3b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
+
+      hmctruth_qcd_0lep_1b_htgrouping->GetXaxis()->SetLabelSize(0.06) ;
+      hmctruth_qcd_0lep_2b_htgrouping->GetXaxis()->SetLabelSize(0.06) ;
+      hmctruth_qcd_0lep_3b_htgrouping->GetXaxis()->SetLabelSize(0.06) ;
+
+      hmctruth_qcd_ldp_1b_htgrouping->GetXaxis()->SetLabelSize(0.06) ;
+      hmctruth_qcd_ldp_2b_htgrouping->GetXaxis()->SetLabelSize(0.06) ;
+      hmctruth_qcd_ldp_3b_htgrouping->GetXaxis()->SetLabelSize(0.06) ;
+
+      hmctruth_qcd_0lep_1b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
+      hmctruth_qcd_0lep_2b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
+      hmctruth_qcd_0lep_3b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
+
+      hmctruth_qcd_ldp_1b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
+      hmctruth_qcd_ldp_2b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
+      hmctruth_qcd_ldp_3b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
+
+      hmctruth_qcd_0lep_1b_htgrouping->SetFillColor(2) ;
+      hmctruth_qcd_0lep_2b_htgrouping->SetFillColor(2) ;
+      hmctruth_qcd_0lep_3b_htgrouping->SetFillColor(2) ;
+
+      hmctruth_qcd_ldp_1b_htgrouping->SetFillColor(2) ;
+      hmctruth_qcd_ldp_2b_htgrouping->SetFillColor(2) ;
+      hmctruth_qcd_ldp_3b_htgrouping->SetFillColor(2) ;
+
+
+      hmctruth_qcd_0lep_1b_htgrouping->SetLineWidth(2) ;
+      hmctruth_qcd_0lep_2b_htgrouping->SetLineWidth(2) ;
+      hmctruth_qcd_0lep_3b_htgrouping->SetLineWidth(2) ;
+
+      hmctruth_qcd_ldp_1b_htgrouping->SetLineWidth(2) ;
+      hmctruth_qcd_ldp_2b_htgrouping->SetLineWidth(2) ;
+      hmctruth_qcd_ldp_3b_htgrouping->SetLineWidth(2) ;
+
+
+      hmctruth_qcd_ldp_1b_htgrouping->SetMaximum( 1.15*hmctruth_qcd_ldp_1b_htgrouping->GetMaximum() ) ;
+      hmctruth_qcd_ldp_2b_htgrouping->SetMaximum( 1.15*hmctruth_qcd_ldp_2b_htgrouping->GetMaximum() ) ;
+      hmctruth_qcd_ldp_3b_htgrouping->SetMaximum( 1.15*hmctruth_qcd_ldp_3b_htgrouping->GetMaximum() ) ;
+
+      hmctruth_qcd_0lep_1b_htgrouping->SetMaximum( 0.10*hmctruth_qcd_ldp_1b_htgrouping->GetMaximum() ) ;
+      hmctruth_qcd_0lep_2b_htgrouping->SetMaximum( 0.10*hmctruth_qcd_ldp_2b_htgrouping->GetMaximum() ) ;
+      hmctruth_qcd_0lep_3b_htgrouping->SetMaximum( 0.10*hmctruth_qcd_ldp_3b_htgrouping->GetMaximum() ) ;
+
+  /// double qcdldpmax(700) ;
+  /// hmctruth_qcd_ldp_1b_htgrouping->SetMaximum(qcdldpmax) ;
+  /// hmctruth_qcd_ldp_2b_htgrouping->SetMaximum(qcdldpmax) ;
+  /// hmctruth_qcd_ldp_3b_htgrouping->SetMaximum(qcdldpmax) ;
 
 
 
 
-
-
+    //---------
 
       TCanvas* cqcd3 = (TCanvas*) gDirectory->FindObject("cqcd3") ;
       if ( cqcd3 == 0x0 ) {
@@ -535,27 +709,27 @@
 
       cqcd3->cd(1) ;
       hmctruth_qcd_0lepoverldpratio_1b_htgrouping->SetTitle("QCD =1b: 0 Lepton / LDP, Ratio") ;
-      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->Draw() ;
+      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->DrawCopy() ;
       cqcd3->cd(2) ;
       hmctruth_qcd_0lepoverldpratio_2b_htgrouping->SetTitle("QCD =2b: 0 Lepton / LDP, Ratio") ;
-      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->Draw() ;
+      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->DrawCopy() ;
       cqcd3->cd(3) ;
       hmctruth_qcd_0lepoverldpratio_3b_htgrouping->SetTitle("QCD >=3b: 0 Lepton / LDP, Ratio") ;
-      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->Draw() ;
+      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->DrawCopy() ;
 
       cqcd3->cd(4) ;
       hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->SetTitle("QCD =1b: 0 Lepton / LDP, Scale Factor") ;
-      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->Draw() ;
+      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->DrawCopy() ;
       line->DrawLine(0.5,1.,hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetNbinsX()+0.5,1.) ;
       hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->Draw("same") ;
       cqcd3->cd(5) ;
       hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->SetTitle("QCD =2b: 0 Lepton / LDP, Scale Factor") ;
-      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->Draw() ;
+      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->DrawCopy() ;
       line->DrawLine(0.5,1.,hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetNbinsX()+0.5,1.) ;
       hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->Draw("same") ;
       cqcd3->cd(6) ;
       hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->SetTitle("QCD >=3b: 0 Lepton / LDP, Scale Factor") ;
-      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->Draw() ;
+      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->DrawCopy() ;
       line->DrawLine(0.5,1.,hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetNbinsX()+0.5,1.) ;
       hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->Draw("same") ;
 
@@ -563,6 +737,164 @@
       outqcd3.ReplaceAll("rootfiles","outputfiles") ;
       outqcd3.ReplaceAll(".root","-mcclosure-qcd3.pdf") ;
       cqcd3->SaveAs( outqcd3 ) ;
+
+    //---------
+
+
+
+      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->SetLineWidth(2) ;
+      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->SetLineWidth(2) ;
+      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->SetLineWidth(2) ;
+
+      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->GetYaxis()->SetNdivisions(505) ;
+      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->GetYaxis()->SetNdivisions(505) ;
+      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->GetYaxis()->SetNdivisions(505) ;
+
+      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
+      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
+      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
+
+      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
+      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
+      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
+
+
+      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->SetLineWidth(2) ;
+      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->SetLineWidth(2) ;
+      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->SetLineWidth(2) ;
+
+      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetYaxis()->SetNdivisions(505) ;
+      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->GetYaxis()->SetNdivisions(505) ;
+      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->GetYaxis()->SetNdivisions(505) ;
+
+      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
+      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
+      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
+
+      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
+      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
+      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
+
+      hmctruth_qcd_0lep_1b_htgrouping->SetYTitle("Events") ;
+      hmctruth_qcd_0lep_2b_htgrouping->SetYTitle("Events") ;
+      hmctruth_qcd_0lep_3b_htgrouping->SetYTitle("Events") ;
+
+      hmctruth_qcd_ldp_1b_htgrouping->SetYTitle("Events") ;
+      hmctruth_qcd_ldp_2b_htgrouping->SetYTitle("Events") ;
+      hmctruth_qcd_ldp_3b_htgrouping->SetYTitle("Events") ;
+
+      hmctruth_qcd_0lep_1b_htgrouping->SetTitleOffset(1.11,"y") ;
+      hmctruth_qcd_0lep_2b_htgrouping->SetTitleOffset(1.11,"y") ;
+      hmctruth_qcd_0lep_3b_htgrouping->SetTitleOffset(1.11,"y") ;
+
+      hmctruth_qcd_0lep_1b_htgrouping->SetTitleSize(0.07,"y") ;
+      hmctruth_qcd_0lep_2b_htgrouping->SetTitleSize(0.07,"y") ;
+      hmctruth_qcd_0lep_3b_htgrouping->SetTitleSize(0.07,"y") ;
+
+      hmctruth_qcd_ldp_1b_htgrouping->SetTitleOffset(1.11,"y") ;
+      hmctruth_qcd_ldp_2b_htgrouping->SetTitleOffset(1.11,"y") ;
+      hmctruth_qcd_ldp_3b_htgrouping->SetTitleOffset(1.11,"y") ;
+
+      hmctruth_qcd_ldp_1b_htgrouping->SetTitleSize(0.07,"y") ;
+      hmctruth_qcd_ldp_2b_htgrouping->SetTitleSize(0.07,"y") ;
+      hmctruth_qcd_ldp_3b_htgrouping->SetTitleSize(0.07,"y") ;
+
+      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->SetYTitle("0Lep / LDP") ;
+      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->SetYTitle("0Lep / LDP") ;
+      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->SetYTitle("0Lep / LDP") ;
+
+      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->SetTitleOffset(1.11,"y") ;
+      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->SetTitleOffset(1.11,"y") ;
+      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->SetTitleOffset(1.11,"y") ;
+
+      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->SetTitleSize(0.07,"y") ;
+      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->SetTitleSize(0.07,"y") ;
+      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->SetTitleSize(0.07,"y") ;
+
+
+      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->SetYTitle("Closure") ;
+      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->SetYTitle("Closure") ;
+      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->SetYTitle("Closure") ;
+
+      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->SetTitleOffset(1.11,"y") ;
+      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->SetTitleOffset(1.11,"y") ;
+      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->SetTitleOffset(1.11,"y") ;
+
+      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->SetTitleSize(0.07,"y") ;
+      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->SetTitleSize(0.07,"y") ;
+      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->SetTitleSize(0.07,"y") ;
+
+      TCanvas* cqcd3b = (TCanvas*) gDirectory->FindObject("cqcd3b") ;
+      if ( cqcd3b == 0x0 ) {
+         cqcd3b = new TCanvas("cqcd3b","qcd closure",1000,1000) ;
+      }
+      cqcd3b->Clear() ;
+      cqcd3b->Divide(3,4) ;
+
+      int pad(1) ;
+
+      cqcd3b->cd(pad++) ;
+      hmctruth_qcd_0lep_1b_htgrouping->SetTitle("QCD =1b: 0 Lepton") ;
+      hmctruth_qcd_0lep_1b_htgrouping->Draw() ;
+      hmctruth_qcd_0lep_1b_htgrouping->Draw("histsame") ;
+      hmctruth_qcd_0lep_1b_htgrouping->Draw("esame") ;
+      cqcd3b->cd(pad++) ;
+      hmctruth_qcd_0lep_2b_htgrouping->SetTitle("QCD =2b: 0 Lepton") ;
+      hmctruth_qcd_0lep_2b_htgrouping->Draw() ;
+      hmctruth_qcd_0lep_2b_htgrouping->Draw("histsame") ;
+      hmctruth_qcd_0lep_2b_htgrouping->Draw("esame") ;
+      cqcd3b->cd(pad++) ;
+      hmctruth_qcd_0lep_3b_htgrouping->SetTitle("QCD >=3b: 0 Lepton") ;
+      hmctruth_qcd_0lep_3b_htgrouping->Draw() ;
+      hmctruth_qcd_0lep_3b_htgrouping->Draw("histsame") ;
+      hmctruth_qcd_0lep_3b_htgrouping->Draw("esame") ;
+
+      cqcd3b->cd(pad++) ;
+      hmctruth_qcd_ldp_1b_htgrouping->SetTitle("QCD =1b: Low minDPhiN") ;
+      hmctruth_qcd_ldp_1b_htgrouping->Draw() ;
+      hmctruth_qcd_ldp_1b_htgrouping->Draw("histsame") ;
+      hmctruth_qcd_ldp_1b_htgrouping->Draw("esame") ;
+      cqcd3b->cd(pad++) ;
+      hmctruth_qcd_ldp_2b_htgrouping->SetTitle("QCD =2b: Low minDPhiN") ;
+      hmctruth_qcd_ldp_2b_htgrouping->Draw() ;
+      hmctruth_qcd_ldp_2b_htgrouping->Draw("histsame") ;
+      hmctruth_qcd_ldp_2b_htgrouping->Draw("esame") ;
+      cqcd3b->cd(pad++) ;
+      hmctruth_qcd_ldp_3b_htgrouping->SetTitle("QCD >=3b: Low minDPhiN") ;
+      hmctruth_qcd_ldp_3b_htgrouping->Draw() ;
+      hmctruth_qcd_ldp_3b_htgrouping->Draw("histsame") ;
+      hmctruth_qcd_ldp_3b_htgrouping->Draw("esame") ;
+
+      cqcd3b->cd(pad++) ;
+      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->SetTitle("QCD =1b: 0 Lepton / LDP, Ratio") ;
+      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->Draw() ;
+      cqcd3b->cd(pad++) ;
+      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->SetTitle("QCD =2b: 0 Lepton / LDP, Ratio") ;
+      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->Draw() ;
+      cqcd3b->cd(pad++) ;
+      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->SetTitle("QCD >=3b: 0 Lepton / LDP, Ratio") ;
+      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->Draw() ;
+
+      cqcd3b->cd(pad++) ;
+      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->SetTitle("QCD =1b: 0 Lepton / LDP, Scale Factor") ;
+      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->Draw() ;
+      line->DrawLine(0.5,1.,hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetNbinsX()+0.5,1.) ;
+      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->Draw("same") ;
+      cqcd3b->cd(pad++) ;
+      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->SetTitle("QCD =2b: 0 Lepton / LDP, Scale Factor") ;
+      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->Draw() ;
+      line->DrawLine(0.5,1.,hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetNbinsX()+0.5,1.) ;
+      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->Draw("same") ;
+      cqcd3b->cd(pad++) ;
+      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->SetTitle("QCD >=3b: 0 Lepton / LDP, Scale Factor") ;
+      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->Draw() ;
+      line->DrawLine(0.5,1.,hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetNbinsX()+0.5,1.) ;
+      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->Draw("same") ;
+
+      TString outqcd3b( infileStr ) ;
+      outqcd3b.ReplaceAll("rootfiles","outputfiles") ;
+      outqcd3b.ReplaceAll(".root","-mcclosure-qcd3b.pdf") ;
+      cqcd3b->SaveAs( outqcd3b ) ;
 
 
 
