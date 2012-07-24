@@ -24,9 +24,9 @@
 void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0lep=-1. ) {
 
   TChain* dyTree = new TChain("treeZ") ;
-  int nAdded = dyTree->Add("files5fb_lowHT/DY.root") ;
+  int nAdded = dyTree->Add("files5fb_verylowHT/DY.root") ;
   if ( nAdded <= 0 ) {
-     printf("\n\n\n *** No treeZ in files5fb_lowHT/DY.root\n\n\n") ;
+     printf("\n\n\n *** No treeZ in files5fb_verylowHT/DY.root\n\n\n") ;
      return ;
   }
 
@@ -36,9 +36,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   sprintf( susycutstring, "&&mgluino==%.0f&&mlsp==%.0f", mgl, mlsp ) ;
   TString susycut( susycutstring ) ;
   if ( mgl>0. && mlsp>0. ) {
-     nAdded = chainT1bbbb.Add("files5fb_lowHT/T1bbbb.root") ;
+     nAdded = chainT1bbbb.Add("files5fb_verylowHT/T1bbbb.root") ;
      if ( nAdded <= 0 ) {
-        printf("\n\n\n *** No tree in files5fb_lowHT/T1bbbb.root\n\n\n") ;
+        printf("\n\n\n *** No tree in files5fb_verylowHT/T1bbbb.root\n\n\n") ;
         return ;
      }
      TFile f("referenceXSecs.root") ;
@@ -58,46 +58,46 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
   TChain chainQCD("tree") ;
    //--- these have high weight
-//chainQCD.Add("files5fb_lowHT/QCD-50to80.root");
-//chainQCD.Add("files5fb_lowHT/QCD-80to120.root");
-//chainQCD.Add("files5fb_lowHT/QCD-120to170.root");
-//chainQCD.Add("files5fb_lowHT/QCD-170to300.root");
+//chainQCD.Add("files5fb_verylowHT/QCD-50to80.root");
+//chainQCD.Add("files5fb_verylowHT/QCD-80to120.root");
+//chainQCD.Add("files5fb_verylowHT/QCD-120to170.root");
+//chainQCD.Add("files5fb_verylowHT/QCD-170to300.root");
    //--- below here, these have weight less than one.
-  chainQCD.Add("files5fb_lowHT/QCD-300to470.root");
-  chainQCD.Add("files5fb_lowHT/QCD-470to600.root");
-  chainQCD.Add("files5fb_lowHT/QCD-600to800.root");
-  chainQCD.Add("files5fb_lowHT/QCD-800to1000.root");
-  chainQCD.Add("files5fb_lowHT/QCD-1000to1400.root");
-  chainQCD.Add("files5fb_lowHT/QCD-1400to1800.root");
-  chainQCD.Add("files5fb_lowHT/QCD-1800.root");
+  chainQCD.Add("files5fb_verylowHT/QCD-300to470.root");
+  chainQCD.Add("files5fb_verylowHT/QCD-470to600.root");
+  chainQCD.Add("files5fb_verylowHT/QCD-600to800.root");
+  chainQCD.Add("files5fb_verylowHT/QCD-800to1000.root");
+  chainQCD.Add("files5fb_verylowHT/QCD-1000to1400.root");
+  chainQCD.Add("files5fb_verylowHT/QCD-1400to1800.root");
+  chainQCD.Add("files5fb_verylowHT/QCD-1800.root");
 
   TChain chainTT("tree") ;
-  chainTT.Add("files5fb_lowHT/TT.root") ;
+  chainTT.Add("files5fb_verylowHT/TT.root") ;
 
   TChain chainZnn("tree") ;
-  chainZnn.Add("files5fb_lowHT/Zinv.root") ;
+  chainZnn.Add("files5fb_verylowHT/Zinv.root") ;
 
   TChain chainWJets("tree") ;
-  chainWJets.Add("files5fb_lowHT/WJets.root") ;
+  chainWJets.Add("files5fb_verylowHT/WJets-300.root") ;
 
   TChain chainAll("tree");
-//chainAll.Add("files5fb_lowHT/QCD-50to80.root");
-//chainAll.Add("files5fb_lowHT/QCD-80to120.root");
-//chainAll.Add("files5fb_lowHT/QCD-120to170.root");
-//chainAll.Add("files5fb_lowHT/QCD-170to300.root");
-  chainAll.Add("files5fb_lowHT/QCD-300to470.root");
-  chainAll.Add("files5fb_lowHT/QCD-470to600.root");
-  chainAll.Add("files5fb_lowHT/QCD-600to800.root");
-  chainAll.Add("files5fb_lowHT/QCD-800to1000.root");
-  chainAll.Add("files5fb_lowHT/QCD-1000to1400.root");
-  chainAll.Add("files5fb_lowHT/QCD-1400to1800.root");
-  chainAll.Add("files5fb_lowHT/QCD-1800.root");
-  chainAll.Add("files5fb_lowHT/TT.root");
-  chainAll.Add("files5fb_lowHT/Zinv.root");
+//chainAll.Add("files5fb_verylowHT/QCD-50to80.root");
+//chainAll.Add("files5fb_verylowHT/QCD-80to120.root");
+//chainAll.Add("files5fb_verylowHT/QCD-120to170.root");
+//chainAll.Add("files5fb_verylowHT/QCD-170to300.root");
+  chainAll.Add("files5fb_verylowHT/QCD-300to470.root");
+  chainAll.Add("files5fb_verylowHT/QCD-470to600.root");
+  chainAll.Add("files5fb_verylowHT/QCD-600to800.root");
+  chainAll.Add("files5fb_verylowHT/QCD-800to1000.root");
+  chainAll.Add("files5fb_verylowHT/QCD-1000to1400.root");
+  chainAll.Add("files5fb_verylowHT/QCD-1400to1800.root");
+  chainAll.Add("files5fb_verylowHT/QCD-1800.root");
+  chainAll.Add("files5fb_verylowHT/TT.root");
+  chainAll.Add("files5fb_verylowHT/Zinv.root");
 
   TChain chainTZ("tree");
-  chainTZ.Add("files5fb_lowHT/TT.root");
-  chainTZ.Add("files5fb_lowHT/Zinv.root");
+  chainTZ.Add("files5fb_verylowHT/TT.root");
+  chainTZ.Add("files5fb_verylowHT/Zinv.root");
 
   gROOT->Reset();
 
@@ -252,9 +252,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
    char selname[3][100] = { "0lep", "1lep", "ldp" } ;
 
    char selcuts[3][10000] = {
-        "minDelPhiN>4&&nMu==0&&nEl==0&&",
-        "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&",
-        "minDelPhiN<4&&nMu==0&&nEl==0&&" } ;
+        "(pt_1st_leadJet>50&&pt_2nd_leadJet>50)&&minDelPhiN>4&&nMu==0&&nEl==0&&",
+        "(pt_1st_leadJet>50&&pt_2nd_leadJet>50)&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&",
+        "(pt_1st_leadJet>50&&pt_2nd_leadJet>50)&&minDelPhiN<4&&nMu==0&&nEl==0&&" } ;
 
 
   //--- Output histograms.

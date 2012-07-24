@@ -606,6 +606,10 @@
      cnp->Clear() ;
      cnp->Divide(3,4) ;
 
+     hnp_ttwj_1b_val->SetMaximum(2.) ;
+     hnp_ttwj_2b_val->SetMaximum(2.) ;
+     hnp_ttwj_3b_val->SetMaximum(2.) ;
+
    //---
      cnp->cd(1) ;
      hnp_ttwj_1b_val->Draw() ;

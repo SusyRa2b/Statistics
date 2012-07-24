@@ -137,16 +137,16 @@
       hmctruth_ttwj_0over1ratio_1b->SetMinimum(0.) ;
       hmctruth_ttwj_0over1ratio_2b->SetMinimum(0.) ;
       hmctruth_ttwj_0over1ratio_3b->SetMinimum(0.) ;
-      hmctruth_ttwj_0over1ratio_1b->SetMaximum(5.) ;
-      hmctruth_ttwj_0over1ratio_2b->SetMaximum(5.) ;
-      hmctruth_ttwj_0over1ratio_3b->SetMaximum(5.) ;
+      hmctruth_ttwj_0over1ratio_1b->SetMaximum(3.) ;
+      hmctruth_ttwj_0over1ratio_2b->SetMaximum(3.) ;
+      hmctruth_ttwj_0over1ratio_3b->SetMaximum(3.) ;
 
       hscalefactor_ttwj_0over1ratio_1b->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_2b->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_3b->SetMinimum(0.) ;
-      hscalefactor_ttwj_0over1ratio_1b->SetMaximum(5.) ;
-      hscalefactor_ttwj_0over1ratio_2b->SetMaximum(5.) ;
-      hscalefactor_ttwj_0over1ratio_3b->SetMaximum(5.) ;
+      hscalefactor_ttwj_0over1ratio_1b->SetMaximum(2.5) ;
+      hscalefactor_ttwj_0over1ratio_2b->SetMaximum(2.5) ;
+      hscalefactor_ttwj_0over1ratio_3b->SetMaximum(2.5) ;
 
 
 
@@ -239,7 +239,7 @@
             int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
 
             char parameterName[1000] ;
-            double err, diff, systValue ;
+            double err, diff, systValue, correction ;
 
 
             sprintf( parameterName, "sf_ttwj_M%d_H%d_1b_err", mbi+1, hbi+1 ) ;
@@ -247,33 +247,42 @@
                   parameterName,
                   hmctruth_ttwj_0lep_1b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
             err  = hscalefactor_ttwj_0over1ratio_1b->GetBinError(hbin)  ;
-            diff = hscalefactor_ttwj_0over1ratio_1b->GetBinContent(hbin) - 1. ;
+            correction = hscalefactor_ttwj_0over1ratio_1b->GetBinContent(hbin)  ;
+            diff = correction - 1. ;
             if ( err > 0. ) {
                systValue = sqrt( pow(err,2) + pow(diff,2) ) ;
             } else {
                systValue = 3.0 ;
             }
             updateFileValue( datfile, parameterName, systValue ) ;
+            sprintf( parameterName, "sf_ttwj_M%d_H%d_1b", mbi+1, hbi+1 ) ;
+            updateFileValue( datfile, parameterName, correction ) ;
 
             sprintf( parameterName, "sf_ttwj_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
             err  = hscalefactor_ttwj_0over1ratio_2b->GetBinError(hbin)  ;
-            diff = hscalefactor_ttwj_0over1ratio_2b->GetBinContent(hbin) - 1. ;
+            correction = hscalefactor_ttwj_0over1ratio_2b->GetBinContent(hbin) ;
+            diff = correction - 1. ;
             if ( err > 0. ) {
                systValue = sqrt( pow(err,2) + pow(diff,2) ) ;
             } else {
                systValue = 3.0 ;
             }
             updateFileValue( datfile, parameterName, systValue ) ;
+            sprintf( parameterName, "sf_ttwj_M%d_H%d_2b", mbi+1, hbi+1 ) ;
+            updateFileValue( datfile, parameterName, correction ) ;
 
             sprintf( parameterName, "sf_ttwj_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
             err  = hscalefactor_ttwj_0over1ratio_3b->GetBinError(hbin)  ;
-            diff = hscalefactor_ttwj_0over1ratio_3b->GetBinContent(hbin) - 1. ;
+            correction = hscalefactor_ttwj_0over1ratio_3b->GetBinContent(hbin)  ;
+            diff = correction - 1. ;
             if ( err > 0. ) {
                systValue = sqrt( pow(err,2) + pow(diff,2) ) ;
             } else {
                systValue = 3.0 ;
             }
             updateFileValue( datfile, parameterName, systValue ) ;
+            sprintf( parameterName, "sf_ttwj_M%d_H%d_3b", mbi+1, hbi+1 ) ;
+            updateFileValue( datfile, parameterName, correction ) ;
 
          } // hbi.
       } // mbi.
