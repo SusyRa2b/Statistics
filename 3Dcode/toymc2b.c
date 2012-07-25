@@ -42,18 +42,107 @@
    RooRealVar* rrv_susy_poi ;
    RooAbsPdf* likelihood ;
 
-   float true_susy_0lep ;
-   float fit_susy_0lep ;
+   RooRealVar* rrv_qcd_0lepLDP_ratio_H1 ;
+   RooRealVar* rrv_qcd_0lepLDP_ratio_H2 ;
+   RooRealVar* rrv_qcd_0lepLDP_ratio_H3 ;
+   RooRealVar* rrv_qcd_0lepLDP_ratio_H4 ;
+
+   //--- Output ttree variables.
+
    float fit_susy_0lep_err ;
    float fit_susy_0lep_err_low ;
    float fit_susy_0lep_err_high ;
    float fit_susy_0lep_err_forpull ;
-   float true_ttwj_0lep ;
+   float fit_susy_0lep_wsfs ;
+
+   float fit_susy_0lep ;
    float fit_ttwj_0lep ;
-   float true_qcd_0lep ;
-   float fit_qcd_0lep ;
-   float true_znn_0lep ;
-   float fit_znn_0lep ;
+   float fit_qcd__0lep ;
+   float fit_znn__0lep ;
+
+   float fit_susy_0lep_1b ;
+   float fit_ttwj_0lep_1b ;
+   float fit_qcd__0lep_1b ;
+   float fit_znn__0lep_1b ;
+
+   float fit_susy_0lep_2b ;
+   float fit_ttwj_0lep_2b ;
+   float fit_qcd__0lep_2b ;
+   float fit_znn__0lep_2b ;
+
+   float fit_susy_0lep_3b ;
+   float fit_ttwj_0lep_3b ;
+   float fit_qcd__0lep_3b ;
+   float fit_znn__0lep_3b ;
+
+
+
+
+   float fit_susy_0lep_nb_hm1 ;
+   float fit_ttwj_0lep_nb_hm1 ;
+   float fit_qcd__0lep_nb_hm1 ;
+   float fit_znn__0lep_nb_hm1 ;
+
+   float fit_susy_0lep_1b_hm1 ;
+   float fit_ttwj_0lep_1b_hm1 ;
+   float fit_qcd__0lep_1b_hm1 ;
+   float fit_znn__0lep_1b_hm1 ;
+
+   float fit_susy_0lep_2b_hm1 ;
+   float fit_ttwj_0lep_2b_hm1 ;
+   float fit_qcd__0lep_2b_hm1 ;
+   float fit_znn__0lep_2b_hm1 ;
+
+   float fit_susy_0lep_3b_hm1 ;
+   float fit_ttwj_0lep_3b_hm1 ;
+   float fit_qcd__0lep_3b_hm1 ;
+   float fit_znn__0lep_3b_hm1 ;
+
+
+
+
+
+   float fit_susy_0lep_nb_hh1 ;
+   float fit_ttwj_0lep_nb_hh1 ;
+   float fit_qcd__0lep_nb_hh1 ;
+   float fit_znn__0lep_nb_hh1 ;
+
+   float fit_susy_0lep_1b_hh1 ;
+   float fit_ttwj_0lep_1b_hh1 ;
+   float fit_qcd__0lep_1b_hh1 ;
+   float fit_znn__0lep_1b_hh1 ;
+
+   float fit_susy_0lep_2b_hh1 ;
+   float fit_ttwj_0lep_2b_hh1 ;
+   float fit_qcd__0lep_2b_hh1 ;
+   float fit_znn__0lep_2b_hh1 ;
+
+   float fit_susy_0lep_3b_hh1 ;
+   float fit_ttwj_0lep_3b_hh1 ;
+   float fit_qcd__0lep_3b_hh1 ;
+   float fit_znn__0lep_3b_hh1 ;
+
+
+
+
+   float true_susy_0lep ;
+   float true_ttwj_0lep ;
+   float true_qcd__0lep ;
+   float true_znn__0lep ;
+
+
+   float fit_qcd_0lepLDP_ratio_H1 ;
+   float fit_qcd_0lepLDP_ratio_H2 ;
+   float fit_qcd_0lepLDP_ratio_H3 ;
+   float fit_qcd_0lepLDP_ratio_H4 ;
+
+   float fit_qcd_0lepLDP_ratio_H1_err ;
+   float fit_qcd_0lepLDP_ratio_H2_err ;
+   float fit_qcd_0lepLDP_ratio_H3_err ;
+   float fit_qcd_0lepLDP_ratio_H4_err ;
+
+
+
    int   fit_covqual_susyfloat ;
 
    float fit_susy_signif ;
@@ -61,7 +150,13 @@
    float fit_susy_ul ;
    float fit_susy_ts_at_ul ;
 
+
+
+   //--- End output ttree variables.
+
+
    double minNllSusyFloat ;
+
    double susy_poi_atMinNll ;
    double susy_poi_plusErr ;
 
@@ -170,15 +265,32 @@
 
 
        //--- Access some workspace stuff needed later.
-  //// rrv_susy_poi = workspace -> var( "mu_susy_M1_H1_1b" ) ;
-  //// if ( rrv_susy_poi == 0x0 ) {
-  ////    printf("\n\n *** can't find susy poi mu_susy_M1_H1_1b.\n\n") ; return ;
-  //// }
 
        rrv_susy_poi = workspace -> var( "mu_susy_all0lep" ) ;
        if ( rrv_susy_poi == 0x0 ) {
           printf("\n\n *** can't find susy poi mu_susy_all0lep.\n\n") ; return ;
        }
+
+       rrv_qcd_0lepLDP_ratio_H1 = workspace -> var( "qcd_0lepLDP_ratio_H1" ) ;
+       if ( rrv_qcd_0lepLDP_ratio_H1 == 0x0 ) {
+          printf("\n\n *** can't find qcd_0lepLDP_ratio_H1.\n\n") ; return ;
+       }
+       rrv_qcd_0lepLDP_ratio_H2 = workspace -> var( "qcd_0lepLDP_ratio_H2" ) ;
+       if ( rrv_qcd_0lepLDP_ratio_H2 == 0x0 ) {
+          printf("\n\n *** can't find qcd_0lepLDP_ratio_H2.\n\n") ; return ;
+       }
+       rrv_qcd_0lepLDP_ratio_H3 = workspace -> var( "qcd_0lepLDP_ratio_H3" ) ;
+       if ( rrv_qcd_0lepLDP_ratio_H3 == 0x0 ) {
+          printf("\n\n *** can't find qcd_0lepLDP_ratio_H3.\n\n") ; return ;
+       }
+       rrv_qcd_0lepLDP_ratio_H4 = workspace -> var( "qcd_0lepLDP_ratio_H4" ) ;
+       if ( rrv_qcd_0lepLDP_ratio_H4 == 0x0 ) {
+          printf("\n\n *** can't find qcd_0lepLDP_ratio_H4.\n\n") ; return ;
+       }
+
+
+
+
 
        ModelConfig* modelConfig = (ModelConfig*) workspace -> obj( "SbModel" ) ;
        if ( modelConfig == 0x0 ) { printf("\n\n *** can't find ModelConfig with name SbModel.\n\n") ; return ; }
@@ -254,7 +366,7 @@
 
        for ( int ti=0; ti<nToy; ti++ ) {
 
-          printf("\n\n\n\n ====== Begin toy experiment %d\n\n\n out of %d", ti, nToy ) ;
+          printf("\n\n\n\n ====== Begin toy experiment %d out of %d\n\n\n", ti, nToy ) ;
 
 
 
@@ -701,8 +813,8 @@
       float R_ttwj_0lep_over_1lep = 1.15 ; // guess for now.
 
       true_ttwj_0lep = 0. ;
-      true_qcd_0lep  = 0. ;
-      true_znn_0lep  = 0. ;
+      true_qcd__0lep  = 0. ;
+      true_znn__0lep  = 0. ;
 
 
 
@@ -729,8 +841,8 @@
 
                if ( useExpected0lep ) { // these are only well defined if using expected values for 0lep.
                   true_ttwj_0lep += exp_0lep_ttwj ;
-                  true_qcd_0lep  += exp_0lep_qcd  ;
-                  true_znn_0lep  += exp_0lep_znn  ;
+                  true_qcd__0lep  += exp_0lep_qcd  ;
+                  true_znn__0lep  += exp_0lep_znn  ;
                }
 
                printf(" 0lep: m,h,b (%d,%d,%d): ttwj=%5.1f, qcd=%5.1f, Znn=%5.1f,  expected total=%5.1f\n",
@@ -943,13 +1055,8 @@
 
       if ( rfr == 0x0 ) { return false ; }
 
-  /// printf(" toy %4d : Fit nSusy 0lep : %4.1f +/- %4.1f (%4.1f, %4.1f)\n", ti,
-  ///     susyPoi0lepRatio * (rrv_susy_poi->getVal()),
-  ///     susyPoi0lepRatio * (rrv_susy_poi->getError()),
-  ///     susyPoi0lepRatio * (rrv_susy_poi->getErrorHi()),
-  ///     susyPoi0lepRatio * (rrv_susy_poi->getErrorLo())
-  ///     ) ;
 
+      printf("\n\n") ;
       printf(" toy %4d : Fit nSusy 0lep : %4.1f +/- %4.1f (%4.1f, %4.1f)\n", ti,
            (rrv_susy_poi->getVal()),
            (rrv_susy_poi->getError()),
@@ -960,10 +1067,6 @@
       susy_poi_atMinNll = rrv_susy_poi->getVal() ;
       susy_poi_plusErr  = rrv_susy_poi->getErrorHi() ;
 
-  /// fit_susy_0lep     = susyPoi0lepRatio * (rrv_susy_poi->getVal()) ;
-  /// fit_susy_0lep_err = susyPoi0lepRatio * (rrv_susy_poi->getError()) ;
-  /// fit_susy_0lep_err_low = susyPoi0lepRatio * (rrv_susy_poi->getErrorLo()) ;
-  /// fit_susy_0lep_err_high = susyPoi0lepRatio * (rrv_susy_poi->getErrorHi()) ;
 
       fit_susy_0lep     =  (rrv_susy_poi->getVal()) ;
       fit_susy_0lep_err =  (rrv_susy_poi->getError()) ;
@@ -977,9 +1080,75 @@
          fit_susy_0lep_err_forpull = fit_susy_0lep_err_high ;
       }
 
+      fit_qcd_0lepLDP_ratio_H1     = rrv_qcd_0lepLDP_ratio_H1 -> getVal() ;
+      fit_qcd_0lepLDP_ratio_H1_err = rrv_qcd_0lepLDP_ratio_H1 -> getError() ;
+      fit_qcd_0lepLDP_ratio_H2     = rrv_qcd_0lepLDP_ratio_H2 -> getVal() ;
+      fit_qcd_0lepLDP_ratio_H2_err = rrv_qcd_0lepLDP_ratio_H2 -> getError() ;
+      fit_qcd_0lepLDP_ratio_H3     = rrv_qcd_0lepLDP_ratio_H3 -> getVal() ;
+      fit_qcd_0lepLDP_ratio_H3_err = rrv_qcd_0lepLDP_ratio_H3 -> getError() ;
+      fit_qcd_0lepLDP_ratio_H4     = rrv_qcd_0lepLDP_ratio_H4 -> getVal() ;
+      fit_qcd_0lepLDP_ratio_H4_err = rrv_qcd_0lepLDP_ratio_H4 -> getError() ;
+
+
+      fit_susy_0lep_wsfs = 0. ;
       fit_ttwj_0lep = 0. ;
-      fit_qcd_0lep = 0. ;
-      fit_znn_0lep = 0. ;
+      fit_qcd__0lep = 0. ;
+      fit_znn__0lep = 0. ;
+
+      fit_susy_0lep_1b = 0. ;
+      fit_ttwj_0lep_1b = 0. ;
+      fit_qcd__0lep_1b = 0. ;
+      fit_znn__0lep_1b = 0. ;
+
+      fit_susy_0lep_2b = 0. ;
+      fit_ttwj_0lep_2b = 0. ;
+      fit_qcd__0lep_2b = 0. ;
+      fit_znn__0lep_2b = 0. ;
+
+      fit_susy_0lep_3b = 0. ;
+      fit_ttwj_0lep_3b = 0. ;
+      fit_qcd__0lep_3b = 0. ;
+      fit_znn__0lep_3b = 0. ;
+
+      fit_susy_0lep_nb_hm1 = 0. ;
+      fit_ttwj_0lep_nb_hm1 = 0. ;
+      fit_qcd__0lep_nb_hm1 = 0. ;
+      fit_znn__0lep_nb_hm1 = 0. ;
+
+      fit_susy_0lep_1b_hm1 = 0. ;
+      fit_ttwj_0lep_1b_hm1 = 0. ;
+      fit_qcd__0lep_1b_hm1 = 0. ;
+      fit_znn__0lep_1b_hm1 = 0. ;
+
+      fit_susy_0lep_2b_hm1 = 0. ;
+      fit_ttwj_0lep_2b_hm1 = 0. ;
+      fit_qcd__0lep_2b_hm1 = 0. ;
+      fit_znn__0lep_2b_hm1 = 0. ;
+
+      fit_susy_0lep_3b_hm1 = 0. ;
+      fit_ttwj_0lep_3b_hm1 = 0. ;
+      fit_qcd__0lep_3b_hm1 = 0. ;
+      fit_znn__0lep_3b_hm1 = 0. ;
+
+      fit_susy_0lep_nb_hh1 = 0. ;
+      fit_ttwj_0lep_nb_hh1 = 0. ;
+      fit_qcd__0lep_nb_hh1 = 0. ;
+      fit_znn__0lep_nb_hh1 = 0. ;
+
+      fit_susy_0lep_1b_hh1 = 0. ;
+      fit_ttwj_0lep_1b_hh1 = 0. ;
+      fit_qcd__0lep_1b_hh1 = 0. ;
+      fit_znn__0lep_1b_hh1 = 0. ;
+
+      fit_susy_0lep_2b_hh1 = 0. ;
+      fit_ttwj_0lep_2b_hh1 = 0. ;
+      fit_qcd__0lep_2b_hh1 = 0. ;
+      fit_znn__0lep_2b_hh1 = 0. ;
+
+      fit_susy_0lep_3b_hh1 = 0. ;
+      fit_ttwj_0lep_3b_hh1 = 0. ;
+      fit_qcd__0lep_3b_hh1 = 0. ;
+      fit_znn__0lep_3b_hh1 = 0. ;
 
       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
          for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
@@ -987,29 +1156,108 @@
 
                char vname[1000] ;
                RooAbsReal* rar ;
+               RooAbsReal* effsf  ;
+               RooAbsReal* btagsf  ;
+
+
+               sprintf( vname, "mu_susy_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+               rar = workspace -> function( vname ) ;
+               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; return false ; }
+               sprintf( vname, "btageff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+               btagsf = (RooAbsReal*) workspace -> obj( vname ) ;
+               if ( btagsf == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; return false ; }
+               sprintf( vname, "eff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+               effsf = (RooAbsReal*) workspace -> obj( vname ) ;
+               if ( effsf == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; return false ; }
+               double nsusy = ( btagsf -> getVal() ) * ( effsf -> getVal() ) * ( rar -> getVal() ) ;
+
+               fit_susy_0lep_wsfs += nsusy ;
+               if ( bbi==0 ) { fit_susy_0lep_1b += nsusy ; }
+               if ( bbi==1 ) { fit_susy_0lep_2b += nsusy ; }
+               if ( bbi==2 ) { fit_susy_0lep_3b += nsusy ; }
+               if ( mbi==(nBinsMET-1) ) {
+                  fit_susy_0lep_nb_hm1 += nsusy ;
+                  if ( bbi==0 ) { fit_susy_0lep_1b_hm1 += nsusy ; }
+                  if ( bbi==1 ) { fit_susy_0lep_2b_hm1 += nsusy ; }
+                  if ( bbi==2 ) { fit_susy_0lep_3b_hm1 += nsusy ; }
+               }
+               if ( hbi==(nBinsHT-1) ) {
+                  fit_susy_0lep_nb_hh1 += nsusy ;
+                  if ( bbi==0 ) { fit_susy_0lep_1b_hh1 += nsusy ; }
+                  if ( bbi==1 ) { fit_susy_0lep_2b_hh1 += nsusy ; }
+                  if ( bbi==2 ) { fit_susy_0lep_3b_hh1 += nsusy ; }
+               }
+
+
 
                sprintf( vname, "mu_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-               if ( mbi==0 && hbi==0 && bbi==0 ) {
-                  rar = workspace -> var( vname ) ;
-               } else {
-                  rar = workspace -> function( vname ) ;
-               }
+               rar = (RooAbsReal*) workspace -> obj( vname ) ;
                if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; return false ; }
-               fit_ttwj_0lep += rar -> getVal() ;
+               double nttwj = rar -> getVal() ;
+               fit_ttwj_0lep += nttwj  ;
+               if ( bbi==0 ) { fit_ttwj_0lep_1b +=  nttwj  ; }
+               if ( bbi==1 ) { fit_ttwj_0lep_2b +=  nttwj  ; }
+               if ( bbi==2 ) { fit_ttwj_0lep_3b +=  nttwj  ; }
+               if ( mbi==(nBinsMET-1) ) {
+                  fit_ttwj_0lep_nb_hm1 += nttwj ;
+                  if ( bbi==0 ) { fit_ttwj_0lep_1b_hm1 += nttwj ; }
+                  if ( bbi==1 ) { fit_ttwj_0lep_2b_hm1 += nttwj ; }
+                  if ( bbi==2 ) { fit_ttwj_0lep_3b_hm1 += nttwj ; }
+               }
+               if ( hbi==(nBinsHT-1) ) {
+                  fit_ttwj_0lep_nb_hh1 += nttwj ;
+                  if ( bbi==0 ) { fit_ttwj_0lep_1b_hh1 += nttwj ; }
+                  if ( bbi==1 ) { fit_ttwj_0lep_2b_hh1 += nttwj ; }
+                  if ( bbi==2 ) { fit_ttwj_0lep_3b_hh1 += nttwj ; }
+               }
+
+
 
                sprintf( vname, "mu_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                rar = workspace -> function( vname ) ;
                if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; return false ; }
-               fit_qcd_0lep += rar -> getVal() ;
+               double nqcd = rar -> getVal() ;
+               fit_qcd__0lep += nqcd  ;
+               if ( bbi==0 ) { fit_qcd__0lep_1b +=  nqcd   ; }
+               if ( bbi==1 ) { fit_qcd__0lep_2b +=  nqcd   ; }
+               if ( bbi==2 ) { fit_qcd__0lep_3b +=  nqcd   ; }
+               if ( mbi==(nBinsMET-1) ) {
+                  fit_qcd__0lep_nb_hm1 += nqcd ;
+                  if ( bbi==0 ) { fit_qcd__0lep_1b_hm1 += nqcd ; }
+                  if ( bbi==1 ) { fit_qcd__0lep_2b_hm1 += nqcd ; }
+                  if ( bbi==2 ) { fit_qcd__0lep_3b_hm1 += nqcd ; }
+               }
+               if ( hbi==(nBinsHT-1) ) {
+                  fit_qcd__0lep_nb_hh1 += nqcd ;
+                  if ( bbi==0 ) { fit_qcd__0lep_1b_hh1 += nqcd ; }
+                  if ( bbi==1 ) { fit_qcd__0lep_2b_hh1 += nqcd ; }
+                  if ( bbi==2 ) { fit_qcd__0lep_3b_hh1 += nqcd ; }
+               }
+
+
 
                sprintf( vname, "mu_znn_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-               if ( bbi==0 ) {
-                  rar = workspace -> var( vname ) ;
-               } else {
-                  rar = workspace -> function( vname ) ;
-               }
+               rar = (RooAbsReal*) workspace -> obj( vname ) ;
                if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; return false ; }
-               fit_znn_0lep += rar -> getVal() ;
+               double nznn = rar -> getVal() ;
+               fit_znn__0lep += nznn  ;
+               if ( bbi==0 ) { fit_znn__0lep_1b +=  nznn   ; }
+               if ( bbi==1 ) { fit_znn__0lep_2b +=  nznn   ; }
+               if ( bbi==2 ) { fit_znn__0lep_3b +=  nznn   ; }
+               if ( mbi==(nBinsMET-1) ) {
+                  fit_znn__0lep_nb_hm1 += nznn ;
+                  if ( bbi==0 ) { fit_znn__0lep_1b_hm1 += nznn ; }
+                  if ( bbi==1 ) { fit_znn__0lep_2b_hm1 += nznn ; }
+                  if ( bbi==2 ) { fit_znn__0lep_3b_hm1 += nznn ; }
+               }
+               if ( hbi==(nBinsHT-1) ) {
+                  fit_znn__0lep_nb_hh1 += nznn ;
+                  if ( bbi==0 ) { fit_znn__0lep_1b_hh1 += nznn ; }
+                  if ( bbi==1 ) { fit_znn__0lep_2b_hh1 += nznn ; }
+                  if ( bbi==2 ) { fit_znn__0lep_3b_hh1 += nznn ; }
+               }
+
+
 
             } // bbi.
          } // hbi.
@@ -1018,9 +1266,87 @@
       fit_covqual_susyfloat = rfr -> covQual() ;
 
       printf(" toy %4d : Fit total 0lep ttwj : %6.1f  (ave true %6.1f)\n", ti, fit_ttwj_0lep, true_ttwj_0lep ) ;
-      printf(" toy %4d : Fit total 0lep qcd  : %6.1f  (ave true %6.1f)\n", ti, fit_qcd_0lep, true_qcd_0lep ) ;
-      printf(" toy %4d : Fit total 0lep znn  : %6.1f  (ave true %6.1f)\n", ti, fit_znn_0lep, true_znn_0lep ) ;
+      printf(" toy %4d : Fit total 0lep qcd  : %6.1f  (ave true %6.1f)\n", ti, fit_qcd__0lep, true_qcd__0lep ) ;
+      printf(" toy %4d : Fit total 0lep znn  : %6.1f  (ave true %6.1f)\n", ti, fit_znn__0lep, true_znn__0lep ) ;
       printf(" toy %4d : Fit covariance matrix quality: %d\n", ti, fit_covqual_susyfloat ) ;
+
+      printf("\n") ;
+      printf(" toy %4d : Fit 1b 0lep susy : %6.1f  \n", ti, fit_susy_0lep_1b ) ;
+      printf(" toy %4d : Fit 1b 0lep ttwj : %6.1f  \n", ti, fit_ttwj_0lep_1b ) ;
+      printf(" toy %4d : Fit 1b 0lep qcd  : %6.1f  \n", ti, fit_qcd__0lep_1b ) ;
+      printf(" toy %4d : Fit 1b 0lep znn  : %6.1f  \n", ti, fit_znn__0lep_1b ) ;
+
+      printf("\n") ;
+      printf(" toy %4d : Fit 2b 0lep susy : %6.1f  \n", ti, fit_susy_0lep_2b ) ;
+      printf(" toy %4d : Fit 2b 0lep ttwj : %6.1f  \n", ti, fit_ttwj_0lep_2b ) ;
+      printf(" toy %4d : Fit 2b 0lep qcd  : %6.1f  \n", ti, fit_qcd__0lep_2b ) ;
+      printf(" toy %4d : Fit 2b 0lep znn  : %6.1f  \n", ti, fit_znn__0lep_2b ) ;
+
+      printf("\n") ;
+      printf(" toy %4d : Fit 3b 0lep susy : %6.1f  \n", ti, fit_susy_0lep_3b ) ;
+      printf(" toy %4d : Fit 3b 0lep ttwj : %6.1f  \n", ti, fit_ttwj_0lep_3b ) ;
+      printf(" toy %4d : Fit 3b 0lep qcd  : %6.1f  \n", ti, fit_qcd__0lep_3b ) ;
+      printf(" toy %4d : Fit 3b 0lep znn  : %6.1f  \n", ti, fit_znn__0lep_3b ) ;
+
+
+
+      printf("\n\n") ;
+      printf(" toy %4d : Fit nb 0lep susy, highest HT bin : %6.1f  \n", ti, fit_susy_0lep_nb_hh1 ) ;
+      printf(" toy %4d : Fit nb 0lep ttwj, highest HT bin : %6.1f  \n", ti, fit_ttwj_0lep_nb_hh1 ) ;
+      printf(" toy %4d : Fit nb 0lep qcd,  highest HT bin : %6.1f  \n", ti, fit_qcd__0lep_nb_hh1 ) ;
+      printf(" toy %4d : Fit nb 0lep znn,  highest HT bin : %6.1f  \n", ti, fit_znn__0lep_nb_hh1 ) ;
+
+      printf("\n") ;
+      printf(" toy %4d : Fit 1b 0lep susy, highest HT bin : %6.1f  \n", ti, fit_susy_0lep_1b_hh1 ) ;
+      printf(" toy %4d : Fit 1b 0lep ttwj, highest HT bin : %6.1f  \n", ti, fit_ttwj_0lep_1b_hh1 ) ;
+      printf(" toy %4d : Fit 1b 0lep qcd,  highest HT bin : %6.1f  \n", ti, fit_qcd__0lep_1b_hh1 ) ;
+      printf(" toy %4d : Fit 1b 0lep znn,  highest HT bin : %6.1f  \n", ti, fit_znn__0lep_1b_hh1 ) ;
+
+      printf("\n") ;
+      printf(" toy %4d : Fit 2b 0lep susy, highest HT bin : %6.1f  \n", ti, fit_susy_0lep_2b_hh1 ) ;
+      printf(" toy %4d : Fit 2b 0lep ttwj, highest HT bin : %6.1f  \n", ti, fit_ttwj_0lep_2b_hh1 ) ;
+      printf(" toy %4d : Fit 2b 0lep qcd,  highest HT bin : %6.1f  \n", ti, fit_qcd__0lep_2b_hh1 ) ;
+      printf(" toy %4d : Fit 2b 0lep znn,  highest HT bin : %6.1f  \n", ti, fit_znn__0lep_2b_hh1 ) ;
+
+      printf("\n") ;
+      printf(" toy %4d : Fit 3b 0lep susy, highest HT bin : %6.1f  \n", ti, fit_susy_0lep_3b_hh1 ) ;
+      printf(" toy %4d : Fit 3b 0lep ttwj, highest HT bin : %6.1f  \n", ti, fit_ttwj_0lep_3b_hh1 ) ;
+      printf(" toy %4d : Fit 3b 0lep qcd,  highest HT bin : %6.1f  \n", ti, fit_qcd__0lep_3b_hh1 ) ;
+      printf(" toy %4d : Fit 3b 0lep znn,  highest HT bin : %6.1f  \n", ti, fit_znn__0lep_3b_hh1 ) ;
+
+
+      printf("\n\n") ;
+      printf(" toy %4d : Fit nb 0lep susy, highest MET bin : %6.1f  \n", ti, fit_susy_0lep_nb_hm1 ) ;
+      printf(" toy %4d : Fit nb 0lep ttwj, highest MET bin : %6.1f  \n", ti, fit_ttwj_0lep_nb_hm1 ) ;
+      printf(" toy %4d : Fit nb 0lep qcd,  highest MET bin : %6.1f  \n", ti, fit_qcd__0lep_nb_hm1 ) ;
+      printf(" toy %4d : Fit nb 0lep znn,  highest MET bin : %6.1f  \n", ti, fit_znn__0lep_nb_hm1 ) ;
+
+      printf("\n") ;
+      printf(" toy %4d : Fit 1b 0lep susy, highest MET bin : %6.1f  \n", ti, fit_susy_0lep_1b_hm1 ) ;
+      printf(" toy %4d : Fit 1b 0lep ttwj, highest MET bin : %6.1f  \n", ti, fit_ttwj_0lep_1b_hm1 ) ;
+      printf(" toy %4d : Fit 1b 0lep qcd,  highest MET bin : %6.1f  \n", ti, fit_qcd__0lep_1b_hm1 ) ;
+      printf(" toy %4d : Fit 1b 0lep znn,  highest MET bin : %6.1f  \n", ti, fit_znn__0lep_1b_hm1 ) ;
+
+      printf("\n") ;
+      printf(" toy %4d : Fit 2b 0lep susy, highest MET bin : %6.1f  \n", ti, fit_susy_0lep_2b_hm1 ) ;
+      printf(" toy %4d : Fit 2b 0lep ttwj, highest MET bin : %6.1f  \n", ti, fit_ttwj_0lep_2b_hm1 ) ;
+      printf(" toy %4d : Fit 2b 0lep qcd,  highest MET bin : %6.1f  \n", ti, fit_qcd__0lep_2b_hm1 ) ;
+      printf(" toy %4d : Fit 2b 0lep znn,  highest MET bin : %6.1f  \n", ti, fit_znn__0lep_2b_hm1 ) ;
+
+      printf("\n") ;
+      printf(" toy %4d : Fit 3b 0lep susy, highest MET bin : %6.1f  \n", ti, fit_susy_0lep_3b_hm1 ) ;
+      printf(" toy %4d : Fit 3b 0lep ttwj, highest MET bin : %6.1f  \n", ti, fit_ttwj_0lep_3b_hm1 ) ;
+      printf(" toy %4d : Fit 3b 0lep qcd,  highest MET bin : %6.1f  \n", ti, fit_qcd__0lep_3b_hm1 ) ;
+      printf(" toy %4d : Fit 3b 0lep znn,  highest MET bin : %6.1f  \n", ti, fit_znn__0lep_3b_hm1 ) ;
+
+
+      printf("\n") ;
+      printf(" toy %4d : Fit QCD 0lep/LDP ratio, H1 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H1, 100*fit_qcd_0lepLDP_ratio_H1_err) ;
+      printf(" toy %4d : Fit QCD 0lep/LDP ratio, H2 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H2, 100*fit_qcd_0lepLDP_ratio_H2_err) ;
+      printf(" toy %4d : Fit QCD 0lep/LDP ratio, H3 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H3, 100*fit_qcd_0lepLDP_ratio_H3_err) ;
+      printf(" toy %4d : Fit QCD 0lep/LDP ratio, H4 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H4, 100*fit_qcd_0lepLDP_ratio_H4_err) ;
+
+      printf("\n\n") ;
 
 
       return true ;
@@ -1040,18 +1366,87 @@
       toytt = new TTree( "toytt", "Toy MC study" ) ;
 
 
-      toytt -> Branch( "true_susy_0lep", &true_susy_0lep, "true_susy_0lep/F" ) ;
-      toytt -> Branch( "fit_susy_0lep", &fit_susy_0lep, "fit_susy_0lep/F" ) ;
       toytt -> Branch( "fit_susy_0lep_err", &fit_susy_0lep_err, "fit_susy_0lep_err/F" ) ;
       toytt -> Branch( "fit_susy_0lep_err_low", &fit_susy_0lep_err_low, "fit_susy_0lep_err_low/F" ) ;
       toytt -> Branch( "fit_susy_0lep_err_high", &fit_susy_0lep_err_high, "fit_susy_0lep_err_high/F" ) ;
       toytt -> Branch( "fit_susy_0lep_err_forpull", &fit_susy_0lep_err_forpull, "fit_susy_0lep_err_forpull/F" ) ;
-      toytt -> Branch( "true_ttwj_0lep", &true_ttwj_0lep, "true_ttwj_0lep/F" ) ;
+      toytt -> Branch( "fit_susy_0lep_wsfs", &fit_susy_0lep_wsfs, "fit_susy_0lep_wsfs/F" ) ;
+
+      toytt -> Branch( "fit_susy_0lep", &fit_susy_0lep, "fit_susy_0lep/F" ) ;
       toytt -> Branch( "fit_ttwj_0lep", &fit_ttwj_0lep, "fit_ttwj_0lep/F" ) ;
-      toytt -> Branch( "true_qcd_0lep", &true_qcd_0lep, "true_qcd_0lep/F" ) ;
-      toytt -> Branch( "fit_qcd_0lep", &fit_qcd_0lep, "fit_qcd_0lep/F" ) ;
-      toytt -> Branch( "true_znn_0lep", &true_znn_0lep, "true_znn_0lep/F" ) ;
-      toytt -> Branch( "fit_znn_0lep", &fit_znn_0lep, "fit_znn_0lep/F" ) ;
+      toytt -> Branch( "fit_qcd__0lep", &fit_qcd__0lep, "fit_qcd__0lep/F" ) ;
+      toytt -> Branch( "fit_znn__0lep", &fit_znn__0lep, "fit_znn__0lep/F" ) ;
+
+      toytt -> Branch( "fit_susy_0lep_1b", &fit_susy_0lep_1b, "fit_susy_0lep_1b/F" ) ;
+      toytt -> Branch( "fit_ttwj_0lep_1b", &fit_ttwj_0lep_1b, "fit_ttwj_0lep_1b/F" ) ;
+      toytt -> Branch( "fit_qcd__0lep_1b", &fit_qcd__0lep_1b, "fit_qcd__0lep_1b/F" ) ;
+      toytt -> Branch( "fit_znn__0lep_1b", &fit_znn__0lep_1b, "fit_znn__0lep_1b/F" ) ;
+
+      toytt -> Branch( "fit_susy_0lep_2b", &fit_susy_0lep_2b, "fit_susy_0lep_2b/F" ) ;
+      toytt -> Branch( "fit_ttwj_0lep_2b", &fit_ttwj_0lep_2b, "fit_ttwj_0lep_2b/F" ) ;
+      toytt -> Branch( "fit_qcd__0lep_2b", &fit_qcd__0lep_2b, "fit_qcd__0lep_2b/F" ) ;
+      toytt -> Branch( "fit_znn__0lep_2b", &fit_znn__0lep_2b, "fit_znn__0lep_2b/F" ) ;
+
+      toytt -> Branch( "fit_susy_0lep_3b", &fit_susy_0lep_3b, "fit_susy_0lep_3b/F" ) ;
+      toytt -> Branch( "fit_ttwj_0lep_3b", &fit_ttwj_0lep_3b, "fit_ttwj_0lep_3b/F" ) ;
+      toytt -> Branch( "fit_qcd__0lep_3b", &fit_qcd__0lep_3b, "fit_qcd__0lep_3b/F" ) ;
+      toytt -> Branch( "fit_znn__0lep_3b", &fit_znn__0lep_3b, "fit_znn__0lep_3b/F" ) ;
+
+      toytt -> Branch( "fit_susy_0lep_nb_hm1", &fit_susy_0lep_nb_hm1, "fit_susy_0lep_nb_hm1/F" ) ;
+      toytt -> Branch( "fit_ttwj_0lep_nb_hm1", &fit_ttwj_0lep_nb_hm1, "fit_ttwj_0lep_nb_hm1/F" ) ;
+      toytt -> Branch( "fit_qcd__0lep_nb_hm1", &fit_qcd__0lep_nb_hm1, "fit_qcd__0lep_nb_hm1/F" ) ;
+      toytt -> Branch( "fit_znn__0lep_nb_hm1", &fit_znn__0lep_nb_hm1, "fit_znn__0lep_nb_hm1/F" ) ;
+
+      toytt -> Branch( "fit_susy_0lep_1b_hm1", &fit_susy_0lep_1b_hm1, "fit_susy_0lep_1b_hm1/F" ) ;
+      toytt -> Branch( "fit_ttwj_0lep_1b_hm1", &fit_ttwj_0lep_1b_hm1, "fit_ttwj_0lep_1b_hm1/F" ) ;
+      toytt -> Branch( "fit_qcd__0lep_1b_hm1", &fit_qcd__0lep_1b_hm1, "fit_qcd__0lep_1b_hm1/F" ) ;
+      toytt -> Branch( "fit_znn__0lep_1b_hm1", &fit_znn__0lep_1b_hm1, "fit_znn__0lep_1b_hm1/F" ) ;
+
+      toytt -> Branch( "fit_susy_0lep_2b_hm1", &fit_susy_0lep_2b_hm1, "fit_susy_0lep_2b_hm1/F" ) ;
+      toytt -> Branch( "fit_ttwj_0lep_2b_hm1", &fit_ttwj_0lep_2b_hm1, "fit_ttwj_0lep_2b_hm1/F" ) ;
+      toytt -> Branch( "fit_qcd__0lep_2b_hm1", &fit_qcd__0lep_2b_hm1, "fit_qcd__0lep_2b_hm1/F" ) ;
+      toytt -> Branch( "fit_znn__0lep_2b_hm1", &fit_znn__0lep_2b_hm1, "fit_znn__0lep_2b_hm1/F" ) ;
+
+      toytt -> Branch( "fit_susy_0lep_3b_hm1", &fit_susy_0lep_3b_hm1, "fit_susy_0lep_3b_hm1/F" ) ;
+      toytt -> Branch( "fit_ttwj_0lep_3b_hm1", &fit_ttwj_0lep_3b_hm1, "fit_ttwj_0lep_3b_hm1/F" ) ;
+      toytt -> Branch( "fit_qcd__0lep_3b_hm1", &fit_qcd__0lep_3b_hm1, "fit_qcd__0lep_3b_hm1/F" ) ;
+      toytt -> Branch( "fit_znn__0lep_3b_hm1", &fit_znn__0lep_3b_hm1, "fit_znn__0lep_3b_hm1/F" ) ;
+
+      toytt -> Branch( "fit_susy_0lep_nb_hh1", &fit_susy_0lep_nb_hh1, "fit_susy_0lep_nb_hh1/F" ) ;
+      toytt -> Branch( "fit_ttwj_0lep_nb_hh1", &fit_ttwj_0lep_nb_hh1, "fit_ttwj_0lep_nb_hh1/F" ) ;
+      toytt -> Branch( "fit_qcd__0lep_nb_hh1", &fit_qcd__0lep_nb_hh1, "fit_qcd__0lep_nb_hh1/F" ) ;
+      toytt -> Branch( "fit_znn__0lep_nb_hh1", &fit_znn__0lep_nb_hh1, "fit_znn__0lep_nb_hh1/F" ) ;
+
+      toytt -> Branch( "fit_susy_0lep_1b_hh1", &fit_susy_0lep_1b_hh1, "fit_susy_0lep_1b_hh1/F" ) ;
+      toytt -> Branch( "fit_ttwj_0lep_1b_hh1", &fit_ttwj_0lep_1b_hh1, "fit_ttwj_0lep_1b_hh1/F" ) ;
+      toytt -> Branch( "fit_qcd__0lep_1b_hh1", &fit_qcd__0lep_1b_hh1, "fit_qcd__0lep_1b_hh1/F" ) ;
+      toytt -> Branch( "fit_znn__0lep_1b_hh1", &fit_znn__0lep_1b_hh1, "fit_znn__0lep_1b_hh1/F" ) ;
+
+      toytt -> Branch( "fit_susy_0lep_2b_hh1", &fit_susy_0lep_2b_hh1, "fit_susy_0lep_2b_hh1/F" ) ;
+      toytt -> Branch( "fit_ttwj_0lep_2b_hh1", &fit_ttwj_0lep_2b_hh1, "fit_ttwj_0lep_2b_hh1/F" ) ;
+      toytt -> Branch( "fit_qcd__0lep_2b_hh1", &fit_qcd__0lep_2b_hh1, "fit_qcd__0lep_2b_hh1/F" ) ;
+      toytt -> Branch( "fit_znn__0lep_2b_hh1", &fit_znn__0lep_2b_hh1, "fit_znn__0lep_2b_hh1/F" ) ;
+
+      toytt -> Branch( "fit_susy_0lep_3b_hh1", &fit_susy_0lep_3b_hh1, "fit_susy_0lep_3b_hh1/F" ) ;
+      toytt -> Branch( "fit_ttwj_0lep_3b_hh1", &fit_ttwj_0lep_3b_hh1, "fit_ttwj_0lep_3b_hh1/F" ) ;
+      toytt -> Branch( "fit_qcd__0lep_3b_hh1", &fit_qcd__0lep_3b_hh1, "fit_qcd__0lep_3b_hh1/F" ) ;
+      toytt -> Branch( "fit_znn__0lep_3b_hh1", &fit_znn__0lep_3b_hh1, "fit_znn__0lep_3b_hh1/F" ) ;
+
+      toytt -> Branch( "fit_qcd_0lepLDP_ratio_H1", &fit_qcd_0lepLDP_ratio_H1, "fit_qcd_0lepLDP_ratio_H1/F" ) ;
+      toytt -> Branch( "fit_qcd_0lepLDP_ratio_H2", &fit_qcd_0lepLDP_ratio_H2, "fit_qcd_0lepLDP_ratio_H2/F" ) ;
+      toytt -> Branch( "fit_qcd_0lepLDP_ratio_H3", &fit_qcd_0lepLDP_ratio_H3, "fit_qcd_0lepLDP_ratio_H3/F" ) ;
+      toytt -> Branch( "fit_qcd_0lepLDP_ratio_H4", &fit_qcd_0lepLDP_ratio_H4, "fit_qcd_0lepLDP_ratio_H4/F" ) ;
+
+      toytt -> Branch( "fit_qcd_0lepLDP_ratio_H1_err", &fit_qcd_0lepLDP_ratio_H1_err, "fit_qcd_0lepLDP_ratio_H1_err/F" ) ;
+      toytt -> Branch( "fit_qcd_0lepLDP_ratio_H2_err", &fit_qcd_0lepLDP_ratio_H2_err, "fit_qcd_0lepLDP_ratio_H2_err/F" ) ;
+      toytt -> Branch( "fit_qcd_0lepLDP_ratio_H3_err", &fit_qcd_0lepLDP_ratio_H3_err, "fit_qcd_0lepLDP_ratio_H3_err/F" ) ;
+      toytt -> Branch( "fit_qcd_0lepLDP_ratio_H4_err", &fit_qcd_0lepLDP_ratio_H4_err, "fit_qcd_0lepLDP_ratio_H4_err/F" ) ;
+
+      toytt -> Branch( "true_susy_0lep", &true_susy_0lep, "true_susy_0lep/F" ) ;
+      toytt -> Branch( "true_ttwj_0lep", &true_ttwj_0lep, "true_ttwj_0lep/F" ) ;
+      toytt -> Branch( "true_qcd__0lep", &true_qcd__0lep, "true_qcd__0lep/F" ) ;
+      toytt -> Branch( "true_znn__0lep", &true_znn__0lep, "true_znn__0lep/F" ) ;
+
       toytt -> Branch( "fit_covqual_susyfloat", &fit_covqual_susyfloat, "fit_covqual_susyfloat/I" ) ;
 
       if ( doSignif ) {

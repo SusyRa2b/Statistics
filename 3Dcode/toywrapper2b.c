@@ -1,11 +1,11 @@
 
-  void toywrapper2b( const char* input_datfile = "datfiles/Input-met4-ht4-wsyst1.dat",
+  void toywrapper2b( const char* input_datfile = "datfiles/Input-met4-ht4-newMC-wsyst.dat",
                 const char* input_susyfile = "datfiles/Susy-range1-met4-ht4.dat",
-                double input_mgl=900, double input_mlsp=300.,
+                double input_mgl=850, double input_mlsp=600.,
                 const char* input_deffdbtagfile = "datfiles/dummy_DeffDbtag-met4-ht4.dat",
-                double input_nSusy0lep = 80.,
-                const char* input_outputDir = "output-toymc2b-mgl900-mlsp300-80evts-wsyst1-exp0lep",
-                int nToy = 400
+                double input_nSusy0lep = 100.,
+                const char* input_outputDir = "output-toymc2b-mgl850-mlsp600-100evts-newMC-wsyst-test1c",
+                int nToy = 10
       ) {
      gROOT->LoadMacro("RooRatio.cxx+") ;
      gROOT->LoadMacro("toymc2b.c+") ;
