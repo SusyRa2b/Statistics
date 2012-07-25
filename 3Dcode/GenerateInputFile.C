@@ -24,9 +24,9 @@
 void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0lep=-1. ) {
 
   TChain* dyTree = new TChain("treeZ") ;
-  int nAdded = dyTree->Add("files5fb_verylowHT/DY.root") ;
+  int nAdded = dyTree->Add("files5fb_veryLowHT/DY.root") ;
   if ( nAdded <= 0 ) {
-     printf("\n\n\n *** No treeZ in files5fb_verylowHT/DY.root\n\n\n") ;
+     printf("\n\n\n *** No treeZ in files5fb_veryLowHT/DY.root\n\n\n") ;
      return ;
   }
 
@@ -36,9 +36,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   sprintf( susycutstring, "&&mgluino==%.0f&&mlsp==%.0f", mgl, mlsp ) ;
   TString susycut( susycutstring ) ;
   if ( mgl>0. && mlsp>0. ) {
-     nAdded = chainT1bbbb.Add("files5fb_verylowHT/T1bbbb.root") ;
+     nAdded = chainT1bbbb.Add("files5fb_veryLowHT/T1bbbb.root") ;
      if ( nAdded <= 0 ) {
-        printf("\n\n\n *** No tree in files5fb_verylowHT/T1bbbb.root\n\n\n") ;
+        printf("\n\n\n *** No tree in files5fb_veryLowHT/T1bbbb.root\n\n\n") ;
         return ;
      }
      TFile f("referenceXSecs.root") ;
@@ -59,46 +59,46 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
   TChain chainQCD("tree") ;
    //--- these have high weight
-//chainQCD.Add("files5fb_verylowHT/QCD-50to80.root");
-//chainQCD.Add("files5fb_verylowHT/QCD-80to120.root");
-//chainQCD.Add("files5fb_verylowHT/QCD-120to170.root");
-//chainQCD.Add("files5fb_verylowHT/QCD-170to300.root");
+//chainQCD.Add("files5fb_veryLowHT/QCD-50to80.root");
+//chainQCD.Add("files5fb_veryLowHT/QCD-80to120.root");
+//chainQCD.Add("files5fb_veryLowHT/QCD-120to170.root");
+//chainQCD.Add("files5fb_veryLowHT/QCD-170to300.root");
    //--- below here, these have weight less than one.
-  chainQCD.Add("files5fb_verylowHT/QCD-300to470.root");
-  chainQCD.Add("files5fb_verylowHT/QCD-470to600.root");
-  chainQCD.Add("files5fb_verylowHT/QCD-600to800.root");
-  chainQCD.Add("files5fb_verylowHT/QCD-800to1000.root");
-  chainQCD.Add("files5fb_verylowHT/QCD-1000to1400.root");
-  chainQCD.Add("files5fb_verylowHT/QCD-1400to1800.root");
-  chainQCD.Add("files5fb_verylowHT/QCD-1800.root");
+  chainQCD.Add("files5fb_veryLowHT/QCD-300to470.root");
+  chainQCD.Add("files5fb_veryLowHT/QCD-470to600.root");
+  chainQCD.Add("files5fb_veryLowHT/QCD-600to800.root");
+  chainQCD.Add("files5fb_veryLowHT/QCD-800to1000.root");
+  chainQCD.Add("files5fb_veryLowHT/QCD-1000to1400.root");
+  chainQCD.Add("files5fb_veryLowHT/QCD-1400to1800.root");
+  chainQCD.Add("files5fb_veryLowHT/QCD-1800.root");
 
   TChain chainTT("tree") ;
-  chainTT.Add("files5fb_verylowHT/TT.root") ;
+  chainTT.Add("files5fb_veryLowHT/TT.root") ;
 
   TChain chainZnn("tree") ;
-  chainZnn.Add("files5fb_verylowHT/Zinv.root") ;
+  chainZnn.Add("files5fb_veryLowHT/Zinv.root") ;
 
   TChain chainWJets("tree") ;
-  chainWJets.Add("files5fb_verylowHT/WJets-300.root") ;
+  chainWJets.Add("files5fb_veryLowHT/WJets-300.root") ;
 
   TChain chainAll("tree");
-//chainAll.Add("files5fb_verylowHT/QCD-50to80.root");
-//chainAll.Add("files5fb_verylowHT/QCD-80to120.root");
-//chainAll.Add("files5fb_verylowHT/QCD-120to170.root");
-//chainAll.Add("files5fb_verylowHT/QCD-170to300.root");
-  chainAll.Add("files5fb_verylowHT/QCD-300to470.root");
-  chainAll.Add("files5fb_verylowHT/QCD-470to600.root");
-  chainAll.Add("files5fb_verylowHT/QCD-600to800.root");
-  chainAll.Add("files5fb_verylowHT/QCD-800to1000.root");
-  chainAll.Add("files5fb_verylowHT/QCD-1000to1400.root");
-  chainAll.Add("files5fb_verylowHT/QCD-1400to1800.root");
-  chainAll.Add("files5fb_verylowHT/QCD-1800.root");
-  chainAll.Add("files5fb_verylowHT/TT.root");
-  chainAll.Add("files5fb_verylowHT/Zinv.root");
+//chainAll.Add("files5fb_veryLowHT/QCD-50to80.root");
+//chainAll.Add("files5fb_veryLowHT/QCD-80to120.root");
+//chainAll.Add("files5fb_veryLowHT/QCD-120to170.root");
+//chainAll.Add("files5fb_veryLowHT/QCD-170to300.root");
+  chainAll.Add("files5fb_veryLowHT/QCD-300to470.root");
+  chainAll.Add("files5fb_veryLowHT/QCD-470to600.root");
+  chainAll.Add("files5fb_veryLowHT/QCD-600to800.root");
+  chainAll.Add("files5fb_veryLowHT/QCD-800to1000.root");
+  chainAll.Add("files5fb_veryLowHT/QCD-1000to1400.root");
+  chainAll.Add("files5fb_veryLowHT/QCD-1400to1800.root");
+  chainAll.Add("files5fb_veryLowHT/QCD-1800.root");
+  chainAll.Add("files5fb_veryLowHT/TT.root");
+  chainAll.Add("files5fb_veryLowHT/Zinv.root");
 
   TChain chainTZ("tree");
-  chainTZ.Add("files5fb_verylowHT/TT.root");
-  chainTZ.Add("files5fb_verylowHT/Zinv.root");
+  chainTZ.Add("files5fb_veryLowHT/TT.root");
+  chainTZ.Add("files5fb_veryLowHT/Zinv.root");
 
   gROOT->Reset();
 
@@ -110,74 +110,185 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   //-- met2-ht1-v1
 //const int nBinsMET   = 2 ;
 //const int nBinsHT    = 1 ;
+//    const int version = 1;
 //float Mbins[nBinsMET+1] = {150.,250.,99999.};
 //float Hbins[nBinsHT+1] = {400.,99999.};
 
 ////-- met2-ht2-v1
 //const int nBinsMET   = 2 ;
 //const int nBinsHT    = 2 ;
+//    const int version = 1;
 //float Mbins[nBinsMET+1] = {150.,250.,99999.};
 //float Hbins[nBinsHT+1] = {400.,600.,99999.};
+
+////-- met2-ht8-v1
+//const int nBinsMET   = 2 ;
+//const int nBinsHT    = 8 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,250.,99999.};
+//float Hbins[nBinsHT+1] = {400.,500.,600.,700.,800.,900.,1000.,1200.,99999.};
 
   //-- met3-ht2-v1
 //const int nBinsMET   = 3 ;
 //const int nBinsHT    = 2 ;
+//    const int version = 1;
 //float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,800.,99999.};
 
 ////-- met3-ht3-v1
 //const int nBinsMET   = 3 ;
 //const int nBinsHT    = 3 ;
+//    const int version = 1;
 //float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
+
+////-- met3-ht3-v2
+const int nBinsMET   = 3 ;
+const int nBinsHT    = 3 ;
+    const int version = 2;
+float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
+float Hbins[nBinsHT+1] = {300.,500.,1000.,99999.};
+
+////-- met3-ht4-v1
+//const int nBinsMET   = 3 ;
+//const int nBinsHT    = 4 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
+//float Hbins[nBinsHT+1] = {200, 300.,500.,1000.,99999.};
+
+////-- met3-ht5-v1
+//const int nBinsMET   = 3 ;
+//const int nBinsHT    = 5 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
+//float Hbins[nBinsHT+1] = {400.,500.,600.,800.,1000.,99999.};
 
 ////-- met4-ht3-v1
 //const int nBinsMET   = 4 ;
 //const int nBinsHT    = 3 ;
+//    const int version = 1;
 //float Mbins[nBinsMET+1] = {150.,250.,350.,500.,99999.};
 //float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
+
+////-- met4-ht3-v2
+//const int nBinsMET   = 4 ;
+//const int nBinsHT    = 3 ;
+//    const int version = 2;
+//float Mbins[nBinsMET+1] = {125, 150.,250.,350.,99999.};
+//float Hbins[nBinsHT+1] = {300.,500.,1000.,99999.};
 
   //-- met5-ht4-v1
 //const int nBinsMET   = 5 ;
 //const int nBinsHT    = 4 ;
+//    const int version = 1;
 //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,99999.};
 
   //-- met4-ht4-v1
-    const int nBinsMET   = 4 ;
-    const int nBinsHT	 = 4 ;
-    float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
-    float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
+//    const int nBinsMET   = 4 ;
+//    const int nBinsHT    = 4 ;
+//    const int version = 1;
+//    float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
+//    float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
+
+  //-- met4-ht4-v2
+//    const int nBinsMET   = 4 ;
+//    const int nBinsHT    = 4 ;
+//    const int version = 2;
+//    float Mbins[nBinsMET+1] = {150.,250.,350.,450.,99999.};
+//    float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
+
+  //-- met4-ht4-v3
+//    const int nBinsMET   = 4 ;
+//    const int nBinsHT    = 4 ;
+//    const int version = 3;
+//    float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
+//    float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,99999.};
+
+  //-- met4-ht4-v4
+//    const int nBinsMET   = 4 ;
+//    const int nBinsHT    = 4 ;
+//    const int version = 4;
+//    float Mbins[nBinsMET+1] = {150.,250.,350.,450.,99999.};
+//    float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,99999.};
+
+  //-- met4-ht4-v5
+//    const int nBinsMET   = 4 ;
+//    const int nBinsHT    = 4 ;
+//    const int version = 5;
+//    float Mbins[nBinsMET+1] = {150.,175.,200.,400.,99999.};
+//    float Hbins[nBinsHT+1] = {400.,450.,550.,850.,99999.};
+
+  //-- met4-ht4-v6
+//    const int nBinsMET   = 4 ;
+//    const int nBinsHT    = 4 ;
+//    const int version = 6;
+//    float Mbins[nBinsMET+1] = {150.,200.,350.,450.,99999.};
+//    float Hbins[nBinsHT+1] = {400.,550.,800.,950.,99999.};
+
+////-- met4-ht4-v7
+//const int nBinsMET   = 4 ;
+//const int nBinsHT    = 4 ;
+//    const int version = 7;
+//float Mbins[nBinsMET+1] = {125, 150.,250.,350.,99999.};
+//float Hbins[nBinsHT+1] = {200, 300.,500.,1000.,99999.};
 
 ////-- met4-ht5-v1
 //const int nBinsMET   = 4 ;
 //const int nBinsHT    = 5 ;
+//    const int version = 1;
 //float Mbins[nBinsMET+1] = {150.,200.,300.,400.,99999.};
 //float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,1200.,99999.};
 
 ////-- met5-ht5-v1
 //const int nBinsMET   = 5 ;
 //const int nBinsHT    = 5 ;
+//    const int version = 1;
 //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,500.,600.,800.,1000.,99999.};
+
+////-- met5-ht3-v1
+//const int nBinsMET   = 5 ;
+//const int nBinsHT    = 3 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,99999.};
+//float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
+
+////-- met5-ht3-v2
+//const int nBinsMET   = 5 ;
+//const int nBinsHT    = 3 ;
+//    const int version = 2;
+//float Mbins[nBinsMET+1] = {150.,175.,200.,350.,450.,99999.};
+//float Hbins[nBinsHT+1] = {400.,550.,800.,99999.};
 
   //-- met6-ht6-v1
 //const int nBinsMET   = 6 ;
 //const int nBinsHT    = 6 ;
+//    const int version = 1;
 //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,400.,99999.};
 //float Hbins[nBinsHT+1] = {400.,500.,600.,700.,800.,900.,99999.};
 
   //-- met7-ht7-v1
 //const int nBinsMET   = 7 ;
 //const int nBinsHT    = 7 ;
+//    const int version = 1;
 //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,400.,500.,99999.};
 //float Hbins[nBinsHT+1] = {400.,500.,600.,700.,800.,900.,1000.,99999.};
 
 ////-- met8-ht8-v1
 //const int nBinsMET   = 8 ;
 //const int nBinsHT    = 8 ;
+//    const int version = 1;
 //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,400.,450.,600.,99999.};
 //float Hbins[nBinsHT+1] = {400.,500.,600.,700.,800.,900.,1000.,1200.,99999.};
+
+////-- met8-ht2-v1
+//const int nBinsMET   = 8 ;
+//const int nBinsHT    = 2 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,400.,450.,600.,99999.};
+//float Hbins[nBinsHT+1] = {400.,600.,99999.};
+
 
 
   TString sMbins[nBinsMET];
@@ -235,12 +346,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   char outfile[10000] ;
   if ( mgl > 0. && mlsp > 0. ) {
      if ( target_susy_all0lep > 0. ) {
-        sprintf( outfile, "InputWT1bbbb-mgl%.0f-mlsp%.0f-%.0fevts-met%d-ht%d.dat", mgl, mlsp, target_susy_all0lep, nBinsMET, nBinsHT ) ;
+        sprintf( outfile, "InputWT1bbbb-mgl%.0f-mlsp%.0f-%.0fevts-met%d-ht%d-v%d.dat", mgl, mlsp, target_susy_all0lep, nBinsMET, nBinsHT, version  ) ;
      } else {
-        sprintf( outfile, "InputWT1bbbb-mgl%.0f-mlsp%.0f-met%d-ht%d.dat", mgl, mlsp, nBinsMET, nBinsHT ) ;
+        sprintf( outfile, "InputWT1bbbb-mgl%.0f-mlsp%.0f-met%d-ht%d-v%d.dat", mgl, mlsp, nBinsMET, nBinsHT, version  ) ;
      }
   } else {
-     sprintf( outfile, "Input-met%d-ht%d.dat", nBinsMET, nBinsHT ) ;
+     sprintf( outfile, "Input-met%d-ht%d-v%d.dat", nBinsMET, nBinsHT, version  ) ;
   }
   inFile.open( outfile );
 

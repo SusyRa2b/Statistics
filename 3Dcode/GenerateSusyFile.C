@@ -30,7 +30,7 @@ void GenerateSusyFile() {
 // so gluino mass = 75+nbin*25; or nbin = (gluinomass-75)/25.
 
   TChain chainT1bbbb("tree");
-  chainT1bbbb.Add("files5fb_lowHT/T1bbbb.root");
+  chainT1bbbb.Add("files5fb_veryLowHT/T1bbbb.root");
 
   gROOT->Reset();
 
@@ -41,33 +41,184 @@ void GenerateSusyFile() {
   //-- met2-ht1-v1
 //const int nBinsMET   = 2 ;
 //const int nBinsHT    = 1 ;
+//    const int version = 1;
 //float Mbins[nBinsMET+1] = {150.,250.,99999.};
 //float Hbins[nBinsHT+1] = {400.,99999.};
 
 ////-- met2-ht2-v1
 //const int nBinsMET   = 2 ;
 //const int nBinsHT    = 2 ;
+//    const int version = 1;
 //float Mbins[nBinsMET+1] = {150.,250.,99999.};
 //float Hbins[nBinsHT+1] = {400.,600.,99999.};
 
+////-- met2-ht8-v1
+//const int nBinsMET   = 2 ;
+//const int nBinsHT    = 8 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,250.,99999.};
+//float Hbins[nBinsHT+1] = {400.,500.,600.,700.,800.,900.,1000.,1200.,99999.};
 
-  //-- met3-ht3-v1
+  //-- met3-ht2-v1
+//const int nBinsMET   = 3 ;
+//const int nBinsHT    = 2 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
+//float Hbins[nBinsHT+1] = {400.,800.,99999.};
+
+////-- met3-ht3-v1
 //const int nBinsMET   = 3 ;
 //const int nBinsHT    = 3 ;
+//    const int version = 1;
 //float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 
-    //-- met4-ht4-v1
+////-- met3-ht3-v2
+//const int nBinsMET   = 3 ;
+//const int nBinsHT    = 3 ;
+//    const int version = 2;
+//float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
+//float Hbins[nBinsHT+1] = {300.,500.,1000.,99999.};
+
+////-- met3-ht4-v1
+//const int nBinsMET   = 3 ;
+//const int nBinsHT    = 4 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
+//float Hbins[nBinsHT+1] = {200, 300.,500.,1000.,99999.};
+
+////-- met3-ht5-v1
+//const int nBinsMET   = 3 ;
+//const int nBinsHT    = 5 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
+//float Hbins[nBinsHT+1] = {400.,500.,600.,800.,1000.,99999.};
+
+////-- met4-ht3-v1
+//const int nBinsMET   = 4 ;
+//const int nBinsHT    = 3 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,250.,350.,500.,99999.};
+//float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
+
+////-- met4-ht3-v2
+//const int nBinsMET   = 4 ;
+//const int nBinsHT    = 3 ;
+//    const int version = 2;
+//float Mbins[nBinsMET+1] = {125, 150.,250.,350.,99999.};
+//float Hbins[nBinsHT+1] = {300.,500.,1000.,99999.};
+
+  //-- met5-ht4-v1
+//const int nBinsMET   = 5 ;
+//const int nBinsHT    = 4 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,99999.};
+//float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,99999.};
+
+  //-- met4-ht4-v1
     const int nBinsMET   = 4 ;
-    const int nBinsHT    = 4 ;
+    const int nBinsHT	 = 4 ;
+    const int version = 1;
     float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
     float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
+
+  //-- met4-ht4-v2
+//    const int nBinsMET   = 4 ;
+//    const int nBinsHT    = 4 ;
+//    const int version = 2;
+//    float Mbins[nBinsMET+1] = {150.,250.,350.,450.,99999.};
+//    float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
+
+  //-- met4-ht4-v3
+//    const int nBinsMET   = 4 ;
+//    const int nBinsHT    = 4 ;
+//    const int version = 3;
+//    float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
+//    float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,99999.};
+
+  //-- met4-ht4-v4
+//    const int nBinsMET   = 4 ;
+//    const int nBinsHT    = 4 ;
+//    const int version = 4;
+//    float Mbins[nBinsMET+1] = {150.,250.,350.,450.,99999.};
+//    float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,99999.};
+
+  //-- met4-ht4-v5
+//    const int nBinsMET   = 4 ;
+//    const int nBinsHT	 = 4 ;
+//    const int version = 5;
+//    float Mbins[nBinsMET+1] = {150.,175.,200.,400.,99999.};
+//    float Hbins[nBinsHT+1] = {400.,450.,550.,850.,99999.};
+
+  //-- met4-ht4-v6
+//    const int nBinsMET   = 4 ;
+//    const int nBinsHT    = 4 ;
+//    const int version = 6;
+//    float Mbins[nBinsMET+1] = {150.,200.,350.,450.,99999.};
+//    float Hbins[nBinsHT+1] = {400.,550.,800.,950.,99999.};
+
+////-- met4-ht4-v7
+//const int nBinsMET   = 4 ;
+//const int nBinsHT    = 4 ;
+//    const int version = 7;
+//float Mbins[nBinsMET+1] = {125, 150.,250.,350.,99999.};
+//float Hbins[nBinsHT+1] = {200, 300.,500.,1000.,99999.};
+
+////-- met4-ht5-v1
+//const int nBinsMET   = 4 ;
+//const int nBinsHT    = 5 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,200.,300.,400.,99999.};
+//float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,1200.,99999.};
 
 ////-- met5-ht5-v1
 //const int nBinsMET   = 5 ;
 //const int nBinsHT    = 5 ;
+//    const int version = 1;
 //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,500.,600.,800.,1000.,99999.};
+
+////-- met5-ht3-v1
+//const int nBinsMET   = 5 ;
+//const int nBinsHT    = 3 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,99999.};
+//float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
+
+////-- met5-ht3-v2
+//const int nBinsMET   = 5 ;
+//const int nBinsHT    = 3 ;
+//    const int version = 2;
+//float Mbins[nBinsMET+1] = {150.,175.,200.,350.,450.,99999.};
+//float Hbins[nBinsHT+1] = {400.,550.,800.,99999.};
+
+  //-- met6-ht6-v1
+//const int nBinsMET   = 6 ;
+//const int nBinsHT    = 6 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,400.,99999.};
+//float Hbins[nBinsHT+1] = {400.,500.,600.,700.,800.,900.,99999.};
+
+  //-- met7-ht7-v1
+//const int nBinsMET   = 7 ;
+//const int nBinsHT    = 7 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,400.,500.,99999.};
+//float Hbins[nBinsHT+1] = {400.,500.,600.,700.,800.,900.,1000.,99999.};
+
+////-- met8-ht8-v1
+//const int nBinsMET   = 8 ;
+//const int nBinsHT    = 8 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,400.,450.,600.,99999.};
+//float Hbins[nBinsHT+1] = {400.,500.,600.,700.,800.,900.,1000.,1200.,99999.};
+
+////-- met8-ht2-v1
+//const int nBinsMET   = 8 ;
+//const int nBinsHT    = 2 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,400.,450.,600.,99999.};
+//float Hbins[nBinsHT+1] = {400.,600.,99999.};
 
 
 
@@ -82,8 +233,8 @@ void GenerateSusyFile() {
 
 
   // dummy masses
-  int minGlMass = 800 ;
-  int maxGlMass = 1100 ;
+  int minGlMass = 900 ;
+  int maxGlMass = 910 ;
 
 
 //double dummyYield = 9.9 ;
@@ -92,7 +243,9 @@ void GenerateSusyFile() {
   long dummyEvts = 10000 ;
 
   ofstream inFile;
-  inFile.open("Susy.dat");
+  char outfile[10000] ;
+  sprintf( outfile, "datfiles/T1bbbb-met%d-ht%d-v%d.dat", nBinsMET, nBinsHT, version ) ;
+  inFile.open( outfile );
 
   // loop over gluino masses
 
@@ -124,10 +277,16 @@ void GenerateSusyFile() {
 
   float xsec = -1.;
   for ( int mGl = minGlMass ; mGl < maxGlMass ; mGl = mGl + 25 ) {
-  xsec = gluinoxsec->GetBinContent((mGl-75)/25);
+
+    int theBin = gluinoxsec->FindBin( mGl ) ;					      
+    if ( theBin <=0 || theBin > gluinoxsec->GetNbinsX() ) {			      
+       printf("\n\n *** can't find bin for mgl=%g.  Returned %d\n\n", mGl, theBin ) ; 
+       return ; 								      
+    }										      
+    xsec = gluinoxsec->GetBinContent( theBin ) ;				      
+
     ////// for ( int mLsp = 50 ; mLsp < ( mGl - 25 ) ; mLsp = mLsp + 25 ) {
-    /////  for ( int mLsp = 200 ; mLsp < 310 ; mLsp = mLsp + 25 ) {
-    for ( int mLsp = 125 ; mLsp < 610 ; mLsp = mLsp + 25 ) {
+    for ( int mLsp = 300 ; mLsp < 560 ; mLsp = mLsp + 25 ) {
 
       inFile << mGl << " " << mLsp << " " << dummyEvts << " " ;
       printf(" mGl=%4d, mLsp=%4d\n", mGl, mLsp ) ; cout << flush ;
@@ -230,7 +389,7 @@ void GenerateSusyFile() {
       } // k (nBjets)
       printf("\n\n") ;
 
-
+      float totalSUSYyield = 0;
       for (int i = 0 ; i < nBinsMET ; i++) {
         for (int j = 0 ; j < nBinsHT ; j++) {
           for (int k = 0 ; k < nBinsBjets ; k++) {
@@ -247,12 +406,13 @@ void GenerateSusyFile() {
                  h_susy_sig[k] -> GetBinContent( i+1, j+1 ),
                  h_susy_sl[k]  -> GetBinContent( i+1, j+1 ),
                  h_susy_ldp[k] -> GetBinContent( i+1, j+1 )  ) ;
-
+             totalSUSYyield += (h_susy_sig[k] -> GetBinContent( i+1, j+1 )*0.5*xsec);
           } // k
         } // j
       } // i
+      printf("Total SUSY yield within current binning = %9.1f", totalSUSYyield);
       printf("\n\n") ;
-
+      
 
 
   //----------------------------------------------------------------------------
