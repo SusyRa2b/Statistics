@@ -15,7 +15,7 @@
 #include <sstream>
 #include <string.h>
 
-#include "TRoot.h"
+#include "TROOT.h"
 #include "TCanvas.h"
 #include "TStyle.h"
 #include "THStack.h"
