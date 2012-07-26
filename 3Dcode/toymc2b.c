@@ -26,6 +26,7 @@
    char susyfile[10000] ;
    char deffdbtagfile[10000] ;
    char outputDir[10000] ;
+   char mcvals_rootfile[10000] ;
 
    int   nFloatParInitVal ;
    char  floatParName[5000][100] ;
@@ -125,6 +126,120 @@
 
 
 
+   float fit_susy_0lep_nb_hm2_hh2 ;
+   float fit_ttwj_0lep_nb_hm2_hh2 ;
+   float fit_qcd__0lep_nb_hm2_hh2 ;
+   float fit_znn__0lep_nb_hm2_hh2 ;
+
+   float fit_susy_0lep_1b_hm2_hh2 ;
+   float fit_ttwj_0lep_1b_hm2_hh2 ;
+   float fit_qcd__0lep_1b_hm2_hh2 ;
+   float fit_znn__0lep_1b_hm2_hh2 ;
+
+   float fit_susy_0lep_2b_hm2_hh2 ;
+   float fit_ttwj_0lep_2b_hm2_hh2 ;
+   float fit_qcd__0lep_2b_hm2_hh2 ;
+   float fit_znn__0lep_2b_hm2_hh2 ;
+
+   float fit_susy_0lep_3b_hm2_hh2 ;
+   float fit_ttwj_0lep_3b_hm2_hh2 ;
+   float fit_qcd__0lep_3b_hm2_hh2 ;
+   float fit_znn__0lep_3b_hm2_hh2 ;
+
+
+
+   float mcval_susy_0lep ;
+   float mcval_ttwj_0lep ;
+   float mcval_qcd__0lep ;
+   float mcval_znn__0lep ;
+
+   float mcval_susy_0lep_1b ;
+   float mcval_ttwj_0lep_1b ;
+   float mcval_qcd__0lep_1b ;
+   float mcval_znn__0lep_1b ;
+
+   float mcval_susy_0lep_2b ;
+   float mcval_ttwj_0lep_2b ;
+   float mcval_qcd__0lep_2b ;
+   float mcval_znn__0lep_2b ;
+
+   float mcval_susy_0lep_3b ;
+   float mcval_ttwj_0lep_3b ;
+   float mcval_qcd__0lep_3b ;
+   float mcval_znn__0lep_3b ;
+
+
+
+
+   float mcval_susy_0lep_nb_hm1 ;
+   float mcval_ttwj_0lep_nb_hm1 ;
+   float mcval_qcd__0lep_nb_hm1 ;
+   float mcval_znn__0lep_nb_hm1 ;
+
+   float mcval_susy_0lep_1b_hm1 ;
+   float mcval_ttwj_0lep_1b_hm1 ;
+   float mcval_qcd__0lep_1b_hm1 ;
+   float mcval_znn__0lep_1b_hm1 ;
+
+   float mcval_susy_0lep_2b_hm1 ;
+   float mcval_ttwj_0lep_2b_hm1 ;
+   float mcval_qcd__0lep_2b_hm1 ;
+   float mcval_znn__0lep_2b_hm1 ;
+
+   float mcval_susy_0lep_3b_hm1 ;
+   float mcval_ttwj_0lep_3b_hm1 ;
+   float mcval_qcd__0lep_3b_hm1 ;
+   float mcval_znn__0lep_3b_hm1 ;
+
+
+
+
+
+   float mcval_susy_0lep_nb_hh1 ;
+   float mcval_ttwj_0lep_nb_hh1 ;
+   float mcval_qcd__0lep_nb_hh1 ;
+   float mcval_znn__0lep_nb_hh1 ;
+
+   float mcval_susy_0lep_1b_hh1 ;
+   float mcval_ttwj_0lep_1b_hh1 ;
+   float mcval_qcd__0lep_1b_hh1 ;
+   float mcval_znn__0lep_1b_hh1 ;
+
+   float mcval_susy_0lep_2b_hh1 ;
+   float mcval_ttwj_0lep_2b_hh1 ;
+   float mcval_qcd__0lep_2b_hh1 ;
+   float mcval_znn__0lep_2b_hh1 ;
+
+   float mcval_susy_0lep_3b_hh1 ;
+   float mcval_ttwj_0lep_3b_hh1 ;
+   float mcval_qcd__0lep_3b_hh1 ;
+   float mcval_znn__0lep_3b_hh1 ;
+
+
+   float mcval_susy_0lep_nb_hm2_hh2 ;
+   float mcval_ttwj_0lep_nb_hm2_hh2 ;
+   float mcval_qcd__0lep_nb_hm2_hh2 ;
+   float mcval_znn__0lep_nb_hm2_hh2 ;
+
+   float mcval_susy_0lep_1b_hm2_hh2 ;
+   float mcval_ttwj_0lep_1b_hm2_hh2 ;
+   float mcval_qcd__0lep_1b_hm2_hh2 ;
+   float mcval_znn__0lep_1b_hm2_hh2 ;
+
+   float mcval_susy_0lep_2b_hm2_hh2 ;
+   float mcval_ttwj_0lep_2b_hm2_hh2 ;
+   float mcval_qcd__0lep_2b_hm2_hh2 ;
+   float mcval_znn__0lep_2b_hm2_hh2 ;
+
+   float mcval_susy_0lep_3b_hm2_hh2 ;
+   float mcval_ttwj_0lep_3b_hm2_hh2 ;
+   float mcval_qcd__0lep_3b_hm2_hh2 ;
+   float mcval_znn__0lep_3b_hm2_hh2 ;
+
+
+
+
+
    float true_susy_0lep ;
    float true_ttwj_0lep ;
    float true_qcd__0lep ;
@@ -180,6 +295,7 @@
    bool setReinitValues( RooFitResult* fitResult ) ;
    bool reinitFloatPars() ;
    bool saveToyDatfile( int toyIndex, RooDataSet* toyds ) ;
+   bool readAndSetMCVals() ;
 
 
    TRandom* tran ;
@@ -195,7 +311,8 @@
                 const char* input_deffdbtagfile = "datfiles/dummy_DeffDbtag-met4-ht4.dat",
                 double input_nSusy0lep = 60.,
                 const char* input_outputDir = "output-toymc2b",
-                int nToy = 10
+                int nToy = 10,
+                const char* input_mcvals_rootfile = "rootfiles/gi-plots-met4-ht4-newMC.root"
                         ) {
 
        char command[10000] ;
@@ -206,6 +323,7 @@
        sprintf( susyfile, "%s", input_susyfile ) ;
        sprintf( outputDir, "%s", input_outputDir ) ;
        sprintf( deffdbtagfile, "%s", input_deffdbtagfile ) ;
+       sprintf( mcvals_rootfile, "%s", input_mcvals_rootfile ) ;
 
        sprintf( command, "mkdir -p %s", outputDir ) ;
        gSystem->Exec( command ) ;
@@ -217,6 +335,9 @@
        gSystem->Exec( command ) ;
 
        sprintf( command, "cp %s %s", deffdbtagfile, outputDir ) ;
+       gSystem->Exec( command ) ;
+
+       sprintf( command, "cp %s %s", mcvals_rootfile, outputDir ) ;
        gSystem->Exec( command ) ;
 
 
@@ -238,6 +359,8 @@
 
 
        tran = new TRandom(12345) ;
+
+
 
 
 
@@ -346,6 +469,12 @@
 
 
 
+
+       //--- set MC vals to be saved in output ttree.
+
+       if ( !readAndSetMCVals() ) {
+          printf("\n\n *** Problem reading MC vals from file %s.\n\n", mcvals_rootfile ) ;
+       }
 
 
 
@@ -865,6 +994,23 @@
 
    bool addSusyToExpectedObs() {
 
+      mcval_susy_0lep = 0. ;
+      mcval_susy_0lep_1b = 0. ;
+      mcval_susy_0lep_2b = 0. ;
+      mcval_susy_0lep_3b = 0. ;
+      mcval_susy_0lep_nb_hm1 = 0. ;
+      mcval_susy_0lep_1b_hm1 = 0. ;
+      mcval_susy_0lep_2b_hm1 = 0. ;
+      mcval_susy_0lep_3b_hm1 = 0. ;
+      mcval_susy_0lep_nb_hh1 = 0. ;
+      mcval_susy_0lep_1b_hh1 = 0. ;
+      mcval_susy_0lep_2b_hh1 = 0. ;
+      mcval_susy_0lep_3b_hh1 = 0. ;
+      mcval_susy_0lep_nb_hm2_hh2 = 0. ;
+      mcval_susy_0lep_1b_hm2_hh2 = 0. ;
+      mcval_susy_0lep_2b_hm2_hh2 = 0. ;
+      mcval_susy_0lep_3b_hm2_hh2 = 0. ;
+
       //--- Get SUSY inputs, if requested.
 
 
@@ -922,7 +1068,6 @@
               }
             }
 
-            ///// susyPoi0lepRatio = input0lepSusyTotal / susy_0lep[0][0][0] ;
 
             printf("\n\n  pointMgl = %g , pointMlsp = %g,  total 0lep events = %g\n", pointMgl, pointMlsp, input0lepSusyTotal ) ;
             printf("   reset susy 0lep total to %g\n\n", nSusy0lep ) ;
@@ -976,6 +1121,43 @@
                printf(" ======== \n") ;
         }
 
+
+        //--- set MC vals (ttree variables).
+
+        for (int i = 0 ; i < nBinsMET ; i++) {
+          for (int j = 0 ; j < nBinsHT ; j++) {
+            for (int k = 0 ; k < nBinsBjets ; k++) {
+
+               mcval_susy_0lep += susy_0lep[i][j][k] ;
+
+               if ( k==0 ) { mcval_susy_0lep_1b += susy_0lep[i][j][k] ; }
+               if ( k==1 ) { mcval_susy_0lep_2b += susy_0lep[i][j][k] ; }
+               if ( k==2 ) { mcval_susy_0lep_3b += susy_0lep[i][j][k] ; }
+
+               if ( i == (nBinsMET-1) ) {
+                  mcval_susy_0lep_nb_hm1 += susy_0lep[i][j][k] ;
+                  if ( k==0 ) { mcval_susy_0lep_1b_hm1 += susy_0lep[i][j][k] ; }
+                  if ( k==1 ) { mcval_susy_0lep_2b_hm1 += susy_0lep[i][j][k] ; }
+                  if ( k==2 ) { mcval_susy_0lep_3b_hm1 += susy_0lep[i][j][k] ; }
+               }
+
+               if ( j == (nBinsHT-1) ) {
+                  mcval_susy_0lep_nb_hh1 += susy_0lep[i][j][k] ;
+                  if ( k==0 ) { mcval_susy_0lep_1b_hh1 += susy_0lep[i][j][k] ; }
+                  if ( k==1 ) { mcval_susy_0lep_2b_hh1 += susy_0lep[i][j][k] ; }
+                  if ( k==2 ) { mcval_susy_0lep_3b_hh1 += susy_0lep[i][j][k] ; }
+               }
+
+               if ( i >= (nBinsMET-2) && j >= (nBinsHT-2) ) {
+                  mcval_susy_0lep_nb_hm2_hh2 += susy_0lep[i][j][k] ;
+                  if ( k==0 ) { mcval_susy_0lep_1b_hm2_hh2 += susy_0lep[i][j][k] ; }
+                  if ( k==1 ) { mcval_susy_0lep_2b_hm2_hh2 += susy_0lep[i][j][k] ; }
+                  if ( k==2 ) { mcval_susy_0lep_3b_hm2_hh2 += susy_0lep[i][j][k] ; }
+               }
+
+            }
+          }
+        }
 
 
 
@@ -1150,6 +1332,26 @@
       fit_qcd__0lep_3b_hh1 = 0. ;
       fit_znn__0lep_3b_hh1 = 0. ;
 
+      fit_susy_0lep_nb_hm2_hh2 = 0. ;
+      fit_ttwj_0lep_nb_hm2_hh2 = 0. ;
+      fit_qcd__0lep_nb_hm2_hh2 = 0. ;
+      fit_znn__0lep_nb_hm2_hh2 = 0. ;
+
+      fit_susy_0lep_1b_hm2_hh2 = 0. ;
+      fit_ttwj_0lep_1b_hm2_hh2 = 0. ;
+      fit_qcd__0lep_1b_hm2_hh2 = 0. ;
+      fit_znn__0lep_1b_hm2_hh2 = 0. ;
+
+      fit_susy_0lep_2b_hm2_hh2 = 0. ;
+      fit_ttwj_0lep_2b_hm2_hh2 = 0. ;
+      fit_qcd__0lep_2b_hm2_hh2 = 0. ;
+      fit_znn__0lep_2b_hm2_hh2 = 0. ;
+
+      fit_susy_0lep_3b_hm2_hh2 = 0. ;
+      fit_ttwj_0lep_3b_hm2_hh2 = 0. ;
+      fit_qcd__0lep_3b_hm2_hh2 = 0. ;
+      fit_znn__0lep_3b_hm2_hh2 = 0. ;
+
       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
          for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
@@ -1187,6 +1389,12 @@
                   if ( bbi==1 ) { fit_susy_0lep_2b_hh1 += nsusy ; }
                   if ( bbi==2 ) { fit_susy_0lep_3b_hh1 += nsusy ; }
                }
+               if ( mbi>=(nBinsMET-2) && hbi>=(nBinsHT-2) ) {
+                  fit_susy_0lep_nb_hm2_hh2 += nsusy ;
+                  if ( bbi==0 ) { fit_susy_0lep_1b_hm2_hh2 += nsusy ; }
+                  if ( bbi==1 ) { fit_susy_0lep_2b_hm2_hh2 += nsusy ; }
+                  if ( bbi==2 ) { fit_susy_0lep_3b_hm2_hh2 += nsusy ; }
+               }
 
 
 
@@ -1209,6 +1417,12 @@
                   if ( bbi==0 ) { fit_ttwj_0lep_1b_hh1 += nttwj ; }
                   if ( bbi==1 ) { fit_ttwj_0lep_2b_hh1 += nttwj ; }
                   if ( bbi==2 ) { fit_ttwj_0lep_3b_hh1 += nttwj ; }
+               }
+               if ( mbi>=(nBinsMET-2) && hbi>=(nBinsHT-2) ) {
+                  fit_ttwj_0lep_nb_hm2_hh2 += nttwj ;
+                  if ( bbi==0 ) { fit_ttwj_0lep_1b_hm2_hh2 += nttwj ; }
+                  if ( bbi==1 ) { fit_ttwj_0lep_2b_hm2_hh2 += nttwj ; }
+                  if ( bbi==2 ) { fit_ttwj_0lep_3b_hm2_hh2 += nttwj ; }
                }
 
 
@@ -1233,6 +1447,12 @@
                   if ( bbi==1 ) { fit_qcd__0lep_2b_hh1 += nqcd ; }
                   if ( bbi==2 ) { fit_qcd__0lep_3b_hh1 += nqcd ; }
                }
+               if ( mbi>=(nBinsMET-2) && hbi>=(nBinsHT-2) ) {
+                  fit_qcd__0lep_nb_hm2_hh2 += nqcd ;
+                  if ( bbi==0 ) { fit_qcd__0lep_1b_hm2_hh2 += nqcd ; }
+                  if ( bbi==1 ) { fit_qcd__0lep_2b_hm2_hh2 += nqcd ; }
+                  if ( bbi==2 ) { fit_qcd__0lep_3b_hm2_hh2 += nqcd ; }
+               }
 
 
 
@@ -1255,6 +1475,12 @@
                   if ( bbi==0 ) { fit_znn__0lep_1b_hh1 += nznn ; }
                   if ( bbi==1 ) { fit_znn__0lep_2b_hh1 += nznn ; }
                   if ( bbi==2 ) { fit_znn__0lep_3b_hh1 += nznn ; }
+               }
+               if ( mbi>=(nBinsMET-2) && hbi>=(nBinsHT-2) ) {
+                  fit_znn__0lep_nb_hm2_hh2 += nznn ;
+                  if ( bbi==0 ) { fit_znn__0lep_1b_hm2_hh2 += nznn ; }
+                  if ( bbi==1 ) { fit_znn__0lep_2b_hm2_hh2 += nznn ; }
+                  if ( bbi==2 ) { fit_znn__0lep_3b_hm2_hh2 += nznn ; }
                }
 
 
@@ -1291,28 +1517,28 @@
 
 
       printf("\n\n") ;
-      printf(" toy %4d : Fit nb 0lep susy, highest HT bin : %6.1f  \n", ti, fit_susy_0lep_nb_hh1 ) ;
-      printf(" toy %4d : Fit nb 0lep ttwj, highest HT bin : %6.1f  \n", ti, fit_ttwj_0lep_nb_hh1 ) ;
-      printf(" toy %4d : Fit nb 0lep qcd,  highest HT bin : %6.1f  \n", ti, fit_qcd__0lep_nb_hh1 ) ;
-      printf(" toy %4d : Fit nb 0lep znn,  highest HT bin : %6.1f  \n", ti, fit_znn__0lep_nb_hh1 ) ;
+      printf(" toy %4d : Fit nb 0lep susy, highest HT bin  : %6.1f  \n", ti, fit_susy_0lep_nb_hh1 ) ;
+      printf(" toy %4d : Fit nb 0lep ttwj, highest HT bin  : %6.1f  \n", ti, fit_ttwj_0lep_nb_hh1 ) ;
+      printf(" toy %4d : Fit nb 0lep qcd,  highest HT bin  : %6.1f  \n", ti, fit_qcd__0lep_nb_hh1 ) ;
+      printf(" toy %4d : Fit nb 0lep znn,  highest HT bin  : %6.1f  \n", ti, fit_znn__0lep_nb_hh1 ) ;
 
       printf("\n") ;
-      printf(" toy %4d : Fit 1b 0lep susy, highest HT bin : %6.1f  \n", ti, fit_susy_0lep_1b_hh1 ) ;
-      printf(" toy %4d : Fit 1b 0lep ttwj, highest HT bin : %6.1f  \n", ti, fit_ttwj_0lep_1b_hh1 ) ;
-      printf(" toy %4d : Fit 1b 0lep qcd,  highest HT bin : %6.1f  \n", ti, fit_qcd__0lep_1b_hh1 ) ;
-      printf(" toy %4d : Fit 1b 0lep znn,  highest HT bin : %6.1f  \n", ti, fit_znn__0lep_1b_hh1 ) ;
+      printf(" toy %4d : Fit 1b 0lep susy, highest HT bin  : %6.1f  \n", ti, fit_susy_0lep_1b_hh1 ) ;
+      printf(" toy %4d : Fit 1b 0lep ttwj, highest HT bin  : %6.1f  \n", ti, fit_ttwj_0lep_1b_hh1 ) ;
+      printf(" toy %4d : Fit 1b 0lep qcd,  highest HT bin  : %6.1f  \n", ti, fit_qcd__0lep_1b_hh1 ) ;
+      printf(" toy %4d : Fit 1b 0lep znn,  highest HT bin  : %6.1f  \n", ti, fit_znn__0lep_1b_hh1 ) ;
 
       printf("\n") ;
-      printf(" toy %4d : Fit 2b 0lep susy, highest HT bin : %6.1f  \n", ti, fit_susy_0lep_2b_hh1 ) ;
-      printf(" toy %4d : Fit 2b 0lep ttwj, highest HT bin : %6.1f  \n", ti, fit_ttwj_0lep_2b_hh1 ) ;
-      printf(" toy %4d : Fit 2b 0lep qcd,  highest HT bin : %6.1f  \n", ti, fit_qcd__0lep_2b_hh1 ) ;
-      printf(" toy %4d : Fit 2b 0lep znn,  highest HT bin : %6.1f  \n", ti, fit_znn__0lep_2b_hh1 ) ;
+      printf(" toy %4d : Fit 2b 0lep susy, highest HT bin  : %6.1f  \n", ti, fit_susy_0lep_2b_hh1 ) ;
+      printf(" toy %4d : Fit 2b 0lep ttwj, highest HT bin  : %6.1f  \n", ti, fit_ttwj_0lep_2b_hh1 ) ;
+      printf(" toy %4d : Fit 2b 0lep qcd,  highest HT bin  : %6.1f  \n", ti, fit_qcd__0lep_2b_hh1 ) ;
+      printf(" toy %4d : Fit 2b 0lep znn,  highest HT bin  : %6.1f  \n", ti, fit_znn__0lep_2b_hh1 ) ;
 
       printf("\n") ;
-      printf(" toy %4d : Fit 3b 0lep susy, highest HT bin : %6.1f  \n", ti, fit_susy_0lep_3b_hh1 ) ;
-      printf(" toy %4d : Fit 3b 0lep ttwj, highest HT bin : %6.1f  \n", ti, fit_ttwj_0lep_3b_hh1 ) ;
-      printf(" toy %4d : Fit 3b 0lep qcd,  highest HT bin : %6.1f  \n", ti, fit_qcd__0lep_3b_hh1 ) ;
-      printf(" toy %4d : Fit 3b 0lep znn,  highest HT bin : %6.1f  \n", ti, fit_znn__0lep_3b_hh1 ) ;
+      printf(" toy %4d : Fit 3b 0lep susy, highest HT bin  : %6.1f  \n", ti, fit_susy_0lep_3b_hh1 ) ;
+      printf(" toy %4d : Fit 3b 0lep ttwj, highest HT bin  : %6.1f  \n", ti, fit_ttwj_0lep_3b_hh1 ) ;
+      printf(" toy %4d : Fit 3b 0lep qcd,  highest HT bin  : %6.1f  \n", ti, fit_qcd__0lep_3b_hh1 ) ;
+      printf(" toy %4d : Fit 3b 0lep znn,  highest HT bin  : %6.1f  \n", ti, fit_znn__0lep_3b_hh1 ) ;
 
 
       printf("\n\n") ;
@@ -1338,6 +1564,31 @@
       printf(" toy %4d : Fit 3b 0lep ttwj, highest MET bin : %6.1f  \n", ti, fit_ttwj_0lep_3b_hm1 ) ;
       printf(" toy %4d : Fit 3b 0lep qcd,  highest MET bin : %6.1f  \n", ti, fit_qcd__0lep_3b_hm1 ) ;
       printf(" toy %4d : Fit 3b 0lep znn,  highest MET bin : %6.1f  \n", ti, fit_znn__0lep_3b_hm1 ) ;
+
+
+      printf("\n\n") ;
+      printf(" toy %4d : Fit nb 0lep susy, highest two MET and HT bins : %6.1f  \n", ti, fit_susy_0lep_nb_hm2_hh2 ) ;
+      printf(" toy %4d : Fit nb 0lep ttwj, highest two MET and HT bins : %6.1f  \n", ti, fit_ttwj_0lep_nb_hm2_hh2 ) ;
+      printf(" toy %4d : Fit nb 0lep qcd,  highest two MET and HT bins : %6.1f  \n", ti, fit_qcd__0lep_nb_hm2_hh2 ) ;
+      printf(" toy %4d : Fit nb 0lep znn,  highest two MET and HT bins : %6.1f  \n", ti, fit_znn__0lep_nb_hm2_hh2 ) ;
+
+      printf("\n") ;
+      printf(" toy %4d : Fit 1b 0lep susy, highest two MET and HT bins : %6.1f  \n", ti, fit_susy_0lep_1b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 1b 0lep ttwj, highest two MET and HT bins : %6.1f  \n", ti, fit_ttwj_0lep_1b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 1b 0lep qcd,  highest two MET and HT bins : %6.1f  \n", ti, fit_qcd__0lep_1b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 1b 0lep znn,  highest two MET and HT bins : %6.1f  \n", ti, fit_znn__0lep_1b_hm2_hh2 ) ;
+
+      printf("\n") ;
+      printf(" toy %4d : Fit 2b 0lep susy, highest two MET and HT bins : %6.1f  \n", ti, fit_susy_0lep_2b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 2b 0lep ttwj, highest two MET and HT bins : %6.1f  \n", ti, fit_ttwj_0lep_2b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 2b 0lep qcd,  highest two MET and HT bins : %6.1f  \n", ti, fit_qcd__0lep_2b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 2b 0lep znn,  highest two MET and HT bins : %6.1f  \n", ti, fit_znn__0lep_2b_hm2_hh2 ) ;
+
+      printf("\n") ;
+      printf(" toy %4d : Fit 3b 0lep susy, highest two MET and HT bins : %6.1f  \n", ti, fit_susy_0lep_3b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 3b 0lep ttwj, highest two MET and HT bins : %6.1f  \n", ti, fit_ttwj_0lep_3b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 3b 0lep qcd,  highest two MET and HT bins : %6.1f  \n", ti, fit_qcd__0lep_3b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 3b 0lep znn,  highest two MET and HT bins : %6.1f  \n", ti, fit_znn__0lep_3b_hm2_hh2 ) ;
 
 
       printf("\n") ;
@@ -1431,6 +1682,106 @@
       toytt -> Branch( "fit_ttwj_0lep_3b_hh1", &fit_ttwj_0lep_3b_hh1, "fit_ttwj_0lep_3b_hh1/F" ) ;
       toytt -> Branch( "fit_qcd__0lep_3b_hh1", &fit_qcd__0lep_3b_hh1, "fit_qcd__0lep_3b_hh1/F" ) ;
       toytt -> Branch( "fit_znn__0lep_3b_hh1", &fit_znn__0lep_3b_hh1, "fit_znn__0lep_3b_hh1/F" ) ;
+
+      toytt -> Branch( "fit_susy_0lep_nb_hm2_hh2", &fit_susy_0lep_nb_hm1, "fit_susy_0lep_nb_hm1/F" ) ;
+      toytt -> Branch( "fit_ttwj_0lep_nb_hm2_hh2", &fit_ttwj_0lep_nb_hm1, "fit_ttwj_0lep_nb_hm1/F" ) ;
+      toytt -> Branch( "fit_qcd__0lep_nb_hm2_hh2", &fit_qcd__0lep_nb_hm1, "fit_qcd__0lep_nb_hm1/F" ) ;
+      toytt -> Branch( "fit_znn__0lep_nb_hm2_hh2", &fit_znn__0lep_nb_hm1, "fit_znn__0lep_nb_hm1/F" ) ;
+
+      toytt -> Branch( "fit_susy_0lep_1b_hm2_hh2", &fit_susy_0lep_1b_hm1, "fit_susy_0lep_1b_hm1/F" ) ;
+      toytt -> Branch( "fit_ttwj_0lep_1b_hm2_hh2", &fit_ttwj_0lep_1b_hm1, "fit_ttwj_0lep_1b_hm1/F" ) ;
+      toytt -> Branch( "fit_qcd__0lep_1b_hm2_hh2", &fit_qcd__0lep_1b_hm1, "fit_qcd__0lep_1b_hm1/F" ) ;
+      toytt -> Branch( "fit_znn__0lep_1b_hm2_hh2", &fit_znn__0lep_1b_hm1, "fit_znn__0lep_1b_hm1/F" ) ;
+
+      toytt -> Branch( "fit_susy_0lep_2b_hm2_hh2", &fit_susy_0lep_2b_hm1, "fit_susy_0lep_2b_hm1/F" ) ;
+      toytt -> Branch( "fit_ttwj_0lep_2b_hm2_hh2", &fit_ttwj_0lep_2b_hm1, "fit_ttwj_0lep_2b_hm1/F" ) ;
+      toytt -> Branch( "fit_qcd__0lep_2b_hm2_hh2", &fit_qcd__0lep_2b_hm1, "fit_qcd__0lep_2b_hm1/F" ) ;
+      toytt -> Branch( "fit_znn__0lep_2b_hm2_hh2", &fit_znn__0lep_2b_hm1, "fit_znn__0lep_2b_hm1/F" ) ;
+
+      toytt -> Branch( "fit_susy_0lep_3b_hm2_hh2", &fit_susy_0lep_3b_hm1, "fit_susy_0lep_3b_hm1/F" ) ;
+      toytt -> Branch( "fit_ttwj_0lep_3b_hm2_hh2", &fit_ttwj_0lep_3b_hm1, "fit_ttwj_0lep_3b_hm1/F" ) ;
+      toytt -> Branch( "fit_qcd__0lep_3b_hm2_hh2", &fit_qcd__0lep_3b_hm1, "fit_qcd__0lep_3b_hm1/F" ) ;
+      toytt -> Branch( "fit_znn__0lep_3b_hm2_hh2", &fit_znn__0lep_3b_hm1, "fit_znn__0lep_3b_hm1/F" ) ;
+
+      toytt -> Branch( "mcval_susy_0lep", &mcval_susy_0lep, "mcval_susy_0lep/F" ) ;
+      toytt -> Branch( "mcval_ttwj_0lep", &mcval_ttwj_0lep, "mcval_ttwj_0lep/F" ) ;
+      toytt -> Branch( "mcval_qcd__0lep", &mcval_qcd__0lep, "mcval_qcd__0lep/F" ) ;
+      toytt -> Branch( "mcval_znn__0lep", &mcval_znn__0lep, "mcval_znn__0lep/F" ) ;
+
+      toytt -> Branch( "mcval_susy_0lep_1b", &mcval_susy_0lep_1b, "mcval_susy_0lep_1b/F" ) ;
+      toytt -> Branch( "mcval_ttwj_0lep_1b", &mcval_ttwj_0lep_1b, "mcval_ttwj_0lep_1b/F" ) ;
+      toytt -> Branch( "mcval_qcd__0lep_1b", &mcval_qcd__0lep_1b, "mcval_qcd__0lep_1b/F" ) ;
+      toytt -> Branch( "mcval_znn__0lep_1b", &mcval_znn__0lep_1b, "mcval_znn__0lep_1b/F" ) ;
+
+      toytt -> Branch( "mcval_susy_0lep_2b", &mcval_susy_0lep_2b, "mcval_susy_0lep_2b/F" ) ;
+      toytt -> Branch( "mcval_ttwj_0lep_2b", &mcval_ttwj_0lep_2b, "mcval_ttwj_0lep_2b/F" ) ;
+      toytt -> Branch( "mcval_qcd__0lep_2b", &mcval_qcd__0lep_2b, "mcval_qcd__0lep_2b/F" ) ;
+      toytt -> Branch( "mcval_znn__0lep_2b", &mcval_znn__0lep_2b, "mcval_znn__0lep_2b/F" ) ;
+
+      toytt -> Branch( "mcval_susy_0lep_3b", &mcval_susy_0lep_3b, "mcval_susy_0lep_3b/F" ) ;
+      toytt -> Branch( "mcval_ttwj_0lep_3b", &mcval_ttwj_0lep_3b, "mcval_ttwj_0lep_3b/F" ) ;
+      toytt -> Branch( "mcval_qcd__0lep_3b", &mcval_qcd__0lep_3b, "mcval_qcd__0lep_3b/F" ) ;
+      toytt -> Branch( "mcval_znn__0lep_3b", &mcval_znn__0lep_3b, "mcval_znn__0lep_3b/F" ) ;
+
+      toytt -> Branch( "mcval_susy_0lep_nb_hm1", &mcval_susy_0lep_nb_hm1, "mcval_susy_0lep_nb_hm1/F" ) ;
+      toytt -> Branch( "mcval_ttwj_0lep_nb_hm1", &mcval_ttwj_0lep_nb_hm1, "mcval_ttwj_0lep_nb_hm1/F" ) ;
+      toytt -> Branch( "mcval_qcd__0lep_nb_hm1", &mcval_qcd__0lep_nb_hm1, "mcval_qcd__0lep_nb_hm1/F" ) ;
+      toytt -> Branch( "mcval_znn__0lep_nb_hm1", &mcval_znn__0lep_nb_hm1, "mcval_znn__0lep_nb_hm1/F" ) ;
+
+      toytt -> Branch( "mcval_susy_0lep_1b_hm1", &mcval_susy_0lep_1b_hm1, "mcval_susy_0lep_1b_hm1/F" ) ;
+      toytt -> Branch( "mcval_ttwj_0lep_1b_hm1", &mcval_ttwj_0lep_1b_hm1, "mcval_ttwj_0lep_1b_hm1/F" ) ;
+      toytt -> Branch( "mcval_qcd__0lep_1b_hm1", &mcval_qcd__0lep_1b_hm1, "mcval_qcd__0lep_1b_hm1/F" ) ;
+      toytt -> Branch( "mcval_znn__0lep_1b_hm1", &mcval_znn__0lep_1b_hm1, "mcval_znn__0lep_1b_hm1/F" ) ;
+
+      toytt -> Branch( "mcval_susy_0lep_2b_hm1", &mcval_susy_0lep_2b_hm1, "mcval_susy_0lep_2b_hm1/F" ) ;
+      toytt -> Branch( "mcval_ttwj_0lep_2b_hm1", &mcval_ttwj_0lep_2b_hm1, "mcval_ttwj_0lep_2b_hm1/F" ) ;
+      toytt -> Branch( "mcval_qcd__0lep_2b_hm1", &mcval_qcd__0lep_2b_hm1, "mcval_qcd__0lep_2b_hm1/F" ) ;
+      toytt -> Branch( "mcval_znn__0lep_2b_hm1", &mcval_znn__0lep_2b_hm1, "mcval_znn__0lep_2b_hm1/F" ) ;
+
+      toytt -> Branch( "mcval_susy_0lep_3b_hm1", &mcval_susy_0lep_3b_hm1, "mcval_susy_0lep_3b_hm1/F" ) ;
+      toytt -> Branch( "mcval_ttwj_0lep_3b_hm1", &mcval_ttwj_0lep_3b_hm1, "mcval_ttwj_0lep_3b_hm1/F" ) ;
+      toytt -> Branch( "mcval_qcd__0lep_3b_hm1", &mcval_qcd__0lep_3b_hm1, "mcval_qcd__0lep_3b_hm1/F" ) ;
+      toytt -> Branch( "mcval_znn__0lep_3b_hm1", &mcval_znn__0lep_3b_hm1, "mcval_znn__0lep_3b_hm1/F" ) ;
+
+      toytt -> Branch( "mcval_susy_0lep_nb_hh1", &mcval_susy_0lep_nb_hh1, "mcval_susy_0lep_nb_hh1/F" ) ;
+      toytt -> Branch( "mcval_ttwj_0lep_nb_hh1", &mcval_ttwj_0lep_nb_hh1, "mcval_ttwj_0lep_nb_hh1/F" ) ;
+      toytt -> Branch( "mcval_qcd__0lep_nb_hh1", &mcval_qcd__0lep_nb_hh1, "mcval_qcd__0lep_nb_hh1/F" ) ;
+      toytt -> Branch( "mcval_znn__0lep_nb_hh1", &mcval_znn__0lep_nb_hh1, "mcval_znn__0lep_nb_hh1/F" ) ;
+
+      toytt -> Branch( "mcval_susy_0lep_1b_hh1", &mcval_susy_0lep_1b_hh1, "mcval_susy_0lep_1b_hh1/F" ) ;
+      toytt -> Branch( "mcval_ttwj_0lep_1b_hh1", &mcval_ttwj_0lep_1b_hh1, "mcval_ttwj_0lep_1b_hh1/F" ) ;
+      toytt -> Branch( "mcval_qcd__0lep_1b_hh1", &mcval_qcd__0lep_1b_hh1, "mcval_qcd__0lep_1b_hh1/F" ) ;
+      toytt -> Branch( "mcval_znn__0lep_1b_hh1", &mcval_znn__0lep_1b_hh1, "mcval_znn__0lep_1b_hh1/F" ) ;
+
+      toytt -> Branch( "mcval_susy_0lep_2b_hh1", &mcval_susy_0lep_2b_hh1, "mcval_susy_0lep_2b_hh1/F" ) ;
+      toytt -> Branch( "mcval_ttwj_0lep_2b_hh1", &mcval_ttwj_0lep_2b_hh1, "mcval_ttwj_0lep_2b_hh1/F" ) ;
+      toytt -> Branch( "mcval_qcd__0lep_2b_hh1", &mcval_qcd__0lep_2b_hh1, "mcval_qcd__0lep_2b_hh1/F" ) ;
+      toytt -> Branch( "mcval_znn__0lep_2b_hh1", &mcval_znn__0lep_2b_hh1, "mcval_znn__0lep_2b_hh1/F" ) ;
+
+      toytt -> Branch( "mcval_susy_0lep_3b_hh1", &mcval_susy_0lep_3b_hh1, "mcval_susy_0lep_3b_hh1/F" ) ;
+      toytt -> Branch( "mcval_ttwj_0lep_3b_hh1", &mcval_ttwj_0lep_3b_hh1, "mcval_ttwj_0lep_3b_hh1/F" ) ;
+      toytt -> Branch( "mcval_qcd__0lep_3b_hh1", &mcval_qcd__0lep_3b_hh1, "mcval_qcd__0lep_3b_hh1/F" ) ;
+      toytt -> Branch( "mcval_znn__0lep_3b_hh1", &mcval_znn__0lep_3b_hh1, "mcval_znn__0lep_3b_hh1/F" ) ;
+
+      toytt -> Branch( "mcval_susy_0lep_nb_hm2_hh2", &mcval_susy_0lep_nb_hm1, "mcval_susy_0lep_nb_hm1/F" ) ;
+      toytt -> Branch( "mcval_ttwj_0lep_nb_hm2_hh2", &mcval_ttwj_0lep_nb_hm1, "mcval_ttwj_0lep_nb_hm1/F" ) ;
+      toytt -> Branch( "mcval_qcd__0lep_nb_hm2_hh2", &mcval_qcd__0lep_nb_hm1, "mcval_qcd__0lep_nb_hm1/F" ) ;
+      toytt -> Branch( "mcval_znn__0lep_nb_hm2_hh2", &mcval_znn__0lep_nb_hm1, "mcval_znn__0lep_nb_hm1/F" ) ;
+
+      toytt -> Branch( "mcval_susy_0lep_1b_hm2_hh2", &mcval_susy_0lep_1b_hm1, "mcval_susy_0lep_1b_hm1/F" ) ;
+      toytt -> Branch( "mcval_ttwj_0lep_1b_hm2_hh2", &mcval_ttwj_0lep_1b_hm1, "mcval_ttwj_0lep_1b_hm1/F" ) ;
+      toytt -> Branch( "mcval_qcd__0lep_1b_hm2_hh2", &mcval_qcd__0lep_1b_hm1, "mcval_qcd__0lep_1b_hm1/F" ) ;
+      toytt -> Branch( "mcval_znn__0lep_1b_hm2_hh2", &mcval_znn__0lep_1b_hm1, "mcval_znn__0lep_1b_hm1/F" ) ;
+
+      toytt -> Branch( "mcval_susy_0lep_2b_hm2_hh2", &mcval_susy_0lep_2b_hm1, "mcval_susy_0lep_2b_hm1/F" ) ;
+      toytt -> Branch( "mcval_ttwj_0lep_2b_hm2_hh2", &mcval_ttwj_0lep_2b_hm1, "mcval_ttwj_0lep_2b_hm1/F" ) ;
+      toytt -> Branch( "mcval_qcd__0lep_2b_hm2_hh2", &mcval_qcd__0lep_2b_hm1, "mcval_qcd__0lep_2b_hm1/F" ) ;
+      toytt -> Branch( "mcval_znn__0lep_2b_hm2_hh2", &mcval_znn__0lep_2b_hm1, "mcval_znn__0lep_2b_hm1/F" ) ;
+
+      toytt -> Branch( "mcval_susy_0lep_3b_hm2_hh2", &mcval_susy_0lep_3b_hm1, "mcval_susy_0lep_3b_hm1/F" ) ;
+      toytt -> Branch( "mcval_ttwj_0lep_3b_hm2_hh2", &mcval_ttwj_0lep_3b_hm1, "mcval_ttwj_0lep_3b_hm1/F" ) ;
+      toytt -> Branch( "mcval_qcd__0lep_3b_hm2_hh2", &mcval_qcd__0lep_3b_hm1, "mcval_qcd__0lep_3b_hm1/F" ) ;
+      toytt -> Branch( "mcval_znn__0lep_3b_hm2_hh2", &mcval_znn__0lep_3b_hm1, "mcval_znn__0lep_3b_hm1/F" ) ;
 
       toytt -> Branch( "fit_qcd_0lepLDP_ratio_H1", &fit_qcd_0lepLDP_ratio_H1, "fit_qcd_0lepLDP_ratio_H1/F" ) ;
       toytt -> Branch( "fit_qcd_0lepLDP_ratio_H2", &fit_qcd_0lepLDP_ratio_H2, "fit_qcd_0lepLDP_ratio_H2/F" ) ;
@@ -1608,6 +1959,342 @@
    } // saveToyDatfile
 
    //==================================================================================
+
+   bool readAndSetMCVals() {
+
+
+      //--- Note: the truth susy values do NOT come from the mcvals root file.  They come from the SUSY .dat file
+      //          and the ttree variables are set in addSusyToExpectedObs.
+
+      mcval_ttwj_0lep = 0. ;
+      mcval_qcd__0lep = 0. ;
+      mcval_znn__0lep = 0. ;
+
+      mcval_ttwj_0lep_1b = 0. ;
+      mcval_qcd__0lep_1b = 0. ;
+      mcval_znn__0lep_1b = 0. ;
+
+      mcval_ttwj_0lep_2b = 0. ;
+      mcval_qcd__0lep_2b = 0. ;
+      mcval_znn__0lep_2b = 0. ;
+
+      mcval_ttwj_0lep_3b = 0. ;
+      mcval_qcd__0lep_3b = 0. ;
+      mcval_znn__0lep_3b = 0. ;
+
+      mcval_ttwj_0lep_nb_hm1 = 0. ;
+      mcval_qcd__0lep_nb_hm1 = 0. ;
+      mcval_znn__0lep_nb_hm1 = 0. ;
+
+      mcval_ttwj_0lep_1b_hm1 = 0. ;
+      mcval_qcd__0lep_1b_hm1 = 0. ;
+      mcval_znn__0lep_1b_hm1 = 0. ;
+
+      mcval_ttwj_0lep_2b_hm1 = 0. ;
+      mcval_qcd__0lep_2b_hm1 = 0. ;
+      mcval_znn__0lep_2b_hm1 = 0. ;
+
+      mcval_ttwj_0lep_3b_hm1 = 0. ;
+      mcval_qcd__0lep_3b_hm1 = 0. ;
+      mcval_znn__0lep_3b_hm1 = 0. ;
+
+      mcval_ttwj_0lep_nb_hh1 = 0. ;
+      mcval_qcd__0lep_nb_hh1 = 0. ;
+      mcval_znn__0lep_nb_hh1 = 0. ;
+
+      mcval_ttwj_0lep_1b_hh1 = 0. ;
+      mcval_qcd__0lep_1b_hh1 = 0. ;
+      mcval_znn__0lep_1b_hh1 = 0. ;
+
+      mcval_ttwj_0lep_2b_hh1 = 0. ;
+      mcval_qcd__0lep_2b_hh1 = 0. ;
+      mcval_znn__0lep_2b_hh1 = 0. ;
+
+      mcval_ttwj_0lep_3b_hh1 = 0. ;
+      mcval_qcd__0lep_3b_hh1 = 0. ;
+      mcval_znn__0lep_3b_hh1 = 0. ;
+
+      mcval_ttwj_0lep_nb_hm2_hh2 = 0. ;
+      mcval_qcd__0lep_nb_hm2_hh2 = 0. ;
+      mcval_znn__0lep_nb_hm2_hh2 = 0. ;
+
+      mcval_ttwj_0lep_1b_hm2_hh2 = 0. ;
+      mcval_qcd__0lep_1b_hm2_hh2 = 0. ;
+      mcval_znn__0lep_1b_hm2_hh2 = 0. ;
+
+      mcval_ttwj_0lep_2b_hm2_hh2 = 0. ;
+      mcval_qcd__0lep_2b_hm2_hh2 = 0. ;
+      mcval_znn__0lep_2b_hm2_hh2 = 0. ;
+
+      mcval_ttwj_0lep_3b_hm2_hh2 = 0. ;
+      mcval_qcd__0lep_3b_hm2_hh2 = 0. ;
+      mcval_znn__0lep_3b_hm2_hh2 = 0. ;
+
+
+      printf("\n\n Reading in MC values from %s\n\n", mcvals_rootfile ) ;
+
+      TFile mcfile( mcvals_rootfile, "READ" ) ;
+      if ( ! mcfile.IsOpen() ) {
+         return false ;
+      }
+
+      TH1F* httwj[nBinsBjets] ;
+      TH1F* hqcd[nBinsBjets] ;
+      TH1F* hznn[nBinsBjets] ;
+
+      for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+
+         char hname[1000] ;
+         TH1F* hist ;
+
+         sprintf( hname, "hmctruth_ttwj_0lep_%db", bbi+1 ) ;
+         hist = (TH1F*) mcfile.Get( hname ) ;
+         if ( hist == 0x0 ) { printf("\n\n *** Missing MC histogram %s\n\n", hname ) ; return false ; }
+         httwj[bbi] = hist ;
+
+         sprintf( hname, "hmctruth_qcd_0lep_%db", bbi+1 ) ;
+         hist = (TH1F*) mcfile.Get( hname ) ;
+         if ( hist == 0x0 ) { printf("\n\n *** Missing MC histogram %s\n\n", hname ) ; return false ; }
+         hqcd[bbi] = hist ;
+
+         sprintf( hname, "hmctruth_znn_0lep_%db", bbi+1 ) ;
+         hist = (TH1F*) mcfile.Get( hname ) ;
+         if ( hist == 0x0 ) { printf("\n\n *** Missing MC histogram %s\n\n", hname ) ; return false ; }
+         hznn[bbi] = hist ;
+
+      } // bbi.
+
+      int mcnBinsMET(0), mcnBinsHT(0) ;
+
+      char binlabel[1000] ;
+      sprintf( binlabel, "%s", httwj[0] -> GetXaxis() -> GetBinLabel( httwj[0]->GetNbinsX() - 1 ) ) ;
+      sscanf( binlabel, "0lep_M%d_H%d_1b", &mcnBinsMET, &mcnBinsHT ) ;
+      if ( mcnBinsMET != nBinsMET || mcnBinsHT != nBinsHT ) {
+         printf("\n\n *** Incompatible MET,HT binning.\n") ;
+         printf("  toymc setting   : MET=%d, HT=%d\n", nBinsMET, nBinsHT) ;
+         printf("  mcvals rootfile : MET=%d, HT=%d\n", mcnBinsMET, mcnBinsHT) ;
+         printf("\n\n") ;
+         return false ;
+      }
+
+
+      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+
+               int hbin = 1 + hbi + mbi*(nBinsHT+1) + 1 ;
+
+               mcval_ttwj_0lep += httwj[bbi] -> GetBinContent( hbin ) ;
+               mcval_qcd__0lep += hqcd[bbi]  -> GetBinContent( hbin ) ;
+               mcval_znn__0lep += hznn[bbi]  -> GetBinContent( hbin ) ;
+
+               if ( mbi == (nBinsMET-1) ) {
+                  mcval_ttwj_0lep_nb_hm1 += httwj[bbi] -> GetBinContent( hbin ) ;
+                  mcval_qcd__0lep_nb_hm1 += hqcd[bbi]  -> GetBinContent( hbin ) ;
+                  mcval_znn__0lep_nb_hm1 += hznn[bbi]  -> GetBinContent( hbin ) ;
+               }
+
+               if ( hbi == (nBinsMET-1) ) {
+                  mcval_ttwj_0lep_nb_hh1 += httwj[bbi] -> GetBinContent( hbin ) ;
+                  mcval_qcd__0lep_nb_hh1 += hqcd[bbi]  -> GetBinContent( hbin ) ;
+                  mcval_znn__0lep_nb_hh1 += hznn[bbi]  -> GetBinContent( hbin ) ;
+               }
+
+               if ( mbi >= (nBinsMET-2) && hbi >= (nBinsHT-2) ) {
+                  mcval_ttwj_0lep_nb_hm2_hh2 += httwj[bbi] -> GetBinContent( hbin ) ;
+                  mcval_qcd__0lep_nb_hm2_hh2 += hqcd[bbi]  -> GetBinContent( hbin ) ;
+                  mcval_znn__0lep_nb_hm2_hh2 += hznn[bbi]  -> GetBinContent( hbin ) ;
+               }
+
+
+
+               if ( bbi == 0 ) {
+                  mcval_ttwj_0lep_1b += httwj[bbi] -> GetBinContent( hbin ) ;
+                  mcval_qcd__0lep_1b += hqcd[bbi]  -> GetBinContent( hbin ) ;
+                  mcval_znn__0lep_1b += hznn[bbi]  -> GetBinContent( hbin ) ;
+                  if ( mbi == (nBinsMET-1) ) {
+                     mcval_ttwj_0lep_1b_hm1 += httwj[bbi] -> GetBinContent( hbin ) ;
+                     mcval_qcd__0lep_1b_hm1 += hqcd[bbi]  -> GetBinContent( hbin ) ;
+                     mcval_znn__0lep_1b_hm1 += hznn[bbi]  -> GetBinContent( hbin ) ;
+                  }
+                  if ( hbi == (nBinsMET-1) ) {
+                     mcval_ttwj_0lep_1b_hh1 += httwj[bbi] -> GetBinContent( hbin ) ;
+                     mcval_qcd__0lep_1b_hh1 += hqcd[bbi]  -> GetBinContent( hbin ) ;
+                     mcval_znn__0lep_1b_hh1 += hznn[bbi]  -> GetBinContent( hbin ) ;
+                  }
+                  if ( mbi >= (nBinsMET-2) && hbi >= (nBinsHT-2) ) {
+                     mcval_ttwj_0lep_1b_hm2_hh2 += httwj[bbi] -> GetBinContent( hbin ) ;
+                     mcval_qcd__0lep_1b_hm2_hh2 += hqcd[bbi]  -> GetBinContent( hbin ) ;
+                     mcval_znn__0lep_1b_hm2_hh2 += hznn[bbi]  -> GetBinContent( hbin ) ;
+                  }
+               }
+
+               if ( bbi == 1 ) {
+                  mcval_ttwj_0lep_2b += httwj[bbi] -> GetBinContent( hbin ) ;
+                  mcval_qcd__0lep_2b += hqcd[bbi]  -> GetBinContent( hbin ) ;
+                  mcval_znn__0lep_2b += hznn[bbi]  -> GetBinContent( hbin ) ;
+                  if ( mbi == (nBinsMET-1) ) {
+                     mcval_ttwj_0lep_2b_hm1 += httwj[bbi] -> GetBinContent( hbin ) ;
+                     mcval_qcd__0lep_2b_hm1 += hqcd[bbi]  -> GetBinContent( hbin ) ;
+                     mcval_znn__0lep_2b_hm1 += hznn[bbi]  -> GetBinContent( hbin ) ;
+                  }
+                  if ( hbi == (nBinsMET-1) ) {
+                     mcval_ttwj_0lep_2b_hh1 += httwj[bbi] -> GetBinContent( hbin ) ;
+                     mcval_qcd__0lep_2b_hh1 += hqcd[bbi]  -> GetBinContent( hbin ) ;
+                     mcval_znn__0lep_2b_hh1 += hznn[bbi]  -> GetBinContent( hbin ) ;
+                  }
+                  if ( mbi >= (nBinsMET-2) && hbi >= (nBinsHT-2) ) {
+                     mcval_ttwj_0lep_2b_hm2_hh2 += httwj[bbi] -> GetBinContent( hbin ) ;
+                     mcval_qcd__0lep_2b_hm2_hh2 += hqcd[bbi]  -> GetBinContent( hbin ) ;
+                     mcval_znn__0lep_2b_hm2_hh2 += hznn[bbi]  -> GetBinContent( hbin ) ;
+                  }
+               }
+
+               if ( bbi == 2 ) {
+                  mcval_ttwj_0lep_3b += httwj[bbi] -> GetBinContent( hbin ) ;
+                  mcval_qcd__0lep_3b += hqcd[bbi]  -> GetBinContent( hbin ) ;
+                  mcval_znn__0lep_3b += hznn[bbi]  -> GetBinContent( hbin ) ;
+                  if ( mbi == (nBinsMET-1) ) {
+                     mcval_ttwj_0lep_3b_hm1 += httwj[bbi] -> GetBinContent( hbin ) ;
+                     mcval_qcd__0lep_3b_hm1 += hqcd[bbi]  -> GetBinContent( hbin ) ;
+                     mcval_znn__0lep_3b_hm1 += hznn[bbi]  -> GetBinContent( hbin ) ;
+                  }
+                  if ( hbi == (nBinsMET-1) ) {
+                     mcval_ttwj_0lep_3b_hh1 += httwj[bbi] -> GetBinContent( hbin ) ;
+                     mcval_qcd__0lep_3b_hh1 += hqcd[bbi]  -> GetBinContent( hbin ) ;
+                     mcval_znn__0lep_3b_hh1 += hznn[bbi]  -> GetBinContent( hbin ) ;
+                  }
+                  if ( mbi >= (nBinsMET-2) && hbi >= (nBinsHT-2) ) {
+                     mcval_ttwj_0lep_3b_hm2_hh2 += httwj[bbi] -> GetBinContent( hbin ) ;
+                     mcval_qcd__0lep_3b_hm2_hh2 += hqcd[bbi]  -> GetBinContent( hbin ) ;
+                     mcval_znn__0lep_3b_hm2_hh2 += hznn[bbi]  -> GetBinContent( hbin ) ;
+                  }
+               }
+
+            } // bbi.
+         } // hbi.
+      } // mbi.
+
+      printf("\n") ;
+      printf(" mcval_susy_0lep         %6.1f\n", mcval_susy_0lep         ) ;
+      printf(" mcval_ttwj_0lep         %6.1f\n", mcval_ttwj_0lep         ) ;
+      printf(" mcval_qcd__0lep         %6.1f\n", mcval_qcd__0lep         ) ;
+      printf(" mcval_znn__0lep         %6.1f\n", mcval_znn__0lep         ) ;
+
+      printf("\n") ;
+      printf(" mcval_susy_0lep_1b      %6.1f\n", mcval_susy_0lep_1b      ) ;
+      printf(" mcval_ttwj_0lep_1b      %6.1f\n", mcval_ttwj_0lep_1b      ) ;
+      printf(" mcval_qcd__0lep_1b      %6.1f\n", mcval_qcd__0lep_1b      ) ;
+      printf(" mcval_znn__0lep_1b      %6.1f\n", mcval_znn__0lep_1b      ) ;
+
+      printf("\n") ;
+      printf(" mcval_susy_0lep_2b      %6.1f\n", mcval_susy_0lep_2b      ) ;
+      printf(" mcval_ttwj_0lep_2b      %6.1f\n", mcval_ttwj_0lep_2b      ) ;
+      printf(" mcval_qcd__0lep_2b      %6.1f\n", mcval_qcd__0lep_2b      ) ;
+      printf(" mcval_znn__0lep_2b      %6.1f\n", mcval_znn__0lep_2b      ) ;
+
+      printf("\n") ;
+      printf(" mcval_susy_0lep_3b      %6.1f\n", mcval_susy_0lep_3b      ) ;
+      printf(" mcval_ttwj_0lep_3b      %6.1f\n", mcval_ttwj_0lep_3b      ) ;
+      printf(" mcval_qcd__0lep_3b      %6.1f\n", mcval_qcd__0lep_3b      ) ;
+      printf(" mcval_znn__0lep_3b      %6.1f\n", mcval_znn__0lep_3b      ) ;
+
+      printf("\n") ;
+      printf(" mcval_susy_0lep_nb_hm1  %6.1f\n", mcval_susy_0lep_nb_hm1  ) ;
+      printf(" mcval_ttwj_0lep_nb_hm1  %6.1f\n", mcval_ttwj_0lep_nb_hm1  ) ;
+      printf(" mcval_qcd__0lep_nb_hm1  %6.1f\n", mcval_qcd__0lep_nb_hm1  ) ;
+      printf(" mcval_znn__0lep_nb_hm1  %6.1f\n", mcval_znn__0lep_nb_hm1  ) ;
+
+      printf("\n") ;
+      printf(" mcval_susy_0lep_1b_hm1  %6.1f\n", mcval_susy_0lep_1b_hm1  ) ;
+      printf(" mcval_ttwj_0lep_1b_hm1  %6.1f\n", mcval_ttwj_0lep_1b_hm1  ) ;
+      printf(" mcval_qcd__0lep_1b_hm1  %6.1f\n", mcval_qcd__0lep_1b_hm1  ) ;
+      printf(" mcval_znn__0lep_1b_hm1  %6.1f\n", mcval_znn__0lep_1b_hm1  ) ;
+
+      printf("\n") ;
+      printf(" mcval_susy_0lep_2b_hm1  %6.1f\n", mcval_susy_0lep_2b_hm1  ) ;
+      printf(" mcval_ttwj_0lep_2b_hm1  %6.1f\n", mcval_ttwj_0lep_2b_hm1  ) ;
+      printf(" mcval_qcd__0lep_2b_hm1  %6.1f\n", mcval_qcd__0lep_2b_hm1  ) ;
+      printf(" mcval_znn__0lep_2b_hm1  %6.1f\n", mcval_znn__0lep_2b_hm1  ) ;
+
+      printf("\n") ;
+      printf(" mcval_susy_0lep_3b_hm1  %6.1f\n", mcval_susy_0lep_3b_hm1  ) ;
+      printf(" mcval_ttwj_0lep_3b_hm1  %6.1f\n", mcval_ttwj_0lep_3b_hm1  ) ;
+      printf(" mcval_qcd__0lep_3b_hm1  %6.1f\n", mcval_qcd__0lep_3b_hm1  ) ;
+      printf(" mcval_znn__0lep_3b_hm1  %6.1f\n", mcval_znn__0lep_3b_hm1  ) ;
+
+      printf("\n") ;
+      printf(" mcval_susy_0lep_nb_hh1  %6.1f\n", mcval_susy_0lep_nb_hh1  ) ;
+      printf(" mcval_ttwj_0lep_nb_hh1  %6.1f\n", mcval_ttwj_0lep_nb_hh1  ) ;
+      printf(" mcval_qcd__0lep_nb_hh1  %6.1f\n", mcval_qcd__0lep_nb_hh1  ) ;
+      printf(" mcval_znn__0lep_nb_hh1  %6.1f\n", mcval_znn__0lep_nb_hh1  ) ;
+
+      printf("\n") ;
+      printf(" mcval_susy_0lep_1b_hh1  %6.1f\n", mcval_susy_0lep_1b_hh1  ) ;
+      printf(" mcval_ttwj_0lep_1b_hh1  %6.1f\n", mcval_ttwj_0lep_1b_hh1  ) ;
+      printf(" mcval_qcd__0lep_1b_hh1  %6.1f\n", mcval_qcd__0lep_1b_hh1  ) ;
+      printf(" mcval_znn__0lep_1b_hh1  %6.1f\n", mcval_znn__0lep_1b_hh1  ) ;
+
+      printf("\n") ;
+      printf(" mcval_susy_0lep_2b_hh1  %6.1f\n", mcval_susy_0lep_2b_hh1  ) ;
+      printf(" mcval_ttwj_0lep_2b_hh1  %6.1f\n", mcval_ttwj_0lep_2b_hh1  ) ;
+      printf(" mcval_qcd__0lep_2b_hh1  %6.1f\n", mcval_qcd__0lep_2b_hh1  ) ;
+      printf(" mcval_znn__0lep_2b_hh1  %6.1f\n", mcval_znn__0lep_2b_hh1  ) ;
+
+      printf("\n") ;
+      printf(" mcval_susy_0lep_3b_hh1  %6.1f\n", mcval_susy_0lep_3b_hh1  ) ;
+      printf(" mcval_ttwj_0lep_3b_hh1  %6.1f\n", mcval_ttwj_0lep_3b_hh1  ) ;
+      printf(" mcval_qcd__0lep_3b_hh1  %6.1f\n", mcval_qcd__0lep_3b_hh1  ) ;
+      printf(" mcval_znn__0lep_3b_hh1  %6.1f\n", mcval_znn__0lep_3b_hh1  ) ;
+
+      printf("\n") ;
+      printf(" mcval_susy_0lep_nb_hm2_hh2  %6.1f\n", mcval_susy_0lep_nb_hm2_hh2  ) ;
+      printf(" mcval_ttwj_0lep_nb_hm2_hh2  %6.1f\n", mcval_ttwj_0lep_nb_hm2_hh2  ) ;
+      printf(" mcval_qcd__0lep_nb_hm2_hh2  %6.1f\n", mcval_qcd__0lep_nb_hm2_hh2  ) ;
+      printf(" mcval_znn__0lep_nb_hm2_hh2  %6.1f\n", mcval_znn__0lep_nb_hm2_hh2  ) ;
+
+      printf("\n") ;
+      printf(" mcval_susy_0lep_1b_hm2_hh2  %6.1f\n", mcval_susy_0lep_1b_hm2_hh2  ) ;
+      printf(" mcval_ttwj_0lep_1b_hm2_hh2  %6.1f\n", mcval_ttwj_0lep_1b_hm2_hh2  ) ;
+      printf(" mcval_qcd__0lep_1b_hm2_hh2  %6.1f\n", mcval_qcd__0lep_1b_hm2_hh2  ) ;
+      printf(" mcval_znn__0lep_1b_hm2_hh2  %6.1f\n", mcval_znn__0lep_1b_hm2_hh2  ) ;
+
+      printf("\n") ;
+      printf(" mcval_susy_0lep_2b_hm2_hh2  %6.1f\n", mcval_susy_0lep_2b_hm2_hh2  ) ;
+      printf(" mcval_ttwj_0lep_2b_hm2_hh2  %6.1f\n", mcval_ttwj_0lep_2b_hm2_hh2  ) ;
+      printf(" mcval_qcd__0lep_2b_hm2_hh2  %6.1f\n", mcval_qcd__0lep_2b_hm2_hh2  ) ;
+      printf(" mcval_znn__0lep_2b_hm2_hh2  %6.1f\n", mcval_znn__0lep_2b_hm2_hh2  ) ;
+
+      printf("\n") ;
+      printf(" mcval_susy_0lep_3b_hm2_hh2  %6.1f\n", mcval_susy_0lep_3b_hm2_hh2  ) ;
+      printf(" mcval_ttwj_0lep_3b_hm2_hh2  %6.1f\n", mcval_ttwj_0lep_3b_hm2_hh2  ) ;
+      printf(" mcval_qcd__0lep_3b_hm2_hh2  %6.1f\n", mcval_qcd__0lep_3b_hm2_hh2  ) ;
+      printf(" mcval_znn__0lep_3b_hm2_hh2  %6.1f\n", mcval_znn__0lep_3b_hm2_hh2  ) ;
+
+      printf("\n\n") ;
+
+
+      return true ;
+
+   } // readAndSetMCVals
+
+
+   //==================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

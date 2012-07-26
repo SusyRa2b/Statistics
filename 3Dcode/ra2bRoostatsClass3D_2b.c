@@ -621,11 +621,10 @@
       printf(" --- Defining observables and parameters of the likelihood.\n" ) ;
 
 
- //// rv_mu_susy_M1_H1_1b = new RooRealVar( "mu_susy_M1_H1_1b", "mu_susy_M1_H1_1b", 0., 100000. ) ;
- //// rv_mu_susy_M1_H1_1b->setVal( 1. ) ;
- //// rv_mu_susy_M1_H1_1b->setConstant( kTRUE ) ;
+      //--- try allowing negative signal yields and see what happens...
 
-      rv_mu_susy_all0lep = new RooRealVar( "mu_susy_all0lep", "mu_susy_all0lep", 0., 100000. ) ;
+  /// rv_mu_susy_all0lep = new RooRealVar( "mu_susy_all0lep", "mu_susy_all0lep", 0., 100000. ) ;
+      rv_mu_susy_all0lep = new RooRealVar( "mu_susy_all0lep", "mu_susy_all0lep", -1000., 100000. ) ;
       rv_mu_susy_all0lep->setVal( 1. ) ;
       rv_mu_susy_all0lep->setConstant( kTRUE ) ;
 
