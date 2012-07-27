@@ -4,8 +4,8 @@
                 double input_mgl=850, double input_mlsp=600.,
                 const char* input_deffdbtagfile = "datfiles/dummy_DeffDbtag-met4-ht4.dat",
                 double input_nSusy0lep = 100.,
-                const char* input_outputDir = "output-toymc2b-mgl850-mlsp600-100evts-newMC-wsyst-test2d",
-                int nToy = 50,
+                const char* input_outputDir = "output-toymc2b-mgl850-mlsp600-100evts-newMC-wsyst-test4b",
+                int nToy = 100,
                 const char* input_mcvals_rootfile = "rootfiles/gi-plots-met4-ht4-newMC.root"
       ) {
      gROOT->LoadMacro("RooRatio.cxx+") ;
