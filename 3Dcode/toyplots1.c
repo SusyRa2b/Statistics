@@ -58,7 +58,7 @@
          TCanvas* can = (TCanvas*) gDirectory->FindObject( cname ) ;
          if ( can == 0x0 ) {
             can = new TCanvas( cname, cname, 500, 500 ) ;
-            can -> SetWindowPosition(1+200*cani,1+25*cani) ;
+            can -> SetWindowPosition(1+30*cani,1+25*cani) ;
          }
          can->Clear() ;
          can->Divide(2,2) ;
