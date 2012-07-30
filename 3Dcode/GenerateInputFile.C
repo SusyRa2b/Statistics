@@ -135,19 +135,19 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 //float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,800.,99999.};
 
-////-- met3-ht3-v1
-//const int nBinsMET   = 3 ;
-//const int nBinsHT    = 3 ;
-//    const int version = 1;
-//float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
-//float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
+  //-- met3-ht3-v1
+  const int nBinsMET   = 3 ;
+  const int nBinsHT    = 3 ;
+      const int version = 1;
+  float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
+  float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 
 ////-- met3-ht3-v2
-const int nBinsMET   = 3 ;
-const int nBinsHT    = 3 ;
-    const int version = 2;
-float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
-float Hbins[nBinsHT+1] = {300.,500.,1000.,99999.};
+//const int nBinsMET   = 3 ;
+//const int nBinsHT    = 3 ;
+//    const int version = 2;
+//float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
+//float Hbins[nBinsHT+1] = {300.,500.,1000.,99999.};
 
 ////-- met3-ht4-v1
 //const int nBinsMET   = 3 ;
