@@ -79,7 +79,8 @@
 					    const char* inputScanFile,
 					    double m0, double m12, bool isT1bbbb, double t1bbbbXsec,
 					    const char* inputSusy_deff_dbtageff_file,
-                                            int   qcdModelIndex
+                                            int   qcdModelIndex,
+                                            const char* wsrootfilename
 					    ) {
 
       printf( "\n\n Opening input file : %s\n\n", infile ) ;
@@ -1602,8 +1603,8 @@
       
 
       workspace.Print() ;
-      printf("\n\n Creating output root file: ws.root\n\n\n") ;
-      workspace.writeToFile("ws.root");
+      printf("\n\n Creating output root file: %s\n\n\n", wsrootfilename) ;
+      workspace.writeToFile(wsrootfilename);
 
       return true;
 

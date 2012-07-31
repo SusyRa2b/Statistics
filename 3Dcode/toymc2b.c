@@ -113,6 +113,7 @@
    bool doUL ;
 
 
+   bool useExpected0lep ;
 
 
 
@@ -146,7 +147,7 @@
                 const char* input_outputDir = "output-toymc2b",
                 int nToy = 10,
                 const char* input_mcvals_rootfile = "rootfiles/gi-plots-met4-ht4-newMC.root",
-                bool useExpected0lep = false
+                bool input_useExpected0lep = false
                         ) {
 
        char command[10000] ;
@@ -191,6 +192,8 @@
        //// useExpected0lep = false ;
        //// useExpected0lep = true ;
 
+       useExpected0lep = input_useExpected0lep ;
+
 
        tran = new TRandom(12345) ;
 
@@ -203,13 +206,11 @@
        ra2bRoostatsClass3D_2b ra2b ;
 
        int qcdModelIndex = 2 ;
-       ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, qcdModelIndex ) ;
-
-       sprintf( command, "mv ws.root %s/", outputDir ) ;
-       gSystem->Exec( command ) ;
 
        char wsfilename[10000] ;
        sprintf( wsfilename, "%s/ws.root", outputDir ) ;
+       ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, qcdModelIndex, wsfilename ) ;
+
        TFile wsfile( wsfilename ) ;
        workspace = (RooWorkspace*) wsfile.Get("ws") ;
        if ( workspace == 0x0 ) {
