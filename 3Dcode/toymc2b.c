@@ -112,7 +112,6 @@
    bool doSignif ;
    bool doUL ;
 
-   bool useExpected0lep ;
 
 
 
@@ -146,7 +145,8 @@
                 double input_nSusy0lep = 60.,
                 const char* input_outputDir = "output-toymc2b",
                 int nToy = 10,
-                const char* input_mcvals_rootfile = "rootfiles/gi-plots-met4-ht4-newMC.root"
+                const char* input_mcvals_rootfile = "rootfiles/gi-plots-met4-ht4-newMC.root",
+                bool useExpected0lep = false ;
                         ) {
 
        char command[10000] ;
@@ -187,8 +187,9 @@
        doSignif = false ;
        doUL = false ;
 
+      //--- this is now an argument.
        //// useExpected0lep = false ;
-       useExpected0lep = true ;
+       //// useExpected0lep = true ;
 
 
        tran = new TRandom(12345) ;
