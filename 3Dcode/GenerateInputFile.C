@@ -135,12 +135,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 //float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,800.,99999.};
 
-  //-- met3-ht3-v1
-  const int nBinsMET   = 3 ;
-  const int nBinsHT    = 3 ;
-      const int version = 1;
-  float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
-  float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
+////-- met3-ht3-v1
+const int nBinsMET   = 3 ;
+const int nBinsHT    = 3 ;
+    const int version = 1;
+float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
+float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 
 ////-- met3-ht3-v2
 //const int nBinsMET   = 3 ;
@@ -1019,12 +1019,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     char outHistName[1000] ;
     if ( mgl>0. && mlsp>0. ) {
        if ( target_susy_all0lep > 0 ) {
-          sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%.0fevts-met%d-ht%d.root", mgl, mlsp, target_susy_all0lep, nBinsMET, nBinsHT ) ;
+          sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%.0fevts-met%d-ht%d-v%d.root", mgl, mlsp, target_susy_all0lep, nBinsMET, nBinsHT, version ) ;
        } else {
-          sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-met%d-ht%d.root", mgl, mlsp, nBinsMET, nBinsHT ) ;
+          sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-met%d-ht%d-v%d.root", mgl, mlsp, nBinsMET, nBinsHT, version ) ;
        }
     } else {
-       sprintf( outHistName, "rootfiles/gi-plots-met%d-ht%d.root", nBinsMET, nBinsHT ) ;
+       sprintf( outHistName, "rootfiles/gi-plots-met%d-ht%d-v%d.root", nBinsMET, nBinsHT, version ) ;
     }
     saveHist( outHistName, "hmc*" ) ;
 
