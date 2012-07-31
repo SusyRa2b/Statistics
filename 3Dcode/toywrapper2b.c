@@ -6,10 +6,11 @@
                 double input_nSusy0lep = 100.,
                 const char* input_outputDir = "output-toymc2b-mgl800-mlsp300-100evts-wsyst-test6e-useEZLtrue",
                 int nToy = 100,
-                const char* input_mcvals_rootfile = "rootfiles/gi-plots-met3-ht3.root"
+                const char* input_mcvals_rootfile = "rootfiles/gi-plots-met3-ht3.root",
+                bool useExpected0lep = false
       ) {
      gROOT->LoadMacro("RooRatio.cxx+") ;
      gROOT->LoadMacro("toymc2b.c+") ;
-     toymc2b( input_datfile, input_susyfile, input_mgl, input_mlsp, input_deffdbtagfile, input_nSusy0lep, input_outputDir, nToy, input_mcvals_rootfile ) ;
+     toymc2b( input_datfile, input_susyfile, input_mgl, input_mlsp, input_deffdbtagfile, input_nSusy0lep, input_outputDir, nToy, input_mcvals_rootfile, useExpected0lep ) ;
   }
 
