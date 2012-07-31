@@ -146,7 +146,7 @@
                 const char* input_outputDir = "output-toymc2b",
                 int nToy = 10,
                 const char* input_mcvals_rootfile = "rootfiles/gi-plots-met4-ht4-newMC.root",
-                bool useExpected0lep = false ;
+                bool useExpected0lep = false
                         ) {
 
        char command[10000] ;
