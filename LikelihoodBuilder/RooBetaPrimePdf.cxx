@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: RooFit                                                           *
  * Package: RooFitModels                                                     *
- * @(#)root/roofit:$Id: RooBetaPrimePdf.cxx 34064 2010-06-22 15:05:19Z wouter $
+ * @(#)root/roofit:$Id: RooBetaPrimePdf.cxx,v 1.1 2012/07/20 13:22:48 kreis Exp $
  * Authors:                                                                  *
  *   WV, Wouter Verkerke, UC Santa Barbara, verkerke@slac.stanford.edu       *
  *   DK, David Kirkby,    UC Irvine,         dkirkby@uci.edu                 *
@@ -63,7 +63,7 @@ RooBetaPrimePdf::RooBetaPrimePdf(const RooBetaPrimePdf& other, const char* name)
 Double_t RooBetaPrimePdf::evaluate() const
 {
   if(x<=0) return 0;
-  return pow(x,alpha-1)*pow(1+x,-alpha-beta);
+  return pow(x,alpha-1)*pow(1+x,-alpha-beta)/ROOT::Math::beta(alpha,beta);
 }
 
 
@@ -81,7 +81,7 @@ Int_t RooBetaPrimePdf::getAnalyticalIntegral(RooArgSet& allVars, RooArgSet& anal
 Double_t RooBetaPrimePdf::analyticalIntegral(Int_t code, const char* rangeName) const 
 {
   assert(code==1) ;
-  double retVal = ROOT::Math::beta(alpha,beta);
+  double retVal = 1.0;//ROOT::Math::beta(alpha,beta);
   if( x.min(rangeName) <=  0. && x.max(rangeName) == RooNumber::infinity()) return retVal;
   if( x.min(rangeName) <=  0.) return retVal*ROOT::Math::beta_cdf( x.max(rangeName) / (1+x.max(rangeName)), alpha , beta ) ;
   return ( retVal*(ROOT::Math::beta_cdf( x.max(rangeName) / (1+x.max(rangeName)), alpha , beta ) - ROOT::Math::beta_cdf( x.min(rangeName) / (1+x.min(rangeName)), alpha , beta ) ) ) ;
