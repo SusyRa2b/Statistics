@@ -23,7 +23,17 @@
 
    const int nCanvas(9) ;
 
-   char plotname[nCanvas][100] = { "nbjet", "met", "ht", "met_nbjet1", "met_nbjet2", "met_nbjet3", "ht_nbjet1", "ht_nbjet2", "ht_nbjet3" } ;
+   char plotname[nCanvas][100] = { 
+       "nbjet",
+       "met",
+       "ht",
+       "met_nbjet1",
+       "met_nbjet2",
+       "met_nbjet3",
+       "ht_nbjet1",
+       "ht_nbjet2",
+       "ht_nbjet3"
+       } ;
 
    char daformat[nCanvas][10000] = {
         "Sum$(%s_%s_0lep_3da[][][%d]):%d>>+h%s_%s_%s"
@@ -62,7 +72,7 @@
          sprintf(cname, "c_%s", plotname[cani] ) ;
          TCanvas* can = (TCanvas*) gDirectory->FindObject( cname ) ;
          if ( can == 0x0 ) {
-            can = new TCanvas( cname, cname, 500, 500 ) ;
+            can = new TCanvas( cname, cname, 370, 370 ) ;
             can -> SetWindowPosition(1+30*cani,1+25*cani) ;
          }
          can->Clear() ;
@@ -119,8 +129,98 @@
 
       } // cani.
 
+   } // toyplots1
+
+  //=========================================================================================================
+
+   void positionWindows1() {
+
+      Int_t x,y ;
+      UInt_t w,h ;
+      gVirtualX->GetGeometry(-1,x,y,w,h) ;
+      printf("\n\n X11 screen size: w=%d, h=%d\n\n", w,h ) ;
+
+      int wmargin(40), hmargin(40) ;
+
+      TCanvas* c ;
+      char cname[1000] ;
+      int width, height ;
+
+      sprintf( cname, "c_nbjet" ) ;
+      c = (TCanvas*) gDirectory->FindObject( cname ) ;
+      if ( c == 0x0 ) { printf("\n\n Can't find canvas %s\n\n", cname ) ; return ; }
+      width  = c -> GetWindowWidth() ;
+      height = c -> GetWindowHeight() ;
+      c->SetWindowPosition( w-width-wmargin, hmargin ) ;
+
+      sprintf( cname, "c_met" ) ;
+      c = (TCanvas*) gDirectory->FindObject( cname ) ;
+      if ( c == 0x0 ) { printf("\n\n Can't find canvas %s\n\n", cname ) ; return ; }
+      width  = c -> GetWindowWidth() ;
+      height = c -> GetWindowHeight() ;
+      c->SetWindowPosition( w-2*width-wmargin, hmargin ) ;
+
+      sprintf( cname, "c_ht" ) ;
+      c = (TCanvas*) gDirectory->FindObject( cname ) ;
+      if ( c == 0x0 ) { printf("\n\n Can't find canvas %s\n\n", cname ) ; return ; }
+      width  = c -> GetWindowWidth() ;
+      height = c -> GetWindowHeight() ;
+      c->SetWindowPosition( w-3*width-wmargin, hmargin ) ;
+
+
+      sprintf( cname, "c_met_nbjet3" ) ;
+      c = (TCanvas*) gDirectory->FindObject( cname ) ;
+      if ( c == 0x0 ) { printf("\n\n Can't find canvas %s\n\n", cname ) ; return ; }
+      width  = c -> GetWindowWidth() ;
+      height = c -> GetWindowHeight() ;
+      c->SetWindowPosition( w-width-wmargin, h-height-hmargin ) ;
+
+      sprintf( cname, "c_met_nbjet2" ) ;
+      c = (TCanvas*) gDirectory->FindObject( cname ) ;
+      if ( c == 0x0 ) { printf("\n\n Can't find canvas %s\n\n", cname ) ; return ; }
+      width  = c -> GetWindowWidth() ;
+      height = c -> GetWindowHeight() ;
+      c->SetWindowPosition( w-2*width-wmargin, h-height-hmargin ) ;
+
+      sprintf( cname, "c_met_nbjet1" ) ;
+      c = (TCanvas*) gDirectory->FindObject( cname ) ;
+      if ( c == 0x0 ) { printf("\n\n Can't find canvas %s\n\n", cname ) ; return ; }
+      width  = c -> GetWindowWidth() ;
+      height = c -> GetWindowHeight() ;
+      c->SetWindowPosition( w-3*width-wmargin, h-height-hmargin ) ;
 
 
 
-   }
+      sprintf( cname, "c_ht_nbjet3" ) ;
+      c = (TCanvas*) gDirectory->FindObject( cname ) ;
+      if ( c == 0x0 ) { printf("\n\n Can't find canvas %s\n\n", cname ) ; return ; }
+      width  = c -> GetWindowWidth() ;
+      height = c -> GetWindowHeight() ;
+      c->SetWindowPosition( w-width-wmargin, h-2*height-hmargin ) ;
+
+      sprintf( cname, "c_ht_nbjet2" ) ;
+      c = (TCanvas*) gDirectory->FindObject( cname ) ;
+      if ( c == 0x0 ) { printf("\n\n Can't find canvas %s\n\n", cname ) ; return ; }
+      width  = c -> GetWindowWidth() ;
+      height = c -> GetWindowHeight() ;
+      c->SetWindowPosition( w-2*width-wmargin, h-2*height-hmargin ) ;
+
+      sprintf( cname, "c_ht_nbjet1" ) ;
+      c = (TCanvas*) gDirectory->FindObject( cname ) ;
+      if ( c == 0x0 ) { printf("\n\n Can't find canvas %s\n\n", cname ) ; return ; }
+      width  = c -> GetWindowWidth() ;
+      height = c -> GetWindowHeight() ;
+      c->SetWindowPosition( w-3*width-wmargin, h-2*height-hmargin ) ;
+
+
+
+
+
+
+
+   } // positionWindows1.
+
+  //=========================================================================================================
+
+
 
