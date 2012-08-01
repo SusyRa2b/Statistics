@@ -5,6 +5,7 @@
 #include "TCanvas.h"
 #include "TDirectory.h"
 #include "TStyle.h"
+#include "TLine.h"
 
 
    const int  ncomps(4) ;
@@ -52,9 +53,12 @@
 
   //----------------------------
 
-   void toyplots1( const char* infilename = "output-toymc2b-mgl850-mlsp600-100evts-newMC-wsyst-test5a-useE0Ltrue/toy-results.root" ) {
+   void toyplots1( const char* infilename = "output-toymc2b-mgl850-mlsp600-100evts-newMC-wsyst-test5a-useE0Ltrue/toy-results.root", bool doDiff=false ) {
 
       gStyle->SetOptStat(0) ;
+      gStyle->SetLabelSize(0.08,"y") ;
+      gStyle->SetNdivisions(504,"y") ;
+      gStyle->SetPadLeftMargin(0.15) ;
 
       gDirectory->Delete("h*") ;
 
@@ -62,6 +66,10 @@
       toytt->Add( infilename ) ;
 
       toytt->Print("toponly") ;
+
+      TLine* line = new TLine() ;
+      line -> SetLineStyle(2) ;
+
 
 
       for ( int cani=0; cani<nCanvas; cani++ ) {
@@ -106,21 +114,67 @@
 
             } // svi.
 
-            double hfitmax = 1.1 * (hfit->GetBinContent( hfit->GetMaximumBin() ) + hfit->GetBinError( hfit->GetMaximumBin() ) ) ;
-            double hmcvalmax = 1.1 * (hmcval->GetBinContent( hmcval->GetMaximumBin() ) ) ;
-            if ( hfitmax > hmcvalmax ) {
-               hfit->SetMaximum( hfitmax ) ;
-            } else {
-               hfit->SetMaximum( hmcvalmax ) ;
-            }
-            hmcval -> SetLineColor( compcolor[ci] ) ;
-            hmcval -> SetLineWidth(2) ;
-            hfit   -> SetLineWidth(2) ;
+            if ( !doDiff ) {
 
-            hfit -> SetMarkerStyle(20) ;
-            hfit -> Draw() ;
-            hmcval -> Draw("histsame") ;
-            hfit -> Draw("same") ;
+               double hfitmax = 1.1 * (hfit->GetBinContent( hfit->GetMaximumBin() ) + hfit->GetBinError( hfit->GetMaximumBin() ) ) ;
+               double hmcvalmax = 1.1 * (hmcval->GetBinContent( hmcval->GetMaximumBin() ) ) ;
+               if ( hfitmax > hmcvalmax ) {
+                  hfit->SetMaximum( hfitmax ) ;
+               } else {
+                  hfit->SetMaximum( hmcvalmax ) ;
+               }
+               hmcval -> SetLineColor( compcolor[ci] ) ;
+               hmcval -> SetLineWidth(2) ;
+               hfit   -> SetLineWidth(2) ;
+
+               hfit -> SetMarkerStyle(20) ;
+               hfit -> Draw() ;
+               hmcval -> Draw("histsame") ;
+               hfit -> Draw("same") ;
+
+            } else {
+
+               sprintf( hname, "hdiff_%s_%s", compname[ci], plotname[cani] ) ;
+               sprintf( htitle, "Ave fit-true diff %s vs %s", compname[ci], plotname[cani] ) ;
+               TH1F* hdiff = new TH1F( hname, htitle, (svmax[cani]-svmin[cani]+1), svmin[cani]-0.5, svmax[cani]+0.5 ) ;
+
+
+               double drawmax(0.) ;
+               double drawmin(0.) ;
+               for ( int bi=1; bi<=(svmax[cani]-svmin[cani]+1); bi++ ) {
+                  double diff = hfit->GetBinContent( bi ) - hmcval->GetBinContent( bi ) ;
+                  double err  = hfit->GetBinError( bi ) ;
+                  hdiff -> SetBinContent( bi, diff ) ;
+                  hdiff -> SetBinError( bi, err ) ;
+                  if ( 1.1*(diff+err) > drawmax ) { drawmax = 1.1*(diff+err) ; }
+                  if ( diff<0 && 1.1*(diff-err) < drawmin ) { drawmin = 1.1*(diff-err) ; }
+               } // bi.
+
+               if ( fabs(drawmax) > fabs(drawmin) ) {
+                  hdiff->SetMaximum(drawmax) ;
+                  hdiff->SetMinimum(-drawmax) ;
+               } else {
+                  hdiff->SetMaximum(fabs(drawmin)) ;
+                  hdiff->SetMinimum(-fabs(drawmin)) ;
+               }
+
+          ///  if ( hdiff -> GetMinimum() > 0.) {
+          ///     hdiff -> SetMinimum( -0.5 ) ;
+          ///  }
+
+          ///  if ( fabs( hdiff->GetMinimum() ) < fabs( hdiff->GetMaximum() ) ) {
+          ///     hdiff->SetMinimum( -fabs(hdiff->GetMaximum() ) ) ;
+          ///  } else {
+          ///     hdiff->SetMaximum( -fabs(hdiff->GetMinimum() ) ) ;
+          ///  }
+
+               hdiff -> SetMarkerStyle(20) ;
+               hdiff -> SetLineWidth(2) ;
+               hdiff -> SetLineColor( compcolor[ci] ) ;
+               hdiff -> Draw() ;
+               line->DrawLine( svmin[cani]-0.5, 0.,    svmax[cani]+0.5, 0. ) ;
+
+            }
 
             printf("\n") ;
 
@@ -173,21 +227,21 @@
       if ( c == 0x0 ) { printf("\n\n Can't find canvas %s\n\n", cname ) ; return ; }
       width  = c -> GetWindowWidth() ;
       height = c -> GetWindowHeight() ;
-      c->SetWindowPosition( w-width-wmargin, h-height-hmargin ) ;
+      c->SetWindowPosition( w-width-wmargin, h-1.05*height-hmargin ) ;
 
       sprintf( cname, "c_met_nbjet2" ) ;
       c = (TCanvas*) gDirectory->FindObject( cname ) ;
       if ( c == 0x0 ) { printf("\n\n Can't find canvas %s\n\n", cname ) ; return ; }
       width  = c -> GetWindowWidth() ;
       height = c -> GetWindowHeight() ;
-      c->SetWindowPosition( w-2*width-wmargin, h-height-hmargin ) ;
+      c->SetWindowPosition( w-2*width-wmargin, h-1.05*height-hmargin ) ;
 
       sprintf( cname, "c_met_nbjet1" ) ;
       c = (TCanvas*) gDirectory->FindObject( cname ) ;
       if ( c == 0x0 ) { printf("\n\n Can't find canvas %s\n\n", cname ) ; return ; }
       width  = c -> GetWindowWidth() ;
       height = c -> GetWindowHeight() ;
-      c->SetWindowPosition( w-3*width-wmargin, h-height-hmargin ) ;
+      c->SetWindowPosition( w-3*width-wmargin, h-1.05*height-hmargin ) ;
 
 
 
@@ -196,21 +250,21 @@
       if ( c == 0x0 ) { printf("\n\n Can't find canvas %s\n\n", cname ) ; return ; }
       width  = c -> GetWindowWidth() ;
       height = c -> GetWindowHeight() ;
-      c->SetWindowPosition( w-width-wmargin, h-2*height-hmargin ) ;
+      c->SetWindowPosition( w-width-wmargin, h-2.1*height-hmargin ) ;
 
       sprintf( cname, "c_ht_nbjet2" ) ;
       c = (TCanvas*) gDirectory->FindObject( cname ) ;
       if ( c == 0x0 ) { printf("\n\n Can't find canvas %s\n\n", cname ) ; return ; }
       width  = c -> GetWindowWidth() ;
       height = c -> GetWindowHeight() ;
-      c->SetWindowPosition( w-2*width-wmargin, h-2*height-hmargin ) ;
+      c->SetWindowPosition( w-2*width-wmargin, h-2.1*height-hmargin ) ;
 
       sprintf( cname, "c_ht_nbjet1" ) ;
       c = (TCanvas*) gDirectory->FindObject( cname ) ;
       if ( c == 0x0 ) { printf("\n\n Can't find canvas %s\n\n", cname ) ; return ; }
       width  = c -> GetWindowWidth() ;
       height = c -> GetWindowHeight() ;
-      c->SetWindowPosition( w-3*width-wmargin, h-2*height-hmargin ) ;
+      c->SetWindowPosition( w-3*width-wmargin, h-2.1*height-hmargin ) ;
 
 
 
