@@ -66,12 +66,12 @@ void GenerateSusyFile() {
 //float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,800.,99999.};
 
-  //-- met3-ht3-v1
-  const int nBinsMET   = 3 ;
-  const int nBinsHT    = 3 ;
-      const int version = 1;
-  float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
-  float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
+////-- met3-ht3-v1
+//const int nBinsMET   = 3 ;
+//const int nBinsHT    = 3 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
+//float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 
 ////-- met3-ht3-v2
 //const int nBinsMET   = 3 ;
@@ -116,11 +116,11 @@ void GenerateSusyFile() {
 //float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,99999.};
 
   //-- met4-ht4-v1
-//  const int nBinsMET   = 4 ;
-//  const int nBinsHT	 = 4 ;
-//  const int version = 1;
-//  float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
-//  float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
+    const int nBinsMET   = 4 ;
+    const int nBinsHT	 = 4 ;
+    const int version = 1;
+    float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
+    float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
 
   //-- met4-ht4-v2
 //    const int nBinsMET   = 4 ;
@@ -280,7 +280,7 @@ void GenerateSusyFile() {
 
     int theBin = gluinoxsec->FindBin( mGl ) ;					      
     if ( theBin <=0 || theBin > gluinoxsec->GetNbinsX() ) {			      
-       printf("\n\n *** can't find bin for mgl=%g.  Returned %d\n\n", mGl, theBin ) ; 
+       printf("\n\n *** can't find bin for mgl=%d.  Returned %d\n\n", mGl, theBin ) ; 
        return ; 								      
     }										      
     xsec = gluinoxsec->GetBinContent( theBin ) ;				      
