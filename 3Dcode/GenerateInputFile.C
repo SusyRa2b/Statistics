@@ -914,25 +914,25 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
     // Z -> ee VL to nominal scale factors
   // would it make more sense to count events in only the loosest HT and/or MET bin and
   // use the scale factors to translate between the different HT and MET bins?
-  
-  /*  for (int k = 0 ; k < nBinsBjets ; k++) {
-      TString knn_ee = "knn_ee" ;
-      knn_ee = knn_ee+sBbins[k] ;
-      inFile << knn_ee << "  \t" << dummyOne << endl;
-      knn_ee = knn_ee+"_err" ;
-      inFile << knn_ee << "  \t" << dummyErr << endl;
-    } */
-    
-    /*  
-    // use 2011 values for now.
-    inFile << "knn_1b     \t" << 0.401 << endl;
-    inFile << "knn_1b_err \t" << 0.018 << endl;
-    inFile << "knn_2b     \t" << 0.067 << endl;
-    inFile << "knn_2b_err \t" << 0.009 << endl;
-    inFile << "knn_3b     \t" << 0.009 << endl;
-    inFile << "knn_3b_err \t" << 0.003 << endl;
-    */
-  
+
+   //    for (int k = 0 ; k < nBinsBjets ; k++) {
+   //    TString knn_ee = "knn_ee" ;
+   //    knn_ee = knn_ee+sBbins[k] ;
+   //    inFile << knn_ee << "  \t" << dummyOne << endl;
+   //    knn_ee = knn_ee+"_err" ;
+   //    inFile << knn_ee << "  \t" << dummyErr << endl;
+   //  }
+   //
+   //
+   //  // use 2011 values for now.
+   //  inFile << "knn_1b     \t" << 0.401 << endl;
+   //  inFile << "knn_1b_err \t" << 0.018 << endl;
+   //  inFile << "knn_2b     \t" << 0.067 << endl;
+   //  inFile << "knn_2b_err \t" << 0.009 << endl;
+   //  inFile << "knn_3b     \t" << 0.009 << endl;
+   //  inFile << "knn_3b_err \t" << 0.003 << endl;
+   //
+
     // updated SF's to improve MC closure (the errors are the same as before)
     inFile << "knn_1b     \t" << 0.394  << endl;
     inFile << "knn_1b_err \t" << 0.018  << endl;
@@ -1022,7 +1022,82 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
       inFile << sf_mm << "  \t" << dummyErr << endl;
   
     }
-  
+
+
+
+    //--- Addding ttwj and znn LDP/ZL MC values
+
+    //--- ttwj MC LDP/ZL
+
+    for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
+      for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
+        int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+        for (int bbi = 0 ; bbi < nBinsBjets ; bbi++) {
+
+            float ldpval = hmctruth_ttwj[2][bbi] -> GetBinContent( hbin ) ;
+            float ldperr = hmctruth_ttwj[2][bbi] -> GetBinError(   hbin ) ;
+            float zlval  = hmctruth_ttwj[0][bbi] -> GetBinContent( hbin ) ;
+            float zlerr  = hmctruth_ttwj[0][bbi] -> GetBinError(   hbin ) ;
+
+            float ldpoverzl = 0. ;
+            float ldpoverzlerr = 0. ;
+
+            if ( zlval > 0. && ldpval > 0. ) {
+               ldpoverzl = ldpval / zlval ;
+               ldpoverzlerr = ldpoverzl * sqrt( pow((zlerr/zlval),2) + pow((ldperr/ldpval),2) ) ;
+            }
+
+            char parname[1000] ;
+
+            sprintf( parname, "ttwj_mc_ldpover1lep_ratio_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+            printf(" %s  :  %6.3f +/- %5.3f\n", parname, ldpoverzl, ldpoverzlerr ) ;
+            inFile << parname << "  \t" << ldpoverzl << endl;
+
+            sprintf( parname, "ttwj_mc_ldpover1lep_ratio_M%d_H%d_%db_err", mbi+1, hbi+1, bbi+1 ) ;
+            inFile << parname << "  \t" << ldpoverzlerr << endl;
+
+        } // bbi
+      } // hbi
+    } // mbi
+
+
+    //--- Znn MC LDP/ZL
+    //--- Note: the 2b and >=3b MC stats are too low.  Use 1b values for all 3.
+
+    for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
+      for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
+        int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+
+        float ldpval = hmctruth_znn[2][0] -> GetBinContent( hbin ) ;
+        float ldperr = hmctruth_znn[2][0] -> GetBinError(   hbin ) ;
+        float zlval  = hmctruth_znn[0][0] -> GetBinContent( hbin ) ;
+        float zlerr  = hmctruth_znn[0][0] -> GetBinError(   hbin ) ;
+
+        float ldpoverzl = 0. ;
+        float ldpoverzlerr = 0. ;
+
+        if ( zlval > 0. && ldpval > 0. ) {
+           ldpoverzl = ldpval / zlval ;
+           ldpoverzlerr = ldpoverzl * sqrt( pow((zlerr/zlval),2) + pow((ldperr/ldpval),2) ) ;
+        }
+
+        char parname[1000] ;
+
+        for (int bbi = 0 ; bbi < nBinsBjets ; bbi++) {
+            sprintf( parname, "znn_mc_ldpover1lep_ratio_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+            printf(" %s  :  %6.3f +/- %5.3f\n", parname, ldpoverzl, ldpoverzlerr ) ;
+            inFile << parname << "  \t" << ldpoverzl << endl;
+
+            sprintf( parname, "znn_mc_ldpover1lep_ratio_M%d_H%d_%db_err", mbi+1, hbi+1, bbi+1 ) ;
+            inFile << parname << "  \t" << ldpoverzlerr << endl;
+        } // bbi
+
+      } // hbi
+    } // mbi
+
+
+
+
     gSystem->Exec("mkdir -p rootfiles") ;
     char outHistName[1000] ;
     if ( mgl>0. && mlsp>0. ) {

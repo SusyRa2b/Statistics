@@ -943,7 +943,232 @@
       } // mbi.
 
 
-   }
+
+
+
+
+
+
+
+
+
+
+     //--- ttwj MC LDP / 0lep ratios
+
+      TH1F* hmctruth_ttwj_ldp_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_ldp_1b") ;
+      if ( hmctruth_ttwj_ldp_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_ldp_1b.\n\n") ; return ; }
+
+      TH1F* hmctruth_ttwj_ldpover0lep_ratio_1b = (TH1F*) hmctruth_ttwj_ldp_1b->Clone("hmctruth_ttwj_ldpover0lep_ratio_1b") ;
+      hmctruth_ttwj_ldpover0lep_ratio_1b->Divide( hmctruth_ttwj_0lep_1b ) ;
+
+
+      TH1F* hmctruth_ttwj_ldp_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_ldp_2b") ;
+      if ( hmctruth_ttwj_ldp_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_ldp_2b.\n\n") ; return ; }
+
+      TH1F* hmctruth_ttwj_ldpover0lep_ratio_2b = (TH1F*) hmctruth_ttwj_ldp_2b->Clone("hmctruth_ttwj_ldpover0lep_ratio_2b") ;
+      hmctruth_ttwj_ldpover0lep_ratio_2b->Divide( hmctruth_ttwj_0lep_2b ) ;
+
+
+      TH1F* hmctruth_ttwj_ldp_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_ldp_3b") ;
+      if ( hmctruth_ttwj_ldp_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_ldp_3b.\n\n") ; return ; }
+
+      TH1F* hmctruth_ttwj_ldpover0lep_ratio_3b = (TH1F*) hmctruth_ttwj_ldp_3b->Clone("hmctruth_ttwj_ldpover0lep_ratio_3b") ;
+      hmctruth_ttwj_ldpover0lep_ratio_3b->Divide( hmctruth_ttwj_0lep_3b ) ;
+
+      hmctruth_ttwj_ldpover0lep_ratio_1b->SetLineColor(2) ;
+      hmctruth_ttwj_ldpover0lep_ratio_2b->SetLineColor(6) ;
+      hmctruth_ttwj_ldpover0lep_ratio_3b->SetLineColor(4) ;
+
+      hmctruth_ttwj_ldpover0lep_ratio_1b->SetMarkerStyle(20) ;
+      hmctruth_ttwj_ldpover0lep_ratio_2b->SetMarkerStyle(25) ;
+      hmctruth_ttwj_ldpover0lep_ratio_3b->SetMarkerStyle(30) ;
+
+
+
+      gStyle->SetPadRightMargin(0.08) ;
+      TCanvas* cttwjmcr = (TCanvas*) gDirectory->FindObject("cttwjmcr") ;
+      if ( cttwjmcr == 0x0 ) {
+         cttwjmcr = new TCanvas("cttwjmcr","ttwjmcr closure", 700, 475) ;
+      }
+      cttwjmcr->Clear() ;
+
+      hmctruth_ttwj_ldpover0lep_ratio_1b->Draw() ;
+      hmctruth_ttwj_ldpover0lep_ratio_2b->Draw("same") ;
+      hmctruth_ttwj_ldpover0lep_ratio_3b->Draw("same") ;
+
+
+      //--- write to file
+
+      for ( int mbi=0; mbi<nBinsMET ; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsHT ; hbi++ ) {
+
+            int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+
+            char parameterName[1000] ;
+            double err, value ;
+
+
+            err   = hmctruth_ttwj_ldpover0lep_ratio_1b->GetBinError(hbin)  ;
+            value = hmctruth_ttwj_ldpover0lep_ratio_1b->GetBinContent(hbin)  ;
+            sprintf( parameterName, "ttwj_mc_ldpover1lep_ratio_M%d_H%d_1b", mbi+1, hbi+1 ) ;
+            printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
+                  parameterName,
+                  hmctruth_ttwj_ldpover0lep_ratio_1b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
+            updateFileValue( datfile, parameterName, value ) ;
+            sprintf( parameterName, "ttwj_mc_ldpover1lep_ratio_M%d_H%d_1b_err", mbi+1, hbi+1 ) ;
+            updateFileValue( datfile, parameterName, err ) ;
+
+            err   = hmctruth_ttwj_ldpover0lep_ratio_2b->GetBinError(hbin)  ;
+            value = hmctruth_ttwj_ldpover0lep_ratio_2b->GetBinContent(hbin)  ;
+            sprintf( parameterName, "ttwj_mc_ldpover1lep_ratio_M%d_H%d_2b", mbi+1, hbi+1 ) ;
+            printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
+                  parameterName,
+                  hmctruth_ttwj_ldpover0lep_ratio_2b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
+            updateFileValue( datfile, parameterName, value ) ;
+            sprintf( parameterName, "ttwj_mc_ldpover1lep_ratio_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
+            updateFileValue( datfile, parameterName, err ) ;
+
+            err   = hmctruth_ttwj_ldpover0lep_ratio_3b->GetBinError(hbin)  ;
+            value = hmctruth_ttwj_ldpover0lep_ratio_3b->GetBinContent(hbin)  ;
+            sprintf( parameterName, "ttwj_mc_ldpover1lep_ratio_M%d_H%d_3b", mbi+1, hbi+1 ) ;
+            printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
+                  parameterName,
+                  hmctruth_ttwj_ldpover0lep_ratio_3b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
+            updateFileValue( datfile, parameterName, value ) ;
+            sprintf( parameterName, "ttwj_mc_ldpover1lep_ratio_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
+            updateFileValue( datfile, parameterName, err ) ;
+
+            printf("\n") ;
+
+
+         } // hbi.
+      } // mbi.
+
+
+
+
+
+
+
+
+
+
+     //--- znn MC LDP / 0lep ratios
+
+      TH1F* hmctruth_znn_0lep_1b = (TH1F*) gDirectory->FindObject("hmctruth_znn_0lep_1b") ;
+      if ( hmctruth_znn_0lep_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_znn_0lep_1b.\n\n") ; return ; }
+      TH1F* hmctruth_znn_ldp_1b = (TH1F*) gDirectory->FindObject("hmctruth_znn_ldp_1b") ;
+      if ( hmctruth_znn_ldp_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_znn_ldp_1b.\n\n") ; return ; }
+
+      TH1F* hmctruth_znn_ldpover0lep_ratio_1b = (TH1F*) hmctruth_znn_ldp_1b->Clone("hmctruth_znn_ldpover0lep_ratio_1b") ;
+      hmctruth_znn_ldpover0lep_ratio_1b->Divide( hmctruth_znn_0lep_1b ) ;
+
+
+      TH1F* hmctruth_znn_0lep_2b = (TH1F*) gDirectory->FindObject("hmctruth_znn_0lep_2b") ;
+      if ( hmctruth_znn_0lep_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_znn_0lep_2b.\n\n") ; return ; }
+      TH1F* hmctruth_znn_ldp_2b = (TH1F*) gDirectory->FindObject("hmctruth_znn_ldp_2b") ;
+      if ( hmctruth_znn_ldp_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_znn_ldp_2b.\n\n") ; return ; }
+
+      TH1F* hmctruth_znn_ldpover0lep_ratio_2b = (TH1F*) hmctruth_znn_ldp_2b->Clone("hmctruth_znn_ldpover0lep_ratio_2b") ;
+      hmctruth_znn_ldpover0lep_ratio_2b->Divide( hmctruth_znn_0lep_2b ) ;
+
+
+      TH1F* hmctruth_znn_0lep_3b = (TH1F*) gDirectory->FindObject("hmctruth_znn_0lep_3b") ;
+      if ( hmctruth_znn_0lep_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_znn_0lep_3b.\n\n") ; return ; }
+      TH1F* hmctruth_znn_ldp_3b = (TH1F*) gDirectory->FindObject("hmctruth_znn_ldp_3b") ;
+      if ( hmctruth_znn_ldp_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_znn_ldp_3b.\n\n") ; return ; }
+
+      TH1F* hmctruth_znn_ldpover0lep_ratio_3b = (TH1F*) hmctruth_znn_ldp_3b->Clone("hmctruth_znn_ldpover0lep_ratio_3b") ;
+      hmctruth_znn_ldpover0lep_ratio_3b->Divide( hmctruth_znn_0lep_3b ) ;
+
+      hmctruth_znn_ldpover0lep_ratio_1b->SetLineColor(2) ;
+      hmctruth_znn_ldpover0lep_ratio_2b->SetLineColor(6) ;
+      hmctruth_znn_ldpover0lep_ratio_3b->SetLineColor(4) ;
+
+      hmctruth_znn_ldpover0lep_ratio_1b->SetMarkerStyle(20) ;
+      hmctruth_znn_ldpover0lep_ratio_2b->SetMarkerStyle(25) ;
+      hmctruth_znn_ldpover0lep_ratio_3b->SetMarkerStyle(30) ;
+
+
+
+      gStyle->SetPadRightMargin(0.08) ;
+      TCanvas* cznnmcr = (TCanvas*) gDirectory->FindObject("cznnmcr") ;
+      if ( cznnmcr == 0x0 ) {
+         cznnmcr = new TCanvas("cznnmcr","znnmcr closure", 700, 475) ;
+      }
+      cznnmcr->Clear() ;
+
+      hmctruth_znn_ldpover0lep_ratio_1b->Draw() ;
+      hmctruth_znn_ldpover0lep_ratio_2b->Draw("same") ;
+      hmctruth_znn_ldpover0lep_ratio_3b->Draw("same") ;
+
+
+      //--- MC stats are too low for 2b and >=3b cases.  Use 1b values for all three.
+
+      //--- write to file
+
+      for ( int mbi=0; mbi<nBinsMET ; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsHT ; hbi++ ) {
+
+            int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+
+            char parameterName[1000] ;
+            double err, value ;
+
+
+            err   = hmctruth_znn_ldpover0lep_ratio_1b->GetBinError(hbin)  ;
+            value = hmctruth_znn_ldpover0lep_ratio_1b->GetBinContent(hbin)  ;
+            sprintf( parameterName, "znn_mc_ldpover1lep_ratio_M%d_H%d_1b", mbi+1, hbi+1 ) ;
+            printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
+                  parameterName,
+                  hmctruth_znn_ldpover0lep_ratio_1b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
+            updateFileValue( datfile, parameterName, value ) ;
+            sprintf( parameterName, "znn_mc_ldpover1lep_ratio_M%d_H%d_1b_err", mbi+1, hbi+1 ) ;
+            updateFileValue( datfile, parameterName, err ) ;
+            sprintf( parameterName, "znn_mc_ldpover1lep_ratio_M%d_H%d_2b", mbi+1, hbi+1 ) ;
+            updateFileValue( datfile, parameterName, value ) ;
+            sprintf( parameterName, "znn_mc_ldpover1lep_ratio_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
+            updateFileValue( datfile, parameterName, err ) ;
+            sprintf( parameterName, "znn_mc_ldpover1lep_ratio_M%d_H%d_3b", mbi+1, hbi+1 ) ;
+            updateFileValue( datfile, parameterName, value ) ;
+            sprintf( parameterName, "znn_mc_ldpover1lep_ratio_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
+            updateFileValue( datfile, parameterName, err ) ;
+
+      ///   err   = hmctruth_znn_ldpover0lep_ratio_2b->GetBinError(hbin)  ;
+      ///   value = hmctruth_znn_ldpover0lep_ratio_2b->GetBinContent(hbin)  ;
+      ///   sprintf( parameterName, "znn_mc_ldpover1lep_ratio_M%d_H%d_2b", mbi+1, hbi+1 ) ;
+      ///   printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
+      ///         parameterName,
+      ///         hmctruth_znn_ldpover0lep_ratio_2b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
+      ///   updateFileValue( datfile, parameterName, value ) ;
+      ///   sprintf( parameterName, "znn_mc_ldpover1lep_ratio_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
+      ///   updateFileValue( datfile, parameterName, err ) ;
+
+      ///   err   = hmctruth_znn_ldpover0lep_ratio_3b->GetBinError(hbin)  ;
+      ///   value = hmctruth_znn_ldpover0lep_ratio_3b->GetBinContent(hbin)  ;
+      ///   sprintf( parameterName, "znn_mc_ldpover1lep_ratio_M%d_H%d_3b", mbi+1, hbi+1 ) ;
+      ///   printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
+      ///         parameterName,
+      ///         hmctruth_znn_ldpover0lep_ratio_3b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
+      ///   updateFileValue( datfile, parameterName, value ) ;
+      ///   sprintf( parameterName, "znn_mc_ldpover1lep_ratio_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
+      ///   updateFileValue( datfile, parameterName, err ) ;
+
+            printf("\n") ;
+
+
+         } // hbi.
+      } // mbi.
+
+
+
+
+
+
+
+
+
+   } // mcclosure2
 
 
 
