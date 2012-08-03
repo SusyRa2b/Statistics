@@ -923,7 +923,7 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
       inFile << knn_ee << "  \t" << dummyErr << endl;
     } */
     
-  
+    /*  
     // use 2011 values for now.
     inFile << "knn_1b     \t" << 0.401 << endl;
     inFile << "knn_1b_err \t" << 0.018 << endl;
@@ -931,8 +931,16 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
     inFile << "knn_2b_err \t" << 0.009 << endl;
     inFile << "knn_3b     \t" << 0.009 << endl;
     inFile << "knn_3b_err \t" << 0.003 << endl;
+    */
   
-  
+    // updated SF's to improve MC closure (the errors are the same as before)
+    inFile << "knn_1b     \t" << 0.394  << endl;
+    inFile << "knn_1b_err \t" << 0.018  << endl;
+    inFile << "knn_2b     \t" << 0.0626 << endl;
+    inFile << "knn_2b_err \t" << 0.009  << endl;
+    inFile << "knn_3b     \t" << 0.0036 << endl;
+    inFile << "knn_3b_err \t" << 0.003  << endl;
+
     // Z -> ll purity
   
     // use 2011 values for now.
