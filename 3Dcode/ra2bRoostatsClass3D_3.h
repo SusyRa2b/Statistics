@@ -1,5 +1,5 @@
-#ifndef ra2bRoostatsClass3D_2b_h
-#define ra2bRoostatsClass3D_2b_h
+#ifndef ra2bRoostatsClass3D_3_h
+#define ra2bRoostatsClass3D_3_h
 
 #include "TRandom2.h"
 #include "RooRealVar.h"
@@ -14,13 +14,13 @@
 #include "RooArgSet.h"
 
 
-   class ra2bRoostatsClass3D_2b {
+   class ra2bRoostatsClass3D_3 {
 
      public :
 
-       ra2bRoostatsClass3D_2b() ;
+       ra2bRoostatsClass3D_3() ;
 
-       virtual ~ra2bRoostatsClass3D_2b();
+       virtual ~ra2bRoostatsClass3D_3();
 
        bool initialize( const char* infile = "inFile.txt",
                         const char* inputScanFile = "scanFile.txt",
@@ -70,8 +70,8 @@
    /// static const int nBinsMET  = 3 ;
    /// static const int nBinsHT   = 2 ;
 
-  //  static const int nBinsMET  = 3 ;
-  //  static const int nBinsHT   = 3 ;
+   // static const int nBinsMET  = 3 ;
+   // static const int nBinsHT   = 3 ;
 
    /// static const int nBinsMET  = 3 ;
    /// static const int nBinsHT   = 4 ;

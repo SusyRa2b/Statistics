@@ -23,6 +23,7 @@
       gStyle->SetOptStat("mr") ;
       gStyle->SetNdivisions(506,"x") ;
       gStyle->SetNdivisions(506,"y") ;
+      gStyle->SetTitleH(0.08) ;
 
 
       TChain ch1("toytt") ;
