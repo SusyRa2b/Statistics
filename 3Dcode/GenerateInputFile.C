@@ -1024,6 +1024,10 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
     }
 
 
+    // btag eff err (Note: this was missing until Aug 3, 2012, but it's apparently not used.)
+    inFile << "btageff_err" << " \t" << dummyErr << endl ;
+
+
 
     //--- Addding ttwj and znn LDP/ZL MC values
 

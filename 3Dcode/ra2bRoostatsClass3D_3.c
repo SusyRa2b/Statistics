@@ -500,6 +500,52 @@
       // btag efficiency error
 
       fscanf( infp, "%s %g", label, &btageff_err ) ; cout << "btageff_err" << " = " << btageff_err << endl ;
+      if ( strcmp( label, "btageff_err") != 0 ) {  mismatchErr(label,"btageff_err") ; return false ; }
+
+
+
+      // New for 3: ttwj and znn LDP/ZL MC ratios.
+
+      float ttwj_ldp0lep_ratio[nBinsMET][nBinsHT][nBinsBtag] ;
+      float  znn_ldp0lep_ratio[nBinsMET][nBinsHT][nBinsBtag] ;
+
+      float ttwj_ldp0lep_ratio_err[nBinsMET][nBinsHT][nBinsBtag] ;
+      float  znn_ldp0lep_ratio_err[nBinsMET][nBinsHT][nBinsBtag] ;
+
+      printf("\n\n") ;
+      for (int i = 0 ; i < nBinsMET ; i++) {
+        for (int j = 0 ; j < nBinsHT ; j++) {
+          for (int k = 0 ; k < nBinsBtag ; k++) {
+             char expectedlabel[1000] ;
+             sprintf( expectedlabel, "ttwj_mc_ldpover1lep_ratio_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+             char vallabel[1000] ;
+             char errlabel[1000] ;
+             fscanf( infp, "%s %g", vallabel, &ttwj_ldp0lep_ratio[i][j][k] ) ;
+             if ( strcmp( vallabel, expectedlabel ) != 0 ) { mismatchErr( label, expectedlabel ) ; return false ; }
+             fscanf( infp, "%s %g", errlabel, &ttwj_ldp0lep_ratio_err[i][j][k] ) ;
+             printf(" ttwj ldp/0lep ratio : %s  %6.3f +/- %5.3f\n", vallabel, ttwj_ldp0lep_ratio[i][j][k], ttwj_ldp0lep_ratio_err[i][j][k] ) ;
+          } // k
+        } // j
+      } // i
+      printf("\n\n") ;
+
+      for (int i = 0 ; i < nBinsMET ; i++) {
+        for (int j = 0 ; j < nBinsHT ; j++) {
+          for (int k = 0 ; k < nBinsBtag ; k++) {
+             char expectedlabel[1000] ;
+             sprintf( expectedlabel, "znn_mc_ldpover1lep_ratio_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+             char vallabel[1000] ;
+             char errlabel[1000] ;
+             fscanf( infp, "%s %g", vallabel, &znn_ldp0lep_ratio[i][j][k] ) ;
+             if ( strcmp( vallabel, expectedlabel ) != 0 ) { mismatchErr( label, expectedlabel ) ; return false ; }
+             fscanf( infp, "%s %g", errlabel, &znn_ldp0lep_ratio_err[i][j][k] ) ;
+             printf("  znn ldp/0lep ratio : %s  %6.3f +/- %5.3f\n", vallabel, znn_ldp0lep_ratio[i][j][k], znn_ldp0lep_ratio_err[i][j][k] ) ;
+          } // k
+        } // j
+      } // i
+      printf("\n\n") ;
+
+
 
 
       printf("\n Done reading in %s\n\n", infile ) ;
@@ -631,6 +677,8 @@
       rv_mu_susy_all0lep->setVal( 1. ) ;
       rv_mu_susy_all0lep->setConstant( kTRUE ) ;
 
+      RooRealVar* rv_ttwj_ldp0lep_ratio[nBinsMET][nBinsHT][nBinsBtag] ;
+      RooRealVar*  rv_znn_ldp0lep_ratio[nBinsMET][nBinsHT][nBinsBtag] ;
 
             
       for (int i = 0 ; i < nBinsMET ; i++) {
@@ -685,6 +733,9 @@
 	    TString WEffSfLdpString  = "width_eff_sf_ldp";
 	    TString dEffdBtLdpString = "deff_dbtageff_ldp";
 
+            TString ttwjldp0lepString = "ttwj_ldp0lep_ratio" ;
+            TString  znnldp0lepString =  "znn_ldp0lep_ratio" ;
+
 
 	    muTtString     += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    muTtSlString   += sMbins[i]+sHbins[j]+sBbins[k] ;
@@ -704,6 +755,8 @@
 	    WEffSfString   += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    dEffdBtString  += sMbins[i]+sHbins[j]+sBbins[k] ;
 
+            ttwjldp0lepString += sMbins[i]+sHbins[j]+sBbins[k] ;
+            znnldp0lepString  += sMbins[i]+sHbins[j]+sBbins[k] ;
 
 
 	    rv_mu_ttwj_sl[i][j][k] = new RooRealVar( muTtSlString, muTtSlString, 0., 100000. ) ;
@@ -736,17 +789,25 @@
 	    rv_mu_susymc_ldp[i][j][k]->setVal( 1. ) ;
 	    rv_mu_susymc_ldp[i][j][k]->setConstant( kTRUE ) ;
 
-	    rv_mu_ttbarsingletopzjetsmc_ldp[i][j][k] = new RooRealVar( muTtLdpString, muTtLdpString, 0., 100000. ) ;
-	    rv_mu_ttbarsingletopzjetsmc_ldp[i][j][k]->setVal( Nttbarsingletopzjetsmc_ldp[i][j][k] ) ;
-	    rv_mu_ttbarsingletopzjetsmc_ldp[i][j][k]->setConstant( kTRUE ) ;
+	 // rv_mu_ttbarsingletopzjetsmc_ldp[i][j][k] = new RooRealVar( muTtLdpString, muTtLdpString, 0., 100000. ) ;
+	 // rv_mu_ttbarsingletopzjetsmc_ldp[i][j][k]->setVal( Nttbarsingletopzjetsmc_ldp[i][j][k] ) ;
+	 // rv_mu_ttbarsingletopzjetsmc_ldp[i][j][k]->setConstant( kTRUE ) ;
 
-	    rv_mu_WJmc_ldp[i][j][k] = new RooRealVar( muWjLdpString, muWjLdpString, 0., 100000. ) ;
-	    rv_mu_WJmc_ldp[i][j][k]->setVal( NWJmc_ldp[i][j][k] ) ;
-	    rv_mu_WJmc_ldp[i][j][k]->setConstant( kTRUE ) ;
+	 // rv_mu_WJmc_ldp[i][j][k] = new RooRealVar( muWjLdpString, muWjLdpString, 0., 100000. ) ;
+	 // rv_mu_WJmc_ldp[i][j][k]->setVal( NWJmc_ldp[i][j][k] ) ;
+	 // rv_mu_WJmc_ldp[i][j][k]->setConstant( kTRUE ) ;
 
-	    rv_mu_Znnmc_ldp[i][j][k] = new RooRealVar( muZnnLdpString, muZnnLdpString, 0., 100000. ) ;
-	    rv_mu_Znnmc_ldp[i][j][k]->setVal( NZnnmc_ldp[i][j][k] ) ;
-	    rv_mu_Znnmc_ldp[i][j][k]->setConstant( kTRUE ) ;
+	 // rv_mu_Znnmc_ldp[i][j][k] = new RooRealVar( muZnnLdpString, muZnnLdpString, 0., 100000. ) ;
+	 // rv_mu_Znnmc_ldp[i][j][k]->setVal( NZnnmc_ldp[i][j][k] ) ;
+	 // rv_mu_Znnmc_ldp[i][j][k]->setConstant( kTRUE ) ;
+
+            rv_ttwj_ldp0lep_ratio[i][j][k] = new RooRealVar( ttwjldp0lepString, ttwjldp0lepString, 0., 100. ) ;
+            rv_ttwj_ldp0lep_ratio[i][j][k] -> setVal( ttwj_ldp0lep_ratio[i][j][k] ) ;
+            rv_ttwj_ldp0lep_ratio[i][j][k] -> setConstant( kTRUE ) ;
+
+            rv_znn_ldp0lep_ratio[i][j][k] = new RooRealVar( znnldp0lepString, znnldp0lepString, 0., 100. ) ;
+            rv_znn_ldp0lep_ratio[i][j][k] -> setVal( znn_ldp0lep_ratio[i][j][k] ) ;
+            rv_znn_ldp0lep_ratio[i][j][k] -> setConstant( kTRUE ) ;
 
 	    
 	    // gaussian constraints
@@ -1249,20 +1310,40 @@
 
 
 
+         //--- old way
+
+         // TString ttwjLdpString  = "mu_ttwj_ldp" ;
+         // ttwjLdpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
+
+         // TString rfvString = "@0 + @1" ;
+
+         // rv_mu_ttwj_ldp[i][j][k] = new RooFormulaVar( ttwjLdpString, rfvString, 
+         //                                              RooArgSet( *rv_mu_ttbarsingletopzjetsmc_ldp[i][j][k], *rv_mu_WJmc_ldp[i][j][k] )) ;
 
 
-	    TString ttwjLdpString  = "mu_ttwj_ldp" ;
-	    ttwjLdpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
+         //--- new way
 
-	    TString rfvString = "@0 + @1" ;
+            TString ttwjLdpString  = "mu_ttwj_ldp" ;
+            ttwjLdpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
 
-	    rv_mu_ttwj_ldp[i][j][k] = new RooFormulaVar( ttwjLdpString, rfvString, 
-							 RooArgSet( *rv_mu_ttbarsingletopzjetsmc_ldp[i][j][k], *rv_mu_WJmc_ldp[i][j][k] )) ;
-	    
+            TString rfvString = "@0 * @1" ;
+
+            rv_mu_ttwj_ldp[i][j][k] = new RooFormulaVar( ttwjLdpString, rfvString,
+                                                         RooArgSet( *rv_mu_ttwj[i][j][k], *rv_ttwj_ldp0lep_ratio[i][j][k] )) ;
+
+
+
+
+
+
+
+
+
+
 
              printf(" qcd,") ; cout << flush ;
 
-	    //---- QCD
+           //---- QCD
 
             TString qcdString    = "mu_qcd" ;
             qcdString    += sMbins[i]+sHbins[j]+sBbins[k] ;
@@ -1326,14 +1407,38 @@
 
              printf(" znn\n") ; cout << flush ;
 
-	    //---- Z -> nunu
-	    
-	    TString znnLdpString   = "mu_znn_ldp" ;
-	    znnLdpString   += sMbins[i]+sHbins[j]+sBbins[k] ;
 
-	    TString znnMcLdpString = "@0" ;
+            //---- Z -> nunu
 
-	    rv_mu_znn_ldp[i][j][k] = new RooFormulaVar( znnLdpString, znnMcLdpString, RooArgSet( *rv_mu_Znnmc_ldp[i][j][k] ) ) ;
+        // //--- old way
+
+        //  TString znnLdpString   = "mu_znn_ldp" ;
+        //  znnLdpString   += sMbins[i]+sHbins[j]+sBbins[k] ;
+
+        //  TString znnMcLdpString = "@0" ;
+
+        //  rv_mu_znn_ldp[i][j][k] = new RooFormulaVar( znnLdpString, znnMcLdpString, RooArgSet( *rv_mu_Znnmc_ldp[i][j][k] ) ) ;
+
+
+           //--- new way
+
+            TString znnLdpString   = "mu_znn_ldp" ;
+            znnLdpString   += sMbins[i]+sHbins[j]+sBbins[k] ;
+
+            TString znnMcLdpString = "@0 * @1" ;
+
+            rv_mu_znn_ldp[i][j][k] = new RooFormulaVar( znnLdpString, znnMcLdpString,
+                                                         RooArgSet( *rv_mu_znn[i][j][k], *rv_znn_ldp0lep_ratio[i][j][k] )) ;
+
+
+
+
+
+
+
+
+
+
 
 
 	    //-- Float the Znn 1b vars and derive 2b and 3b vars using knn ratios
