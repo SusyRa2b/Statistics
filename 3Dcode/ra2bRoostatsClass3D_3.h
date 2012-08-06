@@ -26,7 +26,7 @@
                         const char* inputScanFile = "scanFile.txt",
                         double m0 = 875., double m12 = 525., bool isT1bbbb = false, double t1bbbbXsec=0.,
                         const char* inputSusy_deff_dbtageff_file = "deff_dbtag_file.txt",
-                        int   qcdModelIndex = 1,
+                        int   qcdModelIndex = 3,
                         const char* wsrootfilename = "ws.root"
                         ) ;
        bool setSusyScanPoint( const char* inputScanFile,

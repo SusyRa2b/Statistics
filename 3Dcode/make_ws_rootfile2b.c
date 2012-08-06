@@ -1,7 +1,7 @@
 
 
 
-   void make_ws_rootfile2b( const char* input_datfile = "datfiles/Input-met3-ht3-v1-wclosuresyst.dat",
+   void make_ws_rootfile2b( const char* input_datfile = "datfiles/Input-met3-ht3-v1-wclosuresyst-wttwjcorr-wqcdcorr.dat",
                            const char* input_susyfile = "datfiles/T1bbbb-met3-ht3-v1.dat",
                            double mgl=800, double mlsp=700.,
                            const char* input_deffdbtagfile = "datfiles/dummy_DeffDbtag-met3-ht3.dat"
@@ -16,7 +16,7 @@
        ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, qcdModelIndex ) ;
 
        printf("\n\n Renaming ws.root as ws2.root\n\n") ;
-       gSystem->Exec("mv ws.root ws2.root") ;
+       gSystem->Exec("mv ws.root ws2b.root") ;
 
 
    }

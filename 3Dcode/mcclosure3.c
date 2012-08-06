@@ -21,7 +21,13 @@
 
   //----------------------------------------
 
-   void mcclosure2( const char* infile = "rootfiles/gi-plots-met4-ht4.root", const char* datfile = "Input-met4-ht4-wsyst1.dat" ) {
+   void mcclosure3( const char* infile = "rootfiles/gi-plots-met4-ht4.root",
+                    const char* datfile = "Input-met4-ht4-wsyst1.dat",
+                    bool doQCDCorrection = true,
+                    bool doQCDSyst = true,
+                    bool doTTWJCorrection = true,
+                    bool doTTWJSyst = true
+                    ) {
 
       int nBinsMET(0), nBinsHT(0) ;
 
@@ -323,9 +329,17 @@
             } else {
                systValue = 3.0 ;
             }
-            updateFileValue( datfile, parameterName, systValue ) ;
+            if ( doTTWJSyst ) {
+               updateFileValue( datfile, parameterName, systValue ) ;
+            } else {
+               updateFileValue( datfile, parameterName, 0.0 ) ;
+            }
             sprintf( parameterName, "sf_ttwj_M%d_H%d_1b", mbi+1, hbi+1 ) ;
-            updateFileValue( datfile, parameterName, correction ) ;
+            if ( doTTWJCorrection ) {
+               updateFileValue( datfile, parameterName, correction ) ;
+            } else {
+               updateFileValue( datfile, parameterName, 1.0 ) ;
+            }
 
             sprintf( parameterName, "sf_ttwj_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
             err  = hscalefactor_ttwj_0over1ratio_2b->GetBinError(hbin)  ;
@@ -336,9 +350,17 @@
             } else {
                systValue = 3.0 ;
             }
-            updateFileValue( datfile, parameterName, systValue ) ;
+            if ( doTTWJSyst ) {
+               updateFileValue( datfile, parameterName, systValue ) ;
+            } else {
+               updateFileValue( datfile, parameterName, 0.0 ) ;
+            }
             sprintf( parameterName, "sf_ttwj_M%d_H%d_2b", mbi+1, hbi+1 ) ;
-            updateFileValue( datfile, parameterName, correction ) ;
+            if ( doTTWJCorrection ) {
+               updateFileValue( datfile, parameterName, correction ) ;
+            } else {
+               updateFileValue( datfile, parameterName, 1.0 ) ;
+            }
 
             sprintf( parameterName, "sf_ttwj_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
             err  = hscalefactor_ttwj_0over1ratio_3b->GetBinError(hbin)  ;
@@ -349,9 +371,17 @@
             } else {
                systValue = 3.0 ;
             }
-            updateFileValue( datfile, parameterName, systValue ) ;
+            if ( doTTWJSyst ) {
+               updateFileValue( datfile, parameterName, systValue ) ;
+            } else {
+               updateFileValue( datfile, parameterName, 0.0 ) ;
+            }
             sprintf( parameterName, "sf_ttwj_M%d_H%d_3b", mbi+1, hbi+1 ) ;
-            updateFileValue( datfile, parameterName, correction ) ;
+            if ( doTTWJCorrection ) {
+               updateFileValue( datfile, parameterName, correction ) ;
+            } else {
+               updateFileValue( datfile, parameterName, 1.0 ) ;
+            }
 
          } // hbi.
       } // mbi.
@@ -376,7 +406,7 @@
 
      //---   Q C D  Part   --------------
 
-
+     //---  This is written to go with QCD model 3, which is a single ZL/LDP floating scale factor.
 
 
 
@@ -412,17 +442,6 @@
       hmctruth_qcd_0lepoverldpratio_2b->SetMarkerStyle(25) ;
       hmctruth_qcd_0lepoverldpratio_3b->SetMarkerStyle(30) ;
 
-      TH1F* hmctruth_qcd_0lepoverldpratio_1b_htgrouping = (TH1F*) hmctruth_qcd_0lepoverldpratio_1b->Clone("hmctruth_qcd_0lepoverldpratio_1b_htgrouping") ;
-      TH1F* hmctruth_qcd_0lepoverldpratio_2b_htgrouping = (TH1F*) hmctruth_qcd_0lepoverldpratio_2b->Clone("hmctruth_qcd_0lepoverldpratio_2b_htgrouping") ;
-      TH1F* hmctruth_qcd_0lepoverldpratio_3b_htgrouping = (TH1F*) hmctruth_qcd_0lepoverldpratio_3b->Clone("hmctruth_qcd_0lepoverldpratio_3b_htgrouping") ;
-
-      TH1F* hmctruth_qcd_0lep_1b_htgrouping = (TH1F*) hmctruth_qcd_0lep_1b->Clone("hmctruth_qcd_0lep_1b_htgrouping") ;
-      TH1F* hmctruth_qcd_0lep_2b_htgrouping = (TH1F*) hmctruth_qcd_0lep_2b->Clone("hmctruth_qcd_0lep_2b_htgrouping") ;
-      TH1F* hmctruth_qcd_0lep_3b_htgrouping = (TH1F*) hmctruth_qcd_0lep_3b->Clone("hmctruth_qcd_0lep_3b_htgrouping") ;
-
-      TH1F* hmctruth_qcd_ldp_1b_htgrouping = (TH1F*) hmctruth_qcd_ldp_1b->Clone("hmctruth_qcd_ldp_1b_htgrouping") ;
-      TH1F* hmctruth_qcd_ldp_2b_htgrouping = (TH1F*) hmctruth_qcd_ldp_2b->Clone("hmctruth_qcd_ldp_2b_htgrouping") ;
-      TH1F* hmctruth_qcd_ldp_3b_htgrouping = (TH1F*) hmctruth_qcd_ldp_3b->Clone("hmctruth_qcd_ldp_3b_htgrouping") ;
 
 
 
@@ -501,400 +520,87 @@
 
 
 
-      for ( int mbi=0; mbi<nBinsMET ; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT ; hbi++ ) {
-
-            int hbinin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
-            int hbinout = 1 + (nBinsMET+1)*hbi + mbi + 1 ;
-
-            hmctruth_qcd_0lepoverldpratio_1b_htgrouping->SetBinContent( hbinout, hmctruth_qcd_0lepoverldpratio_1b->GetBinContent( hbinin ) ) ;
-            hmctruth_qcd_0lepoverldpratio_1b_htgrouping->SetBinError(   hbinout, hmctruth_qcd_0lepoverldpratio_1b->GetBinError(   hbinin ) ) ;
-            hmctruth_qcd_0lepoverldpratio_1b_htgrouping->GetXaxis()->SetBinLabel( hbinout,
-                 hmctruth_qcd_0lepoverldpratio_1b->GetXaxis()->GetBinLabel( hbinin ) ) ;
-
-            hmctruth_qcd_0lepoverldpratio_2b_htgrouping->SetBinContent( hbinout, hmctruth_qcd_0lepoverldpratio_2b->GetBinContent( hbinin ) ) ;
-            hmctruth_qcd_0lepoverldpratio_2b_htgrouping->SetBinError(   hbinout, hmctruth_qcd_0lepoverldpratio_2b->GetBinError(   hbinin ) ) ;
-            hmctruth_qcd_0lepoverldpratio_2b_htgrouping->GetXaxis()->SetBinLabel( hbinout,
-                 hmctruth_qcd_0lepoverldpratio_2b->GetXaxis()->GetBinLabel( hbinin ) ) ;
-
-            hmctruth_qcd_0lepoverldpratio_3b_htgrouping->SetBinContent( hbinout, hmctruth_qcd_0lepoverldpratio_3b->GetBinContent( hbinin ) ) ;
-            hmctruth_qcd_0lepoverldpratio_3b_htgrouping->SetBinError(   hbinout, hmctruth_qcd_0lepoverldpratio_3b->GetBinError(   hbinin ) ) ;
-            hmctruth_qcd_0lepoverldpratio_3b_htgrouping->GetXaxis()->SetBinLabel( hbinout,
-                 hmctruth_qcd_0lepoverldpratio_3b->GetXaxis()->GetBinLabel( hbinin ) ) ;
 
 
+      float zlsum_all(0.) ;
+      float ldpsum_all(0.) ;
 
-            hmctruth_qcd_0lep_1b_htgrouping->SetBinContent( hbinout, hmctruth_qcd_0lep_1b->GetBinContent( hbinin ) ) ;
-            hmctruth_qcd_0lep_1b_htgrouping->SetBinError(   hbinout, hmctruth_qcd_0lep_1b->GetBinError(   hbinin ) ) ;
-            hmctruth_qcd_0lep_1b_htgrouping->GetXaxis()->SetBinLabel( hbinout,
-                 hmctruth_qcd_0lep_1b->GetXaxis()->GetBinLabel( hbinin ) ) ;
+      float zlsumw2_all(0.) ;
+      float ldpsumw2_all(0.) ;
 
-            hmctruth_qcd_0lep_2b_htgrouping->SetBinContent( hbinout, hmctruth_qcd_0lep_2b->GetBinContent( hbinin ) ) ;
-            hmctruth_qcd_0lep_2b_htgrouping->SetBinError(   hbinout, hmctruth_qcd_0lep_2b->GetBinError(   hbinin ) ) ;
-            hmctruth_qcd_0lep_2b_htgrouping->GetXaxis()->SetBinLabel( hbinout,
-                 hmctruth_qcd_0lep_2b->GetXaxis()->GetBinLabel( hbinin ) ) ;
+      for ( int hbi=0; hbi<nBinsHT ; hbi++ ) {
 
-            hmctruth_qcd_0lep_3b_htgrouping->SetBinContent( hbinout, hmctruth_qcd_0lep_3b->GetBinContent( hbinin ) ) ;
-            hmctruth_qcd_0lep_3b_htgrouping->SetBinError(   hbinout, hmctruth_qcd_0lep_3b->GetBinError(   hbinin ) ) ;
-            hmctruth_qcd_0lep_3b_htgrouping->GetXaxis()->SetBinLabel( hbinout,
-                 hmctruth_qcd_0lep_3b->GetXaxis()->GetBinLabel( hbinin ) ) ;
+         zlsum_all += zlsum[hbi] ;
+         ldpsum_all += ldpsum[hbi] ;
+
+         zlsumw2_all += zlsumw2[hbi] ;
+         ldpsumw2_all += ldpsumw2[hbi] ;
 
 
+      } // hbi.
 
-            hmctruth_qcd_ldp_1b_htgrouping->SetBinContent( hbinout, hmctruth_qcd_ldp_1b->GetBinContent( hbinin ) ) ;
-            hmctruth_qcd_ldp_1b_htgrouping->SetBinError(   hbinout, hmctruth_qcd_ldp_1b->GetBinError(   hbinin ) ) ;
-            hmctruth_qcd_ldp_1b_htgrouping->GetXaxis()->SetBinLabel( hbinout,
-                 hmctruth_qcd_ldp_1b->GetXaxis()->GetBinLabel( hbinin ) ) ;
+      float qcd_0lepoverldpratio_all(0.) ;
+      float qcd_0lepoverldpratio_all_err(0.) ;
 
-            hmctruth_qcd_ldp_2b_htgrouping->SetBinContent( hbinout, hmctruth_qcd_ldp_2b->GetBinContent( hbinin ) ) ;
-            hmctruth_qcd_ldp_2b_htgrouping->SetBinError(   hbinout, hmctruth_qcd_ldp_2b->GetBinError(   hbinin ) ) ;
-            hmctruth_qcd_ldp_2b_htgrouping->GetXaxis()->SetBinLabel( hbinout,
-                 hmctruth_qcd_ldp_2b->GetXaxis()->GetBinLabel( hbinin ) ) ;
-
-            hmctruth_qcd_ldp_3b_htgrouping->SetBinContent( hbinout, hmctruth_qcd_ldp_3b->GetBinContent( hbinin ) ) ;
-            hmctruth_qcd_ldp_3b_htgrouping->SetBinError(   hbinout, hmctruth_qcd_ldp_3b->GetBinError(   hbinin ) ) ;
-            hmctruth_qcd_ldp_3b_htgrouping->GetXaxis()->SetBinLabel( hbinout,
-                 hmctruth_qcd_ldp_3b->GetXaxis()->GetBinLabel( hbinin ) ) ;
-
-
-
-         } // hbi
-      } // mbi
-
-
-
-
-
-
-
-
-      TH1F* hscalefactor_qcd_0lepoverldpratio_1b_htgrouping = (TH1F*) hmctruth_qcd_0lepoverldpratio_1b_htgrouping->Clone("hscalefactor_qcd_0lep_1b_htgrouping") ;
-      TH1F* hscalefactor_qcd_0lepoverldpratio_2b_htgrouping = (TH1F*) hmctruth_qcd_0lepoverldpratio_2b_htgrouping->Clone("hscalefactor_qcd_0lep_2b_htgrouping") ;
-      TH1F* hscalefactor_qcd_0lepoverldpratio_3b_htgrouping = (TH1F*) hmctruth_qcd_0lepoverldpratio_3b_htgrouping->Clone("hscalefactor_qcd_0lep_3b_htgrouping") ;
-
-
-      for ( int mbi=0; mbi<nBinsMET ; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT ; hbi++ ) {
-
-            int hbin = 1 + (nBinsMET+1)*hbi + mbi + 1 ;
-
-            double sf ;
-            if ( qcd_0lepoverldpratio[hbi] > 0. ) {
-
-               sf = hmctruth_qcd_0lepoverldpratio_1b_htgrouping->GetBinContent( hbin ) / qcd_0lepoverldpratio[hbi] ;
-               printf("  1b MET,HT bin %d,%d  scale factor : %6.3f / %6.3f = %6.3f\n", mbi+1, hbi+1, hmctruth_qcd_0lepoverldpratio_1b_htgrouping->GetBinContent( hbin ),
-                    qcd_0lepoverldpratio[hbi], sf ) ;
-               hscalefactor_qcd_0lepoverldpratio_1b_htgrouping -> SetBinContent( hbin, hmctruth_qcd_0lepoverldpratio_1b_htgrouping->GetBinContent( hbin ) /
-                                                                                       qcd_0lepoverldpratio[hbi] ) ;
-               hscalefactor_qcd_0lepoverldpratio_1b_htgrouping -> SetBinError(   hbin, hmctruth_qcd_0lepoverldpratio_1b_htgrouping->GetBinError( hbin ) /
-                                                                                       qcd_0lepoverldpratio[hbi] ) ;
-
-               sf = hmctruth_qcd_0lepoverldpratio_2b_htgrouping->GetBinContent( hbin ) / qcd_0lepoverldpratio[hbi] ;
-               printf("  2b MET,HT bin %d,%d  scale factor : %6.3f / %6.3f = %6.3f\n", mbi+1, hbi+1, hmctruth_qcd_0lepoverldpratio_2b_htgrouping->GetBinContent( hbin ),
-                    qcd_0lepoverldpratio[hbi], sf ) ;
-               hscalefactor_qcd_0lepoverldpratio_2b_htgrouping -> SetBinContent( hbin, hmctruth_qcd_0lepoverldpratio_2b_htgrouping->GetBinContent( hbin ) /
-                                                                                       qcd_0lepoverldpratio[hbi] ) ;
-               hscalefactor_qcd_0lepoverldpratio_2b_htgrouping -> SetBinError(   hbin, hmctruth_qcd_0lepoverldpratio_2b_htgrouping->GetBinError( hbin ) /
-                                                                                       qcd_0lepoverldpratio[hbi] ) ;
-
-               sf = hmctruth_qcd_0lepoverldpratio_3b_htgrouping->GetBinContent( hbin ) / qcd_0lepoverldpratio[hbi] ;
-               printf("  3b MET,HT bin %d,%d  scale factor : %6.3f / %6.3f = %6.3f\n", mbi+1, hbi+1, hmctruth_qcd_0lepoverldpratio_3b_htgrouping->GetBinContent( hbin ),
-                    qcd_0lepoverldpratio[hbi], sf ) ;
-               hscalefactor_qcd_0lepoverldpratio_3b_htgrouping -> SetBinContent( hbin, hmctruth_qcd_0lepoverldpratio_3b_htgrouping->GetBinContent( hbin ) /
-                                                                                       qcd_0lepoverldpratio[hbi] ) ;
-               hscalefactor_qcd_0lepoverldpratio_3b_htgrouping -> SetBinError(   hbin, hmctruth_qcd_0lepoverldpratio_3b_htgrouping->GetBinError( hbin ) /
-                                                                                       qcd_0lepoverldpratio[hbi] ) ;
-
-            }
-
-         } // hbi
-      } // mbi
-
-
-      hmctruth_qcd_0lepoverldpratio_1b->SetMinimum(-0.1) ;
-      hmctruth_qcd_0lepoverldpratio_2b->SetMinimum(-0.1) ;
-      hmctruth_qcd_0lepoverldpratio_3b->SetMinimum(-0.1) ;
-      hmctruth_qcd_0lepoverldpratio_1b->SetMaximum(0.5) ;
-      hmctruth_qcd_0lepoverldpratio_2b->SetMaximum(0.5) ;
-      hmctruth_qcd_0lepoverldpratio_3b->SetMaximum(0.5) ;
-
-      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->SetMinimum(-0.1) ;
-      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->SetMinimum(-0.1) ;
-      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->SetMinimum(-0.1) ;
-      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->SetMaximum(0.5) ;
-      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->SetMaximum(0.5) ;
-      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->SetMaximum(0.5) ;
-
-      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->SetMinimum(-2.) ;
-      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->SetMinimum(-2.) ;
-      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->SetMinimum(-2.) ;
-      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->SetMaximum(8.) ;
-      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->SetMaximum(8.) ;
-      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->SetMaximum(8.) ;
-
-      hmctruth_qcd_0lep_1b_htgrouping->GetYaxis()->SetNdivisions(505) ;
-      hmctruth_qcd_0lep_2b_htgrouping->GetYaxis()->SetNdivisions(505) ;
-      hmctruth_qcd_0lep_3b_htgrouping->GetYaxis()->SetNdivisions(505) ;
-
-      hmctruth_qcd_ldp_1b_htgrouping->GetYaxis()->SetNdivisions(505) ;
-      hmctruth_qcd_ldp_2b_htgrouping->GetYaxis()->SetNdivisions(505) ;
-      hmctruth_qcd_ldp_3b_htgrouping->GetYaxis()->SetNdivisions(505) ;
-
-      hmctruth_qcd_0lep_1b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
-      hmctruth_qcd_0lep_2b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
-      hmctruth_qcd_0lep_3b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
-
-      hmctruth_qcd_ldp_1b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
-      hmctruth_qcd_ldp_2b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
-      hmctruth_qcd_ldp_3b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
-
-      hmctruth_qcd_0lep_1b_htgrouping->GetXaxis()->SetLabelSize(0.06) ;
-      hmctruth_qcd_0lep_2b_htgrouping->GetXaxis()->SetLabelSize(0.06) ;
-      hmctruth_qcd_0lep_3b_htgrouping->GetXaxis()->SetLabelSize(0.06) ;
-
-      hmctruth_qcd_ldp_1b_htgrouping->GetXaxis()->SetLabelSize(0.06) ;
-      hmctruth_qcd_ldp_2b_htgrouping->GetXaxis()->SetLabelSize(0.06) ;
-      hmctruth_qcd_ldp_3b_htgrouping->GetXaxis()->SetLabelSize(0.06) ;
-
-      hmctruth_qcd_0lep_1b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
-      hmctruth_qcd_0lep_2b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
-      hmctruth_qcd_0lep_3b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
-
-      hmctruth_qcd_ldp_1b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
-      hmctruth_qcd_ldp_2b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
-      hmctruth_qcd_ldp_3b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
-
-      hmctruth_qcd_0lep_1b_htgrouping->SetFillColor(2) ;
-      hmctruth_qcd_0lep_2b_htgrouping->SetFillColor(2) ;
-      hmctruth_qcd_0lep_3b_htgrouping->SetFillColor(2) ;
-
-      hmctruth_qcd_ldp_1b_htgrouping->SetFillColor(2) ;
-      hmctruth_qcd_ldp_2b_htgrouping->SetFillColor(2) ;
-      hmctruth_qcd_ldp_3b_htgrouping->SetFillColor(2) ;
-
-
-      hmctruth_qcd_0lep_1b_htgrouping->SetLineWidth(2) ;
-      hmctruth_qcd_0lep_2b_htgrouping->SetLineWidth(2) ;
-      hmctruth_qcd_0lep_3b_htgrouping->SetLineWidth(2) ;
-
-      hmctruth_qcd_ldp_1b_htgrouping->SetLineWidth(2) ;
-      hmctruth_qcd_ldp_2b_htgrouping->SetLineWidth(2) ;
-      hmctruth_qcd_ldp_3b_htgrouping->SetLineWidth(2) ;
-
-
-      hmctruth_qcd_ldp_1b_htgrouping->SetMaximum( 1.15*hmctruth_qcd_ldp_1b_htgrouping->GetMaximum() ) ;
-      hmctruth_qcd_ldp_2b_htgrouping->SetMaximum( 1.15*hmctruth_qcd_ldp_2b_htgrouping->GetMaximum() ) ;
-      hmctruth_qcd_ldp_3b_htgrouping->SetMaximum( 1.15*hmctruth_qcd_ldp_3b_htgrouping->GetMaximum() ) ;
-
-      hmctruth_qcd_0lep_1b_htgrouping->SetMaximum( 0.10*hmctruth_qcd_ldp_1b_htgrouping->GetMaximum() ) ;
-      hmctruth_qcd_0lep_2b_htgrouping->SetMaximum( 0.10*hmctruth_qcd_ldp_2b_htgrouping->GetMaximum() ) ;
-      hmctruth_qcd_0lep_3b_htgrouping->SetMaximum( 0.10*hmctruth_qcd_ldp_3b_htgrouping->GetMaximum() ) ;
-
-  /// double qcdldpmax(700) ;
-  /// hmctruth_qcd_ldp_1b_htgrouping->SetMaximum(qcdldpmax) ;
-  /// hmctruth_qcd_ldp_2b_htgrouping->SetMaximum(qcdldpmax) ;
-  /// hmctruth_qcd_ldp_3b_htgrouping->SetMaximum(qcdldpmax) ;
-
-
-
-
-    //---------
-
-      TCanvas* cqcd3 = (TCanvas*) gDirectory->FindObject("cqcd3") ;
-      if ( cqcd3 == 0x0 ) {
-         cqcd3 = new TCanvas("cqcd3","qcd closure",1200,950) ;
+      if ( ldpsum_all > 0 && zlsum_all > 0 ) {
+         qcd_0lepoverldpratio_all = zlsum_all / ldpsum_all ;
+         qcd_0lepoverldpratio_all_err = qcd_0lepoverldpratio_all * sqrt( zlsumw2_all / pow( zlsum_all,2) + ldpsumw2_all / pow( ldpsum_all, 2) ) ;
       }
-      cqcd3->Clear() ;
-      cqcd3->Divide(3,2) ;
+      printf(" Average QCD 0lep/LDP ratio = %5.3f +/- %5.3f\n", qcd_0lepoverldpratio_all, qcd_0lepoverldpratio_all_err ) ;
 
-      cqcd3->cd(1) ;
-      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->SetTitle("QCD =1b: 0 Lepton / LDP, Ratio") ;
-      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->DrawCopy() ;
-      cqcd3->cd(2) ;
-      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->SetTitle("QCD =2b: 0 Lepton / LDP, Ratio") ;
-      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->DrawCopy() ;
-      cqcd3->cd(3) ;
-      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->SetTitle("QCD >=3b: 0 Lepton / LDP, Ratio") ;
-      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->DrawCopy() ;
-
-      cqcd3->cd(4) ;
-      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->SetTitle("QCD =1b: 0 Lepton / LDP, Scale Factor") ;
-      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->DrawCopy() ;
-      line->DrawLine(0.5,1.,hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetNbinsX()+0.5,1.) ;
-      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->Draw("same") ;
-      cqcd3->cd(5) ;
-      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->SetTitle("QCD =2b: 0 Lepton / LDP, Scale Factor") ;
-      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->DrawCopy() ;
-      line->DrawLine(0.5,1.,hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetNbinsX()+0.5,1.) ;
-      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->Draw("same") ;
-      cqcd3->cd(6) ;
-      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->SetTitle("QCD >=3b: 0 Lepton / LDP, Scale Factor") ;
-      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->DrawCopy() ;
-      line->DrawLine(0.5,1.,hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetNbinsX()+0.5,1.) ;
-      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->Draw("same") ;
-
-      TString outqcd3( infileStr ) ;
-      outqcd3.ReplaceAll("rootfiles","outputfiles") ;
-      outqcd3.ReplaceAll(".root","-mcclosure-qcd3.pdf") ;
-      cqcd3->SaveAs( outqcd3 ) ;
-
-    //---------
+      printf("\n\n") ;
 
 
 
-      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->SetLineWidth(2) ;
-      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->SetLineWidth(2) ;
-      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->SetLineWidth(2) ;
+     //----------
 
-      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->GetYaxis()->SetNdivisions(505) ;
-      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->GetYaxis()->SetNdivisions(505) ;
-      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->GetYaxis()->SetNdivisions(505) ;
+      TH1F* hscalefactor_qcd_0lepoverldpratio_1b = (TH1F*)  hmctruth_qcd_0lepoverldpratio_1b->Clone( "hscalefactor_qcd_0lepoverldpratio_1b" ) ;
+      TH1F* hscalefactor_qcd_0lepoverldpratio_2b = (TH1F*)  hmctruth_qcd_0lepoverldpratio_2b->Clone( "hscalefactor_qcd_0lepoverldpratio_2b" ) ;
+      TH1F* hscalefactor_qcd_0lepoverldpratio_3b = (TH1F*)  hmctruth_qcd_0lepoverldpratio_3b->Clone( "hscalefactor_qcd_0lepoverldpratio_3b" ) ;
 
-      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
-      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
-      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
-
-      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
-      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
-      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
+      hscalefactor_qcd_0lepoverldpratio_1b -> Scale( 1./ qcd_0lepoverldpratio_all ) ;
+      hscalefactor_qcd_0lepoverldpratio_2b -> Scale( 1./ qcd_0lepoverldpratio_all ) ;
+      hscalefactor_qcd_0lepoverldpratio_3b -> Scale( 1./ qcd_0lepoverldpratio_all ) ;
 
 
-      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->SetLineWidth(2) ;
-      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->SetLineWidth(2) ;
-      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->SetLineWidth(2) ;
-
-      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetYaxis()->SetNdivisions(505) ;
-      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->GetYaxis()->SetNdivisions(505) ;
-      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->GetYaxis()->SetNdivisions(505) ;
-
-      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
-      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
-      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->GetYaxis()->SetLabelSize(0.07) ;
-
-      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
-      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
-      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->GetYaxis()->SetLabelOffset(0.01) ;
-
-      hmctruth_qcd_0lep_1b_htgrouping->SetYTitle("Events") ;
-      hmctruth_qcd_0lep_2b_htgrouping->SetYTitle("Events") ;
-      hmctruth_qcd_0lep_3b_htgrouping->SetYTitle("Events") ;
-
-      hmctruth_qcd_ldp_1b_htgrouping->SetYTitle("Events") ;
-      hmctruth_qcd_ldp_2b_htgrouping->SetYTitle("Events") ;
-      hmctruth_qcd_ldp_3b_htgrouping->SetYTitle("Events") ;
-
-      hmctruth_qcd_0lep_1b_htgrouping->SetTitleOffset(1.11,"y") ;
-      hmctruth_qcd_0lep_2b_htgrouping->SetTitleOffset(1.11,"y") ;
-      hmctruth_qcd_0lep_3b_htgrouping->SetTitleOffset(1.11,"y") ;
-
-      hmctruth_qcd_0lep_1b_htgrouping->SetTitleSize(0.07,"y") ;
-      hmctruth_qcd_0lep_2b_htgrouping->SetTitleSize(0.07,"y") ;
-      hmctruth_qcd_0lep_3b_htgrouping->SetTitleSize(0.07,"y") ;
-
-      hmctruth_qcd_ldp_1b_htgrouping->SetTitleOffset(1.11,"y") ;
-      hmctruth_qcd_ldp_2b_htgrouping->SetTitleOffset(1.11,"y") ;
-      hmctruth_qcd_ldp_3b_htgrouping->SetTitleOffset(1.11,"y") ;
-
-      hmctruth_qcd_ldp_1b_htgrouping->SetTitleSize(0.07,"y") ;
-      hmctruth_qcd_ldp_2b_htgrouping->SetTitleSize(0.07,"y") ;
-      hmctruth_qcd_ldp_3b_htgrouping->SetTitleSize(0.07,"y") ;
-
-      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->SetYTitle("0Lep / LDP") ;
-      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->SetYTitle("0Lep / LDP") ;
-      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->SetYTitle("0Lep / LDP") ;
-
-      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->SetTitleOffset(1.11,"y") ;
-      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->SetTitleOffset(1.11,"y") ;
-      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->SetTitleOffset(1.11,"y") ;
-
-      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->SetTitleSize(0.07,"y") ;
-      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->SetTitleSize(0.07,"y") ;
-      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->SetTitleSize(0.07,"y") ;
 
 
-      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->SetYTitle("Closure") ;
-      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->SetYTitle("Closure") ;
-      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->SetYTitle("Closure") ;
 
-      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->SetTitleOffset(1.11,"y") ;
-      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->SetTitleOffset(1.11,"y") ;
-      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->SetTitleOffset(1.11,"y") ;
-
-      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->SetTitleSize(0.07,"y") ;
-      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->SetTitleSize(0.07,"y") ;
-      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->SetTitleSize(0.07,"y") ;
-
-      TCanvas* cqcd3b = (TCanvas*) gDirectory->FindObject("cqcd3b") ;
-      if ( cqcd3b == 0x0 ) {
-         cqcd3b = new TCanvas("cqcd3b","qcd closure",1000,1000) ;
+      TCanvas* cqcd = (TCanvas*) gDirectory->FindObject("cqcd") ;
+      if ( cqcd == 0x0 ) {
+         cqcd = new TCanvas("cqcd","qcd closure", 700, 950) ;
       }
-      cqcd3b->Clear() ;
-      cqcd3b->Divide(3,4) ;
+      cqcd->Clear() ;
+      cqcd->Divide(1,2) ;
 
-      int pad(1) ;
+      TLegend* legend_qcd = new TLegend( 0.91, 0.77,  0.99, 0.93 ) ;
+      legend_qcd->SetFillColor(kWhite) ;
+      legend_qcd->AddEntry( hmctruth_qcd_0lepoverldpratio_1b, "=1b") ;
+      legend_qcd->AddEntry( hmctruth_qcd_0lepoverldpratio_2b, "=2b") ;
+      legend_qcd->AddEntry( hmctruth_qcd_0lepoverldpratio_3b, ">=3b") ;
 
-      cqcd3b->cd(pad++) ;
-      hmctruth_qcd_0lep_1b_htgrouping->SetTitle("QCD =1b: 0 Lepton") ;
-      hmctruth_qcd_0lep_1b_htgrouping->Draw() ;
-      hmctruth_qcd_0lep_1b_htgrouping->Draw("histsame") ;
-      hmctruth_qcd_0lep_1b_htgrouping->Draw("esame") ;
-      cqcd3b->cd(pad++) ;
-      hmctruth_qcd_0lep_2b_htgrouping->SetTitle("QCD =2b: 0 Lepton") ;
-      hmctruth_qcd_0lep_2b_htgrouping->Draw() ;
-      hmctruth_qcd_0lep_2b_htgrouping->Draw("histsame") ;
-      hmctruth_qcd_0lep_2b_htgrouping->Draw("esame") ;
-      cqcd3b->cd(pad++) ;
-      hmctruth_qcd_0lep_3b_htgrouping->SetTitle("QCD >=3b: 0 Lepton") ;
-      hmctruth_qcd_0lep_3b_htgrouping->Draw() ;
-      hmctruth_qcd_0lep_3b_htgrouping->Draw("histsame") ;
-      hmctruth_qcd_0lep_3b_htgrouping->Draw("esame") ;
+      cqcd->cd(1) ;
+      hmctruth_qcd_0lepoverldpratio_1b->SetTitle("qcd: 0 Lepton / LDP, Ratio") ;
+      hmctruth_qcd_0lepoverldpratio_1b->Draw() ;
+      hmctruth_qcd_0lepoverldpratio_2b->Draw("same") ;
+      hmctruth_qcd_0lepoverldpratio_3b->Draw("same") ;
+      legend_qcd->Draw() ;
 
-      cqcd3b->cd(pad++) ;
-      hmctruth_qcd_ldp_1b_htgrouping->SetTitle("QCD =1b: Low minDPhiN") ;
-      hmctruth_qcd_ldp_1b_htgrouping->Draw() ;
-      hmctruth_qcd_ldp_1b_htgrouping->Draw("histsame") ;
-      hmctruth_qcd_ldp_1b_htgrouping->Draw("esame") ;
-      cqcd3b->cd(pad++) ;
-      hmctruth_qcd_ldp_2b_htgrouping->SetTitle("QCD =2b: Low minDPhiN") ;
-      hmctruth_qcd_ldp_2b_htgrouping->Draw() ;
-      hmctruth_qcd_ldp_2b_htgrouping->Draw("histsame") ;
-      hmctruth_qcd_ldp_2b_htgrouping->Draw("esame") ;
-      cqcd3b->cd(pad++) ;
-      hmctruth_qcd_ldp_3b_htgrouping->SetTitle("QCD >=3b: Low minDPhiN") ;
-      hmctruth_qcd_ldp_3b_htgrouping->Draw() ;
-      hmctruth_qcd_ldp_3b_htgrouping->Draw("histsame") ;
-      hmctruth_qcd_ldp_3b_htgrouping->Draw("esame") ;
+      cqcd->cd(2) ;
+      hscalefactor_qcd_0lepoverldpratio_1b->SetTitle("qcd: 0 Lepton / LDP, Scale Factor") ;
+      hscalefactor_qcd_0lepoverldpratio_1b->Draw() ;
+      hscalefactor_qcd_0lepoverldpratio_2b->Draw("same") ;
+      hscalefactor_qcd_0lepoverldpratio_3b->Draw("same") ;
+      line->DrawLine(0.5,1.,hscalefactor_qcd_0lepoverldpratio_1b->GetNbinsX()+0.5,1.) ;
+      legend_qcd->Draw() ;
 
-      cqcd3b->cd(pad++) ;
-      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->SetTitle("QCD =1b: 0 Lepton / LDP, Ratio") ;
-      hmctruth_qcd_0lepoverldpratio_1b_htgrouping->Draw() ;
-      cqcd3b->cd(pad++) ;
-      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->SetTitle("QCD =2b: 0 Lepton / LDP, Ratio") ;
-      hmctruth_qcd_0lepoverldpratio_2b_htgrouping->Draw() ;
-      cqcd3b->cd(pad++) ;
-      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->SetTitle("QCD >=3b: 0 Lepton / LDP, Ratio") ;
-      hmctruth_qcd_0lepoverldpratio_3b_htgrouping->Draw() ;
+      TString outqcd( infileStr ) ;
+      outqcd.ReplaceAll("rootfiles","outputfiles") ;
+      outqcd.ReplaceAll(".root","-mcclosure-qcd1.pdf") ;
+      cqcd->SaveAs( outqcd ) ;
 
-      cqcd3b->cd(pad++) ;
-      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->SetTitle("QCD =1b: 0 Lepton / LDP, Scale Factor") ;
-      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->Draw() ;
-      line->DrawLine(0.5,1.,hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetNbinsX()+0.5,1.) ;
-      hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->Draw("same") ;
-      cqcd3b->cd(pad++) ;
-      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->SetTitle("QCD =2b: 0 Lepton / LDP, Scale Factor") ;
-      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->Draw() ;
-      line->DrawLine(0.5,1.,hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetNbinsX()+0.5,1.) ;
-      hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->Draw("same") ;
-      cqcd3b->cd(pad++) ;
-      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->SetTitle("QCD >=3b: 0 Lepton / LDP, Scale Factor") ;
-      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->Draw() ;
-      line->DrawLine(0.5,1.,hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetNbinsX()+0.5,1.) ;
-      hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->Draw("same") ;
 
-      TString outqcd3b( infileStr ) ;
-      outqcd3b.ReplaceAll("rootfiles","outputfiles") ;
-      outqcd3b.ReplaceAll(".root","-mcclosure-qcd3b.pdf") ;
-      cqcd3b->SaveAs( outqcd3b ) ;
+
 
 
 
@@ -904,40 +610,75 @@
       for ( int mbi=0; mbi<nBinsMET ; mbi++ ) {
          for ( int hbi=0; hbi<nBinsHT ; hbi++ ) {
 
-            int hbin = 1 + (nBinsMET+1)*hbi + mbi + 1 ;
+            int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
 
             char parameterName[1000] ;
-            double err, diff, systValue ;
+            double sf_val, sf_err ;
 
-            sprintf( parameterName, "sf_qcd_M%d_H%d_1b_err", mbi+1, hbi+1 ) ;
-            err  = hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetBinError(hbin)  ;
-            diff = hscalefactor_qcd_0lepoverldpratio_1b_htgrouping->GetBinContent(hbin) - 1. ;
-            if ( err > 0. ) {
-               systValue = sqrt( pow(err,2) + pow(diff,2) ) ;
-            } else {
-               systValue = 3.0 ;
-            }
-            updateFileValue( datfile, parameterName, systValue ) ;
+            if ( doQCDCorrection ) {
 
-            sprintf( parameterName, "sf_qcd_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
-            err  = hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->GetBinError(hbin)  ;
-            diff = hscalefactor_qcd_0lepoverldpratio_2b_htgrouping->GetBinContent(hbin) - 1. ;
-            if ( err > 0. ) {
-               systValue = sqrt( pow(err,2) + pow(diff,2) ) ;
-            } else {
-               systValue = 3.0 ;
-            }
-            updateFileValue( datfile, parameterName, systValue ) ;
+               sprintf( parameterName, "sf_qcd_M%d_H%d_1b", mbi+1, hbi+1 ) ;
+               sf_val = hscalefactor_qcd_0lepoverldpratio_1b -> GetBinContent( hbin ) ;
+               if ( sf_val == 0. ) { sf_val = 1.0 ; }
+               updateFileValue( datfile, parameterName, sf_val ) ;
 
-            sprintf( parameterName, "sf_qcd_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
-            err  = hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->GetBinError(hbin)  ;
-            diff = hscalefactor_qcd_0lepoverldpratio_3b_htgrouping->GetBinContent(hbin) - 1. ;
-            if ( err > 0. ) {
-               systValue = sqrt( pow(err,2) + pow(diff,2) ) ;
+               sprintf( parameterName, "sf_qcd_M%d_H%d_2b", mbi+1, hbi+1 ) ;
+               sf_val = hscalefactor_qcd_0lepoverldpratio_2b -> GetBinContent( hbin ) ;
+               if ( sf_val == 0. ) { sf_val = 1.0 ; }
+               updateFileValue( datfile, parameterName, sf_val ) ;
+
+               sprintf( parameterName, "sf_qcd_M%d_H%d_3b", mbi+1, hbi+1 ) ;
+               sf_val = hscalefactor_qcd_0lepoverldpratio_3b -> GetBinContent( hbin ) ;
+               if ( sf_val == 0. ) { sf_val = 1.0 ; }
+               updateFileValue( datfile, parameterName, sf_val ) ;
+
             } else {
-               systValue = 3.0 ;
+
+               sprintf( parameterName, "sf_qcd_M%d_H%d_1b", mbi+1, hbi+1 ) ;
+               updateFileValue( datfile, parameterName, 1.0 ) ;
+
+               sprintf( parameterName, "sf_qcd_M%d_H%d_2b", mbi+1, hbi+1 ) ;
+               updateFileValue( datfile, parameterName, 1.0 ) ;
+
+               sprintf( parameterName, "sf_qcd_M%d_H%d_3b", mbi+1, hbi+1 ) ;
+               updateFileValue( datfile, parameterName, 1.0 ) ;
+
+
             }
-            updateFileValue( datfile, parameterName, systValue ) ;
+
+            if ( doQCDSyst ) {
+
+               sprintf( parameterName, "sf_qcd_M%d_H%d_1b_err", mbi+1, hbi+1 ) ;
+               sf_err = hscalefactor_qcd_0lepoverldpratio_1b -> GetBinError( hbin ) ;
+               printf(" bin check : %s  ,  %s\n", parameterName, hscalefactor_qcd_0lepoverldpratio_1b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+               if ( sf_err == 0. ) { sf_err = 3.0 ; }
+               updateFileValue( datfile, parameterName, sf_err ) ;
+
+               sprintf( parameterName, "sf_qcd_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
+               sf_err = hscalefactor_qcd_0lepoverldpratio_2b -> GetBinError( hbin ) ;
+               printf(" bin check : %s  ,  %s\n", parameterName, hscalefactor_qcd_0lepoverldpratio_2b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+               if ( sf_err == 0. ) { sf_err = 3.0 ; }
+               updateFileValue( datfile, parameterName, sf_err ) ;
+
+               sprintf( parameterName, "sf_qcd_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
+               sf_err = hscalefactor_qcd_0lepoverldpratio_3b -> GetBinError( hbin ) ;
+               printf(" bin check : %s  ,  %s\n", parameterName, hscalefactor_qcd_0lepoverldpratio_3b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+               if ( sf_err == 0. ) { sf_err = 3.0 ; }
+               updateFileValue( datfile, parameterName, sf_err ) ;
+
+            } else {
+
+               sprintf( parameterName, "sf_qcd_M%d_H%d_1b_err", mbi+1, hbi+1 ) ;
+               updateFileValue( datfile, parameterName, 0.0 ) ;
+
+               sprintf( parameterName, "sf_qcd_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
+               updateFileValue( datfile, parameterName, 0.0 ) ;
+
+               sprintf( parameterName, "sf_qcd_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
+               updateFileValue( datfile, parameterName, 0.0 ) ;
+
+            }
+
 
          } // hbi.
       } // mbi.

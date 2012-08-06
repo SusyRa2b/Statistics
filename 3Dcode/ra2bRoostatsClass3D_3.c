@@ -517,7 +517,7 @@
         for (int j = 0 ; j < nBinsHT ; j++) {
           for (int k = 0 ; k < nBinsBtag ; k++) {
              char expectedlabel[1000] ;
-             sprintf( expectedlabel, "ttwj_mc_ldpover1lep_ratio_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+             sprintf( expectedlabel, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_%db", i+1, j+1, k+1 ) ;
              char vallabel[1000] ;
              char errlabel[1000] ;
              fscanf( infp, "%s %g", vallabel, &ttwj_ldp0lep_ratio[i][j][k] ) ;
@@ -533,7 +533,7 @@
         for (int j = 0 ; j < nBinsHT ; j++) {
           for (int k = 0 ; k < nBinsBtag ; k++) {
              char expectedlabel[1000] ;
-             sprintf( expectedlabel, "znn_mc_ldpover1lep_ratio_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+             sprintf( expectedlabel, "znn_mc_ldpover0lep_ratio_M%d_H%d_%db", i+1, j+1, k+1 ) ;
              char vallabel[1000] ;
              char errlabel[1000] ;
              fscanf( infp, "%s %g", vallabel, &znn_ldp0lep_ratio[i][j][k] ) ;
@@ -989,6 +989,14 @@
             rv_qcd_0lepLDP_ratio[htbi] = new RooRealVar( vname, vname, 0.05, 0., 10. ) ;
          }
 
+      } else if ( qcdModelIndex == 3 ) {
+
+         printf("\n\n  QCD Model 3 : One floating 0lep/LDP ratio.\n\n") ;
+
+         char vname[1000] ;
+         sprintf( vname, "qcd_0lepLDP_ratio" ) ;
+         rv_qcd_0lepLDP_ratio[0] = new RooRealVar( vname, vname, 0.05, 0., 10. ) ;
+
       } else {
 
          printf("\n\n *** Unknown QCD model index : %d\n\n", qcdModelIndex ) ;
@@ -1360,6 +1368,11 @@
 
                rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
                                                         RooArgSet( *rv_mu_qcd_ldp[i][j][k], *rar_sf_qcd[i][j][k], *rv_qcd_0lepLDP_ratio[j] ) ) ;
+
+            } else if ( qcdModelIndex == 3 ) {
+
+               rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
+                                                        RooArgSet( *rv_mu_qcd_ldp[i][j][k], *rar_sf_qcd[i][j][k], *rv_qcd_0lepLDP_ratio[0] ) ) ;
 
 
             }

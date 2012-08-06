@@ -30,18 +30,23 @@
 
    float nSusy0lep ;
 
+   int qcdModelIndex ;
 
    RooWorkspace* workspace ;
 
    RooRealVar* rrv_susy_poi ;
    RooAbsPdf* likelihood ;
 
+   RooRealVar* rrv_qcd_0lepLDP_ratio ;
    RooRealVar* rrv_qcd_0lepLDP_ratio_H1 ;
    RooRealVar* rrv_qcd_0lepLDP_ratio_H2 ;
    RooRealVar* rrv_qcd_0lepLDP_ratio_H3 ;
    RooRealVar* rrv_qcd_0lepLDP_ratio_H4 ;
 
    float sf_ttwj[nBinsMET][nBinsHT][nBinsBjets] ;
+   float sf_qcd[nBinsMET][nBinsHT][nBinsBjets] ;
+   float ttwj_mc_ldpover0lep_ratio[nBinsMET][nBinsHT][nBinsBjets] ;
+   float  znn_mc_ldpover0lep_ratio[nBinsMET][nBinsHT][nBinsBjets] ;
 
 
    //--- Output ttree variables.
@@ -80,11 +85,13 @@
    float susy_ldp  [nBinsMET][nBinsHT][nBinsBjets] ;
 
 
+   float fit_qcd_0lepLDP_ratio ;
    float fit_qcd_0lepLDP_ratio_H1 ;
    float fit_qcd_0lepLDP_ratio_H2 ;
    float fit_qcd_0lepLDP_ratio_H3 ;
    float fit_qcd_0lepLDP_ratio_H4 ;
 
+   float fit_qcd_0lepLDP_ratio_err ;
    float fit_qcd_0lepLDP_ratio_H1_err ;
    float fit_qcd_0lepLDP_ratio_H2_err ;
    float fit_qcd_0lepLDP_ratio_H3_err ;
@@ -129,7 +136,7 @@
    bool reinitFloatPars() ;
    bool saveToyDatfile( int toyIndex, RooDataSet* toyds ) ;
    bool readAndSetMCVals() ;
-   bool setTtwjSFVals() ;
+   bool setSFVals() ;
 
 
    TRandom* tran ;
@@ -188,10 +195,6 @@
        doSignif = false ;
        doUL = false ;
 
-      //--- this is now an argument.
-       //// useExpected0lep = false ;
-       //// useExpected0lep = true ;
-
        useExpected0lep = input_useExpected0lep ;
 
 
@@ -205,7 +208,7 @@
 
        ra2bRoostatsClass3D_3 ra2b ;
 
-       int qcdModelIndex = 2 ;
+       qcdModelIndex = 3 ;
 
        char wsfilename[10000] ;
        sprintf( wsfilename, "%s/ws.root", outputDir ) ;
@@ -226,8 +229,8 @@
 
        //--- Read in ttwj scale factors (used if useExpected0lep is true).
 
-       if ( !setTtwjSFVals() ) {
-          printf("\n\n *** Problem reading in ttwj scale factors from %s.\n\n", datfile ) ;
+       if ( !setSFVals() ) {
+          printf("\n\n *** Problem reading in scale factors from %s.\n\n", datfile ) ;
        }
 
 
@@ -243,29 +246,38 @@
           printf("\n\n *** can't find susy poi mu_susy_all0lep.\n\n") ; return ;
        }
 
-       if ( nBinsHT >=1 ) {
-          rrv_qcd_0lepLDP_ratio_H1 = workspace -> var( "qcd_0lepLDP_ratio_H1" ) ;
-          if ( rrv_qcd_0lepLDP_ratio_H1 == 0x0 ) {
-             printf("\n\n *** can't find qcd_0lepLDP_ratio_H1.\n\n") ; return ;
+       if ( qcdModelIndex == 2 ) {
+          if ( nBinsHT >=1 ) {
+             rrv_qcd_0lepLDP_ratio_H1 = workspace -> var( "qcd_0lepLDP_ratio_H1" ) ;
+             if ( rrv_qcd_0lepLDP_ratio_H1 == 0x0 ) {
+                printf("\n\n *** can't find qcd_0lepLDP_ratio_H1.\n\n") ; return ;
+             }
           }
-       }
-       if ( nBinsHT >=2 ) {
-          rrv_qcd_0lepLDP_ratio_H2 = workspace -> var( "qcd_0lepLDP_ratio_H2" ) ;
-          if ( rrv_qcd_0lepLDP_ratio_H2 == 0x0 ) {
-             printf("\n\n *** can't find qcd_0lepLDP_ratio_H2.\n\n") ; return ;
+          if ( nBinsHT >=2 ) {
+             rrv_qcd_0lepLDP_ratio_H2 = workspace -> var( "qcd_0lepLDP_ratio_H2" ) ;
+             if ( rrv_qcd_0lepLDP_ratio_H2 == 0x0 ) {
+                printf("\n\n *** can't find qcd_0lepLDP_ratio_H2.\n\n") ; return ;
+             }
           }
-       }
-       if ( nBinsHT >=3 ) {
-          rrv_qcd_0lepLDP_ratio_H3 = workspace -> var( "qcd_0lepLDP_ratio_H3" ) ;
-          if ( rrv_qcd_0lepLDP_ratio_H3 == 0x0 ) {
-             printf("\n\n *** can't find qcd_0lepLDP_ratio_H3.\n\n") ; return ;
+          if ( nBinsHT >=3 ) {
+             rrv_qcd_0lepLDP_ratio_H3 = workspace -> var( "qcd_0lepLDP_ratio_H3" ) ;
+             if ( rrv_qcd_0lepLDP_ratio_H3 == 0x0 ) {
+                printf("\n\n *** can't find qcd_0lepLDP_ratio_H3.\n\n") ; return ;
+             }
           }
-       }
-       if ( nBinsHT >=4 ) {
-          rrv_qcd_0lepLDP_ratio_H4 = workspace -> var( "qcd_0lepLDP_ratio_H4" ) ;
-          if ( rrv_qcd_0lepLDP_ratio_H4 == 0x0 ) {
-             printf("\n\n *** can't find qcd_0lepLDP_ratio_H4. nBinsHT=%d\n\n", nBinsHT) ; return ;
+          if ( nBinsHT >=4 ) {
+             rrv_qcd_0lepLDP_ratio_H4 = workspace -> var( "qcd_0lepLDP_ratio_H4" ) ;
+             if ( rrv_qcd_0lepLDP_ratio_H4 == 0x0 ) {
+                printf("\n\n *** can't find qcd_0lepLDP_ratio_H4. nBinsHT=%d\n\n", nBinsHT) ; return ;
+             }
           }
+       } else if ( qcdModelIndex == 3 ) {
+          rrv_qcd_0lepLDP_ratio = workspace -> var( "qcd_0lepLDP_ratio" ) ;
+          if ( rrv_qcd_0lepLDP_ratio == 0x0 ) {
+             printf("\n\n *** can't find qcd_0lepLDP_ratio.\n\n") ; return ;
+          }
+       } else {
+          printf("\n\n Unsupported QCD model index %d.\n\n", qcdModelIndex ) ;
        }
 
 
@@ -808,10 +820,14 @@
 
                float exp_0lep_ttwj = sf_ttwj[mbi][hbi][bbi] * N_1lep[mbi][hbi][bbi] * R_ttwj_0lep_over_1lep ;
 
-               float exp_0lep_qcd =  ( N_ldp[mbi][hbi][bbi] - N_mc_ldp[mbi][hbi][bbi] ) * R_passfail[hbi] ;
-               if ( exp_0lep_qcd < 0. ) { exp_0lep_qcd = 0. ; }
-
                float exp_0lep_znn = 0.5 * ( N_Zee[mbi][hbi] * Zee_factor[bbi] + N_Zmm[mbi][hbi] * Zmm_factor[bbi] ) ;
+
+               float exp_0lep_qcd =  sf_qcd[mbi][hbi][bbi] * ( N_ldp[mbi][hbi][bbi]
+                      - exp_0lep_ttwj* ttwj_mc_ldpover0lep_ratio[mbi][hbi][bbi]
+                      - exp_0lep_znn *  znn_mc_ldpover0lep_ratio[mbi][hbi][bbi] )
+                      * R_passfail[hbi] ;
+
+               if ( exp_0lep_qcd < 0. ) { exp_0lep_qcd = 0. ; }
 
                float exp_0lep = exp_0lep_ttwj + exp_0lep_qcd + exp_0lep_znn ;
 
@@ -1073,21 +1089,26 @@
          fit_susy_0lep_err_forpull = fit_susy_0lep_err_high ;
       }
 
-      if ( nBinsHT >= 1 ) {
-         fit_qcd_0lepLDP_ratio_H1     = rrv_qcd_0lepLDP_ratio_H1 -> getVal() ;
-         fit_qcd_0lepLDP_ratio_H1_err = rrv_qcd_0lepLDP_ratio_H1 -> getError() ;
-      }
-      if ( nBinsHT >= 2 ) {
-         fit_qcd_0lepLDP_ratio_H2     = rrv_qcd_0lepLDP_ratio_H2 -> getVal() ;
-         fit_qcd_0lepLDP_ratio_H2_err = rrv_qcd_0lepLDP_ratio_H2 -> getError() ;
-      }
-      if ( nBinsHT >= 3 ) {
-         fit_qcd_0lepLDP_ratio_H3     = rrv_qcd_0lepLDP_ratio_H3 -> getVal() ;
-         fit_qcd_0lepLDP_ratio_H3_err = rrv_qcd_0lepLDP_ratio_H3 -> getError() ;
-      }
-      if ( nBinsHT >= 4 ) {
-         fit_qcd_0lepLDP_ratio_H4     = rrv_qcd_0lepLDP_ratio_H4 -> getVal() ;
-         fit_qcd_0lepLDP_ratio_H4_err = rrv_qcd_0lepLDP_ratio_H4 -> getError() ;
+      if ( qcdModelIndex == 2 ) {
+         if ( nBinsHT >= 1 ) {
+            fit_qcd_0lepLDP_ratio_H1     = rrv_qcd_0lepLDP_ratio_H1 -> getVal() ;
+            fit_qcd_0lepLDP_ratio_H1_err = rrv_qcd_0lepLDP_ratio_H1 -> getError() ;
+         }
+         if ( nBinsHT >= 2 ) {
+            fit_qcd_0lepLDP_ratio_H2     = rrv_qcd_0lepLDP_ratio_H2 -> getVal() ;
+            fit_qcd_0lepLDP_ratio_H2_err = rrv_qcd_0lepLDP_ratio_H2 -> getError() ;
+         }
+         if ( nBinsHT >= 3 ) {
+            fit_qcd_0lepLDP_ratio_H3     = rrv_qcd_0lepLDP_ratio_H3 -> getVal() ;
+            fit_qcd_0lepLDP_ratio_H3_err = rrv_qcd_0lepLDP_ratio_H3 -> getError() ;
+         }
+         if ( nBinsHT >= 4 ) {
+            fit_qcd_0lepLDP_ratio_H4     = rrv_qcd_0lepLDP_ratio_H4 -> getVal() ;
+            fit_qcd_0lepLDP_ratio_H4_err = rrv_qcd_0lepLDP_ratio_H4 -> getError() ;
+         }
+      } else if ( qcdModelIndex == 3 ) {
+         fit_qcd_0lepLDP_ratio     = rrv_qcd_0lepLDP_ratio -> getVal() ;
+         fit_qcd_0lepLDP_ratio_err = rrv_qcd_0lepLDP_ratio -> getError() ;
       }
 
 
@@ -1417,10 +1438,14 @@
 
 
       printf("\n") ;
-      if ( nBinsHT>=1 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H1 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H1, 100*fit_qcd_0lepLDP_ratio_H1_err) ; }
-      if ( nBinsHT>=2 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H2 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H2, 100*fit_qcd_0lepLDP_ratio_H2_err) ; }
-      if ( nBinsHT>=3 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H3 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H3, 100*fit_qcd_0lepLDP_ratio_H3_err) ; }
-      if ( nBinsHT>=4 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H4 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H4, 100*fit_qcd_0lepLDP_ratio_H4_err) ; }
+      if ( qcdModelIndex == 2 ) {
+         if ( nBinsHT>=1 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H1 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H1, 100*fit_qcd_0lepLDP_ratio_H1_err) ; }
+         if ( nBinsHT>=2 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H2 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H2, 100*fit_qcd_0lepLDP_ratio_H2_err) ; }
+         if ( nBinsHT>=3 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H3 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H3, 100*fit_qcd_0lepLDP_ratio_H3_err) ; }
+         if ( nBinsHT>=4 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H4 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H4, 100*fit_qcd_0lepLDP_ratio_H4_err) ; }
+      } else if ( qcdModelIndex == 3 ) {
+         printf(" toy %4d : Fit QCD 0lep/LDP ratio : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio, 100*fit_qcd_0lepLDP_ratio_err) ;
+      }
 
       printf("\n\n") ;
 
@@ -1482,15 +1507,20 @@
 
 
 
-      if ( nBinsHT >=1 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H1", &fit_qcd_0lepLDP_ratio_H1, "fit_qcd_0lepLDP_ratio_H1/F" ) ; }
-      if ( nBinsHT >=2 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H2", &fit_qcd_0lepLDP_ratio_H2, "fit_qcd_0lepLDP_ratio_H2/F" ) ; }
-      if ( nBinsHT >=3 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H3", &fit_qcd_0lepLDP_ratio_H3, "fit_qcd_0lepLDP_ratio_H3/F" ) ; }
-      if ( nBinsHT >=4 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H4", &fit_qcd_0lepLDP_ratio_H4, "fit_qcd_0lepLDP_ratio_H4/F" ) ; }
+      if ( qcdModelIndex == 2 ) {
+         if ( nBinsHT >=1 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H1", &fit_qcd_0lepLDP_ratio_H1, "fit_qcd_0lepLDP_ratio_H1/F" ) ; }
+         if ( nBinsHT >=2 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H2", &fit_qcd_0lepLDP_ratio_H2, "fit_qcd_0lepLDP_ratio_H2/F" ) ; }
+         if ( nBinsHT >=3 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H3", &fit_qcd_0lepLDP_ratio_H3, "fit_qcd_0lepLDP_ratio_H3/F" ) ; }
+         if ( nBinsHT >=4 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H4", &fit_qcd_0lepLDP_ratio_H4, "fit_qcd_0lepLDP_ratio_H4/F" ) ; }
 
-      if ( nBinsHT >=1 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H1_err", &fit_qcd_0lepLDP_ratio_H1_err, "fit_qcd_0lepLDP_ratio_H1_err/F" ) ; }
-      if ( nBinsHT >=2 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H2_err", &fit_qcd_0lepLDP_ratio_H2_err, "fit_qcd_0lepLDP_ratio_H2_err/F" ) ; }
-      if ( nBinsHT >=3 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H3_err", &fit_qcd_0lepLDP_ratio_H3_err, "fit_qcd_0lepLDP_ratio_H3_err/F" ) ; }
-      if ( nBinsHT >=4 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H4_err", &fit_qcd_0lepLDP_ratio_H4_err, "fit_qcd_0lepLDP_ratio_H4_err/F" ) ; }
+         if ( nBinsHT >=1 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H1_err", &fit_qcd_0lepLDP_ratio_H1_err, "fit_qcd_0lepLDP_ratio_H1_err/F" ) ; }
+         if ( nBinsHT >=2 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H2_err", &fit_qcd_0lepLDP_ratio_H2_err, "fit_qcd_0lepLDP_ratio_H2_err/F" ) ; }
+         if ( nBinsHT >=3 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H3_err", &fit_qcd_0lepLDP_ratio_H3_err, "fit_qcd_0lepLDP_ratio_H3_err/F" ) ; }
+         if ( nBinsHT >=4 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H4_err", &fit_qcd_0lepLDP_ratio_H4_err, "fit_qcd_0lepLDP_ratio_H4_err/F" ) ; }
+      } else if ( qcdModelIndex == 3 ) {
+         toytt -> Branch( "fit_qcd_0lepLDP_ratio", &fit_qcd_0lepLDP_ratio, "fit_qcd_0lepLDP_ratio/F" ) ;
+         toytt -> Branch( "fit_qcd_0lepLDP_ratio_err", &fit_qcd_0lepLDP_ratio_err, "fit_qcd_0lepLDP_ratio_err/F" ) ;
+      }
 
       toytt -> Branch( "true_susy_0lep", &true_susy_0lep, "true_susy_0lep/F" ) ;
 
@@ -1776,7 +1806,7 @@
    //==================================================================================
 
 
-   bool setTtwjSFVals() {
+   bool setSFVals() {
 
 
       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
@@ -1785,11 +1815,32 @@
 
                float val ;
                char sfname[10000] ;
+
                sprintf( sfname, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                if ( !getFileValue( datfile, sfname, val ) ) {
                   return false ;
                }
                sf_ttwj[mbi][hbi][bbi] = val ;
+
+               sprintf( sfname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+               if ( !getFileValue( datfile, sfname, val ) ) {
+                  return false ;
+               }
+               sf_qcd[mbi][hbi][bbi] = val ;
+
+
+
+               sprintf( sfname, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+               if ( !getFileValue( datfile, sfname, val ) ) {
+                  return false ;
+               }
+               ttwj_mc_ldpover0lep_ratio[mbi][hbi][bbi] = val ;
+
+               sprintf( sfname, "znn_mc_ldpover0lep_ratio_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+               if ( !getFileValue( datfile, sfname, val ) ) {
+                  return false ;
+               }
+               znn_mc_ldpover0lep_ratio[mbi][hbi][bbi] = val ;
 
             } // bbi.
          } // hbi.
@@ -1798,7 +1849,7 @@
 
       return true ;
 
-   } // setTtwjSFVals
+   } // setSFVals
 
 
 

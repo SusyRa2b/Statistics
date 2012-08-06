@@ -135,12 +135,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 //float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,800.,99999.};
 
-////-- met3-ht3-v1
-//const int nBinsMET   = 3 ;
-//const int nBinsHT    = 3 ;
-//    const int version = 1;
-//float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
-//float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
+  //-- met3-ht3-v1
+  const int nBinsMET   = 3 ;
+  const int nBinsHT    = 3 ;
+      const int version = 1;
+  float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
+  float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 
 ////-- met3-ht3-v2
 //const int nBinsMET   = 3 ;
@@ -184,12 +184,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 //float Mbins[nBinsMET+1] = {150.,200.,250.,300.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,99999.};
 
-  //-- met4-ht4-v1
-      const int nBinsMET   = 4 ;
-      const int nBinsHT    = 4 ;
-      const int version = 1;
-      float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
-      float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
+////-- met4-ht4-v1
+//    const int nBinsMET   = 4 ;
+//    const int nBinsHT    = 4 ;
+//    const int version = 1;
+//    float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
+//    float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
 
   //-- met4-ht4-v2
 //    const int nBinsMET   = 4 ;
@@ -341,8 +341,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   float dummyOne = 1.0;
   float dummyPoint999 = 0.999 ;
 //float dummyErr = 0.1;
-  float dummyErr = 0.001;
-//float dummyErr = 0.0;
+//float dummyErr = 0.001;
+  float dummyErr = 0.0;
 
   ofstream inFile;
   char outfile[10000] ;
@@ -1055,11 +1055,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
             char parname[1000] ;
 
-            sprintf( parname, "ttwj_mc_ldpover1lep_ratio_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+            sprintf( parname, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
             printf(" %s  :  %6.3f +/- %5.3f\n", parname, ldpoverzl, ldpoverzlerr ) ;
             inFile << parname << "  \t" << ldpoverzl << endl;
 
-            sprintf( parname, "ttwj_mc_ldpover1lep_ratio_M%d_H%d_%db_err", mbi+1, hbi+1, bbi+1 ) ;
+            sprintf( parname, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_%db_err", mbi+1, hbi+1, bbi+1 ) ;
             inFile << parname << "  \t" << ldpoverzlerr << endl;
 
         } // bbi
@@ -1090,11 +1090,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
         char parname[1000] ;
 
         for (int bbi = 0 ; bbi < nBinsBjets ; bbi++) {
-            sprintf( parname, "znn_mc_ldpover1lep_ratio_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+            sprintf( parname, "znn_mc_ldpover0lep_ratio_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
             printf(" %s  :  %6.3f +/- %5.3f\n", parname, ldpoverzl, ldpoverzlerr ) ;
             inFile << parname << "  \t" << ldpoverzl << endl;
 
-            sprintf( parname, "znn_mc_ldpover1lep_ratio_M%d_H%d_%db_err", mbi+1, hbi+1, bbi+1 ) ;
+            sprintf( parname, "znn_mc_ldpover0lep_ratio_M%d_H%d_%db_err", mbi+1, hbi+1, bbi+1 ) ;
             inFile << parname << "  \t" << ldpoverzlerr << endl;
         } // bbi
 
