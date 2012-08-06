@@ -1,7 +1,7 @@
 #include "TROOT.h"
 #include "TSystem.h"
 #include "TRandom.h"
-#include "ra2bRoostatsClass3D_2b.c"
+#include "ra2bRoostatsClass3D_3.c"
 #include "updateFileValue.c"
 #include "getFileValue.c"
 
@@ -203,7 +203,7 @@
 
        //--- Create workspace.
 
-       ra2bRoostatsClass3D_2b ra2b ;
+       ra2bRoostatsClass3D_3 ra2b ;
 
        int qcdModelIndex = 2 ;
 
