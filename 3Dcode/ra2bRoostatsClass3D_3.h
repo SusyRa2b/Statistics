@@ -70,8 +70,8 @@
    /// static const int nBinsMET  = 3 ;
    /// static const int nBinsHT   = 2 ;
 
-   // static const int nBinsMET  = 3 ;
-   // static const int nBinsHT   = 3 ;
+      static const int nBinsMET  = 3 ;
+      static const int nBinsHT   = 3 ;
 
    /// static const int nBinsMET  = 3 ;
    /// static const int nBinsHT   = 4 ;
@@ -82,8 +82,8 @@
    /// static const int nBinsMET  = 5 ;
    /// static const int nBinsHT   = 4 ;
 
-      static const int nBinsMET  = 4 ;
-      static const int nBinsHT   = 4 ;
+   // static const int nBinsMET  = 4 ;
+   // static const int nBinsHT   = 4 ;
 
    /// static const int nBinsMET  = 5 ;
    /// static const int nBinsHT   = 5 ;

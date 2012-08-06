@@ -136,11 +136,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 //float Hbins[nBinsHT+1] = {400.,800.,99999.};
 
 ////-- met3-ht3-v1
-const int nBinsMET   = 3 ;
-const int nBinsHT    = 3 ;
-    const int version = 1;
-float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
-float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
+//const int nBinsMET   = 3 ;
+//const int nBinsHT    = 3 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
+//float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 
 ////-- met3-ht3-v2
 //const int nBinsMET   = 3 ;
@@ -185,11 +185,11 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 //float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,99999.};
 
   //-- met4-ht4-v1
-//    const int nBinsMET   = 4 ;
-//    const int nBinsHT    = 4 ;
-//    const int version = 1;
-//    float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
-//    float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
+      const int nBinsMET   = 4 ;
+      const int nBinsHT    = 4 ;
+      const int version = 1;
+      float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
+      float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
 
   //-- met4-ht4-v2
 //    const int nBinsMET   = 4 ;
@@ -340,7 +340,9 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
   float dummyZero = 0.;
   float dummyOne = 1.0;
   float dummyPoint999 = 0.999 ;
-  float dummyErr = 0.1;
+//float dummyErr = 0.1;
+  float dummyErr = 0.001;
+//float dummyErr = 0.0;
 
   ofstream inFile;
   char outfile[10000] ;

@@ -1,10 +1,10 @@
 
 
 
-   void make_ws_rootfile2b( const char* input_datfile = "datfiles/Input-met4-ht4-wsyst1.dat",
-                           const char* input_susyfile = "datfiles/Susy-mgl900-mlsp300-met4-ht4.dat",
-                           double mgl=900, double mlsp=300.,
-                           const char* input_deffdbtagfile = "datfiles/dummy_DeffDbtag-met4-ht4.dat"
+   void make_ws_rootfile2b( const char* input_datfile = "datfiles/Input-met3-ht3-v1-wclosuresyst.dat",
+                           const char* input_susyfile = "datfiles/T1bbbb-met3-ht3-v1.dat",
+                           double mgl=800, double mlsp=700.,
+                           const char* input_deffdbtagfile = "datfiles/dummy_DeffDbtag-met3-ht3.dat"
                          ) {
 
        gROOT->LoadMacro("RooRatio.cxx+") ;

@@ -620,13 +620,13 @@
 	   TString EffSfLdpString  = "eff_sf_ldp" ;
 	   TString MuSusyLdpString = "mu_susy_ldp" ;
 	   TString MuTtwjLdpString = "mu_ttwj_ldp" ;
-	   TString MuWJmcLdpString = "mu_WJmc" ;
+	 //TString MuWJmcLdpString = "mu_WJmc" ;
 	   TString MuQcdLdpString  = "mu_qcd_ldp" ;
 
 	   EffSfLdpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
 	   MuSusyLdpString += sMbins[i]+sHbins[j]+sBbins[k] ;
 	   MuTtwjLdpString += sMbins[i]+sHbins[j]+sBbins[k] ;
-	   MuWJmcLdpString += sMbins[i]+sHbins[j]+sBbins[k] ;
+	 //MuWJmcLdpString += sMbins[i]+sHbins[j]+sBbins[k] ;
 	   MuQcdLdpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
 
 	   dataVal = dataN_ldp[i][j][k];
@@ -634,7 +634,8 @@
 	   susyVal = eff_sf_ldp * ( ((RooRealVar*) ws->obj(MuSusyLdpString)) -> getVal() ) ;
 	   sf_mc = ((RooFormulaVar*) ws->obj("sf_mc")) -> getVal() ;
 	   znnVal = 0. ;
-	   ttwjVal = eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuTtwjLdpString))-> getVal() ) + (((RooRealVar*) ws->obj(MuWJmcLdpString))-> getVal() )  ) ; ;
+	 //ttwjVal = eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuTtwjLdpString))-> getVal() ) + (((RooRealVar*) ws->obj(MuWJmcLdpString))-> getVal() )  ) ; ;
+	   ttwjVal = eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuTtwjLdpString))-> getVal() )   ) ; ;
 	   qcdVal  = ((RooRealVar*) ws->obj(MuQcdLdpString))-> getVal() ;
 	   lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
 
