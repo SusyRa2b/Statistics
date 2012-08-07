@@ -78,6 +78,9 @@
    float fit_qcd_0lep_3da [nBinsMET][nBinsHT][nBinsBjets] ;
    float fit_znn_0lep_3da [nBinsMET][nBinsHT][nBinsBjets] ;
 
+   float fit_sf_ttwj_0lep_3da[nBinsMET][nBinsHT][nBinsBjets] ;
+   float fit_sf_qcd_0lep_3da [nBinsMET][nBinsHT][nBinsBjets] ;
+
    float mcval_ttwj_0lep_3da[nBinsMET][nBinsHT][nBinsBjets] ;
    float mcval_qcd_0lep_3da [nBinsMET][nBinsHT][nBinsBjets] ;
    float mcval_znn_0lep_3da [nBinsMET][nBinsHT][nBinsBjets] ;
@@ -1341,6 +1344,19 @@
 
 
 
+               sprintf( vname, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+               rar = (RooAbsReal*) workspace -> obj( vname ) ;
+               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; return false ; }
+               fit_sf_ttwj_0lep_3da[mbi][hbi][bbi] = rar -> getVal() ;
+
+               sprintf( vname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+               rar = (RooAbsReal*) workspace -> obj( vname ) ;
+               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; return false ; }
+               fit_sf_qcd_0lep_3da[mbi][hbi][bbi] = rar -> getVal() ;
+
+
+
+
             } // bbi.
          } // hbi.
       } // mbi.
@@ -1502,6 +1518,12 @@
       sprintf( branchstring, "fit_znn_0lep_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
       toytt -> Branch( "fit_znn_0lep_3da" , &fit_znn_0lep_3da , branchstring ) ;
 
+
+      sprintf( branchstring, "fit_sf_ttwj_0lep_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      toytt -> Branch( "fit_sf_ttwj_0lep_3da", &fit_sf_ttwj_0lep_3da, branchstring ) ;
+
+      sprintf( branchstring, "fit_sf_qcd_0lep_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      toytt -> Branch( "fit_sf_qcd_0lep_3da" , &fit_sf_qcd_0lep_3da , branchstring ) ;
 
 
 
