@@ -2126,8 +2126,8 @@
     RooAbsReal* ra2bRoostatsClass3D_3::makeBetaPrimeConstraint( const char* NP_name, double NP_val, double NP_err ) {
 
        if ( NP_err <= 0. ) {
-          printf("  Uncertainty is zero.  Will return constant scale factor of 1.  Input val = %g, err = %g.\n", NP_val, NP_err ) ;
-          return new RooConstVar( NP_name, NP_name, 1. ) ;
+          printf("  Uncertainty is zero.  Will return constant scale factor of %g.  Input val = %g, err = %g.\n", NP_val, NP_val, NP_err ) ;
+          return new RooConstVar( NP_name, NP_name, NP_val ) ;
        }
 
 
@@ -2215,8 +2215,8 @@
        }
 
        if ( NP_err <= 0. ) {
-          printf("  Uncertainty is zero.  Will return constant scale factor of 1.  Input val = %g, err = %g.\n", NP_val, NP_err ) ;
-          return new RooConstVar( NP_name, NP_name, 1. ) ;
+          printf("  Uncertainty is zero.  Will return constant scale factor of %g.  Input val = %g, err = %g.\n", NP_val, NP_val, NP_err ) ;
+          return new RooConstVar( NP_name, NP_name, NP_val ) ;
        }
 
 
@@ -2307,8 +2307,8 @@
 
 
        if ( NP_err <= 0. ) {
-          printf("  Uncertainty is zero.  Will return constant scale factor of 1.  Input val = %g, err = %g.\n", NP_val, NP_err ) ;
-          return new RooConstVar( NP_name, NP_name, 1. ) ;
+          printf("  Uncertainty is zero.  Will return constant scale factor of %g.  Input val = %g, err = %g.\n", NP_val, NP_val, NP_err ) ;
+          return new RooConstVar( NP_name, NP_name, NP_val ) ;
        }
 
 
@@ -2428,8 +2428,8 @@
 
 
        if ( NP_err <= 0. ) {
-          printf("  Uncertainty is zero.  Will return constant scale factor of 1.  Input val = %g, err = %g.\n", NP_val, NP_err ) ;
-          return new RooConstVar( NP_name, NP_name, 1. ) ;
+          printf("  Uncertainty is zero.  Will return constant scale factor of %g.  Input val = %g, err = %g.\n", NP_val, NP_val, NP_err ) ;
+          return new RooConstVar( NP_name, NP_name, NP_val ) ;
        }
 
 
