@@ -43,6 +43,8 @@
    RooRealVar* rrv_qcd_0lepLDP_ratio_H3 ;
    RooRealVar* rrv_qcd_0lepLDP_ratio_H4 ;
 
+   RooRealVar* rrv_ttwj_0lep1lep_ratio ;
+
    float sf_ttwj[nBinsMET][nBinsHT][nBinsBjets] ;
    float sf_qcd[nBinsMET][nBinsHT][nBinsBjets] ;
    float ttwj_mc_ldpover0lep_ratio[nBinsMET][nBinsHT][nBinsBjets] ;
@@ -97,6 +99,8 @@
    float fit_qcd_0lepLDP_ratio_H3_err ;
    float fit_qcd_0lepLDP_ratio_H4_err ;
 
+   float fit_ttwj_0lep1lep_ratio ;
+   float fit_ttwj_0lep1lep_ratio_err ;
 
 
    int   fit_covqual_susyfloat ;
@@ -281,6 +285,10 @@
        }
 
 
+       rrv_ttwj_0lep1lep_ratio = workspace -> var( "ttwj_0lep1lep_ratio" ) ;
+       if ( rrv_ttwj_0lep1lep_ratio == 0x0 ) {
+          printf("\n\n *** can't find rrv_ttwj_0lep1lep_ratio.\n\n") ; return ;
+       }
 
 
 
@@ -1111,6 +1119,8 @@
          fit_qcd_0lepLDP_ratio_err = rrv_qcd_0lepLDP_ratio -> getError() ;
       }
 
+      fit_ttwj_0lep1lep_ratio     = rrv_ttwj_0lep1lep_ratio -> getVal() ;
+      fit_ttwj_0lep1lep_ratio_err = rrv_ttwj_0lep1lep_ratio -> getError() ;
 
       fit_susy_0lep_wsfs = 0. ;
       double fit_ttwj_0lep = 0. ;
@@ -1447,6 +1457,8 @@
          printf(" toy %4d : Fit QCD 0lep/LDP ratio : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio, 100*fit_qcd_0lepLDP_ratio_err) ;
       }
 
+      printf(" toy %4d : Fit ttwj ZL/SL ratio : ( %6.3f +/- %5.3f)\n", ti, fit_ttwj_0lep1lep_ratio, fit_ttwj_0lep1lep_ratio_err ) ;
+
       printf("\n\n") ;
 
 
@@ -1522,6 +1534,9 @@
          toytt -> Branch( "fit_qcd_0lepLDP_ratio_err", &fit_qcd_0lepLDP_ratio_err, "fit_qcd_0lepLDP_ratio_err/F" ) ;
       }
 
+      toytt -> Branch( "fit_ttwj_0lep1lep_ratio"     , &fit_ttwj_0lep1lep_ratio    , "fit_ttwj_0lep1lep_ratio/F"     ) ;
+      toytt -> Branch( "fit_ttwj_0lep1lep_ratio_err" , &fit_ttwj_0lep1lep_ratio_err, "fit_ttwj_0lep1lep_ratio_err/F" ) ;
+
       toytt -> Branch( "true_susy_0lep", &true_susy_0lep, "true_susy_0lep/F" ) ;
 
       toytt -> Branch( "fit_covqual_susyfloat", &fit_covqual_susyfloat, "fit_covqual_susyfloat/I" ) ;
@@ -1540,7 +1555,7 @@
       toytt -> Branch( "Nobs_0lep", Nobs_0lep, branchstring ) ;
 
       sprintf( branchstring, "Nobs_1lep[%d][%d][%d]/I", nBinsMET, nBinsHT, nBinsBjets ) ;
-      toytt -> Branch( "Nobs_1lep", Nobs_0lep, branchstring ) ;
+      toytt -> Branch( "Nobs_1lep", Nobs_1lep, branchstring ) ;
 
       sprintf( branchstring, "Nobs_ldp[%d][%d][%d]/I", nBinsMET, nBinsHT, nBinsBjets ) ;
       toytt -> Branch( "Nobs_ldp" , Nobs_ldp , branchstring ) ;

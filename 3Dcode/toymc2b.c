@@ -1510,7 +1510,7 @@
       toytt -> Branch( "Nobs_0lep", Nobs_0lep, branchstring ) ;
 
       sprintf( branchstring, "Nobs_1lep[%d][%d][%d]/I", nBinsMET, nBinsHT, nBinsBjets ) ;
-      toytt -> Branch( "Nobs_1lep", Nobs_0lep, branchstring ) ;
+      toytt -> Branch( "Nobs_1lep", Nobs_1lep, branchstring ) ;
 
       sprintf( branchstring, "Nobs_ldp[%d][%d][%d]/I", nBinsMET, nBinsHT, nBinsBjets ) ;
       toytt -> Branch( "Nobs_ldp" , Nobs_ldp , branchstring ) ;
