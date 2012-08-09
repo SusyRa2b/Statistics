@@ -2393,7 +2393,7 @@
           passPar = new RooFormulaVar( varname, formula, RooArgSet( *basePassPar ) ) ;
 
           /////// sprintf( formula, "%g+(@0-%g)*(%g)", (beta-1), baseFailObs->getVal(), sqrt((beta-1)/( baseFailObs->getVal() )) ) ;
-          sprintf( formula, "%g+(@0-%g)*(%g)", (beta-1), baseFailObs->getVal(), sqrt((beta+1)/( baseFailObs->getVal() )) ) ;
+          sprintf( formula, "%g+(@0-%g)*(%g)", (beta+1), baseFailObs->getVal(), sqrt((beta+1)/( baseFailObs->getVal() )) ) ;
           printf(" creating transformed fail parameter with formula : %s\n", formula ) ;
           sprintf( varname, "failPar_%s", NP_name ) ;
           failPar = new RooFormulaVar( varname, formula, RooArgSet( *baseFailPar ) ) ;
@@ -2406,7 +2406,7 @@
           passPar = new RooFormulaVar( varname, formula, RooArgSet( *basePassPar ) ) ;
 
           /////// sprintf( formula, "%g-(@0-%g)*(%g)", (beta-1), baseFailObs->getVal(), sqrt((beta-1)/( baseFailObs->getVal() )) ) ;
-          sprintf( formula, "%g-(@0-%g)*(%g)", (beta-1), baseFailObs->getVal(), sqrt((beta+1)/( baseFailObs->getVal() )) ) ;
+          sprintf( formula, "%g-(@0-%g)*(%g)", (beta+1), baseFailObs->getVal(), sqrt((beta+1)/( baseFailObs->getVal() )) ) ;
           printf(" creating transformed fail parameter with formula : %s\n", formula ) ;
           sprintf( varname, "failPar_%s", NP_name ) ;
           failPar = new RooFormulaVar( varname, formula, RooArgSet( *baseFailPar ) ) ;

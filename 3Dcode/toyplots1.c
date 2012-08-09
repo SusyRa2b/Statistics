@@ -12,11 +12,11 @@
    char compname[ncomps][100] = { "susy", "ttwj", "qcd", "znn" } ;
    int  compcolor[ncomps] = { 6, kBlue-9, 2, kGreen-3 } ;
 
-// const int nBinsMET(4) ;
-// const int nBinsHT(4) ;
+   const int nBinsMET(4) ;
+   const int nBinsHT(4) ;
 
-   const int nBinsMET(3) ;
-   const int nBinsHT(3) ;
+// const int nBinsMET(3) ;
+// const int nBinsHT(3) ;
 
 
    const int nBinsBjets(3) ;
