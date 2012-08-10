@@ -89,8 +89,8 @@
    float fit_sf_ttwj_0lep_atUL_3da[nBinsMET][nBinsHT][nBinsBjets] ;
    float fit_sf_qcd_0lep_atUL_3da [nBinsMET][nBinsHT][nBinsBjets] ;
 
-   float qcd_0lepLDP_ratio_atUL;
-   float ttwj_0lep1lep_ratio_atUL;
+   float fit_qcd_0lepLDP_ratio_atUL;
+   float fit_ttwj_0lep1lep_ratio_atUL;
 
    float fit_susy_0lep_at0susy_3da[nBinsMET][nBinsHT][nBinsBjets] ;
    float fit_ttwj_0lep_at0susy_3da[nBinsMET][nBinsHT][nBinsBjets] ;
@@ -100,8 +100,8 @@
    float fit_sf_ttwj_0lep_at0susy_3da[nBinsMET][nBinsHT][nBinsBjets] ;
    float fit_sf_qcd_0lep_at0susy_3da [nBinsMET][nBinsHT][nBinsBjets] ;
 
-   float qcd_0lepLDP_ratio_at0susy;
-   float ttwj_0lep1lep_ratio_at0susy;
+   float fit_qcd_0lepLDP_ratio_at0susy;
+   float fit_ttwj_0lep1lep_ratio_at0susy;
 
    float mcval_ttwj_0lep_3da[nBinsMET][nBinsHT][nBinsBjets] ;
    float mcval_qcd_0lep_3da [nBinsMET][nBinsHT][nBinsBjets] ;
@@ -444,8 +444,8 @@
              }
              printf("  test stat = %5.2f,  significance = %5.2f\n", testStat, fit_susy_signif ) ;
 
-	     qcd_0lepLDP_ratio_at0susy = rrv_qcd_0lepLDP_ratio->getVal();
-	     ttwj_0lep1lep_ratio_at0susy = rrv_ttwj_0lep1lep_ratio->getVal();
+	     fit_qcd_0lepLDP_ratio_at0susy = rrv_qcd_0lepLDP_ratio->getVal();
+	     fit_ttwj_0lep1lep_ratio_at0susy = rrv_ttwj_0lep1lep_ratio->getVal();
 
              for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
         	for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
@@ -490,7 +490,16 @@
 		      if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
                       double nznn = rar -> getVal() ;
                       fit_znn_0lep_at0susy_3da[mbi][hbi][bbi] = nznn ;
+
+                      sprintf( vname, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                      rar = (RooAbsReal*) workspace -> obj( vname ) ;
+                      if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ;  }
+		      fit_sf_ttwj_0lep_at0susy_3da[mbi][hbi][bbi] = rar -> getVal() ;
                
+                      sprintf( vname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                      rar = (RooAbsReal*) workspace -> obj( vname ) ;
+                      if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
+		      fit_sf_qcd_0lep_at0susy_3da[mbi][hbi][bbi] = rar -> getVal() ;	       
 
                    }
                 }
@@ -1664,8 +1673,8 @@
       	 sprintf( branchstring, "fit_sf_qcd_0lep_at0susy_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
       	 toytt -> Branch( "fit_sf_qcd_0lep_at0susy_3da" , &fit_sf_qcd_0lep_at0susy_3da , branchstring ) ;
 
-         toytt -> Branch( "qcd_0lepLDP_ratio_at0susy", &qcd_0lepLDP_ratio_at0susy, "qcd_0lepLDP_ratio_at0susy/F" ) ;
-         toytt -> Branch( "ttwj_0lep1lep_ratio_at0susy", &ttwj_0lep1lep_ratio_at0susy, "ttwj_0lep1lep_ratio_at0susy/F" ) ;
+         toytt -> Branch( "fit_qcd_0lepLDP_ratio_at0susy", &fit_qcd_0lepLDP_ratio_at0susy, "fit_qcd_0lepLDP_ratio_at0susy/F" ) ;
+         toytt -> Branch( "fit_ttwj_0lep1lep_ratio_at0susy", &fit_ttwj_0lep1lep_ratio_at0susy, "fit_ttwj_0lep1lep_ratio_at0susy/F" ) ;
 
       }
 
@@ -1692,8 +1701,8 @@
       	 sprintf( branchstring, "fit_sf_qcd_0lep_atUL_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
       	 toytt -> Branch( "fit_sf_qcd_0lep_atUL_3da" , &fit_sf_qcd_0lep_atUL_3da , branchstring ) ;
 
-         toytt -> Branch( "qcd_0lepLDP_ratio_atUL", &qcd_0lepLDP_ratio_atUL, "qcd_0lepLDP_ratio_atUL/F" ) ;
-         toytt -> Branch( "ttwj_0lep1lep_ratio_atUL", &ttwj_0lep1lep_ratio_atUL, "ttwj_0lep1lep_ratio_atUL/F" ) ;
+         toytt -> Branch( "fit_qcd_0lepLDP_ratio_atUL", &fit_qcd_0lepLDP_ratio_atUL, "fit_qcd_0lepLDP_ratio_atUL/F" ) ;
+         toytt -> Branch( "fit_ttwj_0lep1lep_ratio_atUL", &fit_ttwj_0lep1lep_ratio_atUL, "fit_ttwj_0lep1lep_ratio_atUL/F" ) ;
       }
 
 
@@ -1806,8 +1815,8 @@
       printf("  SUSY upper limit is : %5.2f 0lep events.\n", fit_susy_ul ) ;
 
 	     
-      qcd_0lepLDP_ratio_atUL = rrv_qcd_0lepLDP_ratio->getVal(); 					   
-      ttwj_0lep1lep_ratio_atUL = rrv_ttwj_0lep1lep_ratio->getVal();					 
+      fit_qcd_0lepLDP_ratio_atUL = rrv_qcd_0lepLDP_ratio->getVal(); 					   
+      fit_ttwj_0lep1lep_ratio_atUL = rrv_ttwj_0lep1lep_ratio->getVal();					 
         												   
       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {  						     	 
          for ( int hbi=0; hbi<nBinsHT; hbi++ ) {						     	 
@@ -1852,8 +1861,17 @@
                if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }			   
                double nznn = rar -> getVal() ;  							   
                fit_znn_0lep_atUL_3da[mbi][hbi][bbi] = nznn ;						   
-        												 
-        												   
+        
+               sprintf( vname, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;		       
+               rar = (RooAbsReal*) workspace -> obj( vname ) ;				       
+               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ;  }	       
+	       fit_sf_ttwj_0lep_atUL_3da[mbi][hbi][bbi] = rar -> getVal() ;		       
+               
+               sprintf( vname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;		       
+               rar = (RooAbsReal*) workspace -> obj( vname ) ;				       
+               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }	       
+	       fit_sf_qcd_0lep_atUL_3da[mbi][hbi][bbi] = rar -> getVal() ;		       
+												 										   
             }												   
          }												   
       } 												 
