@@ -616,12 +616,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 	       if ( k == 1 ) {
 		 sl_frac2b_val[i][j] = ( ttwjval ) / ( ttwjval_1b ) ;
-		 sl_frac2b_err[i][j] = sl_frac2b_val[i][j] * sqrt( 1/ttwjval + 1/ttwjval_1b ) ;
+		 sl_frac2b_err[i][j] = 0.01 ;   // start with arbitrary errors, first
 	       }
 
 	       if ( k == 2 ) {
 		 sl_frac3b_val[i][j] = ( ttwjval ) / ( ttwjval_1b ) ;
-		 sl_frac3b_err[i][j] = sl_frac3b_val[i][j] * sqrt( 1/ttwjval + 1/ttwjval_1b ) ;
+		 sl_frac3b_err[i][j] = 0.01 ;   // start with arbitrary errors, first
 	       }
 
 	     }
