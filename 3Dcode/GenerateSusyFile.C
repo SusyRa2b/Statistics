@@ -29,8 +29,8 @@ void GenerateSusyFile() {
 // bin 1 = gluino mass = 100 GeV, 2 = 125, 3 = 150, 4 = 175, ...
 // so gluino mass = 75+nbin*25; or nbin = (gluinomass-75)/25.
 
-  TChain chainT1bbbb("tree");
-  chainT1bbbb.Add("files5fb_veryLowHT/T1bbbb.root");
+  TChain chainT1tttt("tree");
+  chainT1tttt.Add("files5fb_veryLowHT/T1tttt.root");
 
   gROOT->Reset();
 
@@ -66,14 +66,14 @@ void GenerateSusyFile() {
 //float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,800.,99999.};
 
-////-- met3-ht3-v1
-//const int nBinsMET   = 3 ;
-//const int nBinsHT    = 3 ;
-//    const int version = 1;
-//float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
-//float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
+//-- met3-ht3-v1
+const int nBinsMET   = 3 ;
+const int nBinsHT    = 3 ;
+    const int version = 1;
+float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
+float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 
-////-- met3-ht3-v2
+//-- met3-ht3-v2
 //const int nBinsMET   = 3 ;
 //const int nBinsHT    = 3 ;
 //    const int version = 2;
@@ -116,11 +116,11 @@ void GenerateSusyFile() {
 //float Hbins[nBinsHT+1] = {400.,600.,800.,1000.,99999.};
 
   //-- met4-ht4-v1
-    const int nBinsMET   = 4 ;
-    const int nBinsHT	 = 4 ;
-    const int version = 1;
-    float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
-    float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
+  //   const int nBinsMET   = 4 ;
+  //  const int nBinsHT	 = 4 ;
+  //  const int version = 1;
+  //  float Mbins[nBinsMET+1] = {150.,200.,250.,300.,99999.};
+  //  float Hbins[nBinsHT+1] = {400.,500.,600.,800.,99999.};
 
   //-- met4-ht4-v2
 //    const int nBinsMET   = 4 ;
@@ -233,8 +233,8 @@ void GenerateSusyFile() {
 
 
   // dummy masses
-  int minGlMass = 750 ;
-  int maxGlMass = 1100 ;
+  int minGlMass = 950 ;
+  int maxGlMass = 960 ;
 
 
 //double dummyYield = 9.9 ;
@@ -244,7 +244,7 @@ void GenerateSusyFile() {
 
   ofstream inFile;
   char outfile[10000] ;
-  sprintf( outfile, "datfiles/T1bbbb-met%d-ht%d-v%d.dat", nBinsMET, nBinsHT, version ) ;
+  sprintf( outfile, "datfiles/T1tttt-met%d-ht%d-v%d.dat", nBinsMET, nBinsHT, version ) ;
   inFile.open( outfile );
 
   // loop over gluino masses
@@ -286,7 +286,7 @@ void GenerateSusyFile() {
     xsec = gluinoxsec->GetBinContent( theBin ) ;				      
 
     ////// for ( int mLsp = 50 ; mLsp < ( mGl - 25 ) ; mLsp = mLsp + 25 ) {
-    for ( int mLsp = 300 ; mLsp < (mGl-25) ; mLsp = mLsp + 25 ) {
+    for ( int mLsp = 550 ; mLsp < 560 ; mLsp = mLsp + 25 ) {
 
       inFile << mGl << " " << mLsp << " " << dummyEvts << " " ;
       printf(" mGl=%4d, mLsp=%4d\n", mGl, mLsp ) ; cout << flush ;
@@ -314,15 +314,15 @@ void GenerateSusyFile() {
          char hname[1000] ;
 
          sprintf( hname, "h_susy_sig_%db", k+1 ) ;
-         chainT1bbbb.Project( hname,"HT:MET",allSigCuts);
+         chainT1tttt.Project( hname,"HT:MET",allSigCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  SIG selection %9.1f events.\n", mGl, mLsp, k+1, h_susy_sig[k]->Integral() ) ; cout << flush ;
 
          sprintf( hname, "h_susy_sl_%db", k+1 ) ;
-         chainT1bbbb.Project( hname,"HT:MET",allSLCuts);
+         chainT1tttt.Project( hname,"HT:MET",allSLCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  SL  selection %9.1f events.\n", mGl, mLsp, k+1, h_susy_sl[k]->Integral() ) ; cout << flush ;
 
          sprintf( hname, "h_susy_ldp_%db", k+1 ) ;
-         chainT1bbbb.Project( hname,"HT:MET",allLDPCuts);
+         chainT1tttt.Project( hname,"HT:MET",allLDPCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  LDP selection %9.1f events.\n", mGl, mLsp, k+1, h_susy_ldp[k]->Integral() ) ; cout << flush ;
 
       } // k (nBjets)

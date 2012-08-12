@@ -114,7 +114,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 //float Mbins[nBinsMET+1] = {150.,250.,99999.};
 //float Hbins[nBinsHT+1] = {400.,99999.};
 
-////-- met2-ht2-v1
+//-- met2-ht2-v1
 //const int nBinsMET   = 2 ;
 //const int nBinsHT    = 2 ;
 //    const int version = 1;
@@ -343,6 +343,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 //float dummyErr = 0.1;
 //float dummyErr = 0.001;
   float dummyErr = 0.0;
+
+  float sl_frac2b_val[nBinsMET][nBinsHT];
+  float sl_frac2b_err[nBinsMET][nBinsHT];
+  float sl_frac3b_val[nBinsMET][nBinsHT];
+  float sl_frac3b_err[nBinsMET][nBinsHT];
+
 
   ofstream inFile;
   char outfile[10000] ;
@@ -597,6 +603,28 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
              hmctruth_all[si][k]   -> SetBinContent( histbin, ttval+wjetsval+qcdval+znnval+susyval ) ;
              hmctruth_all[si][k]   -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(wjetserr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
 
+
+	     // compute fractions of SL 2b/1b and 3b/1b
+
+	     if ( si == 1 && k > 0 ) {
+
+	       double ttval_1b = h_tt[0] -> GetBinContent( i+1, j+1 ) ;
+	       double wjetsval_1b = h_wjets[0] -> GetBinContent( i+1, j+1 ) ;
+
+	       double ttwjval = ttval + wjetsval ;
+	       double ttwjval_1b = ttval_1b + wjetsval_1b ;
+
+	       if ( k == 1 ) {
+		 sl_frac2b_val[i][j] = ( ttwjval ) / ( ttwjval_1b ) ;
+		 sl_frac2b_err[i][j] = sl_frac2b_val[i][j] * sqrt( 1/ttwjval + 1/ttwjval_1b ) ;
+	       }
+
+	       if ( k == 2 ) {
+		 sl_frac3b_val[i][j] = ( ttwjval ) / ( ttwjval_1b ) ;
+		 sl_frac3b_err[i][j] = sl_frac3b_val[i][j] * sqrt( 1/ttwjval + 1/ttwjval_1b ) ;
+	       }
+
+	     }
 
             } // k
           } // j
@@ -1100,6 +1128,30 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
       } // hbi
     } // mbi
+
+
+    // add here the fractions (bin by bin) of 2b/1b and 3b/1b SL events (just for the MC for now)
+
+    for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
+      for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
+
+	TString Sl2bstring     = "sl_frac_2b_val";
+	TString Sl2bstring_err = "sl_frac_2b_err";
+	TString Sl3bstring     = "sl_frac_3b_val";
+	TString Sl3bstring_err = "sl_frac_3b_err";
+
+	Sl2bstring     += sMbins[mbi]+sHbins[hbi] ;
+	Sl2bstring_err += sMbins[mbi]+sHbins[hbi] ;
+	Sl3bstring     += sMbins[mbi]+sHbins[hbi] ;
+	Sl3bstring_err += sMbins[mbi]+sHbins[hbi] ;
+
+	inFile << Sl2bstring     << "   \t" << sl_frac2b_val[mbi][hbi] << endl ;
+	inFile << Sl2bstring_err << "   \t" << sl_frac2b_err[mbi][hbi] << endl ;
+	inFile << Sl3bstring     << "   \t" << sl_frac3b_val[mbi][hbi] << endl ;
+	inFile << Sl3bstring_err << "   \t" << sl_frac3b_err[mbi][hbi] << endl ;
+
+      }
+    }
 
 
 

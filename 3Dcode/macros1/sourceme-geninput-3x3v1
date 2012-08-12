@@ -11,8 +11,8 @@
    $ROOTSYS/bin/root -b -q GenerateDummyDeffDbtag.C\(3,3\) >&! logfiles/dummy-deff-met3-ht3-v1.log
    mv dummy_DeffDbtag-met3-ht3.dat datfiles/
 
- # echo GenerateSusyFile
- # $ROOTSYS/bin/root -b -q GenerateSusyFile.C+ >&! logfiles/gensusy-T1bbbb-met3-ht3-v1.log
+   echo GenerateSusyFile
+   $ROOTSYS/bin/root -b -q GenerateSusyFile.C+ >&! logfiles/gensusy-T1bbbb-met3-ht3-v1.log
 
    echo mcclosure3
    cp datfiles/Input-met3-ht3-v1.dat datfiles/Input-met3-ht3-v1-zerosyst-nottwjcorr-noqcdcorr.dat
