@@ -2569,9 +2569,17 @@
        np_rrv -> setVal( NP_val ) ;
        np_rrv -> setConstant( kFALSE ) ;
 
+       //-- create const variables for mean and sigma so that they can be saved and accessed from workspace later.
+
+       char vname[1000] ;
+       sprintf( vname, "mean_%s", NP_name ) ;
+       RooConstVar* g_mean = new RooConstVar( vname, vname, NP_val ) ;
+       sprintf( vname, "sigma_%s", NP_name ) ;
+       RooConstVar* g_sigma = new RooConstVar( vname, vname, NP_err ) ;
+
        char pdfname[1000] ;
        sprintf( pdfname, "pdf_%s", NP_name ) ;
-       RooGaussian* np_pdf = new RooGaussian( pdfname, pdfname, *np_rrv, RooConst( NP_val ), RooConst( NP_err ) ) ;
+       RooGaussian* np_pdf = new RooGaussian( pdfname, pdfname, *np_rrv, *g_mean, *g_sigma ) ;
 
        allNuisances -> add( *np_rrv ) ;
        allNuisancePdfs -> add( *np_pdf ) ;
@@ -2606,26 +2614,47 @@
           rrv_np_base_par -> setConstant( kFALSE ) ;
           allNuisances -> add( *rrv_np_base_par ) ;
 
+          char vname[1000] ;
+          sprintf( vname, "mean_%s", NP_base_name ) ;
+          RooConstVar* g_mean = new RooConstVar( vname, vname, 0.0 ) ;
+          sprintf( vname, "sigma_%s", NP_base_name ) ;
+          RooConstVar* g_sigma = new RooConstVar( vname, vname, 1.0 ) ;
+
           char pdfname[100] ;
           sprintf( pdfname, "pdf_%s", NP_base_name ) ;
           printf("\n\n makeCorrelatedGaussianConstraint : creating base nuisance parameter pdf - %s\n\n", pdfname ) ;
-          RooGaussian* base_np_pdf = new RooGaussian( pdfname, pdfname, *rrv_np_base_par, RooConst(0.), RooConst(1.) ) ;
+          ///// RooGaussian* base_np_pdf = new RooGaussian( pdfname, pdfname, *rrv_np_base_par, RooConst(0.), RooConst(1.) ) ;
+          RooGaussian* base_np_pdf = new RooGaussian( pdfname, pdfname, *rrv_np_base_par, *g_mean, *g_sigma ) ;
           allNuisancePdfs -> add( *base_np_pdf ) ;
 
        }
 
+       //-- create const variables for mean and sigma so that they can be saved and accessed from workspace later.
+
+       char vname[1000] ;
+       sprintf( vname, "mean_%s", NP_name ) ;
+       RooConstVar* g_mean = new RooConstVar( vname, vname, NP_val ) ;
+       sprintf( vname, "sigma_%s", NP_name ) ;
+       RooConstVar* g_sigma = new RooConstVar( vname, vname, NP_err ) ;
 
        char formula[1000] ;
 
-
        if ( !changeSign ) {
-          sprintf( formula, "%g+%g*@0", NP_val, NP_err ) ;
+          sprintf( formula, "@0+@1*@2" ) ;
        } else {
-          sprintf( formula, "%g-%g*@0", NP_val, NP_err ) ;
+          sprintf( formula, "@0-@1*@2" ) ;
        }
 
+       RooAbsReal* rar = new RooFormulaVar( NP_name, formula, RooArgSet( *g_mean, *g_sigma, *rrv_np_base_par ) ) ;
 
-       RooAbsReal* rar = new RooFormulaVar( NP_name, formula, RooArgSet( *rrv_np_base_par ) ) ;
+  ///  if ( !changeSign ) {
+  ///     sprintf( formula, "%g+%g*@0", NP_val, NP_err ) ;
+  ///  } else {
+  ///     sprintf( formula, "%g-%g*@0", NP_val, NP_err ) ;
+  ///  }
+
+  ///  RooAbsReal* rar = new RooFormulaVar( NP_name, formula, RooArgSet( *rrv_np_base_par ) ) ;
+
 
        printf(" makeCorrelatedGaussianConstraint : creating correlated gaussian NP with formula : %s,  %s, val = %g\n", formula, NP_name, rar->getVal() ) ;
 

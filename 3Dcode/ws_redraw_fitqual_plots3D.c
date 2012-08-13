@@ -590,6 +590,9 @@
      TH1F* hnp_qcd_1b_pull = (TH1F*) gDirectory->FindObject("hnp_qcd_1b_pull") ;
      TH1F* hnp_qcd_2b_pull = (TH1F*) gDirectory->FindObject("hnp_qcd_2b_pull") ;
      TH1F* hnp_qcd_3b_pull = (TH1F*) gDirectory->FindObject("hnp_qcd_3b_pull") ;
+     TH1F* hnp_qcd_1b_nom = (TH1F*) gDirectory->FindObject("hnp_qcd_1b_nom") ;
+     TH1F* hnp_qcd_2b_nom = (TH1F*) gDirectory->FindObject("hnp_qcd_2b_nom") ;
+     TH1F* hnp_qcd_3b_nom = (TH1F*) gDirectory->FindObject("hnp_qcd_3b_nom") ;
 
      TH1F* hnp_ttwj_1b_val = (TH1F*) gDirectory->FindObject("hnp_ttwj_1b_val") ;
      TH1F* hnp_ttwj_2b_val = (TH1F*) gDirectory->FindObject("hnp_ttwj_2b_val") ;
@@ -597,6 +600,9 @@
      TH1F* hnp_ttwj_1b_pull = (TH1F*) gDirectory->FindObject("hnp_ttwj_1b_pull") ;
      TH1F* hnp_ttwj_2b_pull = (TH1F*) gDirectory->FindObject("hnp_ttwj_2b_pull") ;
      TH1F* hnp_ttwj_3b_pull = (TH1F*) gDirectory->FindObject("hnp_ttwj_3b_pull") ;
+     TH1F* hnp_ttwj_1b_nom = (TH1F*) gDirectory->FindObject("hnp_ttwj_1b_nom") ;
+     TH1F* hnp_ttwj_2b_nom = (TH1F*) gDirectory->FindObject("hnp_ttwj_2b_nom") ;
+     TH1F* hnp_ttwj_3b_nom = (TH1F*) gDirectory->FindObject("hnp_ttwj_3b_nom") ;
 
      gStyle->SetPadGridY(1) ;
      TCanvas* cnp = (TCanvas*) gDirectory->FindObject("cnp") ;
@@ -606,19 +612,40 @@
      cnp->Clear() ;
      cnp->Divide(3,4) ;
 
-     hnp_ttwj_1b_val->SetMaximum(2.) ;
-     hnp_ttwj_2b_val->SetMaximum(2.) ;
-     hnp_ttwj_3b_val->SetMaximum(2.) ;
+     hnp_ttwj_1b_val->SetMaximum(3.) ;
+     hnp_ttwj_2b_val->SetMaximum(3.) ;
+     hnp_ttwj_3b_val->SetMaximum(3.) ;
+
+     double pullminmax(1.0) ;
+     hnp_ttwj_1b_pull->SetMinimum( -pullminmax ) ;
+     hnp_ttwj_2b_pull->SetMinimum( -pullminmax ) ;
+     hnp_ttwj_3b_pull->SetMinimum( -pullminmax ) ;
+
+     hnp_qcd_1b_pull->SetMinimum( -pullminmax ) ;
+     hnp_qcd_2b_pull->SetMinimum( -pullminmax ) ;
+     hnp_qcd_3b_pull->SetMinimum( -pullminmax ) ;
+
+     hnp_ttwj_1b_pull->SetMaximum( pullminmax ) ;
+     hnp_ttwj_2b_pull->SetMaximum( pullminmax ) ;
+     hnp_ttwj_3b_pull->SetMaximum( pullminmax ) ;
+
+     hnp_qcd_1b_pull->SetMaximum( pullminmax ) ;
+     hnp_qcd_2b_pull->SetMaximum( pullminmax ) ;
+     hnp_qcd_3b_pull->SetMaximum( pullminmax ) ;
+
 
    //---
      cnp->cd(1) ;
      hnp_ttwj_1b_val->Draw() ;
+     hnp_ttwj_1b_nom->Draw("same") ;
 
      cnp->cd(2) ;
      hnp_ttwj_2b_val->Draw() ;
+     hnp_ttwj_2b_nom->Draw("same") ;
 
      cnp->cd(3) ;
      hnp_ttwj_3b_val->Draw() ;
+     hnp_ttwj_3b_nom->Draw("same") ;
 
 
    //---
@@ -635,12 +662,15 @@
    //---
      cnp->cd(7) ;
      hnp_qcd_1b_val->Draw() ;
+     hnp_qcd_1b_nom->Draw("same") ;
 
      cnp->cd(8) ;
      hnp_qcd_2b_val->Draw() ;
+     hnp_qcd_2b_nom->Draw("same") ;
 
      cnp->cd(9) ;
      hnp_qcd_3b_val->Draw() ;
+     hnp_qcd_3b_nom->Draw("same") ;
 
 
    //---

@@ -194,7 +194,7 @@
       gVirtualX->GetGeometry(-1,x,y,w,h) ;
       printf("\n\n X11 screen size: w=%d, h=%d\n\n", w,h ) ;
 
-      int wmargin(40), hmargin(40) ;
+      int wmargin(40), hmargin(100) ;
 
       TCanvas* c ;
       char cname[1000] ;
