@@ -121,8 +121,9 @@
        // likelihood parameters
 
        RooRealVar* rrv_mu_ttwj[nBinsMET][nBinsHT][nBinsBtag] ;
+       RooRealVar* rrv_mu_ttwj_sl[nBinsMET][nBinsHT][nBinsBtag] ;
        RooAbsArg*  rv_mu_ttwj[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooRealVar* rv_mu_ttwj_sl[nBinsMET][nBinsHT][nBinsBtag] ;
+       RooAbsArg*  rv_mu_ttwj_sl[nBinsMET][nBinsHT][nBinsBtag] ;
        RooAbsArg*  rv_mu_ttwj_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
        RooFormulaVar* rfv_mu_ttwj[nBinsMET][nBinsHT][nBinsBtag] ;
        RooFormulaVar* rfv_mu_ttwj_sl[nBinsMET][nBinsHT][nBinsBtag] ;

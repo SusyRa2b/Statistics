@@ -804,8 +804,9 @@
             znnldp0lepString  += sMbins[i]+sHbins[j]+sBbins[k] ;
 
 
-	    rv_mu_ttwj_sl[i][j][k] = new RooRealVar( muTtSlString, muTtSlString, 0., 100000. ) ;
-	    rv_mu_ttwj_sl[i][j][k]->setVal( initialval_ttwj_sl[i][j][k] ) ;    // this is a starting value only
+	    rrv_mu_ttwj_sl[i][j][k] = new RooRealVar( muTtSlString, muTtSlString, 0., 100000. ) ;
+	    rv_mu_ttwj_sl[i][j][k] = rrv_mu_ttwj_sl[i][j][k] ;
+	    rrv_mu_ttwj_sl[i][j][k]->setVal( initialval_ttwj_sl[i][j][k] ) ;    // this is a starting value only
 
             //--- try allowing negative values.
 	    ////// rrv_mu_qcd[i][j][k] = new RooRealVar( muQcdString, muQcdString, 0., 100000. ) ;
@@ -1379,6 +1380,8 @@
 	       
 	     }
 
+	     rv_mu_ttwj_sl[i][j][k] = rfv_mu_ttwj_sl[i][j][k] ;
+
 
 	    //---- TTWJ
 
@@ -1388,7 +1391,7 @@
 
             TString ttwjrfvString = " @0 * @1 * @2" ;
             rfv_mu_ttwj[i][j][k] = new RooFormulaVar( ttwjString, ttwjrfvString,
-                            RooArgSet( *rar_sf_ttwj[i][j][k], *rfv_mu_ttwj_sl[i][j][k], *rv_ttwj_0lep1lep_ratio ) ) ;
+                            RooArgSet( *rar_sf_ttwj[i][j][k], *rv_mu_ttwj_sl[i][j][k], *rv_ttwj_0lep1lep_ratio ) ) ;
 
             rv_mu_ttwj[i][j][k] = rfv_mu_ttwj[i][j][k] ;
 
@@ -1592,7 +1595,7 @@
 	    TString rfvNSlString = "@0 + (@1 * @2 * @3)" ;
 
 	    rv_n_sl[i][j][k] = new RooFormulaVar( nSlString, rfvNSlString,
-						  RooArgSet( *rfv_mu_ttwj_sl[i][j][k], *rar_btageff_sf_sl[i][j][k], 
+						  RooArgSet( *rv_mu_ttwj_sl[i][j][k], *rar_btageff_sf_sl[i][j][k], 
 							     *rar_eff_sf_sl[i][j][k], *rv_mu_susy_sl[i][j][k] ) ) ;
 
 	    
