@@ -75,6 +75,45 @@ void betaPrimeModeTransform(const double& mu_measured , const double& sigma_meas
   cout << "The calculated value of sigma is : " << sqrt( alpha * (alpha + beta - 1 ) / ( pow(beta - 1 , 2 ) * (beta - 2) ) ) << endl;
 }
 
+void betaPrimeMeanTransform(const double& mu_measured , const double& sigma_measured ,
+			    double& alpha , double& beta ) 
+ {
+   double factor = (mu_measured*(mu_measured+1))/(sigma_measured*sigma_measured); // common factor of mu(mu+1)/sigma**2
+   beta = factor + 2;
+   alpha =  mu_measured*(factor + 1);
+  cout << "Beta Prime Mean Transform " << endl;
+  cout << "The calculated value of alpha is : " << alpha << endl;
+  cout << "The calculated value of beta is  : " << beta << endl;
+  cout << "The input value of mu is         : " << mu_measured << endl;
+  cout << "The input value of sigma is      : " << sigma_measured << endl;
+  cout << "The calculated value of mu is    : " << (alpha ) / ( beta - 1 ) << endl;
+  cout << "The calculated value of sigma is : " << sqrt( alpha * (alpha + beta - 1 ) / ( pow(beta - 1 , 2 ) * (beta - 2) ) ) << endl;
+ }
+
+void gammaMeanTransform(const double& mu_measured , const double& sigma_measured ,
+                        double& k , double& theta )
+ {
+  double mu2 = mu_measured*mu_measured; 					         
+  double sigma2 = sigma_measured*sigma_measured;				         
+  // from Wikipedia's http://en.wikipedia.org/wiki/Gamma_distribution parameterization.  
+  theta = sigma2/mu_measured;							         
+  k = mu2/sigma2;								         
+
+  cout << "For mu    : " << mu_measured << endl;				         
+  cout << "For sigma : " << sigma_measured << endl;				         
+  cout << "k is      : " << k << endl;						         
+  cout << "theta is  : " << theta << endl;	
+  
+  cout << "Gamma Mean Transform " << endl;
+  cout << "The calculated value of alpha is : " << k << endl;
+  cout << "The calculated value of beta is  : " << theta << endl;
+  cout << "The input value of mu is         : " << mu_measured << endl;
+  cout << "The input value of sigma is      : " << sigma_measured << endl;
+  cout << "The calculated value of mu is    : " << (k - 1) / ( theta + 1 ) << endl;
+  cout << "The calculated value of sigma is : " << sqrt( k * (k + theta - 1 ) / ( pow(theta - 1 , 2 ) * (theta - 2) ) ) << endl;
+
+  				         
+}
 
 //===================================================================================================================================
 
@@ -127,6 +166,36 @@ void betaModeTransform(const double& mu_measured , const double& sigma_measured 
   cout << "The calculated value of mu is    : " << (alpha - 1) / ( alpha + beta - 2 ) << endl;
   cout << "The calculated value of sigma is : " << sqrt( alpha * beta / ( pow(alpha + beta,2) * (alpha + beta + 1) ) ) << endl;
 }
+
+
+void betaMeanTransform(const double& mu_measured , const double& sigma_measured ,
+                   double& alpha , double& beta )
+{
+  double mu2 = mu_measured*mu_measured;
+  double mu3 = mu_measured*mu2;
+  double sigma2 = sigma_measured*sigma_measured;
+
+  alpha = (mu2-mu3-mu_measured*sigma2)/sigma2;
+  beta = (mu_measured-1.)*(mu2-mu_measured+sigma2)/sigma2;
+
+  if( !(alpha >= 1) && !(beta >= 1) )
+    {
+      cout << "mean and variance un-physical with beta pdf, try setting mode to central value instead" << endl;
+      betaModeTransform(mu_measured, sigma_measured, alpha, beta );
+    }
+  cout << "Beta Mean Transform " << endl;
+  cout << "The calculated value of alpha is : " << alpha << endl;
+  cout << "The calculated value of beta is  : " << beta << endl;
+  cout << "The input value of mu is         : " << mu_measured << endl;
+  cout << "The input value of sigma is      : " << sigma_measured << endl;
+  cout << "The calculated value of mu from mean is    : " << alpha/(alpha+beta) << endl;
+  cout << "The calculated value of mu from mode is    : " << (alpha - 1) / ( alpha + beta - 2 ) << endl;
+  cout << "The calculated value of sigma is : " << sqrt( alpha * beta / ( pow(alpha + beta,2) * (alpha + beta + 1) ) ) << endl;
+
+
+
+}
+
 
 //===================================================================================================================================
 
