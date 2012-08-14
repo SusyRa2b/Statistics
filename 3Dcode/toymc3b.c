@@ -111,6 +111,10 @@
    float susy_1lep [nBinsMET][nBinsHT][nBinsBjets] ;
    float susy_ldp  [nBinsMET][nBinsHT][nBinsBjets] ;
 
+   float fit_chi2_overall ;
+   float fit_chi2_obs ;
+   float fit_chi2_np ;
+   float fit_chi2_prob ;
 
    float fit_qcd_0lepLDP_ratio ;
    float fit_qcd_0lepLDP_ratio_H1 ;
@@ -166,6 +170,10 @@
    bool saveToyDatfile( int toyIndex, RooDataSet* toyds ) ;
    bool readAndSetMCVals() ;
    bool setSFVals() ;
+   double getChi2Obs( const char* obsname, const char* modelname ) ;
+   double getChi2GausNP( const char* npname ) ;
+   double getChi2BetaNP( const char* npname ) ;
+   bool getBetaModeRMS( const char* parName, double &mode, double &rms, double &alpha, double &beta ) ;
 
 
    TRandom* tran ;
@@ -1163,6 +1171,10 @@
 
       if ( rfr == 0x0 ) { return false ; }
 
+      fit_chi2_overall = 0. ;
+      fit_chi2_obs = 0. ;
+      fit_chi2_np = 0. ;
+      fit_chi2_prob = 0. ;
 
       printf("\n\n") ;
       printf(" toy %4d : Fit nSusy 0lep : %4.1f +/- %4.1f (%4.1f, %4.1f)\n", ti,
@@ -1445,9 +1457,121 @@
 
 
 
+
+               //++++ compute chi2 (below here).
+
+               char obsname[1000] ;
+               char modelname[1000] ;
+
+               //-- 0lep observable
+               sprintf( obsname,   "N_0lep_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+               sprintf( modelname, "n_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+               fit_chi2_obs += getChi2Obs( obsname, modelname ) ;
+
+               //-- 1lep observable
+               sprintf( obsname,   "N_1lep_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+               sprintf( modelname, "n_sl_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+               fit_chi2_obs += getChi2Obs( obsname, modelname ) ;
+
+               //-- LDP observable
+               sprintf( obsname,   "N_ldp_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+               sprintf( modelname, "n_ldp_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+               fit_chi2_obs += getChi2Obs( obsname, modelname ) ;
+
+
+
+
+               //-- Zll observables
+               if ( bbi == 0 ) {
+
+                  sprintf( obsname,   "N_Zee_M%d_H%d", mbi+1, hbi+1 ) ;
+                  sprintf( modelname, "n_ee_M%d_H%d", mbi+1, hbi+1 ) ;
+                  fit_chi2_obs += getChi2Obs( obsname, modelname ) ;
+
+                  sprintf( obsname,   "N_Zmm_M%d_H%d", mbi+1, hbi+1 ) ;
+                  sprintf( modelname, "n_mm_M%d_H%d", mbi+1, hbi+1 ) ;
+                  fit_chi2_obs += getChi2Obs( obsname, modelname ) ;
+
+               }
+
+
+
+
+               //-- ttwj and QCD SFs
+
+               sprintf( vname, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+               fit_chi2_np += getChi2GausNP( vname ) ;
+
+               sprintf( vname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+               fit_chi2_np += getChi2GausNP( vname ) ;
+
+
+
+
             } // bbi.
          } // hbi.
       } // mbi.
+
+      //-- more nuisance parameter chi2 contributions.
+      char npname[1000] ;
+
+      sprintf( npname, "eff_sf" ) ;
+      fit_chi2_np += getChi2GausNP( npname ) ;
+
+      sprintf( npname, "btageff_sf" ) ;
+      fit_chi2_np += getChi2GausNP( npname ) ;
+
+      sprintf( npname, "sf_mc" ) ;
+      fit_chi2_np += getChi2GausNP( npname ) ;
+
+      sprintf( npname, "sf_ll" ) ;
+      fit_chi2_np += getChi2GausNP( npname ) ;
+
+      sprintf( npname, "knn_1b" ) ;
+      fit_chi2_np += getChi2GausNP( npname ) ;
+
+      sprintf( npname, "knn_2b" ) ;
+      fit_chi2_np += getChi2GausNP( npname ) ;
+
+      sprintf( npname, "knn_3b" ) ;
+      fit_chi2_np += getChi2GausNP( npname ) ;
+
+      sprintf( npname, "eff_Zee" ) ;
+      fit_chi2_np += getChi2BetaNP( npname ) ;
+
+      sprintf( npname, "eff_Zmm" ) ;
+      fit_chi2_np += getChi2BetaNP( npname ) ;
+
+      sprintf( npname, "pur_Zee" ) ;
+      fit_chi2_np += getChi2BetaNP( npname ) ;
+
+      sprintf( npname, "pur_Zmm" ) ;
+      fit_chi2_np += getChi2BetaNP( npname ) ;
+
+      for ( int i=0; i<nBinsMET; i++ ) {
+
+         sprintf( npname, "acc_Zee_M%d", i+1 ) ;
+         fit_chi2_np += getChi2BetaNP( npname ) ;
+
+         sprintf( npname, "acc_Zmm_M%d", i+1 ) ;
+         fit_chi2_np += getChi2BetaNP( npname ) ;
+
+      } // i.
+
+      fit_chi2_overall = fit_chi2_obs + fit_chi2_np ;
+
+      //-- 3 is ZL,SL,LDP, 2 is ee,mm.
+      int nobs = 3 * (nBinsMET*nBinsHT*nBinsBjets) + 2 * (nBinsMET*nBinsHT) ;
+      //-- 2 is ttwj,QCD, 3 at end is ttwj ZL/SL + QCD ZL/LDP + signal yield.
+      int nfloat = 2 * (nBinsMET*nBinsHT*nBinsBjets) + (nBinsMET*nBinsHT) + 3 ;
+
+      int ndof = nobs - nfloat ;
+
+      fit_chi2_prob = TMath::Prob( fit_chi2_overall, ndof ) ;
+      printf(" toy %4d : chi2 / ndof = %8.2f / %d,  prob = %7.4f\n", ti, fit_chi2_overall, ndof, fit_chi2_prob ) ;
+
+      //-- end nuisance parameter chi2 contributions.
+
 
       fit_covqual_susyfloat = rfr -> covQual() ;
 
@@ -1739,6 +1863,13 @@
       toytt -> Branch( "toy_mean_N_Zmm", toy_mean_N_Zmm, branchstring ) ;
 
 
+
+
+
+      toytt -> Branch( "fit_chi2_overall", &fit_chi2_overall, "fit_chi2_overall/F" ) ;
+      toytt -> Branch( "fit_chi2_obs"    , &fit_chi2_obs    , "fit_chi2_obs/F"     ) ;
+      toytt -> Branch( "fit_chi2_np"     , &fit_chi2_np     , "fit_chi2_np/F"      ) ;
+      toytt -> Branch( "fit_chi2_prob"   , &fit_chi2_prob   , "fit_chi2_prob/F"    ) ;
 
 
 
@@ -2087,6 +2218,121 @@
 
 
    //==================================================================================
+
+   double getChi2Obs( const char* obsname, const char* modelname ) {
+
+      double obsval, modelval, chi(0.) ;
+      RooAbsReal* rar ;
+
+      rar = (RooAbsReal*) workspace -> obj( obsname ) ;
+      if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", obsname ) ; return 0. ; }
+      obsval = rar -> getVal() ;
+
+      rar = (RooAbsReal*) workspace -> obj( modelname ) ;
+      if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", modelname ) ; return 0. ; }
+      modelval = rar -> getVal() ;
+
+      if ( obsval > 0 ) {
+         chi = (obsval - modelval) / sqrt(obsval) ;
+         fit_chi2_obs += chi*chi ;
+      }
+
+      return chi*chi ;
+
+   } // getChi2Obs.
+
+
+   //==================================================================================
+
+   double getChi2GausNP( const char* npname ) {
+
+      double npval, npmean, npsigma, chi(0.) ;
+      char vname[1000] ;
+      RooAbsReal* rar ;
+
+      rar = (RooAbsReal*) workspace -> obj( npname ) ;
+      if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", npname ) ; return 0. ; }
+      npval = rar -> getVal() ;
+
+      sprintf( vname, "mean_%s", npname ) ;
+      rar = (RooAbsReal*) workspace -> obj( vname ) ;
+      if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; return 0. ; }
+      npmean = rar -> getVal() ;
+
+      sprintf( vname, "sigma_%s", npname ) ;
+      rar = (RooAbsReal*) workspace -> obj( vname ) ;
+      if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; return 0. ; }
+      npsigma = rar -> getVal() ;
+
+      if ( npsigma > 0. ) {
+         chi = (npval-npmean)/npsigma ;
+         fit_chi2_np += chi*chi ;
+      }
+
+      return chi*chi ;
+
+   } // getChi2GausNP.
+
+
+   //==================================================================================
+
+   double getChi2BetaNP( const char* npname ) {
+
+      double  chi(0.) ;
+
+      double mode, rms, alpha, beta ;
+      getBetaModeRMS( npname, mode, rms, alpha, beta ) ;
+      RooAbsReal* np = (RooAbsReal*) workspace->obj( npname ) ;
+      if ( np == 0x0 ) {
+         printf("\n\n *** missing nuisance parameter? %s\n\n", npname ) ;
+         return 0. ;
+      }
+      double npVal = np->getVal() ;
+      chi = (npVal-mode)/rms ;
+
+      return chi*chi ;
+
+   } // getChi2GausNP.
+
+
+   //==================================================================================
+
+
+  bool getBetaModeRMS( const char* parName, double &mode, double &rms, double &alpha, double &beta ) {
+
+     mode = 1.0 ;
+     rms = 0.0 ;
+
+     char varname[1000] ;
+
+     sprintf( varname, "passObs_%s", parName ) ;
+     RooAbsReal* passObs = (RooAbsReal*) workspace->obj( varname ) ;
+     if ( passObs == 0x0 ) {
+        printf("\n\n *** getNPModeRMS : can't find pass obs for %s\n\n", parName ) ;
+        return false ;
+     }
+     alpha = passObs->getVal() + 1. ;
+
+     sprintf( varname, "failObs_%s", parName ) ;
+     RooAbsReal* failObs = (RooAbsReal*) workspace->obj( varname ) ;
+     if ( failObs == 0x0 ) {
+        printf("\n\n *** getNPModeRMS : can't find fail obs for %s\n\n", parName ) ;
+        return false ;
+     }
+     beta = failObs->getVal() + 1. ;
+
+     mode = (alpha - 1.)/(alpha+beta -2.) ;
+
+     rms = sqrt( alpha * beta / ( pow(alpha + beta,2) * (alpha + beta + 1) ) ) ;
+
+     return true ;
+
+  } // getNPModeRMS.
+
+
+//==========================================================================================
+
+
 
 
 

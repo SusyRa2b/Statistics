@@ -34,6 +34,10 @@
   void saveHist(const char* filename, const char* pat) ;
 
   bool getBetaPrimeModeRMS( const char* parName, RooWorkspace* ws, double &mode, double &rms, double &alpha, double &beta ) ;
+  bool getBetaModeRMS( const char* parName, RooWorkspace* ws, double &mode, double &rms, double &alpha, double &beta ) ;
+
+  double addChi2FromPullHist( TH1F* hp, double x=0.15, double y=0.85, double size=0.055 ) ;
+  double addChi2FromObs( TH1F* obshist, TH1F* modelhist, double x=0.60, double y=0.85, double size=0.055 ) ;
 
   //------
   //
@@ -46,6 +50,11 @@
    void ws_fitqual_plots3D_3b( const char* wsfile = "ws2.root",
                             double mu_susy_sig_val = 0.,
                             bool doNorm = false  ) {
+
+     double globalChi2(0.0) ;
+     double obsChi2(0.0) ;
+     double npChi2(0.0) ;
+     double chi2(0.0) ;
 
 
      // hardcode here the number of bins of the analysis
@@ -261,18 +270,21 @@
      TH1F* hfitqual_ttwj_0lep_1b = new TH1F("hfitqual_ttwj_0lep_1b", "0 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_qcd_0lep_1b  = new TH1F("hfitqual_qcd_0lep_1b" , "0 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_znn_0lep_1b  = new TH1F("hfitqual_znn_0lep_1b" , "0 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     TH1F* hfitqual_model_0lep_1b  = new TH1F("hfitqual_model_0lep_1b" , "0 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
 
      TH1F* hfitqual_data_0lep_2b = new TH1F("hfitqual_data_0lep_2b", "0 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_susy_0lep_2b = new TH1F("hfitqual_susy_0lep_2b", "0 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_ttwj_0lep_2b = new TH1F("hfitqual_ttwj_0lep_2b", "0 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_qcd_0lep_2b  = new TH1F("hfitqual_qcd_0lep_2b" , "0 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_znn_0lep_2b  = new TH1F("hfitqual_znn_0lep_2b" , "0 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     TH1F* hfitqual_model_0lep_2b  = new TH1F("hfitqual_model_0lep_2b" , "0 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
 
      TH1F* hfitqual_data_0lep_3b = new TH1F("hfitqual_data_0lep_3b", "0 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_susy_0lep_3b = new TH1F("hfitqual_susy_0lep_3b", "0 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_ttwj_0lep_3b = new TH1F("hfitqual_ttwj_0lep_3b", "0 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_qcd_0lep_3b  = new TH1F("hfitqual_qcd_0lep_3b" , "0 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_znn_0lep_3b  = new TH1F("hfitqual_znn_0lep_3b" , "0 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+     TH1F* hfitqual_model_0lep_3b  = new TH1F("hfitqual_model_0lep_3b" , "0 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
 
 
 
@@ -281,18 +293,21 @@
      TH1F* hfitqual_ttwj_1lep_1b = new TH1F("hfitqual_ttwj_1lep_1b", "1 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_qcd_1lep_1b  = new TH1F("hfitqual_qcd_1lep_1b" , "1 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_znn_1lep_1b  = new TH1F("hfitqual_znn_1lep_1b" , "1 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     TH1F* hfitqual_model_1lep_1b  = new TH1F("hfitqual_model_1lep_1b" , "1 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
 
      TH1F* hfitqual_data_1lep_2b = new TH1F("hfitqual_data_1lep_2b", "1 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_susy_1lep_2b = new TH1F("hfitqual_susy_1lep_2b", "1 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_ttwj_1lep_2b = new TH1F("hfitqual_ttwj_1lep_2b", "1 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_qcd_1lep_2b  = new TH1F("hfitqual_qcd_1lep_2b" , "1 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_znn_1lep_2b  = new TH1F("hfitqual_znn_1lep_2b" , "1 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     TH1F* hfitqual_model_1lep_2b  = new TH1F("hfitqual_model_1lep_2b" , "1 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
 
      TH1F* hfitqual_data_1lep_3b = new TH1F("hfitqual_data_1lep_3b", "1 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_susy_1lep_3b = new TH1F("hfitqual_susy_1lep_3b", "1 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_ttwj_1lep_3b = new TH1F("hfitqual_ttwj_1lep_3b", "1 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_qcd_1lep_3b  = new TH1F("hfitqual_qcd_1lep_3b" , "1 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_znn_1lep_3b  = new TH1F("hfitqual_znn_1lep_3b" , "1 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+     TH1F* hfitqual_model_1lep_3b  = new TH1F("hfitqual_model_1lep_3b" , "1 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
 
 
 
@@ -301,18 +316,21 @@
      TH1F* hfitqual_ttwj_ldp_1b = new TH1F("hfitqual_ttwj_ldp_1b", "LDP, 1 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_qcd_ldp_1b  = new TH1F("hfitqual_qcd_ldp_1b" , "LDP, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_znn_ldp_1b  = new TH1F("hfitqual_znn_ldp_1b" , "LDP, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     TH1F* hfitqual_model_ldp_1b  = new TH1F("hfitqual_model_ldp_1b" , "LDP, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
 
      TH1F* hfitqual_data_ldp_2b = new TH1F("hfitqual_data_ldp_2b", "LDP, 2 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_susy_ldp_2b = new TH1F("hfitqual_susy_ldp_2b", "LDP, 2 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_ttwj_ldp_2b = new TH1F("hfitqual_ttwj_ldp_2b", "LDP, 2 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_qcd_ldp_2b  = new TH1F("hfitqual_qcd_ldp_2b" , "LDP, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_znn_ldp_2b  = new TH1F("hfitqual_znn_ldp_2b" , "LDP, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     TH1F* hfitqual_model_ldp_2b  = new TH1F("hfitqual_model_ldp_2b" , "LDP, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
 
      TH1F* hfitqual_data_ldp_3b = new TH1F("hfitqual_data_ldp_3b", "LDP, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_susy_ldp_3b = new TH1F("hfitqual_susy_ldp_3b", "LDP, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_ttwj_ldp_3b = new TH1F("hfitqual_ttwj_ldp_3b", "LDP, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_qcd_ldp_3b  = new TH1F("hfitqual_qcd_ldp_3b" , "LDP, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
      TH1F* hfitqual_znn_ldp_3b  = new TH1F("hfitqual_znn_ldp_3b" , "LDP, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+     TH1F* hfitqual_model_ldp_3b  = new TH1F("hfitqual_model_ldp_3b" , "LDP, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
 
 
      TH1F* hfitqual_data_zee_1b  = new TH1F("hfitqual_data_zee_1b" , "Zee" , nbins, 0.5, nbins+0.5 ) ;
@@ -321,7 +339,7 @@
      TH1F* hfitqual_fit_zmm_1b  = new TH1F("hfitqual_fit_zmm_1b" , "Zmm" , nbins, 0.5, nbins+0.5 ) ;
 
      TH1F* hfitqual_np   = new TH1F("hfitqual_np"  , "Nuisance par"  , 1, 0., 1. ) ;
-     
+
 
      hfitqual_data_zee_1b->SetMarkerStyle(20) ;
      hfitqual_data_zee_1b->SetLineWidth(2) ;
@@ -521,6 +539,7 @@
 	      hfitqual_ttwj_0lep_1b -> SetBinContent( binIndex, ttwjVal ) ;
 	      hfitqual_qcd_0lep_1b  -> SetBinContent( binIndex, qcdVal ) ;
 	      hfitqual_znn_0lep_1b  -> SetBinContent( binIndex, znnVal ) ;
+	      hfitqual_model_0lep_1b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            } else if ( k == 1 ) {
 	      xaxis_0lep_2b->SetBinLabel(binIndex, binLabel ) ;
 	      hfitqual_data_0lep_2b -> SetBinContent( binIndex, dataVal ) ;
@@ -529,6 +548,7 @@
 	      hfitqual_ttwj_0lep_2b -> SetBinContent( binIndex, ttwjVal ) ;
 	      hfitqual_qcd_0lep_2b  -> SetBinContent( binIndex, qcdVal ) ;
 	      hfitqual_znn_0lep_2b  -> SetBinContent( binIndex, znnVal ) ;
+	      hfitqual_model_0lep_2b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            } else if ( k == 2 ) {
 	      xaxis_0lep_3b->SetBinLabel(binIndex, binLabel ) ;
 	      hfitqual_data_0lep_3b -> SetBinContent( binIndex, dataVal ) ;
@@ -537,6 +557,7 @@
 	      hfitqual_ttwj_0lep_3b -> SetBinContent( binIndex, ttwjVal ) ;
 	      hfitqual_qcd_0lep_3b  -> SetBinContent( binIndex, qcdVal ) ;
 	      hfitqual_znn_0lep_3b  -> SetBinContent( binIndex, znnVal ) ;
+	      hfitqual_model_0lep_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            }
 	   
 
@@ -591,6 +612,7 @@
 	      hfitqual_ttwj_1lep_1b -> SetBinContent( binIndex, ttwjVal ) ;
 	      hfitqual_qcd_1lep_1b  -> SetBinContent( binIndex, qcdVal ) ;
 	      hfitqual_znn_1lep_1b  -> SetBinContent( binIndex, znnVal ) ;
+	      hfitqual_model_1lep_1b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            } else if ( k == 1 ) {
 	      xaxis_1lep_2b->SetBinLabel(binIndex, binLabel ) ;
 	      hfitqual_data_1lep_2b -> SetBinContent( binIndex, dataVal ) ;
@@ -599,6 +621,7 @@
 	      hfitqual_ttwj_1lep_2b -> SetBinContent( binIndex, ttwjVal ) ;
 	      hfitqual_qcd_1lep_2b  -> SetBinContent( binIndex, qcdVal ) ;
 	      hfitqual_znn_1lep_2b  -> SetBinContent( binIndex, znnVal ) ;
+	      hfitqual_model_1lep_2b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            } else if ( k == 2 ) {
 	      xaxis_1lep_3b->SetBinLabel(binIndex, binLabel ) ;
 	      hfitqual_data_1lep_3b -> SetBinContent( binIndex, dataVal ) ;
@@ -607,6 +630,7 @@
 	      hfitqual_ttwj_1lep_3b -> SetBinContent( binIndex, ttwjVal ) ;
 	      hfitqual_qcd_1lep_3b  -> SetBinContent( binIndex, qcdVal ) ;
 	      hfitqual_znn_1lep_3b  -> SetBinContent( binIndex, znnVal ) ;
+	      hfitqual_model_1lep_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            }
 	   
 
@@ -666,6 +690,7 @@
 	      hfitqual_ttwj_ldp_1b -> SetBinContent( binIndex, ttwjVal ) ;
 	      hfitqual_qcd_ldp_1b  -> SetBinContent( binIndex, qcdVal ) ;
 	      hfitqual_znn_ldp_1b  -> SetBinContent( binIndex, znnVal ) ;
+	      hfitqual_model_ldp_1b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            } else if ( k == 1 ) {
 	      xaxis_ldp_2b->SetBinLabel(binIndex, binLabel ) ;
 	      hfitqual_data_ldp_2b -> SetBinContent( binIndex, dataVal ) ;
@@ -674,6 +699,7 @@
 	      hfitqual_ttwj_ldp_2b -> SetBinContent( binIndex, ttwjVal ) ;
 	      hfitqual_qcd_ldp_2b  -> SetBinContent( binIndex, qcdVal ) ;
 	      hfitqual_znn_ldp_2b  -> SetBinContent( binIndex, znnVal ) ;
+	      hfitqual_model_ldp_2b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            } else if ( k == 2 ) {
 	      xaxis_ldp_3b->SetBinLabel(binIndex, binLabel ) ;
 	      hfitqual_data_ldp_3b -> SetBinContent( binIndex, dataVal ) ;
@@ -682,6 +708,7 @@
 	      hfitqual_ttwj_ldp_3b -> SetBinContent( binIndex, ttwjVal ) ;
 	      hfitqual_qcd_ldp_3b  -> SetBinContent( binIndex, qcdVal ) ;
 	      hfitqual_znn_ldp_3b  -> SetBinContent( binIndex, znnVal ) ;
+	      hfitqual_model_ldp_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            }
 
 
@@ -837,14 +864,14 @@
 
 
 
-     TLegend* legend = new TLegend(0.4,0.35,0.7,0.85) ;
+     TLegend* legend = new TLegend(0.6,0.45,0.9,0.95) ;
 
      legend->AddEntry( hfitqual_data_0lep_1b, "data" ) ;
      legend->AddEntry( hfitqual_susy_0lep_1b, "SUSY" ) ;
      legend->AddEntry( hfitqual_ttwj_0lep_1b, "ttwj" ) ;
      legend->AddEntry( hfitqual_qcd_0lep_1b,  "QCD" ) ;
      legend->AddEntry( hfitqual_znn_0lep_1b,  "Znunu" ) ;
-     legend->AddEntry( hfitqual_np,           "Eff PG" ) ;
+     //legend->AddEntry( hfitqual_np,           "Eff PG" ) ;
 
 
      if ( doNorm ) {
@@ -870,161 +897,44 @@
      }
 
 
-     TCanvas* cfitqual = new TCanvas("cfitqual","RA2b fit quality", 850, 1000 ) ;
-
-     cfitqual->Divide(3,4);
-
-     gPad->SetTicks(1,0) ;
-
-     hfitqual_data_0lep_1b->SetLabelSize(0.055,"x") ;
-     hfitqual_data_0lep_1b->GetXaxis()->LabelsOption("v") ;
-     hfitqual_data_1lep_1b->SetLabelSize(0.055,"x") ;
-     hfitqual_data_1lep_1b->GetXaxis()->LabelsOption("v") ;
-     hfitqual_data_ldp_1b->SetLabelSize(0.055,"x") ;
-     hfitqual_data_ldp_1b->GetXaxis()->LabelsOption("v") ;
-     
-     hfitqual_data_0lep_2b->SetLabelSize(0.055,"x") ;
-     hfitqual_data_0lep_2b->GetXaxis()->LabelsOption("v") ;
-     hfitqual_data_1lep_2b->SetLabelSize(0.055,"x") ;
-     hfitqual_data_1lep_2b->GetXaxis()->LabelsOption("v") ;
-     hfitqual_data_ldp_2b->SetLabelSize(0.055,"x") ;
-     hfitqual_data_ldp_2b->GetXaxis()->LabelsOption("v") ;
-     
-     hfitqual_data_0lep_3b->SetLabelSize(0.055,"x") ;
-     hfitqual_data_0lep_3b->GetXaxis()->LabelsOption("v") ;
-     hfitqual_data_1lep_3b->SetLabelSize(0.055,"x") ;
-     hfitqual_data_1lep_3b->GetXaxis()->LabelsOption("v") ;
-     hfitqual_data_ldp_3b->SetLabelSize(0.055,"x") ;
-     hfitqual_data_ldp_3b->GetXaxis()->LabelsOption("v") ;
-     
-     hfitqual_data_zee_1b->SetLabelSize(0.055,"x") ;
-     hfitqual_data_zee_1b->GetXaxis()->LabelsOption("v") ;
-     hfitqual_data_zmm_1b->SetLabelSize(0.055,"x") ;
-     hfitqual_data_zmm_1b->GetXaxis()->LabelsOption("v") ;
 
 
 
+ //  //--- Efficiency scale factor primary Gaussian value.
+
+ //  hfitqual_np->SetMinimum(-5.) ;
+ //  hfitqual_np->SetMaximum( 5.) ;
+ //  
+ //  hfitqual_np->SetNdivisions(101,"x") ;
+ //  hfitqual_np->SetNdivisions(101,"y") ;
+ //  hfitqual_np->SetLabelOffset(99,"y") ;
+ //  
+
+ //  TPad* tp = new TPad("tp","tp",0.09,0.,0.18,1.0) ;
+
+ //  tp->SetRightMargin(0.4) ;
+
+ //  tp->Draw() ;
+ //  tp->cd() ;
+ //  hfitqual_np->SetLabelSize(0.5,"x") ;
+ //  TAxis *xaxis ;
+ //  xaxis = hfitqual_np->GetXaxis() ;
+ //  xaxis->SetBinLabel(1,"Eff PG") ;
+ //  hfitqual_np->GetXaxis()->LabelsOption("v") ;
+ //  hfitqual_np->Draw() ;
+
+ //  cfitqual->Update() ;
 
 
+ //  TGaxis* axis = new TGaxis() ;
+ //  axis->SetLabelOffset(0.1) ;
+ //  axis->SetLabelSize(0.30) ;
+ //  axis->SetTickSize(0.2) ;
+ //  axis->DrawAxis( 1.0, -5., 1.0, 5., -5., 5., 510, "+LS") ;
+ //  
+ //  cfitqual->Update() ;
 
-     cfitqual->cd(1);
-     hfitqual_data_0lep_1b->Draw("histpe") ;
-     hfitqual_fit_0lep_1b->Draw("same") ;
-     hfitqual_data_0lep_1b->Draw("same") ;
-     gPad->SetGridy(1) ;
-     
-     cfitqual->cd(2);
-     hfitqual_data_0lep_2b->Draw("histpe") ;
-     hfitqual_fit_0lep_2b->Draw("same") ;
-     hfitqual_data_0lep_2b->Draw("same") ;
-     gPad->SetGridy(1) ;
-     
-     cfitqual->cd(3);
-     hfitqual_data_0lep_3b->Draw("histpe") ;
-     hfitqual_fit_0lep_3b->Draw("same") ;
-     hfitqual_data_0lep_3b->Draw("same") ;
-     gPad->SetGridy(1) ;
-     
-
-
-     cfitqual->cd(4);
-     hfitqual_data_1lep_1b->Draw("histpe") ;
-     hfitqual_fit_1lep_1b->Draw("same") ;
-     hfitqual_data_1lep_1b->Draw("same") ;
-     gPad->SetGridy(1) ;
-     
-     cfitqual->cd(5);
-     hfitqual_data_1lep_2b->Draw("histpe") ;
-     hfitqual_fit_1lep_2b->Draw("same") ;
-     hfitqual_data_1lep_2b->Draw("same") ;
-     gPad->SetGridy(1) ;
-     
-     cfitqual->cd(6);
-     hfitqual_data_1lep_3b->Draw("histpe") ;
-     hfitqual_fit_1lep_3b->Draw("same") ;
-     hfitqual_data_1lep_3b->Draw("same") ;
-     gPad->SetGridy(1) ;
-
-
-
-
-     
-     cfitqual->cd(7);
-     hfitqual_data_ldp_1b->Draw("histpe") ;
-     hfitqual_fit_ldp_1b->Draw("same") ;
-     hfitqual_data_ldp_1b->Draw("same") ;
-     gPad->SetGridy(1) ;
-
-     cfitqual->cd(8);
-     hfitqual_data_ldp_2b->Draw("histpe") ;
-     hfitqual_fit_ldp_2b->Draw("same") ;
-     hfitqual_data_ldp_2b->Draw("same") ;
-     gPad->SetGridy(1) ;
-
-     cfitqual->cd(9);
-     hfitqual_data_ldp_3b->Draw("histpe") ;
-     hfitqual_fit_ldp_3b->Draw("same") ;
-     hfitqual_data_ldp_3b->Draw("same") ;
-     gPad->SetGridy(1) ;
-
-
-
-
-     cfitqual->cd(10) ;
-     hfitqual_data_zee_1b->Draw("histpe") ;
-     hfitqual_fit_zee_1b->Draw("same") ;
-     hfitqual_data_zee_1b->Draw("same") ;
-     gPad->SetGridy(1) ;
-
-     cfitqual->cd(11) ;
-     hfitqual_data_zmm_1b->Draw("histpe") ;
-     hfitqual_fit_zmm_1b->Draw("same") ;
-     hfitqual_data_zmm_1b->Draw("same") ;
-     gPad->SetGridy(1) ;
-
-
-     cfitqual->cd(12);
-     legend->Draw() ;
-
-     cfitqual->Update() ;
-
-
-
-     //--- Efficiency scale factor primary Gaussian value.
-
-     hfitqual_np->SetMinimum(-5.) ;
-     hfitqual_np->SetMaximum( 5.) ;
-     
-     hfitqual_np->SetNdivisions(101,"x") ;
-     hfitqual_np->SetNdivisions(101,"y") ;
-     hfitqual_np->SetLabelOffset(99,"y") ;
-     
-
-     TPad* tp = new TPad("tp","tp",0.09,0.,0.18,1.0) ;
-
-     tp->SetRightMargin(0.4) ;
-
-     tp->Draw() ;
-     tp->cd() ;
-     hfitqual_np->SetLabelSize(0.5,"x") ;
-     TAxis *xaxis ;
-     xaxis = hfitqual_np->GetXaxis() ;
-     xaxis->SetBinLabel(1,"Eff PG") ;
-     hfitqual_np->GetXaxis()->LabelsOption("v") ;
-     hfitqual_np->Draw() ;
-
-     cfitqual->Update() ;
-
-
-     TGaxis* axis = new TGaxis() ;
-     axis->SetLabelOffset(0.1) ;
-     axis->SetLabelSize(0.30) ;
-     axis->SetTickSize(0.2) ;
-     axis->DrawAxis( 1.0, -5., 1.0, 5., -5., 5., 510, "+LS") ;
-     
-     cfitqual->Update() ;
-
-     cfitqual->SaveAs("fitqual.gif") ;
+ //  cfitqual->SaveAs("fitqual.gif") ;
 
 
 
@@ -1076,9 +986,9 @@
         TH1F* hnp_eff_btageff_sf_prod_2b_val  = new TH1F("hnp_eff_btageff_sf_prod_2b_val" , "Nuisance parameters, eff SF * btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
         TH1F* hnp_eff_btageff_sf_prod_3b_val  = new TH1F("hnp_eff_btageff_sf_prod_3b_val" , "Nuisance parameters, eff SF * btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
 
-        TH1F* hnp_prim_eff = new TH1F("hnp_prim_eff", "Nuisance parameters, Efficiency primary Gaussians, pull", 5, 0.5, 5.5 ) ;
+        TH1F* hnp_prim_eff = new TH1F("hnp_prim_eff", "Nuisance parameters, Efficiency primary Gaussians, pull", 7, 0.5, 7.5 ) ;
 
-        TH1F* hnp_znn = new TH1F("hnp_znn", "Nuisance parameters, Znn, pull", 11, 0.5, 11.5 ) ;
+        TH1F* hnp_znn = new TH1F("hnp_znn", "Nuisance parameters, Znn, pull", 10+2*nBinsMET, 0.5, 10+2*nBinsMET+0.5 ) ;
 
 
 
@@ -1122,6 +1032,20 @@
                  if ( bbi==0 ) hnp_qcd_1b_nom->SetBinContent( binIndex, mean ) ;
                  if ( bbi==1 ) hnp_qcd_2b_nom->SetBinContent( binIndex, mean ) ;
                  if ( bbi==2 ) hnp_qcd_3b_nom->SetBinContent( binIndex, mean ) ;
+
+                 char label[1000] ;
+                 sprintf( label, "M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                 if ( bbi==0 ) hnp_qcd_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==1 ) hnp_qcd_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==2 ) hnp_qcd_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==0 ) hnp_qcd_1b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==1 ) hnp_qcd_2b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==2 ) hnp_qcd_3b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==0 ) hnp_qcd_1b_nom-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==1 ) hnp_qcd_2b_nom-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==2 ) hnp_qcd_3b_nom-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+
+
               }
            } // hbi
         } // mbi.
@@ -1167,6 +1091,19 @@
                  if ( bbi==0 ) hnp_ttwj_1b_nom->SetBinContent( binIndex, mean ) ;
                  if ( bbi==1 ) hnp_ttwj_2b_nom->SetBinContent( binIndex, mean ) ;
                  if ( bbi==2 ) hnp_ttwj_3b_nom->SetBinContent( binIndex, mean ) ;
+
+                 char label[1000] ;
+                 sprintf( label, "M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                 if ( bbi==0 ) hnp_ttwj_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==1 ) hnp_ttwj_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==2 ) hnp_ttwj_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==0 ) hnp_ttwj_1b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==1 ) hnp_ttwj_2b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==2 ) hnp_ttwj_3b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==0 ) hnp_ttwj_1b_nom-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==1 ) hnp_ttwj_2b_nom-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==2 ) hnp_ttwj_3b_nom-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+
               }
            } // hbi
         } // mbi.
@@ -1194,17 +1131,37 @@
             }
             double global_btageff_sf = np -> getVal() ;
 
+            //--- don't know where else to put this...
+            sprintf( parName, "sf_mc" ) ;
+            np = (RooAbsReal*) ws->obj( parName ) ;
+            if ( np == 0x0 ) {
+               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+               return ;
+            }
+            double global_sf_mc = np -> getVal() ;
+            sprintf( parName, "sigma_sf_mc" ) ;
+            np = (RooAbsReal*) ws->obj( parName ) ;
+            if ( np == 0x0 ) {
+               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+               return ;
+            }
+            double sf_mc_sigma = np -> getVal() ;
+            double sf_mc_pull = (global_sf_mc-1.) / sf_mc_sigma ;
+            printf(" Overall MC systematic val = %5.2f, sigma = %5.2f, pull = %6.3f\n", global_sf_mc, sf_mc_sigma, sf_mc_pull ) ;
+
             printf(" Global efficiency scale factors (both Gaussian with mean 0, sigma 1): eff_sf = %6.3f,  btageff_sf = %6.3f\n", global_eff_sf, global_btageff_sf ) ;
 
             hnp_prim_eff -> SetBinContent(2, global_eff_sf ) ;
             hnp_prim_eff -> SetBinContent(4, global_btageff_sf ) ;
-            xaxis = hnp_prim_eff -> GetXaxis() ;
-            xaxis->LabelsOption("v") ;
+            hnp_prim_eff -> SetBinContent(6, sf_mc_pull ) ;
+            TAxis* xaxis = hnp_prim_eff -> GetXaxis() ;
             xaxis->SetBinLabel(2,"Eff SF") ;
             xaxis->SetBinLabel(4,"Btag Eff SF") ;
+            xaxis->SetBinLabel(6,"MC SF") ;
             hnp_prim_eff -> SetFillColor(kOrange+1 ) ;
 
-            hnp_prim_eff -> SetLabelSize(0.055,"x") ;
+            hnp_prim_eff -> SetLabelSize(0.075,"x") ;
+            hnp_prim_eff -> GetXaxis() ->LabelsOption("v") ;
 
             hnp_prim_eff->SetMinimum(-2.0) ;
             hnp_prim_eff->SetMaximum(2.0) ;
@@ -1216,15 +1173,14 @@
         //--- Znn nuisance parameters.
         {
 
-            int  n_znnNP_gauss_pars(3) ;
-            char znnNP_gauss_par[3][100] = { "knn_1b", "knn_2b", "knn_3b" } ;
-
             TH1F* hp = hnp_znn ;
 
             hp -> SetFillColor( kGreen-3 ) ;
 
-            xaxis = hp -> GetXaxis() ;
-            xaxis->LabelsOption("v") ;
+            TAxis* xaxis = hp -> GetXaxis() ;
+
+            int  n_znnNP_gauss_pars(4) ;
+            char znnNP_gauss_par[4][100] = { "knn_1b", "knn_2b", "knn_3b", "sf_ll" } ;
 
 
             for ( int npi=0; npi< n_znnNP_gauss_pars; npi++ ) {
@@ -1269,8 +1225,44 @@
 
             } // npi
 
+            int  n_znnNP_beta_pars = 4 + 2 * nBinsMET ;
+            char znnNP_beta_par[20][100] ;
+            int zbnpi(0) ;
+            sprintf( znnNP_beta_par[zbnpi++], "eff_Zee" ) ;
+            sprintf( znnNP_beta_par[zbnpi++], "eff_Zmm" ) ;
+            sprintf( znnNP_beta_par[zbnpi++], "pur_Zee" ) ;
+            sprintf( znnNP_beta_par[zbnpi++], "pur_Zmm" ) ;
+            for ( int i=0; i<nBinsMET; i++ ) {
+               sprintf( znnNP_beta_par[zbnpi++], "acc_Zee_M%d", i+1 ) ;
+               sprintf( znnNP_beta_par[zbnpi++], "acc_Zmm_M%d", i+1 ) ;
+            } // i
+
+            for ( int npi=0; npi< n_znnNP_beta_pars; npi++ ) {
+
+               int hbin = 2 + n_znnNP_gauss_pars + npi ;
+
+               char parName[1000] ;
+               sprintf( parName, "%s", znnNP_beta_par[npi] ) ;
+
+               double mode, rms, alpha, beta ;
+               getBetaModeRMS( parName, ws, mode, rms, alpha, beta ) ;
+               RooAbsReal* np = (RooAbsReal*) ws->obj( parName ) ;
+               if ( np == 0x0 ) {
+                  printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+                  return ;
+               }
+               double npVal = np->getVal() ;
+               double pull = (npVal-mode)/rms ;
+
+               hp -> SetBinContent( hbin, pull ) ;
+               xaxis -> SetBinLabel( hbin, parName ) ;
+
+               printf("  %s : mode=%7.3f, rms=%7.3f, val=%7.3f, pull=%7.3f\n", parName, mode, rms, npVal, pull ) ;
+
+            } // npi
 
             hp -> SetLabelSize(0.055,"x") ;
+            hp -> GetXaxis() ->LabelsOption("v") ;
 
             hp->SetMinimum(-2.0) ;
             hp->SetMaximum(2.0) ;
@@ -1320,10 +1312,40 @@
 
                  printf(" m,h,b %d,%d,%d : eff_sf = %6.3f,  btageff_sf = %6.3f,  prod = %6.3f\n", mbi, hbi, bbi, bin_eff_sf, btageff_sf, prod ) ;
 
+                 char label[1000] ;
+                 sprintf( label, "M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                 if ( bbi==0 ) hnp_eff_sf_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==1 ) hnp_eff_sf_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==2 ) hnp_eff_sf_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==0 ) hnp_btageff_sf_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==1 ) hnp_btageff_sf_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==2 ) hnp_btageff_sf_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==0 ) hnp_eff_btageff_sf_prod_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==1 ) hnp_eff_btageff_sf_prod_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==2 ) hnp_eff_btageff_sf_prod_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+
               }
            } // hbi
         } // mbi.
 
+        hnp_eff_sf_1b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_1b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_2b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_3b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_3b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_btageff_sf_1b_val->SetLabelSize(0.055,"x") ;
+        hnp_btageff_sf_1b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_btageff_sf_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_btageff_sf_2b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_btageff_sf_3b_val->SetLabelSize(0.055,"x") ;
+        hnp_btageff_sf_3b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_btageff_sf_prod_1b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_btageff_sf_prod_1b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_btageff_sf_prod_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_btageff_sf_prod_2b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_btageff_sf_prod_3b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_btageff_sf_prod_3b_val->GetXaxis()->LabelsOption("v") ;
 
 
 
@@ -1386,10 +1408,102 @@
         hnp_eff_btageff_sf_prod_3b_val -> SetMaximum(1.5) ;
 
 
+        hnp_ttwj_1b_val->SetLabelSize(0.055,"x") ;
+        hnp_ttwj_1b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_ttwj_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_ttwj_2b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_ttwj_3b_val->SetLabelSize(0.055,"x") ;
+        hnp_ttwj_3b_val->GetXaxis()->LabelsOption("v") ;
 
+        hnp_qcd_1b_val->SetLabelSize(0.055,"x") ;
+        hnp_qcd_1b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_qcd_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_qcd_2b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_qcd_3b_val->SetLabelSize(0.055,"x") ;
+        hnp_qcd_3b_val->GetXaxis()->LabelsOption("v") ;
+
+        hnp_ttwj_1b_pull->SetLabelSize(0.055,"x") ;
+        hnp_ttwj_1b_pull->GetXaxis()->LabelsOption("v") ;
+        hnp_ttwj_2b_pull->SetLabelSize(0.055,"x") ;
+        hnp_ttwj_2b_pull->GetXaxis()->LabelsOption("v") ;
+        hnp_ttwj_3b_pull->SetLabelSize(0.055,"x") ;
+        hnp_ttwj_3b_pull->GetXaxis()->LabelsOption("v") ;
+
+        hnp_qcd_1b_pull->SetLabelSize(0.055,"x") ;
+        hnp_qcd_1b_pull->GetXaxis()->LabelsOption("v") ;
+        hnp_qcd_2b_pull->SetLabelSize(0.055,"x") ;
+        hnp_qcd_2b_pull->GetXaxis()->LabelsOption("v") ;
+        hnp_qcd_3b_pull->SetLabelSize(0.055,"x") ;
+        hnp_qcd_3b_pull->GetXaxis()->LabelsOption("v") ;
+
+
+
+
+        //=== Efficiency and Znn nuisance pars ============
+
+
+        TCanvas* cnp2 = (TCanvas*) gDirectory->FindObject("cnp2") ;
+        if ( cnp2 == 0x0 ) {
+           cnp2 = new TCanvas("cnp2","RA2b efficiency and Znn nuisance pars", 850, 1000 ) ;
+        }
+        cnp2->Divide(3,4) ;
+
+        cnp2->cd(1) ;
+        hnp_prim_eff->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_prim_eff ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
+
+
+        cnp2->cd(2) ;
+        hnp_znn->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_znn ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
+
+
+
+        cnp2->cd(4) ;
+        hnp_eff_sf_1b_val->Draw() ;
+
+        cnp2->cd(5) ;
+        hnp_eff_sf_2b_val->Draw() ;
+
+        cnp2->cd(6) ;
+        hnp_eff_sf_3b_val->Draw() ;
+
+
+
+        cnp2->cd(7) ;
+        hnp_btageff_sf_1b_val->Draw() ;
+
+        cnp2->cd(8) ;
+        hnp_btageff_sf_2b_val->Draw() ;
+
+        cnp2->cd(9) ;
+        hnp_btageff_sf_3b_val->Draw() ;
+
+
+
+        cnp2->cd(10) ;
+        hnp_eff_btageff_sf_prod_1b_val->Draw() ;
+
+        cnp2->cd(11) ;
+        hnp_eff_btageff_sf_prod_2b_val->Draw() ;
+
+        cnp2->cd(12) ;
+        hnp_eff_btageff_sf_prod_3b_val->Draw() ;
+
+
+
+
+       //==== TTwj and QCD scale factors ========================
 
         gStyle->SetPadGridY(1) ;
-        TCanvas* cnp = new TCanvas("cnp","RA2b nuisance pars", 850, 1000 ) ;
+        TCanvas* cnp = (TCanvas*) gDirectory->FindObject("cnp") ;
+        if ( cnp == 0x0 ) {
+           cnp = new TCanvas("cnp","RA2b nuisance pars", 850, 1000 ) ;
+        }
         cnp->Divide(3,4) ;
 
       //---
@@ -1409,12 +1523,22 @@
       //---
         cnp->cd(4) ;
         hnp_ttwj_1b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_ttwj_1b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
+
 
         cnp->cd(5) ;
         hnp_ttwj_2b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_ttwj_2b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
 
         cnp->cd(6) ;
         hnp_ttwj_3b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_ttwj_3b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
 
 
       //---
@@ -1434,61 +1558,21 @@
       //---
         cnp->cd(10) ;
         hnp_qcd_1b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_qcd_1b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
 
         cnp->cd(11) ;
         hnp_qcd_2b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_qcd_2b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
 
         cnp->cd(12) ;
         hnp_qcd_3b_pull->Draw() ;
-
-
-
-
-
-
-
-
-        TCanvas* cnp2 = new TCanvas("cnp2","RA2b efficiency and Znn nuisance pars", 850, 1000 ) ;
-        cnp2->Divide(3,4) ;
-
-        cnp2->cd(1) ;
-        hnp_eff_sf_1b_val->Draw() ;
-
-        cnp2->cd(2) ;
-        hnp_eff_sf_2b_val->Draw() ;
-
-        cnp2->cd(3) ;
-        hnp_eff_sf_3b_val->Draw() ;
-
-
-
-        cnp2->cd(4) ;
-        hnp_btageff_sf_1b_val->Draw() ;
-
-        cnp2->cd(5) ;
-        hnp_btageff_sf_2b_val->Draw() ;
-
-        cnp2->cd(6) ;
-        hnp_btageff_sf_3b_val->Draw() ;
-
-
-
-        cnp2->cd(7) ;
-        hnp_eff_btageff_sf_prod_1b_val->Draw() ;
-
-        cnp2->cd(8) ;
-        hnp_eff_btageff_sf_prod_2b_val->Draw() ;
-
-        cnp2->cd(9) ;
-        hnp_eff_btageff_sf_prod_3b_val->Draw() ;
-
-
-        cnp2->cd(10) ;
-        hnp_prim_eff->Draw() ;
-
-
-        cnp2->cd(11) ;
-        hnp_znn->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_qcd_3b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
 
 
 
@@ -1500,12 +1584,210 @@
         printf("\n\n *** Skipping nuisance parameters.\n\n") ;
      }
 
+   //====== Observables ==================================
+
+
+     TCanvas* cfitqual = (TCanvas*) gDirectory->FindObject("cfitqual") ;
+     if ( cfitqual == 0x0 ) {
+        cfitqual = new TCanvas("cfitqual","RA2b fit quality", 850, 1000 ) ;
+     }
+
+     cfitqual->Divide(3,4);
+
+     gPad->SetTicks(1,0) ;
+
+     hfitqual_data_0lep_1b->SetLabelSize(0.055,"x") ;
+     hfitqual_data_0lep_1b->GetXaxis()->LabelsOption("v") ;
+     hfitqual_data_1lep_1b->SetLabelSize(0.055,"x") ;
+     hfitqual_data_1lep_1b->GetXaxis()->LabelsOption("v") ;
+     hfitqual_data_ldp_1b->SetLabelSize(0.055,"x") ;
+     hfitqual_data_ldp_1b->GetXaxis()->LabelsOption("v") ;
+     
+     hfitqual_data_0lep_2b->SetLabelSize(0.055,"x") ;
+     hfitqual_data_0lep_2b->GetXaxis()->LabelsOption("v") ;
+     hfitqual_data_1lep_2b->SetLabelSize(0.055,"x") ;
+     hfitqual_data_1lep_2b->GetXaxis()->LabelsOption("v") ;
+     hfitqual_data_ldp_2b->SetLabelSize(0.055,"x") ;
+     hfitqual_data_ldp_2b->GetXaxis()->LabelsOption("v") ;
+     
+     hfitqual_data_0lep_3b->SetLabelSize(0.055,"x") ;
+     hfitqual_data_0lep_3b->GetXaxis()->LabelsOption("v") ;
+     hfitqual_data_1lep_3b->SetLabelSize(0.055,"x") ;
+     hfitqual_data_1lep_3b->GetXaxis()->LabelsOption("v") ;
+     hfitqual_data_ldp_3b->SetLabelSize(0.055,"x") ;
+     hfitqual_data_ldp_3b->GetXaxis()->LabelsOption("v") ;
+     
+     hfitqual_data_zee_1b->SetLabelSize(0.055,"x") ;
+     hfitqual_data_zee_1b->GetXaxis()->LabelsOption("v") ;
+     hfitqual_data_zmm_1b->SetLabelSize(0.055,"x") ;
+     hfitqual_data_zmm_1b->GetXaxis()->LabelsOption("v") ;
 
 
 
 
 
 
+     cfitqual->cd(1);
+     hfitqual_data_0lep_1b->Draw("histpe") ;
+     hfitqual_fit_0lep_1b->Draw("same") ;
+     hfitqual_data_0lep_1b->Draw("same") ;
+     gPad->SetGridy(1) ;
+     chi2 = addChi2FromObs( hfitqual_data_0lep_1b, hfitqual_model_0lep_1b ) ;
+     globalChi2 += chi2 ;
+     obsChi2 += chi2 ;
+     
+     cfitqual->cd(2);
+     hfitqual_data_0lep_2b->Draw("histpe") ;
+     hfitqual_fit_0lep_2b->Draw("same") ;
+     hfitqual_data_0lep_2b->Draw("same") ;
+     gPad->SetGridy(1) ;
+     chi2 = addChi2FromObs( hfitqual_data_0lep_2b, hfitqual_model_0lep_2b ) ;
+     globalChi2 += chi2 ;
+     obsChi2 += chi2 ;
+     
+     cfitqual->cd(3);
+     hfitqual_data_0lep_3b->Draw("histpe") ;
+     hfitqual_fit_0lep_3b->Draw("same") ;
+     hfitqual_data_0lep_3b->Draw("same") ;
+     gPad->SetGridy(1) ;
+     chi2 = addChi2FromObs( hfitqual_data_0lep_3b, hfitqual_model_0lep_3b ) ;
+     globalChi2 += chi2 ;
+     obsChi2 += chi2 ;
+     
+
+
+     cfitqual->cd(4);
+     hfitqual_data_1lep_1b->Draw("histpe") ;
+     hfitqual_fit_1lep_1b->Draw("same") ;
+     hfitqual_data_1lep_1b->Draw("same") ;
+     gPad->SetGridy(1) ;
+     chi2 = addChi2FromObs( hfitqual_data_1lep_1b, hfitqual_model_1lep_1b ) ;
+     globalChi2 += chi2 ;
+     obsChi2 += chi2 ;
+     
+     cfitqual->cd(5);
+     hfitqual_data_1lep_2b->Draw("histpe") ;
+     hfitqual_fit_1lep_2b->Draw("same") ;
+     hfitqual_data_1lep_2b->Draw("same") ;
+     gPad->SetGridy(1) ;
+     chi2 = addChi2FromObs( hfitqual_data_1lep_2b, hfitqual_model_1lep_2b ) ;
+     globalChi2 += chi2 ;
+     obsChi2 += chi2 ;
+     
+     cfitqual->cd(6);
+     hfitqual_data_1lep_3b->Draw("histpe") ;
+     hfitqual_fit_1lep_3b->Draw("same") ;
+     hfitqual_data_1lep_3b->Draw("same") ;
+     gPad->SetGridy(1) ;
+     chi2 = addChi2FromObs( hfitqual_data_1lep_3b, hfitqual_model_1lep_3b ) ;
+     globalChi2 += chi2 ;
+     obsChi2 += chi2 ;
+
+
+
+
+     
+     cfitqual->cd(7);
+     hfitqual_data_ldp_1b->Draw("histpe") ;
+     hfitqual_fit_ldp_1b->Draw("same") ;
+     hfitqual_data_ldp_1b->Draw("same") ;
+     gPad->SetGridy(1) ;
+     chi2 = addChi2FromObs( hfitqual_data_ldp_1b, hfitqual_model_ldp_1b ) ;
+     globalChi2 += chi2 ;
+     obsChi2 += chi2 ;
+
+     cfitqual->cd(8);
+     hfitqual_data_ldp_2b->Draw("histpe") ;
+     hfitqual_fit_ldp_2b->Draw("same") ;
+     hfitqual_data_ldp_2b->Draw("same") ;
+     gPad->SetGridy(1) ;
+     chi2 = addChi2FromObs( hfitqual_data_ldp_2b, hfitqual_model_ldp_2b ) ;
+     globalChi2 += chi2 ;
+     obsChi2 += chi2 ;
+
+     cfitqual->cd(9);
+     hfitqual_data_ldp_3b->Draw("histpe") ;
+     hfitqual_fit_ldp_3b->Draw("same") ;
+     hfitqual_data_ldp_3b->Draw("same") ;
+     gPad->SetGridy(1) ;
+     chi2 = addChi2FromObs( hfitqual_data_ldp_3b, hfitqual_model_ldp_3b ) ;
+     globalChi2 += chi2 ;
+     obsChi2 += chi2 ;
+
+
+
+
+     cfitqual->cd(10) ;
+     hfitqual_data_zee_1b->Draw("histpe") ;
+     hfitqual_fit_zee_1b->Draw("same") ;
+     hfitqual_data_zee_1b->Draw("same") ;
+     gPad->SetGridy(1) ;
+     chi2 = addChi2FromObs( hfitqual_data_zee_1b, hfitqual_fit_zee_1b ) ;
+     globalChi2 += chi2 ;
+     obsChi2 += chi2 ;
+
+     cfitqual->cd(11) ;
+     hfitqual_data_zmm_1b->Draw("histpe") ;
+     hfitqual_fit_zmm_1b->Draw("same") ;
+     hfitqual_data_zmm_1b->Draw("same") ;
+     gPad->SetGridy(1) ;
+     chi2 = addChi2FromObs( hfitqual_data_zmm_1b, hfitqual_fit_zmm_1b ) ;
+     globalChi2 += chi2 ;
+     obsChi2 += chi2 ;
+
+
+     cfitqual->cd(12);
+     legend->Draw() ;
+
+     cfitqual->Update() ;
+
+
+
+     cfitqual->cd(12) ;
+     TText* chi2text = new TText() ;
+     chi2text->SetTextSize(0.055) ;
+     chi2text->SetTextAlign(32) ;
+     char chi2string[1000] ;
+
+     sprintf( chi2string, "Overall Chi2 = %6.2f", globalChi2 ) ;
+     chi2text->DrawTextNDC(0.55, 0.90, chi2string ) ;
+     sprintf( chi2string, "obs Chi2 = %6.2f", obsChi2 ) ;
+     chi2text->DrawTextNDC(0.55, 0.85, chi2string ) ;
+     sprintf( chi2string, "NP Chi2 = %6.2f", npChi2 ) ;
+     chi2text->DrawTextNDC(0.55, 0.80, chi2string ) ;
+
+     printf("\n\n Overall Chi2 = %6.2f\n\n", globalChi2 ) ;
+     printf("     Obs Chi2 = %6.2f\n", obsChi2 ) ;
+     printf("      NP Chi2 = %6.2f\n", npChi2 ) ;
+
+
+     TText* frtext = new TText() ;
+     frtext->SetTextSize(0.055) ;
+     frtext->SetTextAlign(32) ;
+     char frstring[1000] ;
+     if ( mu_susy_sig_val < 0. ) {
+        sprintf( frstring, "NSUSY 0lep : %6.1f +/- %5.1f", rrv_mu_susy_sig->getVal(), rrv_mu_susy_sig->getError() ) ;
+        printf( "\n\n NSUSY 0lep : %6.1f +/- %5.1f\n\n", rrv_mu_susy_sig->getVal(), rrv_mu_susy_sig->getError() ) ;
+     } else {
+        sprintf( frstring, "NSUSY 0lep : %6.1f (fixed)", rrv_mu_susy_sig->getVal() ) ;
+        printf( "\n\n NSUSY 0lep : %6.1f (fixed)\n\n", rrv_mu_susy_sig->getVal() ) ;
+     }
+     frtext->DrawTextNDC(0.55, 0.70, frstring ) ;
+
+
+
+
+     TH1F* hfit_results = new TH1F("hfit_results", "Fit results", 50, 0.5, 50.5 ) ;
+
+     hfit_results -> SetBinContent( 1, rrv_mu_susy_sig->getVal() ) ;
+     hfit_results -> GetXaxis() -> SetBinLabel( 1, "Fit total 0lep SUSY events") ;
+
+     if ( mu_susy_sig_val < 0. ) {
+        hfit_results -> SetBinContent( 2, rrv_mu_susy_sig->getError() ) ;
+     } else {
+        hfit_results -> SetBinContent( 2, 0. ) ;
+     }
+     hfit_results -> GetXaxis() -> SetBinLabel( 2, "Fit total 0lep SUSY events error") ;
 
 
 
@@ -1586,12 +1868,92 @@ void saveHist(const char* filename, const char* pat)
 //==========================================================================================
 
 
+  bool getBetaModeRMS( const char* parName, RooWorkspace* ws, double &mode, double &rms, double &alpha, double &beta ) {
+
+     mode = 1.0 ;
+     rms = 0.0 ;
+
+     char varname[1000] ;
+
+     sprintf( varname, "passObs_%s", parName ) ;
+     RooAbsReal* passObs = (RooAbsReal*) ws->obj( varname ) ;
+     if ( passObs == 0x0 ) {
+        printf("\n\n *** getNPModeRMS : can't find pass obs for %s\n\n", parName ) ;
+        return false ;
+     }
+     alpha = passObs->getVal() + 1. ;
+
+     sprintf( varname, "failObs_%s", parName ) ;
+     RooAbsReal* failObs = (RooAbsReal*) ws->obj( varname ) ;
+     if ( failObs == 0x0 ) {
+        printf("\n\n *** getNPModeRMS : can't find fail obs for %s\n\n", parName ) ;
+        return false ;
+     }
+     beta = failObs->getVal() + 1. ;
+
+     mode = (alpha - 1.)/(alpha+beta -2.) ;
+
+     rms = sqrt( alpha * beta / ( pow(alpha + beta,2) * (alpha + beta + 1) ) ) ;
+
+     return true ;
+
+  } // getNPModeRMS.
 
 
+//==========================================================================================
 
 
+  double addChi2FromPullHist( TH1F* hp, double x, double y, double size ) {
+
+     char   chi2string[100] ;
+     double chi2val(0.) ;
+
+     TText* chi2text = new TText() ;
+     chi2text -> SetTextSize( size ) ;
+
+     for ( int bi=1; bi<=hp->GetNbinsX(); bi++ ) {
+        double chi = hp -> GetBinContent( bi ) ;
+        chi2val += chi*chi ;
+     } // bi.
+
+     sprintf( chi2string, "Chi2 = %6.2f", chi2val ) ;
+     chi2text->DrawTextNDC( x, y, chi2string ) ;
+
+     return chi2val ;
+
+  } // addChi2FromPullHist
 
 
+//==========================================================================================
+
+
+  double addChi2FromObs( TH1F* obshist, TH1F* modelhist, double x, double y, double size ) {
+
+     char   chi2string[100] ;
+     double chi2val(0.) ;
+
+     TText* chi2text = new TText() ;
+     chi2text -> SetTextSize( size ) ;
+
+     for ( int bi=1; bi<=obshist->GetNbinsX(); bi++ ) {
+        double obs = obshist -> GetBinContent( bi ) ;
+        double model = modelhist -> GetBinContent( bi ) ;
+        if ( obs > 0 ) {
+           double chi = (obs-model)/sqrt(obs) ;
+           chi2val += chi*chi ;
+           printf(" %s : obs=%9.1f, model=%9.1f, chi2=%6.2f\n", obshist->GetXaxis()->GetBinLabel( bi ), obs, model, chi*chi ) ;
+        }
+     } // bi.
+
+     sprintf( chi2string, "Chi2 = %6.2f", chi2val ) ;
+     chi2text->DrawTextNDC( x, y, chi2string ) ;
+
+     return chi2val ;
+
+  } // addChi2FromPullHist
+
+
+//==========================================================================================
 
 
 
