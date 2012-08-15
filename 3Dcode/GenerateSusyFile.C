@@ -30,13 +30,12 @@ void GenerateSusyFile() {
 // so gluino mass = 75+nbin*25; or nbin = (gluinomass-75)/25.
 
   TChain chainT1tttt("tree");
-  chainT1tttt.Add("files5fb_veryLowHT/T1tttt.root");
+  chainT1tttt.Add("files5fb_MT/T1tttt.root");
 
   gROOT->Reset();
 
   const int nBinsBjets = 3 ;   // this must always be 3
   const int nJetsCut = 3 ;     // #jets >= nJetsCut
-
 
   //-- met2-ht1-v1
 //const int nBinsMET   = 2 ;
@@ -251,8 +250,9 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 
   TH1F* ht = new TH1F("ht","ht",10,0,10000);
   TString cutsSig = "minDelPhiN>4&&nMu==0&&nEl==0&&";
-  TString cutsSL = "minDelPhiN>4&&(nMu==1||nEl==1)&&";
+  TString cutsSL =  "TypeI_MT<100&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nEl==1&&nMu==0) )&&";
   TString cutsLDP = "minDelPhiN<4&&nMu==0&&nEl==0&&";
+
 
   TH2F* h_susy_sig[10] ;
   TH2F* h_susy_sl[10] ;

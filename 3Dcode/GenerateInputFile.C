@@ -24,9 +24,9 @@
 void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0lep=-1. ) {
 
   TChain* dyTree = new TChain("treeZ") ;
-  int nAdded = dyTree->Add("files5fb_veryLowHT/DY.root") ;
+  int nAdded = dyTree->Add("files5fb_MT/DY.root") ;
   if ( nAdded <= 0 ) {
-     printf("\n\n\n *** No treeZ in files5fb_veryLowHT/DY.root\n\n\n") ;
+     printf("\n\n\n *** No treeZ in files5fb_MT/DY.root\n\n\n") ;
      return ;
   }
 
@@ -36,9 +36,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   sprintf( susycutstring, "&&mgluino==%.0f&&mlsp==%.0f", mgl, mlsp ) ;
   TString susycut( susycutstring ) ;
   if ( mgl>0. && mlsp>0. ) {
-     nAdded = chainT1bbbb.Add("files5fb_veryLowHT/T1bbbb.root") ;
+     nAdded = chainT1bbbb.Add("files5fb_MT/T1bbbb.root") ;
      if ( nAdded <= 0 ) {
-        printf("\n\n\n *** No tree in files5fb_veryLowHT/T1bbbb.root\n\n\n") ;
+        printf("\n\n\n *** No tree in files5fb_MT/T1bbbb.root\n\n\n") ;
         return ;
      }
      TFile f("referenceXSecs.root") ;
@@ -59,46 +59,46 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
   TChain chainQCD("tree") ;
    //--- these have high weight
-//chainQCD.Add("files5fb_veryLowHT/QCD-50to80.root");
-//chainQCD.Add("files5fb_veryLowHT/QCD-80to120.root");
-//chainQCD.Add("files5fb_veryLowHT/QCD-120to170.root");
-//chainQCD.Add("files5fb_veryLowHT/QCD-170to300.root");
+//chainQCD.Add("files5fb_MT/QCD-50to80.root");
+//chainQCD.Add("files5fb_MT/QCD-80to120.root");
+//chainQCD.Add("files5fb_MT/QCD-120to170.root");
+//chainQCD.Add("files5fb_MT/QCD-170to300.root");
    //--- below here, these have weight less than one.
-  chainQCD.Add("files5fb_veryLowHT/QCD-300to470.root");
-  chainQCD.Add("files5fb_veryLowHT/QCD-470to600.root");
-  chainQCD.Add("files5fb_veryLowHT/QCD-600to800.root");
-  chainQCD.Add("files5fb_veryLowHT/QCD-800to1000.root");
-  chainQCD.Add("files5fb_veryLowHT/QCD-1000to1400.root");
-  chainQCD.Add("files5fb_veryLowHT/QCD-1400to1800.root");
-  chainQCD.Add("files5fb_veryLowHT/QCD-1800.root");
+  chainQCD.Add("files5fb_MT/QCD-300to470.root");
+  chainQCD.Add("files5fb_MT/QCD-470to600.root");
+  chainQCD.Add("files5fb_MT/QCD-600to800.root");
+  chainQCD.Add("files5fb_MT/QCD-800to1000.root");
+  chainQCD.Add("files5fb_MT/QCD-1000to1400.root");
+  chainQCD.Add("files5fb_MT/QCD-1400to1800.root");
+  chainQCD.Add("files5fb_MT/QCD-1800.root");
 
   TChain chainTT("tree") ;
-  chainTT.Add("files5fb_veryLowHT/TT.root") ;
+  chainTT.Add("files5fb_MT/TT.root") ;
 
   TChain chainZnn("tree") ;
-  chainZnn.Add("files5fb_veryLowHT/Zinv.root") ;
+  chainZnn.Add("files5fb_MT/Zinv.root") ;
 
   TChain chainWJets("tree") ;
-  chainWJets.Add("files5fb_veryLowHT/WJets-300.root") ;
+  chainWJets.Add("files5fb_MT/WJets-300.root") ;
 
   TChain chainAll("tree");
-//chainAll.Add("files5fb_veryLowHT/QCD-50to80.root");
-//chainAll.Add("files5fb_veryLowHT/QCD-80to120.root");
-//chainAll.Add("files5fb_veryLowHT/QCD-120to170.root");
-//chainAll.Add("files5fb_veryLowHT/QCD-170to300.root");
-  chainAll.Add("files5fb_veryLowHT/QCD-300to470.root");
-  chainAll.Add("files5fb_veryLowHT/QCD-470to600.root");
-  chainAll.Add("files5fb_veryLowHT/QCD-600to800.root");
-  chainAll.Add("files5fb_veryLowHT/QCD-800to1000.root");
-  chainAll.Add("files5fb_veryLowHT/QCD-1000to1400.root");
-  chainAll.Add("files5fb_veryLowHT/QCD-1400to1800.root");
-  chainAll.Add("files5fb_veryLowHT/QCD-1800.root");
-  chainAll.Add("files5fb_veryLowHT/TT.root");
-  chainAll.Add("files5fb_veryLowHT/Zinv.root");
+//chainAll.Add("files5fb_MT/QCD-50to80.root");
+//chainAll.Add("files5fb_MT/QCD-80to120.root");
+//chainAll.Add("files5fb_MT/QCD-120to170.root");
+//chainAll.Add("files5fb_MT/QCD-170to300.root");
+  chainAll.Add("files5fb_MT/QCD-300to470.root");
+  chainAll.Add("files5fb_MT/QCD-470to600.root");
+  chainAll.Add("files5fb_MT/QCD-600to800.root");
+  chainAll.Add("files5fb_MT/QCD-800to1000.root");
+  chainAll.Add("files5fb_MT/QCD-1000to1400.root");
+  chainAll.Add("files5fb_MT/QCD-1400to1800.root");
+  chainAll.Add("files5fb_MT/QCD-1800.root");
+  chainAll.Add("files5fb_MT/TT.root");
+  chainAll.Add("files5fb_MT/Zinv.root");
 
   TChain chainTZ("tree");
-  chainTZ.Add("files5fb_veryLowHT/TT.root");
-  chainTZ.Add("files5fb_veryLowHT/Zinv.root");
+  chainTZ.Add("files5fb_MT/TT.root");
+  chainTZ.Add("files5fb_MT/Zinv.root");
 
   gROOT->Reset();
 
@@ -385,7 +385,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
    char selcuts[3][10000] = {
         "minDelPhiN>4&&nMu==0&&nEl==0&&",
-        "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&",
+        "TypeI_MT<100&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&",
         "minDelPhiN<4&&nMu==0&&nEl==0&&" } ;
 
 
@@ -503,11 +503,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
         char allsusycuts[10000] ;
 
         if ( k < (nBinsBjets-1) ) {
-           sprintf( allcuts, "%snB==%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt ) ;
-           sprintf( allsusycuts, "%snB==%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)%s", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, susycut.Data() ) ;
+	  sprintf( allcuts, "%snB==%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt ) ;
+	  sprintf( allsusycuts, "%snB==%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)%s", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, susycut.Data() ) ;
         } else {
-           sprintf( allcuts, "%snB>=%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt ) ;
-           sprintf( allsusycuts, "%snB>=%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)%s", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, susycut.Data() ) ;
+	  sprintf( allcuts, "%snB>=%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt ) ;
+	  sprintf( allsusycuts, "%snB>=%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)%s", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, susycut.Data() ) ;
         }
 
 
