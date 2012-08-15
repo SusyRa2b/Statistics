@@ -385,7 +385,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
    char selcuts[3][10000] = {
         "minDelPhiN>4&&nMu==0&&nEl==0&&",
-        "TypeI_MT<100&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&",
+        "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&",
         "minDelPhiN<4&&nMu==0&&nEl==0&&" } ;
 
 

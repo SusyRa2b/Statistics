@@ -250,7 +250,7 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 
   TH1F* ht = new TH1F("ht","ht",10,0,10000);
   TString cutsSig = "minDelPhiN>4&&nMu==0&&nEl==0&&";
-  TString cutsSL =  "TypeI_MT<100&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nEl==1&&nMu==0) )&&";
+  TString cutsSL =  "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nEl==1&&nMu==0) )&&";
   TString cutsLDP = "minDelPhiN<4&&nMu==0&&nEl==0&&";
 
 
