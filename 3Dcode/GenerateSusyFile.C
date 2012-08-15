@@ -9,7 +9,7 @@
 #include "TString.h"
 #include "TROOT.h"
 
-void GenerateSusyFile() {
+void GenerateSusyFile( double flatDummyErr = 10. ) {  //-- flat error in %.  If negative, use MC stat err.
 
 //gluino cross sections in pb.
 
@@ -29,8 +29,8 @@ void GenerateSusyFile() {
 // bin 1 = gluino mass = 100 GeV, 2 = 125, 3 = 150, 4 = 175, ...
 // so gluino mass = 75+nbin*25; or nbin = (gluinomass-75)/25.
 
-  TChain chainT1tttt("tree");
-  chainT1tttt.Add("files5fb_MT/T1tttt.root");
+  TChain chainT1bbbb("tree");
+  chainT1bbbb.Add("files5fb_veryLowHT/T1bbbb.root");
 
   gROOT->Reset();
 
@@ -232,23 +232,22 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 
 
   // dummy masses
-  int minGlMass = 950 ;
-  int maxGlMass = 960 ;
+  int minGlMass = 800 ;
+  int maxGlMass = 810 ;
 
 
 //double dummyYield = 9.9 ;
   double dummyCorr = 1. ;
-  double dummyErr = 10. ; // error is in % 
   long dummyEvts = 10000 ;
 
   ofstream inFile;
   char outfile[10000] ;
-  sprintf( outfile, "datfiles/T1tttt-met%d-ht%d-v%d.dat", nBinsMET, nBinsHT, version ) ;
+  sprintf( outfile, "datfiles/T1bbbb-met%d-ht%d-v%d.dat", nBinsMET, nBinsHT, version ) ;
   inFile.open( outfile );
 
   // loop over gluino masses
 
-  TH1F* ht = new TH1F("ht","ht",10,0,10000);
+  // TH1F* ht = new TH1F("ht","ht",10,0,10000);
   TString cutsSig = "minDelPhiN>4&&nMu==0&&nEl==0&&";
   TString cutsSL =  "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nEl==1&&nMu==0) )&&";
   TString cutsLDP = "minDelPhiN<4&&nMu==0&&nEl==0&&";
@@ -286,7 +285,7 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
     xsec = gluinoxsec->GetBinContent( theBin ) ;				      
 
     ////// for ( int mLsp = 50 ; mLsp < ( mGl - 25 ) ; mLsp = mLsp + 25 ) {
-    for ( int mLsp = 550 ; mLsp < 560 ; mLsp = mLsp + 25 ) {
+    for ( int mLsp = 500 ; mLsp < 510 ; mLsp = mLsp + 25 ) {
 
       inFile << mGl << " " << mLsp << " " << dummyEvts << " " ;
       printf(" mGl=%4d, mLsp=%4d\n", mGl, mLsp ) ; cout << flush ;
@@ -314,21 +313,40 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
          char hname[1000] ;
 
          sprintf( hname, "h_susy_sig_%db", k+1 ) ;
-         chainT1tttt.Project( hname,"HT:MET",allSigCuts);
+         chainT1bbbb.Project( hname,"HT:MET",allSigCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  SIG selection %9.1f events.\n", mGl, mLsp, k+1, h_susy_sig[k]->Integral() ) ; cout << flush ;
 
          sprintf( hname, "h_susy_sl_%db", k+1 ) ;
-         chainT1tttt.Project( hname,"HT:MET",allSLCuts);
+         chainT1bbbb.Project( hname,"HT:MET",allSLCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  SL  selection %9.1f events.\n", mGl, mLsp, k+1, h_susy_sl[k]->Integral() ) ; cout << flush ;
 
          sprintf( hname, "h_susy_ldp_%db", k+1 ) ;
-         chainT1tttt.Project( hname,"HT:MET",allLDPCuts);
+         chainT1bbbb.Project( hname,"HT:MET",allLDPCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  LDP selection %9.1f events.\n", mGl, mLsp, k+1, h_susy_ldp[k]->Integral() ) ; cout << flush ;
 
       } // k (nBjets)
       printf("\n\n") ;
 
+      printf("----------------\n") ;
+      for (int i = 0 ; i < nBinsMET ; i++) {
+        for (int j = 0 ; j < nBinsHT ; j++) {
+          for (int k = 0 ; k < nBinsBjets ; k++) {
+
+             printf ( " Raw MC counts: mGl=%d, mLsp=%d: MET,HT (%d,%d) nb=%d   SIG = %9.1f, SL=%9.1f, LDP=%9.1f\n",
+                 mGl, mLsp, i+1, j+1, k+1,
+                 h_susy_sig[k] -> GetBinContent( i+1, j+1 ),
+                 h_susy_sl[k]  -> GetBinContent( i+1, j+1 ),
+                 h_susy_ldp[k] -> GetBinContent( i+1, j+1 )  ) ;
+
+          } // k
+          printf("----------------\n") ;
+        } // j
+      } // i
+      printf("\n\n") ;
+
+
       float totalSUSYyield = 0;
+      printf("----------------\n") ;
       for (int i = 0 ; i < nBinsMET ; i++) {
         for (int j = 0 ; j < nBinsHT ; j++) {
           for (int k = 0 ; k < nBinsBjets ; k++) {
@@ -340,18 +358,21 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
              inFile << 0.5*xsec*(h_susy_sl[k]  -> GetBinContent( i+1, j+1 )) << " " ;
              inFile << 0.5*xsec*(h_susy_ldp[k] -> GetBinContent( i+1, j+1 )) << " " ;
 
-             printf ( " mGl=%d, mLsp=%d: MET,HT (%d,%d) SIG = %9.1f, SL=%9.1f, LDP=%9.1f\n",
-                 mGl, mLsp, i+1, j+1, 
-                 h_susy_sig[k] -> GetBinContent( i+1, j+1 ),
-                 h_susy_sl[k]  -> GetBinContent( i+1, j+1 ),
-                 h_susy_ldp[k] -> GetBinContent( i+1, j+1 )  ) ;
              totalSUSYyield += (h_susy_sig[k] -> GetBinContent( i+1, j+1 )*0.5*xsec);
+
+             printf ( " Xsec weighted events: mGl=%d, mLsp=%d: MET,HT (%d,%d) nb=%d   SIG = %9.1f, SL=%9.1f, LDP=%9.1f\n",
+                 mGl, mLsp, i+1, j+1, k+1,
+                 0.5*xsec*(h_susy_sig[k] -> GetBinContent( i+1, j+1 )),
+                 0.5*xsec*(h_susy_sl[k]  -> GetBinContent( i+1, j+1 )),
+                 0.5*xsec*(h_susy_ldp[k] -> GetBinContent( i+1, j+1 ))  ) ;
+
           } // k
+          printf("----------------\n") ;
         } // j
       } // i
       printf("Total SUSY yield within current binning = %9.1f", totalSUSYyield);
       printf("\n\n") ;
-      
+
 
 
   //----------------------------------------------------------------------------
@@ -364,13 +385,39 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
         }
       }
 
+      printf("----------------\n") ;
       for (int i = 0 ; i < nBinsMET ; i++) {
         for (int j = 0 ; j < nBinsHT ; j++) {
           for (int k = 0 ; k < nBinsBjets ; k++) {
-            inFile << dummyErr << " " << dummyErr << " " << dummyErr << " " ;
+             if ( flatDummyErr >= 0 ) {
+
+                inFile << flatDummyErr << " " << flatDummyErr << " " << flatDummyErr << " " ;
+
+             } else {
+
+                //-- compute approximate stat err.
+                //-- This is 100* sig_eff / eff = 100 * [sqrt(sel)/N]/[sel/N] = 100/sqrt(sel).
+                double nsel_sig = h_susy_sig[k] -> GetBinContent( i+1, j+1 ) ;
+                double nsel_sl  = h_susy_sl[k]  -> GetBinContent( i+1, j+1 ) ;
+                double nsel_ldp = h_susy_ldp[k] -> GetBinContent( i+1, j+1 ) ;
+                double frerr_sig = 100 ;
+                double frerr_sl  = 100 ;
+                double frerr_ldp = 100 ;
+                if ( nsel_sig > 0. ) { frerr_sig = 100./sqrt(nsel_sig) ; }
+                if ( nsel_sl  > 0. ) { frerr_sl  = 100./sqrt(nsel_sl ) ; }
+                if ( nsel_ldp > 0. ) { frerr_ldp = 100./sqrt(nsel_ldp) ; }
+
+                inFile << frerr_sig << " " << frerr_sl << " " << frerr_ldp << " " ;
+
+                printf ( " MC sig_eff/eff (%%): mGl=%d, mLsp=%d: MET,HT (%d,%d) nb=%d   SIG = %9.1f, SL=%9.1f, LDP=%9.1f\n",
+                    mGl, mLsp, i+1, j+1, k+1,
+                    frerr_sig, frerr_sl, frerr_ldp ) ;
+             }
           }
+          printf("----------------\n") ;
         }
       }
+      printf("\n\n") ;
 
       inFile << endl ;
 
