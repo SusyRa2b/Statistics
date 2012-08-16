@@ -1,11 +1,11 @@
 
   void toywrapper3b( const char* input_datfile = "datfiles/Input-met3-ht3-v1-wclosuresyst-wttwjcorr-wqcdcorr.dat",
-                const char* input_susyfile = "datfiles/T1bbbb-met3-ht3-v1-flat10perr.dat",
+                const char* input_susyfile = "datfiles/T1bbbb-met3-ht3-v1-zeroerr.dat",
                 double input_mgl=800, double input_mlsp=600.,
                 const char* input_deffdbtagfile = "datfiles/dummy_DeffDbtag-met3-ht3.dat",
-                double input_nSusy0lep = 37.,
-                const char* input_outputDir = "output-toymc3b-800-600-37evts-flat10perr_posdef",
-                int nToy = 400,
+                double input_nSusy0lep = 100.,
+                const char* input_outputDir = "output-toymc3b-800-600-100evts-zeroerr-uncorrelated",
+                int nToy = 10,
                 const char* input_mcvals_rootfile = "rootfiles/gi-plots-met3-ht3-v1.root",
                 bool useExpected0lep = true
       ) {

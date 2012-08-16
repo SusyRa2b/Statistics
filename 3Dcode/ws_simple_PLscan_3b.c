@@ -22,7 +22,7 @@
 
 // simple minded PL scan (integrating SUSY signal over all the bins)
 
-void ws_simple_PLscan_3b( TString wsfile = "ws.root", double scanHigh = -1., double scanLow = 0. ) {
+void ws_simple_PLscan_3b( TString wsfile = "ws.root", double scanHigh = -1., double scanLow = 0., int nScanPoints=20 ) {
 
 
     TFile* wstf = new TFile( wsfile ) ;
@@ -145,10 +145,9 @@ void ws_simple_PLscan_3b( TString wsfile = "ws.root", double scanHigh = -1., dou
 
       printf("\n\n ========== Doing the scan ==================== \n\n") ;
 
-      int nScanPoints(20) ;
 
-      double poiVals[20] ;
-      double testStatVals[20] ;
+      double poiVals[2000] ;
+      double testStatVals[2000] ;
 
       for ( int spi=0; spi<nScanPoints; spi++ ) {
 
@@ -170,6 +169,7 @@ void ws_simple_PLscan_3b( TString wsfile = "ws.root", double scanHigh = -1., dou
 
 
     TGraph *ScanPlot = new TGraph( nScanPoints, poiVals, testStatVals ) ;
+    ScanPlot -> SetName("susy_0lep_PL_scan") ;
 
     //--- Use interpolation to find +/- 1 sigma and UL points.
 
@@ -258,14 +258,20 @@ void ws_simple_PLscan_3b( TString wsfile = "ws.root", double scanHigh = -1., dou
     TString savestr( wsfile ) ;
     savestr.ReplaceAll(".root","") ;
 
+    char savenamebase[1000] ;
     char savename[1000] ;
 
 
-    sprintf( savename, "%s-susy-PL-scan.pdf", savestr.Data() ) ;
+    if ( nScanPoints != 20 ) {
+       sprintf( savenamebase, "%s-susy-PL-scan-%dpoints", savestr.Data(), nScanPoints ) ;
+    } else {
+       sprintf( savenamebase, "%s-susy-PL-scan", savestr.Data() ) ;
+    }
+    sprintf( savename, "%s.pdf", savenamebase ) ;
     printf(" Saving as %s\n", savename ) ;
     c0->SaveAs( savename );
 
-    sprintf( savename, "%s-susy-PL-scan.gif", savestr.Data() ) ;
+    sprintf( savename, "%s.gif", savenamebase ) ;
     printf(" Saving as %s\n", savename ) ;
     c0->SaveAs( savename );
 
@@ -279,6 +285,12 @@ void ws_simple_PLscan_3b( TString wsfile = "ws.root", double scanHigh = -1., dou
 
     printf("\n\n  Best fit value of %s : %7.1f +/- %5.1f (+%5.1f, %5.1f)\n\n",
        parName.Data(), susy_poi_atMinNll, susy_poi_err, susy_poi_plusErr, susy_poi_minusErr ) ;
+
+
+    sprintf( savename, "%s.root", savenamebase ) ;
+    TFile* f = new TFile( savename,"recreate") ;
+    ScanPlot->Write() ;
+    f->Close() ;
 
 
     return ;

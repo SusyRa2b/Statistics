@@ -445,6 +445,16 @@
      TH1F* hnp_znn = (TH1F*) gDirectory->FindObject("hnp_znn") ;
 
 
+     hnp_eff_sf_1b_val->SetFillColor(kOrange+1) ;
+     hnp_eff_sf_2b_val->SetFillColor(kOrange+1) ;
+     hnp_eff_sf_3b_val->SetFillColor(kOrange+1) ;
+     hnp_btageff_sf_1b_val->SetFillColor(kOrange+1) ;
+     hnp_btageff_sf_2b_val->SetFillColor(kOrange+1) ;
+     hnp_btageff_sf_3b_val->SetFillColor(kOrange+1) ;
+     hnp_eff_btageff_sf_prod_1b_val->SetFillColor(kOrange+1) ;
+     hnp_eff_btageff_sf_prod_2b_val->SetFillColor(kOrange+1) ;
+     hnp_eff_btageff_sf_prod_3b_val->SetFillColor(kOrange+1) ;
+
 
      TCanvas* cnp2 = (TCanvas*) gDirectory->FindObject("cnp2") ;
      if ( cnp2 == 0x0 ) {
@@ -452,17 +462,17 @@
      }
      cnp2->Clear() ;
 
-     hnp_eff_sf_1b_val->SetMinimum(0.0) ;
-     hnp_eff_sf_2b_val->SetMinimum(0.0) ;
-     hnp_eff_sf_3b_val->SetMinimum(0.0) ;
+     hnp_eff_sf_1b_val->SetMinimum(-0.2) ;
+     hnp_eff_sf_2b_val->SetMinimum(-0.2) ;
+     hnp_eff_sf_3b_val->SetMinimum(-0.2) ;
 
-     hnp_btageff_sf_1b_val->SetMinimum(0.0) ;
-     hnp_btageff_sf_2b_val->SetMinimum(0.0) ;
-     hnp_btageff_sf_3b_val->SetMinimum(0.0) ;
+     hnp_btageff_sf_1b_val->SetMinimum(-0.2) ;
+     hnp_btageff_sf_2b_val->SetMinimum(-0.2) ;
+     hnp_btageff_sf_3b_val->SetMinimum(-0.2) ;
 
-     hnp_eff_btageff_sf_prod_1b_val->SetMinimum(0.0) ;
-     hnp_eff_btageff_sf_prod_2b_val->SetMinimum(0.0) ;
-     hnp_eff_btageff_sf_prod_3b_val->SetMinimum(0.0) ;
+     hnp_eff_btageff_sf_prod_1b_val->SetMinimum(-0.2) ;
+     hnp_eff_btageff_sf_prod_2b_val->SetMinimum(-0.2) ;
+     hnp_eff_btageff_sf_prod_3b_val->SetMinimum(-0.2) ;
 
      hnp_eff_sf_1b_val->SetMaximum(2.0) ;
      hnp_eff_sf_2b_val->SetMaximum(2.0) ;

@@ -1198,15 +1198,18 @@
 
                sprintf( NP_name, "eff_sf_M%d_H%d_%db", i+1, j+1, k+1 ) ;
                ///// rar_eff_sf[i][j][k] = makeCorrelatedBetaPrimeConstraint( NP_name, rv_mean_eff_sf[i][j][k]->getVal(), rv_width_eff_sf[i][j][k]->getVal(), "eff_sf" ) ;
-               rar_eff_sf[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, rv_mean_eff_sf[i][j][k]->getVal(), rv_width_eff_sf[i][j][k]->getVal(), effbpname ) ;
+               ///// rar_eff_sf[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, rv_mean_eff_sf[i][j][k]->getVal(), rv_width_eff_sf[i][j][k]->getVal(), effbpname ) ;
+               rar_eff_sf[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf[i][j][k]->getVal(), rv_width_eff_sf[i][j][k]->getVal() ) ;
 
                sprintf( NP_name, "eff_sf_sl_M%d_H%d_%db", i+1, j+1, k+1 ) ;
                ///// rar_eff_sf_sl[i][j][k] = makeCorrelatedBetaPrimeConstraint( NP_name, rv_mean_eff_sf_sl[i][j][k]->getVal(), rv_width_eff_sf_sl[i][j][k]->getVal(), "eff_sf" ) ;
-               rar_eff_sf_sl[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, rv_mean_eff_sf_sl[i][j][k]->getVal(), rv_width_eff_sf_sl[i][j][k]->getVal(), effbpname ) ;
+               ///// rar_eff_sf_sl[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, rv_mean_eff_sf_sl[i][j][k]->getVal(), rv_width_eff_sf_sl[i][j][k]->getVal(), effbpname ) ;
+               rar_eff_sf_sl[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf_sl[i][j][k]->getVal(), rv_width_eff_sf_sl[i][j][k]->getVal() ) ;
 
                sprintf( NP_name, "eff_sf_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
                ///// rar_eff_sf_ldp[i][j][k] = makeCorrelatedBetaPrimeConstraint( NP_name, rv_mean_eff_sf_ldp[i][j][k]->getVal(), rv_width_eff_sf_ldp[i][j][k]->getVal(), "eff_sf" ) ;
-               rar_eff_sf_ldp[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, rv_mean_eff_sf_ldp[i][j][k]->getVal(), rv_width_eff_sf_ldp[i][j][k]->getVal(), effbpname ) ;
+               ///// rar_eff_sf_ldp[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, rv_mean_eff_sf_ldp[i][j][k]->getVal(), rv_width_eff_sf_ldp[i][j][k]->getVal(), effbpname ) ;
+               rar_eff_sf_ldp[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf_ldp[i][j][k]->getVal(), rv_width_eff_sf_ldp[i][j][k]->getVal() ) ;
 
             } // k
          } // j

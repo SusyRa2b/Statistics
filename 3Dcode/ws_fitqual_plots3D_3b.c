@@ -1117,11 +1117,13 @@
 
             sprintf( parName, "eff_sf" ) ;
             np = (RooAbsReal*) ws->obj( parName ) ;
+            double global_eff_sf(0.) ;
             if ( np == 0x0 ) {
                printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-               return ;
+               /// return ;
+            } else {
+               global_eff_sf = np -> getVal() ;
             }
-            double global_eff_sf = np -> getVal() ;
 
             sprintf( parName, "btageff_sf" ) ;
             np = (RooAbsReal*) ws->obj( parName ) ;
