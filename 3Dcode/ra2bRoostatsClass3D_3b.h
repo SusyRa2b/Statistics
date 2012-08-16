@@ -44,7 +44,7 @@
        RooAbsReal* makeCorrelatedBetaConstraint( const char* NP_name, double NP_val, double NP_err, const char* NP_base_name, bool changeSign=false ) ;
 
        RooAbsReal* makeGaussianConstraint( const char* NP_name, double NP_val, double NP_err, bool allowNegative = false ) ;
-       RooAbsReal* makeCorrelatedGaussianConstraint( const char* NP_name, double NP_val, double NP_err, const char* NP_base_name, bool changeSign=false ) ;
+       RooAbsReal* makeCorrelatedGaussianConstraint( const char* NP_name, double NP_val, double NP_err, const char* NP_base_name, bool changeSign=false, bool allowNegative = false ) ;
 
        char initializeFile[10000] ;
 

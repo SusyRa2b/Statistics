@@ -285,7 +285,7 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
     xsec = gluinoxsec->GetBinContent( theBin ) ;				      
 
     ////// for ( int mLsp = 50 ; mLsp < ( mGl - 25 ) ; mLsp = mLsp + 25 ) {
-    for ( int mLsp = 500 ; mLsp < 510 ; mLsp = mLsp + 25 ) {
+    for ( int mLsp = 400 ; mLsp < 710 ; mLsp = mLsp + 100 ) {
 
       inFile << mGl << " " << mLsp << " " << dummyEvts << " " ;
       printf(" mGl=%4d, mLsp=%4d\n", mGl, mLsp ) ; cout << flush ;
@@ -332,7 +332,7 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
         for (int j = 0 ; j < nBinsHT ; j++) {
           for (int k = 0 ; k < nBinsBjets ; k++) {
 
-             printf ( " Raw MC counts: mGl=%d, mLsp=%d: MET,HT (%d,%d) nb=%d   SIG = %9.1f, SL=%9.1f, LDP=%9.1f\n",
+             printf ( " Raw MC counts: mGl=%d, mLsp=%d: MET,HT (%d,%d) nb=%d   SIG = %9.0f, SL=%9.0f, LDP=%9.0f\n",
                  mGl, mLsp, i+1, j+1, k+1,
                  h_susy_sig[k] -> GetBinContent( i+1, j+1 ),
                  h_susy_sl[k]  -> GetBinContent( i+1, j+1 ),
@@ -360,11 +360,21 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 
              totalSUSYyield += (h_susy_sig[k] -> GetBinContent( i+1, j+1 )*0.5*xsec);
 
-             printf ( " Xsec weighted events: mGl=%d, mLsp=%d: MET,HT (%d,%d) nb=%d   SIG = %9.1f, SL=%9.1f, LDP=%9.1f\n",
+                double nsel_sig = h_susy_sig[k] -> GetBinContent( i+1, j+1 ) ;
+                double nsel_sl  = h_susy_sl[k]  -> GetBinContent( i+1, j+1 ) ;
+                double nsel_ldp = h_susy_ldp[k] -> GetBinContent( i+1, j+1 ) ;
+                double nevt_err_sig = 1 ;
+                double nevt_err_sl  = 1 ;
+                double nevt_err_ldp = 1 ;
+                if ( nsel_sig > 0. ) { nevt_err_sig = 0.5*xsec*sqrt(nsel_sig) ; }
+                if ( nsel_sl  > 0. ) { nevt_err_sl  = 0.5*xsec*sqrt(nsel_sl ) ; }
+                if ( nsel_ldp > 0. ) { nevt_err_ldp = 0.5*xsec*sqrt(nsel_ldp) ; }
+
+             printf ( " Xsec weighted events: mGl=%d, mLsp=%d: MET,HT (%d,%d) nb=%d   SIG = %6.1f +/- %4.1f,   SL=%6.1f +/- %4.1f,   LDP=%6.1f +/- %4.1f\n",
                  mGl, mLsp, i+1, j+1, k+1,
-                 0.5*xsec*(h_susy_sig[k] -> GetBinContent( i+1, j+1 )),
-                 0.5*xsec*(h_susy_sl[k]  -> GetBinContent( i+1, j+1 )),
-                 0.5*xsec*(h_susy_ldp[k] -> GetBinContent( i+1, j+1 ))  ) ;
+                 0.5*xsec*(h_susy_sig[k] -> GetBinContent( i+1, j+1 )), nevt_err_sig,
+                 0.5*xsec*(h_susy_sl[k]  -> GetBinContent( i+1, j+1 )), nevt_err_sl,
+                 0.5*xsec*(h_susy_ldp[k] -> GetBinContent( i+1, j+1 )), nevt_err_ldp  ) ;
 
           } // k
           printf("----------------\n") ;
@@ -409,7 +419,7 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 
                 inFile << frerr_sig << " " << frerr_sl << " " << frerr_ldp << " " ;
 
-                printf ( " MC sig_eff/eff (%%): mGl=%d, mLsp=%d: MET,HT (%d,%d) nb=%d   SIG = %9.1f, SL=%9.1f, LDP=%9.1f\n",
+                printf ( " MC sig_eff/eff (%%): mGl=%d, mLsp=%d: MET,HT (%d,%d) nb=%d   SIG = %5.1f,   SL=%5.1f,   LDP=%5.1f\n",
                     mGl, mLsp, i+1, j+1, k+1,
                     frerr_sig, frerr_sl, frerr_ldp ) ;
              }

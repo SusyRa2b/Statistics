@@ -452,8 +452,29 @@
      }
      cnp2->Clear() ;
 
+     hnp_eff_sf_1b_val->SetMinimum(0.0) ;
+     hnp_eff_sf_2b_val->SetMinimum(0.0) ;
+     hnp_eff_sf_3b_val->SetMinimum(0.0) ;
 
+     hnp_btageff_sf_1b_val->SetMinimum(0.0) ;
+     hnp_btageff_sf_2b_val->SetMinimum(0.0) ;
+     hnp_btageff_sf_3b_val->SetMinimum(0.0) ;
 
+     hnp_eff_btageff_sf_prod_1b_val->SetMinimum(0.0) ;
+     hnp_eff_btageff_sf_prod_2b_val->SetMinimum(0.0) ;
+     hnp_eff_btageff_sf_prod_3b_val->SetMinimum(0.0) ;
+
+     hnp_eff_sf_1b_val->SetMaximum(2.0) ;
+     hnp_eff_sf_2b_val->SetMaximum(2.0) ;
+     hnp_eff_sf_3b_val->SetMaximum(2.0) ;
+
+     hnp_btageff_sf_1b_val->SetMaximum(2.0) ;
+     hnp_btageff_sf_2b_val->SetMaximum(2.0) ;
+     hnp_btageff_sf_3b_val->SetMaximum(2.0) ;
+
+     hnp_eff_btageff_sf_prod_1b_val->SetMaximum(2.0) ;
+     hnp_eff_btageff_sf_prod_2b_val->SetMaximum(2.0) ;
+     hnp_eff_btageff_sf_prod_3b_val->SetMaximum(2.0) ;
 
         cnp2->Divide(3,4) ;
 

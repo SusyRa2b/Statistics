@@ -48,6 +48,7 @@
 #include "RooStats/HypoTestResult.h"
 
 #include "RooRatio.h"
+#include "RooPosDefCorrGauss.h"
 #include "betaPrimeConstraint.c"
 
   using namespace RooFit ;
@@ -2597,7 +2598,7 @@
 
 
     RooAbsReal* ra2bRoostatsClass3D_3b::makeCorrelatedGaussianConstraint(
-            const char* NP_name, double NP_val, double NP_err, const char* NP_base_name, bool changeSign ) {
+            const char* NP_name, double NP_val, double NP_err, const char* NP_base_name, bool changeSign, bool allowNegative ) {
 
        if ( NP_err <= 0. ) {
           printf("  makeCorrelatedGaussianConstraint: Uncertainty is zero.  Will return constant scale factor of %g for %s.  Input val = %g, err = %g.\n", NP_val, NP_name, NP_val, NP_err ) ;
@@ -2637,26 +2638,31 @@
        sprintf( vname, "sigma_%s", NP_name ) ;
        RooConstVar* g_sigma = new RooConstVar( vname, vname, NP_err ) ;
 
-       char formula[1000] ;
+       RooAbsReal* rar(0x0) ;
 
-       if ( !changeSign ) {
-          sprintf( formula, "@0+@1*@2" ) ;
+       if ( allowNegative ) {
+
+          char formula[1000] ;
+
+          if ( !changeSign ) {
+             sprintf( formula, "@0+@1*@2" ) ;
+          } else {
+             sprintf( formula, "@0-@1*@2" ) ;
+          }
+
+          rar = new RooFormulaVar( NP_name, formula, RooArgSet( *g_mean, *g_sigma, *rrv_np_base_par ) ) ;
+
+          printf(" makeCorrelatedGaussianConstraint : creating correlated gaussian NP with formula : %s,  %s, val = %g\n", formula, NP_name, rar->getVal() ) ;
+
        } else {
-          sprintf( formula, "@0-@1*@2" ) ;
+
+          rar = new RooPosDefCorrGauss( NP_name, NP_name, *g_mean, *g_sigma, *rrv_np_base_par, changeSign ) ;
+
+          printf(" makeCorrelatedGaussianConstraint : creating pos-def correlated gaussian NP  :  %s, val = %g\n", NP_name, rar->getVal() ) ;
+
        }
 
-       RooAbsReal* rar = new RooFormulaVar( NP_name, formula, RooArgSet( *g_mean, *g_sigma, *rrv_np_base_par ) ) ;
 
-  ///  if ( !changeSign ) {
-  ///     sprintf( formula, "%g+%g*@0", NP_val, NP_err ) ;
-  ///  } else {
-  ///     sprintf( formula, "%g-%g*@0", NP_val, NP_err ) ;
-  ///  }
-
-  ///  RooAbsReal* rar = new RooFormulaVar( NP_name, formula, RooArgSet( *rrv_np_base_par ) ) ;
-
-
-       printf(" makeCorrelatedGaussianConstraint : creating correlated gaussian NP with formula : %s,  %s, val = %g\n", formula, NP_name, rar->getVal() ) ;
 
 
        return rar ;
