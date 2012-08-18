@@ -32,7 +32,8 @@
                               bool logy=false,
                               bool doNorm=false,
                               double normmax=2.0,
-                              int metgroupzoom=1 ) {
+                              int metgroupzoom=1,
+                              double susyScaleFactor=1.0 ) {
 
 
      if ( doNorm ) { logy = false ; }
@@ -138,6 +139,16 @@
      if ( hmctruth_susy_0lep_1b == 0 ) { printf("\n\n*** hmctruth_susy_0lep_1b missing.\n\n") ; return ; }
      if ( hmctruth_susy_0lep_2b == 0 ) { printf("\n\n*** hmctruth_susy_0lep_2b missing.\n\n") ; return ; }
      if ( hmctruth_susy_0lep_3b == 0 ) { printf("\n\n*** hmctruth_susy_0lep_3b missing.\n\n") ; return ; }
+
+     hmctruth_susy_0lep_1b->Scale( susyScaleFactor ) ;
+     hmctruth_susy_0lep_2b->Scale( susyScaleFactor ) ;
+     hmctruth_susy_0lep_3b->Scale( susyScaleFactor ) ;
+     hmctruth_susy_1lep_1b->Scale( susyScaleFactor ) ;
+     hmctruth_susy_1lep_2b->Scale( susyScaleFactor ) ;
+     hmctruth_susy_1lep_3b->Scale( susyScaleFactor ) ;
+     hmctruth_susy_ldp_1b->Scale( susyScaleFactor ) ;
+     hmctruth_susy_ldp_2b->Scale( susyScaleFactor ) ;
+     hmctruth_susy_ldp_3b->Scale( susyScaleFactor ) ;
 
 
 

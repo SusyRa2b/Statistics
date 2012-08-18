@@ -974,9 +974,33 @@
         TH1F* hnp_ttwj_2b_nom  = new TH1F("hnp_ttwj_2b_nom" , "Nuisance parameters, ttwj, 2b, nominal", nbins, 0.5, nbins+0.5 ) ;
         TH1F* hnp_ttwj_3b_nom  = new TH1F("hnp_ttwj_3b_nom" , "Nuisance parameters, ttwj, 3b, nominal", nbins, 0.5, nbins+0.5 ) ;
 
+
+
         TH1F* hnp_eff_sf_1b_val  = new TH1F("hnp_eff_sf_1b_val" , "Nuisance parameters, eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
         TH1F* hnp_eff_sf_2b_val  = new TH1F("hnp_eff_sf_2b_val" , "Nuisance parameters, eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
         TH1F* hnp_eff_sf_3b_val  = new TH1F("hnp_eff_sf_3b_val" , "Nuisance parameters, eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+
+        TH1F* hnp_eff_sf_1b_pull  = new TH1F("hnp_eff_sf_1b_pull" , "Nuisance parameters, eff SF, 1b, pull", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_eff_sf_2b_pull  = new TH1F("hnp_eff_sf_2b_pull" , "Nuisance parameters, eff SF, 2b, pull", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_eff_sf_3b_pull  = new TH1F("hnp_eff_sf_3b_pull" , "Nuisance parameters, eff SF, 3b, pull", nbins, 0.5, nbins+0.5 ) ;
+
+        TH1F* hnp_eff_sf_sl_1b_val  = new TH1F("hnp_eff_sf_sl_1b_val" , "Nuisance parameters, eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_eff_sf_sl_2b_val  = new TH1F("hnp_eff_sf_sl_2b_val" , "Nuisance parameters, eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_eff_sf_sl_3b_val  = new TH1F("hnp_eff_sf_sl_3b_val" , "Nuisance parameters, eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+
+        TH1F* hnp_eff_sf_sl_1b_pull  = new TH1F("hnp_eff_sf_sl_1b_pull" , "Nuisance parameters, eff SF, 1b, pull", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_eff_sf_sl_2b_pull  = new TH1F("hnp_eff_sf_sl_2b_pull" , "Nuisance parameters, eff SF, 2b, pull", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_eff_sf_sl_3b_pull  = new TH1F("hnp_eff_sf_sl_3b_pull" , "Nuisance parameters, eff SF, 3b, pull", nbins, 0.5, nbins+0.5 ) ;
+
+        TH1F* hnp_eff_sf_ldp_1b_val  = new TH1F("hnp_eff_sf_ldp_1b_val" , "Nuisance parameters, eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_eff_sf_ldp_2b_val  = new TH1F("hnp_eff_sf_ldp_2b_val" , "Nuisance parameters, eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_eff_sf_ldp_3b_val  = new TH1F("hnp_eff_sf_ldp_3b_val" , "Nuisance parameters, eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+
+        TH1F* hnp_eff_sf_ldp_1b_pull  = new TH1F("hnp_eff_sf_ldp_1b_pull" , "Nuisance parameters, eff SF, 1b, pull", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_eff_sf_ldp_2b_pull  = new TH1F("hnp_eff_sf_ldp_2b_pull" , "Nuisance parameters, eff SF, 2b, pull", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_eff_sf_ldp_3b_pull  = new TH1F("hnp_eff_sf_ldp_3b_pull" , "Nuisance parameters, eff SF, 3b, pull", nbins, 0.5, nbins+0.5 ) ;
+
+
 
         TH1F* hnp_btageff_sf_1b_val  = new TH1F("hnp_btageff_sf_1b_val" , "Nuisance parameters, btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
         TH1F* hnp_btageff_sf_2b_val  = new TH1F("hnp_btageff_sf_2b_val" , "Nuisance parameters, btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
@@ -985,6 +1009,22 @@
         TH1F* hnp_eff_btageff_sf_prod_1b_val  = new TH1F("hnp_eff_btageff_sf_prod_1b_val" , "Nuisance parameters, eff SF * btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
         TH1F* hnp_eff_btageff_sf_prod_2b_val  = new TH1F("hnp_eff_btageff_sf_prod_2b_val" , "Nuisance parameters, eff SF * btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
         TH1F* hnp_eff_btageff_sf_prod_3b_val  = new TH1F("hnp_eff_btageff_sf_prod_3b_val" , "Nuisance parameters, eff SF * btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+
+        TH1F* hnp_btageff_sf_sl_1b_val  = new TH1F("hnp_btageff_sf_sl_1b_val" , "Nuisance parameters, btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_btageff_sf_sl_2b_val  = new TH1F("hnp_btageff_sf_sl_2b_val" , "Nuisance parameters, btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_btageff_sf_sl_3b_val  = new TH1F("hnp_btageff_sf_sl_3b_val" , "Nuisance parameters, btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+
+        TH1F* hnp_eff_btageff_sf_sl_prod_1b_val  = new TH1F("hnp_eff_btageff_sf_sl_prod_1b_val" , "Nuisance parameters, eff SF * btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_eff_btageff_sf_sl_prod_2b_val  = new TH1F("hnp_eff_btageff_sf_sl_prod_2b_val" , "Nuisance parameters, eff SF * btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_eff_btageff_sf_sl_prod_3b_val  = new TH1F("hnp_eff_btageff_sf_sl_prod_3b_val" , "Nuisance parameters, eff SF * btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+
+        TH1F* hnp_btageff_sf_ldp_1b_val  = new TH1F("hnp_btageff_sf_ldp_1b_val" , "Nuisance parameters, btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_btageff_sf_ldp_2b_val  = new TH1F("hnp_btageff_sf_ldp_2b_val" , "Nuisance parameters, btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_btageff_sf_ldp_3b_val  = new TH1F("hnp_btageff_sf_ldp_3b_val" , "Nuisance parameters, btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+
+        TH1F* hnp_eff_btageff_sf_ldp_prod_1b_val  = new TH1F("hnp_eff_btageff_sf_ldp_prod_1b_val" , "Nuisance parameters, eff SF * btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_eff_btageff_sf_ldp_prod_2b_val  = new TH1F("hnp_eff_btageff_sf_ldp_prod_2b_val" , "Nuisance parameters, eff SF * btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+        TH1F* hnp_eff_btageff_sf_ldp_prod_3b_val  = new TH1F("hnp_eff_btageff_sf_ldp_prod_3b_val" , "Nuisance parameters, eff SF * btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
 
         TH1F* hnp_prim_eff = new TH1F("hnp_prim_eff", "Nuisance parameters, Efficiency primary Gaussians, pull", 7, 0.5, 7.5 ) ;
 
@@ -1274,13 +1314,24 @@
 
 
 
+       //--- bin-by-bin efficiencies
 
         for ( int mbi=0 ; mbi < nBinsMET; mbi ++ ) {
            for ( int hbi=0 ; hbi < nBinsHT; hbi ++ ) {
               for ( int bbi=0 ; bbi < nBinsBtag; bbi ++ ) {
 
+                 char vname[1000] ;
                  char parName[1000] ;
                  RooAbsReal* np(0x0) ;
+                 RooAbsReal* np_mean(0x0) ;
+                 RooAbsReal* np_sigma(0x0) ;
+
+                 double val, mean, sigma ;
+
+
+
+
+                //-- eff_sf
 
                  sprintf( parName, "eff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  np = (RooAbsReal*) ws->obj( parName ) ;
@@ -1289,6 +1340,97 @@
                     return ;
                  }
                  double bin_eff_sf = np -> getVal() ;
+                 val = np->getVal() ;
+                 double bin_eff_sf_pull = 0. ;
+
+                 sprintf( vname, "mean_%s", parName ) ;
+                 np_mean = (RooAbsReal*) ws->obj( vname ) ;
+                 if ( np_mean == 0x0 ) {
+                    printf("\n\n *** missing nuisance parameter mean? %s\n\n", vname ) ;
+                 } else {
+                    mean = np_mean->getVal() ;
+
+                    sprintf( vname, "sigma_%s", parName ) ;
+                    np_sigma = (RooAbsReal*) ws->obj( vname ) ;
+                    if ( np_sigma == 0x0 ) {
+                       printf("\n\n *** missing nuisance parameter sigma? %s\n\n", vname ) ;
+                       return ;
+                    }
+                    sigma = np_sigma->getVal() ;
+
+                    bin_eff_sf_pull = (val-mean)/sigma ;
+                 }
+
+
+
+
+                //-- eff_sf_sl
+
+                 sprintf( parName, "eff_sf_sl_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                 np = (RooAbsReal*) ws->obj( parName ) ;
+                 if ( np == 0x0 ) {
+                    printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+                    return ;
+                 }
+                 double bin_eff_sf_sl = np -> getVal() ;
+                 val = np->getVal() ;
+                 double bin_eff_sf_sl_pull = 0. ;
+
+                 sprintf( vname, "mean_%s", parName ) ;
+                 np_mean = (RooAbsReal*) ws->obj( vname ) ;
+                 if ( np_mean == 0x0 ) {
+                    printf("\n\n *** missing nuisance parameter mean? %s\n\n", vname ) ;
+                 } else {
+                    mean = np_mean->getVal() ;
+
+                    sprintf( vname, "sigma_%s", parName ) ;
+                    np_sigma = (RooAbsReal*) ws->obj( vname ) ;
+                    if ( np_sigma == 0x0 ) {
+                       printf("\n\n *** missing nuisance parameter sigma? %s\n\n", vname ) ;
+                       return ;
+                    }
+                    sigma = np_sigma->getVal() ;
+
+                    bin_eff_sf_sl_pull = (val-mean)/sigma ;
+                 }
+
+
+
+
+                //-- eff_sf_ldp
+
+                 sprintf( parName, "eff_sf_ldp_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                 np = (RooAbsReal*) ws->obj( parName ) ;
+                 if ( np == 0x0 ) {
+                    printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+                    return ;
+                 }
+                 double bin_eff_sf_ldp = np -> getVal() ;
+                 val = np->getVal() ;
+                 double bin_eff_sf_ldp_pull = 0. ;
+
+                 sprintf( vname, "mean_%s", parName ) ;
+                 np_mean = (RooAbsReal*) ws->obj( vname ) ;
+                 if ( np_mean == 0x0 ) {
+                    printf("\n\n *** missing nuisance parameter mean? %s\n\n", vname ) ;
+                 } else {
+                    mean = np_mean->getVal() ;
+
+                    sprintf( vname, "sigma_%s", parName ) ;
+                    np_sigma = (RooAbsReal*) ws->obj( vname ) ;
+                    if ( np_sigma == 0x0 ) {
+                       printf("\n\n *** missing nuisance parameter sigma? %s\n\n", vname ) ;
+                       return ;
+                    }
+                    sigma = np_sigma->getVal() ;
+
+                    bin_eff_sf_ldp_pull = (val-mean)/sigma ;
+                 }
+
+
+
+
+
 
                  sprintf( parName, "btageff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  np = (RooAbsReal*) ws->obj( parName ) ;
@@ -1300,11 +1442,41 @@
 
                  double prod = bin_eff_sf * btageff_sf ;
 
+
+
+                 sprintf( parName, "btageff_sf_sl_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                 np = (RooAbsReal*) ws->obj( parName ) ;
+                 if ( np == 0x0 ) {
+                    printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+                    return ;
+                 }
+                 double btageff_sf_sl = np -> getVal() ;
+
+                 double prod_sl = bin_eff_sf_sl * btageff_sf_sl ;
+
+
+
+                 sprintf( parName, "btageff_sf_ldp_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                 np = (RooAbsReal*) ws->obj( parName ) ;
+                 if ( np == 0x0 ) {
+                    printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+                    return ;
+                 }
+                 double btageff_sf_ldp = np -> getVal() ;
+
+                 double prod_ldp = bin_eff_sf_ldp * btageff_sf_ldp ;
+
+
+
+
                  binIndex = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
 
                  if ( bbi == 0 ) { hnp_eff_sf_1b_val -> SetBinContent( binIndex, bin_eff_sf ) ; }
                  if ( bbi == 1 ) { hnp_eff_sf_2b_val -> SetBinContent( binIndex, bin_eff_sf ) ; }
                  if ( bbi == 2 ) { hnp_eff_sf_3b_val -> SetBinContent( binIndex, bin_eff_sf ) ; }
+                 if ( bbi == 0 ) { hnp_eff_sf_1b_pull -> SetBinContent( binIndex, bin_eff_sf_pull ) ; }
+                 if ( bbi == 1 ) { hnp_eff_sf_2b_pull -> SetBinContent( binIndex, bin_eff_sf_pull ) ; }
+                 if ( bbi == 2 ) { hnp_eff_sf_3b_pull -> SetBinContent( binIndex, bin_eff_sf_pull ) ; }
                  if ( bbi == 0 ) { hnp_btageff_sf_1b_val -> SetBinContent( binIndex, btageff_sf ) ; }
                  if ( bbi == 1 ) { hnp_btageff_sf_2b_val -> SetBinContent( binIndex, btageff_sf ) ; }
                  if ( bbi == 2 ) { hnp_btageff_sf_3b_val -> SetBinContent( binIndex, btageff_sf ) ; }
@@ -1312,19 +1484,76 @@
                  if ( bbi == 1 ) { hnp_eff_btageff_sf_prod_2b_val -> SetBinContent( binIndex, prod ) ; }
                  if ( bbi == 2 ) { hnp_eff_btageff_sf_prod_3b_val -> SetBinContent( binIndex, prod ) ; }
 
-                 printf(" m,h,b %d,%d,%d : eff_sf = %6.3f,  btageff_sf = %6.3f,  prod = %6.3f\n", mbi, hbi, bbi, bin_eff_sf, btageff_sf, prod ) ;
+                 if ( bbi == 0 ) { hnp_eff_sf_sl_1b_val -> SetBinContent( binIndex, bin_eff_sf_sl ) ; }
+                 if ( bbi == 1 ) { hnp_eff_sf_sl_2b_val -> SetBinContent( binIndex, bin_eff_sf_sl ) ; }
+                 if ( bbi == 2 ) { hnp_eff_sf_sl_3b_val -> SetBinContent( binIndex, bin_eff_sf_sl ) ; }
+                 if ( bbi == 0 ) { hnp_eff_sf_sl_1b_pull -> SetBinContent( binIndex, bin_eff_sf_sl_pull ) ; }
+                 if ( bbi == 1 ) { hnp_eff_sf_sl_2b_pull -> SetBinContent( binIndex, bin_eff_sf_sl_pull ) ; }
+                 if ( bbi == 2 ) { hnp_eff_sf_sl_3b_pull -> SetBinContent( binIndex, bin_eff_sf_sl_pull ) ; }
+                 if ( bbi == 0 ) { hnp_btageff_sf_sl_1b_val -> SetBinContent( binIndex, btageff_sf_sl ) ; }
+                 if ( bbi == 1 ) { hnp_btageff_sf_sl_2b_val -> SetBinContent( binIndex, btageff_sf_sl ) ; }
+                 if ( bbi == 2 ) { hnp_btageff_sf_sl_3b_val -> SetBinContent( binIndex, btageff_sf_sl ) ; }
+                 if ( bbi == 0 ) { hnp_eff_btageff_sf_sl_prod_1b_val -> SetBinContent( binIndex, prod_sl ) ; }
+                 if ( bbi == 1 ) { hnp_eff_btageff_sf_sl_prod_2b_val -> SetBinContent( binIndex, prod_sl ) ; }
+                 if ( bbi == 2 ) { hnp_eff_btageff_sf_sl_prod_3b_val -> SetBinContent( binIndex, prod_sl ) ; }
+
+                 if ( bbi == 0 ) { hnp_eff_sf_ldp_1b_val -> SetBinContent( binIndex, bin_eff_sf_ldp ) ; }
+                 if ( bbi == 1 ) { hnp_eff_sf_ldp_2b_val -> SetBinContent( binIndex, bin_eff_sf_ldp ) ; }
+                 if ( bbi == 2 ) { hnp_eff_sf_ldp_3b_val -> SetBinContent( binIndex, bin_eff_sf_ldp ) ; }
+                 if ( bbi == 0 ) { hnp_eff_sf_ldp_1b_pull -> SetBinContent( binIndex, bin_eff_sf_ldp_pull ) ; }
+                 if ( bbi == 1 ) { hnp_eff_sf_ldp_2b_pull -> SetBinContent( binIndex, bin_eff_sf_ldp_pull ) ; }
+                 if ( bbi == 2 ) { hnp_eff_sf_ldp_3b_pull -> SetBinContent( binIndex, bin_eff_sf_ldp_pull ) ; }
+                 if ( bbi == 0 ) { hnp_btageff_sf_ldp_1b_val -> SetBinContent( binIndex, btageff_sf_ldp ) ; }
+                 if ( bbi == 1 ) { hnp_btageff_sf_ldp_2b_val -> SetBinContent( binIndex, btageff_sf_ldp ) ; }
+                 if ( bbi == 2 ) { hnp_btageff_sf_ldp_3b_val -> SetBinContent( binIndex, btageff_sf_ldp ) ; }
+                 if ( bbi == 0 ) { hnp_eff_btageff_sf_ldp_prod_1b_val -> SetBinContent( binIndex, prod_ldp ) ; }
+                 if ( bbi == 1 ) { hnp_eff_btageff_sf_ldp_prod_2b_val -> SetBinContent( binIndex, prod_ldp ) ; }
+                 if ( bbi == 2 ) { hnp_eff_btageff_sf_ldp_prod_3b_val -> SetBinContent( binIndex, prod_ldp ) ; }
+
+                 printf(" m,h,b %d,%d,%d : eff_sf     = %6.3f,  btageff_sf     = %6.3f,  prod = %6.3f\n", mbi, hbi, bbi, bin_eff_sf, btageff_sf, prod ) ;
+                 printf(" m,h,b %d,%d,%d : eff_sf_sl  = %6.3f,  btageff_sf_sl  = %6.3f,  prod = %6.3f\n", mbi, hbi, bbi, bin_eff_sf_sl, btageff_sf_sl, prod_sl ) ;
+                 printf(" m,h,b %d,%d,%d : eff_sf_ldp = %6.3f,  btageff_sf_ldp = %6.3f,  prod = %6.3f\n", mbi, hbi, bbi, bin_eff_sf_ldp, btageff_sf_ldp, prod_ldp ) ;
 
                  char label[1000] ;
                  sprintf( label, "M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  if ( bbi==0 ) hnp_eff_sf_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_eff_sf_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_eff_sf_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==0 ) hnp_eff_sf_1b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==1 ) hnp_eff_sf_2b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==2 ) hnp_eff_sf_3b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==0 ) hnp_btageff_sf_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_btageff_sf_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_btageff_sf_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==0 ) hnp_eff_btageff_sf_prod_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_eff_btageff_sf_prod_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_eff_btageff_sf_prod_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+
+                 if ( bbi==0 ) hnp_eff_sf_sl_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==1 ) hnp_eff_sf_sl_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==2 ) hnp_eff_sf_sl_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==0 ) hnp_eff_sf_sl_1b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==1 ) hnp_eff_sf_sl_2b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==2 ) hnp_eff_sf_sl_3b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==0 ) hnp_btageff_sf_sl_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==1 ) hnp_btageff_sf_sl_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==2 ) hnp_btageff_sf_sl_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==0 ) hnp_eff_btageff_sf_sl_prod_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==1 ) hnp_eff_btageff_sf_sl_prod_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==2 ) hnp_eff_btageff_sf_sl_prod_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+
+                 if ( bbi==0 ) hnp_eff_sf_ldp_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==1 ) hnp_eff_sf_ldp_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==2 ) hnp_eff_sf_ldp_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==0 ) hnp_eff_sf_ldp_1b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==1 ) hnp_eff_sf_ldp_2b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==2 ) hnp_eff_sf_ldp_3b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==0 ) hnp_btageff_sf_ldp_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==1 ) hnp_btageff_sf_ldp_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==2 ) hnp_btageff_sf_ldp_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==0 ) hnp_eff_btageff_sf_ldp_prod_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==1 ) hnp_eff_btageff_sf_ldp_prod_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==2 ) hnp_eff_btageff_sf_ldp_prod_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
 
               }
            } // hbi
@@ -1336,6 +1565,12 @@
         hnp_eff_sf_2b_val->GetXaxis()->LabelsOption("v") ;
         hnp_eff_sf_3b_val->SetLabelSize(0.055,"x") ;
         hnp_eff_sf_3b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_1b_pull->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_1b_pull->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_2b_pull->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_2b_pull->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_3b_pull->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_3b_pull->GetXaxis()->LabelsOption("v") ;
         hnp_btageff_sf_1b_val->SetLabelSize(0.055,"x") ;
         hnp_btageff_sf_1b_val->GetXaxis()->LabelsOption("v") ;
         hnp_btageff_sf_2b_val->SetLabelSize(0.055,"x") ;
@@ -1349,6 +1584,94 @@
         hnp_eff_btageff_sf_prod_3b_val->SetLabelSize(0.055,"x") ;
         hnp_eff_btageff_sf_prod_3b_val->GetXaxis()->LabelsOption("v") ;
 
+        hnp_eff_sf_sl_1b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_sl_1b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_sl_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_sl_2b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_sl_3b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_sl_3b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_sl_1b_pull->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_sl_1b_pull->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_sl_2b_pull->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_sl_2b_pull->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_sl_3b_pull->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_sl_3b_pull->GetXaxis()->LabelsOption("v") ;
+        hnp_btageff_sf_sl_1b_val->SetLabelSize(0.055,"x") ;
+        hnp_btageff_sf_sl_1b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_btageff_sf_sl_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_btageff_sf_sl_2b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_btageff_sf_sl_3b_val->SetLabelSize(0.055,"x") ;
+        hnp_btageff_sf_sl_3b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_btageff_sf_sl_prod_1b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_btageff_sf_sl_prod_1b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_btageff_sf_sl_prod_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_btageff_sf_sl_prod_2b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_btageff_sf_sl_prod_3b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_btageff_sf_sl_prod_3b_val->GetXaxis()->LabelsOption("v") ;
+
+        hnp_eff_sf_ldp_1b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_ldp_1b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_ldp_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_ldp_2b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_ldp_3b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_ldp_3b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_ldp_1b_pull->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_ldp_1b_pull->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_ldp_2b_pull->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_ldp_2b_pull->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_ldp_3b_pull->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_ldp_3b_pull->GetXaxis()->LabelsOption("v") ;
+        hnp_btageff_sf_ldp_1b_val->SetLabelSize(0.055,"x") ;
+        hnp_btageff_sf_ldp_1b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_btageff_sf_ldp_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_btageff_sf_ldp_2b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_btageff_sf_ldp_3b_val->SetLabelSize(0.055,"x") ;
+        hnp_btageff_sf_ldp_3b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_btageff_sf_ldp_prod_1b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_btageff_sf_ldp_prod_1b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_btageff_sf_ldp_prod_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_btageff_sf_ldp_prod_2b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_btageff_sf_ldp_prod_3b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_btageff_sf_ldp_prod_3b_val->GetXaxis()->LabelsOption("v") ;
+
+        hnp_eff_sf_1b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_2b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_3b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_1b_pull->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_2b_pull->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_3b_pull->SetFillColor(kOrange+1) ;
+        hnp_btageff_sf_1b_val->SetFillColor(kOrange+1) ;
+        hnp_btageff_sf_2b_val->SetFillColor(kOrange+1) ;
+        hnp_btageff_sf_3b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_btageff_sf_prod_1b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_btageff_sf_prod_2b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_btageff_sf_prod_3b_val->SetFillColor(kOrange+1) ;
+
+        hnp_eff_sf_sl_1b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_sl_2b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_sl_3b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_sl_1b_pull->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_sl_2b_pull->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_sl_3b_pull->SetFillColor(kOrange+1) ;
+        hnp_btageff_sf_sl_1b_val->SetFillColor(kOrange+1) ;
+        hnp_btageff_sf_sl_2b_val->SetFillColor(kOrange+1) ;
+        hnp_btageff_sf_sl_3b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_btageff_sf_sl_prod_1b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_btageff_sf_sl_prod_2b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_btageff_sf_sl_prod_3b_val->SetFillColor(kOrange+1) ;
+
+        hnp_eff_sf_ldp_1b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_ldp_2b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_ldp_3b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_ldp_1b_pull->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_ldp_2b_pull->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_ldp_3b_pull->SetFillColor(kOrange+1) ;
+        hnp_btageff_sf_ldp_1b_val->SetFillColor(kOrange+1) ;
+        hnp_btageff_sf_ldp_2b_val->SetFillColor(kOrange+1) ;
+        hnp_btageff_sf_ldp_3b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_btageff_sf_ldp_prod_1b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_btageff_sf_ldp_prod_2b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_btageff_sf_ldp_prod_3b_val->SetFillColor(kOrange+1) ;
 
 
         hnp_ttwj_1b_val->SetFillColor(kBlue-9) ;
@@ -1389,26 +1712,86 @@
         hnp_qcd_2b_pull->SetMaximum(2.) ;
         hnp_qcd_3b_pull->SetMaximum(2.) ;
 
-        hnp_eff_sf_1b_val -> SetMinimum(0.5) ;
-        hnp_eff_sf_2b_val -> SetMinimum(0.5) ;
-        hnp_eff_sf_3b_val -> SetMinimum(0.5) ;
-        hnp_btageff_sf_1b_val -> SetMinimum(0.5) ;
-        hnp_btageff_sf_2b_val -> SetMinimum(0.5) ;
-        hnp_btageff_sf_3b_val -> SetMinimum(0.5) ;
-        hnp_eff_btageff_sf_prod_1b_val -> SetMinimum(0.5) ;
-        hnp_eff_btageff_sf_prod_2b_val -> SetMinimum(0.5) ;
-        hnp_eff_btageff_sf_prod_3b_val -> SetMinimum(0.5) ;
+        hnp_eff_sf_1b_val -> SetMinimum(-0.2) ;
+        hnp_eff_sf_2b_val -> SetMinimum(-0.2) ;
+        hnp_eff_sf_3b_val -> SetMinimum(-0.2) ;
+        hnp_btageff_sf_1b_val -> SetMinimum(-0.2) ;
+        hnp_btageff_sf_2b_val -> SetMinimum(-0.2) ;
+        hnp_btageff_sf_3b_val -> SetMinimum(-0.2) ;
+        hnp_eff_btageff_sf_prod_1b_val -> SetMinimum(-0.2) ;
+        hnp_eff_btageff_sf_prod_2b_val -> SetMinimum(-0.2) ;
+        hnp_eff_btageff_sf_prod_3b_val -> SetMinimum(-0.2) ;
 
-        hnp_eff_sf_1b_val -> SetMaximum(1.5) ;
-        hnp_eff_sf_2b_val -> SetMaximum(1.5) ;
-        hnp_eff_sf_3b_val -> SetMaximum(1.5) ;
-        hnp_btageff_sf_1b_val -> SetMaximum(1.5) ;
-        hnp_btageff_sf_2b_val -> SetMaximum(1.5) ;
-        hnp_btageff_sf_3b_val -> SetMaximum(1.5) ;
-        hnp_eff_btageff_sf_prod_1b_val -> SetMaximum(1.5) ;
-        hnp_eff_btageff_sf_prod_2b_val -> SetMaximum(1.5) ;
-        hnp_eff_btageff_sf_prod_3b_val -> SetMaximum(1.5) ;
+        hnp_eff_sf_sl_1b_val -> SetMinimum(-0.2) ;
+        hnp_eff_sf_sl_2b_val -> SetMinimum(-0.2) ;
+        hnp_eff_sf_sl_3b_val -> SetMinimum(-0.2) ;
+        hnp_btageff_sf_sl_1b_val -> SetMinimum(-0.2) ;
+        hnp_btageff_sf_sl_2b_val -> SetMinimum(-0.2) ;
+        hnp_btageff_sf_sl_3b_val -> SetMinimum(-0.2) ;
+        hnp_eff_btageff_sf_sl_prod_1b_val -> SetMinimum(-0.2) ;
+        hnp_eff_btageff_sf_sl_prod_2b_val -> SetMinimum(-0.2) ;
+        hnp_eff_btageff_sf_sl_prod_3b_val -> SetMinimum(-0.2) ;
 
+        hnp_eff_sf_ldp_1b_val -> SetMinimum(-0.2) ;
+        hnp_eff_sf_ldp_2b_val -> SetMinimum(-0.2) ;
+        hnp_eff_sf_ldp_3b_val -> SetMinimum(-0.2) ;
+        hnp_btageff_sf_ldp_1b_val -> SetMinimum(-0.2) ;
+        hnp_btageff_sf_ldp_2b_val -> SetMinimum(-0.2) ;
+        hnp_btageff_sf_ldp_3b_val -> SetMinimum(-0.2) ;
+        hnp_eff_btageff_sf_ldp_prod_1b_val -> SetMinimum(-0.2) ;
+        hnp_eff_btageff_sf_ldp_prod_2b_val -> SetMinimum(-0.2) ;
+        hnp_eff_btageff_sf_ldp_prod_3b_val -> SetMinimum(-0.2) ;
+
+        hnp_eff_sf_1b_val -> SetMaximum(2.0) ;
+        hnp_eff_sf_2b_val -> SetMaximum(2.0) ;
+        hnp_eff_sf_3b_val -> SetMaximum(2.0) ;
+        hnp_btageff_sf_1b_val -> SetMaximum(2.0) ;
+        hnp_btageff_sf_2b_val -> SetMaximum(2.0) ;
+        hnp_btageff_sf_3b_val -> SetMaximum(2.0) ;
+        hnp_eff_btageff_sf_prod_1b_val -> SetMaximum(2.0) ;
+        hnp_eff_btageff_sf_prod_2b_val -> SetMaximum(2.0) ;
+        hnp_eff_btageff_sf_prod_3b_val -> SetMaximum(2.0) ;
+
+        hnp_eff_sf_sl_1b_val -> SetMaximum(2.0) ;
+        hnp_eff_sf_sl_2b_val -> SetMaximum(2.0) ;
+        hnp_eff_sf_sl_3b_val -> SetMaximum(2.0) ;
+        hnp_btageff_sf_sl_1b_val -> SetMaximum(2.0) ;
+        hnp_btageff_sf_sl_2b_val -> SetMaximum(2.0) ;
+        hnp_btageff_sf_sl_3b_val -> SetMaximum(2.0) ;
+        hnp_eff_btageff_sf_sl_prod_1b_val -> SetMaximum(2.0) ;
+        hnp_eff_btageff_sf_sl_prod_2b_val -> SetMaximum(2.0) ;
+        hnp_eff_btageff_sf_sl_prod_3b_val -> SetMaximum(2.0) ;
+
+        hnp_eff_sf_ldp_1b_val -> SetMaximum(2.0) ;
+        hnp_eff_sf_ldp_2b_val -> SetMaximum(2.0) ;
+        hnp_eff_sf_ldp_3b_val -> SetMaximum(2.0) ;
+        hnp_btageff_sf_ldp_1b_val -> SetMaximum(2.0) ;
+        hnp_btageff_sf_ldp_2b_val -> SetMaximum(2.0) ;
+        hnp_btageff_sf_ldp_3b_val -> SetMaximum(2.0) ;
+        hnp_eff_btageff_sf_ldp_prod_1b_val -> SetMaximum(2.0) ;
+        hnp_eff_btageff_sf_ldp_prod_2b_val -> SetMaximum(2.0) ;
+        hnp_eff_btageff_sf_ldp_prod_3b_val -> SetMaximum(2.0) ;
+
+        hnp_eff_sf_1b_pull -> SetMinimum(-2.0) ;
+        hnp_eff_sf_2b_pull -> SetMinimum(-2.0) ;
+        hnp_eff_sf_3b_pull -> SetMinimum(-2.0) ;
+        hnp_eff_sf_1b_pull -> SetMaximum( 2.0) ;
+        hnp_eff_sf_2b_pull -> SetMaximum( 2.0) ;
+        hnp_eff_sf_3b_pull -> SetMaximum( 2.0) ;
+
+        hnp_eff_sf_sl_1b_pull -> SetMinimum(-2.0) ;
+        hnp_eff_sf_sl_2b_pull -> SetMinimum(-2.0) ;
+        hnp_eff_sf_sl_3b_pull -> SetMinimum(-2.0) ;
+        hnp_eff_sf_sl_1b_pull -> SetMaximum( 2.0) ;
+        hnp_eff_sf_sl_2b_pull -> SetMaximum( 2.0) ;
+        hnp_eff_sf_sl_3b_pull -> SetMaximum( 2.0) ;
+
+        hnp_eff_sf_ldp_1b_pull -> SetMinimum(-2.0) ;
+        hnp_eff_sf_ldp_2b_pull -> SetMinimum(-2.0) ;
+        hnp_eff_sf_ldp_3b_pull -> SetMinimum(-2.0) ;
+        hnp_eff_sf_ldp_1b_pull -> SetMaximum( 2.0) ;
+        hnp_eff_sf_ldp_2b_pull -> SetMaximum( 2.0) ;
+        hnp_eff_sf_ldp_3b_pull -> SetMaximum( 2.0) ;
 
         hnp_ttwj_1b_val->SetLabelSize(0.055,"x") ;
         hnp_ttwj_1b_val->GetXaxis()->LabelsOption("v") ;
@@ -1441,12 +1824,12 @@
 
 
 
-        //=== Efficiency and Znn nuisance pars ============
+        //=== Efficiency and Znn nuisance par pulls ============
 
 
         TCanvas* cnp2 = (TCanvas*) gDirectory->FindObject("cnp2") ;
         if ( cnp2 == 0x0 ) {
-           cnp2 = new TCanvas("cnp2","RA2b efficiency and Znn nuisance pars", 850, 1000 ) ;
+           cnp2 = new TCanvas("cnp2","RA2b efficiency and Znn nuisance par pull", 850, 1000 ) ;
         }
         cnp2->Divide(3,4) ;
 
@@ -1466,35 +1849,64 @@
 
 
         cnp2->cd(4) ;
-        hnp_eff_sf_1b_val->Draw() ;
+        hnp_eff_sf_1b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_eff_sf_1b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
 
         cnp2->cd(5) ;
-        hnp_eff_sf_2b_val->Draw() ;
+        hnp_eff_sf_2b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_eff_sf_2b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
 
         cnp2->cd(6) ;
-        hnp_eff_sf_3b_val->Draw() ;
+        hnp_eff_sf_3b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_eff_sf_3b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
 
 
 
         cnp2->cd(7) ;
-        hnp_btageff_sf_1b_val->Draw() ;
+        hnp_eff_sf_sl_1b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_eff_sf_sl_1b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
 
         cnp2->cd(8) ;
-        hnp_btageff_sf_2b_val->Draw() ;
+        hnp_eff_sf_sl_2b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_eff_sf_sl_2b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
 
         cnp2->cd(9) ;
-        hnp_btageff_sf_3b_val->Draw() ;
+        hnp_eff_sf_sl_3b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_eff_sf_sl_3b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
 
 
 
         cnp2->cd(10) ;
-        hnp_eff_btageff_sf_prod_1b_val->Draw() ;
+        hnp_eff_sf_ldp_1b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_1b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
 
         cnp2->cd(11) ;
-        hnp_eff_btageff_sf_prod_2b_val->Draw() ;
+        hnp_eff_sf_ldp_2b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_2b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
 
         cnp2->cd(12) ;
-        hnp_eff_btageff_sf_prod_3b_val->Draw() ;
+        hnp_eff_sf_ldp_3b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_3b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
+
+
 
 
 

@@ -431,60 +431,27 @@
 
 
    //=== Efficiency and Znn nuisance parameters ===================
-     TH1F* hnp_eff_sf_1b_val = (TH1F*) gDirectory->FindObject("hnp_eff_sf_1b_val") ;
-     if ( hnp_eff_sf_1b_val == 0x0 ) { printf("\n\n *** No efficiency and Znn NP plots.\n\n") ; return ; }
-     TH1F* hnp_eff_sf_2b_val = (TH1F*) gDirectory->FindObject("hnp_eff_sf_2b_val") ;
-     TH1F* hnp_eff_sf_3b_val = (TH1F*) gDirectory->FindObject("hnp_eff_sf_3b_val") ;
-     TH1F* hnp_btageff_sf_1b_val = (TH1F*) gDirectory->FindObject("hnp_btageff_sf_1b_val") ;
-     TH1F* hnp_btageff_sf_2b_val = (TH1F*) gDirectory->FindObject("hnp_btageff_sf_2b_val") ;
-     TH1F* hnp_btageff_sf_3b_val = (TH1F*) gDirectory->FindObject("hnp_btageff_sf_3b_val") ;
-     TH1F* hnp_eff_btageff_sf_prod_1b_val = (TH1F*) gDirectory->FindObject("hnp_eff_btageff_sf_prod_1b_val") ;
-     TH1F* hnp_eff_btageff_sf_prod_2b_val = (TH1F*) gDirectory->FindObject("hnp_eff_btageff_sf_prod_2b_val") ;
-     TH1F* hnp_eff_btageff_sf_prod_3b_val = (TH1F*) gDirectory->FindObject("hnp_eff_btageff_sf_prod_3b_val") ;
+     TH1F* hnp_eff_sf_1b_pull = (TH1F*) gDirectory->FindObject("hnp_eff_sf_1b_pull") ;
+     if ( hnp_eff_sf_1b_pull == 0x0 ) { printf("\n\n *** No efficiency and Znn NP plots.\n\n") ; return ; }
+     TH1F* hnp_eff_sf_2b_pull = (TH1F*) gDirectory->FindObject("hnp_eff_sf_2b_pull") ;
+     TH1F* hnp_eff_sf_3b_pull = (TH1F*) gDirectory->FindObject("hnp_eff_sf_3b_pull") ;
+     TH1F* hnp_eff_sf_sl_1b_pull = (TH1F*) gDirectory->FindObject("hnp_eff_sf_sl_1b_pull") ;
+     TH1F* hnp_eff_sf_sl_2b_pull = (TH1F*) gDirectory->FindObject("hnp_eff_sf_sl_2b_pull") ;
+     TH1F* hnp_eff_sf_sl_3b_pull = (TH1F*) gDirectory->FindObject("hnp_eff_sf_sl_3b_pull") ;
+     TH1F* hnp_eff_sf_ldp_1b_pull = (TH1F*) gDirectory->FindObject("hnp_eff_sf_ldp_1b_pull") ;
+     TH1F* hnp_eff_sf_ldp_2b_pull = (TH1F*) gDirectory->FindObject("hnp_eff_sf_ldp_2b_pull") ;
+     TH1F* hnp_eff_sf_ldp_3b_pull = (TH1F*) gDirectory->FindObject("hnp_eff_sf_ldp_3b_pull") ;
+
      TH1F* hnp_prim_eff = (TH1F*) gDirectory->FindObject("hnp_prim_eff") ;
      TH1F* hnp_znn = (TH1F*) gDirectory->FindObject("hnp_znn") ;
 
 
-     hnp_eff_sf_1b_val->SetFillColor(kOrange+1) ;
-     hnp_eff_sf_2b_val->SetFillColor(kOrange+1) ;
-     hnp_eff_sf_3b_val->SetFillColor(kOrange+1) ;
-     hnp_btageff_sf_1b_val->SetFillColor(kOrange+1) ;
-     hnp_btageff_sf_2b_val->SetFillColor(kOrange+1) ;
-     hnp_btageff_sf_3b_val->SetFillColor(kOrange+1) ;
-     hnp_eff_btageff_sf_prod_1b_val->SetFillColor(kOrange+1) ;
-     hnp_eff_btageff_sf_prod_2b_val->SetFillColor(kOrange+1) ;
-     hnp_eff_btageff_sf_prod_3b_val->SetFillColor(kOrange+1) ;
-
-
      TCanvas* cnp2 = (TCanvas*) gDirectory->FindObject("cnp2") ;
      if ( cnp2 == 0x0 ) {
-        cnp2 = new TCanvas("cnp2","RA2b efficiency and Znn nuisance pars", 850, 1000 ) ;
+        cnp2 = new TCanvas("cnp2","RA2b efficiency and Znn nuisance par pull", 850, 1000 ) ;
      }
      cnp2->Clear() ;
 
-     hnp_eff_sf_1b_val->SetMinimum(-0.2) ;
-     hnp_eff_sf_2b_val->SetMinimum(-0.2) ;
-     hnp_eff_sf_3b_val->SetMinimum(-0.2) ;
-
-     hnp_btageff_sf_1b_val->SetMinimum(-0.2) ;
-     hnp_btageff_sf_2b_val->SetMinimum(-0.2) ;
-     hnp_btageff_sf_3b_val->SetMinimum(-0.2) ;
-
-     hnp_eff_btageff_sf_prod_1b_val->SetMinimum(-0.2) ;
-     hnp_eff_btageff_sf_prod_2b_val->SetMinimum(-0.2) ;
-     hnp_eff_btageff_sf_prod_3b_val->SetMinimum(-0.2) ;
-
-     hnp_eff_sf_1b_val->SetMaximum(2.0) ;
-     hnp_eff_sf_2b_val->SetMaximum(2.0) ;
-     hnp_eff_sf_3b_val->SetMaximum(2.0) ;
-
-     hnp_btageff_sf_1b_val->SetMaximum(2.0) ;
-     hnp_btageff_sf_2b_val->SetMaximum(2.0) ;
-     hnp_btageff_sf_3b_val->SetMaximum(2.0) ;
-
-     hnp_eff_btageff_sf_prod_1b_val->SetMaximum(2.0) ;
-     hnp_eff_btageff_sf_prod_2b_val->SetMaximum(2.0) ;
-     hnp_eff_btageff_sf_prod_3b_val->SetMaximum(2.0) ;
 
         cnp2->Divide(3,4) ;
 
@@ -507,43 +474,70 @@
 
 
         cnp2->cd(4) ;
-        hnp_eff_sf_1b_val->Draw() ;
+        hnp_eff_sf_1b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_eff_sf_1b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
         cnp2->cd(5) ;
-        hnp_eff_sf_2b_val->Draw() ;
+        hnp_eff_sf_2b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_eff_sf_2b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
         cnp2->cd(6) ;
-        hnp_eff_sf_3b_val->Draw() ;
+        hnp_eff_sf_3b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_eff_sf_3b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
 
 
         cnp2->cd(7) ;
-        hnp_btageff_sf_1b_val->Draw() ;
+        hnp_eff_sf_sl_1b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_eff_sf_sl_1b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
         cnp2->cd(8) ;
-        hnp_btageff_sf_2b_val->Draw() ;
+        hnp_eff_sf_sl_2b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_eff_sf_sl_2b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
         cnp2->cd(9) ;
-        hnp_btageff_sf_3b_val->Draw() ;
+        hnp_eff_sf_sl_3b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_eff_sf_sl_3b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
 
 
         cnp2->cd(10) ;
-        hnp_eff_btageff_sf_prod_1b_val->Draw() ;
+        hnp_eff_sf_ldp_1b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_1b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
         cnp2->cd(11) ;
-        hnp_eff_btageff_sf_prod_2b_val->Draw() ;
+        hnp_eff_sf_ldp_2b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_2b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
         cnp2->cd(12) ;
-        hnp_eff_btageff_sf_prod_3b_val->Draw() ;
+        hnp_eff_sf_ldp_3b_pull->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_3b_pull ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
 
