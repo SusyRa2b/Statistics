@@ -485,7 +485,7 @@ void setupUnderlyingLikelihood(RooWorkspace& ws ,allBinNames& names, allBins& nu
 			     names.observables,names.nuisances);
   names.MCUncertainty = MCUncertainty->GetName();
   
-  RooRealVar signalCrossSection("signalCrossSection","signalCrossSection",0.0,0.0,1e3);
+  RooRealVar signalCrossSection("signalCrossSection","signalCrossSection",0.0,0.0,1e5);
   ws.import(signalCrossSection);
   names.signalCrossSection = signalCrossSection.GetName();
 
