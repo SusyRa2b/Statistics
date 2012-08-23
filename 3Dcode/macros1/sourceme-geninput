@@ -4,19 +4,18 @@
    mkdir -p datfiles
 
    echo GenerateInputFile
-   $ROOTSYS/bin/root -b -q GenerateInputFile.C+ >&! logfiles/geninput-met4-ht4.log
-   mv Input-met4-ht4.dat datfiles/
+   $ROOTSYS/bin/root -b -q GenerateInputFile.C+ >&! logfiles/geninput-met3-ht3-v1.log
+   mv Input-met3-ht3-v1.dat datfiles/
 
    echo GenerateDummyDeffDbtag
-   $ROOTSYS/bin/root -b -q GenerateDummyDeffDbtag.C\(4,4\) >&! logfiles/dummy-deff-met4-ht4.log
-   mv dummy_DeffDbtag-met4-ht4.dat datfiles/
+   $ROOTSYS/bin/root -b -q GenerateDummyDeffDbtag.C\(3,3\) >&! logfiles/dummy-deff-met3-ht3.log
+   mv dummy_DeffDbtag-met3-ht3.dat datfiles/
 
    echo GenerateSusyFile
    $ROOTSYS/bin/root -b -q GenerateSusyFile.C+ >&! logfiles/gensusy-mgl900-mlsp300-met4-ht4.log
-   mv Susy.dat datfiles/Susy-mgl900-mlsp300-met4-ht4.dat
 
    echo mcclosure2
-   cp datfiles/Input-met4-ht4.dat datfiles/Input-met4-ht4-wsyst1.dat
-   $ROOTSYS/bin/root -b -q mcclosure2.c+\(\"rootfiles/gi-plots-met4-ht4.root\",\"datfiles/Input-met4-ht4-wsyst1.dat\"\) >&! logfiles/mcclosure-met4-ht4.log
+   cp datfiles/Input-met3-ht3-v1.dat datfiles/Input-met3-ht3-v1-wsyst1.dat
+   $ROOTSYS/bin/root -b -q mcclosure2.c+\(\"rootfiles/gi-plots-met3-ht3-v1.root\",\"datfiles/Input-met3-ht3-v1-wsyst1.dat\"\) >&! logfiles/mcclosure-met3-ht3-v1.log
 
 
