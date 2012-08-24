@@ -89,18 +89,18 @@ while(<$fin>) {
 	print {$binFileHandles[$binFileHash{$bin}]} "zeroLeptonCount $value\n";
       }
       
-      if($fullOKAname =~ /(N_1lep)(_M)(\d)(_H)(\d)(_)(\d)(b)/) {
+      elsif($fullOKAname =~ /(N_1lep)(_M)(\d)(_H)(\d)(_)(\d)(b)/) {
       	my $bin = "M$3_H$5_$7"."b";
 	print {$binFileHandles[$binFileHash{$bin}]} "oneMuonCount $value\n";
 	print {$binFileHandles[$binFileHash{$bin}]} "oneElectronCount $value\n";
       }
       
-      if($fullOKAname =~ /(N_ldp)(_M)(\d)(_H)(\d)(_)(\d)(b)/) {
+      elsif($fullOKAname =~ /(N_ldp)(_M)(\d)(_H)(\d)(_)(\d)(b)/) {
       	my $bin = "M$3_H$5_$7"."b";
 	print {$binFileHandles[$binFileHash{$bin}]} "zeroLeptonLowDeltaPhiNCount $value\n";
       }
       
-      if($fullOKAname =~ /(R_lsb)(_H)(\d)(_)(1b)(_*)(\S*)/) {#Only take 1b since it's independent of b-tagging!
+      elsif($fullOKAname =~ /(R_lsb)(_H)(\d)(_)(1b)(_*)(\S*)/) {#Only take 1b since it's independent of b-tagging!
 	my $dim = "H$3";
 	my $err = "$7";
 	foreach(@binFileNames) {
@@ -118,7 +118,7 @@ while(<$fin>) {
 	}
       }
       
-      if($fullOKAname =~ /(N_Zee)(_M)(\d)(_H)(\d)/) {
+      elsif($fullOKAname =~ /(N_Zee)(_M)(\d)(_H)(\d)/) {
 	my $dim = "M$3_H$5";
 	foreach(@binFileNames) {
 	  my $binFileName = $_;
@@ -129,7 +129,7 @@ while(<$fin>) {
 	}
       }
       
-      if($fullOKAname =~ /(N_Zmm)(_M)(\d)(_H)(\d)/) {
+      elsif($fullOKAname =~ /(N_Zmm)(_M)(\d)(_H)(\d)/) {
 	my $dim = "M$3_H$5";
 	foreach(@binFileNames) {
 	  my $binFileName = $_;
@@ -140,20 +140,20 @@ while(<$fin>) {
 	}
       }
       
-      if($fullOKAname =~ /(N_ttbarsingletopzjetsmc_ldp_)(\S*)/) {
+      elsif($fullOKAname =~ /(N_ttbarsingletopzjetsmc_ldp_)(\S*)/) {
 	my $binFileName = $2;
 	$ldpMCSum[$binFileHash{$binFileName}] += $value;
       }
-      if($fullOKAname =~ /(N_WJmc_ldp_)(\S*)/) {
+      elsif($fullOKAname =~ /(N_WJmc_ldp_)(\S*)/) {
         my $binFileName = $2;
         $ldpMCSum[$binFileHash{$binFileName}] += $value;
       }
-      if($fullOKAname =~ /(N_Znnmc_ldp_)(\S*)/) {
+      elsif($fullOKAname =~ /(N_Znnmc_ldp_)(\S*)/) {
 	my $binFileName = $2;
 	$ldpMCSum[$binFileHash{$binFileName}] += $value;
       }
       
-      if($fullOKAname =~ /(acc_Zee)(_M)(\d)(_*)(\S*)/) {
+      elsif($fullOKAname =~ /(acc_Zee)(_M)(\d)(_*)(\S*)/) {
 	my $dim = "M$3";
 	my $err = "$5";
 	foreach(@binFileNames) {
@@ -170,7 +170,7 @@ while(<$fin>) {
 	}
       }
       
-      if($fullOKAname =~ /(acc_Zmm)(_M)(\d)(_*)(\S*)/) {
+      elsif($fullOKAname =~ /(acc_Zmm)(_M)(\d)(_*)(\S*)/) {
 	my $dim = "M$3";
 	my $err = "$5";
 	foreach(@binFileNames) {
@@ -187,21 +187,21 @@ while(<$fin>) {
 	}
       }
       
-      if($fullOKAname =~ /(Z_ee_eff_err)/) {
+      elsif($fullOKAname =~ /(Z_ee_eff_err)/) {
 	print $globalout "ZtoeeEfficiencyError $value\n";
       }
-      elsif($fullOKAname =~ /(Z_ee_eff)/) {
+      elsif($fullOKAname =~ /(Z_ee_eff)/) {#order important
 	print $globalout "ZtoeeEfficiency $value\n";
       }
       
-      if($fullOKAname =~ /(Z_mm_eff_err)/) {
+      elsif($fullOKAname =~ /(Z_mm_eff_err)/) {
 	print $globalout "ZtomumuEfficiencyError $value\n";
       }
-      elsif($fullOKAname =~ /(Z_mm_eff)/) {
+      elsif($fullOKAname =~ /(Z_mm_eff)/) {#order important
 	print $globalout "ZtomumuEfficiency $value\n";
       }
       
-      if($fullOKAname =~ /(knn_)(\d)(b)(_*)(\S*)/) {
+      elsif($fullOKAname =~ /(knn_)(\d)(b)(_*)(\S*)/) {
 	my $dim = "$2b";
 	my $err = "$5";
 	foreach(@binFileNames) {
@@ -218,25 +218,25 @@ while(<$fin>) {
 	}
       }
       
-      if($fullOKAname =~ /(Z_ee_pur_err)/) {
+      elsif($fullOKAname =~ /(Z_ee_pur_err)/) {
 	print $globalout "ZtoeePurityError $value\n";
       }
-      elsif($fullOKAname =~ /(Z_ee_pur)/) {
+      elsif($fullOKAname =~ /(Z_ee_pur)/) {#order important
         print $globalout "ZtoeePurity $value\n";
       }
       
-      if($fullOKAname =~ /(Z_mm_pur_err)/) {
+      elsif($fullOKAname =~ /(Z_mm_pur_err)/) {
         print $globalout "ZtomumuPurityError $value\n";
       }
-      elsif($fullOKAname =~ /(Z_mm_pur)/) {
+      elsif($fullOKAname =~ /(Z_mm_pur)/) {#order important
         print $globalout "ZtomumuPurity $value\n";
       }
       
-      if($fullOKAname =~ /(sf_mc_err)/) {
+      elsif($fullOKAname =~ /(sf_mc_err)/) {
 	print $globalout "MCUncertainty $value\n";
       }
       
-      if($fullOKAname =~ /(sf_qcd)(_M)(\d)(_H)(\d)(_)(\d)(b)(_*)(\S*)/) {
+      elsif($fullOKAname =~ /(sf_qcd)(_M)(\d)(_H)(\d)(_)(\d)(b)(_*)(\S*)/) {
 	my $binFileName = "M$3_H$5_$7b";
 	my $err = $10;
 	if($err ne "err") {
@@ -247,7 +247,7 @@ while(<$fin>) {
 	}
       }
       
-      if($fullOKAname =~ /(sf_ttwj)(_M)(\d)(_H)(\d)(_)(\d)(b)(_*)(\S*)/) {
+      elsif($fullOKAname =~ /(sf_ttwj)(_M)(\d)(_H)(\d)(_)(\d)(b)(_*)(\S*)/) {
 	my $binFileName = "M$3_H$5_$7b";
 	my $err = $10;
 	if($err ne "err") {
@@ -258,7 +258,7 @@ while(<$fin>) {
 	}
       }
       
-      if($fullOKAname =~ /(sf_ee_)(\d)(b)(_*)(\S*)/) {
+      elsif($fullOKAname =~ /(sf_ee_)(\d)(b)(_*)(\S*)/) {
 	my $dim = "$2b";
 	my $err = "$5";
 	foreach(@binFileNames) {
@@ -275,7 +275,7 @@ while(<$fin>) {
 	}
       }
       
-      if($fullOKAname =~ /(sf_mm_)(\d)(b)(_*)(\S*)/) {
+      elsif($fullOKAname =~ /(sf_mm_)(\d)(b)(_*)(\S*)/) {
 	my $dim = "$2b";
 	my $err = "$5";
 	foreach(@binFileNames) {
@@ -291,9 +291,17 @@ while(<$fin>) {
 	  }
 	}
       }
-
-
+      
+      else {
+	print "Doing nothing with line: $line";
+      }
+      
     }#line to translate (Name Value)
+   
+    else {
+      print "Doing nothing with line: $line";
+    }
+    
   }#not the first line
 }
 
