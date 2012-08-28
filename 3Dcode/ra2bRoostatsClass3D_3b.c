@@ -1876,61 +1876,63 @@
 
 	  //--Include the stat error on the efficiency for SMS's
 
-	  if ( isT1bbbb ) {
+          //--- Owen: Aug 28, 2012.  Don't do this.
 
-	    float n_0l_raw_eff[nBinsMET][nBinsHT][nBinsBtag] ;
-	    float n_1l_raw_eff[nBinsMET][nBinsHT][nBinsBtag] ;
-	    float n_ldp_raw_eff[nBinsMET][nBinsHT][nBinsBtag] ;
+     ///  if ( isT1bbbb ) {
 
-	    float n_0l_stat_error[nBinsMET][nBinsHT][nBinsBtag] ;
-	    float n_1l_stat_error[nBinsMET][nBinsHT][nBinsBtag] ;
-	    float n_ldp_stat_error[nBinsMET][nBinsHT][nBinsBtag] ;
+     ///    float n_0l_raw_eff[nBinsMET][nBinsHT][nBinsBtag] ;
+     ///    float n_1l_raw_eff[nBinsMET][nBinsHT][nBinsBtag] ;
+     ///    float n_ldp_raw_eff[nBinsMET][nBinsHT][nBinsBtag] ;
+
+     ///    float n_0l_stat_error[nBinsMET][nBinsHT][nBinsBtag] ;
+     ///    float n_1l_stat_error[nBinsMET][nBinsHT][nBinsBtag] ;
+     ///    float n_ldp_stat_error[nBinsMET][nBinsHT][nBinsBtag] ;
 
 
-	    for (int i = 0 ; i < nBinsMET ; i++) {
-	      for (int j = 0 ; j < nBinsHT ; j++) {
-		for (int k = 0 ; k < nBinsBtag ; k++) {     
+     ///    for (int i = 0 ; i < nBinsMET ; i++) {
+     ///      for (int j = 0 ; j < nBinsHT ; j++) {
+     ///        for (int k = 0 ; k < nBinsBtag ; k++) {     
 
-		  TString binString = "";
-		  binString += sMbins[i]+sHbins[j]+sBbins[k] ;
+     ///          TString binString = "";
+     ///          binString += sMbins[i]+sHbins[j]+sBbins[k] ;
 
-		  // absolute raw efficiency
-		  n_0l_raw_eff[i][j][k]  = n_0l_raw[i][j][k] / nGenPerPoint ;
-		  n_1l_raw_eff[i][j][k]  = n_1l_raw[i][j][k] / nGenPerPoint ;
-		  n_ldp_raw_eff[i][j][k] = n_ldp_raw[i][j][k] / nGenPerPoint ;
+     ///          // absolute raw efficiency
+     ///          n_0l_raw_eff[i][j][k]  = n_0l_raw[i][j][k] / nGenPerPoint ;
+     ///          n_1l_raw_eff[i][j][k]  = n_1l_raw[i][j][k] / nGenPerPoint ;
+     ///          n_ldp_raw_eff[i][j][k] = n_ldp_raw[i][j][k] / nGenPerPoint ;
 
-		  // absolute stat error
-		  n_0l_stat_error[i][j][k]  = sqrt( n_0l_raw_eff[i][j][k]  * ( 1.0 - n_0l_raw_eff[i][j][k]  ) / nGenPerPoint ) ;
-		  n_1l_stat_error[i][j][k]  = sqrt( n_1l_raw_eff[i][j][k]  * ( 1.0 - n_1l_raw_eff[i][j][k]  ) / nGenPerPoint ) ;
-		  n_ldp_stat_error[i][j][k] = sqrt( n_ldp_raw_eff[i][j][k] * ( 1.0 - n_ldp_raw_eff[i][j][k] ) / nGenPerPoint ) ;
+     ///          // absolute stat error
+     ///          n_0l_stat_error[i][j][k]  = sqrt( n_0l_raw_eff[i][j][k]  * ( 1.0 - n_0l_raw_eff[i][j][k]  ) / nGenPerPoint ) ;
+     ///          n_1l_stat_error[i][j][k]  = sqrt( n_1l_raw_eff[i][j][k]  * ( 1.0 - n_1l_raw_eff[i][j][k]  ) / nGenPerPoint ) ;
+     ///          n_ldp_stat_error[i][j][k] = sqrt( n_ldp_raw_eff[i][j][k] * ( 1.0 - n_ldp_raw_eff[i][j][k] ) / nGenPerPoint ) ;
 
-		  // relative stat err in percent.
-		  if ( n_0l_raw_eff[i][j][k] > 0 ) { n_0l_stat_error[i][j][k] = 100.* n_0l_stat_error[i][j][k] / n_0l_raw_eff[i][j][k] ; } 
-		  else { n_0l_stat_error[i][j][k] = 0. ; }
+     ///          // relative stat err in percent.
+     ///          if ( n_0l_raw_eff[i][j][k] > 0 ) { n_0l_stat_error[i][j][k] = 100.* n_0l_stat_error[i][j][k] / n_0l_raw_eff[i][j][k] ; } 
+     ///          else { n_0l_stat_error[i][j][k] = 0. ; }
 
-		  if ( n_1l_raw_eff[i][j][k] > 0 ) { n_1l_stat_error[i][j][k] = 100.* n_1l_stat_error[i][j][k] / n_1l_raw_eff[i][j][k] ; } 
-		  else { n_1l_stat_error[i][j][k] = 0. ; }
+     ///          if ( n_1l_raw_eff[i][j][k] > 0 ) { n_1l_stat_error[i][j][k] = 100.* n_1l_stat_error[i][j][k] / n_1l_raw_eff[i][j][k] ; } 
+     ///          else { n_1l_stat_error[i][j][k] = 0. ; }
 
-		  if ( n_ldp_raw_eff[i][j][k] > 0 ) { n_ldp_stat_error[i][j][k] = 100.* n_ldp_stat_error[i][j][k] / n_ldp_raw_eff[i][j][k] ; } 
-		  else { n_ldp_stat_error[i][j][k] = 0. ; }
-		  
-		  cout << binString + " - 0 lep - SUSY statistical uncertainty (%) = " << n_0l_stat_error[i][j][k] << endl ; 
-		  cout << binString + " - 1 lep - SUSY statistical uncertainty (%) = " << n_1l_stat_error[i][j][k] << endl ; 
-		  cout << binString + " - ldp   - SUSY statistical uncertainty (%) = " << n_ldp_stat_error[i][j][k] << endl ; 
+     ///          if ( n_ldp_raw_eff[i][j][k] > 0 ) { n_ldp_stat_error[i][j][k] = 100.* n_ldp_stat_error[i][j][k] / n_ldp_raw_eff[i][j][k] ; } 
+     ///          else { n_ldp_stat_error[i][j][k] = 0. ; }
 
-		  // total error
-		  n_0l_error[i][j][k]  = sqrt( pow( n_0l_error[i][j][k],  2) + pow( n_0l_stat_error[i][j][k], 2) ) ;
-		  n_1l_error[i][j][k]  = sqrt( pow( n_1l_error[i][j][k],  2) + pow( n_1l_stat_error[i][j][k], 2) ) ;
-		  n_ldp_error[i][j][k] = sqrt( pow( n_ldp_error[i][j][k], 2) + pow( n_ldp_stat_error[i][j][k], 2) ) ;
-		  
-		  cout << binString + " - 0 lep - SUSY total uncertainty (%) = " << n_0l_error[i][j][k] << endl ; 
-		  cout << binString + " - 1 lep - SUSY total uncertainty (%) = " << n_1l_error[i][j][k] << endl ; 
-		  cout << binString + " - ldp   - SUSY total uncertainty (%) = " << n_ldp_error[i][j][k] << endl ; 
+     ///          cout << binString + " - 0 lep - SUSY statistical uncertainty (%) = " << n_0l_stat_error[i][j][k] << endl ; 
+     ///          cout << binString + " - 1 lep - SUSY statistical uncertainty (%) = " << n_1l_stat_error[i][j][k] << endl ; 
+     ///          cout << binString + " - ldp   - SUSY statistical uncertainty (%) = " << n_ldp_stat_error[i][j][k] << endl ; 
 
-		}
-	      }
-	    }
-	  } // end of if (isT1bbbb)
+     ///          // total error
+     ///          n_0l_error[i][j][k]  = sqrt( pow( n_0l_error[i][j][k],  2) + pow( n_0l_stat_error[i][j][k], 2) ) ;
+     ///          n_1l_error[i][j][k]  = sqrt( pow( n_1l_error[i][j][k],  2) + pow( n_1l_stat_error[i][j][k], 2) ) ;
+     ///          n_ldp_error[i][j][k] = sqrt( pow( n_ldp_error[i][j][k], 2) + pow( n_ldp_stat_error[i][j][k], 2) ) ;
+
+     ///          cout << binString + " - 0 lep - SUSY total uncertainty (%) = " << n_0l_error[i][j][k] << endl ; 
+     ///          cout << binString + " - 1 lep - SUSY total uncertainty (%) = " << n_1l_error[i][j][k] << endl ; 
+     ///          cout << binString + " - ldp   - SUSY total uncertainty (%) = " << n_ldp_error[i][j][k] << endl ; 
+
+     ///        }
+     ///      }
+     ///    }
+     ///  } // end of if (isT1bbbb)
 
 
 	  double setVal_n_0l[nBinsMET][nBinsHT][nBinsBtag] ;
@@ -1943,16 +1945,16 @@
 	    for (int j = 0 ; j < nBinsHT ; j++) {
 	      for (int k = 0 ; k < nBinsBtag ; k++) {     
 		
-		if (!isT1bbbb) {
-		  setVal_n_0l[i][j][k]  = n_0l_raw[i][j][k]  * n_0l_correction[i][j][k] ;
-		  setVal_n_1l[i][j][k]  = n_1l_raw[i][j][k]  * n_1l_correction[i][j][k] ;
-		  setVal_n_ldp[i][j][k] = n_ldp_raw[i][j][k] * n_ldp_correction[i][j][k] ;
-		}
-		else {
-		  setVal_n_0l[i][j][k]  = DataLumi * t1bbbbXsec * (( n_0l_raw[i][j][k]  * n_0l_correction[i][j][k] ) / nGenPerPoint ) ;
-		  setVal_n_1l[i][j][k]  = DataLumi * t1bbbbXsec * (( n_1l_raw[i][j][k]  * n_1l_correction[i][j][k] ) / nGenPerPoint ) ;
-		  setVal_n_ldp[i][j][k] = DataLumi * t1bbbbXsec * (( n_ldp_raw[i][j][k] * n_ldp_correction[i][j][k] ) / nGenPerPoint ) ;
-		}
+            /// if (!isT1bbbb) {
+                  setVal_n_0l[i][j][k]  = n_0l_raw[i][j][k]  * n_0l_correction[i][j][k] ;
+                  setVal_n_1l[i][j][k]  = n_1l_raw[i][j][k]  * n_1l_correction[i][j][k] ;
+                  setVal_n_ldp[i][j][k] = n_ldp_raw[i][j][k] * n_ldp_correction[i][j][k] ;
+            /// }
+            /// else {
+            ///   setVal_n_0l[i][j][k]  = DataLumi * t1bbbbXsec * (( n_0l_raw[i][j][k]  * n_0l_correction[i][j][k] ) / nGenPerPoint ) ;
+            ///   setVal_n_1l[i][j][k]  = DataLumi * t1bbbbXsec * (( n_1l_raw[i][j][k]  * n_1l_correction[i][j][k] ) / nGenPerPoint ) ;
+            ///   setVal_n_ldp[i][j][k] = DataLumi * t1bbbbXsec * (( n_ldp_raw[i][j][k] * n_ldp_correction[i][j][k] ) / nGenPerPoint ) ;
+            /// }
 
                 all0lep += setVal_n_0l[i][j][k] ;
 
