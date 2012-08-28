@@ -61,8 +61,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
    //--- these have high weight
 //chainQCD.Add("files5fb_MT/QCD-50to80.root");
 //chainQCD.Add("files5fb_MT/QCD-80to120.root");
-//chainQCD.Add("files5fb_MT/QCD-120to170.root");
-//chainQCD.Add("files5fb_MT/QCD-170to300.root");
+chainQCD.Add("files5fb_MT/QCD-120to170.root");
+chainQCD.Add("files5fb_MT/QCD-170to300.root");
    //--- below here, these have weight less than one.
   chainQCD.Add("files5fb_MT/QCD-300to470.root");
   chainQCD.Add("files5fb_MT/QCD-470to600.root");
@@ -84,8 +84,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   TChain chainAll("tree");
 //chainAll.Add("files5fb_MT/QCD-50to80.root");
 //chainAll.Add("files5fb_MT/QCD-80to120.root");
-//chainAll.Add("files5fb_MT/QCD-120to170.root");
-//chainAll.Add("files5fb_MT/QCD-170to300.root");
+chainAll.Add("files5fb_MT/QCD-120to170.root");
+chainAll.Add("files5fb_MT/QCD-170to300.root");
   chainAll.Add("files5fb_MT/QCD-300to470.root");
   chainAll.Add("files5fb_MT/QCD-470to600.root");
   chainAll.Add("files5fb_MT/QCD-600to800.root");
@@ -106,6 +106,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   const int nJetsCut = 3 ;     // #jets >= nJetsCut
 
   double minLeadJetPt = 50. ;
+  double min3rdJetPt = 50. ;
 
   //-- met2-ht1-v1
 //const int nBinsMET   = 2 ;
@@ -329,9 +330,13 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
      leadJetPtCutString = "(pt_1st_leadJet>" ;
      stringstream number ;
      number << minLeadJetPt ;
+     stringstream number2 ;
+     number2 << min3rdJetPt ;
      leadJetPtCutString += number.str() ;
      leadJetPtCutString += "&&pt_2nd_leadJet>" ;
      leadJetPtCutString += number.str() ;
+     leadJetPtCutString += "&&pt_3rd_leadJet>" ;
+     leadJetPtCutString += number2.str() ;
      leadJetPtCutString += ")" ;
   }
 
@@ -503,11 +508,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
         char allsusycuts[10000] ;
 
         if ( k < (nBinsBjets-1) ) {
-	  sprintf( allcuts, "%snB==%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt ) ;
-	  sprintf( allsusycuts, "%snB==%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)%s", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, susycut.Data() ) ;
+          sprintf( allcuts, "%snB==%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
+          sprintf( allsusycuts, "%snB==%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)%s", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt, susycut.Data() ) ;
         } else {
-	  sprintf( allcuts, "%snB>=%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt ) ;
-	  sprintf( allsusycuts, "%snB>=%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)%s", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, susycut.Data() ) ;
+          sprintf( allcuts, "%snB>=%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
+          sprintf( allsusycuts, "%snB>=%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)%s", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt, susycut.Data() ) ;
         }
 
 
@@ -825,9 +830,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
        char allcuts[100000] ;
        if ( k < (nBinsBjets-1) ) {
-          sprintf( allcuts, "nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)&&minDelPhiN<4&&nMu==0&&nEl==0&&nB==%d", nJetsCut, minLeadJetPt, minLeadJetPt, k+1 ) ;
+          sprintf( allcuts, "nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&minDelPhiN<4&&nMu==0&&nEl==0&&nB==%d", nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt, k+1 ) ;
        } else {
-          sprintf( allcuts, "nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f)&&minDelPhiN<4&&nMu==0&&nEl==0&&nB>=%d", nJetsCut, minLeadJetPt, minLeadJetPt, k+1 ) ;
+          sprintf( allcuts, "nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&minDelPhiN<4&&nMu==0&&nEl==0&&nB>=%d", nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt, k+1 ) ;
        }
 
        printf("\n cuts : %s\n", allcuts ) ; cout << flush ;

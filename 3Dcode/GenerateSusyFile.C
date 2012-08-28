@@ -231,6 +231,11 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
   TString cBbins[3] = {"nB==1","nB==2","nB>=3"};
 
 
+  // jet pt thresholds
+  double minLeadJetPt = 50. ;
+  double min3rdJetPt = 50. ;
+
+
   // dummy masses
   int minGlMass = 800 ;
   int maxGlMass = 810 ;
@@ -251,6 +256,16 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
   TString cutsSig = "minDelPhiN>4&&nMu==0&&nEl==0&&";
   TString cutsSL =  "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nEl==1&&nMu==0) )&&";
   TString cutsLDP = "minDelPhiN<4&&nMu==0&&nEl==0&&";
+  TString jetpt = "pt_1st_leadJet>";
+  jetpt+= minLeadJetPt;
+  jetpt+= "&&pt_2nd_leadJet>";
+  jetpt+= minLeadJetPt;
+  jetpt+= "&&pt_3rd_leadJet>";
+  jetpt+= min3rdJetPt;
+  jetpt+= "&&";
+  cutsSig += jetpt;
+  cutsSL += jetpt;
+  cutsLDP += jetpt;
 
 
   TH2F* h_susy_sig[10] ;
