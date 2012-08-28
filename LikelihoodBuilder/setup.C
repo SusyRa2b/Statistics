@@ -1,4 +1,6 @@
-{
+#include "TSystem.h"
+
+void setup(){
   gSystem->CompileMacro("RooRatio.cxx"               ,"kO") ;
   gSystem->CompileMacro("RooBetaPdf.cxx"             ,"kO") ;
   gSystem->CompileMacro("RooBetaPrimePdf.cxx"        ,"kO") ;
@@ -10,4 +12,5 @@
   gSystem->CompileMacro("RooCorrelatedBetaPrimeGeneratorHelper.cxx"  ,"kO") ;
   gSystem->CompileMacro("rooFitBetaHelperFunctions.h","kO") ;
   gSystem->CompileMacro("likelihoodBuilder.C","kO") ;
+  return;
 }
