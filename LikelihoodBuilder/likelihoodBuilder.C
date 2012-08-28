@@ -824,3 +824,6 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString s
 }
 
 
+void likelihoodBuilder( TString setupFileName, TString binFilesFileName, TString signalModelFileName, int signalModelFileLine, TString workspaceName, TString outputFileName ) {
+  buildLikelihood(setupFileName, binFilesFileName, signalModelFileName, signalModelFileLine, workspaceName, outputFileName);
+}
