@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: RooFit                                                           *
  * Package: RooFitModels                                                     *
- * @(#)root/roofit:$Id: RooBetaPrimePdf.cxx,v 1.1 2012/07/20 13:22:48 kreis Exp $
+ * @(#)root/roofit:$Id: RooBetaPrimePdf.cxx,v 1.2 2012/07/31 12:33:59 winstrom Exp $
  * Authors:                                                                  *
  *   WV, Wouter Verkerke, UC Santa Barbara, verkerke@slac.stanford.edu       *
  *   DK, David Kirkby,    UC Irvine,         dkirkby@uci.edu                 *
@@ -63,7 +63,8 @@ RooBetaPrimePdf::RooBetaPrimePdf(const RooBetaPrimePdf& other, const char* name)
 Double_t RooBetaPrimePdf::evaluate() const
 {
   if(x<=0) return 0;
-  return pow(x,alpha-1)*pow(1+x,-alpha-beta)/ROOT::Math::beta(alpha,beta);
+  //return pow(x,alpha-1)*pow(1+x,-alpha-beta)/ROOT::Math::beta(alpha,beta); // beta function has problems with large alpha/beta
+  return exp( (alpha-1)*log(x) - (alpha + beta)*log(1+x) - (ROOT::Math::lgamma(alpha)+ROOT::Math::lgamma(beta)-ROOT::Math::lgamma(alpha+beta)) );
 }
 
 
