@@ -142,6 +142,8 @@
 
    //--- End output ttree variables.
 
+   double initFit_R_ttwj_0lep_over_1lep ;
+   double initFit_qcd_0lepLDP_ratio ;
 
    double minNllSusyFloat ;
 
@@ -418,6 +420,12 @@
           if ( toyds == 0x0 ) { printf("\n\n *** Fail!\n\n") ; return ; }
           toyds->printMultiline( cout, 1, kTRUE, "" ) ;
 
+
+
+          saveToyDatfile( ti, toyds ) ;
+
+
+
           RooArgSet ras ;
           ras.add( *rrv_susy_poi ) ;
           rrv_susy_poi->setConstant( kFALSE ) ;
@@ -536,7 +544,6 @@
 
 
 
-          saveToyDatfile( ti, toyds ) ;
 
 
 
@@ -914,10 +921,9 @@
       } // bbi.
 
       for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-         R_passfail[hbi] = 0.07 ; // guess for now.
+         R_passfail[hbi] = initFit_qcd_0lepLDP_ratio ;
       }
 
-      float R_ttwj_0lep_over_1lep = 1.15 ; // guess for now.
 
 
 
@@ -925,7 +931,8 @@
          for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
-               float exp_0lep_ttwj = sf_ttwj[mbi][hbi][bbi] * N_1lep[mbi][hbi][bbi] * R_ttwj_0lep_over_1lep ;
+               float exp_0lep_ttwj = sf_ttwj[mbi][hbi][bbi] * N_1lep[mbi][hbi][bbi] * initFit_R_ttwj_0lep_over_1lep ;
+
 
                float exp_0lep_znn = 0.5 * ( N_Zee[mbi][hbi] * Zee_factor[bbi] + N_Zmm[mbi][hbi] * Zmm_factor[bbi] ) ;
 
@@ -950,8 +957,17 @@
                toy_mean_N_ldp [mbi][hbi][bbi] = N_ldp [mbi][hbi][bbi] ;
 
 
-               printf(" 0lep: m,h,b (%d,%d,%d): ttwj=%5.1f, qcd=%5.1f, Znn=%5.1f,  expected total=%5.1f\n",
+               printf("\n 0lep: m,h,b (%d,%d,%d): ttwj=%5.1f, qcd=%5.1f, Znn=%5.1f,  expected total=%5.1f\n",
                     mbi, hbi, bbi, exp_0lep_ttwj, exp_0lep_qcd, exp_0lep_znn, toy_mean_N_0lep[mbi][hbi][bbi] ) ;
+               printf("   ttwj : sf * N1lep * Rttwj = %5.2f * %6.1f * %5.2f = %6.1f\n",
+                     sf_ttwj[mbi][hbi][bbi],  N_1lep[mbi][hbi][bbi], initFit_R_ttwj_0lep_over_1lep,
+                     exp_0lep_ttwj ) ;
+               printf("   qcd  : sf * (Nldp - ttwj * RMCttwj - Znn * RMCznn) * Rqcd = %5.2f * (%6.1f - %6.1f * %4.2f - %6.1f * %4.2f) * %5.3f = %6.1f\n",
+                     sf_qcd[mbi][hbi][bbi], N_ldp[mbi][hbi][bbi], exp_0lep_ttwj, ttwj_mc_ldpover0lep_ratio[mbi][hbi][bbi],
+                     exp_0lep_znn, znn_mc_ldpover0lep_ratio[mbi][hbi][bbi], R_passfail[hbi],
+                     exp_0lep_qcd ) ;
+               printf("   Znn  : 0.5 * (Nee * Fee + Nmm * Fmm)   =   0.5 * (%5.1f * %5.2f + %5.1f * %5.2f)   =   %6.1f\n",
+                    N_Zee[mbi][hbi], Zee_factor[bbi], N_Zmm[mbi][hbi], Zmm_factor[bbi], exp_0lep_znn ) ;
 
             } // bbi.
             toy_mean_N_Zee[mbi][hbi] = N_Zee[mbi][hbi] ;
@@ -2023,6 +2039,9 @@
 
       nFloatParInitVal = 0 ;
 
+      initFit_R_ttwj_0lep_over_1lep = -1. ;
+      initFit_qcd_0lepLDP_ratio = -1. ;
+
       TIterator* parIter = floatPars.createIterator() ;
       while ( RooRealVar* par = (RooRealVar*) parIter->Next() ) {
 
@@ -2033,8 +2052,26 @@
 
          printf(" %20s : %8.2f\n", par->GetName(), par->getVal() ) ;
 
+         if ( strcmp( par->GetName(), "ttwj_0lep1lep_ratio" ) == 0 ) {
+            printf("    Setting initFit_R_ttwj_0lep_over_1lep to %5.3f\n", par->getVal() ) ;
+            initFit_R_ttwj_0lep_over_1lep = par->getVal() ;
+         }
+         if ( strcmp( par->GetName(), "qcd_0lepLDP_ratio" ) == 0 ) {
+            printf("    Setting initFit_qcd_0lepLDP_ratio to %5.3f\n", par->getVal() ) ;
+            initFit_qcd_0lepLDP_ratio = par->getVal() ;
+         }
+
       }
       printf("\n\n") ;
+
+      if ( initFit_R_ttwj_0lep_over_1lep < 0 ) {
+         printf("\n\n *** Did not find floating parameter ttwj_0lep1lep_ratio.  Can't continue.\n\n") ;
+         return false ;
+      }
+      if ( initFit_qcd_0lepLDP_ratio < 0 ) {
+         printf("\n\n *** Did not find floating parameter qcd_0lepLDP_ratio.  Can't continue.\n\n") ;
+         return false ;
+      }
 
       return true ;
 
