@@ -252,35 +252,35 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
   
   //-----Define Z->ll observables
   
-  RooRealVar* diElectronCount = (RooRealVar*)ws.arg("diElectron_"+observed.diElectronName+"_Count");
+  RooRealVar* diElectronCount = ws.var("diElectron_"+observed.diElectronName+"_Count");
   if(diElectronCount == NULL) 
     {
       RooRealVar diElectronCount_temp("diElectron_"+observed.diElectronName+"_Count","diElectron_"+observed.diElectronName+"_Count",observed.diElectron); 
       diElectronCount_temp.setConstant();
       ws.import(diElectronCount_temp);
-      diElectronCount = (RooRealVar*)ws.arg("diElectron_"+observed.diElectronName+"_Count");
+      diElectronCount = ws.var("diElectron_"+observed.diElectronName+"_Count");
       ws.extendSet(names.observables,diElectronCount->GetName());
     }
-  RooRealVar* diMuonCount = (RooRealVar*)ws.arg("diMuon_"+observed.diMuonName+"_Count");
+  RooRealVar* diMuonCount = ws.var("diMuon_"+observed.diMuonName+"_Count");
   if(diMuonCount == NULL) 
     {
       RooRealVar diMuonCount_temp("diMuon_"+observed.diMuonName+"_Count","diMuon_"+observed.diMuonName+"_Count",observed.diMuon);
       diMuonCount_temp.setConstant();
       ws.import(diMuonCount_temp);
-      diMuonCount = (RooRealVar*)ws.arg("diMuon_"+observed.diMuonName+"_Count");
+      diMuonCount = ws.var("diMuon_"+observed.diMuonName+"_Count");
       ws.extendSet(names.observables,diMuonCount->GetName());
     }
   
   //-----Define Z->ll yields
   
-  RooAbsArg* ZtollOverZtoNuNuRatio = ws.arg(names.ZtollOverZtoNuNuRatio);
+  RooRealVar* ZtollOverZtoNuNuRatio = ws.var(names.ZtollOverZtoNuNuRatio);
   
-  RooRealVar* ZtoNuNu = (RooRealVar*)ws.arg("ZtoNuNu_"+observed.diMuonName);//use MuonName, which should be the same as ElectronName
+  RooRealVar* ZtoNuNu = ws.var("ZtoNuNu_"+observed.diMuonName);//use MuonName, which should be the same as ElectronName
   if(ZtoNuNu == NULL) 
     {
       RooRealVar ZtoNuNu_temp("ZtoNuNu_"+observed.diMuonName,"ZtoNuNu_"+observed.diMuonName,(1./numbers.ZtollOverZtoNuNuRatio)*0.5*(observed.diMuon*numbers.ZtomumuPurity/(numbers.ZtomumuEfficiency*abcd.ZtomumuAcceptance) + observed.diElectron*numbers.ZtoeePurity/(numbers.ZtoeeEfficiency*abcd.ZtoeeAcceptance)),0.0,1e3);
       ws.import(ZtoNuNu_temp);
-      ZtoNuNu = (RooRealVar*)ws.arg("ZtoNuNu_"+observed.diMuonName);
+      ZtoNuNu = ws.var("ZtoNuNu_"+observed.diMuonName);
       ws.extendSet(names.nuisances,ZtoNuNu->GetName());
     }
   
