@@ -260,19 +260,19 @@
             cqcd->Divide(1,3) ;
 
             cqcd->cd(1) ;
-            hflat_0lep[si][bbi] -> Draw("histe") ;
-            hflat_0lep[si][bbi] -> Draw("samee") ;
+            hflat_0lep[si][bbi] -> DrawCopy("histe") ;
+            hflat_0lep[si][bbi] -> DrawCopy("samee") ;
 
             cqcd->cd(2) ;
-            hflat_ldp[si][bbi] -> Draw("histe") ;
-            hflat_ldp[si][bbi] -> Draw("samee") ;
+            hflat_ldp[si][bbi] -> DrawCopy("histe") ;
+            hflat_ldp[si][bbi] -> DrawCopy("samee") ;
 
             cqcd->cd(3) ;
             hflat_0lepldp_ratio[si][bbi]->SetMinimum(-0.1) ;
             hflat_0lepldp_ratio[si][bbi]->SetMaximum(0.6) ;
             hflat_0lepldp_ratio[si][bbi]->SetMarkerStyle(20) ;
             hflat_0lepldp_ratio[si][bbi]->SetLineWidth(2) ;
-            hflat_0lepldp_ratio[si][bbi]->Draw() ;
+            hflat_0lepldp_ratio[si][bbi]->DrawCopy() ;
             gPad->SetGridx(1) ;
             gPad->SetGridy(1) ;
             line->DrawLine(0.5,0,nbins+0.5,0) ;
@@ -285,6 +285,9 @@
 
          } // si.
       } // bbi.
+
+
+
 
 
 
@@ -335,6 +338,75 @@
 
 
 
+
+
+      TH1F* hflat_0lepldp_ratio_ave_withRMSerror[nBinsBjets] ;
+
+      printf("\n\n") ;
+      for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+
+         char hname[1000] ;
+         char htitle[1000] ;
+
+         sprintf( hname, "hflat_0lepldp_ratio_ave_%db_withRMSerror", bbi+1 ) ;
+         sprintf( htitle, "QCD 0lep/LDP average ratio, RMS included in error, nb=%d", bbi+1 ) ;
+         hflat_0lepldp_ratio_ave_withRMSerror[bbi] = bookHist( hname, htitle, nBinsMET, nBinsHT, 5 ) ;
+
+         hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetMarkerStyle(24) ;
+         hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetMarkerSize(2.0) ;
+         hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetLineWidth(3) ;
+
+         for ( int binind=1; binind<=nbins; binind++ ) {
+
+            double sumsquare(0.) ;
+            int    nsum(0) ;
+
+            double ave     = hflat_0lepldp_ratio_ave[bbi] -> GetBinContent( binind ) ;
+            double ave_err = hflat_0lepldp_ratio_ave[bbi] -> GetBinError( binind ) ;
+
+            for ( int si=0; si<nQcdSamples; si++ ) {
+
+               double val = hflat_0lepldp_ratio[si][bbi] -> GetBinContent( binind ) ;
+               double err = hflat_0lepldp_ratio[si][bbi] -> GetBinError( binind ) ;
+
+               if ( err <= 0 ) { continue ; }
+               if ( val <= 0 ) { continue ; }
+               if ( err/val > 0.5 ) { continue ; } //-- do not include points with very large errors.
+
+
+               double diff = val - ave ;
+
+               sumsquare += diff*diff ;
+
+               nsum ++ ;
+
+            } // si.
+
+            if ( nsum > 1 ) {
+               double rms = sqrt(sumsquare/nsum) ;
+               double totalerr = sqrt( ave_err*ave_err + rms*rms ) ;
+               const char* binlabel = hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> GetXaxis() -> GetBinLabel( binind ) ;
+               printf(" %s : %s : ratio = %5.3f, stat err = %5.3f, RMS = %5.3f,  total err = %5.3f\n",
+                   hname, binlabel, ave, ave_err, rms, totalerr ) ;
+               hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetBinContent( binind, ave ) ;
+               hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetBinError( binind, totalerr ) ;
+            } else {
+               hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetBinContent( binind, ave ) ;
+               hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetBinError( binind, ave_err ) ;
+            }
+
+         } // binind
+         printf("\n") ;
+
+      } // bbi.
+      printf("\n\n") ;
+
+
+
+
+
+
+
      //---
 
       TCanvas* cqcd2 = (TCanvas*) gDirectory->FindObject("cqcd2") ;
@@ -364,9 +436,9 @@
          hflat_0lepldp_ratio[si][0] -> SetMarkerStyle(20+si) ;
          hflat_0lepldp_ratio[si][0] -> SetLineColor(samplecolor[si]) ;
          hflat_0lepldp_ratio[si][0] -> SetMarkerColor(samplecolor[si]) ;
-         if ( si == 0 ) { hflat_0lepldp_ratio[si][0] -> DrawCopy() ; } else { hflat_0lepldp_ratio[si][0] -> Draw("same") ; }
+         if ( si == 0 ) { hflat_0lepldp_ratio[si][0] -> DrawCopy() ; } else { hflat_0lepldp_ratio[si][0] -> DrawCopy("same") ; }
       }
-      hflat_0lepldp_ratio_ave[0]->Draw("same") ;
+      hflat_0lepldp_ratio_ave[0]->DrawCopy("same") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
       l2->Draw() ;
       gPad->SetGridx(1) ;
@@ -378,9 +450,9 @@
          hflat_0lepldp_ratio[si][1] -> SetMarkerStyle(20+si) ;
          hflat_0lepldp_ratio[si][1] -> SetLineColor(samplecolor[si]) ;
          hflat_0lepldp_ratio[si][1] -> SetMarkerColor(samplecolor[si]) ;
-         if ( si == 0 ) { hflat_0lepldp_ratio[si][1] -> DrawCopy() ; } else { hflat_0lepldp_ratio[si][1] -> Draw("same") ; }
+         if ( si == 0 ) { hflat_0lepldp_ratio[si][1] -> DrawCopy() ; } else { hflat_0lepldp_ratio[si][1] -> DrawCopy("same") ; }
       }
-      hflat_0lepldp_ratio_ave[1]->Draw("same") ;
+      hflat_0lepldp_ratio_ave[1]->DrawCopy("same") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
       l2->Draw() ;
       gPad->SetGridx(1) ;
@@ -392,9 +464,9 @@
          hflat_0lepldp_ratio[si][2] -> SetMarkerStyle(20+si) ;
          hflat_0lepldp_ratio[si][2] -> SetLineColor(samplecolor[si]) ;
          hflat_0lepldp_ratio[si][2] -> SetMarkerColor(samplecolor[si]) ;
-         if ( si == 0 ) { hflat_0lepldp_ratio[si][2] -> DrawCopy() ; } else { hflat_0lepldp_ratio[si][2] -> Draw("same") ; }
+         if ( si == 0 ) { hflat_0lepldp_ratio[si][2] -> DrawCopy() ; } else { hflat_0lepldp_ratio[si][2] -> DrawCopy("same") ; }
       }
-      hflat_0lepldp_ratio_ave[2]->Draw("same") ;
+      hflat_0lepldp_ratio_ave[2]->DrawCopy("same") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
       l2->Draw() ;
       gPad->SetGridx(1) ;
@@ -433,19 +505,19 @@
          for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
             cqcd3->cd(1+bbi) ;
-            hflat_0lep[si][bbi] -> Draw("histe") ;
-            hflat_0lep[si][bbi] -> Draw("samee") ;
+            hflat_0lep[si][bbi] -> DrawCopy("histe") ;
+            hflat_0lep[si][bbi] -> DrawCopy("samee") ;
 
             cqcd3->cd(4+bbi) ;
-            hflat_ldp[si][bbi] -> Draw("histe") ;
-            hflat_ldp[si][bbi] -> Draw("samee") ;
+            hflat_ldp[si][bbi] -> DrawCopy("histe") ;
+            hflat_ldp[si][bbi] -> DrawCopy("samee") ;
 
 
             cqcd3->cd(7+bbi) ;
             gPad->SetGridx(1) ;
             gPad->SetGridy(1) ;
-            hflat_0lepldp_ratio[si][bbi]->Draw() ;
-            hflat_0lepldp_ratio_ave[bbi]->Draw("same") ;
+            hflat_0lepldp_ratio[si][bbi]->DrawCopy() ;
+            hflat_0lepldp_ratio_ave[bbi]->DrawCopy("same") ;
             line->DrawLine(0.5,0,nbins+0.5,0) ;
             l3->Draw() ;
 
@@ -464,6 +536,77 @@
          if ( a == 'q') { return ; }
 
       } // si.
+
+
+     //---
+
+      TCanvas* cqcd4 = (TCanvas*) gDirectory->FindObject("cqcd4") ;
+      if ( cqcd4 == 0x0 ) {
+         cqcd4 = new TCanvas("cqcd4", "qcd study", 1700, 600 ) ;
+      }
+
+      gStyle->SetEndErrorSize(5) ;
+
+      cqcd4->Clear() ;
+      cqcd4->Divide(3,1) ;
+
+      cqcd4 -> cd(1) ;
+      hflat_0lepldp_ratio_ave[0] -> SetTitle("Average QCD 0lep/LDP ratio, nb=1") ;
+      hflat_0lepldp_ratio_ave[0] -> SetMarkerSize(1.2) ;
+      hflat_0lepldp_ratio_ave[0] -> SetMarkerStyle(20) ;
+      hflat_0lepldp_ratio_ave[0] -> SetMaximum(0.6) ;
+      hflat_0lepldp_ratio_ave[0] -> SetMinimum(-0.1) ;
+      hflat_0lepldp_ratio_ave[0]->DrawCopy("e1") ;
+      hflat_0lepldp_ratio_ave_withRMSerror[0]->SetMarkerStyle() ;
+      hflat_0lepldp_ratio_ave_withRMSerror[0]->SetLineColor(4) ;
+      hflat_0lepldp_ratio_ave_withRMSerror[0]->DrawCopy("samee1") ;
+      hflat_0lepldp_ratio_ave[0]->DrawCopy("samee1") ;
+      line->DrawLine(0.5,0,nbins+0.5,0) ;
+      gPad->SetGridx(1) ;
+      gPad->SetGridy(1) ;
+
+      cqcd4 -> cd(2) ;
+      hflat_0lepldp_ratio_ave[1] -> SetTitle("Average QCD 0lep/LDP ratio, nb=2") ;
+      hflat_0lepldp_ratio_ave[1] -> SetMarkerSize(1.2) ;
+      hflat_0lepldp_ratio_ave[1] -> SetMarkerStyle(20) ;
+      hflat_0lepldp_ratio_ave[1] -> SetMaximum(0.6) ;
+      hflat_0lepldp_ratio_ave[1] -> SetMinimum(-0.1) ;
+      hflat_0lepldp_ratio_ave[1]->DrawCopy("e1") ;
+      hflat_0lepldp_ratio_ave_withRMSerror[1]->SetMarkerStyle() ;
+      hflat_0lepldp_ratio_ave_withRMSerror[1]->SetLineColor(4) ;
+      hflat_0lepldp_ratio_ave_withRMSerror[1]->DrawCopy("samee1") ;
+      hflat_0lepldp_ratio_ave[1]->DrawCopy("samee1") ;
+      line->DrawLine(0.5,0,nbins+0.5,0) ;
+      gPad->SetGridx(1) ;
+      gPad->SetGridy(1) ;
+
+      cqcd4 -> cd(3) ;
+      hflat_0lepldp_ratio_ave[2] -> SetTitle("Average QCD 0lep/LDP ratio, nb>=3") ;
+      hflat_0lepldp_ratio_ave[2] -> SetMarkerSize(1.2) ;
+      hflat_0lepldp_ratio_ave[2] -> SetMarkerStyle(20) ;
+      hflat_0lepldp_ratio_ave[2] -> SetMaximum(0.6) ;
+      hflat_0lepldp_ratio_ave[2] -> SetMinimum(-0.1) ;
+      hflat_0lepldp_ratio_ave[2]->DrawCopy("e1") ;
+      hflat_0lepldp_ratio_ave_withRMSerror[2]->SetMarkerStyle() ;
+      hflat_0lepldp_ratio_ave_withRMSerror[2]->SetLineColor(4) ;
+      hflat_0lepldp_ratio_ave_withRMSerror[2]->DrawCopy("samee1") ;
+      hflat_0lepldp_ratio_ave[2]->DrawCopy("samee1") ;
+      line->DrawLine(0.5,0,nbins+0.5,0) ;
+      gPad->SetGridx(1) ;
+      gPad->SetGridy(1) ;
+
+
+      cqcd4->Update() ; cqcd4->Draw() ;
+
+      if ( savePlots ) {
+         cqcd4 -> SaveAs("outputfiles/qcd-study-averatio.png") ;
+         cqcd4 -> SaveAs("outputfiles/qcd-study-averatio.pdf") ;
+      }
+
+
+
+
+
 
 
    } // qcd_study.
