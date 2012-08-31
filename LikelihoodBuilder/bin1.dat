@@ -28,6 +28,8 @@ deltaPhiNRatioName H1
 deltaPhiNRatio 0.01
 deltaPhiNRatioError 0.001
 lowDeltaPhiNScalingName H1
+topWJetsLowDeltaPhiNOverZeroLeptonRatioMC 0.1
+ZtoNuNuLowDeltaPhiNOverZeroLeptonRatioMC 0.1
 qcdClosure 1.0
 qcdClosureError 1.2
 topWJetsClosure 1.0
