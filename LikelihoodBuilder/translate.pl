@@ -117,6 +117,30 @@ while(<$fin>) {
 	  }
 	}
       }
+
+      elsif($fullOKAname =~ /(ttwj_mc_ldpover0lep_ratio)(_M)(\d)(_H)(\d)(_)(\d)(b)(_*)(\S*)/) {
+	my $binFileName = "M$3_H$5_$7b";
+	my $err = $10;
+	if($err ne "err") {
+	  print {$binFileHandles[$binFileHash{$binFileName}]} "topWJetsLowDeltaPhiNOverZeroLeptonRatioMC $value\n";
+	}
+	else {
+	  #currently not used
+	  #print {$binFileHandles[$binFileHash{$binFileName}]} "topWJetsLowDeltaPhiNOverZeroLeptonRatioMCError $value\n";
+	}
+      }
+
+      elsif($fullOKAname =~ /(znn_mc_ldpover0lep_ratio)(_M)(\d)(_H)(\d)(_)(\d)(b)(_*)(\S*)/) {
+	my $binFileName = "M$3_H$5_$7b";
+	my $err = $10;
+	if($err ne "err") {
+	  print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoNuNuLowDeltaPhiNOverZeroLeptonRatioMC $value\n";
+	}
+	else {
+	  #currently not used
+	  #print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoNuNuLowDeltaPhiNOverZeroLeptonRatioMCError $value\n";
+	}
+      }
       
       elsif($fullOKAname =~ /(N_Zee)(_M)(\d)(_H)(\d)/) {
 	my $dim = "M$3_H$5";
