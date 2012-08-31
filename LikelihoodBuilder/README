@@ -3,22 +3,33 @@ CVS checkout:
 cvs co -r HEAD -d LikelihoodBuilder UserCode/SusyAnalysis/RA2b/Statistics/LikelihoodBuilder
 
 
-The way to run this is:
+The way to build a likelihood is:
 ========================================
 If you are on lxplus, you can get a compatible version of root by doing 'source setupRooFit.csh'.
 
+If you don't have your own input files, you can use the example checked in here.  You must do 'cp bin1.dat bin2.dat' and 'cp bin1.dat bin3.dat' to create all of the required input files.
+
 root -l
 .x setup.C
-buildLikelihood("setupFile.dat","binFilesFile.dat","signalModelFile.dat",1,"workspace","test.root")
+buildLikelihood("setupFile.dat","binFilesFile.dat","signalModelFile.dat",0,"workspace","test.root")
 
 
-The way to fit is:
+The way to fit is (after building likelihood):
 =========================================
 If you are on lxplus, you can get a compatible version of root by doing 'source setupRooFit.csh'.
 
 root -l
 .x setup.C
 .x minimalFit.C+
+
+
+The way to do a profile likelihood scan is (after building likelihood):
+=========================================
+If you are on lxplus, you can get a compatible version of root by doing 'source setupRooFit.csh'.
+
+root -l
+.x setup.C
+.x minimalProfileLikelihood.C+
 
 
 Some additional info:
