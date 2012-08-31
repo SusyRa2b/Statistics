@@ -43,6 +43,10 @@
 #include "rooFitBetaHelperFunctions.h"
 #include "RooNormalFromFlatPdf.h"
 
+//For truncated gaussians, uncomment this line and two lines in setup.C
+//You must also check out RA2b/Statistics/3Dcode to get a couple of files
+//#include "rooFitGaussianHelperFunctions.h"
+
 #include "RooStats/ModelConfig.h"
 
 #include "TMath.h"
