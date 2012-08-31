@@ -980,7 +980,7 @@ chainAll.Add("files5fb_MT/QCD-170to300.root");
   
     // use 2011 values for now.
     inFile << "Z_ee_pur  \t" << 0.911 << endl;
-    inFile << "Z_ee_pur_err  \t" << 0.104 << endl;
+    inFile << "Z_ee_pur_err  \t" << 0.079 << endl;
     inFile << "Z_mm_pur  \t" << 0.866 << endl;
     inFile << "Z_mm_pur_err  \t" << 0.079 << endl;
   
