@@ -11,6 +11,8 @@
 #include "TLine.h"
 #include "TLegend.h"
 
+#include "updateFileValue.c"
+
 
 #include <iostream>
 
@@ -20,7 +22,7 @@
 
    //-------
 
-   void qcd_study1( bool fillHists=false, bool savePlots=false ) {
+   void qcd_study1( bool fillHists=false, bool savePlots=false, bool interactive=true, const char* datfile = "null" ) {
 
       TLine* line = new TLine() ;
 
@@ -96,6 +98,8 @@
          cqcd = new TCanvas("cqcd", "qcd study", 700, 900 ) ;
       }
 
+      char hname[1000] ;
+      char htitle[1000] ;
 
       if ( fillHists ) {
 
@@ -110,8 +114,6 @@
 
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
-               char hname[1000] ;
-               char htitle[1000] ;
                sprintf( hname, "h_0lep_%db_%s", bbi+1, samplename[si] ) ;
                sprintf( htitle, "QCD 0lep yield, nb=%d, %s", bbi+1, samplename[si] ) ;
                printf("         booking hist %s : %s\n", hname, htitle ) ;
@@ -164,9 +166,6 @@
                hldp[si][bbi]->Draw("samecolz") ;
                cqcd->Update() ; cqcd->Draw() ;
 
-            // hldp[si][bbi]->Print("all") ;
-            // getchar() ;
-
             } // bbi.
 
          } // si.
@@ -185,7 +184,6 @@
       for ( int si=0; si<nQcdSamples; si++ ) {
          for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
-            char hname[1000] ;
             sprintf( hname, "h_0lep_%db_%s", bbi+1, samplename[si] ) ;
             printf("  loading %s\n", hname ) ;
             h0lep[si][bbi] = (TH2F*) gDirectory->FindObject( hname ) ;
@@ -198,17 +196,29 @@
          } // bbi.
       } // si.
 
+
+
+
+
+
+     //--- Flatten 2D histos and compute 0lep/LDP ratios for each sample.
+
       int nbins = nBinsMET*(nBinsHT+1) + 1 ;
 
       TH1F* hflat_0lep[nQcdSamples][nBinsBjets] ;
       TH1F* hflat_ldp [nQcdSamples][nBinsBjets] ;
       TH1F* hflat_0lepldp_ratio[nQcdSamples][nBinsBjets] ;
 
+      sprintf( hname, "hflat_0lep_all" ) ;
+      sprintf( htitle, "All QCD 0lep events" ) ;
+      TH1F* hflat_0lep_all = bookHist( hname, htitle, nBinsMET, nBinsHT, 5 ) ;
+      sprintf( hname, "hflat_ldp_all" ) ;
+      sprintf( htitle, "All QCD ldp events" ) ;
+      TH1F* hflat_ldp_all = bookHist( hname, htitle, nBinsMET, nBinsHT, 5 ) ;
+
+
       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
          for ( int si=0; si<nQcdSamples; si++ ) {
-
-            char hname[1000] ;
-            char htitle[1000] ;
 
             sprintf( hname, "hflat_0lep_%db_%s", bbi+1, samplename[si] ) ;
             sprintf( htitle, "QCD 0lep events, nb=%d, %s", bbi+1, samplename[si] ) ;
@@ -256,6 +266,9 @@
                } // hbi.
             } // mbi.
 
+            hflat_0lep_all -> Add( hflat_0lep[si][bbi] ) ;
+            hflat_ldp_all  -> Add( hflat_ldp [si][bbi] ) ;
+
             cqcd->Clear() ;
             cqcd->Divide(1,3) ;
 
@@ -280,24 +293,37 @@
 
             cqcd->Update() ; cqcd->Draw() ;
 
-            // char a = getchar() ;
-            // if ( a == 'q') { return ; }
-
          } // si.
       } // bbi.
 
+      TH1F* hflat_0lep_all_sqrtNerrs = (TH1F*) hflat_0lep_all->Clone("hflat_0lep_all_sqrtNerrs") ;
+      TH1F* hflat_ldp_all_sqrtNerrs  = (TH1F*) hflat_ldp_all ->Clone("hflat_ldp_all_sqrtNerrs") ;
+
+      for ( int bi=1; bi<=nbins; bi++ ) {
+         double val ;
+         val = hflat_0lep_all_sqrtNerrs->GetBinContent( bi ) ;
+         hflat_0lep_all_sqrtNerrs -> SetBinError( bi, sqrt(val) ) ;
+         val = hflat_ldp_all_sqrtNerrs->GetBinContent( bi ) ;
+         hflat_ldp_all_sqrtNerrs -> SetBinError( bi, sqrt(val) ) ;
+      }
 
 
 
 
+
+
+
+
+
+
+
+
+     //--- Compute sample average of 0lep/LDP ratio
 
 
       TH1F* hflat_0lepldp_ratio_ave[nBinsBjets] ;
 
       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-
-         char hname[1000] ;
-         char htitle[1000] ;
 
          sprintf( hname, "hflat_0lepldp_ratio_ave_%db", bbi+1 ) ;
          sprintf( htitle, "QCD 0lep/LDP average ratio, nb=%d", bbi+1 ) ;
@@ -339,14 +365,13 @@
 
 
 
+     //--- Compute RMS spread of samples and total uncertainty
+
 
       TH1F* hflat_0lepldp_ratio_ave_withRMSerror[nBinsBjets] ;
 
       printf("\n\n") ;
       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-
-         char hname[1000] ;
-         char htitle[1000] ;
 
          sprintf( hname, "hflat_0lepldp_ratio_ave_%db_withRMSerror", bbi+1 ) ;
          sprintf( htitle, "QCD 0lep/LDP average ratio, RMS included in error, nb=%d", bbi+1 ) ;
@@ -406,8 +431,113 @@
 
 
 
+     //--- compute global average 0lep/LDP ratio.
 
-     //---
+      double all0lep(0.) ;
+      double allldp(0.) ;
+
+      printf("\n\n") ;
+      for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+         for ( int si=0; si<nQcdSamples; si++ ) {
+
+            double sample_all0lep = h0lep[si][bbi] -> Integral() ;
+            double sample_allldp  = hldp [si][bbi] -> Integral() ;
+            double sample_ratio(0.) ;
+            if ( sample_allldp > 0 ) { sample_ratio = sample_all0lep / sample_allldp ; }
+
+            printf( "%s, nb=%d : 0lep = %8.1f,  LDP = %8.1f, ratio = %5.3f\n", samplename[si], bbi+1, sample_all0lep, sample_allldp, sample_ratio ) ;
+
+            all0lep += sample_all0lep ;
+            allldp += sample_allldp ;
+
+         } // si.
+         printf("\n") ;
+      } // bbi.
+      printf("\n\n") ;
+
+      double global_0lepldp_ratio(0.) ;
+      if ( allldp > 0.) {
+         global_0lepldp_ratio = all0lep / allldp ;
+      } else {
+         printf("\n\n *** You screwed up.\n\n") ; return ;
+      }
+      printf("  overall : 0lep = %9.1f,  LDP = %9.1f, ratio = %5.3f\n", all0lep, allldp, global_0lepldp_ratio ) ;
+
+
+
+
+
+
+
+
+
+
+     //--- Compute scale factors.  SF_i = (0lep/LDP)_i / global_(0lep/LDP)
+
+      TH1F* hflat_scale_factor[nBinsBjets] ;
+      TH1F* hflat_scale_factor_withRMSerror[nBinsBjets] ;
+
+      for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+
+         sprintf( hname, "hflat_scale_factor_%db", bbi+1 ) ;
+         sprintf( htitle, "QCD scale factor, nb=%d", bbi+1 ) ;
+         hflat_scale_factor[bbi] = (TH1F*) hflat_0lepldp_ratio_ave[bbi]->Clone( hname ) ;
+         hflat_scale_factor[bbi] -> SetTitle( htitle ) ;
+         hflat_scale_factor[bbi] -> Scale( 1./ global_0lepldp_ratio ) ;
+
+         sprintf( hname, "hflat_scale_factor_%db_withRMSerror", bbi+1 ) ;
+         sprintf( htitle, "QCD scale factor, nb=%d, RMS error included ", bbi+1 ) ;
+         hflat_scale_factor_withRMSerror[bbi] = (TH1F*) hflat_0lepldp_ratio_ave_withRMSerror[bbi]->Clone( hname ) ;
+         hflat_scale_factor_withRMSerror[bbi] -> SetTitle( htitle ) ;
+         hflat_scale_factor_withRMSerror[bbi] -> Scale( 1./ global_0lepldp_ratio ) ;
+
+      } // bbi.
+
+
+
+
+
+
+
+
+
+     //--- set Scale Factor values in dat file if one is provided.
+
+      if ( strcmp( datfile, "null" ) != 0 ) {
+
+         printf("\n\n\n Setting QCD scale factors in %s\n\n", datfile ) ;
+
+         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+            for ( int hbi=0; hbi<nBinsMET; hbi++ ) {
+               for ( int bbi=0; bbi<nBinsMET; bbi++ ) {
+                  char parname[1000] ;
+                  int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+                  double val = hflat_scale_factor_withRMSerror[bbi]->GetBinContent( histbin ) ;
+                  double err = hflat_scale_factor_withRMSerror[bbi]->GetBinError( histbin ) ;
+                  if ( err <= 0 ) {
+                     val = 1.0 ;
+                     err = 3.0 ;
+                  }
+                  sprintf( parname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                  updateFileValue( datfile, parname, val ) ;
+                  sprintf( parname, "sf_qcd_M%d_H%d_%db_err", mbi+1, hbi+1, bbi+1 ) ;
+                  updateFileValue( datfile, parname, err ) ;
+               } // bbi.
+            } // hbi.
+         } // mbi.
+
+      }
+
+
+
+
+
+
+
+     //===========  End calculations.  Plots and other output below here.  ===================================
+
+
+     //--- Plot all samples together
 
       TCanvas* cqcd2 = (TCanvas*) gDirectory->FindObject("cqcd2") ;
       if ( cqcd2 == 0x0 ) {
@@ -480,7 +610,14 @@
          cqcd2 -> SaveAs("outputfiles/qcd-study-allonone.pdf") ;
       }
 
-     //---
+
+
+
+
+
+
+
+     //--- Go through the samples, 1 by 1, and draw numerator, denominator, and ratio
 
       TCanvas* cqcd3 = (TCanvas*) gDirectory->FindObject("cqcd3") ;
       if ( cqcd3 == 0x0 ) {
@@ -532,13 +669,20 @@
             sprintf( filename, "outputfiles/qcd-study-%s.png", samplename[si] ) ;
             cqcd3 -> SaveAs( filename ) ;
          }
-         char a = getchar() ;
-         if ( a == 'q') { return ; }
+         if ( interactive ) {
+            char a = getchar() ;
+            if ( a == 'q') { return ; }
+         }
 
       } // si.
 
 
-     //---
+
+
+
+
+
+     //--- Draw the average 0lep/LDP ratio with MC stat error and total error.
 
       TCanvas* cqcd4 = (TCanvas*) gDirectory->FindObject("cqcd4") ;
       if ( cqcd4 == 0x0 ) {
@@ -601,6 +745,82 @@
       if ( savePlots ) {
          cqcd4 -> SaveAs("outputfiles/qcd-study-averatio.png") ;
          cqcd4 -> SaveAs("outputfiles/qcd-study-averatio.pdf") ;
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+     //--- Draw the QCD scale factor with MC stat error and total error.
+
+      TCanvas* cqcd5 = (TCanvas*) gDirectory->FindObject("cqcd5") ;
+      if ( cqcd5 == 0x0 ) {
+         cqcd5 = new TCanvas("cqcd5", "qcd study", 1700, 600 ) ;
+      }
+
+      gStyle->SetEndErrorSize(5) ;
+
+      cqcd5->Clear() ;
+      cqcd5->Divide(3,1) ;
+
+      cqcd5 -> cd(1) ;
+      hflat_scale_factor[0] -> SetTitle("QCD Scale Factor, nb=1") ;
+      hflat_scale_factor[0] -> SetMarkerSize(1.2) ;
+      hflat_scale_factor[0] -> SetMarkerStyle(20) ;
+      hflat_scale_factor[0] -> SetMaximum(2.6) ;
+      hflat_scale_factor[0] -> SetMinimum(-0.1) ;
+      hflat_scale_factor[0]->DrawCopy("e1") ;
+      hflat_scale_factor_withRMSerror[0]->SetMarkerStyle() ;
+      hflat_scale_factor_withRMSerror[0]->SetLineColor(4) ;
+      hflat_scale_factor_withRMSerror[0]->DrawCopy("samee1") ;
+      hflat_scale_factor[0]->DrawCopy("samee1") ;
+      line->DrawLine(0.5,0,nbins+0.5,0) ;
+      gPad->SetGridx(1) ;
+      gPad->SetGridy(1) ;
+
+      cqcd5 -> cd(2) ;
+      hflat_scale_factor[1] -> SetTitle("QCD Scale Factor, nb=2") ;
+      hflat_scale_factor[1] -> SetMarkerSize(1.2) ;
+      hflat_scale_factor[1] -> SetMarkerStyle(20) ;
+      hflat_scale_factor[1] -> SetMaximum(2.6) ;
+      hflat_scale_factor[1] -> SetMinimum(-0.1) ;
+      hflat_scale_factor[1]->DrawCopy("e1") ;
+      hflat_scale_factor_withRMSerror[1]->SetMarkerStyle() ;
+      hflat_scale_factor_withRMSerror[1]->SetLineColor(4) ;
+      hflat_scale_factor_withRMSerror[1]->DrawCopy("samee1") ;
+      hflat_scale_factor[1]->DrawCopy("samee1") ;
+      line->DrawLine(0.5,0,nbins+0.5,0) ;
+      gPad->SetGridx(1) ;
+      gPad->SetGridy(1) ;
+
+      cqcd5 -> cd(3) ;
+      hflat_scale_factor[2] -> SetTitle("QCD Scale Factor, nb>=3") ;
+      hflat_scale_factor[2] -> SetMarkerSize(1.2) ;
+      hflat_scale_factor[2] -> SetMarkerStyle(20) ;
+      hflat_scale_factor[2] -> SetMaximum(2.6) ;
+      hflat_scale_factor[2] -> SetMinimum(-0.1) ;
+      hflat_scale_factor[2]->DrawCopy("e1") ;
+      hflat_scale_factor_withRMSerror[2]->SetMarkerStyle() ;
+      hflat_scale_factor_withRMSerror[2]->SetLineColor(4) ;
+      hflat_scale_factor_withRMSerror[2]->DrawCopy("samee1") ;
+      hflat_scale_factor[2]->DrawCopy("samee1") ;
+      line->DrawLine(0.5,0,nbins+0.5,0) ;
+      gPad->SetGridx(1) ;
+      gPad->SetGridy(1) ;
+
+
+      cqcd5->Update() ; cqcd5->Draw() ;
+
+      if ( savePlots ) {
+         cqcd5 -> SaveAs("outputfiles/qcd-study-scalefactor.png") ;
+         cqcd5 -> SaveAs("outputfiles/qcd-study-scalefactor.pdf") ;
       }
 
 
