@@ -50,6 +50,12 @@
 using namespace RooFit ;
 using namespace RooStats ;
 
+struct  likelihoodOptions
+{
+  bool skipTriggerEfficiency;
+  TString qcdMethod;
+};
+
 struct channels
 {
   double zeroLepton;
@@ -80,6 +86,8 @@ struct abcdBinParameters
   double oneMuonTriggerEfficiency;
   double oneMuonTriggerEfficiencyError;
   double zeroLeptonLowDeltaPhiNMC;
+  double topWJetsLowDeltaPhiNOverZeroLeptonRatioMC;
+  double ZtoNuNuLowDeltaPhiNOverZeroLeptonRatioMC;
   TString ZtoNuNubTagScalingName;
   double ZtoNuNubTagScaling;
   double ZtoNuNubTagScalingError;
@@ -141,7 +149,7 @@ struct allBins
 } ;
 
 
-bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const allBins& numbers, channels& observed , abcdBinParameters& abcd , yields& signal , yields& signalError , double& oneLeptonTotal, double& zeroLeptonTopWJetsGuess)
+bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& binName , allBinNames& names , const allBins& numbers, channels& observed , abcdBinParameters& abcd , yields& signal , yields& signalError , double& oneLeptonTotal, double& zeroLeptonTopWJetsGuess)
 {
 
   //Make sure that names are unique to this bin
@@ -201,12 +209,17 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   RooProduct zeroLeptonQCDYield(zeroLeptonName+"_QCDYield",zeroLeptonName+"_QCDYield",RooArgSet(*deltaPhiNRatio,*zeroLeptonQCDClosure,zeroLeptonLowDeltaPhiNQCDYield));
   */
 
-  RooRealVar* lowDeltaPhiNScaling = ws.var("lowDeltaPhiNScaling_"+abcd.lowDeltaPhiNScalingName);
+  //BEN FIXME -- for now, make this in option here.  consider moving option to input file "scalingName"
+  TString scaling = "lowDeltaPhiNScaling_";
+  if(options.qcdMethod == "singleScaleWithCorrections") scaling +=  "_all";
+  else if (options.qcdMethod == "htDependent") scaling +=  abcd.lowDeltaPhiNScalingName;
+  else assert(0);
+  RooRealVar* lowDeltaPhiNScaling = ws.var(scaling);
   if(lowDeltaPhiNScaling == NULL) {
-    RooRealVar lowDeltaPhiNScaling_temp("lowDeltaPhiNScaling_"+abcd.lowDeltaPhiNScalingName, "lowDeltaPhiNScaling_"+abcd.lowDeltaPhiNScalingName, 0.0, 1e3);
-    lowDeltaPhiNScaling_temp.setVal(0.1);//BEN FIXME -should get an automatic initial guess, but how? it's easy to get the lowDeltaPhiN part, but what about the 0L?
+    RooRealVar lowDeltaPhiNScaling_temp(scaling, scaling, 0.0, 1e3);
+    lowDeltaPhiNScaling_temp.setVal(0.1);//BEN FIXME - automatic initial guess?
     ws.import(lowDeltaPhiNScaling_temp);
-    lowDeltaPhiNScaling = ws.var("lowDeltaPhiNScaling_"+abcd.lowDeltaPhiNScalingName);
+    lowDeltaPhiNScaling = ws.var(scaling);
   }
   double qcdGuess = observed.zeroLeptonLowDeltaPhiN - abcd.zeroLeptonLowDeltaPhiNMC;
   if(qcdGuess < 1e-5) qcdGuess = 1e-5;
@@ -218,7 +231,9 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
 			   abcd.qcdClosure,abcd.qcdClosureError,
 			   names.observables,names.nuisances);
   RooProduct zeroLeptonQCDYield(zeroLeptonName+"_QCDYield",zeroLeptonName+"_QCDYield",RooArgSet(*lowDeltaPhiNScaling,*zeroLeptonQCDClosure,zeroLeptonLowDeltaPhiNQCDYield));
-
+  
+  
+  
   //Define top and W+jets component:
   
   RooRealVar* singleLeptonScaling = ws.var(names.singleLeptonScaling);
@@ -232,6 +247,7 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
 			   names.observables,names.nuisances);
   RooProduct  zeroLeptonTopWJetsYield(zeroLeptonName+"_TopWJetsYield",zeroLeptonName+"_TopWJetsYield",RooArgSet(*singleLeptonScaling,*zeroLeptonTopWJetsClosure,oneLeptonTopWJetsYield));
   
+
   //Define Z to invisible component:
   
   //-----Define Z->ll observables
@@ -353,13 +369,31 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   
   RooProduct zeroLeptonZtoNuNuYield(zeroLeptonName+"_ZtoNuNuYield",zeroLeptonName+"_ZtoNuNuYield",RooArgSet(*zeroLeptonZtoNuNubTagScaling,*ZtoNuNu));
   
-  // Monte Carlo yield (summed over all channels) in zero lepton low delta phi_N region
-  
+  //  Non-QCD/Signal in Low  Delta Phi_N  region
+
+  /*
+  //Old non-QCD subtraction
   RooAbsArg* MCUncertainty = ws.arg(names.MCUncertainty);
   RooRealVar zeroLeptonLowDeltaPhiNMCCount(zeroLeptonLowDeltaPhiNName+"_MCCount",zeroLeptonLowDeltaPhiNName+"_MCCount",abcd.zeroLeptonLowDeltaPhiNMC);
   zeroLeptonLowDeltaPhiNMCCount.setConstant();
   RooProduct  zeroLeptonLowDeltaPhiNMCYield(zeroLeptonLowDeltaPhiNName+"_MCYield",zeroLeptonLowDeltaPhiNName+"_MCYield",RooArgSet(*MCUncertainty,zeroLeptonLowDeltaPhiNMCCount));
-  
+  */
+
+  RooRealVar topWJetsLowDeltaPhiNOverZeroLeptonRatioMC(zeroLeptonLowDeltaPhiNName+"_topWJetsLowDeltaPhiNOverZeroLeptonRatioMC",
+						       zeroLeptonLowDeltaPhiNName+"_topWJetsLowDeltaPhiNOverZeroLeptonRatioMC", 
+						       abcd.topWJetsLowDeltaPhiNOverZeroLeptonRatioMC);
+  topWJetsLowDeltaPhiNOverZeroLeptonRatioMC.setConstant();
+  RooProduct zeroLeptonLowDeltaPhiNTopWJetsYield(zeroLeptonLowDeltaPhiNName+"_topWJetsYield",zeroLeptonLowDeltaPhiNName+"_topWJetsYield",RooArgSet(topWJetsLowDeltaPhiNOverZeroLeptonRatioMC,zeroLeptonTopWJetsYield));
+
+  RooRealVar ZtoNuNuLowDeltaPhiNOverZeroLeptonRatioMC(zeroLeptonLowDeltaPhiNName+"_ZtoNuNuLowDeltaPhiNOverZeroLeptonRatioMC",
+						       zeroLeptonLowDeltaPhiNName+"_ZtoNuNuLowDeltaPhiNOverZeroLeptonRatioMC", 
+						       abcd.ZtoNuNuLowDeltaPhiNOverZeroLeptonRatioMC);
+  ZtoNuNuLowDeltaPhiNOverZeroLeptonRatioMC.setConstant();
+  RooProduct zeroLeptonLowDeltaPhiNZtoNuNuYield(zeroLeptonLowDeltaPhiNName+"_ZtoNuNuYield",zeroLeptonLowDeltaPhiNName+"_ZtoNuNuYield",RooArgSet(ZtoNuNuLowDeltaPhiNOverZeroLeptonRatioMC,zeroLeptonZtoNuNuYield));
+
+  RooAddition zeroLeptonLowDeltaPhiNNonQCDYield(zeroLeptonLowDeltaPhiNName+"_NonQCDYield",zeroLeptonLowDeltaPhiNName+"_NonQCDYield",RooArgSet(zeroLeptonLowDeltaPhiNTopWJetsYield,zeroLeptonLowDeltaPhiNZtoNuNuYield));
+
+
   // Setup signal yields
 
   RooRealVar* signalCrossSection = ws.var(names.signalCrossSection);
@@ -391,12 +425,12 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
   RooAddition zeroLeptonYieldSum(zeroLeptonName+"_YieldSum",zeroLeptonName+"_YieldSum",RooArgSet(zeroLeptonSignalYield,zeroLeptonZtoNuNuYield,zeroLeptonTopWJetsYield,zeroLeptonQCDYield));
   double topGuess = observed.zeroLepton - zeroLeptonZtoNuNuYield.getVal() - zeroLeptonQCDYield.getVal();
   if(topGuess > 0 ) zeroLeptonTopWJetsGuess += topGuess;
-  RooAddition zeroLeptonLowDeltaPhiNYieldSum(zeroLeptonLowDeltaPhiNName+"_YieldSum",zeroLeptonLowDeltaPhiNName+"_YieldSum",RooArgSet(zeroLeptonLowDeltaPhiNSignalYield,zeroLeptonLowDeltaPhiNQCDYield,zeroLeptonLowDeltaPhiNMCYield));
+  //RooAddition zeroLeptonLowDeltaPhiNYieldSum(zeroLeptonLowDeltaPhiNName+"_YieldSum",zeroLeptonLowDeltaPhiNName+"_YieldSum",RooArgSet(zeroLeptonLowDeltaPhiNSignalYield,zeroLeptonLowDeltaPhiNQCDYield,zeroLeptonLowDeltaPhiNMCYield));//Old non-QCD subtraction
+  RooAddition zeroLeptonLowDeltaPhiNYieldSum(zeroLeptonLowDeltaPhiNName+"_YieldSum",zeroLeptonLowDeltaPhiNName+"_YieldSum",RooArgSet(zeroLeptonLowDeltaPhiNSignalYield,zeroLeptonLowDeltaPhiNQCDYield,zeroLeptonLowDeltaPhiNNonQCDYield));
   RooAddition oneLeptonYieldSum(oneLeptonName+"_YieldSum",oneLeptonName+"_YieldSum",RooArgSet(oneLeptonSignalYield,oneLeptonTopWJetsYield));
   
   // Setup trigger efficiencies
-  bool skipTriggerEfficiency = true; //BEN FIXME -- consider making this a global variable
-  if (skipTriggerEfficiency == true)
+  if (options.skipTriggerEfficiency == true)
     {
       
       // Total Yields in bins
@@ -469,7 +503,7 @@ bool makeOneBin(RooWorkspace& ws , TString& binName , allBinNames& names , const
 
 }
 
-void setupUnderlyingLikelihood(RooWorkspace& ws ,allBinNames& names, allBins& numbers)
+void setupUnderlyingLikelihood(const likelihoodOptions options, RooWorkspace& ws ,allBinNames& names, allBins& numbers)
 {
   ws.defineSet("observables","");
   names.observables = "observables";
@@ -479,11 +513,14 @@ void setupUnderlyingLikelihood(RooWorkspace& ws ,allBinNames& names, allBins& nu
 
   //Universal parameters
 
+  /*
+  //Old non-QCD subtraction
   RooAbsArg* MCUncertainty = 
     getBetaPrimeConstraint(ws,"MCUncertainty","",
-			     1.0,numbers.MCUncertainty,
-			     names.observables,names.nuisances);
+			   1.0,numbers.MCUncertainty,
+			   names.observables,names.nuisances);
   names.MCUncertainty = MCUncertainty->GetName();
+  */
   
   RooRealVar signalCrossSection("signalCrossSection","signalCrossSection",0.0,0.0,1e5);
   ws.import(signalCrossSection);
@@ -642,6 +679,8 @@ void setupObservations(TString binName, TString binFileName, map<TString,abcdBin
       else if(index == "oneMuonTriggerEfficiency"	              ) abcd.oneMuonTriggerEfficiency = value.Atof();			
       else if(index == "oneMuonTriggerEfficiencyError"		      ) abcd.oneMuonTriggerEfficiencyError = value.Atof();			
       else if(index == "zeroLeptonLowDeltaPhiNMC"		      ) abcd.zeroLeptonLowDeltaPhiNMC = value.Atof();			
+      else if(index == "topWJetsLowDeltaPhiNOverZeroLeptonRatioMC"    ) abcd.topWJetsLowDeltaPhiNOverZeroLeptonRatioMC = value.Atof();
+      else if(index == "ZtoNuNuLowDeltaPhiNOverZeroLeptonRatioMC"     ) abcd.ZtoNuNuLowDeltaPhiNOverZeroLeptonRatioMC = value.Atof();
       else if(index == "ZtoNuNubTagScalingName"			      ) abcd.ZtoNuNubTagScalingName = value;				
       else if(index == "ZtoNuNubTagScaling"			      ) abcd.ZtoNuNubTagScaling = value.Atof();				
       else if(index == "ZtoNuNubTagScalingError"		      ) abcd.ZtoNuNubTagScalingError = value.Atof();			
@@ -739,7 +778,7 @@ void setupUnderlyingModel(map<TString,TString>& binFileNames, vector<TString>& b
 
 void buildLikelihood( TString setupFileName, TString binFilesFileName, TString signalModelFileName, int signalModelFileLine, TString workspaceName, TString outputFileName ) 
 {
-
+  
   double luminosity(1.);
   RooWorkspace ws (workspaceName) ;
   ws.autoImportClassCode(true);
@@ -747,12 +786,16 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString s
   map<TString,TString> binFileNames;
   allBinNames names;
   allBins numbers;
+  likelihoodOptions options;
   map<TString,abcdBinParameters> bins;
   map<TString,channels> observations;
   map<TString,yields> signal;
   map<TString,yields> signalError;
   double oneLeptonTotal(0.);
   double zeroLeptonTopWJetsGuess(0.);
+
+  options.skipTriggerEfficiency = true;
+  options.qcdMethod = "singleScaleWithCorrections";//others: htDependent
 
   setupUnderlyingModel(binFileNames, binNames, setupFileName , binFilesFileName , numbers , luminosity);
   for(map<TString,TString>::iterator thisBin = binFileNames.begin(); thisBin != binFileNames.end() ; thisBin++)
@@ -762,11 +805,11 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString s
 
   setupSignalModel(binNames , signalModelFileName , signalModelFileLine , signal , signalError , luminosity);
 
-  setupUnderlyingLikelihood(ws , names, numbers);
+  setupUnderlyingLikelihood(options, ws , names, numbers);
 
   for(vector<TString>::iterator thisBin = binNames.begin(); thisBin != binNames.end() ; thisBin++)
     {
-      makeOneBin(ws , *thisBin , names , numbers, observations[*thisBin] , bins[*thisBin] , signal[*thisBin] , signalError[*thisBin] , oneLeptonTotal, zeroLeptonTopWJetsGuess );
+      makeOneBin(options, ws , *thisBin , names , numbers, observations[*thisBin] , bins[*thisBin] , signal[*thisBin] , signalError[*thisBin] , oneLeptonTotal, zeroLeptonTopWJetsGuess );
     }
 
   ws.var(names.singleLeptonScaling)->setVal(zeroLeptonTopWJetsGuess/oneLeptonTotal);
