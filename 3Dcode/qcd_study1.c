@@ -33,25 +33,44 @@
 
       int nBinsBjets = 3 ;
 
-      const int nBinsMET = 3 ;
-      const int nBinsHT  = 3 ;
-      float Mbins[nBinsMET+1] = { 125, 200,  350, 99999. } ;
-      float Hbins[nBinsHT+1]  = { 400, 600, 1000, 99999. } ;
+      ////-- met3-ht3-v5
+      //const int nBinsMET   = 3 ;
+      //const int nBinsHT    = 3 ;
+      //    const int version = 5;
+      //float Mbins[nBinsMET+1] = {125, 200.,350.,99999.};
+      //float Hbins[nBinsHT+1] = {400, 600.,1000.,99999.};
+
+      ////-- met4-ht3-v3
+      const int nBinsMET   = 4 ;
+      const int nBinsHT    = 3 ;
+          const int version = 3;
+      float Mbins[nBinsMET+1] = {125, 150.,250.,350.,99999.};
+      float Hbins[nBinsHT+1] = {400, 600.,1000.,99999.};
+
+      ////-- met4-ht4-v15
+      //const int nBinsMET   = 4 ;
+      //const int nBinsHT    = 4 ;
+      //    const int version = 15;
+      //float Mbins[nBinsMET+1] = {125, 150.,250.,350.,99999.};
+      //float Hbins[nBinsHT+1] = {400, 500.,800.,1000.,99999.};
+
+
+
 
       TH2F* hdummy = new TH2F("hdummy","",2, Mbins[0], 1500., 2, Hbins[0], 1500. ) ;
 
       const int nQcdSamples(9) ;
 
       char inputfile[9][1000] = {
-        "files15fb_8TeV/nn-qcd-0120-to-0170.root"
-       ,"files15fb_8TeV/nn-qcd-0170-to-0300.root"
-       ,"files15fb_8TeV/nn-qcd-0300-to-0470.root"
-       ,"files15fb_8TeV/nn-qcd-0470-to-0600.root"
-       ,"files15fb_8TeV/nn-qcd-0600-to-0800.root"
-       ,"files15fb_8TeV/nn-qcd-0800-to-1000.root"
-       ,"files15fb_8TeV/nn-qcd-1000-to-1400.root"
-       ,"files15fb_8TeV/nn-qcd-1400-to-1800.root"
-       ,"files15fb_8TeV/nn-qcd-1800.root"
+        "files15fb_8TeV/QCD-120to170.root"
+       ,"files15fb_8TeV/QCD-170to300.root"
+       ,"files15fb_8TeV/QCD-300to470.root"
+       ,"files15fb_8TeV/QCD-470to600.root"
+       ,"files15fb_8TeV/QCD-600to800.root"
+       ,"files15fb_8TeV/QCD-800to1000.root"
+       ,"files15fb_8TeV/QCD-1000to1400.root"
+       ,"files15fb_8TeV/QCD-1400to1800.root"
+       ,"files15fb_8TeV/QCD-1800.root"
       } ;
 
       char samplename[9][100] = {
@@ -508,8 +527,8 @@
          printf("\n\n\n Setting QCD scale factors in %s\n\n", datfile ) ;
 
          for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-            for ( int hbi=0; hbi<nBinsMET; hbi++ ) {
-               for ( int bbi=0; bbi<nBinsMET; bbi++ ) {
+            for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+               for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
                   char parname[1000] ;
                   int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
                   double val = hflat_scale_factor_withRMSerror[bbi]->GetBinContent( histbin ) ;
