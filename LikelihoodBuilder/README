@@ -11,7 +11,7 @@ If you don't have your own input files, you can use the example checked in here.
 
 root -l
 .x setup.C
-buildLikelihood("setupFile.dat","binFilesFile.dat","signalModelFile.dat",0,"workspace","test.root")
+buildLikelihood("","setupFile.dat","binFilesFile.dat","signalModelFile.dat",0,"workspace","test.root")
 
 
 The way to fit is (after building likelihood):

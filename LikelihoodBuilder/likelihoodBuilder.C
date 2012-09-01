@@ -215,7 +215,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
 
   //BEN FIXME -- for now, make this in option here.  consider moving option to input file "scalingName"
   TString scaling = "lowDeltaPhiNScaling_";
-  if(options.qcdMethod == "singleScaleWithCorrections") scaling +=  "_all";
+  if(options.qcdMethod == "singleScaleWithCorrections") scaling +=  "all";
   else if (options.qcdMethod == "htDependent") scaling +=  abcd.lowDeltaPhiNScalingName;
   else assert(0);
   RooRealVar* lowDeltaPhiNScaling = ws.var(scaling);
@@ -235,7 +235,6 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
 			   abcd.qcdClosure,abcd.qcdClosureError,
 			   names.observables,names.nuisances);
   RooProduct zeroLeptonQCDYield(zeroLeptonName+"_QCDYield",zeroLeptonName+"_QCDYield",RooArgSet(*lowDeltaPhiNScaling,*zeroLeptonQCDClosure,zeroLeptonLowDeltaPhiNQCDYield));
-  
   
   
   //Define top and W+jets component:
@@ -717,7 +716,7 @@ void setupObservations(TString binName, TString binFileName, map<TString,abcdBin
   observations[binName] = counts;
 }
 
-void setupUnderlyingModel(map<TString,TString>& binFileNames, vector<TString>& binNames, TString& modelFileName , TString& binFilesFileName , allBins& numbers, double& luminosity)
+void setupUnderlyingModel(TString binFilesPath, map<TString,TString>& binFileNames, vector<TString>& binNames, TString& modelFileName , TString& binFilesFileName , allBins& numbers, double& luminosity)
 {
   ifstream setupFile;
        
@@ -774,13 +773,13 @@ void setupUnderlyingModel(map<TString,TString>& binFileNames, vector<TString>& b
       cout << index << " : " << fileName << endl;
       if(index == "") continue;
       binNames.push_back(index);
-      binFileNames[index] = fileName;
+      binFileNames[index] = binFilesPath+fileName;
     }
   setupFile.close();
 }
 
 
-void buildLikelihood( TString setupFileName, TString binFilesFileName, TString signalModelFileName, int signalModelFileLine, TString workspaceName, TString outputFileName ) 
+void buildLikelihood( TString binFilesPath, TString setupFileName, TString binFilesFileName, TString signalModelFileName, int signalModelFileLine, TString workspaceName, TString outputFileName ) 
 {
   
   double luminosity(1.);
@@ -801,7 +800,7 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString s
   options.skipTriggerEfficiency = true;
   options.qcdMethod = "singleScaleWithCorrections";//others: htDependent
 
-  setupUnderlyingModel(binFileNames, binNames, setupFileName , binFilesFileName , numbers , luminosity);
+  setupUnderlyingModel(binFilesPath, binFileNames, binNames, setupFileName , binFilesFileName , numbers , luminosity);
   for(map<TString,TString>::iterator thisBin = binFileNames.begin(); thisBin != binFileNames.end() ; thisBin++)
     {
       setupObservations(thisBin->first , thisBin->second , bins, observations);
@@ -871,6 +870,6 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString s
 }
 
 
-void likelihoodBuilder( TString setupFileName, TString binFilesFileName, TString signalModelFileName, int signalModelFileLine, TString workspaceName, TString outputFileName ) {
-  buildLikelihood(setupFileName, binFilesFileName, signalModelFileName, signalModelFileLine, workspaceName, outputFileName);
+void likelihoodBuilder( TString binFilesPath, TString setupFileName, TString binFilesFileName, TString signalModelFileName, int signalModelFileLine, TString workspaceName, TString outputFileName ) {
+  buildLikelihood(binFilesPath, setupFileName, binFilesFileName, signalModelFileName, signalModelFileLine, workspaceName, outputFileName);
 }
