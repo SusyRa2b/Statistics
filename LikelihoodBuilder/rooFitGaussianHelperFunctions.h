@@ -20,7 +20,7 @@
 using namespace RooFit ;
 
 
-RooAbsReal* makeGaussianConstraint( RooWorkspace& ws, TString NP_name, const TString binName,
+RooAbsArg* makeGaussianConstraint( RooWorkspace& ws, TString NP_name, const TString binName,
 				    const double NP_val, const double NP_err,
 				    const TString observables, const TString nuisances,
 				    bool allowNegative = false ) {
@@ -28,7 +28,8 @@ RooAbsReal* makeGaussianConstraint( RooWorkspace& ws, TString NP_name, const TSt
   NP_name = NP_name + binName;
 
   if ( NP_err <= 0. ) {
-    RooConstVar* rrc = new RooConstVar( NP_name, NP_name, NP_val ) ;
+    RooRealVar* rrc = new RooRealVar( NP_name+"_zeroErrorGaussian", NP_name+"_zeroErrorGaussian", NP_val ) ;
+    rrc->setConstant();
     ws.import(*rrc);
     return ws.var(rrc->GetName());
   }
@@ -38,7 +39,7 @@ RooAbsReal* makeGaussianConstraint( RooWorkspace& ws, TString NP_name, const TSt
 
   if ( min < 0. && !allowNegative ) { min = 1e-5 ; }
 
-  RooRealVar* np_rrv = new RooRealVar( NP_name, NP_name, min, max ) ;
+  RooRealVar* np_rrv = new RooRealVar(NP_name+"_gaussian", NP_name+"_gaussian", min, max ) ;
   np_rrv -> setVal( NP_val ) ;
   np_rrv -> setConstant( kFALSE ) ;
 
@@ -67,7 +68,8 @@ RooAbsReal* makeCorrelatedGaussianConstraint( RooWorkspace& ws, TString NP_name,
   NP_name = NP_name + binName;
   
   if ( NP_err <= 0. ) {
-    RooConstVar* rrc = new RooConstVar( NP_name, NP_name, NP_val ) ;
+    RooRealVar* rrc = new RooRealVar( NP_name+"_zeroErrorCorrelatedGaussian", NP_name+"_zeroErrorCorrelatedGaussian", NP_val ) ;
+    rrc->setConstant();
     ws.import(*rrc);
     return ws.var(rrc->GetName());
   }
@@ -79,14 +81,15 @@ RooAbsReal* makeCorrelatedGaussianConstraint( RooWorkspace& ws, TString NP_name,
     rrv_np_base_par = new RooRealVar( NP_base_name, NP_base_name, -6.0, 6.0 ) ;
     rrv_np_base_par -> setVal( 0. ) ;
     rrv_np_base_par -> setConstant( kFALSE ) ;
+    
     //allNuisances -> add( *rrv_np_base_par ) ;//BEN FIXME -- add to nuisances
     ws.import( *rrv_np_base_par ) ;
 
     RooConstVar* g_mean = new RooConstVar( "mean_"+NP_base_name, "mean_"+NP_base_name, 0.0 ) ;
     RooConstVar* g_sigma = new RooConstVar( "sigma_"+NP_base_name, "sigma_"+NP_base_name, 1.0 ) ;
 
-    ///// RooGaussian* base_np_pdf = new RooGaussian( pdfname, pdfname, *rrv_np_base_par, RooConst(0.), RooConst(1.) ) ;
     RooGaussian* base_np_pdf = new RooGaussian( "pdf_"+NP_base_name, "pdf_"+NP_base_name, *rrv_np_base_par, *g_mean, *g_sigma ) ;
+    
     //allNuisancePdfs -> add( *base_np_pdf ) ;//BEN FIXME -- add to nuisances 
     ws.import( *base_np_pdf );
 
@@ -115,6 +118,7 @@ RooAbsReal* makeCorrelatedGaussianConstraint( RooWorkspace& ws, TString NP_name,
     rar = new RooPosDefCorrGauss( NP_name_char, NP_name_char, *g_mean, *g_sigma, *rrv_np_base_par, changeSign ) ;
   }
 
+  cout << " returning corr gauss " << endl;
   return rar ;
   
 }
