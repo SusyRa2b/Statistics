@@ -94,10 +94,10 @@ void profileLikelihoodLimit(const char * fileName = "test.root",
   LikelihoodInterval* interval = pl.GetInterval();
     
   cout << endl;
-  cout << percentInterval << " interval on " <<firstPOI->GetName()<<" is : ["<<
-    interval->LowerLimit(*firstPOI) << ", "<<
-    interval->UpperLimit(*firstPOI) <<"] "<<endl;
-  return;
+  double lowerLimit = interval->LowerLimit(*firstPOI);
+  double upperLimit = interval->UpperLimit(*firstPOI);
+  cout << percentInterval << " interval on " << firstPOI->GetName() << ", lower = " << lowerLimit << endl;
+  cout << percentInterval << " interval on " << firstPOI->GetName() << ", upper = " << upperLimit << endl;
 
   
   if(doPlots){
