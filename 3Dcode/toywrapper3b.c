@@ -3,9 +3,9 @@
                 const char* input_susyfile = "datfiles/T1bbbb-met3-ht3-v5.dat",
                 double input_mgl=1100, double input_mlsp=300.,
                 const char* input_deffdbtagfile = "datfiles/dummy_DeffDbtag-met3-ht3.dat",
-                double input_nSusy0lep = 0.,
-                const char* input_outputDir = "output-toymc3b-test3-qcdmodel4-nsig000",
-                int nToy = 100,
+                double input_nSusy0lep = 200.,
+                const char* input_outputDir = "output-toymc3b-test4-qcdmodel4-nsig200",
+                int nToy = 10,
                 const char* input_mcvals_rootfile = "rootfiles/gi-plots-met3-ht3-v5.root",
                 bool useExpected0lep = true,
                 int qcdModelIndex = 4
