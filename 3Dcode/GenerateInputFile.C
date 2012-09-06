@@ -661,6 +661,23 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
      } // si.
 
 
+
+
+     //--- Insert dummy R_lsb lines for backwards compatibility.
+     for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+        for ( int bbi=0; bbi<nBinsHT; bbi++ ) {
+           char dummyline[1000] ;
+           sprintf( dummyline, "R_lsb_H%d_%db       0.1", hbi+1, bbi+1 ) ;
+           inFile << dummyline << endl ;
+           sprintf( dummyline, "R_lsb_H%d_%db_err   0.01", hbi+1, bbi+1 ) ;
+           inFile << dummyline << endl ;
+        } // bbi.
+     } // hbi.
+
+
+
+
+
     printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
 
     { //--- scoping bracket for QCD chunk.

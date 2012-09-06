@@ -237,7 +237,9 @@
                 int nToy = 10,
                 const char* input_mcvals_rootfile = "rootfiles/gi-plots-met4-ht4-newMC.root",
                 bool input_useExpected0lep = false,
-                int input_qcdModelIndex = 3
+                int input_qcdModelIndex = 3,
+                bool input_doSignif = false,
+                bool input_doUL = false
                         ) {
 
        char command[10000] ;
@@ -275,11 +277,8 @@
 
        true_susy_0lep = 0. ;
 
-       //// doSignif = false ;
-       //// doUL = false ;
-
-       doSignif = true ;
-       doUL = true ;
+       doSignif = input_doSignif ;
+       doUL = input_doUL ;
 
        useExpected0lep = input_useExpected0lep ;
 

@@ -8,11 +8,13 @@
                 int nToy = 10,
                 const char* input_mcvals_rootfile = "rootfiles/gi-plots-met3-ht3-v5.root",
                 bool useExpected0lep = true,
-                int qcdModelIndex = 4
+                int qcdModelIndex = 4,
+                bool input_doSignif = false,
+                bool input_doUL = false
       ) {
      gROOT->LoadMacro("RooRatio.cxx+") ;
      gROOT->LoadMacro("RooPosDefCorrGauss.cxx+") ;
      gROOT->LoadMacro("toymc3b.c+") ;
-     toymc3b( input_datfile, input_susyfile, input_mgl, input_mlsp, input_deffdbtagfile, input_nSusy0lep, input_outputDir, nToy, input_mcvals_rootfile, useExpected0lep, qcdModelIndex ) ;
+     toymc3b( input_datfile, input_susyfile, input_mgl, input_mlsp, input_deffdbtagfile, input_nSusy0lep, input_outputDir, nToy, input_mcvals_rootfile, useExpected0lep, qcdModelIndex, input_doSignif, input_doUL ) ;
   }
 
