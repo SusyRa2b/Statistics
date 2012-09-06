@@ -1,0 +1,15 @@
+
+
+   echo met3-ht3-v5-newqcdsyst-model2-mgl1100-mlsp300-3b
+   root -b -q make_ws_rootfile3b.c\(\"datfiles/Input-met3-ht3-v5-newqcdsyst-model2-exp0lep.dat\",\"datfiles/T1bbbb-met3-ht3-v5.dat\",1100,300,\"datfiles/dummy_DeffDbtag-met3-ht3.dat\",2\) >& logfiles/makews-met3-ht3-v5-newqcdsyst-model2-mgl1100-mlsp300-3b.log
+   mv ws3b.root rootfiles/ws-met3-ht3-v5-newqcdsyst-model2-mgl1100-mlsp300-3b.root
+
+   echo met3-ht3-v5-newqcdsyst-model3-mgl1100-mlsp300-3b
+   root -b -q make_ws_rootfile3b.c\(\"datfiles/Input-met3-ht3-v5-newqcdsyst-model3-exp0lep.dat\",\"datfiles/T1bbbb-met3-ht3-v5.dat\",1100,300,\"datfiles/dummy_DeffDbtag-met3-ht3.dat\",3\) >& logfiles/makews-met3-ht3-v5-newqcdsyst-model3-mgl1100-mlsp300-3b.log
+   mv ws3b.root rootfiles/ws-met3-ht3-v5-newqcdsyst-model3-mgl1100-mlsp300-3b.root
+
+   echo met3-ht3-v5-newqcdsyst-model4-mgl1100-mlsp300-3b
+   root -b -q make_ws_rootfile3b.c\(\"datfiles/Input-met3-ht3-v5-newqcdsyst-model4-exp0lep.dat\",\"datfiles/T1bbbb-met3-ht3-v5.dat\",1100,300,\"datfiles/dummy_DeffDbtag-met3-ht3.dat\",4\) >& logfiles/makews-met3-ht3-v5-newqcdsyst-model4-mgl1100-mlsp300-3b.log
+   mv ws3b.root rootfiles/ws-met3-ht3-v5-newqcdsyst-model4-mgl1100-mlsp300-3b.root
+
+

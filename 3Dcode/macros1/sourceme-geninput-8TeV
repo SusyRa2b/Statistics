@@ -1,0 +1,30 @@
+
+   mkdir -p logfiles
+   mkdir -p rootfiles
+   mkdir -p datfiles
+
+   echo GenerateInputFile
+   $ROOTSYS/bin/root -b -q GenerateInputFile.C+ >&! logfiles/geninput-met3-ht3-v5.log
+   mv Input-met3-ht3-v5.dat datfiles/
+
+   echo GenerateDummyDeffDbtag
+   $ROOTSYS/bin/root -b -q GenerateDummyDeffDbtag.C\(3,3\) >&! logfiles/dummy-deff-met3-ht3.log
+   mv dummy_DeffDbtag-met3-ht3.dat datfiles/
+
+   echo GenerateSusyFile
+   $ROOTSYS/bin/root -b -q GenerateSusyFile.C+ >&! logfiles/gensusy-met3-ht3-v5.log
+
+   echo mcclosure4, qcd model 2
+   cp datfiles/Input-met3-ht3-v5.dat datfiles/Input-met3-ht3-v5-newqcdsyst-model2-exp0lep.dat
+   $ROOTSYS/bin/root -b -q mcclosure4.c+\(\"rootfiles/gi-plots-met3-ht3-v5.root\",\"datfiles/Input-met3-ht3-v5-newqcdsyst-model2-exp0lep.dat\",2,1\) >&! logfiles/mcclosure4-met3-ht3-v5-newqcdsyst-model2-exp0lep.log
+
+   echo mcclosure4, qcd model 3
+   cp datfiles/Input-met3-ht3-v5.dat datfiles/Input-met3-ht3-v5-newqcdsyst-model3-exp0lep.dat
+   $ROOTSYS/bin/root -b -q mcclosure4.c+\(\"rootfiles/gi-plots-met3-ht3-v5.root\",\"datfiles/Input-met3-ht3-v5-newqcdsyst-model3-exp0lep.dat\",3,1\) >&! logfiles/mcclosure4-met3-ht3-v5-newqcdsyst-model3-exp0lep.log
+
+   echo mcclosure4, qcd model 4
+   cp datfiles/Input-met3-ht3-v5.dat datfiles/Input-met3-ht3-v5-newqcdsyst-model4-exp0lep.dat
+   $ROOTSYS/bin/root -b -q mcclosure4.c+\(\"rootfiles/gi-plots-met3-ht3-v5.root\",\"datfiles/Input-met3-ht3-v5-newqcdsyst-model4-exp0lep.dat\",4,1\) >&! logfiles/mcclosure4-met3-ht3-v5-newqcdsyst-model4-exp0lep.log
+
+
+
