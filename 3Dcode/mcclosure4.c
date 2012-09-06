@@ -61,7 +61,7 @@
             parind++ ;
          }
       } // mbi.
-      for ( int bbi=0; bbi<nBinsMET; bbi++ ) {
+      for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
          if ( bbi == 0 ) {
             fit_SFqcd_nb[bbi] = 1.0 ;
          } else {
@@ -853,13 +853,13 @@
          myMinuit->mnparm( parind, pname, htbin_0lepldp_ratio[hbi], 0.03, 0., 2., ierflg ) ;
          parind++ ;
       } // hbi.
-      for ( int mbi=1; mbi<nBinsHT; mbi++ ) {
+      for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
          char pname[1000] ;
          sprintf( pname, "SFqcd_MET%d", mbi+1 ) ;
          myMinuit->mnparm( parind, pname, 1.0, 0.10, 0., 2., ierflg ) ;
          parind++ ;
       } // mbi.
-      for ( int bbi=1; bbi<nBinsHT; bbi++ ) {
+      for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {
          char pname[1000] ;
          sprintf( pname, "SFqcd_nb%d", bbi+1 ) ;
          myMinuit->mnparm( parind, pname, 1.0, 0.10, 0., 2., ierflg ) ;
@@ -880,7 +880,7 @@
          fit_Rqcd_HT[hbi] = val ;
          parind++ ;
       } // hbi.
-      for ( int mbi=1; mbi<nBinsHT; mbi++ ) {
+      for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
          char pname[1000] ;
          double val, err ;
          sprintf( pname, "SFqcd_MET%d", mbi+1 ) ;
@@ -889,7 +889,7 @@
          fit_SFqcd_MET[mbi] = val ;
          parind++ ;
       } // mbi.
-      for ( int bbi=1; bbi<nBinsHT; bbi++ ) {
+      for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {
          char pname[1000] ;
          double val, err ;
          sprintf( pname, "SFqcd_nb%d", bbi+1 ) ;
@@ -1606,10 +1606,10 @@
          for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
             fprintf( mcval_file, "qcd_0lepLDP_ratio_H%d  %5.3f\n", hbi+1, htbin_0lepldp_ratio[hbi] ) ;
          } // hbi.
-         for ( int mbi=1; mbi<nBinsHT; mbi++ ) {
+         for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
             fprintf( mcval_file, "SFqcd_met%d  %5.3f\n", mbi+1, fit_SFqcd_MET[mbi] ) ;
          } // mbi.
-         for ( int bbi=1; bbi<nBinsHT; bbi++ ) {
+         for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {
             fprintf( mcval_file, "SFqcd_nb%d  %5.3f\n", bbi+1, fit_SFqcd_nb[bbi] ) ;
          } // bbi.
       }
@@ -1663,7 +1663,7 @@
 
          float Zee_factor[10] ;
          float Zmm_factor[10] ;
-         for ( int bbi=0; bbi<nBinsMET; bbi++ ) {
+         for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
             sprintf( pname, "knn_%db", bbi+1 ) ;
             float knn ;
@@ -1675,7 +1675,7 @@
          } // bbi.
 
          for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-            for ( int hbi=0; hbi<nBinsMET; hbi++ ) {
+            for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
 
                sprintf( pname, "N_Zee_M%d_H%d", mbi+1, hbi+1 ) ;
                float NZee ;
@@ -1685,7 +1685,7 @@
                float NZmm ;
                getFileValue( datfile, pname, NZmm ) ;
 
-               for ( int bbi=0; bbi<nBinsMET; bbi++ ) {
+               for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
 
                   sprintf( pname, "N_1lep_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;

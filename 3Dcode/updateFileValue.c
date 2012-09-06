@@ -9,13 +9,13 @@
 
       FILE* infp ;
       if ( (infp=fopen( inFile,"r"))==NULL ) {
-         printf("\n\n *** Problem opening input file: %s.\n\n", inFile ) ;
+         printf("\n\n *** updateFileValue: Problem opening input file: %s.\n\n", inFile ) ;
          return false ;
       }
 
       FILE* outfp ;
       if ( (outfp=fopen( ufvname,"w"))==NULL ) {
-         printf("\n\n *** Problem opening output file.\n\n" ) ;
+         printf("\n\n *** updateFileValue: Problem opening output file.\n\n" ) ;
          return false ;
       }
 
@@ -41,6 +41,7 @@
       }
 
       fclose( infp ) ;
+      fflush( outfp ) ;
       fclose( outfp ) ;
 
       char command[10000] ;
