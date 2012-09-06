@@ -609,6 +609,7 @@
 
       printf("\n\n") ;
 
+      double initialguess_model3_qcd_0lepLDP_ratio(0.) ;
       double initialguess_model24_qcd_0lepLDP_ratio[nBinsHT] ;
       double initialguess_model4_SFqcd_met[nBinsMET] ;
       double initialguess_model4_SFqcd_nb[nBinsBtag] ;
@@ -632,46 +633,38 @@
          } // hbi.
 
          //-- Get the nbjet scale factors.  Use the highest HT bin and lowest MET bin because it has the best MC statistics.
-      // for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
-      //       initialguess_model4_SFqcd_nb[bbi] = 1.0 ;
-      // // if ( bbi == 0 ) {
-      // //    initialguess_model4_SFqcd_nb[0] = 1.0 ; //-- first one is 1 by definition.
-      // // } else {
-      // //    tmp_qcd = N_0lep[0][nBinsHT-1][bbi] - initialval_ttwj[0][nBinsHT-1][bbi] - initialval_znn[0][nBinsHT-1][bbi] ;
-      // //    if (initialguess_model24_qcd_0lepLDP_ratio[nBinsHT-1] * initialval_qcd_ldp[0][nBinsHT-1][bbi] > 0 ) {
-      // //       initialguess_model4_SFqcd_nb[bbi] = tmp_qcd / ( initialguess_model24_qcd_0lepLDP_ratio[nBinsHT-1] * initialval_qcd_ldp[0][nBinsHT-1][bbi] ) ;
-      // //    } else {
-      // //       initialguess_model4_SFqcd_nb[bbi] = 0.0 ;
-      // //    }
-      // //    printf( "nb  bin %d : QCD SFnb = %7.1f / %7.1f = %6.3f\n", bbi+1, tmp_qcd, ( initialguess_model24_qcd_0lepLDP_ratio[nBinsHT-1] * initialval_qcd_ldp[0][nBinsHT-1][bbi] ),
-      // //       initialguess_model4_SFqcd_nb[bbi] ) ;
-      // // }
-      // } // bbi.
+         for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
+               initialguess_model4_SFqcd_nb[bbi] = 1.0 ;
+            if ( bbi == 0 ) {
+               initialguess_model4_SFqcd_nb[0] = 1.0 ; //-- first one is 1 by definition.
+            } else {
+               tmp_qcd = N_0lep[0][nBinsHT-1][bbi] - initialval_ttwj[0][nBinsHT-1][bbi] - initialval_znn[0][nBinsHT-1][bbi] ;
+               if (initialguess_model24_qcd_0lepLDP_ratio[nBinsHT-1] * initialval_qcd_ldp[0][nBinsHT-1][bbi] > 0 ) {
+                  initialguess_model4_SFqcd_nb[bbi] = tmp_qcd / ( initialguess_model24_qcd_0lepLDP_ratio[nBinsHT-1] * initialval_qcd_ldp[0][nBinsHT-1][bbi] ) ;
+               } else {
+                  initialguess_model4_SFqcd_nb[bbi] = 0.0 ;
+               }
+               printf( "nb  bin %d : QCD SFnb = %7.1f / %7.1f = %6.3f\n", bbi+1, tmp_qcd, ( initialguess_model24_qcd_0lepLDP_ratio[nBinsHT-1] * initialval_qcd_ldp[0][nBinsHT-1][bbi] ),
+                  initialguess_model4_SFqcd_nb[bbi] ) ;
+            }
+         } // bbi.
 
-         initialguess_model4_SFqcd_nb[0] = 1.0 ;
-         initialguess_model4_SFqcd_nb[1] = 0.85 ;
-         initialguess_model4_SFqcd_nb[2] = 0.69 ;
-
-      // //-- Get the MET scale factors.  Use the highest HT bin because it has the best MC statistics.
-      // for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-      //       initialguess_model4_SFqcd_met[mbi] = 1.0 ;
-      // // if ( mbi == 0 ) {
-      // //    initialguess_model4_SFqcd_met[0] = 1.0 ; //-- first one is 1 by definition.
-      // // } else {
-      // //    tmp_qcd = N_0lep[mbi][nBinsHT-1][0] - initialval_ttwj[mbi][nBinsHT-1][0] - initialval_znn[mbi][nBinsHT-1][0] ;
-      // //    if ( initialguess_model24_qcd_0lepLDP_ratio[nBinsHT-1] * initialval_qcd_ldp[mbi][nBinsHT-1][0] > 0. ) {
-      // //       initialguess_model4_SFqcd_met[mbi] = tmp_qcd / ( initialguess_model24_qcd_0lepLDP_ratio[nBinsHT-1] * initialval_qcd_ldp[mbi][nBinsHT-1][0] ) ;
-      // //    } else {
-      // //       initialguess_model4_SFqcd_met[mbi] = 0.0 ;
-      // //    }
-      // //    printf( "MET bin %d : QCD SFmet = %7.1f / %7.1f = %6.3f\n", mbi+1, tmp_qcd, ( initialguess_model24_qcd_0lepLDP_ratio[nBinsHT-1] * initialval_qcd_ldp[mbi][nBinsHT-1][0] ),
-      // //         initialguess_model4_SFqcd_met[mbi] ) ;
-      // // }
-      // } // mbi.
-
-         initialguess_model4_SFqcd_met[0] = 1.0 ;
-         initialguess_model4_SFqcd_met[1] = 1.28 ;
-         initialguess_model4_SFqcd_met[2] = 1.90 ;
+         //-- Get the MET scale factors.  Use the highest HT bin because it has the best MC statistics.
+         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+               initialguess_model4_SFqcd_met[mbi] = 1.0 ;
+            if ( mbi == 0 ) {
+               initialguess_model4_SFqcd_met[0] = 1.0 ; //-- first one is 1 by definition.
+            } else {
+               tmp_qcd = N_0lep[mbi][nBinsHT-1][0] - initialval_ttwj[mbi][nBinsHT-1][0] - initialval_znn[mbi][nBinsHT-1][0] ;
+               if ( initialguess_model24_qcd_0lepLDP_ratio[nBinsHT-1] * initialval_qcd_ldp[mbi][nBinsHT-1][0] > 0. ) {
+                  initialguess_model4_SFqcd_met[mbi] = tmp_qcd / ( initialguess_model24_qcd_0lepLDP_ratio[nBinsHT-1] * initialval_qcd_ldp[mbi][nBinsHT-1][0] ) ;
+               } else {
+                  initialguess_model4_SFqcd_met[mbi] = 0.0 ;
+               }
+               printf( "MET bin %d : QCD SFmet = %7.1f / %7.1f = %6.3f\n", mbi+1, tmp_qcd, ( initialguess_model24_qcd_0lepLDP_ratio[nBinsHT-1] * initialval_qcd_ldp[mbi][nBinsHT-1][0] ),
+                    initialguess_model4_SFqcd_met[mbi] ) ;
+            }
+         } // mbi.
 
          for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
             for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
@@ -682,7 +675,54 @@
          } // mbi.
 
 
-      } // QCD model 4?
+      } else if ( qcdModelIndex == 2 ) {
+
+         double tmp_qcd ;
+
+         //-- Estimate the HT ratios from the first MET and nbjet bins
+         for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
+            tmp_qcd = N_0lep[0][hbi][0] - initialval_ttwj[0][hbi][0] - initialval_znn[0][hbi][0] ;
+            if ( initialval_qcd_ldp[0][hbi][0] > 0. ) {
+               initialguess_model24_qcd_0lepLDP_ratio[hbi] = tmp_qcd / initialval_qcd_ldp[0][hbi][0] ;
+            } else {
+               initialguess_model24_qcd_0lepLDP_ratio[hbi] = 0.0 ;
+            }
+            printf( "HT  bin %d : QCD 0lep/LDP ratio = %7.1f / %7.1f = %6.3f\n", hbi+1, tmp_qcd, initialval_qcd_ldp[0][hbi][0],
+                 initialguess_model24_qcd_0lepLDP_ratio[hbi] ) ;
+         } // hbi.
+
+         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+            for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
+               for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
+                  initialval_qcd[mbi][hbi][bbi] = sf_qcd[mbi][hbi][bbi] * initialguess_model24_qcd_0lepLDP_ratio[hbi] * initialval_qcd_ldp[mbi][hbi][bbi] ;
+               } // bbi.
+            } // hbi.
+         } // mbi.
+
+
+      } else if ( qcdModelIndex == 3 ) {
+
+         //-- Estimate the HT ratios from the first MET and nbjet bins
+         double sum0lep(0.) ;
+         double sumLDP(0.) ;
+         for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
+            double tmp_qcd = N_0lep[0][hbi][0] - initialval_ttwj[0][hbi][0] - initialval_znn[0][hbi][0] ;
+            sum0lep += tmp_qcd ;
+            sumLDP += initialval_qcd_ldp[0][hbi][0] ;
+         } // hbi.
+
+         if ( sumLDP > 0. ) { initialguess_model3_qcd_0lepLDP_ratio = sum0lep / sumLDP ; }
+         printf( "QCD 0lep/LDP ratio = %7.1f / %7.1f = %6.3f\n", sum0lep, sumLDP, initialguess_model3_qcd_0lepLDP_ratio ) ;
+
+         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+            for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
+               for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
+                  initialval_qcd[mbi][hbi][bbi] = sf_qcd[mbi][hbi][bbi] * initialguess_model3_qcd_0lepLDP_ratio * initialval_qcd_ldp[mbi][hbi][bbi] ;
+               } // bbi.
+            } // hbi.
+         } // mbi.
+
+      }
 
       printf("\n\n") ;
 
@@ -1077,7 +1117,7 @@
          for ( int htbi=0; htbi < nBinsHT ; htbi++ ) {
             char vname[1000] ;
             sprintf( vname, "qcd_0lepLDP_ratio_H%d", htbi+1 ) ;
-            rv_qcd_0lepLDP_ratio[htbi] = new RooRealVar( vname, vname, 0.05, 0., 10. ) ;
+            rv_qcd_0lepLDP_ratio[htbi] = new RooRealVar( vname, vname, initialguess_model24_qcd_0lepLDP_ratio[htbi], 0., 10. ) ;
          }
 
       } else if ( qcdModelIndex == 3 ) {
@@ -1086,7 +1126,7 @@
 
          char vname[1000] ;
          sprintf( vname, "qcd_0lepLDP_ratio" ) ;
-         rv_qcd_0lepLDP_ratio[0] = new RooRealVar( vname, vname, 0.05, 0., 10. ) ;
+         rv_qcd_0lepLDP_ratio[0] = new RooRealVar( vname, vname, initialguess_model3_qcd_0lepLDP_ratio, 0., 10. ) ;
 
       } else if ( qcdModelIndex == 4 ) {
 
@@ -1516,9 +1556,9 @@
                rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
                                                         RooArgSet( *rv_mu_qcd_ldp[i][j][k], *rar_sf_qcd[i][j][k], *rv_qcd_0lepLDP_ratio[j], *rv_SFqcd_met[i], *rv_SFqcd_nb[k] ) ) ;
 
-               printf(" *** debug2: m%d,h%d,b%d : qcd_ldp * sf * R0lep/LDP * SFmet * SFnb = %7.1f * %5.3f * %5.3f * %5.3f = %7.1f     \n",
-                     i+1, j+1, k+1, rv_mu_qcd_ldp[i][j][k]->getVal(), rar_sf_qcd[i][j][k]->getVal(), rv_qcd_0lepLDP_ratio[j]->getVal(),
-                     rv_SFqcd_met[i]->getVal(), rv_SFqcd_nb[k]->getVal(), rfv_mu_qcd[i][j][k]->getVal() ) ;
+           /// printf(" *** debug2: m%d,h%d,b%d : qcd_ldp * sf * R0lep/LDP * SFmet * SFnb = %7.1f * %5.3f * %5.3f * %5.3f = %7.1f     \n",
+           ///       i+1, j+1, k+1, rv_mu_qcd_ldp[i][j][k]->getVal(), rar_sf_qcd[i][j][k]->getVal(), rv_qcd_0lepLDP_ratio[j]->getVal(),
+           ///       rv_SFqcd_met[i]->getVal(), rv_SFqcd_nb[k]->getVal(), rfv_mu_qcd[i][j][k]->getVal() ) ;
 
 
             }
@@ -1656,11 +1696,11 @@
 	    				       RooArgSet( *rv_mu_ttwj[i][j][k], *rv_mu_qcd[i][j][k], *rv_mu_znn[i][j][k],  
 							  *rar_btageff_sf[i][j][k], *rar_eff_sf[i][j][k], *rv_mu_susy[i][j][k] ) ) ;
 
-            printf(" *** debug1: m%d,h%d,b%d : n_0lep = mu_ttwj + mu_qcd + mu_znn = %7.1f + %7.1f + %7.1f = %7.1f\n",
-                 i+1, j+1, k+1, ((RooFormulaVar*)rv_mu_ttwj[i][j][k])->getVal(),
-                                ((RooFormulaVar*)rv_mu_qcd[i][j][k])->getVal(),
-                                ((RooFormulaVar*)rv_mu_znn[i][j][k])->getVal(),
-                                rv_n[i][j][k]->getVal() ) ;
+       ///  printf(" *** debug1: m%d,h%d,b%d : n_0lep = mu_ttwj + mu_qcd + mu_znn = %7.1f + %7.1f + %7.1f = %7.1f\n",
+       ///       i+1, j+1, k+1, ((RooFormulaVar*)rv_mu_ttwj[i][j][k])->getVal(),
+       ///                      ((RooFormulaVar*)rv_mu_qcd[i][j][k])->getVal(),
+       ///                      ((RooFormulaVar*)rv_mu_znn[i][j][k])->getVal(),
+       ///                      rv_n[i][j][k]->getVal() ) ;
 
 
 	    TString rfvNSlString = "@0 + (@1 * @2 * @3)" ;
@@ -2005,7 +2045,7 @@
 	}
 
 
-	printf("  pointM0 = %g , pointM12 = %g\n", pointM0, pointM12 ) ;
+	//// printf("  pointM0 = %g , pointM12 = %g\n", pointM0, pointM12 ) ;
 
 	if (    fabs( pointM0 - m0 ) <= deltaM0/2 && fabs( pointM12 - m12 ) <= deltaM12/2 ) {
 	  
@@ -2221,7 +2261,7 @@
 	  }
 	}
 
-	printf("  pointM0 = %g , pointM12 = %g\n", pointM0, pointM12 ) ;
+	//// printf("  pointM0 = %g , pointM12 = %g\n", pointM0, pointM12 ) ;
 
 	if (    fabs( pointM0 - m0 ) <= deltaM0/2. && fabs( pointM12 - m12 ) <= deltaM12/2. ) {
 	 
