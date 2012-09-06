@@ -11,6 +11,7 @@
 #include "TRegexp.h"
 #include "TSystem.h"
 #include "TH2F.h"
+#include "TCanvas.h"
 
   using std::stringstream ;
   using std::ofstream ;
@@ -24,9 +25,9 @@
 void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0lep=-1. ) {
 
   TChain* dyTree = new TChain("treeZ") ;
-  int nAdded = dyTree->Add("files5fb_MT/DY.root") ;
+  int nAdded = dyTree->Add("files15fb_8TeV/DY.root") ;
   if ( nAdded <= 0 ) {
-     printf("\n\n\n *** No treeZ in files5fb_MT/DY.root\n\n\n") ;
+     printf("\n\n\n *** No treeZ in files15fb_8TeV/DY.root\n\n\n") ;
      return ;
   }
 
@@ -36,9 +37,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   sprintf( susycutstring, "&&mgluino==%.0f&&mlsp==%.0f", mgl, mlsp ) ;
   TString susycut( susycutstring ) ;
   if ( mgl>0. && mlsp>0. ) {
-     nAdded = chainT1bbbb.Add("files5fb_MT/T1bbbb.root") ;
+     nAdded = chainT1bbbb.Add("files15fb_8TeV/T1bbbb.root") ;
      if ( nAdded <= 0 ) {
-        printf("\n\n\n *** No tree in files5fb_MT/T1bbbb.root\n\n\n") ;
+        printf("\n\n\n *** No tree in files15fb_8TeV/T1bbbb.root\n\n\n") ;
         return ;
      }
      TFile f("referenceXSecs.root") ;
@@ -59,46 +60,57 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
   TChain chainQCD("tree") ;
    //--- these have high weight
-//chainQCD.Add("files5fb_MT/QCD-50to80.root");
-//chainQCD.Add("files5fb_MT/QCD-80to120.root");
-chainQCD.Add("files5fb_MT/QCD-120to170.root");
-chainQCD.Add("files5fb_MT/QCD-170to300.root");
+//chainQCD.Add("files15fb_8TeV/QCD-50to80.root");
+//chainQCD.Add("files15fb_8TeV/QCD-80to120.root");
+  chainQCD.Add("files15fb_8TeV/QCD-120to170.root");
+  chainQCD.Add("files15fb_8TeV/QCD-170to300.root");
    //--- below here, these have weight less than one.
-  chainQCD.Add("files5fb_MT/QCD-300to470.root");
-  chainQCD.Add("files5fb_MT/QCD-470to600.root");
-  chainQCD.Add("files5fb_MT/QCD-600to800.root");
-  chainQCD.Add("files5fb_MT/QCD-800to1000.root");
-  chainQCD.Add("files5fb_MT/QCD-1000to1400.root");
-  chainQCD.Add("files5fb_MT/QCD-1400to1800.root");
-  chainQCD.Add("files5fb_MT/QCD-1800.root");
+  chainQCD.Add("files15fb_8TeV/QCD-300to470.root");
+  chainQCD.Add("files15fb_8TeV/QCD-470to600.root");
+  chainQCD.Add("files15fb_8TeV/QCD-600to800.root");
+  chainQCD.Add("files15fb_8TeV/QCD-800to1000.root");
+  chainQCD.Add("files15fb_8TeV/QCD-1000to1400.root");
+  chainQCD.Add("files15fb_8TeV/QCD-1400to1800.root");
+  chainQCD.Add("files15fb_8TeV/QCD-1800.root");
 
   TChain chainTT("tree") ;
-  chainTT.Add("files5fb_MT/TT.root") ;
+  chainTT.Add("files15fb_8TeV/TT.root") ;
 
   TChain chainZnn("tree") ;
-  chainZnn.Add("files5fb_MT/Zinv.root") ;
+  chainZnn.Add("files15fb_8TeV/Zinv-100to200.root") ;
+  chainZnn.Add("files15fb_8TeV/Zinv-200to400.root") ;
+  chainZnn.Add("files15fb_8TeV/Zinv-400.root") ;
 
   TChain chainWJets("tree") ;
-  chainWJets.Add("files5fb_MT/WJets-300.root") ;
+  chainWJets.Add("files15fb_8TeV/WJets-250to300.root") ;
+  chainWJets.Add("files15fb_8TeV/WJets-300to400.root") ;
+  chainWJets.Add("files15fb_8TeV/WJets-400.root") ;
 
-  TChain chainAll("tree");
-//chainAll.Add("files5fb_MT/QCD-50to80.root");
-//chainAll.Add("files5fb_MT/QCD-80to120.root");
-chainAll.Add("files5fb_MT/QCD-120to170.root");
-chainAll.Add("files5fb_MT/QCD-170to300.root");
-  chainAll.Add("files5fb_MT/QCD-300to470.root");
-  chainAll.Add("files5fb_MT/QCD-470to600.root");
-  chainAll.Add("files5fb_MT/QCD-600to800.root");
-  chainAll.Add("files5fb_MT/QCD-800to1000.root");
-  chainAll.Add("files5fb_MT/QCD-1000to1400.root");
-  chainAll.Add("files5fb_MT/QCD-1400to1800.root");
-  chainAll.Add("files5fb_MT/QCD-1800.root");
-  chainAll.Add("files5fb_MT/TT.root");
-  chainAll.Add("files5fb_MT/Zinv.root");
+      char qcdinputfile[9][1000] = {
+        "files15fb_8TeV/QCD-120to170.root"
+       ,"files15fb_8TeV/QCD-170to300.root"
+       ,"files15fb_8TeV/QCD-300to470.root"
+       ,"files15fb_8TeV/QCD-470to600.root"
+       ,"files15fb_8TeV/QCD-600to800.root"
+       ,"files15fb_8TeV/QCD-800to1000.root"
+       ,"files15fb_8TeV/QCD-1000to1400.root"
+       ,"files15fb_8TeV/QCD-1400to1800.root"
+       ,"files15fb_8TeV/QCD-1800.root"
+      } ;
 
-  TChain chainTZ("tree");
-  chainTZ.Add("files5fb_MT/TT.root");
-  chainTZ.Add("files5fb_MT/Zinv.root");
+      char qcdsamplename[9][100] = {
+        "qcd_0120_to_0170"
+       ,"qcd_0170_to_0300"
+       ,"qcd_0300_to_0470"
+       ,"qcd_0470_to_0600"
+       ,"qcd_0600_to_0800"
+       ,"qcd_0800_to_1000"
+       ,"qcd_1000_to_1400"
+       ,"qcd_1400_to_1800"
+       ,"qcd_1800_to_9999"
+      } ;
+
+
 
   gROOT->Reset();
 
@@ -136,12 +148,19 @@ chainAll.Add("files5fb_MT/QCD-170to300.root");
 //float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
 //float Hbins[nBinsHT+1] = {400.,800.,99999.};
 
-  //-- met3-ht3-v1
-  const int nBinsMET   = 3 ;
-  const int nBinsHT    = 3 ;
-      const int version = 1;
-  float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
-  float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
+////-- met3-ht3-v1
+//const int nBinsMET   = 3 ;
+//const int nBinsHT    = 3 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
+//float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
+
+////-- met3-ht3-v5
+      const int nBinsMET = 3 ;
+      const int nBinsHT  = 3 ;
+      const int version = 5;
+      float Mbins[nBinsMET+1] = { 125, 200,  350, 99999. } ;
+      float Hbins[nBinsHT+1]  = { 400, 600, 1000, 99999. } ;
 
 ////-- met3-ht3-v2
 //const int nBinsMET   = 3 ;
@@ -345,9 +364,7 @@ chainAll.Add("files5fb_MT/QCD-170to300.root");
   float dummyZero = 0.;
   float dummyOne = 1.0;
   float dummyPoint999 = 0.999 ;
-//float dummyErr = 0.1;
-//float dummyErr = 0.001;
-  float dummyErr = 0.0;
+  float dummyErr = 0.1;
 
   float sl_frac2b_val[nBinsMET][nBinsHT];
   float sl_frac2b_err[nBinsMET][nBinsHT];
@@ -440,11 +457,6 @@ chainAll.Add("files5fb_MT/QCD-170to300.root");
       } // bbi.
    } // si.
 
-
-
-
-     TH1F* hmctruth_qcd_lsb_pass = new TH1F("hmctruth_qcd_lsb_pass","LSB, QCD pass", 1+nBinsBjets*(nBinsHT+1), 0.5, 1+nBinsBjets*(nBinsHT+1)+0.5 )  ;
-     TH1F* hmctruth_qcd_lsb_fail = new TH1F("hmctruth_qcd_lsb_fail","LSB, QCD fail", 1+nBinsBjets*(nBinsHT+1), 0.5, 1+nBinsBjets*(nBinsHT+1)+0.5 )  ;
 
 
 
@@ -649,77 +661,86 @@ chainAll.Add("files5fb_MT/QCD-170to300.root");
      } // si.
 
 
+    printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
+
+    { //--- scoping bracket for QCD chunk.
+
+    //--- Fill histograms to be used in QCD analysis (done in mcclosure4.c).
+
+      const int nQcdSamples(9) ;
+
+      TCanvas* cqcd = new TCanvas("cqcd","QCD") ;
+
+      TH2F*   h0lep[nQcdSamples][nBinsBjets] ;
+      TH2F*   hldp [nQcdSamples][nBinsBjets] ;
+
+      TChain* qcdch[nQcdSamples] ;
+
+      char hname[1000] ;
+      char htitle[1000] ;
+
+      TH2F* hdummy = new TH2F("hdummy","",2, Mbins[0], 1500., 2, Hbins[0], 1500. ) ;
+
+         printf("\n\n") ;
+         for ( int si=0; si<nQcdSamples; si++ ) {
+
+            qcdch[si] = new TChain("tree") ;
+            printf(" %2d : connecting to %s\n", si, qcdinputfile[si] ) ;
+            qcdch[si] -> Add( qcdinputfile[si] ) ;
+
+            for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+
+               sprintf( hname, "h_0lep_%db_%s", bbi+1, qcdsamplename[si] ) ;
+               sprintf( htitle, "QCD 0lep yield, nb=%d, %s", bbi+1, qcdsamplename[si] ) ;
+               printf("         booking hist %s : %s\n", hname, htitle ) ;
+               h0lep[si][bbi] = new TH2F( hname, htitle, nBinsMET, Mbins, nBinsHT, Hbins ) ;
+               h0lep[si][bbi] -> Sumw2() ;
+               sprintf( hname, "h_ldp_%db_%s", bbi+1, qcdsamplename[si] ) ;
+               sprintf( htitle, "QCD  LDP yield, nb=%d, %s", bbi+1, qcdsamplename[si] ) ;
+               printf("         booking hist %s  : %s\n", hname, htitle ) ;
+               hldp [si][bbi] = new TH2F( hname, htitle, nBinsMET, Mbins, nBinsHT, Hbins ) ;
+               hldp [si][bbi] -> Sumw2() ;
+
+            } // bbi.
+
+         } // si.
+         printf("\n\n") ;
 
 
+         char bcut[3][100] = { "nB==1", "nB==2", "nB>=3" } ;
+
+         for ( int si=0; si<nQcdSamples; si++ ) {
+
+            printf(" %2d : %s : 0lep\n", si, qcdsamplename[si] ) ; cout << flush ;
+            for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+
+               char arg1[1000] ;
+
+               char cuts0lep[10000] ;
+               sprintf( cuts0lep, "%s(%s)&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)", selcuts[0], bcut[bbi], nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
+               printf("     %db, 0lep cuts : %s\n", bbi+1, cuts0lep ) ;
+               sprintf( arg1, "HT:MET>>h_0lep_%db_%s", bbi+1, qcdsamplename[si] ) ;
+               qcdch[si] -> Draw( arg1, cuts0lep ) ;
+               hdummy->Draw() ;
+               h0lep[si][bbi]->Draw("samecolz") ;
+               cqcd->Update() ; cqcd->Draw() ;
 
 
+               char cutsldp[10000] ;
+               sprintf( cutsldp, "%s(%s)&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)", selcuts[2], bcut[bbi], nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
+               printf("     %db, ldp  cuts : %s\n", bbi+1, cutsldp  ) ;
+               sprintf( arg1, "HT:MET>>h_ldp_%db_%s", bbi+1, qcdsamplename[si] ) ;
+               qcdch[si] -> Draw( arg1, cutsldp, "colz" ) ;
+               hdummy->Draw() ;
+               hldp[si][bbi]->Draw("samecolz") ;
+               cqcd->Update() ; cqcd->Draw() ;
 
-    printf("\n\n-----------------------------------------------------------------\n\n") ;
-  
-    TH1F* ht_pass = new TH1F("ht_pass","ht_pass",10,0,10000);
-    TH1F* ht_fail = new TH1F("ht_fail","ht_fail",10,0,10000);
-  
-    ht_pass -> Sumw2() ;
-    ht_fail -> Sumw2() ;
+            } // bbi.
 
-    //inFile << "Note: I've removed the b jet dependance of this result since it's always with zero b jets" << endl;
-    // R_lsb  very low met sideband (50-100) ratio of mdp>4/mdp<4 (with zero b ratio)
+         } // si.
 
-    stringstream njcut ; njcut << nJetsCut ;
-    TString cutslsb = "MET>50&&MET<100&&nMu==0&&nEl==0&&nB==0&&nJets>=";
-    cutslsb += njcut.str();
-    cutslsb += "&&";
+    } //--- scoping bracket for QCD chunk.
 
-    for (int j = 0 ; j < nBinsHT ; j++) {
-      for (int k = 0 ; k < nBinsBjets ; k++) {
-  
-        TString Rlsb = "R_lsb" ;
-        Rlsb = Rlsb+sHbins[j]+sBbins[k] ;
-        
-        TString cut = "HT>";  
-        cut += Hbins[j];
-        cut += "&&HT<";
-        cut += Hbins[j+1];
-        
-        TString pass = "&&minDelPhiN>4";
-        TString fail = "&&minDelPhiN<4";
-        TString allcutspass = cutslsb+cut+pass ;
-     // if ( k==0 ) { chainAll.Project("ht_pass","HT",allcutspass); } // only do it once in bjet loop, since using nB==0.
-        double npasserr(0.) ;
-        float npass = 100. ;
-     // npass = ht_pass->IntegralAndError(1,10,npasserr) ;
-        printf(" R_lsb -- HT,MET bins (%d,%d): npass=%10.1f, cuts=%s\n", j,k,npass, allcutspass.Data()) ; cout << flush ;
-        hmctruth_qcd_lsb_pass->SetBinContent( 1+k*(nBinsHT+1)+j+1, npass ) ;
-        hmctruth_qcd_lsb_pass->SetBinError(   1+k*(nBinsHT+1)+j+1, npasserr ) ;
-        char passbinlabel[1000] ;
-        sprintf( passbinlabel, "ldp_H%d_%db_pass", j+1, k+1 ) ;
-        hmctruth_qcd_lsb_pass->GetXaxis()->SetBinLabel( 1+k*(nBinsHT+1)+j+1, passbinlabel ) ;
-  
-  
-        TString allcutsfail = cutslsb+cut+fail ;
-     // if ( k==0 ) { chainAll.Project("ht_fail","HT",allcutsfail); } // only do it once in the bjet loop, since using nB==0.
-        double nfailerr(0.) ;
-        float nfail = 1000. ;
-     // nfail = ht_fail->IntegralAndError(1,10,nfailerr) ;
-        printf(" R_lsb -- HT,MET bins (%d,%d): nfail=%10.1f, cuts=%s\n", j,k,nfail, allcutsfail.Data()) ; cout << flush ;
-        hmctruth_qcd_lsb_fail->SetBinContent( 1+k*(nBinsHT+1)+j+1, nfail ) ;
-        hmctruth_qcd_lsb_fail->SetBinError(   1+k*(nBinsHT+1)+j+1, nfailerr ) ;
-        char failbinlabel[1000] ;
-        sprintf( failbinlabel, "ldp_H%d_%db_fail", j+1, k+1 ) ;
-        hmctruth_qcd_lsb_fail->GetXaxis()->SetBinLabel( 1+k*(nBinsHT+1)+j+1, failbinlabel ) ;
-        
-        inFile << Rlsb << "      \t" << npass/nfail << endl;
-        
-        float error = TMath::Sqrt( (1/npass) + (1/nfail) )*(npass/nfail);
-        Rlsb = Rlsb+"_err" ;
-        inFile << Rlsb << "  \t" << error << endl;
-  
-      }  
-      ht_pass->Reset() ;
-      ht_fail->Reset() ;
-    }
-  
-    
     printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
   
     // Z -> ee observables 
@@ -729,6 +750,7 @@ chainAll.Add("files5fb_MT/QCD-170to300.root");
     ht -> Sumw2() ;
 
     TString cutszee = "cat==2&&minDelPhiNee>4&&nVLB>=1&&nJets>=";
+    stringstream njcut ; njcut << nJetsCut ;
     cutszee += njcut.str();
     cutszee += "&&";
 
@@ -824,26 +846,7 @@ chainAll.Add("files5fb_MT/QCD-170to300.root");
   
     printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
 
-
-
-    for (int k = 0 ; k < nBinsBjets ; k++) {
-
-       char allcuts[100000] ;
-       if ( k < (nBinsBjets-1) ) {
-          sprintf( allcuts, "nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&minDelPhiN<4&&nMu==0&&nEl==0&&nB==%d", nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt, k+1 ) ;
-       } else {
-          sprintf( allcuts, "nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&minDelPhiN<4&&nMu==0&&nEl==0&&nB>=%d", nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt, k+1 ) ;
-       }
-
-       printf("\n cuts : %s\n", allcuts ) ; cout << flush ;
-
-       char hname[1000] ;
-       sprintf( hname, "h_mc_%db", k+1 ) ;
-       chainTZ.Project( hname, "HT:MET", allcuts ) ;
-       printf(" ttbar+singletop+zjets  %12s %7.1f events\n", hname, h_mc[k]->Integral() ) ; cout << flush ;
-
-    } // k.
-    printf("\n\n") ;
+    //--- Owen : these MC inputs are no longer used.  Insert dummy values for backwards compatibility in format.
 
     for (int i = 0 ; i < nBinsMET ; i++) {
       for (int j = 0 ; j < nBinsHT ; j++) {
@@ -853,8 +856,8 @@ chainAll.Add("files5fb_MT/QCD-170to300.root");
            sprintf( obsname, "N_ttbarsingletopzjetsmc_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
 
            double val, err ;
-           val = h_mc[k] -> GetBinContent( i+1, j+1 ) ;
-           err = h_mc[k] -> GetBinError(   i+1, j+1 ) ;
+           val = 0. ;
+           err = 0. ;
 
            printf(" %s : %7.1f +/- %7.1f\n", obsname, val, err ) ;
 
@@ -865,13 +868,6 @@ chainAll.Add("files5fb_MT/QCD-170to300.root");
       }
       printf("\n") ;
     }
-
-
-
-
-
-
-
 
     // NWJmc_ldp
   
@@ -904,6 +900,7 @@ chainAll.Add("files5fb_MT/QCD-170to300.root");
       }
     }
   
+    printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
   
     // various parameters needed for Z -> invis.
   
@@ -1172,7 +1169,7 @@ chainAll.Add("files5fb_MT/QCD-170to300.root");
     } else {
        sprintf( outHistName, "rootfiles/gi-plots-met%d-ht%d-v%d.root", nBinsMET, nBinsHT, version ) ;
     }
-    saveHist( outHistName, "hmc*" ) ;
+    saveHist( outHistName, "h*" ) ;
 
 
     inFile.close();

@@ -33,19 +33,19 @@
 
       int nBinsBjets = 3 ;
 
-      ////-- met3-ht3-v5
-      //const int nBinsMET   = 3 ;
-      //const int nBinsHT    = 3 ;
-      //    const int version = 5;
-      //float Mbins[nBinsMET+1] = {125, 200.,350.,99999.};
-      //float Hbins[nBinsHT+1] = {400, 600.,1000.,99999.};
+        //-- met3-ht3-v5
+        const int nBinsMET   = 3 ;
+        const int nBinsHT    = 3 ;
+         // const int version = 5;
+        float Mbins[nBinsMET+1] = {125, 200.,350.,99999.};
+        float Hbins[nBinsHT+1] = {400, 600.,1000.,99999.};
 
-      ////-- met4-ht3-v3
-      const int nBinsMET   = 4 ;
-      const int nBinsHT    = 3 ;
-          const int version = 3;
-      float Mbins[nBinsMET+1] = {125, 150.,250.,350.,99999.};
-      float Hbins[nBinsHT+1] = {400, 600.,1000.,99999.};
+  //  ////-- met4-ht3-v3
+  //  const int nBinsMET   = 4 ;
+  //  const int nBinsHT    = 3 ;
+  //      const int version = 3;
+  //  float Mbins[nBinsMET+1] = {125, 150.,250.,350.,99999.};
+  //  float Hbins[nBinsHT+1] = {400, 600.,1000.,99999.};
 
       ////-- met4-ht4-v15
       //const int nBinsMET   = 4 ;
@@ -625,8 +625,8 @@
       cqcd2->Update() ; cqcd2->Draw() ;
 
       if ( savePlots ) {
-         cqcd2 -> SaveAs("outputfiles/qcd-study-allonone.png") ;
-         cqcd2 -> SaveAs("outputfiles/qcd-study-allonone.pdf") ;
+         cqcd2 -> SaveAs("outputfiles/qcd-study1-allonone.png") ;
+         cqcd2 -> SaveAs("outputfiles/qcd-study1-allonone.pdf") ;
       }
 
 
@@ -683,9 +683,9 @@
 
          if ( savePlots ) {
             char filename[1000] ;
-            sprintf( filename, "outputfiles/qcd-study-%s.pdf", samplename[si] ) ;
+            sprintf( filename, "outputfiles/qcd-study1-%s.pdf", samplename[si] ) ;
             cqcd3 -> SaveAs( filename ) ;
-            sprintf( filename, "outputfiles/qcd-study-%s.png", samplename[si] ) ;
+            sprintf( filename, "outputfiles/qcd-study1-%s.png", samplename[si] ) ;
             cqcd3 -> SaveAs( filename ) ;
          }
          if ( interactive ) {
@@ -762,8 +762,8 @@
       cqcd4->Update() ; cqcd4->Draw() ;
 
       if ( savePlots ) {
-         cqcd4 -> SaveAs("outputfiles/qcd-study-averatio.png") ;
-         cqcd4 -> SaveAs("outputfiles/qcd-study-averatio.pdf") ;
+         cqcd4 -> SaveAs("outputfiles/qcd-study1-averatio.png") ;
+         cqcd4 -> SaveAs("outputfiles/qcd-study1-averatio.pdf") ;
       }
 
 
@@ -838,8 +838,8 @@
       cqcd5->Update() ; cqcd5->Draw() ;
 
       if ( savePlots ) {
-         cqcd5 -> SaveAs("outputfiles/qcd-study-scalefactor.png") ;
-         cqcd5 -> SaveAs("outputfiles/qcd-study-scalefactor.pdf") ;
+         cqcd5 -> SaveAs("outputfiles/qcd-study1-scalefactor.png") ;
+         cqcd5 -> SaveAs("outputfiles/qcd-study1-scalefactor.pdf") ;
       }
 
 

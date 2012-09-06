@@ -13,17 +13,17 @@ void GenerateSusyFile( double flatDummyErr = 10. ) {  //-- flat error in %.  If 
 
 //gluino cross sections in pb.
 
-//  TFile prospino("referenceXSecs.root");
-//  TH1F *gluinoxsec = gluino;
 
   TFile prospino("referenceXSecs.root");
-  ///// TH1F *gluinoxsec = (TH1F*) prospino.Get("gluino") ;
   TH1F *gluinoxsec = (TH1F*) prospino.Get("gluino_NLONLL") ;
   if ( gluinoxsec == 0 ) {
-     printf("\n\n *** Can't find histogram with name gluino in referenceXSecs.root.\n\n") ;
+     printf("\n\n *** Can't find histogram with name gluino_NLONLL in referenceXSecs.root.\n\n") ;
      return ;
-  } else {
-     gluinoxsec->Print("all") ;
+  }
+  TH1F *gluinoxsec8TeV = (TH1F*) prospino.Get("gluino8TeV_NLONLL") ;
+  if ( gluinoxsec8TeV == 0 ) {
+     printf("\n\n *** Can't find histogram with name gluino8TeV_NLONLL in referenceXSecs.root.\n\n") ;
+     return ;
   }
 
 // bin 1 = gluino mass = 100 GeV, 2 = 125, 3 = 150, 4 = 175, ...
@@ -66,11 +66,18 @@ void GenerateSusyFile( double flatDummyErr = 10. ) {  //-- flat error in %.  If 
 //float Hbins[nBinsHT+1] = {400.,800.,99999.};
 
 //-- met3-ht3-v1
-const int nBinsMET   = 3 ;
-const int nBinsHT    = 3 ;
-    const int version = 1;
-float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
-float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
+//const int nBinsMET   = 3 ;
+//const int nBinsHT    = 3 ;
+//    const int version = 1;
+//float Mbins[nBinsMET+1] = {150.,250.,350.,99999.};
+//float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
+
+////-- met3-ht3-v5
+      const int nBinsMET = 3 ;
+      const int nBinsHT  = 3 ;
+      const int version = 5;
+      float Mbins[nBinsMET+1] = { 125, 200,  350, 99999. } ;
+      float Hbins[nBinsHT+1]  = { 400, 600, 1000, 99999. } ;
 
 //-- met3-ht3-v2
 //const int nBinsMET   = 3 ;
@@ -238,7 +245,7 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 
   // dummy masses
   int minGlMass = 800 ;
-  int maxGlMass = 810 ;
+  int maxGlMass = 1210 ;
 
 
 //double dummyYield = 9.9 ;
@@ -290,7 +297,8 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
   cutsNjets += njcut.str();
 
   float xsec = -1.;
-  for ( int mGl = minGlMass ; mGl < maxGlMass ; mGl = mGl + 25 ) {
+  float xsec8TeV = -1. ;
+  for ( int mGl = minGlMass ; mGl < maxGlMass ; mGl = mGl + 100 ) {
 
     int theBin = gluinoxsec->FindBin( mGl ) ;					      
     if ( theBin <=0 || theBin > gluinoxsec->GetNbinsX() ) {			      
@@ -299,8 +307,17 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
     }										      
     xsec = gluinoxsec->GetBinContent( theBin ) ;				      
 
+    int theBin8TeV = gluinoxsec8TeV->FindBin( mGl ) ;					      
+    if ( theBin8TeV <=0 || theBin8TeV > gluinoxsec8TeV->GetNbinsX() ) {			      
+       printf("\n\n *** can't find bin for mgl=%d.  Returned %d\n\n", mGl, theBin ) ; 
+       return ; 								      
+    }										      
+    xsec8TeV = gluinoxsec8TeV->GetBinContent( theBin8TeV ) ;				      
+
+    printf("\n\n  SUSY Xsecs:  7 TeV = %f,  8 TeV = %f\n\n", xsec, xsec8TeV ) ;
+
     ////// for ( int mLsp = 50 ; mLsp < ( mGl - 25 ) ; mLsp = mLsp + 25 ) {
-    for ( int mLsp = 400 ; mLsp < 710 ; mLsp = mLsp + 100 ) {
+    for ( int mLsp = 300 ; mLsp < 710 ; mLsp = mLsp + 400 ) {
 
       inFile << mGl << " " << mLsp << " " << dummyEvts << " " ;
       printf(" mGl=%4d, mLsp=%4d\n", mGl, mLsp ) ; cout << flush ;
@@ -366,14 +383,16 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
         for (int j = 0 ; j < nBinsHT ; j++) {
           for (int k = 0 ; k < nBinsBjets ; k++) {
 
-         // each point has 10k events generated. The sigma is in pb and I want to normalized to 5 fb-1. 
-         // so multiple cross section by 0.5 to get events in 5 fb-1
+         //-- Aug 31, 2012: This is for using the 7TeV T1bbbb to get 8TeV 15 fb normalization.
+         //
+         // each point has 10k events generated. The sigma is in pb and I want to normalized to 15 fb-1. 
+         // so multiple cross section by 1.5 to get events in 15 fb-1
 
-             inFile << 0.5*xsec*(h_susy_sig[k] -> GetBinContent( i+1, j+1 )) << " " ;
-             inFile << 0.5*xsec*(h_susy_sl[k]  -> GetBinContent( i+1, j+1 )) << " " ;
-             inFile << 0.5*xsec*(h_susy_ldp[k] -> GetBinContent( i+1, j+1 )) << " " ;
+             inFile << 1.5*xsec8TeV*(h_susy_sig[k] -> GetBinContent( i+1, j+1 )) << " " ;
+             inFile << 1.5*xsec8TeV*(h_susy_sl[k]  -> GetBinContent( i+1, j+1 )) << " " ;
+             inFile << 1.5*xsec8TeV*(h_susy_ldp[k] -> GetBinContent( i+1, j+1 )) << " " ;
 
-             totalSUSYyield += (h_susy_sig[k] -> GetBinContent( i+1, j+1 )*0.5*xsec);
+             totalSUSYyield += (h_susy_sig[k] -> GetBinContent( i+1, j+1 )*1.5*xsec8TeV);
 
                 double nsel_sig = h_susy_sig[k] -> GetBinContent( i+1, j+1 ) ;
                 double nsel_sl  = h_susy_sl[k]  -> GetBinContent( i+1, j+1 ) ;
@@ -381,15 +400,42 @@ float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
                 double nevt_err_sig = 1 ;
                 double nevt_err_sl  = 1 ;
                 double nevt_err_ldp = 1 ;
-                if ( nsel_sig > 0. ) { nevt_err_sig = 0.5*xsec*sqrt(nsel_sig) ; }
-                if ( nsel_sl  > 0. ) { nevt_err_sl  = 0.5*xsec*sqrt(nsel_sl ) ; }
-                if ( nsel_ldp > 0. ) { nevt_err_ldp = 0.5*xsec*sqrt(nsel_ldp) ; }
+                if ( nsel_sig > 0. ) { nevt_err_sig = 1.5*xsec8TeV*sqrt(nsel_sig) ; }
+                if ( nsel_sl  > 0. ) { nevt_err_sl  = 1.5*xsec8TeV*sqrt(nsel_sl ) ; }
+                if ( nsel_ldp > 0. ) { nevt_err_ldp = 1.5*xsec8TeV*sqrt(nsel_ldp) ; }
 
-             printf ( " Xsec weighted events: mGl=%d, mLsp=%d: MET,HT (%d,%d) nb=%d   SIG = %6.1f +/- %4.1f,   SL=%6.1f +/- %4.1f,   LDP=%6.1f +/- %4.1f\n",
+             printf ( " xsec8TeV weighted events: mGl=%d, mLsp=%d: MET,HT (%d,%d) nb=%d   SIG = %6.1f +/- %4.1f,   SL=%6.1f +/- %4.1f,   LDP=%6.1f +/- %4.1f\n",
                  mGl, mLsp, i+1, j+1, k+1,
-                 0.5*xsec*(h_susy_sig[k] -> GetBinContent( i+1, j+1 )), nevt_err_sig,
-                 0.5*xsec*(h_susy_sl[k]  -> GetBinContent( i+1, j+1 )), nevt_err_sl,
-                 0.5*xsec*(h_susy_ldp[k] -> GetBinContent( i+1, j+1 )), nevt_err_ldp  ) ;
+                 1.5*xsec8TeV*(h_susy_sig[k] -> GetBinContent( i+1, j+1 )), nevt_err_sig,
+                 1.5*xsec8TeV*(h_susy_sl[k]  -> GetBinContent( i+1, j+1 )), nevt_err_sl,
+                 1.5*xsec8TeV*(h_susy_ldp[k] -> GetBinContent( i+1, j+1 )), nevt_err_ldp  ) ;
+
+         //-- Aug 31, 2012: This is for 7TeV T1bbbb with 5 fb normalization.
+         //
+         // each point has 10k events generated. The sigma is in pb and I want to normalized to 5 fb-1. 
+         // so multiple cross section by 0.5 to get events in 5 fb-1
+
+      ////   inFile << 0.5*xsec*(h_susy_sig[k] -> GetBinContent( i+1, j+1 )) << " " ;
+      ////   inFile << 0.5*xsec*(h_susy_sl[k]  -> GetBinContent( i+1, j+1 )) << " " ;
+      ////   inFile << 0.5*xsec*(h_susy_ldp[k] -> GetBinContent( i+1, j+1 )) << " " ;
+
+      ////   totalSUSYyield += (h_susy_sig[k] -> GetBinContent( i+1, j+1 )*0.5*xsec);
+
+      ////      double nsel_sig = h_susy_sig[k] -> GetBinContent( i+1, j+1 ) ;
+      ////      double nsel_sl  = h_susy_sl[k]  -> GetBinContent( i+1, j+1 ) ;
+      ////      double nsel_ldp = h_susy_ldp[k] -> GetBinContent( i+1, j+1 ) ;
+      ////      double nevt_err_sig = 1 ;
+      ////      double nevt_err_sl  = 1 ;
+      ////      double nevt_err_ldp = 1 ;
+      ////      if ( nsel_sig > 0. ) { nevt_err_sig = 0.5*xsec*sqrt(nsel_sig) ; }
+      ////      if ( nsel_sl  > 0. ) { nevt_err_sl  = 0.5*xsec*sqrt(nsel_sl ) ; }
+      ////      if ( nsel_ldp > 0. ) { nevt_err_ldp = 0.5*xsec*sqrt(nsel_ldp) ; }
+
+      ////   printf ( " Xsec weighted events: mGl=%d, mLsp=%d: MET,HT (%d,%d) nb=%d   SIG = %6.1f +/- %4.1f,   SL=%6.1f +/- %4.1f,   LDP=%6.1f +/- %4.1f\n",
+      ////       mGl, mLsp, i+1, j+1, k+1,
+      ////       0.5*xsec*(h_susy_sig[k] -> GetBinContent( i+1, j+1 )), nevt_err_sig,
+      ////       0.5*xsec*(h_susy_sl[k]  -> GetBinContent( i+1, j+1 )), nevt_err_sl,
+      ////       0.5*xsec*(h_susy_ldp[k] -> GetBinContent( i+1, j+1 )), nevt_err_ldp  ) ;
 
           } // k
           printf("----------------\n") ;
