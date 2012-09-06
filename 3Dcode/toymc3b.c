@@ -2346,7 +2346,7 @@
                return false ;
             }
          } // mbi.
-         for ( int bbi=1; bbi<nBinsHT; bbi++ ) {
+         for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {
             if ( initFit_SFqcd_nb[bbi] == 1 ) {
                printf("\n\n *** Did not find floating parameter SFqcd_nb%d.  Can't continue.\n\n", bbi+1 ) ;
                return false ;
