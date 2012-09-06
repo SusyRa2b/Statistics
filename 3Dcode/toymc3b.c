@@ -5,11 +5,11 @@
 #include "updateFileValue.c"
 #include "getFileValue.c"
 
-// static const int nBinsMET  = 4 ;
-// static const int nBinsHT   = 4 ;
+   static const int nBinsMET  = 4 ;
+   static const int nBinsHT   = 4 ;
 
-   static const int nBinsMET  = 3 ;
-   static const int nBinsHT   = 3 ;
+// static const int nBinsMET  = 3 ;
+// static const int nBinsHT   = 3 ;
 
    static const int nBinsBjets = 3 ;    // this must always be 3
 

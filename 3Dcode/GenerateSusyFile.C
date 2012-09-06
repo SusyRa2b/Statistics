@@ -73,11 +73,11 @@ void GenerateSusyFile( double flatDummyErr = 10. ) {  //-- flat error in %.  If 
 //float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 
 ////-- met3-ht3-v5
-      const int nBinsMET = 3 ;
-      const int nBinsHT  = 3 ;
-      const int version = 5;
-      float Mbins[nBinsMET+1] = { 125, 200,  350, 99999. } ;
-      float Hbins[nBinsHT+1]  = { 400, 600, 1000, 99999. } ;
+//    const int nBinsMET = 3 ;
+//    const int nBinsHT  = 3 ;
+//    const int version = 5;
+//    float Mbins[nBinsMET+1] = { 125, 200,  350, 99999. } ;
+//    float Hbins[nBinsHT+1]  = { 400, 600, 1000, 99999. } ;
 
 //-- met3-ht3-v2
 //const int nBinsMET   = 3 ;
@@ -169,6 +169,13 @@ void GenerateSusyFile( double flatDummyErr = 10. ) {  //-- flat error in %.  If 
 //    const int version = 7;
 //float Mbins[nBinsMET+1] = {125, 150.,250.,350.,99999.};
 //float Hbins[nBinsHT+1] = {200, 300.,500.,1000.,99999.};
+
+  //-- met4-ht4-v15
+      const int nBinsMET   = 4 ;
+      const int nBinsHT    = 4 ;
+      const int version = 15;
+      float Mbins[nBinsMET+1] = {125.,150.,250.,350.,99999.};
+      float Hbins[nBinsHT+1] = {400.,500.,800.,1000.,99999.};
 
 ////-- met4-ht5-v1
 //const int nBinsMET   = 4 ;

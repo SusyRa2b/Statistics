@@ -156,11 +156,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 //float Hbins[nBinsHT+1] = {400.,600.,1000.,99999.};
 
 ////-- met3-ht3-v5
-      const int nBinsMET = 3 ;
-      const int nBinsHT  = 3 ;
-      const int version = 5;
-      float Mbins[nBinsMET+1] = { 125, 200,  350, 99999. } ;
-      float Hbins[nBinsHT+1]  = { 400, 600, 1000, 99999. } ;
+//    const int nBinsMET = 3 ;
+//    const int nBinsHT  = 3 ;
+//    const int version = 5;
+//    float Mbins[nBinsMET+1] = { 125, 200,  350, 99999. } ;
+//    float Hbins[nBinsHT+1]  = { 400, 600, 1000, 99999. } ;
 
 ////-- met3-ht3-v2
 //const int nBinsMET   = 3 ;
@@ -252,6 +252,13 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 //    const int version = 7;
 //float Mbins[nBinsMET+1] = {125, 150.,250.,350.,99999.};
 //float Hbins[nBinsHT+1] = {200, 300.,500.,1000.,99999.};
+
+  //-- met4-ht4-v15
+      const int nBinsMET   = 4 ;
+      const int nBinsHT    = 4 ;
+      const int version = 15;
+      float Mbins[nBinsMET+1] = {125.,150.,250.,350.,99999.};
+      float Hbins[nBinsHT+1] = {400.,500.,800.,1000.,99999.};
 
 ////-- met4-ht5-v1
 //const int nBinsMET   = 4 ;
@@ -665,7 +672,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
      //--- Insert dummy R_lsb lines for backwards compatibility.
      for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-        for ( int bbi=0; bbi<nBinsHT; bbi++ ) {
+        for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
            char dummyline[1000] ;
            sprintf( dummyline, "R_lsb_H%d_%db       0.1", hbi+1, bbi+1 ) ;
            inFile << dummyline << endl ;
