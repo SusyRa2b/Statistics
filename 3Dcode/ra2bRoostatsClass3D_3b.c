@@ -1151,6 +1151,12 @@
             }
          }
 
+         //--- The SF for the highest MET bin always seems to be very poorly constrained in the fits.
+         //    Fix it instead of letting it float.
+
+         rv_SFqcd_met[nBinsMET-1] -> setConstant(kTRUE) ;
+         printf("\n\n Fixing SFqcd_met%d to %5.3f since the fit has trouble with this one.\n\n", nBinsMET, rv_SFqcd_met[nBinsMET-1] -> getVal() ) ;
+
          for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
             char vname[1000] ;
             sprintf( vname, "SFqcd_nb%d", bbi+1 ) ;

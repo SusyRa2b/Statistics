@@ -2252,10 +2252,10 @@
       for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
          initFit_qcd_0lepLDP_ratio_HT[hbi] = -1. ;
       } // hbi.
-      for ( int mbi=0; mbi<nBinsHT; mbi++ ) {
+      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
          initFit_SFqcd_met[mbi] = 1. ;
       } // mbi.
-      for ( int bbi=0; bbi<nBinsHT; bbi++ ) {
+      for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
          initFit_SFqcd_nb[bbi] = 1. ;
       } // bbi.
 
@@ -2296,7 +2296,7 @@
                   initFit_qcd_0lepLDP_ratio_HT[hbi] = par->getVal() ;
                }
             } // hbi.
-            for ( int mbi=1; mbi<nBinsHT; mbi++ ) {
+            for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
                char pname[100] ;
                sprintf( pname, "SFqcd_met%d", mbi+1 ) ;
                if ( strcmp( par->GetName(), pname ) == 0 ) {
@@ -2304,7 +2304,7 @@
                   initFit_SFqcd_met[mbi] = par->getVal() ;
                }
             } // mbi.
-            for ( int bbi=1; bbi<nBinsHT; bbi++ ) {
+            for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {
                char pname[100] ;
                sprintf( pname, "SFqcd_nb%d", bbi+1 ) ;
                if ( strcmp( par->GetName(), pname ) == 0 ) {
@@ -2340,10 +2340,26 @@
                return false ;
             }
          } // hbi.
-         for ( int mbi=1; mbi<nBinsHT; mbi++ ) {
+         //+++++ Trying not floating the MET scale factor for the highest bin.
+         for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
             if ( initFit_SFqcd_met[mbi] == 1 ) {
-               printf("\n\n *** Did not find floating parameter SFqcd_met%d.  Can't continue.\n\n", mbi+1 ) ;
-               return false ;
+               if ( mbi<nBinsMET-1 ) {
+                  printf("\n\n *** Did not find floating parameter SFqcd_met%d.  Can't continue.\n\n", mbi+1 ) ;
+                  return false ;
+               } else {
+                  printf("\n\n *** Did not find floating parameter SFqcd_met%d.  Assuming it's fixed.\n", mbi+1 ) ;
+                  char vname[1000] ;
+                  sprintf( vname, "SFqcd_met%d", mbi+1 ) ;
+                  printf("  Searching for parameter %s in workspace.\n", vname ) ;
+                  RooRealVar* par = workspace -> var( vname ) ;
+                  if ( par != 0x0 ) {
+                     printf("  Found %s with value %5.3f\n", vname, par->getVal() ) ;
+                     initFit_SFqcd_met[mbi] = par->getVal() ;
+                  } else {
+                     printf("\n *** Didn't find it.  Can't continue.\n\n") ;
+                     return false ;
+                  }
+               }
             }
          } // mbi.
          for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {

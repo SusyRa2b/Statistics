@@ -12,11 +12,11 @@
    char compname[ncomps][100] = { "susy", "ttwj", "qcd", "znn" } ;
    int  compcolor[ncomps] = { 6, kBlue-9, 2, kGreen-3 } ;
 
-// const int nBinsMET(4) ;
-// const int nBinsHT(4) ;
+   const int nBinsMET(4) ;
+   const int nBinsHT(4) ;
 
-   const int nBinsMET(3) ;
-   const int nBinsHT(3) ;
+// const int nBinsMET(3) ;
+// const int nBinsHT(3) ;
 
 
    const int nBinsBjets(3) ;
@@ -53,7 +53,7 @@
 
   //----------------------------
 
-   void toyplots1( const char* infilename = "output-toymc2b-mgl850-mlsp600-100evts-newMC-wsyst-test5a-useE0Ltrue/toy-results.root", bool doDiff=false ) {
+   void toyplots1( const char* infilename = "output-toymc2b-mgl850-mlsp600-100evts-newMC-wsyst-test5a-useE0Ltrue/toy-results.root", bool doDiff=false, bool doFrac=false, float sethmax=0.0 ) {
 
       gStyle->SetOptStat(0) ;
       gStyle->SetLabelSize(0.08,"y") ;
@@ -106,11 +106,11 @@
 
                sprintf( drawarg1, daformat[cani], "fit", compname[ci], svi-1, svi, "fit", compname[ci], plotname[cani] ) ;
                printf( "%s\n", drawarg1 ) ;
-               toytt -> Draw( drawarg1 ) ;
+               toytt -> Draw( drawarg1, "fit_covqual_susyfloat==3" ) ;
 
                sprintf( drawarg1, daformat[cani], "mcval", compname[ci], svi-1, svi, "mcval", compname[ci], plotname[cani] ) ;
                printf( "%s\n", drawarg1 ) ;
-               toytt -> Draw( drawarg1 ) ;
+               toytt -> Draw( drawarg1, "fit_covqual_susyfloat==3" ) ;
 
             } // svi.
 
@@ -144,29 +144,31 @@
                for ( int bi=1; bi<=(svmax[cani]-svmin[cani]+1); bi++ ) {
                   double diff = hfit->GetBinContent( bi ) - hmcval->GetBinContent( bi ) ;
                   double err  = hfit->GetBinError( bi ) ;
+                  if ( doFrac ) {
+                     if ( hmcval->GetBinContent( bi ) > 0. ) {
+                        diff = diff / ( hmcval->GetBinContent( bi ) ) ;
+                        err  = err  / ( hmcval->GetBinContent( bi ) ) ;
+                     }
+                     printf(" fit=%7.1f, MC=%7.1f, frac diff = %5.3f +/- %5.3f\n", hfit->GetBinContent( bi ), hmcval->GetBinContent( bi ), diff, err ) ;
+                  }
                   hdiff -> SetBinContent( bi, diff ) ;
                   hdiff -> SetBinError( bi, err ) ;
                   if ( 1.1*(diff+err) > drawmax ) { drawmax = 1.1*(diff+err) ; }
                   if ( diff<0 && 1.1*(diff-err) < drawmin ) { drawmin = 1.1*(diff-err) ; }
                } // bi.
 
-               if ( fabs(drawmax) > fabs(drawmin) ) {
-                  hdiff->SetMaximum(drawmax) ;
-                  hdiff->SetMinimum(-drawmax) ;
+               if ( sethmax <= 0 ) {
+                  if ( fabs(drawmax) > fabs(drawmin) ) {
+                     hdiff->SetMaximum(drawmax) ;
+                     hdiff->SetMinimum(-drawmax) ;
+                  } else {
+                     hdiff->SetMaximum(fabs(drawmin)) ;
+                     hdiff->SetMinimum(-fabs(drawmin)) ;
+                  }
                } else {
-                  hdiff->SetMaximum(fabs(drawmin)) ;
-                  hdiff->SetMinimum(-fabs(drawmin)) ;
+                  hdiff->SetMaximum(sethmax) ;
+                  hdiff->SetMinimum(-sethmax) ;
                }
-
-          ///  if ( hdiff -> GetMinimum() > 0.) {
-          ///     hdiff -> SetMinimum( -0.5 ) ;
-          ///  }
-
-          ///  if ( fabs( hdiff->GetMinimum() ) < fabs( hdiff->GetMaximum() ) ) {
-          ///     hdiff->SetMinimum( -fabs(hdiff->GetMaximum() ) ) ;
-          ///  } else {
-          ///     hdiff->SetMaximum( -fabs(hdiff->GetMinimum() ) ) ;
-          ///  }
 
                hdiff -> SetMarkerStyle(20) ;
                hdiff -> SetLineWidth(2) ;
