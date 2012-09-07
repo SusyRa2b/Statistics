@@ -68,8 +68,10 @@ while(<$fin>) {
       $binFileHash{$bfn} = $tempCount;
       $tempCount = $tempCount+1;
       print $binlistout "bin$tempCount bin_$bfn.dat\n";
+      #print $binlistout "bin_$bfn bin_$bfn.dat\n";
     }
     
+    #FOLLOWING LINES ARE FOR TESTING
     #print hash -- e.g. M4_H1_1b key gives 36 value
     #while ((my $key, my $value) = each %binFileHash)
     #  {
@@ -91,8 +93,9 @@ while(<$fin>) {
       
       elsif($fullOKAname =~ /(N_1lep)(_M)(\d)(_H)(\d)(_)(\d)(b)/) {
       	my $bin = "M$3_H$5_$7"."b";
-	print {$binFileHandles[$binFileHash{$bin}]} "oneMuonCount $value\n";
-	print {$binFileHandles[$binFileHash{$bin}]} "oneElectronCount $value\n";
+	my $half = $value/2.0;
+	print {$binFileHandles[$binFileHash{$bin}]} "oneMuonCount $half\n";
+	print {$binFileHandles[$binFileHash{$bin}]} "oneElectronCount $half\n";
       }
       
       elsif($fullOKAname =~ /(N_ldp)(_M)(\d)(_H)(\d)(_)(\d)(b)/) {
