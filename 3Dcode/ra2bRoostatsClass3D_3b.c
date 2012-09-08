@@ -1151,11 +1151,11 @@
             }
          }
 
-         //--- The SF for the highest MET bin always seems to be very poorly constrained in the fits.
-         //    Fix it instead of letting it float.
+     //  //--- The SF for the highest MET bin always seems to be very poorly constrained in the fits.
+     //  //    Fix it instead of letting it float.
 
-         rv_SFqcd_met[nBinsMET-1] -> setConstant(kTRUE) ;
-         printf("\n\n Fixing SFqcd_met%d to %5.3f since the fit has trouble with this one.\n\n", nBinsMET, rv_SFqcd_met[nBinsMET-1] -> getVal() ) ;
+     //  rv_SFqcd_met[nBinsMET-1] -> setConstant(kTRUE) ;
+     //  printf("\n\n Fixing SFqcd_met%d to %5.3f since the fit has trouble with this one.\n\n", nBinsMET, rv_SFqcd_met[nBinsMET-1] -> getVal() ) ;
 
          for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
             char vname[1000] ;
@@ -1347,6 +1347,50 @@
       } // k (nbtag)
 
 
+
+
+
+
+
+
+
+      //-- If using QCD model 4, give a few floating parameters some help with a constraint PDF.
+
+      printf("\n\n") ;
+      if ( qcdModelIndex == 4 ) {
+
+        //-- constrain MET scale factors for >= bin 3 (counting from 1).
+         if ( nBinsMET==4 ) {
+
+            char pdfname[1000] ;
+            char meanname[1000] ;
+            char signame[1000] ;
+
+            sprintf( pdfname, "pdf_%s", rv_SFqcd_met[2]->GetName() ) ;
+            sprintf( meanname, "pdf_mean_%s", rv_SFqcd_met[2]->GetName() ) ;
+            sprintf( signame, "pdf_sigma_%s", rv_SFqcd_met[2]->GetName() ) ;
+            RooConstVar* mean_mb3 = new RooConstVar( meanname, meanname, 1.41 ) ; //-- value hardwired from chi2 fit of MC ratios.
+            RooConstVar* sigma_mb3 = new RooConstVar( signame, signame, 0.14 ) ; //-- value is diff between SFmet3 and SFmet2 divided by 2.
+            printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_met[2]->GetName(), mean_mb3->getVal(), sigma_mb3->getVal() ) ;
+            RooGaussian* rg_mb3 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_met[2], *mean_mb3, *sigma_mb3) ;
+            allNuisances -> add( *rv_SFqcd_met[2] ) ;
+            allNuisancePdfs -> add( *rg_mb3 ) ;
+
+            sprintf( pdfname, "pdf_%s", rv_SFqcd_met[3]->GetName() ) ;
+            sprintf( meanname, "pdf_mean_%s", rv_SFqcd_met[3]->GetName() ) ;
+            sprintf( signame, "pdf_sigma_%s", rv_SFqcd_met[3]->GetName() ) ;
+            RooConstVar* mean_mb4 = new RooConstVar( meanname, meanname, 1.98 ) ; //-- value hardwired from chi2 fit of MC ratios.
+            RooConstVar* sigma_mb4 = new RooConstVar( signame, signame, 0.43 ) ; //-- value is diff between SFmet4 and SFmet2 divided by 2.
+            printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_met[3]->GetName(), mean_mb4->getVal(), sigma_mb4->getVal() ) ;
+            RooGaussian* rg_mb4 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_met[3], *mean_mb4, *sigma_mb4) ;
+            allNuisances -> add( *rv_SFqcd_met[3] ) ;
+            allNuisancePdfs -> add( *rg_mb4 ) ;
+
+         } else {
+            printf("\n\n *** QCD model 4 : NOT adding constraint PDFs for MET SFs, since I don't know what to do for this binning.\n") ;
+         }
+      }
+      printf("\n\n") ;
 
 
 
