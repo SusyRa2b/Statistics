@@ -1386,6 +1386,16 @@
             allNuisances -> add( *rv_SFqcd_met[3] ) ;
             allNuisancePdfs -> add( *rg_mb4 ) ;
 
+            sprintf( pdfname, "pdf_%s", rv_SFqcd_nb[2]->GetName() ) ;
+            sprintf( meanname, "pdf_mean_%s", rv_SFqcd_nb[2]->GetName() ) ;
+            sprintf( signame, "pdf_sigma_%s", rv_SFqcd_nb[2]->GetName() ) ;
+            RooConstVar* mean_nb3 = new RooConstVar( meanname, meanname, 0.68 ) ; //-- value hardwired from chi2 fit of MC ratios.
+            RooConstVar* sigma_nb3 = new RooConstVar( signame, signame, 0.16 ) ; //-- guess: 1-SF / 2.  chi2 fit error is 0.07 so this is reasonable in magnitude.
+            printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_nb[2]->GetName(), mean_nb3->getVal(), sigma_nb3->getVal() ) ;
+            RooGaussian* rg_nb3 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_nb[2], *mean_nb3, *sigma_nb3) ;
+            allNuisances -> add( *rv_SFqcd_nb[2] ) ;
+            allNuisancePdfs -> add( *rg_nb3 ) ;
+
          } else {
             printf("\n\n *** QCD model 4 : NOT adding constraint PDFs for MET SFs, since I don't know what to do for this binning.\n") ;
          }
