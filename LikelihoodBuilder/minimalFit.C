@@ -41,6 +41,11 @@ void minimalFit(TString workspaceFile = "test.root", double signalCrossSectionGu
   cout << "RooFitResult status = " << fitResult->status() << endl;
   cout << "RooFitResult minNll = " << fitResult->minNll() << endl;
 
+  if(updateWS) {
+    //ws->import(fitResult->GetName());//if i do this, how do i get it out of the workspace later??
+    fitResult->Write();
+  }
+
   if(updateWS) ws->Write();
   wstf->Close();
 
