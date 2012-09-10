@@ -223,6 +223,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
     RooRealVar lowDeltaPhiNScaling_temp(scaling, scaling, 0.0, 1e3);
     lowDeltaPhiNScaling_temp.setVal(0.1);//BEN FIXME - automatic initial guess?
     ws.import(lowDeltaPhiNScaling_temp);
+    ws.extendSet(names.nuisances,lowDeltaPhiNScaling_temp.GetName());
     lowDeltaPhiNScaling = ws.var(scaling);
   }
   double qcdGuess = observed.zeroLeptonLowDeltaPhiN - abcd.zeroLeptonLowDeltaPhiNMC;
@@ -382,11 +383,11 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
   RooProduct  zeroLeptonLowDeltaPhiNMCYield(zeroLeptonLowDeltaPhiNName+"_MCYield",zeroLeptonLowDeltaPhiNName+"_MCYield",RooArgSet(*MCUncertainty,zeroLeptonLowDeltaPhiNMCCount));
   */
 
-  RooRealVar topWJetsLowDeltaPhiNOverZeroLeptonRatioMC(zeroLeptonLowDeltaPhiNName+"_topWJetsLowDeltaPhiNOverZeroLeptonRatioMC",
-						       zeroLeptonLowDeltaPhiNName+"_topWJetsLowDeltaPhiNOverZeroLeptonRatioMC", 
+  RooRealVar topWJetsLowDeltaPhiNOverZeroLeptonRatioMC(zeroLeptonLowDeltaPhiNName+"_TopWJetsLowDeltaPhiNOverZeroLeptonRatioMC",
+						       zeroLeptonLowDeltaPhiNName+"_TopWJetsLowDeltaPhiNOverZeroLeptonRatioMC", 
 						       abcd.topWJetsLowDeltaPhiNOverZeroLeptonRatioMC);
   topWJetsLowDeltaPhiNOverZeroLeptonRatioMC.setConstant();
-  RooProduct zeroLeptonLowDeltaPhiNTopWJetsYield(zeroLeptonLowDeltaPhiNName+"_topWJetsYield",zeroLeptonLowDeltaPhiNName+"_topWJetsYield",RooArgSet(topWJetsLowDeltaPhiNOverZeroLeptonRatioMC,zeroLeptonTopWJetsYield));
+  RooProduct zeroLeptonLowDeltaPhiNTopWJetsYield(zeroLeptonLowDeltaPhiNName+"_TopWJetsYield",zeroLeptonLowDeltaPhiNName+"_TopWJetsYield",RooArgSet(topWJetsLowDeltaPhiNOverZeroLeptonRatioMC,zeroLeptonTopWJetsYield));
 
   RooRealVar ZtoNuNuLowDeltaPhiNOverZeroLeptonRatioMC(zeroLeptonLowDeltaPhiNName+"_ZtoNuNuLowDeltaPhiNOverZeroLeptonRatioMC",
 						       zeroLeptonLowDeltaPhiNName+"_ZtoNuNuLowDeltaPhiNOverZeroLeptonRatioMC", 
@@ -533,6 +534,7 @@ void setupUnderlyingLikelihood(const likelihoodOptions options, RooWorkspace& ws
 
   RooRealVar singleLeptonScaling("singleLeptonScaling","singleLeptonScaling",0.0,1e3);
   ws.import(singleLeptonScaling);
+  ws.extendSet(names.nuisances,singleLeptonScaling.GetName());
   names.singleLeptonScaling = singleLeptonScaling.GetName();
 
 
