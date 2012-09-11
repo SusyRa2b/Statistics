@@ -1419,7 +1419,7 @@
             sprintf( pdfname, "pdf_%s", rv_SFqcd_met[2]->GetName() ) ;
             sprintf( meanname, "pdf_mean_%s", rv_SFqcd_met[2]->GetName() ) ;
             sprintf( signame, "pdf_sigma_%s", rv_SFqcd_met[2]->GetName() ) ;
-            RooConstVar* mean_mb3 = new RooConstVar( meanname, meanname, 1.41 ) ; //-- value hardwired from chi2 fit of MC ratios.
+            RooConstVar* mean_mb3 = new RooConstVar( meanname, meanname, 1.34 ) ; //-- value hardwired from chi2 fit of MC ratios.
             RooConstVar* sigma_mb3 = new RooConstVar( signame, signame, 0.14 ) ; //-- value is diff between SFmet3 and SFmet2 divided by 2.
             printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_met[2]->GetName(), mean_mb3->getVal(), sigma_mb3->getVal() ) ;
             RooGaussian* rg_mb3 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_met[2], *mean_mb3, *sigma_mb3) ;
@@ -1429,7 +1429,7 @@
             sprintf( pdfname, "pdf_%s", rv_SFqcd_met[3]->GetName() ) ;
             sprintf( meanname, "pdf_mean_%s", rv_SFqcd_met[3]->GetName() ) ;
             sprintf( signame, "pdf_sigma_%s", rv_SFqcd_met[3]->GetName() ) ;
-            RooConstVar* mean_mb4 = new RooConstVar( meanname, meanname, 1.98 ) ; //-- value hardwired from chi2 fit of MC ratios.
+            RooConstVar* mean_mb4 = new RooConstVar( meanname, meanname, 1.90 ) ; //-- value hardwired from chi2 fit of MC ratios.
             RooConstVar* sigma_mb4 = new RooConstVar( signame, signame, 0.43 ) ; //-- value is diff between SFmet4 and SFmet2 divided by 2.
             printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_met[3]->GetName(), mean_mb4->getVal(), sigma_mb4->getVal() ) ;
             RooGaussian* rg_mb4 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_met[3], *mean_mb4, *sigma_mb4) ;
@@ -1439,7 +1439,7 @@
             sprintf( pdfname, "pdf_%s", rv_SFqcd_nb[2]->GetName() ) ;
             sprintf( meanname, "pdf_mean_%s", rv_SFqcd_nb[2]->GetName() ) ;
             sprintf( signame, "pdf_sigma_%s", rv_SFqcd_nb[2]->GetName() ) ;
-            RooConstVar* mean_nb3 = new RooConstVar( meanname, meanname, 0.68 ) ; //-- value hardwired from chi2 fit of MC ratios.
+            RooConstVar* mean_nb3 = new RooConstVar( meanname, meanname, 0.69 ) ; //-- value hardwired from chi2 fit of MC ratios.
             RooConstVar* sigma_nb3 = new RooConstVar( signame, signame, 0.16 ) ; //-- guess: 1-SF / 2.  chi2 fit error is 0.07 so this is reasonable in magnitude.
             printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_nb[2]->GetName(), mean_nb3->getVal(), sigma_nb3->getVal() ) ;
             RooGaussian* rg_nb3 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_nb[2], *mean_nb3, *sigma_nb3) ;
