@@ -407,7 +407,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
 				     signal.zeroLepton,signalError.zeroLepton,
 				     names.observables,names.nuisances,
 				     names.signalUncertainty);
-  
+
   RooAbsArg*  zeroLeptonLowDeltaPhiNSignalYieldFraction = 
     getCorrelatedBetaPrimeConstraint(ws,"zeroLeptonLowDeltaPhiNSignalYieldFraction_",binName,
 				     signal.zeroLeptonLowDeltaPhiN,signalError.zeroLeptonLowDeltaPhiN,
@@ -578,7 +578,8 @@ void setupSignalModel(vector<TString> binNames, TString signalModelFileName, int
   ifstream signalFile;  
   
   signalFile.open(signalModelFileName.Data(),fstream::in);
-  
+  assert(signalFile.is_open());
+
   int thisLineNumber = 0;
   string fileLine;
 
@@ -730,6 +731,7 @@ void setupUnderlyingModel(TString binFilesPath, map<TString,TString>& binFileNam
   double value;
        
   setupFile.open(modelFileName.Data(),fstream::in);
+  assert(setupFile.is_open());
 
   while(!setupFile.eof())
     {
