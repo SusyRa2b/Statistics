@@ -21,6 +21,23 @@
 //                                  Added QCD Model 4.  Float 0lep/LDP ratio in
 //                                  each HT bin.  Apply MET and nbjet corrections.
 //
+//
+//            QCD Model descriptions
+//
+//               3 : Float one global 0lep/LDP ratio
+//
+//               2 : Float independent 0lep/LDP ratios for each HT bin.
+//
+//               4 : Float independent 0lep/LDP ratios for each HT bin.
+//                   Float independent MET corrections for each MET bin > 1.
+//                   Float independent nbjet corrections for each MET bin > 1.
+//
+//               5 : Float independent 0lep/LDP ratios for each HT bin.
+//                   Float one MET correction that's common for bins with index > 1.
+//                   Float one nbjet correction that's common for bins with index > 1.
+//
+//
+//
 
 
 #include <iostream>
@@ -93,6 +110,13 @@
                                             int   qcdModelIndex,
                                             const char* wsrootfilename
 					    ) {
+
+
+
+      if ( qcdModelIndex<2 || qcdModelIndex>5 ) {
+         printf("\n\n *** Unsupported QCD model index: %d.  Try again with 2,3,4,5.\n\n", qcdModelIndex) ;
+         return false ;
+      }
 
       double dummy ;
       dummy = t1bbbbXsec ;
@@ -616,7 +640,7 @@
 
       //--- QCD is a bit more complicated for model 4
 
-      if ( qcdModelIndex == 4 ) {
+      if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
 
          double tmp_qcd ;
 
@@ -634,7 +658,6 @@
 
          //-- Get the nbjet scale factors.  Use lowest bins of MET and HT and compute for exact agreement.
          for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
-               initialguess_model4_SFqcd_nb[bbi] = 1.0 ;
             if ( bbi == 0 ) {
                initialguess_model4_SFqcd_nb[0] = 1.0 ; //-- first one is 1 by definition.
             } else {
@@ -645,8 +668,13 @@
                } else {
                   initialguess_model4_SFqcd_nb[bbi] = 0.0 ;
                }
-               printf( "nb  bin %d : QCD SFnb = (%7.1f / %7.1f) = %6.3f\n", bbi+1, tmp_qcd, tmp_denom,
-                  initialguess_model4_SFqcd_nb[bbi] ) ;
+               if ( bbi>1 && qcdModelIndex == 5 ) {
+                  initialguess_model4_SFqcd_nb[bbi] = initialguess_model4_SFqcd_nb[1] ;
+                  printf( "nb  bin %d : QCD SFnb = %6.3f (value from bin 2)\n", bbi+1, initialguess_model4_SFqcd_nb[bbi] ) ;
+               } else {
+                  printf( "nb  bin %d : QCD SFnb = (%7.1f / %7.1f) = %6.3f\n", bbi+1, tmp_qcd, tmp_denom,
+                     initialguess_model4_SFqcd_nb[bbi] ) ;
+               }
             }
          } // bbi.
 
@@ -667,11 +695,21 @@
                printf( "MET bin %d : QCD SFmet = (%7.1f / %7.1f) = %6.3f\n", mbi+1, tmp_qcd, tmp_denom,
                     initialguess_model4_SFqcd_met[mbi] ) ;
             } else if ( mbi == 2 ) {
-               initialguess_model4_SFqcd_met[mbi] = 1.41 ;
-               printf( "MET bin %d : QCD SFmet = %6.3f (hardwired guess)\n", mbi+1, initialguess_model4_SFqcd_met[mbi] ) ;
+               if ( qcdModelIndex == 4 ) {
+                  initialguess_model4_SFqcd_met[mbi] = 1.41 ;
+                  printf( "MET bin %d : QCD SFmet = %6.3f (hardwired guess)\n", mbi+1, initialguess_model4_SFqcd_met[mbi] ) ;
+               } else if ( qcdModelIndex == 5 ) {
+                  initialguess_model4_SFqcd_met[mbi] = initialguess_model4_SFqcd_met[1] ;
+                  printf( "MET bin %d : QCD SFmet = %6.3f (value from bin 2)\n", mbi+1, initialguess_model4_SFqcd_met[mbi] ) ;
+               }
             } else if ( mbi == 3 ) {
-               initialguess_model4_SFqcd_met[mbi] = 1.98 ;
-               printf( "MET bin %d : QCD SFmet = %6.3f (hardwired guess)\n", mbi+1, initialguess_model4_SFqcd_met[mbi] ) ;
+               if ( qcdModelIndex == 4 ) {
+                  initialguess_model4_SFqcd_met[mbi] = 1.98 ;
+                  printf( "MET bin %d : QCD SFmet = %6.3f (hardwired guess)\n", mbi+1, initialguess_model4_SFqcd_met[mbi] ) ;
+               } else if ( qcdModelIndex == 5 ) {
+                  initialguess_model4_SFqcd_met[mbi] = initialguess_model4_SFqcd_met[1] ;
+                  printf( "MET bin %d : QCD SFmet = %6.3f (value from bin 2)\n", mbi+1, initialguess_model4_SFqcd_met[mbi] ) ;
+               }
             }
          } // mbi.
 
@@ -1138,9 +1176,9 @@
          sprintf( vname, "qcd_0lepLDP_ratio" ) ;
          rv_qcd_0lepLDP_ratio[0] = new RooRealVar( vname, vname, initialguess_model3_qcd_0lepLDP_ratio, 0., 10. ) ;
 
-      } else if ( qcdModelIndex == 4 ) {
+      } else if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
 
-         printf("\n\n  QCD Model 4 : One floating 0lep/LDP ratio for each HT bin. Includes MET and nbjet corrections.\n\n") ;
+         printf("\n\n  QCD Model %d : One floating 0lep/LDP ratio for each HT bin. Includes MET and nbjet corrections.\n\n", qcdModelIndex) ;
 
          for ( int htbi=0; htbi < nBinsHT ; htbi++ ) {
             char vname[1000] ;
@@ -1150,32 +1188,34 @@
          }
 
          for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-            char vname[1000] ;
-            sprintf( vname, "SFqcd_met%d", mbi+1 ) ;
-            printf("  MET bin %d : %s\n", mbi+1, vname ) ; cout << flush ;
-            rv_SFqcd_met[mbi] = new RooRealVar( vname, vname, initialguess_model4_SFqcd_met[mbi], 0., 3. ) ;
-            if ( mbi==0 ) {
-               rv_SFqcd_met[mbi] -> setConstant(kTRUE) ;
+            if ( qcdModelIndex == 5 && mbi > 1 ) {
+               rv_SFqcd_met[mbi] = rv_SFqcd_met[1] ;
             } else {
-               rv_SFqcd_met[mbi] -> setConstant(kFALSE) ;
+               char vname[1000] ;
+               sprintf( vname, "SFqcd_met%d", mbi+1 ) ;
+               printf("  MET bin %d : %s\n", mbi+1, vname ) ; cout << flush ;
+               rv_SFqcd_met[mbi] = new RooRealVar( vname, vname, initialguess_model4_SFqcd_met[mbi], 0., 3. ) ;
+               if ( mbi==0 ) {
+                  rv_SFqcd_met[mbi] -> setConstant(kTRUE) ;
+               } else {
+                  rv_SFqcd_met[mbi] -> setConstant(kFALSE) ;
+               }
             }
          }
 
-     //  //--- The SF for the highest MET bin always seems to be very poorly constrained in the fits.
-     //  //    Fix it instead of letting it float.
-
-     //  rv_SFqcd_met[nBinsMET-1] -> setConstant(kTRUE) ;
-     //  printf("\n\n Fixing SFqcd_met%d to %5.3f since the fit has trouble with this one.\n\n", nBinsMET, rv_SFqcd_met[nBinsMET-1] -> getVal() ) ;
-
          for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
-            char vname[1000] ;
-            sprintf( vname, "SFqcd_nb%d", bbi+1 ) ;
-            printf("  nbjet bin %d : %s\n", bbi+1, vname ) ; cout << flush ;
-            rv_SFqcd_nb[bbi] = new RooRealVar( vname, vname, initialguess_model4_SFqcd_nb[bbi], 0., 3. ) ;
-            if ( bbi==0 ) {
-               rv_SFqcd_nb[bbi] -> setConstant(kTRUE) ;
+            if ( qcdModelIndex == 5 && bbi > 1 ) {
+               rv_SFqcd_nb[bbi] = rv_SFqcd_nb[1] ;
             } else {
-               rv_SFqcd_nb[bbi] -> setConstant(kFALSE) ;
+               char vname[1000] ;
+               sprintf( vname, "SFqcd_nb%d", bbi+1 ) ;
+               printf("  nbjet bin %d : %s\n", bbi+1, vname ) ; cout << flush ;
+               rv_SFqcd_nb[bbi] = new RooRealVar( vname, vname, initialguess_model4_SFqcd_nb[bbi], 0., 3. ) ;
+               if ( bbi==0 ) {
+                  rv_SFqcd_nb[bbi] -> setConstant(kTRUE) ;
+               } else {
+                  rv_SFqcd_nb[bbi] -> setConstant(kFALSE) ;
+               }
             }
          }
 
@@ -1619,17 +1659,12 @@
                rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
                                                         RooArgSet( *rv_mu_qcd_ldp[i][j][k], *rar_sf_qcd[i][j][k], *rv_qcd_0lepLDP_ratio[0] ) ) ;
 
-            } else if ( qcdModelIndex == 4 ) {
+            } else if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
 
                TString rfvQcdString = "@0 * @1 * @2 * @3 * @4" ;
 
                rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
                                                         RooArgSet( *rv_mu_qcd_ldp[i][j][k], *rar_sf_qcd[i][j][k], *rv_qcd_0lepLDP_ratio[j], *rv_SFqcd_met[i], *rv_SFqcd_nb[k] ) ) ;
-
-           /// printf(" *** debug2: m%d,h%d,b%d : qcd_ldp * sf * R0lep/LDP * SFmet * SFnb = %7.1f * %5.3f * %5.3f * %5.3f = %7.1f     \n",
-           ///       i+1, j+1, k+1, rv_mu_qcd_ldp[i][j][k]->getVal(), rar_sf_qcd[i][j][k]->getVal(), rv_qcd_0lepLDP_ratio[j]->getVal(),
-           ///       rv_SFqcd_met[i]->getVal(), rv_SFqcd_nb[k]->getVal(), rfv_mu_qcd[i][j][k]->getVal() ) ;
-
 
             }
 

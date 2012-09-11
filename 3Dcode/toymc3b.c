@@ -330,11 +330,11 @@
           printf("\n\n *** can't find susy poi mu_susy_all0lep.\n\n") ; return ;
        }
 
-       if ( qcdModelIndex < 2 || qcdModelIndex > 4 ) {
+       if ( qcdModelIndex < 2 || qcdModelIndex > 5 ) {
           printf("\n\n Unsupported QCD model index %d.\n\n", qcdModelIndex ) ;
           return ;
        }
-       if ( qcdModelIndex == 2 || qcdModelIndex == 4 ) {
+       if ( qcdModelIndex == 2 || qcdModelIndex == 4 || qcdModelIndex == 5 ) {
           if ( nBinsHT >=1 ) {
              rrv_qcd_0lepLDP_ratio_H1 = workspace -> var( "qcd_0lepLDP_ratio_H1" ) ;
              if ( rrv_qcd_0lepLDP_ratio_H1 == 0x0 ) {
@@ -366,23 +366,11 @@
              printf("\n\n *** can't find qcd_0lepLDP_ratio.\n\n") ; return ;
           }
        }
-       if ( qcdModelIndex == 4 ) {
+       if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
           if ( nBinsMET >=2 ) {
              rrv_SFqcd_met2 = workspace -> var( "SFqcd_met2" ) ;
              if ( rrv_SFqcd_met2 == 0x0 ) {
                 printf("\n\n *** can't find SFqcd_met2.\n\n") ; return ;
-             }
-          }
-          if ( nBinsMET >=3 ) {
-             rrv_SFqcd_met3 = workspace -> var( "SFqcd_met3" ) ;
-             if ( rrv_SFqcd_met3 == 0x0 ) {
-                printf("\n\n *** can't find SFqcd_met3.\n\n") ; return ;
-             }
-          }
-          if ( nBinsMET >=4 ) {
-             rrv_SFqcd_met4 = workspace -> var( "SFqcd_met4" ) ;
-             if ( rrv_SFqcd_met4 == 0x0 ) {
-                printf("\n\n *** can't find SFqcd_met4.\n\n") ; return ;
              }
           }
           if ( nBinsBjets >=2 ) {
@@ -391,16 +379,30 @@
                 printf("\n\n *** can't find SFqcd_nb2.\n\n") ; return ;
              }
           }
-          if ( nBinsBjets >=3 ) {
-             rrv_SFqcd_nb3 = workspace -> var( "SFqcd_nb3" ) ;
-             if ( rrv_SFqcd_nb3 == 0x0 ) {
-                printf("\n\n *** can't find SFqcd_nb3.\n\n") ; return ;
+          if ( qcdModelIndex == 4 ) {
+             if ( nBinsMET >=3 ) {
+                rrv_SFqcd_met3 = workspace -> var( "SFqcd_met3" ) ;
+                if ( rrv_SFqcd_met3 == 0x0 ) {
+                   printf("\n\n *** can't find SFqcd_met3.\n\n") ; return ;
+                }
              }
-          }
-          if ( nBinsBjets >=4 ) {
-             rrv_SFqcd_nb4 = workspace -> var( "SFqcd_nb4" ) ;
-             if ( rrv_SFqcd_nb4 == 0x0 ) {
-                printf("\n\n *** can't find SFqcd_nb4.\n\n") ; return ;
+             if ( nBinsMET >=4 ) {
+                rrv_SFqcd_met4 = workspace -> var( "SFqcd_met4" ) ;
+                if ( rrv_SFqcd_met4 == 0x0 ) {
+                   printf("\n\n *** can't find SFqcd_met4.\n\n") ; return ;
+                }
+             }
+             if ( nBinsBjets >=3 ) {
+                rrv_SFqcd_nb3 = workspace -> var( "SFqcd_nb3" ) ;
+                if ( rrv_SFqcd_nb3 == 0x0 ) {
+                   printf("\n\n *** can't find SFqcd_nb3.\n\n") ; return ;
+                }
+             }
+             if ( nBinsBjets >=4 ) {
+                rrv_SFqcd_nb4 = workspace -> var( "SFqcd_nb4" ) ;
+                if ( rrv_SFqcd_nb4 == 0x0 ) {
+                   printf("\n\n *** can't find SFqcd_nb4.\n\n") ; return ;
+                }
              }
           }
        }
@@ -548,20 +550,22 @@
 
              fit_ttwj_0lep1lep_ratio_at0susy = rrv_ttwj_0lep1lep_ratio->getVal();
 
-             if ( qcdModelIndex == 2 || qcdModelIndex == 4 ) {
+             if ( qcdModelIndex == 2 || qcdModelIndex == 4 || qcdModelIndex == 5 ) {
                 if ( nBinsHT >= 1 ) { fit_qcd_0lepLDP_ratio_H1_at0susy     = rrv_qcd_0lepLDP_ratio_H1 -> getVal() ; }
                 if ( nBinsHT >= 2 ) { fit_qcd_0lepLDP_ratio_H2_at0susy     = rrv_qcd_0lepLDP_ratio_H2 -> getVal() ; }
                 if ( nBinsHT >= 3 ) { fit_qcd_0lepLDP_ratio_H3_at0susy     = rrv_qcd_0lepLDP_ratio_H3 -> getVal() ; }
                 if ( nBinsHT >= 4 ) { fit_qcd_0lepLDP_ratio_H4_at0susy     = rrv_qcd_0lepLDP_ratio_H4 -> getVal() ; }
              }
              if ( qcdModelIndex == 3 ) { fit_qcd_0lepLDP_ratio_at0susy     = rrv_qcd_0lepLDP_ratio -> getVal() ; }
-             if ( qcdModelIndex == 4 ) {
+             if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
                 if ( nBinsMET >=2 ) { fit_SFqcd_met2_at0susy     = rrv_SFqcd_met2 -> getVal() ; }
-                if ( nBinsMET >=3 ) { fit_SFqcd_met3_at0susy     = rrv_SFqcd_met3 -> getVal() ; }
-                if ( nBinsMET >=4 ) { fit_SFqcd_met4_at0susy     = rrv_SFqcd_met4 -> getVal() ; }
                 if ( nBinsBjets >=2 ) { fit_SFqcd_nb2_at0susy     = rrv_SFqcd_nb2 -> getVal() ; }
-                if ( nBinsBjets >=3 ) { fit_SFqcd_nb3_at0susy     = rrv_SFqcd_nb3 -> getVal() ; }
-                if ( nBinsBjets >=4 ) { fit_SFqcd_nb4_at0susy     = rrv_SFqcd_nb4 -> getVal() ; }
+                if ( qcdModelIndex == 4 ) {
+                   if ( nBinsMET >=3 ) { fit_SFqcd_met3_at0susy     = rrv_SFqcd_met3 -> getVal() ; }
+                   if ( nBinsMET >=4 ) { fit_SFqcd_met4_at0susy     = rrv_SFqcd_met4 -> getVal() ; }
+                   if ( nBinsBjets >=3 ) { fit_SFqcd_nb3_at0susy     = rrv_SFqcd_nb3 -> getVal() ; }
+                   if ( nBinsBjets >=4 ) { fit_SFqcd_nb4_at0susy     = rrv_SFqcd_nb4 -> getVal() ; }
+                }
              }
 
 
@@ -1039,7 +1043,7 @@
                   qcdratio = initFit_qcd_0lepLDP_ratio_HT[hbi] ;
                } else if ( qcdModelIndex == 3 ) {
                   qcdratio = initFit_qcd_0lepLDP_ratio ;
-               } else if ( qcdModelIndex == 4 ) {
+               } else if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
                   qcdratio = initFit_qcd_0lepLDP_ratio_HT[hbi] * initFit_SFqcd_met[mbi] * initFit_SFqcd_nb[bbi] ;
                }
 
@@ -1323,7 +1327,7 @@
          fit_susy_0lep_err_forpull = fit_susy_0lep_err_high ;
       }
 
-      if ( qcdModelIndex == 2 || qcdModelIndex == 4 ) {
+      if ( qcdModelIndex == 2 || qcdModelIndex == 4 || qcdModelIndex == 5 ) {
          if ( nBinsHT >= 1 ) {
             fit_qcd_0lepLDP_ratio_H1     = rrv_qcd_0lepLDP_ratio_H1 -> getVal() ;
             fit_qcd_0lepLDP_ratio_H1_err = rrv_qcd_0lepLDP_ratio_H1 -> getError() ;
@@ -1345,11 +1349,17 @@
          fit_qcd_0lepLDP_ratio     = rrv_qcd_0lepLDP_ratio -> getVal() ;
          fit_qcd_0lepLDP_ratio_err = rrv_qcd_0lepLDP_ratio -> getError() ;
       }
-      if ( qcdModelIndex == 4 ) {
+      if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
          if ( nBinsMET >=2 ) {
             fit_SFqcd_met2     = rrv_SFqcd_met2 -> getVal() ;
             fit_SFqcd_met2_err = rrv_SFqcd_met2 -> getError() ;
          }
+         if ( nBinsBjets >=2 ) {
+            fit_SFqcd_nb2     = rrv_SFqcd_nb2 -> getVal() ;
+            fit_SFqcd_nb2_err = rrv_SFqcd_nb2 -> getError() ;
+         }
+      }
+      if ( qcdModelIndex == 4 ) {
          if ( nBinsMET >=3 ) {
             fit_SFqcd_met3     = rrv_SFqcd_met3 -> getVal() ;
             fit_SFqcd_met3_err = rrv_SFqcd_met3 -> getError() ;
@@ -1357,10 +1367,6 @@
          if ( nBinsMET >=4 ) {
             fit_SFqcd_met4     = rrv_SFqcd_met4 -> getVal() ;
             fit_SFqcd_met4_err = rrv_SFqcd_met4 -> getError() ;
-         }
-         if ( nBinsBjets >=2 ) {
-            fit_SFqcd_nb2     = rrv_SFqcd_nb2 -> getVal() ;
-            fit_SFqcd_nb2_err = rrv_SFqcd_nb2 -> getError() ;
          }
          if ( nBinsBjets >=3 ) {
             fit_SFqcd_nb3     = rrv_SFqcd_nb3 -> getVal() ;
@@ -1826,7 +1832,7 @@
 
 
       printf("\n") ;
-      if ( qcdModelIndex == 2 || qcdModelIndex == 4 ) {
+      if ( qcdModelIndex == 2 || qcdModelIndex == 4 || qcdModelIndex == 5 ) {
          if ( nBinsHT>=1 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H1 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H1, 100*fit_qcd_0lepLDP_ratio_H1_err) ; }
          if ( nBinsHT>=2 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H2 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H2, 100*fit_qcd_0lepLDP_ratio_H2_err) ; }
          if ( nBinsHT>=3 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H3 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H3, 100*fit_qcd_0lepLDP_ratio_H3_err) ; }
@@ -1835,11 +1841,13 @@
       if ( qcdModelIndex == 3 ) {
          printf(" toy %4d : Fit QCD 0lep/LDP ratio : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio, 100*fit_qcd_0lepLDP_ratio_err) ;
       }
-      if ( qcdModelIndex == 4 ) {
+      if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
          if ( nBinsMET>=2 ) { printf(" toy %4d : Fit QCD SFqcd_met2 : %5.2f +/- %5.2f\n", ti, fit_SFqcd_met2, fit_SFqcd_met2_err) ; }
+         if ( nBinsBjets>=2 ) { printf(" toy %4d : Fit QCD SFqcd_nb2 : %5.2f +/- %5.2f\n", ti, fit_SFqcd_nb2, fit_SFqcd_nb2_err) ; }
+      }
+      if ( qcdModelIndex == 4 ) {
          if ( nBinsMET>=3 ) { printf(" toy %4d : Fit QCD SFqcd_met3 : %5.2f +/- %5.2f\n", ti, fit_SFqcd_met3, fit_SFqcd_met3_err) ; }
          if ( nBinsMET>=4 ) { printf(" toy %4d : Fit QCD SFqcd_met4 : %5.2f +/- %5.2f\n", ti, fit_SFqcd_met4, fit_SFqcd_met4_err) ; }
-         if ( nBinsBjets>=2 ) { printf(" toy %4d : Fit QCD SFqcd_nb2 : %5.2f +/- %5.2f\n", ti, fit_SFqcd_nb2, fit_SFqcd_nb2_err) ; }
          if ( nBinsBjets>=3 ) { printf(" toy %4d : Fit QCD SFqcd_nb3 : %5.2f +/- %5.2f\n", ti, fit_SFqcd_nb3, fit_SFqcd_nb3_err) ; }
          if ( nBinsBjets>=4 ) { printf(" toy %4d : Fit QCD SFqcd_nb4 : %5.2f +/- %5.2f\n", ti, fit_SFqcd_nb4, fit_SFqcd_nb4_err) ; }
       }
@@ -1912,7 +1920,7 @@
 
 
 
-      if ( qcdModelIndex == 2 || qcdModelIndex == 4 ) {
+      if ( qcdModelIndex == 2 || qcdModelIndex == 4 || qcdModelIndex == 5 ) {
          if ( nBinsHT >=1 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H1", &fit_qcd_0lepLDP_ratio_H1, "fit_qcd_0lepLDP_ratio_H1/F" ) ; }
          if ( nBinsHT >=2 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H2", &fit_qcd_0lepLDP_ratio_H2, "fit_qcd_0lepLDP_ratio_H2/F" ) ; }
          if ( nBinsHT >=3 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H3", &fit_qcd_0lepLDP_ratio_H3, "fit_qcd_0lepLDP_ratio_H3/F" ) ; }
@@ -1927,17 +1935,19 @@
          toytt -> Branch( "fit_qcd_0lepLDP_ratio", &fit_qcd_0lepLDP_ratio, "fit_qcd_0lepLDP_ratio/F" ) ;
          toytt -> Branch( "fit_qcd_0lepLDP_ratio_err", &fit_qcd_0lepLDP_ratio_err, "fit_qcd_0lepLDP_ratio_err/F" ) ;
       }
-      if ( qcdModelIndex == 4 ) {
+      if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
          if ( nBinsMET >=2 ) { toytt -> Branch( "fit_SFqcd_met2", &fit_SFqcd_met2, "fit_SFqcd_met2/F" ) ; }
+         if ( nBinsMET >=2 ) { toytt -> Branch( "fit_SFqcd_met2_err", &fit_SFqcd_met2_err, "fit_SFqcd_met2_err/F" ) ; }
+         if ( nBinsBjets >=2 ) { toytt -> Branch( "fit_SFqcd_nb2", &fit_SFqcd_nb2, "fit_SFqcd_nb2/F" ) ; }
+         if ( nBinsBjets >=2 ) { toytt -> Branch( "fit_SFqcd_nb2_err", &fit_SFqcd_nb2_err, "fit_SFqcd_nb2_err/F" ) ; }
+      }
+      if ( qcdModelIndex == 4 ) {
          if ( nBinsMET >=3 ) { toytt -> Branch( "fit_SFqcd_met3", &fit_SFqcd_met3, "fit_SFqcd_met3/F" ) ; }
          if ( nBinsMET >=4 ) { toytt -> Branch( "fit_SFqcd_met4", &fit_SFqcd_met4, "fit_SFqcd_met4/F" ) ; }
-         if ( nBinsMET >=2 ) { toytt -> Branch( "fit_SFqcd_met2_err", &fit_SFqcd_met2_err, "fit_SFqcd_met2_err/F" ) ; }
          if ( nBinsMET >=3 ) { toytt -> Branch( "fit_SFqcd_met3_err", &fit_SFqcd_met3_err, "fit_SFqcd_met3_err/F" ) ; }
          if ( nBinsMET >=4 ) { toytt -> Branch( "fit_SFqcd_met4_err", &fit_SFqcd_met4_err, "fit_SFqcd_met4_err/F" ) ; }
-         if ( nBinsBjets >=2 ) { toytt -> Branch( "fit_SFqcd_nb2", &fit_SFqcd_nb2, "fit_SFqcd_nb2/F" ) ; }
          if ( nBinsBjets >=3 ) { toytt -> Branch( "fit_SFqcd_nb3", &fit_SFqcd_nb3, "fit_SFqcd_nb3/F" ) ; }
          if ( nBinsBjets >=4 ) { toytt -> Branch( "fit_SFqcd_nb4", &fit_SFqcd_nb4, "fit_SFqcd_nb4/F" ) ; }
-         if ( nBinsBjets >=2 ) { toytt -> Branch( "fit_SFqcd_nb2_err", &fit_SFqcd_nb2_err, "fit_SFqcd_nb2_err/F" ) ; }
          if ( nBinsBjets >=3 ) { toytt -> Branch( "fit_SFqcd_nb3_err", &fit_SFqcd_nb3_err, "fit_SFqcd_nb3_err/F" ) ; }
          if ( nBinsBjets >=4 ) { toytt -> Branch( "fit_SFqcd_nb4_err", &fit_SFqcd_nb4_err, "fit_SFqcd_nb4_err/F" ) ; }
       }
@@ -1974,7 +1984,7 @@
 
          toytt -> Branch( "fit_ttwj_0lep1lep_ratio_at0susy", &fit_ttwj_0lep1lep_ratio_at0susy, "fit_ttwj_0lep1lep_ratio_at0susy/F" ) ;
 
-         if ( qcdModelIndex == 2 || qcdModelIndex == 4 ) {
+         if ( qcdModelIndex == 2 || qcdModelIndex == 4 || qcdModelIndex == 5 ) {
             if ( nBinsHT >=1 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H1_at0susy", &fit_qcd_0lepLDP_ratio_H1_at0susy, "fit_qcd_0lepLDP_ratio_H1_at0susy/F" ) ; }
             if ( nBinsHT >=2 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H2_at0susy", &fit_qcd_0lepLDP_ratio_H2_at0susy, "fit_qcd_0lepLDP_ratio_H2_at0susy/F" ) ; }
             if ( nBinsHT >=3 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H3_at0susy", &fit_qcd_0lepLDP_ratio_H3_at0susy, "fit_qcd_0lepLDP_ratio_H3_at0susy/F" ) ; }
@@ -1983,11 +1993,13 @@
          if ( qcdModelIndex == 3 ) {
             toytt -> Branch( "fit_qcd_0lepLDP_ratio_at0susy", &fit_qcd_0lepLDP_ratio_at0susy, "fit_qcd_0lepLDP_ratio_at0susy/F" ) ;
          }
-         if ( qcdModelIndex == 4 ) {
+         if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
             if ( nBinsMET >=2 ) { toytt -> Branch( "fit_SFqcd_met2_at0susy", &fit_SFqcd_met2_at0susy, "fit_SFqcd_met2_at0susy/F" ) ; }
+            if ( nBinsBjets >=2 ) { toytt -> Branch( "fit_SFqcd_nb2_at0susy", &fit_SFqcd_nb2_at0susy, "fit_SFqcd_nb2_at0susy/F" ) ; }
+         }
+         if ( qcdModelIndex == 4 ) {
             if ( nBinsMET >=3 ) { toytt -> Branch( "fit_SFqcd_met3_at0susy", &fit_SFqcd_met3_at0susy, "fit_SFqcd_met3_at0susy/F" ) ; }
             if ( nBinsMET >=4 ) { toytt -> Branch( "fit_SFqcd_met4_at0susy", &fit_SFqcd_met4_at0susy, "fit_SFqcd_met4_at0susy/F" ) ; }
-            if ( nBinsBjets >=2 ) { toytt -> Branch( "fit_SFqcd_nb2_at0susy", &fit_SFqcd_nb2_at0susy, "fit_SFqcd_nb2_at0susy/F" ) ; }
             if ( nBinsBjets >=3 ) { toytt -> Branch( "fit_SFqcd_nb3_at0susy", &fit_SFqcd_nb3_at0susy, "fit_SFqcd_nb3_at0susy/F" ) ; }
             if ( nBinsBjets >=4 ) { toytt -> Branch( "fit_SFqcd_nb4_at0susy", &fit_SFqcd_nb4_at0susy, "fit_SFqcd_nb4_at0susy/F" ) ; }
          }
@@ -2019,7 +2031,7 @@
 
          toytt -> Branch( "fit_ttwj_0lep1lep_ratio_atUL", &fit_ttwj_0lep1lep_ratio_atUL, "fit_ttwj_0lep1lep_ratio_atUL/F" ) ;
 
-         if ( qcdModelIndex == 2 || qcdModelIndex == 4 ) {
+         if ( qcdModelIndex == 2 || qcdModelIndex == 4 || qcdModelIndex == 5 ) {
             if ( nBinsHT >=1 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H1_atUL", &fit_qcd_0lepLDP_ratio_H1_atUL, "fit_qcd_0lepLDP_ratio_H1_atUL/F" ) ; }
             if ( nBinsHT >=2 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H2_atUL", &fit_qcd_0lepLDP_ratio_H2_atUL, "fit_qcd_0lepLDP_ratio_H2_atUL/F" ) ; }
             if ( nBinsHT >=3 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H3_atUL", &fit_qcd_0lepLDP_ratio_H3_atUL, "fit_qcd_0lepLDP_ratio_H3_atUL/F" ) ; }
@@ -2028,11 +2040,13 @@
          if ( qcdModelIndex == 3 ) {
             toytt -> Branch( "fit_qcd_0lepLDP_ratio_atUL", &fit_qcd_0lepLDP_ratio_atUL, "fit_qcd_0lepLDP_ratio_atUL/F" ) ;
          }
-         if ( qcdModelIndex == 4 ) {
+         if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
             if ( nBinsMET >=2 ) { toytt -> Branch( "fit_SFqcd_met2_atUL", &fit_SFqcd_met2_atUL, "fit_SFqcd_met2_atUL/F" ) ; }
+            if ( nBinsBjets >=2 ) { toytt -> Branch( "fit_SFqcd_nb2_atUL", &fit_SFqcd_nb2_atUL, "fit_SFqcd_nb2_atUL/F" ) ; }
+         }
+         if ( qcdModelIndex == 4 ) {
             if ( nBinsMET >=3 ) { toytt -> Branch( "fit_SFqcd_met3_atUL", &fit_SFqcd_met3_atUL, "fit_SFqcd_met3_atUL/F" ) ; }
             if ( nBinsMET >=4 ) { toytt -> Branch( "fit_SFqcd_met4_atUL", &fit_SFqcd_met4_atUL, "fit_SFqcd_met4_atUL/F" ) ; }
-            if ( nBinsBjets >=2 ) { toytt -> Branch( "fit_SFqcd_nb2_atUL", &fit_SFqcd_nb2_atUL, "fit_SFqcd_nb2_atUL/F" ) ; }
             if ( nBinsBjets >=3 ) { toytt -> Branch( "fit_SFqcd_nb3_atUL", &fit_SFqcd_nb3_atUL, "fit_SFqcd_nb3_atUL/F" ) ; }
             if ( nBinsBjets >=4 ) { toytt -> Branch( "fit_SFqcd_nb4_atUL", &fit_SFqcd_nb4_atUL, "fit_SFqcd_nb4_atUL/F" ) ; }
          }
@@ -2157,18 +2171,20 @@
 
       fit_ttwj_0lep1lep_ratio_atUL = rrv_ttwj_0lep1lep_ratio->getVal();
 
-      if ( qcdModelIndex == 2 || qcdModelIndex == 4 ) {
+      if ( qcdModelIndex == 2 || qcdModelIndex == 4 || qcdModelIndex == 5 ) {
          if ( nBinsHT >= 1 ) { fit_qcd_0lepLDP_ratio_H1_atUL     = rrv_qcd_0lepLDP_ratio_H1 -> getVal() ; }
          if ( nBinsHT >= 2 ) { fit_qcd_0lepLDP_ratio_H2_atUL     = rrv_qcd_0lepLDP_ratio_H2 -> getVal() ; }
          if ( nBinsHT >= 3 ) { fit_qcd_0lepLDP_ratio_H3_atUL     = rrv_qcd_0lepLDP_ratio_H3 -> getVal() ; }
          if ( nBinsHT >= 4 ) { fit_qcd_0lepLDP_ratio_H4_atUL     = rrv_qcd_0lepLDP_ratio_H4 -> getVal() ; }
       }
       if ( qcdModelIndex == 3 ) { fit_qcd_0lepLDP_ratio_atUL     = rrv_qcd_0lepLDP_ratio -> getVal() ; }
-      if ( qcdModelIndex == 4 ) {
+      if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
          if ( nBinsMET >=2 ) { fit_SFqcd_met2_atUL     = rrv_SFqcd_met2 -> getVal() ; }
+         if ( nBinsBjets >=2 ) { fit_SFqcd_nb2_atUL     = rrv_SFqcd_nb2 -> getVal() ; }
+      }
+      if ( qcdModelIndex == 4 ) {
          if ( nBinsMET >=3 ) { fit_SFqcd_met3_atUL     = rrv_SFqcd_met3 -> getVal() ; }
          if ( nBinsMET >=4 ) { fit_SFqcd_met4_atUL     = rrv_SFqcd_met4 -> getVal() ; }
-         if ( nBinsBjets >=2 ) { fit_SFqcd_nb2_atUL     = rrv_SFqcd_nb2 -> getVal() ; }
          if ( nBinsBjets >=3 ) { fit_SFqcd_nb3_atUL     = rrv_SFqcd_nb3 -> getVal() ; }
          if ( nBinsBjets >=4 ) { fit_SFqcd_nb4_atUL     = rrv_SFqcd_nb4 -> getVal() ; }
       }
@@ -2287,7 +2303,7 @@
                   initFit_qcd_0lepLDP_ratio_HT[hbi] = par->getVal() ;
                }
             } // hbi.
-         } else if ( qcdModelIndex == 4 ) {
+         } else if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
             for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
                char pname[100] ;
                sprintf( pname, "qcd_0lepLDP_ratio_H%d", hbi+1 ) ;
@@ -2296,7 +2312,7 @@
                   initFit_qcd_0lepLDP_ratio_HT[hbi] = par->getVal() ;
                }
             } // hbi.
-            for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
+            for ( int mbi=1; mbi<nBinsMET; mbi++ ) { //-- this is ok for model 5
                char pname[100] ;
                sprintf( pname, "SFqcd_met%d", mbi+1 ) ;
                if ( strcmp( par->GetName(), pname ) == 0 ) {
@@ -2304,7 +2320,7 @@
                   initFit_SFqcd_met[mbi] = par->getVal() ;
                }
             } // mbi.
-            for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {
+            for ( int bbi=1; bbi<nBinsBjets; bbi++ ) { //-- this is ok for model 5
                char pname[100] ;
                sprintf( pname, "SFqcd_nb%d", bbi+1 ) ;
                if ( strcmp( par->GetName(), pname ) == 0 ) {
@@ -2312,7 +2328,7 @@
                   initFit_SFqcd_nb[bbi] = par->getVal() ;
                }
             } // bbi.
-         } // QCD model 4?
+         } // QCD model 4 or 5?
 
       } // par iterator.
       printf("\n\n") ;
@@ -2333,36 +2349,22 @@
                return false ;
             }
          } // hbi.
-      } else if ( qcdModelIndex == 4 ) {
+      } else if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
          for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
             if ( initFit_qcd_0lepLDP_ratio_HT[hbi] < 0 ) {
                printf("\n\n *** Did not find floating parameter initFit_qcd_0lepLDP_ratio_H%d.  Can't continue.\n\n", hbi+1 ) ;
                return false ;
             }
          } // hbi.
-         //+++++ Trying not floating the MET scale factor for the highest bin.
          for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
-            if ( initFit_SFqcd_met[mbi] == 1 ) {
-               if ( mbi<nBinsMET-1 ) {
-                  printf("\n\n *** Did not find floating parameter SFqcd_met%d.  Can't continue.\n\n", mbi+1 ) ;
-                  return false ;
-               } else {
-                  printf("\n\n *** Did not find floating parameter SFqcd_met%d.  Assuming it's fixed.\n", mbi+1 ) ;
-                  char vname[1000] ;
-                  sprintf( vname, "SFqcd_met%d", mbi+1 ) ;
-                  printf("  Searching for parameter %s in workspace.\n", vname ) ;
-                  RooRealVar* par = workspace -> var( vname ) ;
-                  if ( par != 0x0 ) {
-                     printf("  Found %s with value %5.3f\n", vname, par->getVal() ) ;
-                     initFit_SFqcd_met[mbi] = par->getVal() ;
-                  } else {
-                     printf("\n *** Didn't find it.  Can't continue.\n\n") ;
-                     return false ;
-                  }
-               }
+            if ( qcdModelIndex == 5 && mbi>1 ) continue ;
+            if ( mbi<nBinsMET-1 ) {
+               printf("\n\n *** Did not find floating parameter SFqcd_met%d.  Can't continue.\n\n", mbi+1 ) ;
+               return false ;
             }
          } // mbi.
          for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {
+            if ( qcdModelIndex == 5 && bbi>1 ) continue ;
             if ( initFit_SFqcd_nb[bbi] == 1 ) {
                printf("\n\n *** Did not find floating parameter SFqcd_nb%d.  Can't continue.\n\n", bbi+1 ) ;
                return false ;
