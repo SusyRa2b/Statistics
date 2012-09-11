@@ -246,7 +246,7 @@ void GenerateSusyFile( double flatDummyErr = 10. ) {  //-- flat error in %.  If 
 
 
   // jet pt thresholds
-  double minLeadJetPt = 50. ;
+  double minLeadJetPt = 70. ;
   double min3rdJetPt = 50. ;
 
 

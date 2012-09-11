@@ -1,10 +1,14 @@
 
-*) The first version of the (currently available) 8TeV MC,
-   normalized to *** 15 fb-1 *** is:
+*) The most recent versions of the (currently available) 8TeV MC,
+   normalized to *** 15 fb-1 *** are in:
+   /afs/cern.ch/user/k/kaulmer/public/files15fb_8TeV/
+  (requiring minimum pT for a "good jet" to be > 50 GeV, including counting nB with > 50 GeV)
+
+   The previous version of the 8TeV MC, normalized to *** 15 fb-1 *** is:
 
   /afs/cern.ch/work/g/gaz/public/RA2b/3Dfit/files15fb_8TeV/
   (requiring minimum pT for a "good jet" to be > 50 GeV)
-
+  Note: In GenerateInpueFile.C these files should be in files15fb_8TeV_old1/
 
 
 *) The most recent versions of the root files to be used is:

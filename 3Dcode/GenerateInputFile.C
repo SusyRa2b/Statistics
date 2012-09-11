@@ -25,9 +25,9 @@
 void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0lep=-1. ) {
 
   TChain* dyTree = new TChain("treeZ") ;
-  int nAdded = dyTree->Add("files15fb_8TeV/DY.root") ;
+  int nAdded = dyTree->Add("files15fb_8TeV_old1/DY.root") ;
   if ( nAdded <= 0 ) {
-     printf("\n\n\n *** No treeZ in files15fb_8TeV/DY.root\n\n\n") ;
+     printf("\n\n\n *** No treeZ in files15fb_8TeV_old1/DY.root\n\n\n") ;
      return ;
   }
 
@@ -37,13 +37,13 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   sprintf( susycutstring, "&&mgluino==%.0f&&mlsp==%.0f", mgl, mlsp ) ;
   TString susycut( susycutstring ) ;
   if ( mgl>0. && mlsp>0. ) {
-     nAdded = chainT1bbbb.Add("files15fb_8TeV/T1bbbb.root") ;
+     nAdded = chainT1bbbb.Add("files5fb_MT/T1bbbb.root") ;
      if ( nAdded <= 0 ) {
-        printf("\n\n\n *** No tree in files15fb_8TeV/T1bbbb.root\n\n\n") ;
+        printf("\n\n\n *** No tree in files5fb_MT/T1bbbb.root\n\n\n") ;
         return ;
      }
      TFile f("referenceXSecs.root") ;
-     TH1F* xsechist = (TH1F*) f.Get("gluino_NLONLL") ;
+     TH1F* xsechist = (TH1F*) f.Get("gluino8TeV_NLONLL") ;
      if ( xsechist==0x0 ) { printf("\n\n *** can't find reference Xsec histogram in referenceXSecs.root.\n\n") ; return ; }
      int theBin = xsechist->FindBin( mgl ) ;
      if ( theBin <=0 || theBin > xsechist->GetNbinsX() ) {
@@ -52,7 +52,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
      }
      double xsec = xsechist->GetBinContent( theBin ) ;
      printf("\n\n T1bbbb xsec for mgl=%g is %g\n\n", mgl, xsec ) ;
-     t1bbbbWeight = 0.5*xsec ;  //in pb. scan has 10k events, so nScan*0.5*xsec = events in 5fb-1
+     t1bbbbWeight = 1.5*xsec ;  //in pb. scan has 10k events, so nScan*1.5*xsec = events in 15fb-1
      //////  t1bbbbWeight = 0.1*xsec ;  //in pb. T1tttt scan has 50k events, so nScan*0.1*xsec = events in 5fb-1
      printf("\n\n Susy ttree cut: %s\n\n", susycutstring ) ;
   }
@@ -85,6 +85,14 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   chainWJets.Add("files15fb_8TeV/WJets-250to300.root") ;
   chainWJets.Add("files15fb_8TeV/WJets-300to400.root") ;
   chainWJets.Add("files15fb_8TeV/WJets-400.root") ;
+  chainWJets.Add("files15fb_8TeV/T-s.root") ;
+  chainWJets.Add("files15fb_8TeV/T-t.root") ;
+  chainWJets.Add("files15fb_8TeV/T-tW.root") ;
+  chainWJets.Add("files15fb_8TeV/Tbar-s.root") ;
+  chainWJets.Add("files15fb_8TeV/Tbar-t.root") ;
+  chainWJets.Add("files15fb_8TeV/Tbar-tW.root") ;
+
+
 
       char qcdinputfile[9][1000] = {
         "files15fb_8TeV/QCD-120to170.root"
@@ -117,7 +125,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   const int nBinsBjets = 3 ;   // this must always be 3
   const int nJetsCut = 3 ;     // #jets >= nJetsCut
 
-  double minLeadJetPt = 50. ;
+  double minLeadJetPt = 70. ;
   double min3rdJetPt = 50. ;
 
   //-- met2-ht1-v1
