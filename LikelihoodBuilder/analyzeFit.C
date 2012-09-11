@@ -60,7 +60,7 @@ void integratedTotals(TString workspaceFile = "test.root", TString name =  "", T
   
   //Now get ttwj qcd znn -- do it by simply incrementing doubles since we don't care about the error for now
   double ttwjtot=0, qcdtot=0, znntot=0;
-  for(int i = 0; i<binNames.size(); i++) {
+  for(unsigned int i = 0; i<binNames.size(); i++) {
     
     RooAbsReal * ttwj = ws->function("zeroLepton_"+binNames.at(i)+"_TopWJetsYield");
     RooAbsReal * qcd = ws->function("zeroLepton_"+binNames.at(i)+"_QCDYield");
@@ -77,7 +77,7 @@ void integratedTotals(TString workspaceFile = "test.root", TString name =  "", T
 
   //for signal, we care about the error, so let's do it the Roo way
   RooArgSet* signalFractionSet = new RooArgSet("signalFractions");
-  for(int i =0; i<binNames.size(); i++) {
+  for(unsigned int i =0; i<binNames.size(); i++) {
     signalFractionSet->add( *(ws->arg("zeroLeptonSignalYieldFraction_"+binNames.at(i)+"_BetaPrimeInverseCDF")) );
   }
   RooAddition* signalFractionAddition = new RooAddition("signalFractionAddition", "signalFractionAddition", *signalFractionSet);
@@ -415,9 +415,9 @@ void owenPlots(TString workspaceFile = "test.root", TString name = "",  TString 
 }
 
 
-void analyzeFit(TString workspaceFile = "test.root", TString name = "") {
+void analyzeFit(TString workspaceFile = "test.root", TString name = "", TString binFilesFile = "") {
 
-  integratedTotals();
+  integratedTotals(workspaceFile, name, binFilesFile);
   //integratedTotals(workspaceFile, name);
   //owenPlots();
 
