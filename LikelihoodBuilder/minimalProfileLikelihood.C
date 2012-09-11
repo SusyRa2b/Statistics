@@ -47,7 +47,8 @@ void profileLikelihoodLimit(const char * fileName = "test.root",
 			    double percentInterval = 0.95, 
 			    double signalCrossSectionLow = 0.0,
 			    double signalCrossSectionHigh = 500.0,
-                            bool doPlots = false)
+                            bool doPlots = false,
+			    TString datFile = "")
 
 {
   cout <<"Starting Profile Likelihood Calculator"<<endl;
@@ -99,6 +100,14 @@ void profileLikelihoodLimit(const char * fileName = "test.root",
   cout << percentInterval << " interval on " << firstPOI->GetName() << ", lower = " << lowerLimit << endl;
   cout << percentInterval << " interval on " << firstPOI->GetName() << ", upper = " << upperLimit << endl;
 
+  if(datFile != "") {
+    ofstream myfile;
+    myfile.open(datFile.Data(), ios::out | ios::app);
+    assert(myfile.is_open());
+    myfile << lowerLimit << " " << upperLimit << " ";
+    myfile.close();
+  }
+
   
   if(doPlots){
     cout << "Making a plot of the profile likelihood function ....(if it is taking a lot of time use less points or the TF1 drawing option)\n";
@@ -126,7 +135,7 @@ void profileLikelihoodLimit(const char * fileName = "test.root",
 void minimalProfileLikelihood() 
 {
 
-  profileLikelihoodLimit("test.root", "workspace", "S+B_model", "B_model", "data", "modelName", 0.95, 0.0, 500.0, true);
+  profileLikelihoodLimit("test.root", "workspace", "S+B_model", "B_model", "data", "modelName", 0.95, 0.0, 500.0, true, "");
   
   return;
 }
