@@ -2358,7 +2358,7 @@
          } // hbi.
          for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
             if ( qcdModelIndex == 5 && mbi>1 ) continue ;
-            if ( mbi<nBinsMET-1 ) {
+            if ( initFit_SFqcd_met[mbi] == 1 ) {
                printf("\n\n *** Did not find floating parameter SFqcd_met%d.  Can't continue.\n\n", mbi+1 ) ;
                return false ;
             }
