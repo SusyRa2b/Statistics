@@ -30,7 +30,7 @@ void GenerateSusyFile( double flatDummyErr = 10. ) {  //-- flat error in %.  If 
 // so gluino mass = 75+nbin*25; or nbin = (gluinomass-75)/25.
 
   TChain chainT1bbbb("tree");
-  chainT1bbbb.Add("files5fb_MT/T1bbbb.root");
+  chainT1bbbb.Add("files5fb_MT_pt50/T1bbbb.root");
 
   gROOT->Reset();
 
