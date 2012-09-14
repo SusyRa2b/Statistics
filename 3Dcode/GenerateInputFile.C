@@ -5,6 +5,7 @@
 #include "TMath.h"
 #include "TTree.h"
 #include "TChain.h"
+#include "TChainElement.h"
 #include "TString.h"
 #include "TROOT.h"
 #include "TH1F.h"
@@ -12,14 +13,19 @@
 #include "TSystem.h"
 #include "TH2F.h"
 #include "TCanvas.h"
+#include "SmallTree.C"
 
   using std::stringstream ;
   using std::ofstream ;
   using std::endl ;
+  using std::cout;
+  using std::endl;
+  using std::flush;
 
   void saveHist(const char* filename, const char* pat) ;
   TH1F* bookHist(const char* hname, const char* htitle, const char* selstring, int nbjet, int nBinsMET, int nBinsHT ) ;
-
+  void FillHTMET(TChain *chain, TH2F *histo, int si, int k) ;
+  
 // to add in: nMu, nEl, minDelPhi
 
 void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0lep=-1. ) {
@@ -125,8 +131,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   const int nBinsBjets = 3 ;   // this must always be 3
   const int nJetsCut = 3 ;     // #jets >= nJetsCut
 
+//be careful because this is hard coded now in SmallTree::Loop
   double minLeadJetPt = 70. ;
   double min3rdJetPt = 50. ;
+  
+  bool doPUreweighting = false;
 
   //-- met2-ht1-v1
 //const int nBinsMET   = 2 ;
@@ -546,22 +555,25 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
         printf("\n\n N_%s -- nbjet bin (%d): cuts=%s\n\n", selname[si], k, allcuts) ; cout << flush ;
 
         char hname[100] ;
-
         sprintf( hname, "h_tt_%db", k+1 ) ;
-        chainTT.Project(hname,"HT:MET",allcuts);
-        printf("    %12s %7.1f events\n", hname, h_tt[k]->Integral() ) ; cout << flush ;
+        if(doPUreweighting) FillHTMET(&chainTT, h_tt[k], si, k);
+	else chainTT.Project (hname,"HT:MET",allcuts);
+	printf("    %12s %7.1f events\n", hname, h_tt[k]->Integral() ) ; cout << flush ;
 
         sprintf( hname, "h_wjets_%db", k+1 ) ;
-        chainWJets.Project(hname,"HT:MET",allcuts);
-        printf("    %12s %7.1f events\n", hname, h_wjets[k]->Integral() ) ; cout << flush ;
+        if(doPUreweighting) FillHTMET(&chainWJets, h_wjets[k], si, k);
+	else chainWJets.Project(hname,"HT:MET",allcuts);
+	printf("    %12s %7.1f events\n", hname, h_wjets[k]->Integral() ) ; cout << flush ;
 
         sprintf( hname, "h_qcd_%db", k+1 ) ;
-        chainQCD.Project(hname,"HT:MET",allcuts);
-        printf("    %12s %7.1f events\n", hname, h_qcd[k]->Integral() ) ; cout << flush ;
+        if (doPUreweighting) FillHTMET(&chainQCD, h_qcd[k], si, k);
+	else chainQCD.Project(hname,"HT:MET",allcuts);
+	printf("    %12s %7.1f events\n", hname, h_qcd[k]->Integral() ) ; cout << flush ;
 
         sprintf( hname, "h_znn_%db", k+1 ) ;
-        chainZnn.Project(hname,"HT:MET",allcuts);
-        printf("    %12s %7.1f events\n", hname, h_znn[k]->Integral() ) ; cout << flush ;
+        if (doPUreweighting) FillHTMET(&chainZnn, h_znn[k], si, k);
+	else chainZnn.Project(hname,"HT:MET",allcuts);
+	printf("    %12s %7.1f events\n", hname, h_znn[k]->Integral() ) ; cout << flush ;
         if ( mgl > 0. ) {
            sprintf( hname, "h_susy_%db", k+1 ) ;
            chainT1bbbb.Project(hname,"HT:MET",allsusycuts);
@@ -1159,7 +1171,6 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
             sprintf( parname, "znn_mc_ldpover0lep_ratio_M%d_H%d_%db_err", mbi+1, hbi+1, bbi+1 ) ;
             inFile << parname << "  \t" << ldpoverzlerr << endl;
         } // bbi
-
       } // hbi
     } // mbi
 
@@ -1236,7 +1247,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   
   //==========================================================================================
   
-  
+
     TH1F* bookHist(const char* hname, const char* htitle, const char* selstring, int nbjet, int nBinsMET, int nBinsHT ) {
   
        int nbins = nBinsMET*(nBinsHT+1) + 1 ;
@@ -1261,4 +1272,23 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     }
   
   //==========================================================================================
- 
+  
+  void FillHTMET(TChain *chain, TH2F *histo, int si, int k) {
+
+     TObjArray *fileElements=chain->GetListOfFiles();
+     TIter next(fileElements);
+     TChainElement *chEl=0;
+     while (( chEl=(TChainElement*)next() )) {
+        TFile f(chEl->GetTitle());
+        TTree *tree = (TTree*)f.Get("tree");
+	SmallTree *t = new SmallTree(tree);
+	t->Loop(histo, si, k);
+     }
+
+//     SmallTree *t = new SmallTree(chain);
+//     t->Loop(histo, si, k);
+
+    return;    
+  }
+
+  //==========================================================================================
