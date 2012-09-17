@@ -47,6 +47,8 @@
 //You must also check out RA2b/Statistics/3Dcode to get a couple of files
 //#include "rooFitGaussianHelperFunctions.h"
 
+#include "metReweightingBuilder.h"
+
 #include "RooStats/ModelConfig.h"
 
 #include "TMath.h"
@@ -58,6 +60,7 @@ struct  likelihoodOptions
 {
   bool skipTriggerEfficiency;
   TString qcdMethod;
+  TString ttwjMethod;
 };
 
 struct channels
@@ -801,8 +804,10 @@ void buildLikelihood( TString binFilesPath, TString setupFileName, TString binFi
   double oneLeptonTotal(0.);
   double zeroLeptonTopWJetsGuess(0.);
 
+  
   options.skipTriggerEfficiency = true;
   options.qcdMethod = "singleScaleWithCorrections";//others: htDependent
+  options.ttwjMethod = "ABCD"; //others:metReweighting
 
   setupUnderlyingModel(binFilesPath, binFileNames, binNames, setupFileName , binFilesFileName , numbers , luminosity);
   for(map<TString,TString>::iterator thisBin = binFileNames.begin(); thisBin != binFileNames.end() ; thisBin++)
@@ -813,6 +818,8 @@ void buildLikelihood( TString binFilesPath, TString setupFileName, TString binFi
   setupSignalModel(binNames , signalModelFileName , signalModelFileLine , signal , signalError , luminosity);
 
   setupUnderlyingLikelihood(options, ws , names, numbers);
+
+  if(options.ttwjMethod == "metReweighting") buildMRLikelihood("","","","","","","",false);
 
   for(vector<TString>::iterator thisBin = binNames.begin(); thisBin != binNames.end() ; thisBin++)
     {

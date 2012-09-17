@@ -45,6 +45,8 @@
 
 #include "TMath.h"
 
+#include "metReweightingBuilder.h"
+
 using namespace RooFit ;
 using namespace RooStats ;
 
@@ -696,8 +698,9 @@ void makeTauHadBinPrediction( RooWorkspace& wspace, TString binname, vector<TStr
 
 
 void buildMRLikelihood( TString outputFile, TString bincontentFileName, TString outsidebincontentFileName, 
-		      TString scalefactorsFileName, TString tauhadscalefactorsFileName,
-		      TString signalfractionsFileName, TString outsidesignalfractionsFileName ) 
+			TString scalefactorsFileName, TString tauhadscalefactorsFileName,
+			TString signalfractionsFileName, TString outsidesignalfractionsFileName,
+			bool standaloneMode, RooWorkspace* ws) 
 {
 
   ///////////////////////////////////////////////////
@@ -707,10 +710,18 @@ void buildMRLikelihood( TString outputFile, TString bincontentFileName, TString 
 
   ///////////////////////////////////////////////////
 
-  RooWorkspace* wspace = new RooWorkspace("wspace");
-
-  RooRealVar signalCrossSection("signalCrossSection","signalCrossSection",0.,0.,10.);
-  wspace->import(signalCrossSection);
+  RooWorkspace* wspace;
+  if(standaloneMode){ 
+    wspace = new RooWorkspace("wspace");
+  }
+  else{
+    wspace = ws;
+  }
+  
+  if(standaloneMode){
+    RooRealVar signalCrossSection("signalCrossSection","signalCrossSection",0.,0.,10.);
+    wspace->import(signalCrossSection);  
+  }
 
   wspace->defineSet("namesfordata","");
   wspace->defineSet("nuisances","");
@@ -868,15 +879,18 @@ void buildMRLikelihood( TString outputFile, TString bincontentFileName, TString 
     TString twoLooseEName("twoLooseE_");
     twoLooseEName+=binname;
     ////// 
-    RooRealVar zeroLeptonCount(zeroLeptonName+"_Count",zeroLeptonName+"_Count",zerolepton);
-    zeroLeptonCount.setConstant();
-    wspace->import(zeroLeptonCount);
-    wspace->extendSet("namesfordata",zeroLeptonCount.GetName());
+
+    if(standaloneMode){
+      RooRealVar zeroLeptonCount(zeroLeptonName+"_Count",zeroLeptonName+"_Count",zerolepton);
+      zeroLeptonCount.setConstant();
+      wspace->import(zeroLeptonCount);
+      wspace->extendSet("namesfordata",zeroLeptonCount.GetName());
  
-    RooRealVar zeroLeptonSignalFrac(zeroLeptonName+"_SignalFrac",zeroLeptonName+"_SignalFrac",signal0);
-    zeroLeptonSignalFrac.setConstant();
-    wspace->import(zeroLeptonSignalFrac);
- 
+      RooRealVar zeroLeptonSignalFrac(zeroLeptonName+"_SignalFrac",zeroLeptonName+"_SignalFrac",signal0);
+      zeroLeptonSignalFrac.setConstant();
+      wspace->import(zeroLeptonSignalFrac);
+    } 
+
 
     // input files must go: dtheta1(tmu,mu,e), dtheta2(tmu,mu,e), etc!, dileps
 
@@ -1101,36 +1115,39 @@ void buildMRLikelihood( TString outputFile, TString bincontentFileName, TString 
     
        
     /////////////////////////////////////////////////////////////////////////////////////
-    // GET AND APPLY SIGNAL FRACTION FOR THIS 0L BIN, ADD TO ALL PREDICTIONS
+    // GET AND APPLY SIGNAL FRACTION FOR THIS 0L BIN, ADD TO ALL PREDICTIONS, SET  CONSTRAINTS  FOR THIS 0L BIN
  
     //    cout << " GET 0L COUNTS AND SIG FRAC " << endl;
 
-    TString zeroLeptonCountName(zeroLeptonName);
-    zeroLeptonCountName.Append("_Count");
-    //RooRealVar zeroLeptonCount = wspace->var(zeroLeptonCountName.Data());
 
-    TString zeroLeptonSignalFracName(zeroLeptonName);
-    zeroLeptonSignalFracName.Append("_SignalFrac");
-    //RooRealVar zeroLeptonSignalFrac = wspace->var(zeroLeptonSignalFracName.Data());
+    if(standaloneMode){
+
+      RooRealVar signalCrossSection = *(wspace->var("signalCrossSection"));
+  
+      TString zeroLeptonCountName(zeroLeptonName);
+      zeroLeptonCountName.Append("_Count");
+      //RooRealVar zeroLeptonCount = wspace->var(zeroLeptonCountName.Data());
+      
+      TString zeroLeptonSignalFracName(zeroLeptonName);
+      zeroLeptonSignalFracName.Append("_SignalFrac");
+      //RooRealVar zeroLeptonSignalFrac = wspace->var(zeroLeptonSignalFracName.Data());
 
  
-    RooProduct zeroLeptonSignalYield(zeroLeptonName+"_SignalYield",zeroLeptonName+"_SignalYield",
-				     RooArgSet(signalCrossSection,*wspace->var(zeroLeptonSignalFracName.Data())));
+      RooProduct zeroLeptonSignalYield(zeroLeptonName+"_SignalYield",zeroLeptonName+"_SignalYield",
+				       RooArgSet(signalCrossSection,*wspace->var(zeroLeptonSignalFracName.Data())));
 
-    RooAddition zeroLeptonYieldSum(zeroLeptonName+"_YieldSum",zeroLeptonName+"_YieldSum",
+      RooAddition zeroLeptonYieldSum(zeroLeptonName+"_YieldSum",zeroLeptonName+"_YieldSum",
 				   RooArgSet( zeroLeptonSignalYield, zeroLeptonTopWJetsPolarizationYield, zeroLeptonTopWJetsTauHadYield, zeroLeptonTopWJetsDileptonYield ));
-		
-	
-    //    cout << " SET 0L CONSTRAINTS " << endl;
 
-    /////////////////////////////////////////////////////////////////////////////////////
-    // SET CONSTRAINTS FOR THIS 0L BIN
-    
-    RooPoisson zeroLeptonConstraint(zeroLeptonName+"_Constraint",zeroLeptonName+"_Constraint",
+
+	
+      //    cout << " SET 0L CONSTRAINTS " << endl;
+      RooPoisson zeroLeptonConstraint(zeroLeptonName+"_Constraint",zeroLeptonName+"_Constraint",
 				    *wspace->var(zeroLeptonCountName.Data()),zeroLeptonYieldSum);
 				    
-    wspace->import( zeroLeptonConstraint,RecycleConflictNodes() );
-
+      wspace->import( zeroLeptonConstraint,RecycleConflictNodes() );
+    }
+    
     
   }// end of FINAL loop over HT, MET bins
   
@@ -1151,125 +1168,131 @@ void buildMRLikelihood( TString outputFile, TString bincontentFileName, TString 
   ////////////////////////////////////
 
 
-  
-  RooArgSet Constraints(wspace->allPdfs());
-  
-  RooProdPdf model("model","model", Constraints );
-  wspace->import(model);
 
-  //cout << "data, size: " << (*wspace->set("namesfordata")).getSize() << endl;
-  //(*wspace->set("namesfordata")).Print("v");
+  ////////////////////////////////////////////////////////////////////
+  ///////// if in standalone mode, construct likelihood and fit//////
+  ///////////////////////////////////////////////////////////////////
+  if(standaloneMode){
 
-  RooDataSet dataset("dataset","dataset",*wspace->set("namesfordata"));
-
-  dataset.add(*wspace->set("namesfordata"));
-
-  wspace->import(dataset);
-
- 
-  //  cout << endl << endl << " FINAL SET OF DATA " << endl;
-  //dataset.Print("v");
-  //  cout << endl << endl << " FINAL SET OF CONSTRAINTS " << endl;
-  //Constraints.Print("v");
-  
-  wspace->defineSet("poi","signalCrossSection");
-  
-  ////////////////////////////////////
-
-  //Hesse(false),Minos(false),
-  //Save(),Constrain(Constraints)
-  //	     );
     
- 
-
-  ModelConfig * modelConfig = new ModelConfig("modelConfig");
-  modelConfig->SetWorkspace(*wspace);
-  modelConfig->SetPdf("model");
-  modelConfig->SetParametersOfInterest(*wspace->set("poi"));
-  modelConfig->SetNuisanceParameters(*wspace->set("nuisances"));
-
-  //cout << " before model print " << endl;
-  //modelConfig->Print("v");
-  //cout << " after model print " << endl;
-
-
-
-  // Declare parameter of interest
-  RooArgSet parofinterest(*wspace->set("poi")) ;
-  //ProfileLikelihoodCalculator plc(dataset, *wspace->pdf("model"), parofinterest);
-  //plc.SetTestSize(0.05);
-  ProfileLikelihoodCalculator plc(dataset, *modelConfig);
-  plc.SetConfidenceLevel(0.95);
-
-  //  cout << " before pl " << endl;
-
-  LikelihoodInterval* interval = plc.GetInterval() ;
-  LikelihoodIntervalPlot*  lplot = new LikelihoodIntervalPlot(interval);
-
-  //  interval->Print("v");
-
-  RooRealVar* firstPOI = (RooRealVar*) parofinterest.first();
-
-  double profileLikelihoodUpperLimit = interval->UpperLimit(*firstPOI);
-  double profileLikelihoodLowerLimit = interval->LowerLimit(*firstPOI);
-  
-  firstPOI->setRange(profileLikelihoodLowerLimit,profileLikelihoodUpperLimit);
-  
-  TCanvas* canvas = new TCanvas("Result", "Result", 10, 10,500,500);
-  lplot->Draw();
-  //lplot->Save();
-  canvas->Update();
- 
-  
-  ////////////////////////////////////
-  model.fitTo(dataset);
-  ////////////////////////////////////
-
-
-  /* 
-
-  cout << endl << endl << endl << endl;
-  cout << " XSEC AFTER FIT " << wspace->var("signalCrossSection")->getValV() << endl;
-  cout << " SIGFRAC AFTER FIT " << wspace->var("zeroLepton_3BhighHThighMET_SignalFrac")->getValV() << endl << endl;
-
-  cout << " ONE LEPTON COUNTS 1 " << wspace->var("oneLepton_3BhighHThighMET_Theta1Count")->getValV() << endl;
-  cout << " ONE LEPTON COUNTS 2 " << wspace->var("oneLepton_3BhighHThighMET_Theta2Count")->getValV() << endl;
-  cout << " ONE LEPTON COUNTS 3 " << wspace->var("oneLepton_3BhighHThighMET_Theta3Count")->getValV() << endl;
-  cout << " ONE LEPTON COUNTS 4 " << wspace->var("oneLepton_3BhighHThighMET_Theta4Count")->getValV() << endl;
-  cout << " ONE LEPTON COUNTS 5 " << wspace->var("oneLepton_3BhighHThighMET_Theta5Count")->getValV() << endl << endl;
-  
-  cout << " ONE LEPTON SUM 1 " << wspace->function("oneLepton_3BhighHThighMET_YieldSumTheta1")->getVal() << endl;
-  cout << " ONE LEPTON SUM 2 " << wspace->function("oneLepton_3BhighHThighMET_YieldSumTheta2")->getVal() << endl;
-  cout << " ONE LEPTON SUM 3 " << wspace->function("oneLepton_3BhighHThighMET_YieldSumTheta3")->getVal() << endl;
-  cout << " ONE LEPTON SUM 4 " << wspace->function("oneLepton_3BhighHThighMET_YieldSumTheta4")->getVal() << endl;
-  cout << " ONE LEPTON SUM 5 " << wspace->function("oneLepton_3BhighHThighMET_YieldSumTheta5")->getVal() << endl << endl;
-
-  cout << " ONE LEPTON ttbar 1 " << wspace->function("oneLepton_3BhighHThighMET_TopWJetsYieldTheta1")->getVal() << endl;
-  cout << " ONE LEPTON ttbar 2 " << wspace->function("oneLepton_3BhighHThighMET_TopWJetsYieldTheta2")->getVal() << endl;
-  cout << " ONE LEPTON ttbar 3 " << wspace->function("oneLepton_3BhighHThighMET_TopWJetsYieldTheta3")->getVal() << endl;
-  cout << " ONE LEPTON ttbar 4 " << wspace->function("oneLepton_3BhighHThighMET_TopWJetsYieldTheta4")->getVal() << endl;
-  cout << " ONE LEPTON ttbar 5 " << wspace->function("oneLepton_3BhighHThighMET_TopWJetsYieldTheta5")->getVal() << endl << endl;
-
-  cout << " ONE LEPTON sig 1 " << wspace->function("oneLepton_3BhighHThighMET_SignalYieldTheta1")->getVal() << endl;
-  cout << " ONE LEPTON sig 2 " << wspace->function("oneLepton_3BhighHThighMET_SignalYieldTheta2")->getVal() << endl;
-  cout << " ONE LEPTON sig 3 " << wspace->function("oneLepton_3BhighHThighMET_SignalYieldTheta3")->getVal() << endl;
-  cout << " ONE LEPTON sig 4 " << wspace->function("oneLepton_3BhighHThighMET_SignalYieldTheta4")->getVal() << endl;
-  cout << " ONE LEPTON sig 5 " << wspace->function("oneLepton_3BhighHThighMET_SignalYieldTheta5")->getVal() << endl << endl;
-
-  cout << " 0L SIGNAL AFTER FIT " << wspace->function("zeroLepton_3BhighHThighMET_SignalYield")->getVal() << endl;
-  cout << " 0L TTBAR AFTER FIT  " << wspace->function("zeroLepton_3BhighHThighMET_TopWJetsYield")->getVal() << endl;
-  cout << " ZERO LEPTON SUM " << wspace->function("zeroLepton_3BhighHThighMET_YieldSum")->getVal() << endl;
- 
-  cout << endl << endl << endl << endl << " zeroLeptonCounts " << wspace->var("zeroLepton_3BhighHThighMET_Count")->getValV() << endl << endl;
-  
- cout << endl <<  endl;
-
- if( error==1 ) cout << " ERROR FOUND IN MATCHING BIN NAMES!!! " << endl;
-
-*/
-  
-  test->Write();
-
+    RooArgSet Constraints(wspace->allPdfs());
+    
+    RooProdPdf model("model","model", Constraints );
+    wspace->import(model);
+    
+    //cout << "data, size: " << (*wspace->set("namesfordata")).getSize() << endl;
+    //(*wspace->set("namesfordata")).Print("v");
+    
+    RooDataSet dataset("dataset","dataset",*wspace->set("namesfordata"));
+    
+    dataset.add(*wspace->set("namesfordata"));
+    
+    wspace->import(dataset);
+    
+    
+    //  cout << endl << endl << " FINAL SET OF DATA " << endl;
+    //dataset.Print("v");
+    //  cout << endl << endl << " FINAL SET OF CONSTRAINTS " << endl;
+    //Constraints.Print("v");
+    
+    wspace->defineSet("poi","signalCrossSection");
+    
+    ////////////////////////////////////
+    
+    //Hesse(false),Minos(false),
+    //Save(),Constrain(Constraints)
+    //	     );
+    
+    
+    
+    ModelConfig * modelConfig = new ModelConfig("modelConfig");
+    modelConfig->SetWorkspace(*wspace);
+    modelConfig->SetPdf("model");
+    modelConfig->SetParametersOfInterest(*wspace->set("poi"));
+    modelConfig->SetNuisanceParameters(*wspace->set("nuisances"));
+    
+    //cout << " before model print " << endl;
+    //modelConfig->Print("v");
+    //cout << " after model print " << endl;
+    
+    
+    
+    // Declare parameter of interest
+    RooArgSet parofinterest(*wspace->set("poi")) ;
+    //ProfileLikelihoodCalculator plc(dataset, *wspace->pdf("model"), parofinterest);
+    //plc.SetTestSize(0.05);
+    ProfileLikelihoodCalculator plc(dataset, *modelConfig);
+    plc.SetConfidenceLevel(0.95);
+    
+    //  cout << " before pl " << endl;
+    
+    LikelihoodInterval* interval = plc.GetInterval() ;
+    LikelihoodIntervalPlot*  lplot = new LikelihoodIntervalPlot(interval);
+    
+    //  interval->Print("v");
+    
+    RooRealVar* firstPOI = (RooRealVar*) parofinterest.first();
+    
+    double profileLikelihoodUpperLimit = interval->UpperLimit(*firstPOI);
+    double profileLikelihoodLowerLimit = interval->LowerLimit(*firstPOI);
+    
+    firstPOI->setRange(profileLikelihoodLowerLimit,profileLikelihoodUpperLimit);
+    
+    TCanvas* canvas = new TCanvas("Result", "Result", 10, 10,500,500);
+    lplot->Draw();
+    //lplot->Save();
+    canvas->Update();
+    
+    
+    ////////////////////////////////////
+    model.fitTo(dataset);
+    ////////////////////////////////////
+    
+    
+    /* 
+       
+    cout << endl << endl << endl << endl;
+    cout << " XSEC AFTER FIT " << wspace->var("signalCrossSection")->getValV() << endl;
+    cout << " SIGFRAC AFTER FIT " << wspace->var("zeroLepton_3BhighHThighMET_SignalFrac")->getValV() << endl << endl;
+    
+    cout << " ONE LEPTON COUNTS 1 " << wspace->var("oneLepton_3BhighHThighMET_Theta1Count")->getValV() << endl;
+    cout << " ONE LEPTON COUNTS 2 " << wspace->var("oneLepton_3BhighHThighMET_Theta2Count")->getValV() << endl;
+    cout << " ONE LEPTON COUNTS 3 " << wspace->var("oneLepton_3BhighHThighMET_Theta3Count")->getValV() << endl;
+    cout << " ONE LEPTON COUNTS 4 " << wspace->var("oneLepton_3BhighHThighMET_Theta4Count")->getValV() << endl;
+    cout << " ONE LEPTON COUNTS 5 " << wspace->var("oneLepton_3BhighHThighMET_Theta5Count")->getValV() << endl << endl;
+    
+    cout << " ONE LEPTON SUM 1 " << wspace->function("oneLepton_3BhighHThighMET_YieldSumTheta1")->getVal() << endl;
+    cout << " ONE LEPTON SUM 2 " << wspace->function("oneLepton_3BhighHThighMET_YieldSumTheta2")->getVal() << endl;
+    cout << " ONE LEPTON SUM 3 " << wspace->function("oneLepton_3BhighHThighMET_YieldSumTheta3")->getVal() << endl;
+    cout << " ONE LEPTON SUM 4 " << wspace->function("oneLepton_3BhighHThighMET_YieldSumTheta4")->getVal() << endl;
+    cout << " ONE LEPTON SUM 5 " << wspace->function("oneLepton_3BhighHThighMET_YieldSumTheta5")->getVal() << endl << endl;
+    
+    cout << " ONE LEPTON ttbar 1 " << wspace->function("oneLepton_3BhighHThighMET_TopWJetsYieldTheta1")->getVal() << endl;
+    cout << " ONE LEPTON ttbar 2 " << wspace->function("oneLepton_3BhighHThighMET_TopWJetsYieldTheta2")->getVal() << endl;
+    cout << " ONE LEPTON ttbar 3 " << wspace->function("oneLepton_3BhighHThighMET_TopWJetsYieldTheta3")->getVal() << endl;
+    cout << " ONE LEPTON ttbar 4 " << wspace->function("oneLepton_3BhighHThighMET_TopWJetsYieldTheta4")->getVal() << endl;
+    cout << " ONE LEPTON ttbar 5 " << wspace->function("oneLepton_3BhighHThighMET_TopWJetsYieldTheta5")->getVal() << endl << endl;
+    
+    cout << " ONE LEPTON sig 1 " << wspace->function("oneLepton_3BhighHThighMET_SignalYieldTheta1")->getVal() << endl;
+    cout << " ONE LEPTON sig 2 " << wspace->function("oneLepton_3BhighHThighMET_SignalYieldTheta2")->getVal() << endl;
+    cout << " ONE LEPTON sig 3 " << wspace->function("oneLepton_3BhighHThighMET_SignalYieldTheta3")->getVal() << endl;
+    cout << " ONE LEPTON sig 4 " << wspace->function("oneLepton_3BhighHThighMET_SignalYieldTheta4")->getVal() << endl;
+    cout << " ONE LEPTON sig 5 " << wspace->function("oneLepton_3BhighHThighMET_SignalYieldTheta5")->getVal() << endl << endl;
+    
+    cout << " 0L SIGNAL AFTER FIT " << wspace->function("zeroLepton_3BhighHThighMET_SignalYield")->getVal() << endl;
+    cout << " 0L TTBAR AFTER FIT  " << wspace->function("zeroLepton_3BhighHThighMET_TopWJetsYield")->getVal() << endl;
+    cout << " ZERO LEPTON SUM " << wspace->function("zeroLepton_3BhighHThighMET_YieldSum")->getVal() << endl;
+    
+    cout << endl << endl << endl << endl << " zeroLeptonCounts " << wspace->var("zeroLepton_3BhighHThighMET_Count")->getValV() << endl << endl;
+    
+    cout << endl <<  endl;
+    
+    if( error==1 ) cout << " ERROR FOUND IN MATCHING BIN NAMES!!! " << endl;
+    
+    */
+    
+    test->Write();
+  }//end if standaloneMode
 
 }// end of likelihood builder
 
