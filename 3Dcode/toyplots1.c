@@ -59,6 +59,7 @@
       gStyle->SetLabelSize(0.08,"y") ;
       gStyle->SetNdivisions(504,"y") ;
       gStyle->SetPadLeftMargin(0.15) ;
+      gStyle->SetEndErrorSize(5) ;
 
       gDirectory->Delete("h*") ;
 
@@ -93,9 +94,11 @@
 
             char hname[1000] ;
             char htitle[1000] ;
-            sprintf( hname, "hfit_%s_%s", compname[ci], plotname[cani] ) ;
             sprintf( htitle, "Fit %s vs %s", compname[ci], plotname[cani] ) ;
+            sprintf( hname, "hfit_%s_%s", compname[ci], plotname[cani] ) ;
             TProfile* hfit   = new TProfile( hname, htitle, (svmax[cani]-svmin[cani]+1), svmin[cani]-0.5, svmax[cani]+0.5, "s" ) ;
+            sprintf( hname, "hfitem_%s_%s", compname[ci], plotname[cani] ) ;
+            TProfile* hfitem = new TProfile( hname, htitle, (svmax[cani]-svmin[cani]+1), svmin[cani]-0.5, svmax[cani]+0.5 ) ;
             sprintf( hname, "hmcval_%s_%s", compname[ci], plotname[cani] ) ;
             sprintf( htitle, "MCval %s vs %s", compname[ci], plotname[cani] ) ;
             TProfile* hmcval   = new TProfile( hname, htitle, (svmax[cani]-svmin[cani]+1), svmin[cani]-0.5, svmax[cani]+0.5 ) ;
@@ -105,6 +108,10 @@
                char drawarg1[10000] ;
 
                sprintf( drawarg1, daformat[cani], "fit", compname[ci], svi-1, svi, "fit", compname[ci], plotname[cani] ) ;
+               printf( "%s\n", drawarg1 ) ;
+               toytt -> Draw( drawarg1, "fit_covqual_susyfloat==3" ) ;
+
+               sprintf( drawarg1, daformat[cani], "fit", compname[ci], svi-1, svi, "fitem", compname[ci], plotname[cani] ) ;
                printf( "%s\n", drawarg1 ) ;
                toytt -> Draw( drawarg1, "fit_covqual_susyfloat==3" ) ;
 
@@ -126,11 +133,14 @@
                hmcval -> SetLineColor( compcolor[ci] ) ;
                hmcval -> SetLineWidth(2) ;
                hfit   -> SetLineWidth(2) ;
+               hfit   -> SetLineColor(4) ;
+               hfitem -> SetLineWidth(2) ;
 
                hfit -> SetMarkerStyle(20) ;
-               hfit -> Draw() ;
+               hfit -> Draw("e1") ;
                hmcval -> Draw("histsame") ;
                hfit -> Draw("same") ;
+               hfitem->Draw("samee1") ;
 
             } else {
 
@@ -138,21 +148,29 @@
                sprintf( htitle, "Ave fit-true diff %s vs %s", compname[ci], plotname[cani] ) ;
                TH1F* hdiff = new TH1F( hname, htitle, (svmax[cani]-svmin[cani]+1), svmin[cani]-0.5, svmax[cani]+0.5 ) ;
 
+               sprintf( hname, "hdiffem_%s_%s", compname[ci], plotname[cani] ) ;
+               sprintf( htitle, "Ave fit-true diff %s vs %s", compname[ci], plotname[cani] ) ;
+               TH1F* hdiffem = new TH1F( hname, htitle, (svmax[cani]-svmin[cani]+1), svmin[cani]-0.5, svmax[cani]+0.5 ) ;
+
 
                double drawmax(0.) ;
                double drawmin(0.) ;
                for ( int bi=1; bi<=(svmax[cani]-svmin[cani]+1); bi++ ) {
                   double diff = hfit->GetBinContent( bi ) - hmcval->GetBinContent( bi ) ;
                   double err  = hfit->GetBinError( bi ) ;
+                  double errm = hfitem->GetBinError( bi ) ;
                   if ( doFrac ) {
                      if ( hmcval->GetBinContent( bi ) > 0. ) {
                         diff = diff / ( hmcval->GetBinContent( bi ) ) ;
                         err  = err  / ( hmcval->GetBinContent( bi ) ) ;
+                        errm = errm / ( hmcval->GetBinContent( bi ) ) ;
                      }
                      printf(" fit=%7.1f, MC=%7.1f, frac diff = %5.3f +/- %5.3f\n", hfit->GetBinContent( bi ), hmcval->GetBinContent( bi ), diff, err ) ;
                   }
                   hdiff -> SetBinContent( bi, diff ) ;
                   hdiff -> SetBinError( bi, err ) ;
+                  hdiffem -> SetBinContent( bi, diff ) ;
+                  hdiffem -> SetBinError( bi, errm ) ;
                   if ( 1.1*(diff+err) > drawmax ) { drawmax = 1.1*(diff+err) ; }
                   if ( diff<0 && 1.1*(diff-err) < drawmin ) { drawmin = 1.1*(diff-err) ; }
                } // bi.
@@ -173,7 +191,8 @@
                hdiff -> SetMarkerStyle(20) ;
                hdiff -> SetLineWidth(2) ;
                hdiff -> SetLineColor( compcolor[ci] ) ;
-               hdiff -> Draw() ;
+               hdiff -> Draw("e1") ;
+               hdiffem -> Draw("samee1") ;
                line->DrawLine( svmin[cani]-0.5, 0.,    svmax[cani]+0.5, 0. ) ;
 
             }

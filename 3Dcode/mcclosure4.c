@@ -494,7 +494,7 @@
       } ;
 
       int samplecolor[9] = {
-         800+8,
+         6,
          632,
          616+2,
          600+1,
@@ -734,7 +734,8 @@
 
                if ( err <= 0 ) { continue ; }
                if ( val <= 0 ) { continue ; }
-               if ( err/val > 0.5 ) { continue ; } //-- do not include points with very large errors.
+               //if ( err/val > 0.5 ) { continue ; } //-- do not include points with very large errors.
+               if ( err/val > 0.3 ) { continue ; } //-- do not include points with very large errors.
 
 
                double diff = val - ave ;
@@ -1210,6 +1211,7 @@
       hflat_0lepldp_ratio_model[0] -> SetLineColor(2) ;
       hflat_0lepldp_ratio_model[0] -> SetLineWidth(2) ;
       hflat_0lepldp_ratio_model[0] -> Draw("histsame") ;
+      hflat_0lepldp_ratio_ave[0]->DrawCopy("samee1") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
       gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
@@ -1228,6 +1230,7 @@
       hflat_0lepldp_ratio_model[1] -> SetLineColor(2) ;
       hflat_0lepldp_ratio_model[1] -> SetLineWidth(2) ;
       hflat_0lepldp_ratio_model[1] -> Draw("histsame") ;
+      hflat_0lepldp_ratio_ave[1]->DrawCopy("samee1") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
       gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
@@ -1246,6 +1249,7 @@
       hflat_0lepldp_ratio_model[2] -> SetLineColor(2) ;
       hflat_0lepldp_ratio_model[2] -> SetLineWidth(2) ;
       hflat_0lepldp_ratio_model[2] -> Draw("histsame") ;
+      hflat_0lepldp_ratio_ave[2]->DrawCopy("samee1") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
       gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
@@ -1256,6 +1260,71 @@
       if ( savePlots ) {
          cqcd4 -> SaveAs("outputfiles/mcclosure4-qcd-averatio.png") ;
          cqcd4 -> SaveAs("outputfiles/mcclosure4-qcd-averatio.pdf") ;
+      }
+
+
+
+
+
+
+
+
+
+
+      cqcd4->Clear() ;
+      cqcd4->Divide(3,1) ;
+
+      cqcd4 -> cd(1) ;
+      hflat_0lepldp_ratio_ave[0] -> SetTitle("Average QCD 0lep/LDP ratio, nb=1") ;
+      hflat_0lepldp_ratio_ave[0] -> SetMarkerSize(1.2) ;
+      hflat_0lepldp_ratio_ave[0] -> SetMarkerStyle(20) ;
+      hflat_0lepldp_ratio_ave[0] -> SetMaximum(0.6) ;
+      hflat_0lepldp_ratio_ave[0] -> SetMinimum(-0.1) ;
+      hflat_0lepldp_ratio_ave[0]->DrawCopy("e1") ;
+      hflat_0lepldp_ratio_ave_withRMSerror[0]->SetMarkerStyle() ;
+      hflat_0lepldp_ratio_ave_withRMSerror[0]->SetLineColor(4) ;
+      hflat_0lepldp_ratio_ave_withRMSerror[0]->DrawCopy("samee1") ;
+      hflat_0lepldp_ratio_ave[0]->DrawCopy("samee1") ;
+      line->DrawLine(0.5,0,nbins+0.5,0) ;
+      gPad->SetGridx(1) ;
+      gPad->SetGridy(1) ;
+
+      cqcd4 -> cd(2) ;
+      hflat_0lepldp_ratio_ave[1] -> SetTitle("Average QCD 0lep/LDP ratio, nb=2") ;
+      hflat_0lepldp_ratio_ave[1] -> SetMarkerSize(1.2) ;
+      hflat_0lepldp_ratio_ave[1] -> SetMarkerStyle(20) ;
+      hflat_0lepldp_ratio_ave[1] -> SetMaximum(0.6) ;
+      hflat_0lepldp_ratio_ave[1] -> SetMinimum(-0.1) ;
+      hflat_0lepldp_ratio_ave[1]->DrawCopy("e1") ;
+      hflat_0lepldp_ratio_ave_withRMSerror[1]->SetMarkerStyle() ;
+      hflat_0lepldp_ratio_ave_withRMSerror[1]->SetLineColor(4) ;
+      hflat_0lepldp_ratio_ave_withRMSerror[1]->DrawCopy("samee1") ;
+      hflat_0lepldp_ratio_ave[1]->DrawCopy("samee1") ;
+      line->DrawLine(0.5,0,nbins+0.5,0) ;
+      gPad->SetGridx(1) ;
+      gPad->SetGridy(1) ;
+
+      cqcd4 -> cd(3) ;
+      hflat_0lepldp_ratio_ave[2] -> SetTitle("Average QCD 0lep/LDP ratio, nb>=3") ;
+      hflat_0lepldp_ratio_ave[2] -> SetMarkerSize(1.2) ;
+      hflat_0lepldp_ratio_ave[2] -> SetMarkerStyle(20) ;
+      hflat_0lepldp_ratio_ave[2] -> SetMaximum(0.6) ;
+      hflat_0lepldp_ratio_ave[2] -> SetMinimum(-0.1) ;
+      hflat_0lepldp_ratio_ave[2]->DrawCopy("e1") ;
+      hflat_0lepldp_ratio_ave_withRMSerror[2]->SetMarkerStyle() ;
+      hflat_0lepldp_ratio_ave_withRMSerror[2]->SetLineColor(4) ;
+      hflat_0lepldp_ratio_ave_withRMSerror[2]->DrawCopy("samee1") ;
+      hflat_0lepldp_ratio_ave[2]->DrawCopy("samee1") ;
+      line->DrawLine(0.5,0,nbins+0.5,0) ;
+      gPad->SetGridx(1) ;
+      gPad->SetGridy(1) ;
+
+
+      cqcd4->Update() ; cqcd4->Draw() ;
+
+      if ( savePlots ) {
+         cqcd4 -> SaveAs("outputfiles/mcclosure4-qcd-averatio-nomodel.png") ;
+         cqcd4 -> SaveAs("outputfiles/mcclosure4-qcd-averatio-nomodel.pdf") ;
       }
 
 
