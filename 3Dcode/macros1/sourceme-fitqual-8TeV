@@ -1,14 +1,14 @@
 
-  echo fitqual-met4-ht4-v15-newqcdsyst-model2-mgl1100-mlsp300-3b-nosusy
-  root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-met4-ht4-v15-newqcdsyst-model2-mgl1100-mlsp300-3b.root\"\) >& logfiles/fitqual-met4-ht4-v15-newqcdsyst-model2-mgl1100-mlsp300-3b-nosusy.log
+# echo fitqual-met4-ht4-v15-newqcdsyst-model2-mgl1100-mlsp300-3b-nosusy
+# root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-met4-ht4-v15-newqcdsyst-model2-mgl1100-mlsp300-3b.root\"\) >& logfiles/fitqual-met4-ht4-v15-newqcdsyst-model2-mgl1100-mlsp300-3b-nosusy.log
 
-  echo fitqual-met4-ht4-v15-newqcdsyst-model3-mgl1100-mlsp300-3b-nosusy
-  root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-met4-ht4-v15-newqcdsyst-model3-mgl1100-mlsp300-3b.root\"\) >& logfiles/fitqual-met4-ht4-v15-newqcdsyst-model3-mgl1100-mlsp300-3b-nosusy.log
+# echo fitqual-met4-ht4-v15-newqcdsyst-model3-mgl1100-mlsp300-3b-nosusy
+# root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-met4-ht4-v15-newqcdsyst-model3-mgl1100-mlsp300-3b.root\"\) >& logfiles/fitqual-met4-ht4-v15-newqcdsyst-model3-mgl1100-mlsp300-3b-nosusy.log
 
   echo fitqual-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-nosusy
   root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b.root\"\) >& logfiles/fitqual-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-nosusy.log
 
-  echo fitqual-met4-ht4-v15-newqcdsyst-model5-mgl1100-mlsp300-3b-nosusy
-  root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-met4-ht4-v15-newqcdsyst-model5-mgl1100-mlsp300-3b.root\"\) >& logfiles/fitqual-met4-ht4-v15-newqcdsyst-model5-mgl1100-mlsp300-3b-nosusy.log
+# echo fitqual-met4-ht4-v15-newqcdsyst-model5-mgl1100-mlsp300-3b-nosusy
+# root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-met4-ht4-v15-newqcdsyst-model5-mgl1100-mlsp300-3b.root\"\) >& logfiles/fitqual-met4-ht4-v15-newqcdsyst-model5-mgl1100-mlsp300-3b-nosusy.log
 
 

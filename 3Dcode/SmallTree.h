@@ -167,6 +167,7 @@ Int_t SmallTree::Cut(Long64_t entry)
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
+   if ( entry > 0 ) return 1 ;
    return 1;
 }
 #endif // #ifdef SmallTree_cxx

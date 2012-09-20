@@ -34,7 +34,7 @@
 
    int nBinsMET ;
    int nBinsHT ;
-   const int nBinsBjets(3) ;
+   const int nBinsBjets(4) ;
    const int nQcdSamples(9) ;
 
   //-----------
@@ -87,7 +87,7 @@
 
   //=============================================================================================================================
 
-   void mcclosure4( const char* infile = "rootfiles/gi-plots-met4-ht4.root",
+   void mcclosure4_ge4b( const char* infile = "rootfiles/gi-plots-met4-ht4.root",
                     const char* datfile = "Input-met4-ht4-wsyst1.dat",
                     int qcdModelIndex = 4,
                     bool setExpected0lepObs = true,
@@ -152,13 +152,24 @@
       TH1F* hmctruth_ttwj_0over1ratio_3b = (TH1F*) hmctruth_ttwj_0lep_3b->Clone("hmctruth_ttwj_0over1ratio_3b") ;
       hmctruth_ttwj_0over1ratio_3b->Divide( hmctruth_ttwj_1lep_3b ) ;
 
+
+      TH1F* hmctruth_ttwj_0lep_4b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_0lep_4b") ;
+      if ( hmctruth_ttwj_0lep_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_0lep_4b.\n\n") ; return ; }
+      TH1F* hmctruth_ttwj_1lep_4b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_1lep_4b") ;
+      if ( hmctruth_ttwj_1lep_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_1lep_4b.\n\n") ; return ; }
+
+      TH1F* hmctruth_ttwj_0over1ratio_4b = (TH1F*) hmctruth_ttwj_0lep_4b->Clone("hmctruth_ttwj_0over1ratio_4b") ;
+      hmctruth_ttwj_0over1ratio_4b->Divide( hmctruth_ttwj_1lep_4b ) ;
+
       hmctruth_ttwj_0over1ratio_1b->SetLineColor(2) ;
       hmctruth_ttwj_0over1ratio_2b->SetLineColor(6) ;
       hmctruth_ttwj_0over1ratio_3b->SetLineColor(4) ;
+      hmctruth_ttwj_0over1ratio_4b->SetLineColor(8) ;
 
       hmctruth_ttwj_0over1ratio_1b->SetMarkerStyle(20) ;
       hmctruth_ttwj_0over1ratio_2b->SetMarkerStyle(25) ;
       hmctruth_ttwj_0over1ratio_3b->SetMarkerStyle(30) ;
+      hmctruth_ttwj_0over1ratio_4b->SetMarkerStyle(34) ;
 
 
       char binlabel[1000] ;
@@ -183,18 +194,22 @@
          total0lep += hmctruth_ttwj_0lep_1b->GetBinContent( bi ) ;
          total0lep += hmctruth_ttwj_0lep_2b->GetBinContent( bi ) ;
          total0lep += hmctruth_ttwj_0lep_3b->GetBinContent( bi ) ;
+         total0lep += hmctruth_ttwj_0lep_4b->GetBinContent( bi ) ;
 
          total1lep += hmctruth_ttwj_1lep_1b->GetBinContent( bi ) ;
          total1lep += hmctruth_ttwj_1lep_2b->GetBinContent( bi ) ;
          total1lep += hmctruth_ttwj_1lep_3b->GetBinContent( bi ) ;
+         total1lep += hmctruth_ttwj_1lep_4b->GetBinContent( bi ) ;
 
          sumw20lep += pow( hmctruth_ttwj_0lep_1b->GetBinError( bi ), 2 ) ;
          sumw20lep += pow( hmctruth_ttwj_0lep_2b->GetBinError( bi ), 2 ) ;
          sumw20lep += pow( hmctruth_ttwj_0lep_3b->GetBinError( bi ), 2 ) ;
+         sumw20lep += pow( hmctruth_ttwj_0lep_4b->GetBinError( bi ), 2 ) ;
 
          sumw21lep += pow( hmctruth_ttwj_1lep_1b->GetBinError( bi ), 2 ) ;
          sumw21lep += pow( hmctruth_ttwj_1lep_2b->GetBinError( bi ), 2 ) ;
          sumw21lep += pow( hmctruth_ttwj_1lep_3b->GetBinError( bi ), 2 ) ;
+         sumw21lep += pow( hmctruth_ttwj_1lep_4b->GetBinError( bi ), 2 ) ;
 
       } // bi.
 
@@ -207,15 +222,18 @@
       TH1F* hscalefactor_ttwj_0over1ratio_1b = (TH1F*) hmctruth_ttwj_0over1ratio_1b->Clone("hscalefactor_ttwj_0lep_1b") ;
       TH1F* hscalefactor_ttwj_0over1ratio_2b = (TH1F*) hmctruth_ttwj_0over1ratio_2b->Clone("hscalefactor_ttwj_0lep_2b") ;
       TH1F* hscalefactor_ttwj_0over1ratio_3b = (TH1F*) hmctruth_ttwj_0over1ratio_3b->Clone("hscalefactor_ttwj_0lep_3b") ;
+      TH1F* hscalefactor_ttwj_0over1ratio_4b = (TH1F*) hmctruth_ttwj_0over1ratio_4b->Clone("hscalefactor_ttwj_0lep_4b") ;
 
       hscalefactor_ttwj_0over1ratio_1b->Scale(1./simpleAveR_0over1) ;
       hscalefactor_ttwj_0over1ratio_2b->Scale(1./simpleAveR_0over1) ;
       hscalefactor_ttwj_0over1ratio_3b->Scale(1./simpleAveR_0over1) ;
+      hscalefactor_ttwj_0over1ratio_4b->Scale(1./simpleAveR_0over1) ;
 
 
       TH1F* hscalefactor_ttwj_0over1ratio_1b_whalfcorr = (TH1F*) hscalefactor_ttwj_0over1ratio_1b->Clone("hscalefactor_ttwj_0over1ratio_1b_whalfcorr") ;
       TH1F* hscalefactor_ttwj_0over1ratio_2b_whalfcorr = (TH1F*) hscalefactor_ttwj_0over1ratio_2b->Clone("hscalefactor_ttwj_0over1ratio_2b_whalfcorr") ;
       TH1F* hscalefactor_ttwj_0over1ratio_3b_whalfcorr = (TH1F*) hscalefactor_ttwj_0over1ratio_3b->Clone("hscalefactor_ttwj_0over1ratio_3b_whalfcorr") ;
+      TH1F* hscalefactor_ttwj_0over1ratio_4b_whalfcorr = (TH1F*) hscalefactor_ttwj_0over1ratio_4b->Clone("hscalefactor_ttwj_0over1ratio_4b_whalfcorr") ;
 
       for ( int hbi=1; hbi<=nBins; hbi++ ) {
 
@@ -242,6 +260,13 @@
          errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
          hscalefactor_ttwj_0over1ratio_3b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
 
+         val = hscalefactor_ttwj_0over1ratio_4b -> GetBinContent( hbi ) ;
+         err = hscalefactor_ttwj_0over1ratio_4b -> GetBinError( hbi ) ;
+         if ( err <= 0 ) continue ;
+         halfdiff = 0.5*(val - 1.) ;
+         errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
+         hscalefactor_ttwj_0over1ratio_4b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
+
       }
 
 
@@ -264,6 +289,7 @@
          if ( bbi==0 ) hp = hmctruth_ttwj_0over1ratio_1b ;
          if ( bbi==1 ) hp = hmctruth_ttwj_0over1ratio_2b ;
          if ( bbi==2 ) hp = hmctruth_ttwj_0over1ratio_3b ;
+         if ( bbi==3 ) hp = hmctruth_ttwj_0over1ratio_4b ;
 
          for ( int hbi=1; hbi<=nBins; hbi++ ) {
 
@@ -292,7 +318,7 @@
 
 
 
-     //--- Compute RMS of =1, =2, >=3 values.  Don't use points with big errors.
+     //--- Compute RMS of =1, =2, =3, >=4 values.  Don't use points with big errors.
 
       int ttwj_nsum[100] ;
       double ttwj_sumdiffsq[100] ;
@@ -305,6 +331,7 @@
          if ( bbi==0 ) hp = hmctruth_ttwj_0over1ratio_1b ;
          if ( bbi==1 ) hp = hmctruth_ttwj_0over1ratio_2b ;
          if ( bbi==2 ) hp = hmctruth_ttwj_0over1ratio_3b ;
+         if ( bbi==3 ) hp = hmctruth_ttwj_0over1ratio_4b ;
 
          for ( int hbi=1; hbi<=nBins; hbi++ ) {
 
@@ -375,23 +402,29 @@
       hmctruth_ttwj_0over1ratio_1b->SetMinimum(0.) ;
       hmctruth_ttwj_0over1ratio_2b->SetMinimum(0.) ;
       hmctruth_ttwj_0over1ratio_3b->SetMinimum(0.) ;
+      hmctruth_ttwj_0over1ratio_4b->SetMinimum(0.) ;
       hmctruth_ttwj_0over1ratio_1b->SetMaximum(3.) ;
       hmctruth_ttwj_0over1ratio_2b->SetMaximum(3.) ;
       hmctruth_ttwj_0over1ratio_3b->SetMaximum(3.) ;
+      hmctruth_ttwj_0over1ratio_4b->SetMaximum(3.) ;
 
       hscalefactor_ttwj_0over1ratio_1b->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_2b->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_3b->SetMinimum(0.) ;
+      hscalefactor_ttwj_0over1ratio_4b->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_1b->SetMaximum(2.5) ;
       hscalefactor_ttwj_0over1ratio_2b->SetMaximum(2.5) ;
       hscalefactor_ttwj_0over1ratio_3b->SetMaximum(2.5) ;
+      hscalefactor_ttwj_0over1ratio_4b->SetMaximum(2.5) ;
 
       hscalefactor_ttwj_0over1ratio_1b_whalfcorr->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_2b_whalfcorr->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_3b_whalfcorr->SetMinimum(0.) ;
+      hscalefactor_ttwj_0over1ratio_4b_whalfcorr->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_1b_whalfcorr->SetMaximum(2.5) ;
       hscalefactor_ttwj_0over1ratio_2b_whalfcorr->SetMaximum(2.5) ;
       hscalefactor_ttwj_0over1ratio_3b_whalfcorr->SetMaximum(2.5) ;
+      hscalefactor_ttwj_0over1ratio_4b_whalfcorr->SetMaximum(2.5) ;
 
 
       TH1F* hdummy1 = (TH1F*) hmctruth_ttwj_0over1ratio_1b->Clone( "hdummy1" ) ;
@@ -403,10 +436,12 @@
       resetBinLabels( hmctruth_ttwj_0over1ratio_1b ) ;
       resetBinLabels( hmctruth_ttwj_0over1ratio_2b ) ;
       resetBinLabels( hmctruth_ttwj_0over1ratio_3b ) ;
+      resetBinLabels( hmctruth_ttwj_0over1ratio_4b ) ;
 
       resetBinLabels( hscalefactor_ttwj_0over1ratio_1b ) ;
       resetBinLabels( hscalefactor_ttwj_0over1ratio_2b ) ;
       resetBinLabels( hscalefactor_ttwj_0over1ratio_3b ) ;
+      resetBinLabels( hscalefactor_ttwj_0over1ratio_4b ) ;
 
 
       gStyle->SetPadRightMargin(0.08) ;
@@ -421,7 +456,8 @@
       legend_ttwj->SetFillColor(kWhite) ;
       legend_ttwj->AddEntry( hmctruth_ttwj_0over1ratio_1b, "=1b") ;
       legend_ttwj->AddEntry( hmctruth_ttwj_0over1ratio_2b, "=2b") ;
-      legend_ttwj->AddEntry( hmctruth_ttwj_0over1ratio_3b, ">=3b") ;
+      legend_ttwj->AddEntry( hmctruth_ttwj_0over1ratio_3b, "=3b") ;
+      legend_ttwj->AddEntry( hmctruth_ttwj_0over1ratio_4b, ">=4b") ;
 
       cttwj->cd(1) ;
       hdummy1->SetMaximum(3.0) ;
@@ -431,6 +467,7 @@
       hmctruth_ttwj_0over1ratio_1b->DrawCopy("same") ;
       hmctruth_ttwj_0over1ratio_2b->DrawCopy("same") ;
       hmctruth_ttwj_0over1ratio_3b->DrawCopy("same") ;
+      hmctruth_ttwj_0over1ratio_4b->DrawCopy("same") ;
       legend_ttwj->Draw() ;
 
       cttwj->cd(2) ;
@@ -441,6 +478,7 @@
       hscalefactor_ttwj_0over1ratio_1b->DrawCopy("same") ;
       hscalefactor_ttwj_0over1ratio_2b->DrawCopy("same") ;
       hscalefactor_ttwj_0over1ratio_3b->DrawCopy("same") ;
+      hscalefactor_ttwj_0over1ratio_4b->DrawCopy("same") ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
       legend_ttwj->Draw() ;
 
@@ -485,7 +523,7 @@
          cttwj3 = new TCanvas("cttwj3","ttwj closure", 1200, 950) ;
       }
       cttwj3->Clear() ;
-      cttwj3->Divide(3,2) ;
+      cttwj3->Divide(4,2) ;
 
       cttwj3->cd(1) ;
       hmctruth_ttwj_0over1ratio_1b->SetTitle("ttwj =1b: 0 Lepton / 1 Lepton, Ratio") ;
@@ -494,27 +532,36 @@
       hmctruth_ttwj_0over1ratio_2b->SetTitle("ttwj =2b: 0 Lepton / 1 Lepton, Ratio") ;
       hmctruth_ttwj_0over1ratio_2b->Draw() ;
       cttwj3->cd(3) ;
-      hmctruth_ttwj_0over1ratio_3b->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Ratio") ;
+      hmctruth_ttwj_0over1ratio_3b->SetTitle("ttwj =3b: 0 Lepton / 1 Lepton, Ratio") ;
       hmctruth_ttwj_0over1ratio_3b->Draw() ;
-
       cttwj3->cd(4) ;
+      hmctruth_ttwj_0over1ratio_4b->SetTitle("ttwj >=4b: 0 Lepton / 1 Lepton, Ratio") ;
+      hmctruth_ttwj_0over1ratio_4b->Draw() ;
+
+      cttwj3->cd(5) ;
       hscalefactor_ttwj_0over1ratio_1b->SetTitle("ttwj =1b: 0 Lepton / 1 Lepton, Scale Factor") ;
       hscalefactor_ttwj_0over1ratio_1b_whalfcorr->DrawCopy("e1") ;
       hscalefactor_ttwj_0over1ratio_1b->DrawCopy("samee1") ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
       hscalefactor_ttwj_0over1ratio_1b->Draw("same") ;
-      cttwj3->cd(5) ;
+      cttwj3->cd(6) ;
       hscalefactor_ttwj_0over1ratio_2b->SetTitle("ttwj =2b: 0 Lepton / 1 Lepton, Scale Factor") ;
       hscalefactor_ttwj_0over1ratio_2b_whalfcorr->DrawCopy("e1") ;
       hscalefactor_ttwj_0over1ratio_2b->DrawCopy("samee1") ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
       hscalefactor_ttwj_0over1ratio_2b->Draw("same") ;
-      cttwj3->cd(6) ;
-      hscalefactor_ttwj_0over1ratio_3b->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Scale Factor") ;
+      cttwj3->cd(7) ;
+      hscalefactor_ttwj_0over1ratio_3b->SetTitle("ttwj =3b: 0 Lepton / 1 Lepton, Scale Factor") ;
       hscalefactor_ttwj_0over1ratio_3b_whalfcorr->DrawCopy("e1") ;
       hscalefactor_ttwj_0over1ratio_3b->DrawCopy("samee1") ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
       hscalefactor_ttwj_0over1ratio_3b->Draw("same") ;
+      cttwj3->cd(8) ;
+      hscalefactor_ttwj_0over1ratio_4b->SetTitle("ttwj >=4b: 0 Lepton / 1 Lepton, Scale Factor") ;
+      hscalefactor_ttwj_0over1ratio_4b_whalfcorr->DrawCopy("e1") ;
+      hscalefactor_ttwj_0over1ratio_4b->DrawCopy("samee1") ;
+      line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
+      hscalefactor_ttwj_0over1ratio_4b->Draw("same") ;
 
 
       TString outttwj3( infileStr ) ;
@@ -544,28 +591,34 @@
       hmctruth_ttwj_0over1ratio_1b->SetMarkerStyle(20) ;
       hmctruth_ttwj_0over1ratio_2b->SetMarkerStyle(20) ;
       hmctruth_ttwj_0over1ratio_3b->SetMarkerStyle(20) ;
+      hmctruth_ttwj_0over1ratio_4b->SetMarkerStyle(20) ;
       hscalefactor_ttwj_0over1ratio_1b->SetMarkerStyle(20) ;
       hscalefactor_ttwj_0over1ratio_2b->SetMarkerStyle(20) ;
       hscalefactor_ttwj_0over1ratio_3b->SetMarkerStyle(20) ;
+      hscalefactor_ttwj_0over1ratio_4b->SetMarkerStyle(20) ;
       hmctruth_ttwj_0over1ratio_1b->SetLineColor(2) ;
       hmctruth_ttwj_0over1ratio_2b->SetLineColor(2) ;
       hmctruth_ttwj_0over1ratio_3b->SetLineColor(2) ;
+      hmctruth_ttwj_0over1ratio_4b->SetLineColor(2) ;
       hscalefactor_ttwj_0over1ratio_1b->SetLineColor(2) ;
       hscalefactor_ttwj_0over1ratio_2b->SetLineColor(2) ;
       hscalefactor_ttwj_0over1ratio_3b->SetLineColor(2) ;
+      hscalefactor_ttwj_0over1ratio_4b->SetLineColor(2) ;
       hmctruth_ttwj_0over1ratio_1b->SetLineWidth(2) ;
       hmctruth_ttwj_0over1ratio_2b->SetLineWidth(2) ;
       hmctruth_ttwj_0over1ratio_3b->SetLineWidth(2) ;
+      hmctruth_ttwj_0over1ratio_4b->SetLineWidth(2) ;
       hscalefactor_ttwj_0over1ratio_1b->SetLineWidth(2) ;
       hscalefactor_ttwj_0over1ratio_2b->SetLineWidth(2) ;
       hscalefactor_ttwj_0over1ratio_3b->SetLineWidth(2) ;
+      hscalefactor_ttwj_0over1ratio_4b->SetLineWidth(2) ;
 
       TCanvas* cttwj3ave = (TCanvas*) gDirectory->FindObject("cttwj3ave") ;
       if ( cttwj3ave == 0x0 ) {
          cttwj3ave = new TCanvas("cttwj3ave","ttwj closure", 1200, 950) ;
       }
       cttwj3ave->Clear() ;
-      cttwj3ave->Divide(3,2) ;
+      cttwj3ave->Divide(4,2) ;
 
       cttwj3ave->cd(1) ;
       hmctruth_ttwj_0over1ratio_1b->SetTitle("ttwj =1b: 0 Lepton / 1 Lepton, Ratio") ;
@@ -578,12 +631,17 @@
       h_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
       h_ttwj_ave_0over1ratio->Draw("e1same") ;
       cttwj3ave->cd(3) ;
-      hmctruth_ttwj_0over1ratio_3b->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Ratio") ;
+      hmctruth_ttwj_0over1ratio_3b->SetTitle("ttwj =3b: 0 Lepton / 1 Lepton, Ratio") ;
       hmctruth_ttwj_0over1ratio_3b->Draw() ;
       h_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
       h_ttwj_ave_0over1ratio->Draw("e1same") ;
-
       cttwj3ave->cd(4) ;
+      hmctruth_ttwj_0over1ratio_4b->SetTitle("ttwj >=4b: 0 Lepton / 1 Lepton, Ratio") ;
+      hmctruth_ttwj_0over1ratio_4b->Draw() ;
+      h_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
+      h_ttwj_ave_0over1ratio->Draw("e1same") ;
+
+      cttwj3ave->cd(5) ;
       hscalefactor_ttwj_0over1ratio_1b->SetTitle("ttwj =1b: 0 Lepton / 1 Lepton, Scale Factor") ;
       hscalefactor_ttwj_0over1ratio_1b->Draw() ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
@@ -591,7 +649,7 @@
       hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->Draw("e1same") ;
       hscalefactor_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
       hscalefactor_ttwj_ave_0over1ratio->Draw("e1same") ;
-      cttwj3ave->cd(5) ;
+      cttwj3ave->cd(6) ;
       hscalefactor_ttwj_0over1ratio_2b->SetTitle("ttwj =2b: 0 Lepton / 1 Lepton, Scale Factor") ;
       hscalefactor_ttwj_0over1ratio_2b->Draw() ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
@@ -599,11 +657,19 @@
       hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->Draw("e1same") ;
       hscalefactor_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
       hscalefactor_ttwj_ave_0over1ratio->Draw("e1same") ;
-      cttwj3ave->cd(6) ;
-      hscalefactor_ttwj_0over1ratio_3b->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Scale Factor") ;
+      cttwj3ave->cd(7) ;
+      hscalefactor_ttwj_0over1ratio_3b->SetTitle("ttwj =3b: 0 Lepton / 1 Lepton, Scale Factor") ;
       hscalefactor_ttwj_0over1ratio_3b->Draw() ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
       hscalefactor_ttwj_0over1ratio_3b->Draw("same") ;
+      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->Draw("e1same") ;
+      hscalefactor_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
+      hscalefactor_ttwj_ave_0over1ratio->Draw("e1same") ;
+      cttwj3ave->cd(8) ;
+      hscalefactor_ttwj_0over1ratio_4b->SetTitle("ttwj >=4b: 0 Lepton / 1 Lepton, Scale Factor") ;
+      hscalefactor_ttwj_0over1ratio_4b->Draw() ;
+      line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
+      hscalefactor_ttwj_0over1ratio_4b->Draw("same") ;
       hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->Draw("e1same") ;
       hscalefactor_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
       hscalefactor_ttwj_ave_0over1ratio->Draw("e1same") ;
@@ -620,25 +686,29 @@
       hmctruth_ttwj_0lep_1b->SetFillColor(kBlue-9) ;
       hmctruth_ttwj_0lep_2b->SetFillColor(kBlue-9) ;
       hmctruth_ttwj_0lep_3b->SetFillColor(kBlue-9) ;
+      hmctruth_ttwj_0lep_4b->SetFillColor(kBlue-9) ;
 
       hmctruth_ttwj_1lep_1b->SetFillColor(kBlue-9) ;
       hmctruth_ttwj_1lep_2b->SetFillColor(kBlue-9) ;
       hmctruth_ttwj_1lep_3b->SetFillColor(kBlue-9) ;
+      hmctruth_ttwj_1lep_4b->SetFillColor(kBlue-9) ;
 
       hmctruth_ttwj_0lep_1b->SetLineWidth(2) ;
       hmctruth_ttwj_0lep_2b->SetLineWidth(2) ;
       hmctruth_ttwj_0lep_3b->SetLineWidth(2) ;
+      hmctruth_ttwj_0lep_4b->SetLineWidth(2) ;
 
       hmctruth_ttwj_1lep_1b->SetLineWidth(2) ;
       hmctruth_ttwj_1lep_2b->SetLineWidth(2) ;
       hmctruth_ttwj_1lep_3b->SetLineWidth(2) ;
+      hmctruth_ttwj_1lep_4b->SetLineWidth(2) ;
 
       TCanvas* cttwj3b = (TCanvas*) gDirectory->FindObject("cttwj3b") ;
       if ( cttwj3b == 0x0 ) {
          cttwj3b = new TCanvas("cttwj3b","ttwj closure", 1200, 950) ;
       }
       cttwj3b->Clear() ;
-      cttwj3b->Divide(3,2) ;
+      cttwj3b->Divide(4,2) ;
 
       cttwj3b->cd(1) ;
       hmctruth_ttwj_0lep_1b->SetTitle("ttwj =1b: 0 Lepton") ;
@@ -651,26 +721,36 @@
       hmctruth_ttwj_0lep_2b->Draw("histsame") ;
       hmctruth_ttwj_0lep_2b->Draw("esame") ;
       cttwj3b->cd(3) ;
-      hmctruth_ttwj_0lep_3b->SetTitle("ttwj >=3b: 0 Lepton") ;
+      hmctruth_ttwj_0lep_3b->SetTitle("ttwj =3b: 0 Lepton") ;
       hmctruth_ttwj_0lep_3b->Draw() ;
       hmctruth_ttwj_0lep_3b->Draw("histsame") ;
       hmctruth_ttwj_0lep_3b->Draw("esame") ;
-
       cttwj3b->cd(4) ;
+      hmctruth_ttwj_0lep_4b->SetTitle("ttwj >=4b: 0 Lepton") ;
+      hmctruth_ttwj_0lep_4b->Draw() ;
+      hmctruth_ttwj_0lep_4b->Draw("histsame") ;
+      hmctruth_ttwj_0lep_4b->Draw("esame") ;
+
+      cttwj3b->cd(5) ;
       hmctruth_ttwj_1lep_1b->SetTitle("ttwj =1b: 1 Lepton") ;
       hmctruth_ttwj_1lep_1b->Draw() ;
       hmctruth_ttwj_1lep_1b->Draw("histsame") ;
       hmctruth_ttwj_1lep_1b->Draw("esame") ;
-      cttwj3b->cd(5) ;
+      cttwj3b->cd(6) ;
       hmctruth_ttwj_1lep_2b->SetTitle("ttwj =2b: 1 Lepton") ;
       hmctruth_ttwj_1lep_2b->Draw() ;
       hmctruth_ttwj_1lep_2b->Draw("histsame") ;
       hmctruth_ttwj_1lep_2b->Draw("esame") ;
-      cttwj3b->cd(6) ;
-      hmctruth_ttwj_1lep_3b->SetTitle("ttwj >=3b: 1 Lepton") ;
+      cttwj3b->cd(7) ;
+      hmctruth_ttwj_1lep_3b->SetTitle("ttwj =3b: 1 Lepton") ;
       hmctruth_ttwj_1lep_3b->Draw() ;
       hmctruth_ttwj_1lep_3b->Draw("histsame") ;
       hmctruth_ttwj_1lep_3b->Draw("esame") ;
+      cttwj3b->cd(8) ;
+      hmctruth_ttwj_1lep_4b->SetTitle("ttwj >=4b: 1 Lepton") ;
+      hmctruth_ttwj_1lep_4b->Draw() ;
+      hmctruth_ttwj_1lep_4b->Draw("histsame") ;
+      hmctruth_ttwj_1lep_4b->Draw("esame") ;
 
 
 
@@ -680,9 +760,6 @@
       cttwj3b->SaveAs( outttwj3b ) ;
 
    //----
-
-
-
 
 
 
@@ -771,6 +848,33 @@
                updateFileValue( datfile, parameterName, 0.0 ) ;
             }
             sprintf( parameterName, "sf_ttwj_M%d_H%d_3b", mbi+1, hbi+1 ) ;
+            if ( doTTWJCorrection ) {
+               updateFileValue( datfile, parameterName, correction ) ;
+            } else {
+               updateFileValue( datfile, parameterName, 1.0 ) ;
+            }
+
+
+
+
+            sprintf( parameterName, "sf_ttwj_M%d_H%d_4b_err", mbi+1, hbi+1 ) ;
+            printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1,
+                  parameterName,
+                  hmctruth_ttwj_0lep_4b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+            if ( useAverageTtwjClosure ) {
+               err        = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin)  ;
+               correction = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinContent(hbin)  ;
+            } else {
+               err        = hscalefactor_ttwj_0over1ratio_4b_whalfcorr->GetBinError(hbin)  ;
+               correction = hscalefactor_ttwj_0over1ratio_4b_whalfcorr->GetBinContent(hbin)  ;
+            }
+            if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
+            if ( doTTWJSyst ) {
+               updateFileValue( datfile, parameterName, systValue ) ;
+            } else {
+               updateFileValue( datfile, parameterName, 0.0 ) ;
+            }
+            sprintf( parameterName, "sf_ttwj_M%d_H%d_4b", mbi+1, hbi+1 ) ;
             if ( doTTWJCorrection ) {
                updateFileValue( datfile, parameterName, correction ) ;
             } else {
@@ -1393,7 +1497,7 @@
 
 
       cqcd2 -> Clear() ;
-      cqcd2 -> Divide(3,1) ;
+      cqcd2 -> Divide(4,1) ;
 
       cqcd2 -> cd(1) ;
       hflat_0lepldp_ratio[0][0] -> SetTitle("QCD 0lep/LDP ratio, nb=1") ;
@@ -1424,7 +1528,7 @@
       gPad->SetGridy(1) ;
 
       cqcd2 -> cd(3) ;
-      hflat_0lepldp_ratio[0][2] -> SetTitle("QCD 0lep/LDP ratio, nb>=3") ;
+      hflat_0lepldp_ratio[0][2] -> SetTitle("QCD 0lep/LDP ratio, nb=3") ;
       for ( int si=0; si<nQcdSamples; si++ ) {
          hflat_0lepldp_ratio[si][2] -> SetMarkerStyle(20+si) ;
          hflat_0lepldp_ratio[si][2] -> SetLineColor(samplecolor[si]) ;
@@ -1432,6 +1536,20 @@
          if ( si == 0 ) { hflat_0lepldp_ratio[si][2] -> DrawCopy() ; } else { hflat_0lepldp_ratio[si][2] -> DrawCopy("same") ; }
       }
       hflat_0lepldp_ratio_ave[2]->DrawCopy("same") ;
+      line->DrawLine(0.5,0,nbins+0.5,0) ;
+      l2->Draw() ;
+      gPad->SetGridx(1) ;
+      gPad->SetGridy(1) ;
+
+      cqcd2 -> cd(4) ;
+      hflat_0lepldp_ratio[0][3] -> SetTitle("QCD 0lep/LDP ratio, nb>=4") ;
+      for ( int si=0; si<nQcdSamples; si++ ) {
+         hflat_0lepldp_ratio[si][3] -> SetMarkerStyle(20+si) ;
+         hflat_0lepldp_ratio[si][3] -> SetLineColor(samplecolor[si]) ;
+         hflat_0lepldp_ratio[si][3] -> SetMarkerColor(samplecolor[si]) ;
+         if ( si == 0 ) { hflat_0lepldp_ratio[si][3] -> DrawCopy() ; } else { hflat_0lepldp_ratio[si][3] -> DrawCopy("same") ; }
+      }
+      hflat_0lepldp_ratio_ave[3]->DrawCopy("same") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
       l2->Draw() ;
       gPad->SetGridx(1) ;
@@ -1464,11 +1582,13 @@
       hflat_0lepldp_ratio[0][0] -> SetTitle(oldtitle) ;
       sprintf( oldtitle, "QCD 0lep/LDP ratio, nb=2, %s", samplename[0] ) ;
       hflat_0lepldp_ratio[0][1] -> SetTitle(oldtitle) ;
-      sprintf( oldtitle, "QCD 0lep/LDP ratio, nb>=3, %s", samplename[0] ) ;
+      sprintf( oldtitle, "QCD 0lep/LDP ratio, nb=3, %s", samplename[0] ) ;
       hflat_0lepldp_ratio[0][2] -> SetTitle(oldtitle) ;
+      sprintf( oldtitle, "QCD 0lep/LDP ratio, nb>=4, %s", samplename[0] ) ;
+      hflat_0lepldp_ratio[0][3] -> SetTitle(oldtitle) ;
 
       cqcd3->Clear() ;
-      cqcd3->Divide(3,3) ;
+      cqcd3->Divide(4,3) ;
 
       for ( int si=0; si<nQcdSamples; si++ ) {
          TLegend* l3 = new TLegend( 0.65, 0.78, 0.99, 0.92) ;
@@ -1480,12 +1600,12 @@
             hflat_0lep[si][bbi] -> DrawCopy("histe") ;
             hflat_0lep[si][bbi] -> DrawCopy("samee") ;
 
-            cqcd3->cd(4+bbi) ;
+            cqcd3->cd(5+bbi) ;
             hflat_ldp[si][bbi] -> DrawCopy("histe") ;
             hflat_ldp[si][bbi] -> DrawCopy("samee") ;
 
 
-            cqcd3->cd(7+bbi) ;
+            cqcd3->cd(9+bbi) ;
             gPad->SetGridx(1) ;
             gPad->SetGridy(1) ;
             hflat_0lepldp_ratio[si][bbi]->DrawCopy() ;
@@ -1523,7 +1643,7 @@
       gStyle->SetEndErrorSize(5) ;
 
       cqcd4->Clear() ;
-      cqcd4->Divide(3,1) ;
+      cqcd4->Divide(4,1) ;
 
       cqcd4 -> cd(1) ;
       hflat_0lepldp_ratio_ave[0] -> SetTitle("Average QCD 0lep/LDP ratio, nb=1") ;
@@ -1564,7 +1684,7 @@
       gPad->SetGridy(1) ;
 
       cqcd4 -> cd(3) ;
-      hflat_0lepldp_ratio_ave[2] -> SetTitle("Average QCD 0lep/LDP ratio, nb>=3") ;
+      hflat_0lepldp_ratio_ave[2] -> SetTitle("Average QCD 0lep/LDP ratio, nb=3") ;
       hflat_0lepldp_ratio_ave[2] -> SetMarkerSize(1.2) ;
       hflat_0lepldp_ratio_ave[2] -> SetMarkerStyle(20) ;
       hflat_0lepldp_ratio_ave[2] -> SetMaximum(0.6) ;
@@ -1578,6 +1698,25 @@
       hflat_0lepldp_ratio_model[2] -> SetLineWidth(2) ;
       hflat_0lepldp_ratio_model[2] -> Draw("histsame") ;
       hflat_0lepldp_ratio_ave[2]->DrawCopy("samee1") ;
+      line->DrawLine(0.5,0,nbins+0.5,0) ;
+      gPad->SetGridx(1) ;
+      gPad->SetGridy(1) ;
+
+      cqcd4 -> cd(4) ;
+      hflat_0lepldp_ratio_ave[3] -> SetTitle("Average QCD 0lep/LDP ratio, nb>=4") ;
+      hflat_0lepldp_ratio_ave[3] -> SetMarkerSize(1.2) ;
+      hflat_0lepldp_ratio_ave[3] -> SetMarkerStyle(20) ;
+      hflat_0lepldp_ratio_ave[3] -> SetMaximum(0.6) ;
+      hflat_0lepldp_ratio_ave[3] -> SetMinimum(-0.1) ;
+      hflat_0lepldp_ratio_ave[3]->DrawCopy("e1") ;
+      hflat_0lepldp_ratio_ave_withRMSerror[3]->SetMarkerStyle() ;
+      hflat_0lepldp_ratio_ave_withRMSerror[3]->SetLineColor(4) ;
+      hflat_0lepldp_ratio_ave_withRMSerror[3]->DrawCopy("samee1") ;
+      hflat_0lepldp_ratio_ave[3]->DrawCopy("samee1") ;
+      hflat_0lepldp_ratio_model[3] -> SetLineColor(2) ;
+      hflat_0lepldp_ratio_model[3] -> SetLineWidth(2) ;
+      hflat_0lepldp_ratio_model[3] -> Draw("histsame") ;
+      hflat_0lepldp_ratio_ave[3]->DrawCopy("samee1") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
       gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
@@ -1600,7 +1739,7 @@
 
 
       cqcd4->Clear() ;
-      cqcd4->Divide(3,1) ;
+      cqcd4->Divide(4,1) ;
 
       cqcd4 -> cd(1) ;
       hflat_0lepldp_ratio_ave[0] -> SetTitle("Average QCD 0lep/LDP ratio, nb=1") ;
@@ -1633,7 +1772,7 @@
       gPad->SetGridy(1) ;
 
       cqcd4 -> cd(3) ;
-      hflat_0lepldp_ratio_ave[2] -> SetTitle("Average QCD 0lep/LDP ratio, nb>=3") ;
+      hflat_0lepldp_ratio_ave[2] -> SetTitle("Average QCD 0lep/LDP ratio, nb=3") ;
       hflat_0lepldp_ratio_ave[2] -> SetMarkerSize(1.2) ;
       hflat_0lepldp_ratio_ave[2] -> SetMarkerStyle(20) ;
       hflat_0lepldp_ratio_ave[2] -> SetMaximum(0.6) ;
@@ -1643,6 +1782,21 @@
       hflat_0lepldp_ratio_ave_withRMSerror[2]->SetLineColor(4) ;
       hflat_0lepldp_ratio_ave_withRMSerror[2]->DrawCopy("samee1") ;
       hflat_0lepldp_ratio_ave[2]->DrawCopy("samee1") ;
+      line->DrawLine(0.5,0,nbins+0.5,0) ;
+      gPad->SetGridx(1) ;
+      gPad->SetGridy(1) ;
+
+      cqcd4 -> cd(4) ;
+      hflat_0lepldp_ratio_ave[3] -> SetTitle("Average QCD 0lep/LDP ratio, nb>=4") ;
+      hflat_0lepldp_ratio_ave[3] -> SetMarkerSize(1.2) ;
+      hflat_0lepldp_ratio_ave[3] -> SetMarkerStyle(20) ;
+      hflat_0lepldp_ratio_ave[3] -> SetMaximum(0.6) ;
+      hflat_0lepldp_ratio_ave[3] -> SetMinimum(-0.1) ;
+      hflat_0lepldp_ratio_ave[3]->DrawCopy("e1") ;
+      hflat_0lepldp_ratio_ave_withRMSerror[3]->SetMarkerStyle() ;
+      hflat_0lepldp_ratio_ave_withRMSerror[3]->SetLineColor(4) ;
+      hflat_0lepldp_ratio_ave_withRMSerror[3]->DrawCopy("samee1") ;
+      hflat_0lepldp_ratio_ave[3]->DrawCopy("samee1") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
       gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
@@ -1676,7 +1830,7 @@
       gStyle->SetEndErrorSize(5) ;
 
       cqcd5->Clear() ;
-      cqcd5->Divide(3,1) ;
+      cqcd5->Divide(4,1) ;
 
       cqcd5 -> cd(1) ;
       hflat_scale_factor[0] -> SetTitle("QCD Scale Factor, nb=1") ;
@@ -1719,7 +1873,7 @@
       gPad->SetGridy(1) ;
 
       cqcd5 -> cd(3) ;
-      hflat_scale_factor[2] -> SetTitle("QCD Scale Factor, nb>=3") ;
+      hflat_scale_factor[2] -> SetTitle("QCD Scale Factor, nb=3") ;
       hflat_scale_factor[2] -> SetMarkerSize(1.2) ;
       hflat_scale_factor[2] -> SetMarkerStyle(20) ;
       hflat_scale_factor[2] -> SetMaximum(2.6) ;
@@ -1732,6 +1886,26 @@
       hflat_scale_factor_withRMSerror[2]->SetLineColor(4) ;
       hflat_scale_factor_withRMSerror[2]->DrawCopy("samee1") ;
       hflat_scale_factor[2]->DrawCopy("samee1") ;
+      line->SetLineColor(4) ;
+      line->SetLineStyle(1) ;
+      line->DrawLine(0.5,0,nbins+0.5,0) ;
+      gPad->SetGridx(1) ;
+      gPad->SetGridy(1) ;
+
+      cqcd5 -> cd(4) ;
+      hflat_scale_factor[3] -> SetTitle("QCD Scale Factor, nb>=4") ;
+      hflat_scale_factor[3] -> SetMarkerSize(1.2) ;
+      hflat_scale_factor[3] -> SetMarkerStyle(20) ;
+      hflat_scale_factor[3] -> SetMaximum(2.6) ;
+      hflat_scale_factor[3] -> SetMinimum(-0.1) ;
+      hflat_scale_factor[3]->DrawCopy("e1") ;
+      line->SetLineColor(2) ;
+      line->SetLineStyle(1) ;
+      line->DrawLine(0.5,1.0,nbins+0.5,1.0) ;
+      hflat_scale_factor_withRMSerror[3]->SetMarkerStyle() ;
+      hflat_scale_factor_withRMSerror[3]->SetLineColor(4) ;
+      hflat_scale_factor_withRMSerror[3]->DrawCopy("samee1") ;
+      hflat_scale_factor[3]->DrawCopy("samee1") ;
       line->SetLineColor(4) ;
       line->SetLineStyle(1) ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
@@ -1769,7 +1943,7 @@
 
 
 
-
+     return ;
 
 
 

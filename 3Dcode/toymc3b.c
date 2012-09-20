@@ -708,7 +708,7 @@
       float Z_ee_pur(0.) ;
       float Z_mm_pur(0.) ;
 
-      float R_passfail[nBinsHT] ;
+      // float R_passfail[nBinsHT] ;
 
 
       int nread ;
@@ -1075,7 +1075,7 @@
                      exp_0lep_ttwj ) ;
                printf("   qcd  : sf * (Nldp - ttwj * RMCttwj - Znn * RMCznn) * Rqcd = %5.2f * (%6.1f - %6.1f * %4.2f - %6.1f * %4.2f) * %5.3f = %6.1f\n",
                      sf_qcd[mbi][hbi][bbi], N_ldp[mbi][hbi][bbi], exp_0lep_ttwj, ttwj_mc_ldpover0lep_ratio[mbi][hbi][bbi],
-                     exp_0lep_znn, znn_mc_ldpover0lep_ratio[mbi][hbi][bbi], R_passfail[hbi],
+                     exp_0lep_znn, znn_mc_ldpover0lep_ratio[mbi][hbi][bbi], qcdratio,
                      exp_0lep_qcd ) ;
                printf("   Znn  : 0.5 * (Nee * Fee + Nmm * Fmm)   =   0.5 * (%5.1f * %5.2f + %5.1f * %5.2f)   =   %6.1f\n",
                     N_Zee[mbi][hbi], Zee_factor[bbi], N_Zmm[mbi][hbi], Zmm_factor[bbi], exp_0lep_znn ) ;
@@ -2334,8 +2334,20 @@
       printf("\n\n") ;
 
       if ( initFit_R_ttwj_0lep_over_1lep < 0 ) {
-         printf("\n\n *** Did not find floating parameter ttwj_0lep1lep_ratio.  Can't continue.\n\n") ;
-         return false ;
+
+      // printf("\n\n *** Did not find floating parameter ttwj_0lep1lep_ratio.  Can't continue.\n\n") ;
+      // return false ;
+
+        //zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+         printf("\n\n *** Did not find floating parameter ttwj_0lep1lep_ratio.  Assuming its fixed.\n\n") ;
+         RooAbsReal* rar = (RooAbsReal*) workspace->obj( "ttwj_0lep1lep_ratio" ) ;
+         if ( rar == 0x0 ) {
+            printf("\n\n *** Did not find fixed parameter ttwj_0lep1lep_ratio.  Can't continue.\n\n") ;
+         } else {
+            initFit_R_ttwj_0lep_over_1lep = rar->getVal() ;
+         }
+        //zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
       }
       if ( qcdModelIndex == 3 ) {
          if ( initFit_qcd_0lepLDP_ratio < 0 ) {
