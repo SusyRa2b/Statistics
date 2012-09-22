@@ -187,7 +187,7 @@
        printf(" %20s : %8.2f\n", func->GetName(), func->getVal() ) ;
      }
 
-     printf("\n\n") ;
+     printf("\n\n") ; cout << flush ;
 
 
      double AttwjVal[nBinsMET][nBinsHT][nBinsBtag] ;
@@ -206,8 +206,17 @@
 	   TObject* ttwj_obj = ws->obj(ttString) ;
 	   TObject* qcd_obj  = ws->obj(qcdString) ;
 	   
-	   AttwjVal[i][j][k] = ((RooRealVar*) ttwj_obj)->getVal() ;
-	   AqcdVal[i][j][k]  = ((RooRealVar*) qcd_obj)->getVal() ;
+           if ( ttwj_obj == 0x0 ) {
+              printf(" * %s missing\n", ttString.Data() ) ;
+           } else {
+	      AttwjVal[i][j][k] = ((RooRealVar*) ttwj_obj)->getVal() ;
+           }
+
+           if ( qcd_obj == 0x0 ) {
+              printf(" * %s missing\n", qcdString.Data() ) ;
+           } else {
+	      AqcdVal[i][j][k]  = ((RooRealVar*) qcd_obj)->getVal() ;
+           }
 
 	 }
        }
@@ -222,6 +231,7 @@
      int dataN_Zee[nBinsMET][nBinsHT] ;
      int dataN_Zmm[nBinsMET][nBinsHT] ;
 
+     printf("\n\n Unpacking observables.\n\n") ; cout << flush ;
 
      const RooArgSet* dsras = rds->get() ;
      TIterator* obsIter = dsras->createIterator() ;
@@ -472,11 +482,15 @@
      double sf_mc(0.) ;
 
 
+     printf("\n\n Looping through analysis bins.\n\n") ; cout << flush ;
+
      // loop through all the bins of the analysis
 
      for ( int i = 0 ; i < nBinsMET ; i++ ) {
        for ( int j = 0 ; j < nBinsHT ; j++ ) {
 	 for ( int k = 0 ; k < nBinsBtag ; k++ ) {
+
+           printf(" here t1\n") ; cout << flush ;
 	   
 	   /// binIndex = 2 + ( nBinsHT*i + j + k ) + k*(nBinsMET*nBinsHT) ;
 
@@ -496,10 +510,30 @@
 	   MuSusyString += sMbins[i]+sHbins[j]+sBbins[k] ;
 	   ZnnString    += sMbins[i]+sHbins[j]+sBbins[k] ;
 
+           printf(" here t2\n") ; cout << flush ;
+
 	   dataVal = dataN_0lep[i][j][k];
-	   eff_sf = ((RooFormulaVar*) ws->obj(EffSfString)) -> getVal() ;
-	   susyVal = eff_sf * ( ((RooRealVar*) ws->obj(MuSusyString)) -> getVal() ) ;
-	   znnVal = ((RooRealVar*) ws->obj(ZnnString))  -> getVal() ;
+	   eff_sf = 1.0 ;
+	   susyVal = 0. ;
+	   znnVal = 0. ;
+           if ( ws->obj(EffSfString) != 0 ) {
+              eff_sf = ((RooFormulaVar*) ws->obj(EffSfString)) -> getVal() ;
+           } else {
+              printf(" * %s missing.\n", EffSfString.Data() ) ;
+           }
+           if ( ws->obj(MuSusyString) != 0 ) {
+              susyVal = eff_sf * ( ((RooRealVar*) ws->obj(MuSusyString)) -> getVal() ) ;
+           } else {
+              printf(" * %s missing.\n", MuSusyString.Data() ) ;
+           }
+           if ( ws->obj(ZnnString) != 0 ) {
+              znnVal = ((RooRealVar*) ws->obj(ZnnString))  -> getVal() ;
+           } else {
+              printf(" * %s missing.\n", ZnnString.Data() ) ;
+           }
+	 //eff_sf = ((RooFormulaVar*) ws->obj(EffSfString)) -> getVal() ;
+	 //susyVal = eff_sf * ( ((RooRealVar*) ws->obj(MuSusyString)) -> getVal() ) ;
+	 //znnVal = ((RooRealVar*) ws->obj(ZnnString))  -> getVal() ;
 	   ttwjVal = AttwjVal[i][j][k] ;
 	   qcdVal  = AqcdVal[i][j][k] ;
 	   lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
@@ -521,6 +555,7 @@
 	   cout << binLabel << "        znn : " << znnVal << endl ;
 	   cout << binLabel << "   LH total : " << lhtotalVal << endl ;
 	   cout << binLabel << "       data : " << dataVal << endl ;
+           cout << flush ;
 
 	   if ( doNorm && dataVal > 0. ) {
 	     dataErr = dataErr / dataVal ;
@@ -577,9 +612,27 @@
 	   MuTtwjSlString += sMbins[i]+sHbins[j]+sBbins[k] ;
 
 	   dataVal = dataN_1lep[i][j][k];
-	   eff_sf_sl = ((RooFormulaVar*) ws->obj(EffSfSlString)) -> getVal() ;
-	   susyVal = eff_sf_sl * ( ((RooRealVar*) ws->obj(MuSusySlString)) -> getVal() ) ;
-	   ttwjVal = ((RooRealVar*) ws->obj(MuTtwjSlString)) -> getVal() ; ;
+           eff_sf_sl = 1. ;
+           susyVal = 0. ;
+           ttwjVal = 0. ;
+           if ( ws->obj(EffSfSlString) != 0x0 ) {
+	      eff_sf_sl = ((RooFormulaVar*) ws->obj(EffSfSlString)) -> getVal() ;
+           } else {
+              printf(" * %s missing.\n", EffSfSlString.Data() ) ;
+           }
+           if ( ws->obj(MuSusySlString) != 0x0 ) {
+              susyVal = eff_sf_sl * ( ((RooRealVar*) ws->obj(MuSusySlString)) -> getVal() ) ;
+           } else {
+              printf(" * %s missing.\n", MuSusySlString.Data() ) ;
+           }
+           if ( ws->obj(MuTtwjSlString) != 0x0 ) {
+              ttwjVal = ((RooRealVar*) ws->obj(MuTtwjSlString)) -> getVal() ;
+           } else {
+              printf(" * %s missing.\n", MuTtwjSlString.Data() ) ;
+           }
+	 //eff_sf_sl = ((RooFormulaVar*) ws->obj(EffSfSlString)) -> getVal() ;
+	 //susyVal = eff_sf_sl * ( ((RooRealVar*) ws->obj(MuSusySlString)) -> getVal() ) ;
+	 //ttwjVal = ((RooRealVar*) ws->obj(MuTtwjSlString)) -> getVal() ; ;
 	   qcdVal  = 0. ;
 	   znnVal  = 0. ;
 	   lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
@@ -655,12 +708,49 @@
 	   MuQcdLdpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
 
 	   dataVal = dataN_ldp[i][j][k];
-	   eff_sf_ldp = ((RooFormulaVar*) ws->obj(EffSfLdpString)) -> getVal() ;
-	   susyVal = eff_sf_ldp * ( ((RooRealVar*) ws->obj(MuSusyLdpString)) -> getVal() ) ;
-	   sf_mc = ((RooFormulaVar*) ws->obj("sf_mc")) -> getVal() ;
-	   ttwjVal = eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuTtwjLdpString))-> getVal() )   ) ; ;
-	   znnVal  = eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuZnnLdpString))-> getVal() )   ) ; ;
-	   qcdVal  = ((RooRealVar*) ws->obj(MuQcdLdpString))-> getVal() ;
+	   eff_sf_ldp = 1. ;
+	   susyVal = 0. ;
+	   sf_mc = 1.0 ;
+	   ttwjVal = 0. ;
+	   znnVal  = 0. ;
+	   qcdVal  = 0. ;
+           if ( ws->obj(EffSfLdpString) != 0 ) {
+              eff_sf_ldp = ((RooFormulaVar*) ws->obj(EffSfLdpString)) -> getVal() ;
+           } else {
+              printf(" * %s missing\n", EffSfLdpString.Data() ) ;
+           }
+           if ( ws->obj(MuSusyLdpString) != 0 ) {
+              susyVal = eff_sf_ldp * ( ((RooRealVar*) ws->obj(MuSusyLdpString)) -> getVal() ) ;
+           } else {
+              printf(" * %s missing\n", MuSusyLdpString.Data() ) ;
+           }
+           if ( ws->obj("sf_mc") != 0 ) {
+              sf_mc = ((RooFormulaVar*) ws->obj("sf_mc")) -> getVal() ;
+           } else {
+              printf(" * sf_mc missing\n" ) ;
+           }
+           if ( ws->obj(MuTtwjLdpString) != 0 ) {
+              ttwjVal = eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuTtwjLdpString))-> getVal() )   ) ;
+           } else {
+              printf(" * %s missing\n", MuTtwjLdpString.Data() ) ;
+           }
+           if ( ws->obj(MuZnnLdpString) != 0) {
+              znnVal  = eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuZnnLdpString))-> getVal() )   ) ;
+           } else {
+              printf(" * %s missing\n", MuZnnLdpString.Data() ) ;
+           }
+           if ( ws->obj(MuQcdLdpString) != 0 ) {
+              qcdVal  = ((RooRealVar*) ws->obj(MuQcdLdpString))-> getVal() ;
+           } else {
+              printf(" * %s missing\n", MuQcdLdpString.Data() ) ;
+           }
+
+	// eff_sf_ldp = ((RooFormulaVar*) ws->obj(EffSfLdpString)) -> getVal() ;
+	// susyVal = eff_sf_ldp * ( ((RooRealVar*) ws->obj(MuSusyLdpString)) -> getVal() ) ;
+	// sf_mc = ((RooFormulaVar*) ws->obj("sf_mc")) -> getVal() ;
+	// ttwjVal = eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuTtwjLdpString))-> getVal() )   ) ; ;
+	// znnVal  = eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuZnnLdpString))-> getVal() )   ) ; ;
+	// qcdVal  = ((RooRealVar*) ws->obj(MuQcdLdpString))-> getVal() ;
 	   lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
 
 	   dataErr = sqrt(dataVal) ;
@@ -673,6 +763,8 @@
 	   cout << binLabel << "   LH total : " << lhtotalVal << endl ;
 	   cout << binLabel << "       data : " << dataVal << endl ;
 
+           printf(" here 1\n") ; cout << flush ;
+
 	   if ( doNorm && dataVal > 0. ) {
 	     dataErr = dataErr / dataVal ;
 	     susyVal = susyVal / dataVal ;
@@ -682,6 +774,7 @@
 	     dataVal = 1. ;
 	   }
 
+           printf(" here 2\n") ; cout << flush ;
            if ( k == 0 ) {
 	      xaxis_ldp_1b->SetBinLabel(binIndex, binLabel ) ;
 	      hfitqual_data_ldp_1b -> SetBinContent( binIndex, dataVal ) ;
@@ -712,9 +805,12 @@
            }
 
 
+           printf(" here 3\n") ; cout << flush ;
 
 
            if ( k == 0 ) {
+
+           printf(" here 4\n") ; cout << flush ;
 
 	   //+++++ Zee histogram:
 
@@ -727,7 +823,13 @@
               nZeeModelString += sMbins[i]+sHbins[j] ;
 
               printf("\n Grabbing value of this from ws: %s\n", nZeeModelString.Data() ) ; cout << flush ;
-              lhtotalVal = ((RooRealVar*) ws->obj(nZeeModelString)) -> getVal() ;
+              lhtotalVal = 0. ;
+              if ( ws->obj(nZeeModelString) != 0 ) {
+                 lhtotalVal = ((RooRealVar*) ws->obj(nZeeModelString)) -> getVal() ;
+              } else {
+                 printf(" * %s missing.\n", nZeeModelString.Data() ) ;
+              }
+            //lhtotalVal = ((RooRealVar*) ws->obj(nZeeModelString)) -> getVal() ;
               printf("\n Model value for %s is %7.1f\n", nZeeModelString.Data(), lhtotalVal ) ; cout << flush ;
              
 	      dataVal = dataN_Zee[i][j];
@@ -750,6 +852,7 @@
 	      hfitqual_fit_zee_1b  -> SetBinContent( binIndex, lhtotalVal ) ;
 
 
+           printf(" here 5\n") ; cout << flush ;
 
 	   //+++++ Zmm histogram:
 
@@ -762,7 +865,13 @@
               nZmmModelString += sMbins[i]+sHbins[j] ;
 
               printf("\n Grabbing value of this from ws: %s\n", nZmmModelString.Data() ) ; cout << flush ;
-              lhtotalVal = ((RooRealVar*) ws->obj(nZmmModelString)) -> getVal() ;
+              lhtotalVal = 0. ;
+              if ( ws->obj(nZmmModelString) != 0 ) {
+                 lhtotalVal = ((RooRealVar*) ws->obj(nZmmModelString)) -> getVal() ;
+              } else {
+                 printf(" * %s missing.\n", nZmmModelString.Data() ) ;
+              }
+            //lhtotalVal = ((RooRealVar*) ws->obj(nZmmModelString)) -> getVal() ;
               printf("\n Model value for %s is %7.1f\n", nZmmModelString.Data(), lhtotalVal ) ; cout << flush ;
              
 	      dataVal = dataN_Zmm[i][j];
@@ -791,6 +900,7 @@
      } // i: MET
 
 
+           printf(" here 6\n") ; cout << flush ;
 
      //-- Eff sf ---------
 
@@ -949,6 +1059,8 @@
 
 
 
+     printf("\n\n Now doing nuisance parameters.\n\n") ; cout << flush ;
+
     //----------  Now, do nuisance parameters.
 
      RooConstVar* npcheck = (RooConstVar*) ws->obj( "mean_sf_qcd_M1_H1_1b" ) ;
@@ -1039,11 +1151,12 @@
                  char parName[1000] ;
                  sprintf( parName, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  RooAbsReal* np = (RooAbsReal*) ws->obj( parName ) ;
+                 double npVal = 1.0 ;
                  if ( np == 0x0 ) {
                     printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-                    return ;
+                 } else {
+                    npVal = np->getVal() ;
                  }
-                 double npVal = np->getVal() ;
                  char vname[1000] ;
                  sprintf( vname, "mean_%s", parName ) ;
                  RooConstVar* rcv_mean = (RooConstVar*) ws->obj( vname ) ;
@@ -1098,11 +1211,12 @@
                  char parName[1000] ;
                  sprintf( parName, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  RooAbsReal* np = (RooAbsReal*) ws->obj( parName ) ;
+                 double npVal = 1.0 ;
                  if ( np == 0x0 ) {
                     printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-                    return ;
+                 } else {
+                    npVal = np->getVal() ;
                  }
-                 double npVal = np->getVal() ;
                  char vname[1000] ;
                  sprintf( vname, "mean_%s", parName ) ;
                  RooConstVar* rcv_mean = (RooConstVar*) ws->obj( vname ) ;
@@ -1167,27 +1281,30 @@
 
             sprintf( parName, "btageff_sf" ) ;
             np = (RooAbsReal*) ws->obj( parName ) ;
+            double global_btageff_sf = 1. ;
             if ( np == 0x0 ) {
                printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-               return ;
+            } else {
+               global_btageff_sf = np -> getVal() ;
             }
-            double global_btageff_sf = np -> getVal() ;
 
             //--- don't know where else to put this...
             sprintf( parName, "sf_mc" ) ;
             np = (RooAbsReal*) ws->obj( parName ) ;
+            double global_sf_mc = 1. ;
             if ( np == 0x0 ) {
                printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-               return ;
+            } else {
+               global_sf_mc = np -> getVal() ;
             }
-            double global_sf_mc = np -> getVal() ;
             sprintf( parName, "sigma_sf_mc" ) ;
             np = (RooAbsReal*) ws->obj( parName ) ;
+            double sf_mc_sigma = 1. ;
             if ( np == 0x0 ) {
                printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-               return ;
+            } else {
+               sf_mc_sigma = np -> getVal() ;
             }
-            double sf_mc_sigma = np -> getVal() ;
             double sf_mc_pull = (global_sf_mc-1.) / sf_mc_sigma ;
             printf(" Overall MC systematic val = %5.2f, sigma = %5.2f, pull = %6.3f\n", global_sf_mc, sf_mc_sigma, sf_mc_pull ) ;
 
@@ -1237,27 +1354,30 @@
 
                sprintf( parName, "%s", znnNP_gauss_par[npi] ) ;
                np = (RooAbsReal*) ws->obj( parName ) ;
+               double val = 1. ;
                if ( np == 0x0 ) {
                   printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-                  return ;
+               } else {
+                 val = np->getVal() ;
                }
-               double val = np->getVal() ;
 
                sprintf( vname, "mean_%s", parName ) ;
                np_mean = (RooAbsReal*) ws->obj( vname ) ;
+               double mean = 1. ;
                if ( np_mean == 0x0 ) {
                   printf("\n\n *** missing nuisance parameter mean? %s\n\n", vname ) ;
-                  return ;
+               } else {
+                  mean = np_mean->getVal() ;
                }
-               double mean = np_mean->getVal() ;
 
                sprintf( vname, "sigma_%s", parName ) ;
                np_sigma = (RooAbsReal*) ws->obj( vname ) ;
+               double sigma = 1. ;
                if ( np_sigma == 0x0 ) {
                   printf("\n\n *** missing nuisance parameter sigma? %s\n\n", vname ) ;
-                  return ;
+               } else {
+                  sigma = np_sigma->getVal() ;
                }
-               double sigma = np_sigma->getVal() ;
 
                double pull = (val-mean)/sigma ;
 
@@ -1291,10 +1411,13 @@
                RooAbsReal* np = (RooAbsReal*) ws->obj( parName ) ;
                if ( np == 0x0 ) {
                   printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-                  return ;
                }
-               double npVal = np->getVal() ;
-               double pull = (npVal-mode)/rms ;
+               double npVal = 1. ;
+               double pull = 0. ;
+               if ( np != 0x0 ) {
+                  npVal = np->getVal() ;
+                  pull = (npVal-mode)/rms ;
+               }
 
                hp -> SetBinContent( hbin, pull ) ;
                xaxis -> SetBinLabel( hbin, parName ) ;
@@ -1335,12 +1458,13 @@
 
                  sprintf( parName, "eff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  np = (RooAbsReal*) ws->obj( parName ) ;
+                 double bin_eff_sf = 1. ;
                  if ( np == 0x0 ) {
                     printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-                    return ;
+                 } else {
+                    bin_eff_sf = np -> getVal() ;
+                    val = np->getVal() ;
                  }
-                 double bin_eff_sf = np -> getVal() ;
-                 val = np->getVal() ;
                  double bin_eff_sf_pull = 0. ;
 
                  sprintf( vname, "mean_%s", parName ) ;
@@ -1352,11 +1476,12 @@
 
                     sprintf( vname, "sigma_%s", parName ) ;
                     np_sigma = (RooAbsReal*) ws->obj( vname ) ;
+                    sigma = 1. ;
                     if ( np_sigma == 0x0 ) {
                        printf("\n\n *** missing nuisance parameter sigma? %s\n\n", vname ) ;
-                       return ;
+                    } else {
+                       sigma = np_sigma->getVal() ;
                     }
-                    sigma = np_sigma->getVal() ;
 
                     bin_eff_sf_pull = (val-mean)/sigma ;
                  }
@@ -1368,12 +1493,13 @@
 
                  sprintf( parName, "eff_sf_sl_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  np = (RooAbsReal*) ws->obj( parName ) ;
+                 double bin_eff_sf_sl = 1. ;
                  if ( np == 0x0 ) {
                     printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-                    return ;
+                 } else {
+                    bin_eff_sf_sl = np -> getVal() ;
+                    val = np->getVal() ;
                  }
-                 double bin_eff_sf_sl = np -> getVal() ;
-                 val = np->getVal() ;
                  double bin_eff_sf_sl_pull = 0. ;
 
                  sprintf( vname, "mean_%s", parName ) ;
@@ -1385,11 +1511,12 @@
 
                     sprintf( vname, "sigma_%s", parName ) ;
                     np_sigma = (RooAbsReal*) ws->obj( vname ) ;
+                    sigma = 1. ;
                     if ( np_sigma == 0x0 ) {
                        printf("\n\n *** missing nuisance parameter sigma? %s\n\n", vname ) ;
-                       return ;
+                    } else {
+                       sigma = np_sigma->getVal() ;
                     }
-                    sigma = np_sigma->getVal() ;
 
                     bin_eff_sf_sl_pull = (val-mean)/sigma ;
                  }
@@ -1401,12 +1528,13 @@
 
                  sprintf( parName, "eff_sf_ldp_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  np = (RooAbsReal*) ws->obj( parName ) ;
+                 double bin_eff_sf_ldp = 1. ;
                  if ( np == 0x0 ) {
                     printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-                    return ;
+                 } else {
+                    bin_eff_sf_ldp = np -> getVal() ;
+                    val = np->getVal() ;
                  }
-                 double bin_eff_sf_ldp = np -> getVal() ;
-                 val = np->getVal() ;
                  double bin_eff_sf_ldp_pull = 0. ;
 
                  sprintf( vname, "mean_%s", parName ) ;
@@ -1418,11 +1546,12 @@
 
                     sprintf( vname, "sigma_%s", parName ) ;
                     np_sigma = (RooAbsReal*) ws->obj( vname ) ;
+                    sigma = 1. ;
                     if ( np_sigma == 0x0 ) {
                        printf("\n\n *** missing nuisance parameter sigma? %s\n\n", vname ) ;
-                       return ;
+                    } else {
+                       sigma = np_sigma->getVal() ;
                     }
-                    sigma = np_sigma->getVal() ;
 
                     bin_eff_sf_ldp_pull = (val-mean)/sigma ;
                  }
@@ -1434,11 +1563,12 @@
 
                  sprintf( parName, "btageff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  np = (RooAbsReal*) ws->obj( parName ) ;
+                 double btageff_sf = 1. ;
                  if ( np == 0x0 ) {
                     printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-                    return ;
+                 } else {
+                    btageff_sf = np -> getVal() ;
                  }
-                 double btageff_sf = np -> getVal() ;
 
                  double prod = bin_eff_sf * btageff_sf ;
 
@@ -1446,11 +1576,12 @@
 
                  sprintf( parName, "btageff_sf_sl_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  np = (RooAbsReal*) ws->obj( parName ) ;
+                 double btageff_sf_sl = 1. ;
                  if ( np == 0x0 ) {
                     printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-                    return ;
+                 } else {
+                    btageff_sf_sl = np -> getVal() ;
                  }
-                 double btageff_sf_sl = np -> getVal() ;
 
                  double prod_sl = bin_eff_sf_sl * btageff_sf_sl ;
 
@@ -1458,11 +1589,12 @@
 
                  sprintf( parName, "btageff_sf_ldp_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  np = (RooAbsReal*) ws->obj( parName ) ;
+                 double btageff_sf_ldp = 1. ;
                  if ( np == 0x0 ) {
                     printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-                    return ;
+                 } else {
+                    btageff_sf_ldp = np -> getVal() ;
                  }
-                 double btageff_sf_ldp = np -> getVal() ;
 
                  double prod_ldp = bin_eff_sf_ldp * btageff_sf_ldp ;
 

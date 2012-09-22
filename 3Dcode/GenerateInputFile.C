@@ -79,13 +79,27 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   chainQCD.Add("files15fb_8TeV/QCD-1400to1800.root");
   chainQCD.Add("files15fb_8TeV/QCD-1800.root");
 
-  TChain chainTT("tree") ;
-  chainTT.Add("files15fb_8TeV/TT.root") ;
+
+
+
+
 
   TChain chainZnn("tree") ;
   chainZnn.Add("files15fb_8TeV/Zinv-100to200.root") ;
   chainZnn.Add("files15fb_8TeV/Zinv-200to400.root") ;
   chainZnn.Add("files15fb_8TeV/Zinv-400.root") ;
+
+
+
+
+
+
+
+
+
+  TChain chainTT("tree") ;
+  chainTT.Add("files15fb_8TeV/TT.root") ;
+
 
   TChain chainWJets("tree") ;
   chainWJets.Add("files15fb_8TeV/WJets-250to300.root") ;
@@ -97,6 +111,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   chainWJets.Add("files15fb_8TeV/Tbar-s.root") ;
   chainWJets.Add("files15fb_8TeV/Tbar-t.root") ;
   chainWJets.Add("files15fb_8TeV/Tbar-tW.root") ;
+
+
+
 
 
 
@@ -585,6 +602,15 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
       if (si==0) printf("N_Susy_Total = %7.1f events", nSusyTotal); cout << flush;
       printf("\n\n") ;
 
+
+  /// //--- Rescale W+jets component as a test variation -------------------------------
+  ///
+  /// for ( int bi=0; bi<nBinsBjets; bi++ ) {
+  ///   /// h_wjets[bi] -> Scale(1.5) ;
+  ///   h_wjets[bi] -> Scale(0.5) ;
+  /// } // bi
+  ///
+  /// //--------------------------------------------------------------------------------
 
       for (int i = 0 ; i < nBinsMET ; i++) {
         for (int j = 0 ; j < nBinsHT ; j++) {

@@ -1,18 +1,18 @@
 
-#  mkdir -p logfiles
-#  mkdir -p rootfiles
-#  mkdir -p datfiles
+   mkdir -p logfiles
+   mkdir -p rootfiles
+   mkdir -p datfiles
 
-#  echo GenerateInputFile
-#  $ROOTSYS/bin/root -b -q GenerateInputFile.C+ >&! logfiles/geninput-met4-ht4-v15.log
-#  mv Input-met4-ht4-v15.dat datfiles/
+   echo GenerateInputFile
+   $ROOTSYS/bin/root -b -q GenerateInputFile.C+ >&! logfiles/geninput-met4-ht4-v15.log
+   mv Input-met4-ht4-v15.dat datfiles/
 
-#  echo GenerateDummyDeffDbtag
-#  $ROOTSYS/bin/root -b -q GenerateDummyDeffDbtag.C\(4,4\) >&! logfiles/dummy-deff-met4-ht4.log
-#  mv dummy_DeffDbtag-met4-ht4.dat datfiles/
+   echo GenerateDummyDeffDbtag
+   $ROOTSYS/bin/root -b -q GenerateDummyDeffDbtag.C\(4,4\) >&! logfiles/dummy-deff-met4-ht4.log
+   mv dummy_DeffDbtag-met4-ht4.dat datfiles/
 
-#  echo GenerateSusyFile
-#  $ROOTSYS/bin/root -b -q GenerateSusyFile.C+ >&! logfiles/gensusy-met4-ht4-v15.log
+   echo GenerateSusyFile
+   $ROOTSYS/bin/root -b -q GenerateSusyFile.C+ >&! logfiles/gensusy-met4-ht4-v15.log
 
 #  echo mcclosure4, qcd model 2
 #  cp datfiles/Input-met4-ht4-v15.dat datfiles/Input-met4-ht4-v15-newqcdsyst-model2-exp0lep.dat
@@ -22,9 +22,9 @@
 #  cp datfiles/Input-met4-ht4-v15.dat datfiles/Input-met4-ht4-v15-newqcdsyst-model3-exp0lep.dat
 #  $ROOTSYS/bin/root -b -q mcclosure4.c+\(\"rootfiles/gi-plots-met4-ht4-v15.root\",\"datfiles/Input-met4-ht4-v15-newqcdsyst-model3-exp0lep.dat\",3,1\) >&! logfiles/mcclosure4-met4-ht4-v15-newqcdsyst-model3-exp0lep.log
 
-#  echo mcclosure4, qcd model 4
-#  cp datfiles/Input-met4-ht4-v15.dat datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep.dat
-#  $ROOTSYS/bin/root -b -q mcclosure4.c+\(\"rootfiles/gi-plots-met4-ht4-v15.root\",\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep.dat\",4,1\) >&! logfiles/mcclosure4-met4-ht4-v15-newqcdsyst-model4-exp0lep.log
+   echo mcclosure4, qcd model 4
+   cp datfiles/Input-met4-ht4-v15.dat datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep.dat
+   $ROOTSYS/bin/root -b -q mcclosure4.c+\(\"rootfiles/gi-plots-met4-ht4-v15.root\",\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep.dat\",4,1\) >&! logfiles/mcclosure4-met4-ht4-v15-newqcdsyst-model4-exp0lep.log
 
    echo mcclosure4, qcd model 4, ttwj ave
    cp datfiles/Input-met4-ht4-v15.dat datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave.dat

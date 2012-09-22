@@ -58,6 +58,7 @@
 #include "TGaxis.h"
 #include "TLine.h"
 #include "TStringLong.h"
+#include "TSystem.h"
 
 #include "RooArgSet.h"
 #include "RooConstVar.h"
@@ -108,7 +109,8 @@
 					    double m0, double m12, bool isT1bbbb, double t1bbbbXsec,
 					    const char* inputSusy_deff_dbtageff_file,
                                             int   qcdModelIndex,
-                                            const char* wsrootfilename
+                                            const char* wsrootfilename,
+                                            const char* blindBinsList
 					    ) {
 
 
@@ -117,6 +119,64 @@
          printf("\n\n *** Unsupported QCD model index: %d.  Try again with 2,3,4,5.\n\n", qcdModelIndex) ;
          return false ;
       }
+
+
+
+
+     //--- read in blind bins, if file given.
+
+      bool blind0lepBin[nBinsMET][nBinsHT][nBinsBtag] ;
+      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
+               blind0lepBin[mbi][hbi][bbi] = false ;
+            } // bbi.
+         } // hbi.
+      } // mbi.
+
+      if ( strcmp( blindBinsList, "null" ) != 0 ) {
+         char command[1000] ;
+         sprintf( command, "ls %s >& /dev/null", blindBinsList ) ;
+         int returnstat = gSystem->Exec( command ) ;
+         if ( returnstat != 0 ) {
+            printf("\n\n *** Given non-null blindBinsList file, but it doesn't exist: %s\n\n", blindBinsList ) ;
+            return false ;
+         }
+         FILE* bbl_file ;
+         if ( (bbl_file = fopen( blindBinsList, "r"))==NULL ) {
+            printf("\n\n *** Problem opening blindBinsList file: %s\n\n", blindBinsList ) ;
+            return false ;
+         }
+         printf("\n\n Reading blindBinsList file: %s\n\n", blindBinsList ) ;
+         while ( ! feof(bbl_file) ) {
+            char binlabel[1000] ;
+            fscanf( bbl_file, "%s", binlabel ) ;
+            if ( feof(bbl_file) ) break ;
+            int bmb(-1), bhb(-1), bbb(-1) ;
+            int rv = sscanf( binlabel, "N_0lep_M%d_H%d_%db", &bmb, &bhb, &bbb ) ;
+            if ( rv == 0 ) {
+               printf("\n\n *** bad bin label format: %s\n\n", binlabel ) ;
+               return false ;
+            }
+            if ( bmb < 1 || bhb < 1 || bbb < 1 || bmb > nBinsMET || bhb > nBinsHT || bbb > nBinsBtag ) {
+               printf("\n\n *** bin index out of range: met=%d, ht=%d, nb=%d\n\n", bmb, bhb, bbb ) ;
+               return false ;
+            }
+            blind0lepBin[bmb-1][bhb-1][bbb-1] = true ;
+            printf("   bin label %s : will blind met=%d, ht=%d, nb=%d 0lep bin.\n", binlabel, bmb, bhb, bbb ) ;
+         } // still reading?
+      } // process blindBinsList file?
+
+
+
+
+
+
+
+
+
+
+
 
       double dummy ;
       dummy = t1bbbbXsec ;
@@ -1832,11 +1892,17 @@
 	    pdfN1lepString += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    pdfNldpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
 
-	    pdf_N_0lep[i][j][k] = new RooPoisson( pdfN0lepString, pdfN0lepString, *rv_0lep[i][j][k], *rv_n[i][j][k] ) ;
+            if ( blind0lepBin[i][j][k] ) {
+               printf(" * Not including 0lep met=%d, ht=%d, nb=%d PDF in the likelihood.\n", i+1, j+1, k+1 ) ;
+               pdf_N_0lep[i][j][k] = new RooConstVar( pdfN0lepString, pdfN0lepString, 1.0 ) ;
+            } else {
+	       pdf_N_0lep[i][j][k] = new RooPoisson( pdfN0lepString, pdfN0lepString, *rv_0lep[i][j][k], *rv_n[i][j][k] ) ;
+	       pdflist.add( *pdf_N_0lep[i][j][k] ) ;
+            }
+
 	    pdf_N_1lep[i][j][k] = new RooPoisson( pdfN1lepString, pdfN1lepString, *rv_1lep[i][j][k], *rv_n_sl[i][j][k] ) ;
 	    pdf_N_ldp[i][j][k]  = new RooPoisson( pdfNldpString,  pdfNldpString,  *rv_ldp[i][j][k],  *rv_n_ldp[i][j][k] ) ;
 
-	    pdflist.add( *pdf_N_0lep[i][j][k] ) ;
 	    pdflist.add( *pdf_N_1lep[i][j][k] ) ;
 	    pdflist.add( *pdf_N_ldp[i][j][k] ) ;
 

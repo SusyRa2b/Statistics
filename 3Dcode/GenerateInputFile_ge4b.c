@@ -1023,6 +1023,8 @@ void GenerateInputFile_ge4b( double mgl=-1., double mlsp=-1., double target_susy
     inFile << "knn_2b_err \t" << 0.009  << endl;
     inFile << "knn_3b     \t" << 0.0036 << endl;
     inFile << "knn_3b_err \t" << 0.003  << endl;
+    inFile << "knn_4b     \t" << 0.00011 << endl;
+    inFile << "knn_4b_err \t" << 0.00011  << endl;
 
     // Z -> ll purity
   

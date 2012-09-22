@@ -27,7 +27,8 @@
                         double m0 = 875., double m12 = 525., bool isT1bbbb = false, double t1bbbbXsec=0.,
                         const char* inputSusy_deff_dbtageff_file = "deff_dbtag_file.txt",
                         int   qcdModelIndex = 3,
-                        const char* wsrootfilename = "ws.root"
+                        const char* wsrootfilename = "ws.root",
+                        const char* blindBinsList = "null"
                         ) ;
        bool setSusyScanPoint( const char* inputScanFile,
                               double m0, double m12, bool isT1bbbb = false, double t1bbbbXsec=0.,
@@ -193,7 +194,8 @@
 
        // pdf's
        
-       RooPoisson* pdf_N_0lep[nBinsMET][nBinsHT][nBinsBtag] ;
+       ///// RooPoisson* pdf_N_0lep[nBinsMET][nBinsHT][nBinsBtag] ;
+       RooAbsReal* pdf_N_0lep[nBinsMET][nBinsHT][nBinsBtag] ;
        RooPoisson* pdf_N_1lep[nBinsMET][nBinsHT][nBinsBtag] ;
        RooPoisson* pdf_N_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
 
