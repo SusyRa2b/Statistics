@@ -206,7 +206,7 @@
 
    bool readMCvals() ;
    bool addSusyToExpectedObs() ;
-   RooDataSet* genToyData() ;
+   RooDataSet* genToyData( bool noFluctuations = false ) ;
    bool processToyResult( int ti, RooFitResult* fitResult ) ;
    bool bookTree() ;
    float findUL( RooDataSet* toyds ) ;
@@ -226,6 +226,10 @@
    TTree* toytt ;
    TFile* ttfile ;
 
+   char blindBinsList[10000] ;
+
+   bool blindStudy ;
+
    //=====================================
 
    void toymc3b( const char* input_datfile = "datfiles/Input-met4-ht4-wsyst1.dat",
@@ -239,7 +243,8 @@
                 bool input_useExpected0lep = false,
                 int input_qcdModelIndex = 3,
                 bool input_doSignif = false,
-                bool input_doUL = false
+                bool input_doUL = false,
+                const char* input_blindBinsList = "null"
                         ) {
 
        char command[10000] ;
@@ -251,6 +256,14 @@
        sprintf( outputDir, "%s", input_outputDir ) ;
        sprintf( deffdbtagfile, "%s", input_deffdbtagfile ) ;
        sprintf( mcvals_rootfile, "%s", input_mcvals_rootfile ) ;
+       sprintf( blindBinsList, "%s", input_blindBinsList ) ;
+
+       if ( strcmp( blindBinsList, "null") == 0 ) {
+          blindStudy = false ;
+       } else {
+          printf("\n\n *** blind bins list file set to %s.  Will fix signal to zero in fits.\n", blindBinsList ) ;
+          blindStudy = true ;
+       }
 
        sprintf( command, "mkdir -p %s", outputDir ) ;
        gSystem->Exec( command ) ;
@@ -296,7 +309,7 @@
 
        char wsfilename[10000] ;
        sprintf( wsfilename, "%s/ws.root", outputDir ) ;
-       ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, qcdModelIndex, wsfilename ) ;
+       ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, qcdModelIndex, wsfilename, blindBinsList ) ;
 
        TFile wsfile( wsfilename ) ;
        workspace = (RooWorkspace*) wsfile.Get("ws") ;
@@ -470,6 +483,34 @@
 
 
 
+
+
+
+
+
+       //--- Do an another initial fit to determine reasonable starting values for all floating parameters.
+       //    Do it from dataset at MC values with no fluctuations, including susy.
+
+       RooDataSet* toydsNofluctuations = genToyData(true) ;
+
+       rrv_susy_poi -> setVal( nSusy0lep ) ;
+       rrv_susy_poi -> setConstant( kFALSE ) ;
+
+       printf("\n\n\n ===== Starting fit to determine reinitialization values...\n\n\n") ;
+
+       RooFitResult* mcfitResult2 = likelihood->fitTo( *toydsNofluctuations, Save(true), PrintLevel(0) ) ;
+
+       if ( ! setReinitValues( mcfitResult2 ) ) {
+          printf("\n\n *** Problem in collecting inital vals for floating parameters from MC fit.\n\n") ; return ;
+       }
+
+
+
+
+
+
+
+
        //--- set MC vals to be saved in output ttree.
 
        if ( !useExpected0lep ) {
@@ -516,13 +557,23 @@
 
           RooArgSet ras ;
           ras.add( *rrv_susy_poi ) ;
-          rrv_susy_poi->setConstant( kFALSE ) ;
+          if ( !blindStudy ) {
+             rrv_susy_poi->setConstant( kFALSE ) ;
+          } else {
+             rrv_susy_poi->setVal( 0.0 ) ;
+             rrv_susy_poi->setConstant( kTRUE ) ;
+          }
 
           if ( ! reinitFloatPars() ) {
              printf("\n\n *** problem reinitializing floating pars.\n\n") ; return ;
           }
 
-          RooFitResult* fitResult = likelihood -> fitTo( *toyds, Save(true), Hesse(true), Minos(ras), Strategy(1), PrintLevel(0) ) ;
+          RooFitResult* fitResult ;
+          if ( !blindStudy ) {
+             fitResult = likelihood -> fitTo( *toyds, Save(true), Hesse(true), Minos(ras), Strategy(1), PrintLevel(0) ) ;
+          } else {
+             fitResult = likelihood -> fitTo( *toyds, Save(true), Hesse(true), Strategy(1), PrintLevel(0) ) ;
+          }
           minNllSusyFloat = fitResult->minNll() ;
 
           processToyResult( ti, fitResult ) ;
@@ -532,7 +583,7 @@
 
           //-- Calculate significance from delta log likelihood, if requested.
 
-          if ( doSignif ) {
+          if ( doSignif && !blindStudy ) {
 
              double susy_yield = rrv_susy_poi->getVal();
              rrv_susy_poi->setVal(0.) ;
@@ -593,20 +644,20 @@
                       fit_susy_0lep_wsfs += nsusy ;
 
                       fit_susy_0lep_at0susy_3da[mbi][hbi][bbi] = nsusy ;
-                      
+
                       sprintf( vname, "mu_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                       rar = (RooAbsReal*) workspace -> obj( vname ) ;
                       if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ;  }
                       double nttwj = rar -> getVal() ;
                       fit_ttwj_0lep_at0susy_3da[mbi][hbi][bbi] = nttwj ;
-               
-               
+
+
                       sprintf( vname, "mu_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                       rar = workspace -> function( vname ) ;
                       if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ;}
                       double nqcd = rar -> getVal() ;
                       fit_qcd_0lep_at0susy_3da[mbi][hbi][bbi] = nqcd ;
-               
+
                       sprintf( vname, "mu_znn_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                       rar = (RooAbsReal*) workspace -> obj( vname ) ;
                       if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
@@ -617,7 +668,7 @@
                       rar = (RooAbsReal*) workspace -> obj( vname ) ;
                       if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ;  }
                       fit_sf_ttwj_0lep_at0susy_3da[mbi][hbi][bbi] = rar -> getVal() ;
-               
+
                       sprintf( vname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                       rar = (RooAbsReal*) workspace -> obj( vname ) ;
                       if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
@@ -640,7 +691,7 @@
 
           //-- Calculate one-sided upper limit on susy signal, if requested.
 
-          if ( doUL ) {
+          if ( doUL && !blindStudy ) {
 
              findUL( toyds ) ;
 
@@ -1219,7 +1270,7 @@
 
    //==================================================================================
 
-   RooDataSet* genToyData() {
+   RooDataSet* genToyData( bool noFluctuations ) {
 
       RooArgSet obsList ;
 
@@ -1238,15 +1289,30 @@
                   if ( rrv == 0x0 ) { printf("\n\n *** can't find variable with name %s\n", oname ) ; return 0x0 ; }
 
                   if ( si == 0 ) {
-                     int nobs = tran->Poisson( toy_mean_N_0lep[mbi][hbi][bbi] ) ;
+                     int nobs ;
+                     if ( noFluctuations ) {
+                        nobs = TMath::Nint( toy_mean_N_0lep[mbi][hbi][bbi] ) ;
+                     } else {
+                        nobs = tran->Poisson( toy_mean_N_0lep[mbi][hbi][bbi] ) ;
+                     }
                      rrv -> setVal( nobs  ) ;
                      Nobs_0lep[mbi][hbi][bbi] = nobs ;
                   } else if ( si == 1 ) {
-                     int nobs = tran->Poisson( toy_mean_N_1lep[mbi][hbi][bbi] ) ;
+                     int nobs ;
+                     if ( noFluctuations ) {
+                        nobs = TMath::Nint( toy_mean_N_1lep[mbi][hbi][bbi] ) ;
+                     } else {
+                        nobs = tran->Poisson( toy_mean_N_1lep[mbi][hbi][bbi] ) ;
+                     }
                      rrv -> setVal( nobs ) ;
                      Nobs_1lep[mbi][hbi][bbi] = nobs ;
                   } else if ( si == 2 ) {
-                     int nobs = tran->Poisson( toy_mean_N_ldp [mbi][hbi][bbi] ) ;
+                     int nobs ;
+                     if ( noFluctuations ) {
+                        nobs = TMath::Nint( toy_mean_N_ldp [mbi][hbi][bbi] ) ;
+                     } else {
+                        nobs = tran->Poisson( toy_mean_N_ldp [mbi][hbi][bbi] ) ;
+                     }
                      rrv -> setVal( nobs ) ;
                      Nobs_ldp[mbi][hbi][bbi] = nobs ;
                   }
@@ -1263,7 +1329,12 @@
             sprintf( oname, "N_Zee_M%d_H%d", mbi+1, hbi+1 ) ;
             RooRealVar* rrv = workspace -> var( oname ) ;
             if ( rrv == 0x0 ) { printf("\n\n *** can't find variable with name %s\n", oname ) ; return 0x0 ; }
-            int nobs = tran->Poisson( toy_mean_N_Zee[mbi][hbi] ) ;
+            int nobs ;
+            if ( noFluctuations ) {
+               nobs = TMath::Nint( toy_mean_N_Zee[mbi][hbi] ) ;
+            } else {
+               nobs = tran->Poisson( toy_mean_N_Zee[mbi][hbi] ) ;
+            }
             rrv -> setVal( nobs ) ;
             Nobs_Zee[mbi][hbi] = nobs ;
             obsList.add( *rrv ) ;
@@ -1275,7 +1346,12 @@
             sprintf( oname, "N_Zmm_M%d_H%d", mbi+1, hbi+1 ) ;
             RooRealVar* rrv = workspace -> var( oname ) ;
             if ( rrv == 0x0 ) { printf("\n\n *** can't find variable with name %s\n", oname ) ; return 0x0 ; }
-            int nobs = tran->Poisson( toy_mean_N_Zmm[mbi][hbi] ) ;
+            int nobs ;
+            if ( noFluctuations ) {
+               nobs = TMath::Nint( toy_mean_N_Zmm[mbi][hbi] ) ;
+            } else {
+               nobs = tran->Poisson( toy_mean_N_Zmm[mbi][hbi] ) ;
+            }
             rrv -> setVal( nobs ) ;
             Nobs_Zmm[mbi][hbi] = nobs ;
             obsList.add( *rrv ) ;
@@ -1471,16 +1547,19 @@
                RooAbsReal* btagsf  ;
 
 
+               double nsusy(0.) ;
                sprintf( vname, "mu_susy_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                rar = workspace -> function( vname ) ;
-               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; return false ; }
+               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
                sprintf( vname, "btageff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                btagsf = (RooAbsReal*) workspace -> obj( vname ) ;
-               if ( btagsf == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; return false ; }
+               if ( btagsf == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
                sprintf( vname, "eff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                effsf = (RooAbsReal*) workspace -> obj( vname ) ;
-               if ( effsf == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; return false ; }
-               double nsusy = ( btagsf -> getVal() ) * ( effsf -> getVal() ) * ( rar -> getVal() ) ;
+               if ( effsf == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
+               if ( rar != 0x0 && btagsf != 0x0 && effsf != 0x0 ) {
+                  nsusy = ( btagsf -> getVal() ) * ( effsf -> getVal() ) * ( rar -> getVal() ) ;
+               }
 
                fit_susy_0lep_wsfs += nsusy ;
 
@@ -1510,10 +1589,14 @@
 
 
 
+               double nttwj(0.) ;
                sprintf( vname, "mu_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                rar = (RooAbsReal*) workspace -> obj( vname ) ;
-               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; return false ; }
-               double nttwj = rar -> getVal() ;
+               if ( rar == 0x0 ) {
+                  printf("\n\n *** missing var %s\n\n", vname ) ;
+               } else {
+                  nttwj = rar -> getVal() ;
+               }
                fit_ttwj_0lep_3da[mbi][hbi][bbi] = nttwj ;
                fit_ttwj_0lep += nttwj  ;
                if ( bbi==0 ) { fit_ttwj_0lep_1b +=  nttwj  ; }
@@ -1540,10 +1623,14 @@
 
 
 
+               double nqcd(0.) ;
                sprintf( vname, "mu_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                rar = workspace -> function( vname ) ;
-               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; return false ; }
-               double nqcd = rar -> getVal() ;
+               if ( rar == 0x0 ) {
+                  printf("\n\n *** missing var %s\n\n", vname ) ;
+               } else {
+                  nqcd = rar -> getVal() ;
+               }
                fit_qcd_0lep_3da[mbi][hbi][bbi] = nqcd ;
                fit_qcd__0lep += nqcd  ;
                if ( bbi==0 ) { fit_qcd__0lep_1b +=  nqcd   ; }
@@ -1570,10 +1657,14 @@
 
 
 
+               double nznn(0.) ;
                sprintf( vname, "mu_znn_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                rar = (RooAbsReal*) workspace -> obj( vname ) ;
-               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; return false ; }
-               double nznn = rar -> getVal() ;
+               if ( rar == 0x0 ) {
+                  printf("\n\n *** missing var %s\n\n", vname ) ; return false ;
+               } else {
+                  nznn = rar -> getVal() ;
+               }
                fit_znn_0lep_3da[mbi][hbi][bbi] = nznn ;
                fit_znn__0lep += nznn  ;
                if ( bbi==0 ) { fit_znn__0lep_1b +=  nznn   ; }

@@ -10,11 +10,12 @@
                 bool useExpected0lep = true,
                 int qcdModelIndex = 4,
                 bool input_doSignif = false,
-                bool input_doUL = false
+                bool input_doUL = false,
+                const char* blindBinsList = "null"
       ) {
      gROOT->LoadMacro("RooRatio.cxx+") ;
      gROOT->LoadMacro("RooPosDefCorrGauss.cxx+") ;
      gROOT->LoadMacro("toymc3b.c+") ;
-     toymc3b( input_datfile, input_susyfile, input_mgl, input_mlsp, input_deffdbtagfile, input_nSusy0lep, input_outputDir, nToy, input_mcvals_rootfile, useExpected0lep, qcdModelIndex, input_doSignif, input_doUL ) ;
+     toymc3b( input_datfile, input_susyfile, input_mgl, input_mlsp, input_deffdbtagfile, input_nSusy0lep, input_outputDir, nToy, input_mcvals_rootfile, useExpected0lep, qcdModelIndex, input_doSignif, input_doUL, blindBinsList ) ;
   }
 

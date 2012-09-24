@@ -134,6 +134,8 @@
          } // hbi.
       } // mbi.
 
+      bool blindStudy(false) ;
+
       if ( strcmp( blindBinsList, "null" ) != 0 ) {
          char command[1000] ;
          sprintf( command, "ls %s >& /dev/null", blindBinsList ) ;
@@ -147,6 +149,7 @@
             printf("\n\n *** Problem opening blindBinsList file: %s\n\n", blindBinsList ) ;
             return false ;
          }
+         blindStudy = true ;
          printf("\n\n Reading blindBinsList file: %s\n\n", blindBinsList ) ;
          while ( ! feof(bbl_file) ) {
             char binlabel[1000] ;
@@ -1005,9 +1008,12 @@
 	    rv_mu_qcd_ldp[i][j][k] = rrv_mu_qcd_ldp[i][j][k];
 	    rrv_mu_qcd_ldp[i][j][k]->setVal( initialval_qcd_ldp[i][j][k] ) ;   // this is a starting value only
 
-	    rrv_mu_znn[i][j][k] = new RooRealVar( muZnnString, muZnnString, 0., 100000. ) ;
-	    rv_mu_znn[i][j][k] = rrv_mu_znn[i][j][k];
-	    rrv_mu_znn[i][j][k]->setVal( initialval_znn[i][j][k] ) ;           // this is a starting value only
+            //-- owen: sept 23, 2012 : do not create these for >1 btag.
+            if ( k==0 ) {
+	       rrv_mu_znn[i][j][k] = new RooRealVar( muZnnString, muZnnString, 0., 100000. ) ;
+	       rv_mu_znn[i][j][k] = rrv_mu_znn[i][j][k];
+	       rrv_mu_znn[i][j][k]->setVal( initialval_znn[i][j][k] ) ;           // this is a starting value only
+            }
 
 
 	    // MC inputs
@@ -1537,19 +1543,25 @@
             for (int k = 0 ; k < nBinsBtag ; k++) {
 
                sprintf( NP_name, "eff_sf_M%d_H%d_%db", i+1, j+1, k+1 ) ;
-               ///// rar_eff_sf[i][j][k] = makeCorrelatedBetaPrimeConstraint( NP_name, rv_mean_eff_sf[i][j][k]->getVal(), rv_width_eff_sf[i][j][k]->getVal(), "eff_sf" ) ;
-               ///// rar_eff_sf[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, rv_mean_eff_sf[i][j][k]->getVal(), rv_width_eff_sf[i][j][k]->getVal(), effbpname ) ;
-               rar_eff_sf[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf[i][j][k]->getVal(), rv_width_eff_sf[i][j][k]->getVal() ) ;
+               if ( !blindStudy ) {
+                  rar_eff_sf[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf[i][j][k]->getVal(), rv_width_eff_sf[i][j][k]->getVal() ) ;
+               } else {
+                  rar_eff_sf[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf[i][j][k]->getVal(), 0.0 ) ;
+               }
 
                sprintf( NP_name, "eff_sf_sl_M%d_H%d_%db", i+1, j+1, k+1 ) ;
-               ///// rar_eff_sf_sl[i][j][k] = makeCorrelatedBetaPrimeConstraint( NP_name, rv_mean_eff_sf_sl[i][j][k]->getVal(), rv_width_eff_sf_sl[i][j][k]->getVal(), "eff_sf" ) ;
-               ///// rar_eff_sf_sl[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, rv_mean_eff_sf_sl[i][j][k]->getVal(), rv_width_eff_sf_sl[i][j][k]->getVal(), effbpname ) ;
-               rar_eff_sf_sl[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf_sl[i][j][k]->getVal(), rv_width_eff_sf_sl[i][j][k]->getVal() ) ;
+               if ( !blindStudy ) {
+                  rar_eff_sf_sl[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf_sl[i][j][k]->getVal(), rv_width_eff_sf_sl[i][j][k]->getVal() ) ;
+               } else {
+                  rar_eff_sf_sl[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf_sl[i][j][k]->getVal(), 0.0 ) ;
+               }
 
                sprintf( NP_name, "eff_sf_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
-               ///// rar_eff_sf_ldp[i][j][k] = makeCorrelatedBetaPrimeConstraint( NP_name, rv_mean_eff_sf_ldp[i][j][k]->getVal(), rv_width_eff_sf_ldp[i][j][k]->getVal(), "eff_sf" ) ;
-               ///// rar_eff_sf_ldp[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, rv_mean_eff_sf_ldp[i][j][k]->getVal(), rv_width_eff_sf_ldp[i][j][k]->getVal(), effbpname ) ;
-               rar_eff_sf_ldp[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf_ldp[i][j][k]->getVal(), rv_width_eff_sf_ldp[i][j][k]->getVal() ) ;
+               if ( !blindStudy ) {
+                  rar_eff_sf_ldp[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf_ldp[i][j][k]->getVal(), rv_width_eff_sf_ldp[i][j][k]->getVal() ) ;
+               } else {
+                  rar_eff_sf_ldp[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf_ldp[i][j][k]->getVal(), 0.0 ) ;
+               }
 
             } // k
          } // j
@@ -1581,20 +1593,29 @@
                sprintf( NP_name, "btageff_sf_M%d_H%d_%db", i+1, j+1, k+1 ) ;
                changeSign = false ;
                if ( rv_deff_dbtageff[i][j][k]->getVal() < 0. ) { changeSign = true ; }
-               //// rar_btageff_sf[i][j][k] = makeCorrelatedBetaPrimeConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff[i][j][k]->getVal()), "btageff_sf", changeSign ) ;
-               rar_btageff_sf[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff[i][j][k]->getVal()), btageffbpname, changeSign ) ;
+               if ( !blindStudy ) {
+                  rar_btageff_sf[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff[i][j][k]->getVal()), btageffbpname, changeSign ) ;
+               } else {
+                  rar_btageff_sf[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, 0.0, btageffbpname, changeSign ) ;
+               }
 
                sprintf( NP_name, "btageff_sf_sl_M%d_H%d_%db", i+1, j+1, k+1 ) ;
                changeSign = false ;
                if ( rv_deff_dbtageff_sl[i][j][k]->getVal() < 0. ) { changeSign = true ; }
-               //// rar_btageff_sf_sl[i][j][k] = makeCorrelatedBetaPrimeConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff_sl[i][j][k]->getVal()), "btageff_sf", changeSign ) ;
-               rar_btageff_sf_sl[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff_sl[i][j][k]->getVal()), btageffbpname, changeSign ) ;
+               if ( !blindStudy ) {
+                  rar_btageff_sf_sl[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff_sl[i][j][k]->getVal()), btageffbpname, changeSign ) ;
+               } else {
+                  rar_btageff_sf_sl[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, 0.0, btageffbpname, changeSign ) ;
+               }
 
                sprintf( NP_name, "btageff_sf_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
                changeSign = false ;
                if ( rv_deff_dbtageff_ldp[i][j][k]->getVal() < 0. ) { changeSign = true ; }
-               //// rar_btageff_sf_ldp[i][j][k] = makeCorrelatedBetaPrimeConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff_ldp[i][j][k]->getVal()), "btageff_sf", changeSign ) ;
-               rar_btageff_sf_ldp[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff_ldp[i][j][k]->getVal()), btageffbpname, changeSign ) ;
+               if ( !blindStudy ) {
+                  rar_btageff_sf_ldp[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff_ldp[i][j][k]->getVal()), btageffbpname, changeSign ) ;
+               } else {
+                  rar_btageff_sf_ldp[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, 0.0, btageffbpname, changeSign ) ;
+               }
 
             } // k
          } // j
@@ -1658,18 +1679,6 @@
 
 
 
-         //--- old way
-
-         // TString ttwjLdpString  = "mu_ttwj_ldp" ;
-         // ttwjLdpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
-
-         // TString rfvString = "@0 + @1" ;
-
-         // rv_mu_ttwj_ldp[i][j][k] = new RooFormulaVar( ttwjLdpString, rfvString, 
-         //                                              RooArgSet( *rv_mu_ttbarsingletopzjetsmc_ldp[i][j][k], *rv_mu_WJmc_ldp[i][j][k] )) ;
-
-
-         //--- new way
 
             TString ttwjLdpString  = "mu_ttwj_ldp" ;
             ttwjLdpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
@@ -1774,37 +1783,6 @@
 
             //---- Z -> nunu
 
-        // //--- old way
-
-        //  TString znnLdpString   = "mu_znn_ldp" ;
-        //  znnLdpString   += sMbins[i]+sHbins[j]+sBbins[k] ;
-
-        //  TString znnMcLdpString = "@0" ;
-
-        //  rv_mu_znn_ldp[i][j][k] = new RooFormulaVar( znnLdpString, znnMcLdpString, RooArgSet( *rv_mu_Znnmc_ldp[i][j][k] ) ) ;
-
-
-           //--- new way
-
-            TString znnLdpString   = "mu_znn_ldp" ;
-            znnLdpString   += sMbins[i]+sHbins[j]+sBbins[k] ;
-
-            TString znnMcLdpString = "@0 * @1" ;
-
-            rv_mu_znn_ldp[i][j][k] = new RooFormulaVar( znnLdpString, znnMcLdpString,
-                                                         RooArgSet( *rv_mu_znn[i][j][k], *rv_znn_ldp0lep_ratio[i][j][k] )) ;
-
-
-
-
-
-
-
-
-
-
-
-
 	    //-- Float the Znn 1b vars and derive 2b and 3b vars using knn ratios
 
 
@@ -1843,6 +1821,20 @@
 	    }
 
       
+
+
+
+
+
+            TString znnLdpString   = "mu_znn_ldp" ;
+            znnLdpString   += sMbins[i]+sHbins[j]+sBbins[k] ;
+
+            TString znnMcLdpString = "@0 * @1" ;
+
+            rv_mu_znn_ldp[i][j][k] = new RooFormulaVar( znnLdpString, znnMcLdpString,
+                                                         RooArgSet( *rv_mu_znn[i][j][k], *rv_znn_ldp0lep_ratio[i][j][k] )) ;
+
+
 
 
             //+++++++++++++ Expected counts for observables in terms of parameters ++++++++++++++++++
