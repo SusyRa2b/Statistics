@@ -26,7 +26,7 @@ using namespace RooStats ;
 using namespace std;
 
 
-void integratedTotals(TString workspaceFile = "test.root", TString name =  "", TString binFilesFile = "binFilesFile.dat")
+void integratedTotals(TString workspaceFile = "test.root", TString name =  "", TString binFilesFile = "binFilesFile.dat", TString datFile = "")
 {
   
   TFile* wstf = new TFile ( workspaceFile );
@@ -88,6 +88,17 @@ void integratedTotals(TString workspaceFile = "test.root", TString name =  "", T
   double sig = signalYield->getVal();
   double sigerr = signalYield->getPropagatedError(*fitResult);
   cout << "analyzeFitOutput: " << name << " " << sig << "+-" << sigerr << " " << ttwjtot << " " << qcdtot << " " << znntot << endl; 
+  cout << "DEBUG: datFile: " << datFile << endl;
+  
+  if(datFile != "") {
+    cout << "DEBUG: printing to file" << endl;
+    ofstream myfile;
+    myfile.open(datFile.Data(), ios::out | ios::app);
+    assert(myfile.is_open());
+    myfile << sig << " " << sigerr << " " << ttwjtot << " " << qcdtot << " " << znntot << " ";
+    myfile.close();
+  }
+
 
   wstf->Close();
 
@@ -415,9 +426,9 @@ void owenPlots(TString workspaceFile = "test.root", TString name = "",  TString 
 }
 
 
-void analyzeFit(TString workspaceFile = "test.root", TString name = "", TString binFilesFile = "") {
+void analyzeFit(TString workspaceFile = "test.root", TString name = "", TString binFilesFile = "", TString datFile= "") {
 
-  integratedTotals(workspaceFile, name, binFilesFile);
+  integratedTotals(workspaceFile, name, binFilesFile, datFile);
   //integratedTotals(workspaceFile, name);
   //owenPlots();
 
