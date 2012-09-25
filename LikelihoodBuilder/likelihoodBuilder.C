@@ -962,7 +962,7 @@ void buildLikelihood( TString binFilesPath, TString setupFileName, TString binFi
   ws.import (bModel);
 
   ws.Print() ;
-  ws.writeToFile(outputFileName) ;
+  ws.writeToFile(outputFileName, true) ;
 
 }
 
