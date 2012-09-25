@@ -74,7 +74,7 @@
      int nBinsMET(1) ;
      for ( int bi=2; bi<20; bi++ ) {
         char vname[1000] ;
-        sprintf( vname, "mu_ttwj_sl_M%d_H1_1b", bi ) ;
+        sprintf( vname, "mu_ttwj_sl_M%d_H2_1b", bi ) ;
         RooRealVar* rrv = ws->var( vname ) ;
         if ( rrv == 0x0 ) break ;
         nBinsMET = bi ;
@@ -208,12 +208,14 @@
 	   
            if ( ttwj_obj == 0x0 ) {
               printf(" * %s missing\n", ttString.Data() ) ;
+              AttwjVal[i][j][k] = 0. ;
            } else {
 	      AttwjVal[i][j][k] = ((RooRealVar*) ttwj_obj)->getVal() ;
            }
 
            if ( qcd_obj == 0x0 ) {
               printf(" * %s missing\n", qcdString.Data() ) ;
+              AqcdVal[i][j][k] = 0. ;
            } else {
 	      AqcdVal[i][j][k]  = ((RooRealVar*) qcd_obj)->getVal() ;
            }
@@ -231,6 +233,17 @@
      int dataN_Zee[nBinsMET][nBinsHT] ;
      int dataN_Zmm[nBinsMET][nBinsHT] ;
 
+     for ( int i = 0 ; i < nBinsMET ; i++ ) {
+       for ( int j = 0 ; j < nBinsHT ; j++ ) {
+         for ( int k = 0 ; k < nBinsBtag ; k++ ) {
+            dataN_0lep[i][j][k] = 0. ;
+            dataN_1lep[i][j][k] = 0. ;
+            dataN_ldp[i][j][k] = 0. ;
+            dataN_Zee[i][j] = 0. ;
+            dataN_Zmm[i][j] = 0. ;
+         }
+       }
+     }
      printf("\n\n Unpacking observables.\n\n") ; cout << flush ;
 
      const RooArgSet* dsras = rds->get() ;
@@ -520,16 +533,19 @@
               eff_sf = ((RooFormulaVar*) ws->obj(EffSfString)) -> getVal() ;
            } else {
               printf(" * %s missing.\n", EffSfString.Data() ) ;
+              eff_sf = 1. ;
            }
            if ( ws->obj(MuSusyString) != 0 ) {
               susyVal = eff_sf * ( ((RooRealVar*) ws->obj(MuSusyString)) -> getVal() ) ;
            } else {
               printf(" * %s missing.\n", MuSusyString.Data() ) ;
+              susyVal = 0. ;
            }
            if ( ws->obj(ZnnString) != 0 ) {
               znnVal = ((RooRealVar*) ws->obj(ZnnString))  -> getVal() ;
            } else {
               printf(" * %s missing.\n", ZnnString.Data() ) ;
+              znnVal = 0. ;
            }
 	 //eff_sf = ((RooFormulaVar*) ws->obj(EffSfString)) -> getVal() ;
 	 //susyVal = eff_sf * ( ((RooRealVar*) ws->obj(MuSusyString)) -> getVal() ) ;
@@ -619,16 +635,19 @@
 	      eff_sf_sl = ((RooFormulaVar*) ws->obj(EffSfSlString)) -> getVal() ;
            } else {
               printf(" * %s missing.\n", EffSfSlString.Data() ) ;
+              eff_sf_sl = 1. ;
            }
            if ( ws->obj(MuSusySlString) != 0x0 ) {
               susyVal = eff_sf_sl * ( ((RooRealVar*) ws->obj(MuSusySlString)) -> getVal() ) ;
            } else {
               printf(" * %s missing.\n", MuSusySlString.Data() ) ;
+              susyVal = 0. ;
            }
            if ( ws->obj(MuTtwjSlString) != 0x0 ) {
               ttwjVal = ((RooRealVar*) ws->obj(MuTtwjSlString)) -> getVal() ;
            } else {
               printf(" * %s missing.\n", MuTtwjSlString.Data() ) ;
+              ttwjVal = 0. ;
            }
 	 //eff_sf_sl = ((RooFormulaVar*) ws->obj(EffSfSlString)) -> getVal() ;
 	 //susyVal = eff_sf_sl * ( ((RooRealVar*) ws->obj(MuSusySlString)) -> getVal() ) ;
@@ -718,31 +737,37 @@
               eff_sf_ldp = ((RooFormulaVar*) ws->obj(EffSfLdpString)) -> getVal() ;
            } else {
               printf(" * %s missing\n", EffSfLdpString.Data() ) ;
+              eff_sf_ldp = 1. ;
            }
            if ( ws->obj(MuSusyLdpString) != 0 ) {
               susyVal = eff_sf_ldp * ( ((RooRealVar*) ws->obj(MuSusyLdpString)) -> getVal() ) ;
            } else {
               printf(" * %s missing\n", MuSusyLdpString.Data() ) ;
+              susyVal = 0. ;
            }
            if ( ws->obj("sf_mc") != 0 ) {
               sf_mc = ((RooFormulaVar*) ws->obj("sf_mc")) -> getVal() ;
            } else {
               printf(" * sf_mc missing\n" ) ;
+              sf_mc = 1. ;
            }
            if ( ws->obj(MuTtwjLdpString) != 0 ) {
               ttwjVal = eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuTtwjLdpString))-> getVal() )   ) ;
            } else {
               printf(" * %s missing\n", MuTtwjLdpString.Data() ) ;
+              ttwjVal = 0. ;
            }
            if ( ws->obj(MuZnnLdpString) != 0) {
               znnVal  = eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuZnnLdpString))-> getVal() )   ) ;
            } else {
               printf(" * %s missing\n", MuZnnLdpString.Data() ) ;
+              znnVal = 0. ;
            }
            if ( ws->obj(MuQcdLdpString) != 0 ) {
               qcdVal  = ((RooRealVar*) ws->obj(MuQcdLdpString))-> getVal() ;
            } else {
               printf(" * %s missing\n", MuQcdLdpString.Data() ) ;
+              qcdVal = 0. ;
            }
 
 	// eff_sf_ldp = ((RooFormulaVar*) ws->obj(EffSfLdpString)) -> getVal() ;
@@ -828,6 +853,7 @@
                  lhtotalVal = ((RooRealVar*) ws->obj(nZeeModelString)) -> getVal() ;
               } else {
                  printf(" * %s missing.\n", nZeeModelString.Data() ) ;
+                 lhtotalVal = 0. ;
               }
             //lhtotalVal = ((RooRealVar*) ws->obj(nZeeModelString)) -> getVal() ;
               printf("\n Model value for %s is %7.1f\n", nZeeModelString.Data(), lhtotalVal ) ; cout << flush ;
@@ -870,6 +896,7 @@
                  lhtotalVal = ((RooRealVar*) ws->obj(nZmmModelString)) -> getVal() ;
               } else {
                  printf(" * %s missing.\n", nZmmModelString.Data() ) ;
+                 lhtotalVal = 0. ;
               }
             //lhtotalVal = ((RooRealVar*) ws->obj(nZmmModelString)) -> getVal() ;
               printf("\n Model value for %s is %7.1f\n", nZmmModelString.Data(), lhtotalVal ) ; cout << flush ;
@@ -1151,7 +1178,7 @@
                  char parName[1000] ;
                  sprintf( parName, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  RooAbsReal* np = (RooAbsReal*) ws->obj( parName ) ;
-                 double npVal = 1.0 ;
+                 double npVal = 0.0 ;
                  if ( np == 0x0 ) {
                     printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
                  } else {
@@ -1160,18 +1187,20 @@
                  char vname[1000] ;
                  sprintf( vname, "mean_%s", parName ) ;
                  RooConstVar* rcv_mean = (RooConstVar*) ws->obj( vname ) ;
+                 double mean = 0. ;
                  if ( rcv_mean == 0x0 ) {
                     printf("\n\n *** missing nuisance parameter mean? %s\n\n", vname ) ;
-                    return ;
+                 } else {
+                    mean = rcv_mean->getVal() ;
                  }
                  sprintf( vname, "sigma_%s", parName ) ;
                  RooConstVar* rcv_sigma = (RooConstVar*) ws->obj( vname ) ;
+                 double sigma = 1. ;
                  if ( rcv_sigma == 0x0 ) {
                     printf("\n\n *** missing nuisance parameter sigma? %s\n\n", vname ) ;
-                    return ;
+                 } else {
+                    sigma = rcv_sigma->getVal() ;
                  }
-                 double mean = rcv_mean->getVal() ;
-                 double sigma = rcv_sigma->getVal() ;
 
                  double pull = (npVal-mean)/sigma ;
                  printf("  %s : mean=%7.3f, sigma=%7.3f, val=%7.3f, pull=%7.3f\n", parName, mean, sigma, npVal, pull ) ;
@@ -1211,7 +1240,7 @@
                  char parName[1000] ;
                  sprintf( parName, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  RooAbsReal* np = (RooAbsReal*) ws->obj( parName ) ;
-                 double npVal = 1.0 ;
+                 double npVal = 0.0 ;
                  if ( np == 0x0 ) {
                     printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
                  } else {
@@ -1220,18 +1249,20 @@
                  char vname[1000] ;
                  sprintf( vname, "mean_%s", parName ) ;
                  RooConstVar* rcv_mean = (RooConstVar*) ws->obj( vname ) ;
+                 double mean = 0. ;
                  if ( rcv_mean == 0x0 ) {
                     printf("\n\n *** missing nuisance parameter mean? %s\n\n", vname ) ;
-                    return ;
+                 } else {
+                    mean = rcv_mean->getVal() ;
                  }
                  sprintf( vname, "sigma_%s", parName ) ;
                  RooConstVar* rcv_sigma = (RooConstVar*) ws->obj( vname ) ;
+                 double sigma = 1. ;
                  if ( rcv_sigma == 0x0 ) {
                     printf("\n\n *** missing nuisance parameter sigma? %s\n\n", vname ) ;
-                    return ;
+                 } else {
+                    sigma = rcv_sigma->getVal() ;
                  }
-                 double mean = rcv_mean->getVal() ;
-                 double sigma = rcv_sigma->getVal() ;
 
                  double pull = (npVal-mean)/sigma ;
                  printf("  %s : mean=%7.3f, sigma=%7.3f, val=%7.3f, pull=%7.3f\n", parName, mean, sigma, npVal, pull ) ;
