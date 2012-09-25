@@ -217,6 +217,9 @@
       float Nttbarsingletopzjetsmc_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
       float NWJmc_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
       float NZnnmc_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
+      float NVVmc_0lep[nBinsMET][nBinsHT][nBinsBtag] ;
+      float NVVmc_1lep[nBinsMET][nBinsHT][nBinsBtag] ;
+      float NVVmc_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
 
       
       // other parameters:
@@ -255,6 +258,10 @@
       
       float btageff_err ;
 
+      float trigeff_0L[nBinsMET][nBinsHT];
+      float trigefferr_0L[nBinsMET][nBinsHT];
+      float trigeff_1L[nBinsMET][nBinsHT];
+      float trigefferr_1L[nBinsMET][nBinsHT];
 
 
       //--- read in description lines.
@@ -641,7 +648,91 @@
       } // i
       printf("\n\n") ;
 
+      // NVVmc_0lep
 
+      for (int i = 0 ; i < nBinsMET ; i++) {
+	for (int j = 0 ; j < nBinsHT ; j++) {
+	  for (int k = 0 ; k < nBinsBtag ; k++) {
+	    
+	    TString inPar = "N_VVmc_0lep"+sMbins[i]+sHbins[j]+sBbins[k] ;
+	    fscanf( infp, "%s %g", label, &NVVmc_0lep[i][j][k] ) ;
+	    
+	    if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
+	    cout << inPar << " = " << NVVmc_0lep[i][j][k] << endl ;	  
+
+	  }
+	}
+      }
+      
+      // NVVmc_1lep
+
+      for (int i = 0 ; i < nBinsMET ; i++) {
+	for (int j = 0 ; j < nBinsHT ; j++) {
+	  for (int k = 0 ; k < nBinsBtag ; k++) {
+	    
+	    TString inPar = "N_VVmc_1lep"+sMbins[i]+sHbins[j]+sBbins[k] ;
+	    fscanf( infp, "%s %g", label, &NVVmc_1lep[i][j][k] ) ;
+	    
+	    if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
+	    cout << inPar << " = " << NVVmc_1lep[i][j][k] << endl ;	  
+
+	  }
+	}
+      }
+      
+      // NVVmc_ldp
+
+      for (int i = 0 ; i < nBinsMET ; i++) {
+	for (int j = 0 ; j < nBinsHT ; j++) {
+	  for (int k = 0 ; k < nBinsBtag ; k++) {
+	    
+	    TString inPar = "N_VVmc_ldp"+sMbins[i]+sHbins[j]+sBbins[k] ;
+	    fscanf( infp, "%s %g", label, &NVVmc_ldp[i][j][k] ) ;
+	    
+	    if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
+	    cout << inPar << " = " << NVVmc_ldp[i][j][k] << endl ;	  
+
+	  }
+	}
+      }
+
+
+      // next get trigger efficiency values
+      for (int i = 0 ; i < nBinsMET ; i++) {
+	for (int j = 0 ; j < nBinsHT ; j++) {
+	    
+	    TString inPar = "trigeff_val_0L"+sMbins[i]+sHbins[j];
+	    fscanf( infp, "%s %g", label, &trigeff_0L[i][j] ) ;
+	    
+	    if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
+	    cout << inPar << " = " << trigeff_0L[i][j] << endl ;	  
+
+	    inPar = "trigeff_err_0L"+sMbins[i]+sHbins[j];
+	    fscanf( infp, "%s %g", label, &trigefferr_0L[i][j] ) ;
+	    
+	    if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
+	    cout << inPar << " = " << trigefferr_0L[i][j] << endl ;	  
+
+        }
+      }
+
+      for (int i = 0 ; i < nBinsMET ; i++) {
+	for (int j = 0 ; j < nBinsHT ; j++) {
+	    
+	    TString inPar = "trigeff_val_1L"+sMbins[i]+sHbins[j];
+	    fscanf( infp, "%s %g", label, &trigeff_1L[i][j] ) ;
+	    
+	    if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
+	    cout << inPar << " = " << trigeff_1L[i][j] << endl ;	  
+
+	    inPar = "trigeff_err_1L"+sMbins[i]+sHbins[j];
+	    fscanf( infp, "%s %g", label, &trigefferr_1L[i][j] ) ;
+	    
+	    if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
+	    cout << inPar << " = " << trigefferr_1L[i][j] << endl ;	  
+
+        }
+      }
 
 
       printf("\n Done reading in %s\n\n", infile ) ;
@@ -913,6 +1004,14 @@
       rv_mu_susy_all0lep->setVal( 1. ) ;
       rv_mu_susy_all0lep->setConstant( kTRUE ) ;
 
+
+      rv_mean_vv_sf = new RooRealVar( "mean_vv_sf", "mean_vv_sf", 0., 10. );			  
+      rv_mean_vv_sf->setVal( 1.0 ) ;								  
+      rv_mean_vv_sf->setConstant( kTRUE ) ;							  
+      rv_width_vv_sf = new RooRealVar( "width_vv_sf", "width_vv_sf", 0., 10. );  		  
+      rv_width_vv_sf->setVal( 1.00 ) ; 	   // arbitrarily set the uncertainty to 100%	  
+      rv_width_vv_sf->setConstant( kTRUE ) ;							  
+
       RooRealVar* rv_ttwj_ldp0lep_ratio[nBinsMET][nBinsHT][nBinsBtag] ;
       RooRealVar*  rv_znn_ldp0lep_ratio[nBinsMET][nBinsHT][nBinsBtag] ;
 
@@ -957,6 +1056,10 @@
 	    TString muWjLdpString  = "mu_WJmc";
 	    TString muZnnLdpString = "mu_Znnmc";
 
+            TString vv0lepString = "mu_vvmc";
+            TString vv1lepString = "mu_vvmc_sl";
+            TString vvldpString = "mu_vvmc_ldp";
+
 	    TString MEffSfString     = "mean_eff_sf";
 	    TString WEffSfString     = "width_eff_sf";
 	    TString dEffdBtString    = "deff_dbtageff";
@@ -986,6 +1089,10 @@
 	    muTtLdpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    muWjLdpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    muZnnLdpString += sMbins[i]+sHbins[j]+sBbins[k] ;
+
+            vv0lepString  += sMbins[i]+sHbins[j]+sBbins[k] ; 
+            vv1lepString  += sMbins[i]+sHbins[j]+sBbins[k] ; 
+            vvldpString   += sMbins[i]+sHbins[j]+sBbins[k] ; 
 
 	    MEffSfString   += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    WEffSfString   += sMbins[i]+sHbins[j]+sBbins[k] ;
@@ -1050,6 +1157,18 @@
             rv_znn_ldp0lep_ratio[i][j][k] -> setVal( znn_ldp0lep_ratio[i][j][k] ) ;
             rv_znn_ldp0lep_ratio[i][j][k] -> setConstant( kTRUE ) ;
 
+
+	    rv_mu_vvmc[i][j][k] = new RooRealVar( vv0lepString, vv0lepString, 0., 100. ) ;
+	    rv_mu_vvmc[i][j][k]->setVal( NVVmc_0lep[i][j][k] ) ;
+	    rv_mu_vvmc[i][j][k]->setConstant( kTRUE ) ;
+
+	    rv_mu_vvmc_sl[i][j][k] = new RooRealVar( vv1lepString, vv1lepString, 0., 100. ) ;
+	    rv_mu_vvmc_sl[i][j][k]->setVal( NVVmc_1lep[i][j][k] ) ;
+	    rv_mu_vvmc_sl[i][j][k]->setConstant( kTRUE ) ;  
+
+	    rv_mu_vvmc_ldp[i][j][k] = new RooRealVar( vvldpString, vvldpString, 0., 100. ) ;
+	    rv_mu_vvmc_ldp[i][j][k]->setVal( NVVmc_ldp[i][j][k] ) ; 
+	    rv_mu_vvmc_ldp[i][j][k]->setConstant( kTRUE ) ; 
 	    
 	    // gaussian constraints
 
@@ -1487,7 +1606,8 @@
             sprintf( signame, "pdf_sigma_%s", rv_SFqcd_met[2]->GetName() ) ;
             RooConstVar* mean_mb3 = new RooConstVar( meanname, meanname, 1.34 ) ; //-- value hardwired from chi2 fit of MC ratios.
             RooConstVar* sigma_mb3 = new RooConstVar( signame, signame, 0.14 ) ; //-- value is diff between SFmet3 and SFmet2 divided by 2.
-            printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_met[2]->GetName(), mean_mb3->getVal(), sigma_mb3->getVal() ) ;
+            //RooConstVar* sigma_mb3 = new RooConstVar( signame, signame, 0.34 ) ; //-- value is diff between 1-SF
+	    printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_met[2]->GetName(), mean_mb3->getVal(), sigma_mb3->getVal() ) ;
             RooGaussian* rg_mb3 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_met[2], *mean_mb3, *sigma_mb3) ;
             allNuisances -> add( *rv_SFqcd_met[2] ) ;
             allNuisancePdfs -> add( *rg_mb3 ) ;
@@ -1497,7 +1617,8 @@
             sprintf( signame, "pdf_sigma_%s", rv_SFqcd_met[3]->GetName() ) ;
             RooConstVar* mean_mb4 = new RooConstVar( meanname, meanname, 1.90 ) ; //-- value hardwired from chi2 fit of MC ratios.
             RooConstVar* sigma_mb4 = new RooConstVar( signame, signame, 0.43 ) ; //-- value is diff between SFmet4 and SFmet2 divided by 2.
-            printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_met[3]->GetName(), mean_mb4->getVal(), sigma_mb4->getVal() ) ;
+            //RooConstVar* sigma_mb4 = new RooConstVar( signame, signame, 0.90 ) ; //-- value is 1-SF
+	    printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_met[3]->GetName(), mean_mb4->getVal(), sigma_mb4->getVal() ) ;
             RooGaussian* rg_mb4 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_met[3], *mean_mb4, *sigma_mb4) ;
             allNuisances -> add( *rv_SFqcd_met[3] ) ;
             allNuisancePdfs -> add( *rg_mb4 ) ;
@@ -1507,7 +1628,8 @@
             sprintf( signame, "pdf_sigma_%s", rv_SFqcd_nb[2]->GetName() ) ;
             RooConstVar* mean_nb3 = new RooConstVar( meanname, meanname, 0.69 ) ; //-- value hardwired from chi2 fit of MC ratios.
             RooConstVar* sigma_nb3 = new RooConstVar( signame, signame, 0.16 ) ; //-- guess: 1-SF / 2.  chi2 fit error is 0.07 so this is reasonable in magnitude.
-            printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_nb[2]->GetName(), mean_nb3->getVal(), sigma_nb3->getVal() ) ;
+            //RooConstVar* sigma_nb3 = new RooConstVar( signame, signame, 0.31 ) ; //-- guess: 1-SF 
+	    printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_nb[2]->GetName(), mean_nb3->getVal(), sigma_nb3->getVal() ) ;
             RooGaussian* rg_nb3 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_nb[2], *mean_nb3, *sigma_nb3) ;
             allNuisances -> add( *rv_SFqcd_nb[2] ) ;
             allNuisancePdfs -> add( *rg_nb3 ) ;
@@ -1621,17 +1743,24 @@
          } // j
       } // i
 
+      // set the Gaussian constraint on the diboson background scale factor
+      RooAbsReal* rar_vv_sf = makeGaussianConstraint( "rar_vv_sf", rv_mean_vv_sf->getVal(), rv_width_vv_sf->getVal() ) ;
 
+      // make beta constraints for trigger efficiency corrections
+      printf("\n\n trigger efficiencies.\n\n") ; cout << flush ;
 
+      RooAbsReal* rar_trigeff[nBinsMET][nBinsHT];
+      RooAbsReal* rar_trigeff_sl[nBinsMET][nBinsHT];
 
+      for (int i = 0 ; i < nBinsMET ; i++) {
+        for (int j = 0 ; j < nBinsHT ; j++) {
+          sprintf( NP_name, "trigeff_M%d_H%d", i+1, j+1 ) ;
+          rar_trigeff[i][j] = makeBetaConstraint( NP_name, trigeff_0L[i][j], trigefferr_0L[i][j] ) ;
 
-
-
-
-
-
-
-
+          sprintf( NP_name, "trigeff_sl_M%d_H%d", i+1, j+1 ) ;
+          rar_trigeff_sl[i][j] = makeBetaConstraint( NP_name, trigeff_1L[i][j], trigefferr_1L[i][j] ) ;
+        }
+      }
 
 
 
@@ -1834,6 +1963,20 @@
             rv_mu_znn_ldp[i][j][k] = new RooFormulaVar( znnLdpString, znnMcLdpString,
                                                          RooArgSet( *rv_mu_znn[i][j][k], *rv_znn_ldp0lep_ratio[i][j][k] )) ;
 
+	    TString rfvVVString = "@0 * @1" ;
+
+            TString vvString0lep = "mu_vv";
+            vvString0lep += sMbins[i]+sHbins[j]+sBbins[k] ;
+	    rv_mu_vv[i][j][k] = new RooFormulaVar( vvString0lep, rfvVVString, RooArgSet( *rar_vv_sf, *rv_mu_vvmc[i][j][k] ));
+
+            TString vvString1lep = "mu_vv";
+            vvString1lep += sMbins[i]+sHbins[j]+sBbins[k] ;
+	    rv_mu_vv_sl[i][j][k] = new RooFormulaVar( vvString1lep, rfvVVString, RooArgSet( *rar_vv_sf, *rv_mu_vvmc_sl[i][j][k] ));
+
+            TString vvStringldp = "mu_vv";
+            vvStringldp += sMbins[i]+sHbins[j]+sBbins[k] ;
+	    rv_mu_vv_ldp[i][j][k] = new RooFormulaVar( vvStringldp, rfvVVString, RooArgSet( *rar_vv_sf, *rv_mu_vvmc_ldp[i][j][k] ));
+
 
 
 
@@ -1847,11 +1990,12 @@
 	    nSlString  += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    nLdpString += sMbins[i]+sHbins[j]+sBbins[k] ;
 
-	    TString rfvNString =  "@0 + @1 + @2 + (@3 * @4 * @5)" ;
+	    TString rfvNString =  "(@0 + @1 + @2 + @3 + (@4 * @5 * @6)) * @7" ;
 
+// for trigger efficiency will need: *rar_trigeff[i][j]
 	    rv_n[i][j][k] = new RooFormulaVar( nString, rfvNString,
-	    				       RooArgSet( *rv_mu_ttwj[i][j][k], *rv_mu_qcd[i][j][k], *rv_mu_znn[i][j][k],  
-							  *rar_btageff_sf[i][j][k], *rar_eff_sf[i][j][k], *rv_mu_susy[i][j][k] ) ) ;
+	    				       RooArgSet( *rv_mu_ttwj[i][j][k], *rv_mu_qcd[i][j][k], *rv_mu_znn[i][j][k],  *rv_mu_vv[i][j][k],
+							  *rar_btageff_sf[i][j][k], *rar_eff_sf[i][j][k], *rv_mu_susy[i][j][k], *rar_trigeff[i][j] ) ) ;
 
        ///  printf(" *** debug1: m%d,h%d,b%d : n_0lep = mu_ttwj + mu_qcd + mu_znn = %7.1f + %7.1f + %7.1f = %7.1f\n",
        ///       i+1, j+1, k+1, ((RooFormulaVar*)rv_mu_ttwj[i][j][k])->getVal(),
@@ -1860,18 +2004,18 @@
        ///                      rv_n[i][j][k]->getVal() ) ;
 
 
-	    TString rfvNSlString = "@0 + (@1 * @2 * @3)" ;
+	    TString rfvNSlString = "(@0 + @1 + (@2 * @3 * @4)) * @5" ;
 
 	    rv_n_sl[i][j][k] = new RooFormulaVar( nSlString, rfvNSlString,
-						  RooArgSet( *rv_mu_ttwj_sl[i][j][k], *rar_btageff_sf_sl[i][j][k], 
-							     *rar_eff_sf_sl[i][j][k], *rv_mu_susy_sl[i][j][k] ) ) ;
+						  RooArgSet( *rv_mu_ttwj_sl[i][j][k], *rv_mu_vv_sl[i][j][k], *rar_btageff_sf_sl[i][j][k], 
+							     *rar_eff_sf_sl[i][j][k], *rv_mu_susy_sl[i][j][k], *rar_trigeff_sl[i][j] ) ) ;
 
 	    
-	    TString rfvNLdpString = "@0 + @1 * @2 * ( @3 * ( @4 + @5 ) + @6 )" ;
+	    TString rfvNLdpString = "(@0 + @1 + @2 * @3 * ( @4 * ( @5 + @6 ) + @7 ) ) * @8" ;
 	      
 	    rv_n_ldp[i][j][k] = new RooFormulaVar( nLdpString, rfvNLdpString,
-						   RooArgSet( *rv_mu_qcd_ldp[i][j][k], *rar_btageff_sf_ldp[i][j][k], *rar_eff_sf_ldp[i][j][k], 
-							      *rar_sf_mc, *rv_mu_ttwj_ldp[i][j][k], *rv_mu_znn_ldp[i][j][k], *rv_mu_susy_ldp[i][j][k] ) ) ;
+						   RooArgSet( *rv_mu_qcd_ldp[i][j][k], *rv_mu_vv_ldp[i][j][k], *rar_btageff_sf_ldp[i][j][k], *rar_eff_sf_ldp[i][j][k], 
+							      *rar_sf_mc, *rv_mu_ttwj_ldp[i][j][k], *rv_mu_znn_ldp[i][j][k], *rv_mu_susy_ldp[i][j][k], *rar_trigeff[i][j] ) ) ;
 
 
 	    // pdf's

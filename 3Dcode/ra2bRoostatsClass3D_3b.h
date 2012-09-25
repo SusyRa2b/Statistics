@@ -145,6 +145,10 @@
        RooAbsArg*   rv_mu_susy_sl[nBinsMET][nBinsHT][nBinsBtag] ;
        RooAbsArg*   rv_mu_susy_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
 
+       RooFormulaVar* rv_mu_vv[nBinsMET][nBinsHT][nBinsBtag] ;
+       RooFormulaVar* rv_mu_vv_sl[nBinsMET][nBinsHT][nBinsBtag] ;
+       RooFormulaVar* rv_mu_vv_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
+
 
        // MC inputs
 
@@ -155,6 +159,10 @@
        RooRealVar* rv_mu_ttbarsingletopzjetsmc_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
        RooRealVar* rv_mu_WJmc_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
        RooRealVar* rv_mu_Znnmc_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
+
+       RooRealVar* rv_mu_vvmc[nBinsMET][nBinsHT][nBinsBtag] ;
+       RooRealVar* rv_mu_vvmc_sl[nBinsMET][nBinsHT][nBinsBtag] ;
+       RooRealVar* rv_mu_vvmc_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
 
        
        // gaussian constraints
@@ -170,6 +178,8 @@
   //   RooFormulaVar* rv_eff_sf_sl[nBinsMET][nBinsHT][nBinsBtag] ;
   //   RooFormulaVar* rv_eff_sf_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
 
+       RooRealVar* rv_mean_vv_sf;
+       RooRealVar* rv_width_vv_sf;
        
        // btag efficiency derivatives
 

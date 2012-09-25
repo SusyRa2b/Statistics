@@ -112,6 +112,13 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   chainWJets.Add("files15fb_8TeV/Tbar-t.root") ;
   chainWJets.Add("files15fb_8TeV/Tbar-tW.root") ;
 
+//include Z->ll in VV contribution
+  TChain chainVV("tree");
+  chainVV.Add("files15fb_8TeV/WW.root");
+  chainVV.Add("files15fb_8TeV/WZ.root");
+  chainVV.Add("files15fb_8TeV/ZZ.root");
+//  chainVV.Add("files15fb_8TeV_old1/DY-200to400.root");
+// chainVV.Add("files15fb_8TeV_old1/DY-400.root");
 
 
 
@@ -460,6 +467,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
    TH1F* hmctruth_wjets[3][3] ;
    TH1F* hmctruth_qcd[3][3] ;
    TH1F* hmctruth_znn[3][3] ;
+   TH1F* hmctruth_vv[3][3] ;
    TH1F* hmctruth_allsm[3][3] ;
    TH1F* hmctruth_all[3][3] ;
 
@@ -488,6 +496,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
          sprintf( hname, "hmctruth_znn_%s_%db", selname[si], bbi+1 ) ;
          hmctruth_znn[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
 
+         sprintf( hname, "hmctruth_vv_%s_%db", selname[si], bbi+1 ) ;
+         hmctruth_vv[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
+
          sprintf( hname, "hmctruth_allsm_%s_%db", selname[si], bbi+1 ) ;
          hmctruth_allsm[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
 
@@ -515,6 +526,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     TH2F* h_wjets[10] ;
     TH2F* h_qcd[10] ;
     TH2F* h_znn[10] ;
+    TH2F* h_vv[10];
     TH2F* h_susy[10] ;
     TH2F* h_mc[10] ;
 
@@ -537,6 +549,10 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
        sprintf( hname, "h_znn_%db", bi+1 ) ;
        h_znn[bi]  = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
        h_znn[bi] -> Sumw2() ;
+
+       sprintf( hname, "h_vv_%db", bi+1 ) ;
+       h_vv[bi]  = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
+       h_vv[bi] -> Sumw2() ;
 
        sprintf( hname, "h_susy_%db", bi+1 ) ;
        h_susy[bi] = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
@@ -591,6 +607,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
         if (doPUreweighting) FillHTMET(&chainZnn, h_znn[k], si, k);
 	else chainZnn.Project(hname,"HT:MET",allcuts);
 	printf("    %12s %7.1f events\n", hname, h_znn[k]->Integral() ) ; cout << flush ;
+
+        sprintf( hname, "h_vv_%db", k+1 ) ;
+        if (doPUreweighting) FillHTMET(&chainVV, h_vv[k], si, k);
+	else chainVV.Project(hname,"HT:MET",allcuts);
+	printf("    %12s %7.1f events\n", hname, h_vv[k]->Integral() ) ; cout << flush ;
+
         if ( mgl > 0. ) {
            sprintf( hname, "h_susy_%db", k+1 ) ;
            chainT1bbbb.Project(hname,"HT:MET",allsusycuts);
@@ -633,6 +655,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
              double znnval = h_znn[k] -> GetBinContent( i+1, j+1 ) ;
              double znnerr = h_znn[k] -> GetBinError(   i+1, j+1 ) ;
 
+             double vvval = h_vv[k] -> GetBinContent( i+1, j+1 ) ;
+             double vverr = h_vv[k] -> GetBinError(   i+1, j+1 ) ;
+
              double susyval = h_susy[k] -> GetBinContent( i+1, j+1 ) ;
              double susyerr = h_susy[k] -> GetBinError(   i+1, j+1 ) ;
 
@@ -640,6 +665,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
              printf(" N_%s, wjets  met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, wjetsval,wjetserr) ; cout << flush ;
              printf(" N_%s, qcd    met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, qcdval,qcderr) ; cout << flush ;
              printf(" N_%s, znn    met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, znnval,znnerr) ; cout << flush ;
+             printf(" N_%s, vv     met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, vvval,vverr) ; cout << flush ;
              if ( mgl>0. ) {
                 if ( target_susy_all0lep > 0. ) {
                    susyval = susyval * (target_susy_all0lep/nSusyTotal);
@@ -649,7 +675,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
              }
              printf("\n") ;
 
-             double allval = ttval + wjetsval + qcdval + znnval + susyval ;
+             double allval = ttval + wjetsval + qcdval + znnval + vvval + susyval ;
 
              //// inFile << obsname << "  \t" << (int)allval << endl;
              inFile << obsname << "  \t" << allval << endl;
@@ -666,6 +692,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
              hmctruth_qcd[si][k]   -> SetBinError(   histbin, qcderr ) ;
              hmctruth_znn[si][k]   -> SetBinContent( histbin, znnval ) ;
              hmctruth_znn[si][k]   -> SetBinError(   histbin, znnerr ) ;
+             hmctruth_vv[si][k]    -> SetBinContent( histbin, vvval ) ;
+             hmctruth_vv[si][k]    -> SetBinError(   histbin, vverr ) ;
              hmctruth_susy[si][k]  -> SetBinContent( histbin, susyval  ) ;
              hmctruth_susy[si][k]  -> SetBinError(   histbin, susyerr  ) ;
              hmctruth_allsm[si][k] -> SetBinContent( histbin, ttval+wjetsval+qcdval+znnval ) ;
@@ -707,7 +735,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
              h_wjets[k] -> Reset() ;
              h_qcd[k] -> Reset() ;
              h_znn[k] -> Reset() ;
-             h_susy[k] -> Reset() ;
+             h_vv[k] -> Reset() ;
+	     h_susy[k] -> Reset() ;
           }
 
 
@@ -1200,6 +1229,57 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
       } // hbi
     } // mbi
 
+    // print out combined mc truth values for VV and DY (included in fit from MC)
+    for ( int si=0; si<nSel; si++ ) {
+      for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
+    	for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
+    	  int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+    	  for (int bbi = 0 ; bbi < nBinsBjets ; bbi++) {
+
+    	     float vvvalue = hmctruth_vv[si][bbi] -> GetBinContent( hbin ) ;
+    	     char parname[1000] ;
+
+    	     sprintf( parname, "N_VVmc_%s_M%d_H%d_%db", selname[si], mbi+1, hbi+1, bbi+1 ) ;
+    	     printf(" %s  :  %6.3f \n", parname, vvvalue ) ;
+    	     inFile << parname << "  \t" << vvvalue << endl;
+
+
+    	  } // bbi
+    	} // hbi
+      } // mbi
+    } // si
+
+    // next write out measured trigger efficiencies
+    float trigeff0LVal[4][4] = {{0.50,0.50,0.50,0.50},{0.60,0.60,0.60,0.60},{0.60,0.95,0.95,0.95},{1.00,1.00,1.00,1.00}};
+    float trigeff0LErr[4][4] = {{0.01,0.01,0.01,0.01},{0.01,0.01,0.01,0.01},{0.01,0.01,0.01,0.01},{0.01,0.01,0.01,0.01}};
+    float trigeff1LVal[4][4] = {{0.85,0.85,0.85,0.85},{0.95,0.95,0.95,0.95},{1.00,1.00,1.00,1.00},{1.00,1.00,1.00,1.00}};
+    float trigeff1LErr[4][4] = {{0.01,0.01,0.01,0.01},{0.01,0.01,0.01,0.01},{0.01,0.01,0.01,0.01},{0.01,0.01,0.01,0.01}};
+    //float trigeff0LVal[4][4] = {{1.00,1.00,1.00,1.00},{1.00,1.00,1.00,1.00},{1.00,1.00,1.00,1.00},{1.00,1.00,1.00,1.00}};
+    //float trigeff0LErr[4][4] = {{0.0,0.0,0.0,0.0},{0.0,0.0,0.0,0.0},{0.0,0.0,0.0,0.0},{0.0,0.0,0.0,0.0}};
+    //float trigeff1LVal[4][4] = {{1.00,1.00,1.00,1.00},{1.00,1.00,1.00,1.00},{1.00,1.00,1.00,1.00},{1.00,1.00,1.00,1.00}};
+    //float trigeff1LErr[4][4] = {{0.0,0.0,0.0,0.0},{0.0,0.0,0.0,0.0},{0.0,0.0,0.0,0.0},{0.0,0.0,0.0,0.0}};
+    for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
+      for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
+    	char parname[1000] ;
+    	sprintf( parname, "trigeff_val_0L_M%d_H%d", mbi+1, hbi+1 ) ;
+    	printf(" %s  :  %6.3f \n", parname, trigeff0LVal[mbi][hbi] ) ;
+    	inFile << parname << "  \t" << trigeff0LVal[mbi][hbi] << endl;
+	sprintf( parname, "trigeff_err_0L_M%d_H%d", mbi+1, hbi+1 ) ;
+    	printf(" %s  :  %6.3f \n", parname, trigeff0LErr[mbi][hbi] ) ;
+    	inFile << parname << "  \t" << trigeff0LErr[mbi][hbi] << endl;
+      }
+    }
+    for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
+      for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
+    	char parname[1000] ;
+    	sprintf( parname, "trigeff_val_1L_M%d_H%d", mbi+1, hbi+1 ) ;
+    	printf(" %s  :  %6.3f \n", parname, trigeff1LVal[mbi][hbi] ) ;
+    	inFile << parname << "  \t" << trigeff1LVal[mbi][hbi] << endl;
+    	sprintf( parname, "trigeff_err_1L_M%d_H%d", mbi+1, hbi+1 ) ;
+    	printf(" %s  :  %6.3f \n", parname, trigeff1LErr[mbi][hbi] ) ;
+    	inFile << parname << "  \t" << trigeff1LErr[mbi][hbi] << endl;
+      }
+    }
 
     // add here the fractions (bin by bin) of 2b/1b and 3b/1b SL events (just for the MC for now)
 
@@ -1223,8 +1303,6 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
       }
     }
-
-
 
 
     gSystem->Exec("mkdir -p rootfiles") ;
