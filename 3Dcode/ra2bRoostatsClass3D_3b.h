@@ -108,6 +108,7 @@
 
        static const float DataLumi = 9999. ;     // integrated luminosity (in pb-1)
 
+       bool ignoreBin[nBinsMET][nBinsHT] ;
 
        // observables
 

@@ -115,6 +115,37 @@
 
 
 
+
+
+
+
+
+      //-- Hardwire in to ignore the highest MET bin in the lowest HT bin.
+      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            ignoreBin[mbi][hbi] = false ;
+         } // hbi
+      } // mbi
+      ignoreBin[nBinsMET-1][0] = true ;
+
+      printf("\n\n *** Ignoring these bins in the analysis.\n\n") ;
+      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            if ( ignoreBin[mbi][hbi] ) {
+               printf("  MET %d, HT %d\n", mbi+1, hbi+1 ) ;
+            }
+         } // hbi
+      } // mbi
+      printf("\n\n\n") ;
+
+
+
+
+
+
+
+
+
       if ( qcdModelIndex<2 || qcdModelIndex>5 ) {
          printf("\n\n *** Unsupported QCD model index: %d.  Try again with 2,3,4,5.\n\n", qcdModelIndex) ;
          return false ;
@@ -310,6 +341,12 @@
             N_0lep[i][j][k] = TMath::Nint( value ) ;
 
 	    if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
+
+            if ( ignoreBin[i][j] ) {
+               N_0lep[i][j][k] = 0. ;
+               continue ;
+            }
+
 	    cout << inPar << " = " << N_0lep[i][j][k] << endl ;
 
 	  }
@@ -329,6 +366,12 @@
             N_1lep[i][j][k] = TMath::Nint( value ) ;
 
 	    if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
+
+            if ( ignoreBin[i][j] ) {
+               N_1lep[i][j][k] = 0. ;
+               continue ;
+            }
+
 	    cout << inPar << " = " << N_1lep[i][j][k] << endl ;
 
 	  }
@@ -348,6 +391,12 @@
             N_ldp[i][j][k] = TMath::Nint( value ) ;
 
 	    if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
+
+            if ( ignoreBin[i][j] ) {
+               N_ldp[i][j][k] = 0. ;
+               continue ;
+            }
+
 	    cout << inPar << " = " << N_ldp[i][j][k] << endl ;
 
 	  }
@@ -386,6 +435,12 @@
           N_Zee[i][j] = TMath::Nint( value ) ;
 
 	  if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
+
+          if ( ignoreBin[i][j] ) {
+             N_Zee[i][j] = 0. ;
+             continue ;
+          }
+
 	  cout << inPar << " = " << N_Zee[i][j] << endl ;	  
 
 	}
@@ -400,6 +455,12 @@
           N_Zmm[i][j] = TMath::Nint( value ) ;
 
 	  if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
+
+          if ( ignoreBin[i][j] ) {
+             N_Zmm[i][j] = 0. ;
+             continue ;
+          }
+
 	  cout << inPar << " = " << N_Zmm[i][j] << endl ;	  
 
 	}
@@ -758,6 +819,9 @@
 
       for (int i = 0 ; i < nBinsMET ; i++) {
         for (int j = 0 ; j < nBinsHT ; j++) {
+
+          if ( ignoreBin[i][j] ) continue ;
+
           for (int k = 0 ; k < nBinsBtag ; k++) {     
 
             // TTWJ stuff.
@@ -939,6 +1003,9 @@
 
       for (int i = 0 ; i < nBinsMET ; i++) {
 	for (int j = 0 ; j < nBinsHT ; j++) {
+
+          if ( ignoreBin[i][j] ) continue ;
+
 	  for (int k = 0 ; k < nBinsBtag ; k++) {     
 
             double model_0lep = initialval_ttwj[i][j][k] + initialval_qcd[i][j][k] + initialval_znn[i][j][k] ;
@@ -1018,6 +1085,9 @@
             
       for (int i = 0 ; i < nBinsMET ; i++) {
 	for (int j = 0 ; j < nBinsHT ; j++) {
+
+          if ( ignoreBin[i][j] ) continue ;
+
 	  for (int k = 0 ; k < nBinsBtag ; k++) {     
 
 	    TString zlString  = "N_0lep";
@@ -1279,6 +1349,7 @@
       double susymc_all0lep(0.) ;
       for (int i = 0 ; i < nBinsMET ; i++) {
          for (int j = 0 ; j < nBinsHT ; j++) {
+            if ( ignoreBin[i][j] ) continue ;
             for (int k = 0 ; k < nBinsBtag ; k++) {
                susymc_all0lep += rv_mu_susymc[i][j][k] -> getVal() ;
             }
@@ -1553,6 +1624,7 @@
 
       for (int i = 0 ; i < nBinsMET ; i++) {
         for (int j = 0 ; j < nBinsHT ; j++) {
+          if ( ignoreBin[i][j] ) continue ;
           for (int k = 0 ; k < nBinsBtag ; k++) {
 
 
@@ -1662,6 +1734,7 @@
 
       for (int i = 0 ; i < nBinsMET ; i++) {
          for (int j = 0 ; j < nBinsHT ; j++) {
+            if ( ignoreBin[i][j] ) continue ;
             for (int k = 0 ; k < nBinsBtag ; k++) {
 
                sprintf( NP_name, "eff_sf_M%d_H%d_%db", i+1, j+1, k+1 ) ;
@@ -1708,6 +1781,7 @@
 
       for (int i = 0 ; i < nBinsMET ; i++) {
          for (int j = 0 ; j < nBinsHT ; j++) {
+            if ( ignoreBin[i][j] ) continue ;
             for (int k = 0 ; k < nBinsBtag ; k++) {
 
                bool changeSign ;
@@ -1754,6 +1828,9 @@
 
       for (int i = 0 ; i < nBinsMET ; i++) {
         for (int j = 0 ; j < nBinsHT ; j++) {
+
+          if ( ignoreBin[i][j] ) continue ;
+
           sprintf( NP_name, "trigeff_M%d_H%d", i+1, j+1 ) ;
           rar_trigeff[i][j] = makeBetaConstraint( NP_name, trigeff_0L[i][j], trigefferr_0L[i][j] ) ;
 
@@ -1782,6 +1859,9 @@
 
       for (int i = 0 ; i < nBinsMET ; i++) {
 	for (int j = 0 ; j < nBinsHT ; j++) {
+
+          if ( ignoreBin[i][j] ) continue ;
+
 	  for (int k = 0 ; k < nBinsBtag ; k++) {     
 
 
@@ -2111,6 +2191,7 @@
             double logL(0.) ;
             for (int i = 0 ; i < nBinsMET ; i++) {
                for (int j = 0 ; j < nBinsHT ; j++) {
+                  if ( ignoreBin[i][j] ) continue ;
                   for (int k = 0 ; k < nBinsBtag ; k++) {     
                      double pdfVal = pdf_N_0lep[i][j][k] -> getVal() ;
                      if ( pdfVal > 0. ) { logL += log( pdfVal ) ; } else { printf(" *** PDF %s evaluates to %g\n", pdf_N_0lep[i][j][k] -> GetName(), pdfVal ) ; }
@@ -2135,6 +2216,7 @@
             rv_ttwj_0lep1lep_ratio -> setVal( scanVal ) ;
             for (int i = 0 ; i < nBinsMET ; i++) {
                for (int j = 0 ; j < nBinsHT ; j++) {
+                  if ( ignoreBin[i][j] ) continue ;
                   for (int k = 0 ; k < nBinsBtag ; k++) {     
                      double pdfVal = pdf_N_0lep[i][j][k] -> getVal() ;
                      if ( pdfVal > 0. ) { logL += log( pdfVal ) ; } else { printf(" *** PDF %s evaluates to %g\n", pdf_N_0lep[i][j][k] -> GetName(), pdfVal ) ; }
@@ -2376,65 +2458,6 @@
 	  }
 	  
 
-	  //--Include the stat error on the efficiency for SMS's
-
-          //--- Owen: Aug 28, 2012.  Don't do this.
-
-     ///  if ( isT1bbbb ) {
-
-     ///    float n_0l_raw_eff[nBinsMET][nBinsHT][nBinsBtag] ;
-     ///    float n_1l_raw_eff[nBinsMET][nBinsHT][nBinsBtag] ;
-     ///    float n_ldp_raw_eff[nBinsMET][nBinsHT][nBinsBtag] ;
-
-     ///    float n_0l_stat_error[nBinsMET][nBinsHT][nBinsBtag] ;
-     ///    float n_1l_stat_error[nBinsMET][nBinsHT][nBinsBtag] ;
-     ///    float n_ldp_stat_error[nBinsMET][nBinsHT][nBinsBtag] ;
-
-
-     ///    for (int i = 0 ; i < nBinsMET ; i++) {
-     ///      for (int j = 0 ; j < nBinsHT ; j++) {
-     ///        for (int k = 0 ; k < nBinsBtag ; k++) {     
-
-     ///          TString binString = "";
-     ///          binString += sMbins[i]+sHbins[j]+sBbins[k] ;
-
-     ///          // absolute raw efficiency
-     ///          n_0l_raw_eff[i][j][k]  = n_0l_raw[i][j][k] / nGenPerPoint ;
-     ///          n_1l_raw_eff[i][j][k]  = n_1l_raw[i][j][k] / nGenPerPoint ;
-     ///          n_ldp_raw_eff[i][j][k] = n_ldp_raw[i][j][k] / nGenPerPoint ;
-
-     ///          // absolute stat error
-     ///          n_0l_stat_error[i][j][k]  = sqrt( n_0l_raw_eff[i][j][k]  * ( 1.0 - n_0l_raw_eff[i][j][k]  ) / nGenPerPoint ) ;
-     ///          n_1l_stat_error[i][j][k]  = sqrt( n_1l_raw_eff[i][j][k]  * ( 1.0 - n_1l_raw_eff[i][j][k]  ) / nGenPerPoint ) ;
-     ///          n_ldp_stat_error[i][j][k] = sqrt( n_ldp_raw_eff[i][j][k] * ( 1.0 - n_ldp_raw_eff[i][j][k] ) / nGenPerPoint ) ;
-
-     ///          // relative stat err in percent.
-     ///          if ( n_0l_raw_eff[i][j][k] > 0 ) { n_0l_stat_error[i][j][k] = 100.* n_0l_stat_error[i][j][k] / n_0l_raw_eff[i][j][k] ; } 
-     ///          else { n_0l_stat_error[i][j][k] = 0. ; }
-
-     ///          if ( n_1l_raw_eff[i][j][k] > 0 ) { n_1l_stat_error[i][j][k] = 100.* n_1l_stat_error[i][j][k] / n_1l_raw_eff[i][j][k] ; } 
-     ///          else { n_1l_stat_error[i][j][k] = 0. ; }
-
-     ///          if ( n_ldp_raw_eff[i][j][k] > 0 ) { n_ldp_stat_error[i][j][k] = 100.* n_ldp_stat_error[i][j][k] / n_ldp_raw_eff[i][j][k] ; } 
-     ///          else { n_ldp_stat_error[i][j][k] = 0. ; }
-
-     ///          cout << binString + " - 0 lep - SUSY statistical uncertainty (%) = " << n_0l_stat_error[i][j][k] << endl ; 
-     ///          cout << binString + " - 1 lep - SUSY statistical uncertainty (%) = " << n_1l_stat_error[i][j][k] << endl ; 
-     ///          cout << binString + " - ldp   - SUSY statistical uncertainty (%) = " << n_ldp_stat_error[i][j][k] << endl ; 
-
-     ///          // total error
-     ///          n_0l_error[i][j][k]  = sqrt( pow( n_0l_error[i][j][k],  2) + pow( n_0l_stat_error[i][j][k], 2) ) ;
-     ///          n_1l_error[i][j][k]  = sqrt( pow( n_1l_error[i][j][k],  2) + pow( n_1l_stat_error[i][j][k], 2) ) ;
-     ///          n_ldp_error[i][j][k] = sqrt( pow( n_ldp_error[i][j][k], 2) + pow( n_ldp_stat_error[i][j][k], 2) ) ;
-
-     ///          cout << binString + " - 0 lep - SUSY total uncertainty (%) = " << n_0l_error[i][j][k] << endl ; 
-     ///          cout << binString + " - 1 lep - SUSY total uncertainty (%) = " << n_1l_error[i][j][k] << endl ; 
-     ///          cout << binString + " - ldp   - SUSY total uncertainty (%) = " << n_ldp_error[i][j][k] << endl ; 
-
-     ///        }
-     ///      }
-     ///    }
-     ///  } // end of if (isT1bbbb)
 
 
 	  double setVal_n_0l[nBinsMET][nBinsHT][nBinsBtag] ;
@@ -2445,18 +2468,12 @@
 
 	  for (int i = 0 ; i < nBinsMET ; i++) {
 	    for (int j = 0 ; j < nBinsHT ; j++) {
+              if ( ignoreBin[i][j] ) continue ;
 	      for (int k = 0 ; k < nBinsBtag ; k++) {     
 		
-            /// if (!isT1bbbb) {
-                  setVal_n_0l[i][j][k]  = n_0l_raw[i][j][k]  * n_0l_correction[i][j][k] ;
-                  setVal_n_1l[i][j][k]  = n_1l_raw[i][j][k]  * n_1l_correction[i][j][k] ;
-                  setVal_n_ldp[i][j][k] = n_ldp_raw[i][j][k] * n_ldp_correction[i][j][k] ;
-            /// }
-            /// else {
-            ///   setVal_n_0l[i][j][k]  = DataLumi * t1bbbbXsec * (( n_0l_raw[i][j][k]  * n_0l_correction[i][j][k] ) / nGenPerPoint ) ;
-            ///   setVal_n_1l[i][j][k]  = DataLumi * t1bbbbXsec * (( n_1l_raw[i][j][k]  * n_1l_correction[i][j][k] ) / nGenPerPoint ) ;
-            ///   setVal_n_ldp[i][j][k] = DataLumi * t1bbbbXsec * (( n_ldp_raw[i][j][k] * n_ldp_correction[i][j][k] ) / nGenPerPoint ) ;
-            /// }
+                setVal_n_0l[i][j][k]  = n_0l_raw[i][j][k]  * n_0l_correction[i][j][k] ;
+                setVal_n_1l[i][j][k]  = n_1l_raw[i][j][k]  * n_1l_correction[i][j][k] ;
+                setVal_n_ldp[i][j][k] = n_ldp_raw[i][j][k] * n_ldp_correction[i][j][k] ;
 
                 all0lep += setVal_n_0l[i][j][k] ;
 
@@ -2488,6 +2505,7 @@
 	  
 	  for (int i = 0 ; i < nBinsMET ; i++) {
 	    for (int j = 0 ; j < nBinsHT ; j++) {
+              if ( ignoreBin[i][j] ) continue ;
 	      for (int k = 0 ; k < nBinsBtag ; k++) {     
 
 		TString binString = "";
@@ -2576,6 +2594,7 @@
 
 	  for (int i = 0 ; i < nBinsMET ; i++) {
 	    for (int j = 0 ; j < nBinsHT ; j++) {
+              if ( ignoreBin[i][j] ) continue ;
 	      for (int k = 0 ; k < nBinsBtag ; k++) {     
 		
 		TString binString = "";

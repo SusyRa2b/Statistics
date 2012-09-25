@@ -64,7 +64,7 @@
      int nBinsMET(1) ;
      for ( int bi=2; bi<20; bi++ ) {
         char vname[1000] ;
-        sprintf( vname, "mu_ttwj_sl_M%d_H1_1b", bi ) ;
+        sprintf( vname, "mu_ttwj_sl_M%d_H2_1b", bi ) ;
         RooRealVar* rrv = ws->var( vname ) ;
         if ( rrv == 0x0 ) break ;
         nBinsMET = bi ;
