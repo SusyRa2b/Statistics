@@ -1286,7 +1286,13 @@
 
                   sprintf( oname, "N_%s_M%d_H%d_%db", selname[si], mbi+1, hbi+1, bbi+1 ) ;
                   RooRealVar* rrv = workspace -> var( oname ) ;
-                  if ( rrv == 0x0 ) { printf("\n\n *** can't find variable with name %s\n", oname ) ; return 0x0 ; }
+                  if ( rrv == 0x0 ) {
+                     printf("\n\n *** can't find variable with name %s\n", oname ) ; cout << flush ;
+                     if ( si == 0 ) Nobs_0lep[mbi][hbi][bbi] = 0 ;
+                     if ( si == 1 ) Nobs_1lep[mbi][hbi][bbi] = 0 ;
+                     if ( si == 2 ) Nobs_ldp [mbi][hbi][bbi] = 0 ;
+                     continue ;
+                  }
 
                   if ( si == 0 ) {
                      int nobs ;
@@ -1328,7 +1334,11 @@
          for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
             sprintf( oname, "N_Zee_M%d_H%d", mbi+1, hbi+1 ) ;
             RooRealVar* rrv = workspace -> var( oname ) ;
-            if ( rrv == 0x0 ) { printf("\n\n *** can't find variable with name %s\n", oname ) ; return 0x0 ; }
+            if ( rrv == 0x0 ) {
+               printf("\n\n *** can't find variable with name %s\n", oname ) ;
+               Nobs_Zee[mbi][hbi] = 0 ;
+               continue ;
+            }
             int nobs ;
             if ( noFluctuations ) {
                nobs = TMath::Nint( toy_mean_N_Zee[mbi][hbi] ) ;
@@ -1345,7 +1355,11 @@
          for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
             sprintf( oname, "N_Zmm_M%d_H%d", mbi+1, hbi+1 ) ;
             RooRealVar* rrv = workspace -> var( oname ) ;
-            if ( rrv == 0x0 ) { printf("\n\n *** can't find variable with name %s\n", oname ) ; return 0x0 ; }
+            if ( rrv == 0x0 ) {
+               printf("\n\n *** can't find variable with name %s\n", oname ) ;
+               Nobs_Zmm[mbi][hbi] = 0 ;
+               continue ;
+            }
             int nobs ;
             if ( noFluctuations ) {
                nobs = TMath::Nint( toy_mean_N_Zmm[mbi][hbi] ) ;
@@ -1661,7 +1675,7 @@
                sprintf( vname, "mu_znn_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                rar = (RooAbsReal*) workspace -> obj( vname ) ;
                if ( rar == 0x0 ) {
-                  printf("\n\n *** missing var %s\n\n", vname ) ; return false ;
+                  printf("\n\n *** missing var %s\n\n", vname ) ;
                } else {
                   nznn = rar -> getVal() ;
                }
@@ -1693,13 +1707,21 @@
 
                sprintf( vname, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                rar = (RooAbsReal*) workspace -> obj( vname ) ;
-               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; return false ; }
-               fit_sf_ttwj_0lep_3da[mbi][hbi][bbi] = rar -> getVal() ;
+               if ( rar == 0x0 ) {
+                  printf("\n\n *** missing var %s\n\n", vname ) ;
+                  fit_sf_ttwj_0lep_3da[mbi][hbi][bbi] = 1. ;
+               } else {
+                  fit_sf_ttwj_0lep_3da[mbi][hbi][bbi] = rar -> getVal() ;
+               }
 
                sprintf( vname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                rar = (RooAbsReal*) workspace -> obj( vname ) ;
-               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; return false ; }
-               fit_sf_qcd_0lep_3da[mbi][hbi][bbi] = rar -> getVal() ;
+               if ( rar == 0x0 ) {
+                  printf("\n\n *** missing var %s\n\n", vname ) ;
+                  fit_sf_qcd_0lep_3da[mbi][hbi][bbi] = 1. ;
+               } else {
+                  fit_sf_qcd_0lep_3da[mbi][hbi][bbi] = rar -> getVal() ;
+               }
 
 
 
