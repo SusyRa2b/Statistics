@@ -72,6 +72,7 @@
 
 #include "RooRatio.h"
 #include "RooPosDefCorrGauss.h"
+#include "RooBetaPdf.h"
 #include "betaPrimeConstraint.c"
 
   using namespace RooFit ;
@@ -2734,89 +2735,108 @@
 
     RooAbsReal* ra2bRoostatsClass3D_3b::makeBetaConstraint( const char* NP_name, double NP_val, double NP_err ) {
 
-       if ( NP_val >=1 ) {
-          printf("\n\n *** ra2bRoostatsClass3D_3b::makeBetaConstraint:  warning.  Input efficiency value is %g.  Resetting to 0.999.\n\n", NP_val) ;
-          NP_val = 0.999 ;
-       }
-
        if ( NP_err <= 0. ) {
           printf("  Uncertainty is zero.  Will return constant scale factor of %g.  Input val = %g, err = %g.\n", NP_val, NP_val, NP_err ) ;
           return new RooConstVar( NP_name, NP_name, NP_val ) ;
        }
 
+       if ( NP_val >=1 ) {
+          printf("\n\n *** ra2bRoostatsClass3D_3b::makeBetaConstraint:  warning.  Input efficiency value is %g.  Resetting to 0.999.\n\n", NP_val) ;
+          NP_val = 0.999 ;
+       }
 
        double alpha, beta ;
        char varname[1000] ;
 
-       RooRealVar *rrv_passObs, *rrv_failObs, *rrv_passPar, *rrv_failPar ;
-       RooPoisson *passConstraint, *failConstraint ;
-
-       double parVal, parErr, upperLimit, lowerLimit ;
 
        betaModeTransform( NP_val, NP_err, alpha, beta ) ;
 
-       sprintf( varname, "passObs_%s", NP_name ) ;
-       rrv_passObs = new RooRealVar( varname, varname, alpha-1., 1e-5, 1e5 ) ;
-       rrv_passObs -> setConstant( kTRUE ) ;
+       sprintf( varname, "alpha_%s", NP_name ) ;
+       RooAbsReal* rar_alpha = new RooConstVar( varname, varname, alpha ) ;
 
-       sprintf( varname, "failObs_%s", NP_name ) ;
-       rrv_failObs = new RooRealVar( varname, varname, beta -1., 1e-5, 1e5 ) ;
-       rrv_failObs -> setConstant( kTRUE ) ;
+       sprintf( varname, "beta_%s", NP_name ) ;
+       RooAbsReal* rar_beta = new RooConstVar( varname, varname, beta ) ;
 
-       globalObservables -> add( *rrv_passObs ) ;
-       globalObservables -> add( *rrv_failObs ) ;
+       RooAbsReal* rar_np = new RooRealVar( NP_name, NP_name, NP_val, 0., 1. ) ;
 
+       sprintf( varname, "betapdf_%s", NP_name ) ;
+       RooAbsReal* rar_pdf = new RooBetaPdf( varname, varname, *rar_np, *rar_alpha, *rar_beta ) ;
 
-       parVal = alpha-1. ;
-       lowerLimit = parVal - 6*sqrt(parVal) ;
-       if ( lowerLimit <= 0. ) { lowerLimit = 1e-5 ; }
-       upperLimit = parVal + 6*sqrt(parVal) ;
-       if ( parVal > 0. ) { parErr = sqrt( parVal ) ; } else { parErr = 0. ; }
-       sprintf( varname, "passPar_%s", NP_name ) ;
-       rrv_passPar = new RooRealVar( varname, varname, parVal, lowerLimit, upperLimit ) ;
-       rrv_passPar -> setError( parErr ) ;
-       rrv_passPar->setConstant( kFALSE ) ;
-       printf(" floating nuisance parameter: %s = %g +/- %g, [%g, %g]\n",
-           varname, parVal, parErr, lowerLimit, upperLimit ) ;
+       allNuisances -> add( *rar_np ) ;
+       allNuisancePdfs -> add( *rar_pdf ) ;
 
-       parVal = beta-1. ;
-       lowerLimit = parVal - 6*sqrt(parVal) ;
-       if ( lowerLimit <= 0. ) { lowerLimit = 1e-5 ; }
-       upperLimit = parVal + 6*sqrt(parVal) ;
-       if ( parVal > 0. ) { parErr = sqrt( parVal ) ; } else { parErr = 0. ; }
-       sprintf( varname, "failPar_%s", NP_name ) ;
-       rrv_failPar = new RooRealVar( varname, varname, parVal, lowerLimit, upperLimit ) ;
-       rrv_failPar -> setError( parErr ) ;
-       rrv_failPar->setConstant( kFALSE ) ;
-       printf(" floating nuisance parameter: %s = %g +/- %g, [%g, %g]\n",
-           varname, parVal, parErr, lowerLimit, upperLimit ) ;
-
-       allNuisances -> add( *rrv_passPar ) ;
-       allNuisances -> add( *rrv_failPar ) ;
+       return rar_np ;
 
 
-       sprintf( varname, "passConstraint_%s", NP_name ) ;
-       passConstraint = new RooPoisson( varname, varname, *rrv_passObs, *rrv_passPar ) ;
-       printf("  Created constraint PDF : %s, val = %g, logval = %g\n",
-         varname, passConstraint->getVal(), passConstraint->getLogVal() ) ;
+ //  //--- Old way with two pseudo observations below here.
 
-       sprintf( varname, "failConstraint_%s", NP_name ) ;
-       failConstraint = new RooPoisson( varname, varname, *rrv_failObs, *rrv_failPar ) ;
-       printf("  Created constraint PDF : %s, val = %g, logval = %g\n",
-         varname, failConstraint->getVal(), failConstraint->getLogVal() ) ;
+ //    RooRealVar *rrv_passObs, *rrv_failObs, *rrv_passPar, *rrv_failPar ;
+ //    RooPoisson *passConstraint, *failConstraint ;
 
-       allNuisancePdfs -> add( *passConstraint ) ;
-       allNuisancePdfs -> add( *failConstraint ) ;
+ //    double parVal, parErr, upperLimit, lowerLimit ;
 
-       sprintf( varname, "%s_passPlusFail", NP_name ) ;
-       RooAddition* passPlusFail = new RooAddition( varname, varname, RooArgSet(*rrv_passPar, *rrv_failPar) ) ;
+ //    sprintf( varname, "passObs_%s", NP_name ) ;
+ //    rrv_passObs = new RooRealVar( varname, varname, alpha-1., 1e-5, 1e5 ) ;
+ //    rrv_passObs -> setConstant( kTRUE ) ;
+
+ //    sprintf( varname, "failObs_%s", NP_name ) ;
+ //    rrv_failObs = new RooRealVar( varname, varname, beta -1., 1e-5, 1e5 ) ;
+ //    rrv_failObs -> setConstant( kTRUE ) ;
+
+ //    globalObservables -> add( *rrv_passObs ) ;
+ //    globalObservables -> add( *rrv_failObs ) ;
 
 
-       sprintf( varname, "%s", NP_name ) ;
-       RooAbsReal* rar = new RooRatio( varname, varname, *rrv_passPar, *passPlusFail ) ;
-       printf("  Created nuisance parameter %s : val = %g\n", varname, rar -> getVal() ) ;
+ //    parVal = alpha-1. ;
+ //    lowerLimit = parVal - 6*sqrt(parVal) ;
+ //    if ( lowerLimit <= 0. ) { lowerLimit = 1e-5 ; }
+ //    upperLimit = parVal + 6*sqrt(parVal) ;
+ //    if ( parVal > 0. ) { parErr = sqrt( parVal ) ; } else { parErr = 0. ; }
+ //    sprintf( varname, "passPar_%s", NP_name ) ;
+ //    rrv_passPar = new RooRealVar( varname, varname, parVal, lowerLimit, upperLimit ) ;
+ //    rrv_passPar -> setError( parErr ) ;
+ //    rrv_passPar->setConstant( kFALSE ) ;
+ //    printf(" floating nuisance parameter: %s = %g +/- %g, [%g, %g]\n",
+ //        varname, parVal, parErr, lowerLimit, upperLimit ) ;
 
-       return rar ;
+ //    parVal = beta-1. ;
+ //    lowerLimit = parVal - 6*sqrt(parVal) ;
+ //    if ( lowerLimit <= 0. ) { lowerLimit = 1e-5 ; }
+ //    upperLimit = parVal + 6*sqrt(parVal) ;
+ //    if ( parVal > 0. ) { parErr = sqrt( parVal ) ; } else { parErr = 0. ; }
+ //    sprintf( varname, "failPar_%s", NP_name ) ;
+ //    rrv_failPar = new RooRealVar( varname, varname, parVal, lowerLimit, upperLimit ) ;
+ //    rrv_failPar -> setError( parErr ) ;
+ //    rrv_failPar->setConstant( kFALSE ) ;
+ //    printf(" floating nuisance parameter: %s = %g +/- %g, [%g, %g]\n",
+ //        varname, parVal, parErr, lowerLimit, upperLimit ) ;
+
+ //    allNuisances -> add( *rrv_passPar ) ;
+ //    allNuisances -> add( *rrv_failPar ) ;
+
+
+ //    sprintf( varname, "passConstraint_%s", NP_name ) ;
+ //    passConstraint = new RooPoisson( varname, varname, *rrv_passObs, *rrv_passPar ) ;
+ //    printf("  Created constraint PDF : %s, val = %g, logval = %g\n",
+ //      varname, passConstraint->getVal(), passConstraint->getLogVal() ) ;
+
+ //    sprintf( varname, "failConstraint_%s", NP_name ) ;
+ //    failConstraint = new RooPoisson( varname, varname, *rrv_failObs, *rrv_failPar ) ;
+ //    printf("  Created constraint PDF : %s, val = %g, logval = %g\n",
+ //      varname, failConstraint->getVal(), failConstraint->getLogVal() ) ;
+
+ //    allNuisancePdfs -> add( *passConstraint ) ;
+ //    allNuisancePdfs -> add( *failConstraint ) ;
+
+ //    sprintf( varname, "%s_passPlusFail", NP_name ) ;
+ //    RooAddition* passPlusFail = new RooAddition( varname, varname, RooArgSet(*rrv_passPar, *rrv_failPar) ) ;
+
+
+ //    sprintf( varname, "%s", NP_name ) ;
+ //    RooAbsReal* rar = new RooRatio( varname, varname, *rrv_passPar, *passPlusFail ) ;
+ //    printf("  Created nuisance parameter %s : val = %g\n", varname, rar -> getVal() ) ;
+
+ //    return rar ;
 
     } // makeBetaConstraint.
 
