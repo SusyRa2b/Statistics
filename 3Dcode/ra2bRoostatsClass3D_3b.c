@@ -828,7 +828,7 @@
             // TTWJ stuff.
 
             initialval_ttwj_sl[i][j][k] = N_1lep[i][j][k] ;
-            initialval_ttwj[i][j][k] = sf_ttwj[i][j][k] * initialguess_ttwj_0lep1lep_ratio * initialval_ttwj_sl[i][j][k] ;
+            initialval_ttwj[i][j][k] = sf_ttwj[i][j][k] * (initialguess_ttwj_0lep1lep_ratio*(trigeff_0L[i][j]/trigeff_1L[i][j])) * initialval_ttwj_sl[i][j][k] ;
             initialval_ttwj_ldp[i][j][k] = ttwj_ldp0lep_ratio[i][j][k] * initialval_ttwj[i][j][k] ;
 
             // Z -> invis stuff :
@@ -2183,7 +2183,8 @@
 
       { // begin scoping bracket.
 
-         double initialGuess = 1.3 ;
+         //let's try scaling this by the trig eff in the first met and ht bin since that has the most events
+         double initialGuess = 1.3*(trigeff_1L[0][0]/trigeff_0L[0][0]) ;
 
 
          ((RooRealVar*)rv_mu_susy_all0lep) -> setVal(0.) ;
@@ -2205,8 +2206,8 @@
 
          printf("\n\n Initial guess for ttwj 0lep/1lep ratio: %6.3f\n\n", initialGuess ) ;
 
-         double scanLow  = 1.0 ;
-         double scanHigh = 2.0 ;
+         double scanLow  = 1.0*(trigeff_1L[0][0]/trigeff_0L[0][0]) ;
+         double scanHigh = 2.0*(trigeff_1L[0][0]/trigeff_0L[0][0]) ;
          double bestVal = initialGuess ;
          double bestlnL( -1.e99 ) ;
          int nScanPoints(50) ;
