@@ -26,7 +26,7 @@ using namespace RooStats ;
 using namespace std;
 
 
-void integratedTotals(TString workspaceFile = "test.root", TString name =  "", TString binFilesFile = "binFilesFile.dat", TString datFile = "")
+void integratedTotals(TString workspaceFile = "test.root", TString binFilesFile = "binFilesFile.dat", TString datFile = "")
 {
   
   TFile* wstf = new TFile ( workspaceFile );
@@ -83,11 +83,14 @@ void integratedTotals(TString workspaceFile = "test.root", TString name =  "", T
   RooAddition* signalFractionAddition = new RooAddition("signalFractionAddition", "signalFractionAddition", *signalFractionSet);
   RooProduct*  signalYield = new RooProduct("signalYield","signalYield", RooArgSet(*signalFractionAddition,*signalCrossSection));;;
 
+  RooRealVar* signalUncertainty = ws->var("signalUncertainty"); 
+  double sigU = signalUncertainty->getVal();
+
   RooFitResult *fitResult = (RooFitResult*)wstf->Get("fitresult_likelihood_data");
   
   double sig = signalYield->getVal();
   double sigerr = signalYield->getPropagatedError(*fitResult);
-  cout << "analyzeFitOutput: " << name << " " << sig << "+-" << sigerr << " " << ttwjtot << " " << qcdtot << " " << znntot << endl; 
+  cout << "analyzeFitOutput: " << sig << "+-" << sigerr << " " << ttwjtot << " " << qcdtot << " " << znntot << endl; 
   cout << "DEBUG: datFile: " << datFile << endl;
   
   if(datFile != "") {
@@ -95,7 +98,7 @@ void integratedTotals(TString workspaceFile = "test.root", TString name =  "", T
     ofstream myfile;
     myfile.open(datFile.Data(), ios::out | ios::app);
     assert(myfile.is_open());
-    myfile << sig << " " << sigerr << " " << ttwjtot << " " << qcdtot << " " << znntot << " ";
+    myfile << sigU << " " << sig << " " << sigerr << " " << ttwjtot << " " << qcdtot << " " << znntot << " ";
     myfile.close();
   }
 
@@ -159,7 +162,7 @@ struct s3d {
 
 
 
-void owenPlots(TString workspaceFile = "test.root", TString name = "",  TString binFilesFile = "binFilesFile.dat") {
+void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binFilesFile.dat") {
   //This function assumes bin dat files are named like bin_Mx_Hy_zb
 
   gStyle->SetOptStat(0);
@@ -426,10 +429,10 @@ void owenPlots(TString workspaceFile = "test.root", TString name = "",  TString 
 }
 
 
-void analyzeFit(TString workspaceFile = "test.root", TString name = "", TString binFilesFile = "", TString datFile= "") {
+void analyzeFit(TString workspaceFile = "test.root", TString binFilesFile = "", TString datFile= "") {
 
-  integratedTotals(workspaceFile, name, binFilesFile, datFile);
-  //integratedTotals(workspaceFile, name);
+  integratedTotals(workspaceFile, binFilesFile, datFile);
+  //integratedTotals(workspaceFile);
   //owenPlots();
 
 }
