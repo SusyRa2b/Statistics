@@ -1,23 +1,21 @@
 
 
- # echo met4-ht4-v15-newqcdsyst-model2-mgl1100-mlsp300-3b
- # root -b -q make_ws_rootfile3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model2-exp0lep.dat\",\"datfiles/T1bbbb-met4-ht4-v15.dat\",1100,300,\"datfiles/dummy_DeffDbtag-met4-ht4.dat\",2\) >& logfiles/makews-met4-ht4-v15-newqcdsyst-model2-mgl1100-mlsp300-3b.log
- # mv ws3b.root rootfiles/ws-met4-ht4-v15-newqcdsyst-model2-mgl1100-mlsp300-3b.root
-
- # echo met4-ht4-v15-newqcdsyst-model3-mgl1100-mlsp300-3b
- # root -b -q make_ws_rootfile3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model3-exp0lep.dat\",\"datfiles/T1bbbb-met4-ht4-v15.dat\",1100,300,\"datfiles/dummy_DeffDbtag-met4-ht4.dat\",3\) >& logfiles/makews-met4-ht4-v15-newqcdsyst-model3-mgl1100-mlsp300-3b.log
- # mv ws3b.root rootfiles/ws-met4-ht4-v15-newqcdsyst-model3-mgl1100-mlsp300-3b.root
 
  # echo met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b
  # root -b -q make_ws_rootfile3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep.dat\",\"datfiles/T1bbbb-met4-ht4-v15.dat\",1100,300,\"datfiles/dummy_DeffDbtag-met4-ht4.dat\",4\) >& logfiles/makews-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b.log
  # mv ws3b.root rootfiles/ws-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b.root
 
-   echo met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave
-   root -b -q make_ws_rootfile3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave.dat\",\"datfiles/T1bbbb-met4-ht4-v15.dat\",1100,300,\"datfiles/dummy_DeffDbtag-met4-ht4.dat\",4\) >& logfiles/makews-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave.log
-   mv ws3b.root rootfiles/ws-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave.root
+#  echo met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave
+#  root -b -q make_ws_rootfile3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave.dat\",\"datfiles/T1bbbb-met4-ht4-v15.dat\",1100,300,\"datfiles/dummy_DeffDbtag-met4-ht4.dat\",4\) >& logfiles/makews-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave.log
+#  mv ws3b.root rootfiles/ws-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave.root
 
- # echo met4-ht4-v15-newqcdsyst-model5-mgl1100-mlsp300-3b
- # root -b -q make_ws_rootfile3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model5-exp0lep.dat\",\"datfiles/T1bbbb-met4-ht4-v15.dat\",1100,300,\"datfiles/dummy_DeffDbtag-met4-ht4.dat\",5\) >& logfiles/makews-met4-ht4-v15-newqcdsyst-model5-mgl1100-mlsp300-3b.log
- # mv ws3b.root rootfiles/ws-met4-ht4-v15-newqcdsyst-model5-mgl1100-mlsp300-3b.root
+
+
+
+
+
+   echo met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave-wtrigeff
+   root -b -q make_ws_rootfile3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrigeff.dat\",\"datfiles/T1bbbb-met4-ht4-v15.dat\",1100,300,\"datfiles/dummy_DeffDbtag-met4-ht4.dat\",4\) >& logfiles/makews-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave-wtrigeff.log
+   mv ws3b.root rootfiles/ws-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave-wtrigeff.root
 
 

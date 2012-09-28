@@ -827,8 +827,8 @@
 
             // TTWJ stuff.
 
-            initialval_ttwj_sl[i][j][k] = N_1lep[i][j][k] ;
-            initialval_ttwj[i][j][k] = sf_ttwj[i][j][k] * (initialguess_ttwj_0lep1lep_ratio*(trigeff_0L[i][j]/trigeff_1L[i][j])) * initialval_ttwj_sl[i][j][k] ;
+            initialval_ttwj_sl[i][j][k] = N_1lep[i][j][k] / trigeff_1L[i][j] ;
+            initialval_ttwj[i][j][k] = sf_ttwj[i][j][k] * initialguess_ttwj_0lep1lep_ratio* initialval_ttwj_sl[i][j][k] ;
             initialval_ttwj_ldp[i][j][k] = ttwj_ldp0lep_ratio[i][j][k] * initialval_ttwj[i][j][k] ;
 
             // Z -> invis stuff :
@@ -843,7 +843,7 @@
 
             // QCD stuff:
 
-            initialval_qcd_ldp[i][j][k] = N_ldp[i][j][k] - ( initialval_ttwj_ldp[i][j][k] + initialval_znn_ldp[i][j][k] ) ;
+            initialval_qcd_ldp[i][j][k] = N_ldp[i][j][k] / trigeff_0L[i][j] - ( initialval_ttwj_ldp[i][j][k] + initialval_znn_ldp[i][j][k] ) ;
 
           }
         }
@@ -865,7 +865,7 @@
 
          //-- Estimate the HT ratios from the first MET and nbjet bins
          for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
-            tmp_qcd = N_0lep[0][hbi][0] - initialval_ttwj[0][hbi][0] - initialval_znn[0][hbi][0] ;
+            tmp_qcd = N_0lep[0][hbi][0] / trigeff_0L[0][hbi] - initialval_ttwj[0][hbi][0] - initialval_znn[0][hbi][0] ;
             if ( initialval_qcd_ldp[0][hbi][0] > 0. ) {
                initialguess_model24_qcd_0lepLDP_ratio[hbi] = tmp_qcd / ( sf_qcd[0][hbi][0] * initialval_qcd_ldp[0][hbi][0] ) ;
             } else {
@@ -880,7 +880,7 @@
             if ( bbi == 0 ) {
                initialguess_model4_SFqcd_nb[0] = 1.0 ; //-- first one is 1 by definition.
             } else {
-               tmp_qcd = N_0lep[0][0][bbi] - initialval_ttwj[0][0][bbi] - initialval_znn[0][0][bbi] ;
+               tmp_qcd = N_0lep[0][0][bbi] / trigeff_0L[0][0] - initialval_ttwj[0][0][bbi] - initialval_znn[0][0][bbi] ;
                double tmp_denom = sf_qcd[0][0][bbi] * initialguess_model24_qcd_0lepLDP_ratio[0] * initialval_qcd_ldp[0][0][bbi] ;
                if ( tmp_denom > 0. ) {
                   initialguess_model4_SFqcd_nb[bbi] = tmp_qcd / tmp_denom ;
@@ -904,7 +904,7 @@
             if ( mbi == 0 ) {
                initialguess_model4_SFqcd_met[0] = 1.0 ; //-- first one is 1 by definition.
             } else if ( mbi == 1 ) {
-               tmp_qcd = N_0lep[mbi][0][0] - initialval_ttwj[mbi][0][0] - initialval_znn[mbi][0][0] ;
+               tmp_qcd = N_0lep[mbi][0][0] / trigeff_0L[mbi][0] - initialval_ttwj[mbi][0][0] - initialval_znn[mbi][0][0] ;
                double tmp_denom = sf_qcd[mbi][0][0] * initialguess_model24_qcd_0lepLDP_ratio[0] * initialval_qcd_ldp[mbi][0][0] ;
                if ( tmp_denom > 0. ) {
                   initialguess_model4_SFqcd_met[mbi] = tmp_qcd / tmp_denom ;
@@ -948,7 +948,7 @@
 
          //-- Estimate the HT ratios from the first MET and nbjet bins
          for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
-            tmp_qcd = N_0lep[0][hbi][0] - initialval_ttwj[0][hbi][0] - initialval_znn[0][hbi][0] ;
+            tmp_qcd = N_0lep[0][hbi][0] / trigeff_0L[0][hbi] - initialval_ttwj[0][hbi][0] - initialval_znn[0][hbi][0] ;
             if ( initialval_qcd_ldp[0][hbi][0] > 0. ) {
                initialguess_model24_qcd_0lepLDP_ratio[hbi] = tmp_qcd / ( sf_qcd[0][hbi][0] * initialval_qcd_ldp[0][hbi][0] ) ;
             } else {
@@ -973,7 +973,7 @@
          double sum0lep(0.) ;
          double sumLDP(0.) ;
          for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
-            double tmp_qcd = N_0lep[0][hbi][0] - initialval_ttwj[0][hbi][0] - initialval_znn[0][hbi][0] ;
+            double tmp_qcd = N_0lep[0][hbi][0] / trigeff_0L[0][hbi] - initialval_ttwj[0][hbi][0] - initialval_znn[0][hbi][0] ;
             sum0lep += tmp_qcd ;
             sumLDP += initialval_qcd_ldp[0][hbi][0] ;
          } // hbi.
@@ -1009,8 +1009,8 @@
 
 	  for (int k = 0 ; k < nBinsBtag ; k++) {     
 
-            double model_0lep = initialval_ttwj[i][j][k] + initialval_qcd[i][j][k] + initialval_znn[i][j][k] ;
-            double model_ldp  = initialval_qcd_ldp[i][j][k] + initialval_ttwj_ldp[i][j][k] + initialval_znn_ldp[i][j][k] ;
+            double model_0lep = trigeff_0L[i][j] * ( initialval_ttwj[i][j][k] + initialval_qcd[i][j][k] + initialval_znn[i][j][k] ) ;
+            double model_ldp  = trigeff_0L[i][j] * ( initialval_qcd_ldp[i][j][k] + initialval_ttwj_ldp[i][j][k] + initialval_znn_ldp[i][j][k] ) ;
             double pdf_0lep = TMath::PoissonI( N_0lep[i][j][k], model_0lep ) ;
             double pdf_ldp  = TMath::PoissonI( N_ldp[i][j][k] , model_ldp  ) ;
             char warning0lep[4] ;
@@ -1025,9 +1025,9 @@
             if ( pdf_ldp < 0.000001 ) { sprintf( warningldp, "***") ; }
 	    cout << " MET bin " << i+1 << ", HT bin " << j+1 << ", Btag bin " << k+1 << endl;
 	    printf(" 0-lep     | %6d   | %7.1f | %8.6f %4s ||  %7.1f | %7.1f | %7.1f |\n", N_0lep[i][j][k], model_0lep, pdf_0lep, warning0lep,
-                                                                                       initialval_ttwj[i][j][k], initialval_qcd[i][j][k], initialval_znn[i][j][k] ) ;
+                            trigeff_0L[i][j] * initialval_ttwj[i][j][k], trigeff_0L[i][j] * initialval_qcd[i][j][k], trigeff_0L[i][j] * initialval_znn[i][j][k] ) ;
 	    printf(" ldp       | %6d   | %7.1f | %8.6f %4s ||  %7.1f | %7.1f | %7.1f |\n", N_ldp[i][j][k], model_ldp, pdf_ldp, warningldp,
-                                                                                       initialval_ttwj_ldp[i][j][k], initialval_qcd_ldp[i][j][k], initialval_znn_ldp[i][j][k] ) ;
+                            trigeff_0L[i][j] * initialval_ttwj_ldp[i][j][k], trigeff_0L[i][j] * initialval_qcd_ldp[i][j][k], trigeff_0L[i][j] * initialval_znn_ldp[i][j][k] ) ;
             printf("-----------+----------+---------+---------------++----------+---------+---------+\n") ;
 
 	  }
@@ -2184,7 +2184,7 @@
       { // begin scoping bracket.
 
          //let's try scaling this by the trig eff in the first met and ht bin since that has the most events
-         double initialGuess = 1.3*(trigeff_1L[0][0]/trigeff_0L[0][0]) ;
+         ////double initialGuess = 1.3*(trigeff_1L[0][0]/trigeff_0L[0][0]) ;
 
 
          ((RooRealVar*)rv_mu_susy_all0lep) -> setVal(0.) ;
@@ -2201,14 +2201,16 @@
                   }
                }
             }
-            printf( "\n val = %6.3f, ln L = %g\n\n\n", initialGuess, logL ) ;
+            printf( "\n val = %6.3f, ln L = %g\n\n\n", rv_ttwj_0lep1lep_ratio->getVal(), logL ) ;
            }
 
-         printf("\n\n Initial guess for ttwj 0lep/1lep ratio: %6.3f\n\n", initialGuess ) ;
+         printf("\n\n Initial guess for ttwj 0lep/1lep ratio: %6.3f\n\n", rv_ttwj_0lep1lep_ratio->getVal() ) ;
 
-         double scanLow  = 1.0*(trigeff_1L[0][0]/trigeff_0L[0][0]) ;
-         double scanHigh = 2.0*(trigeff_1L[0][0]/trigeff_0L[0][0]) ;
-         double bestVal = initialGuess ;
+         ///double scanLow  = 1.0*(trigeff_1L[0][0]/trigeff_0L[0][0]) ;
+         ///double scanHigh = 2.0*(trigeff_1L[0][0]/trigeff_0L[0][0]) ;
+         double scanLow  = 1.0 ;
+         double scanHigh = 2.0 ;
+         double bestVal = rv_ttwj_0lep1lep_ratio->getVal() ;
          double bestlnL( -1.e99 ) ;
          int nScanPoints(50) ;
          if ( scanLow < 0. ) { scanLow = 1. ; }

@@ -35,4 +35,8 @@
 #  $ROOTSYS/bin/root -b -q mcclosure5.c+\(\"rootfiles/gi-plots-met4-ht4-v15.root\",\"datfiles/Input-met4-ht4-v15-newqcdsyst-model5-exp0lep.dat\",5,1\) >&! logfiles/mcclosure5-met4-ht4-v15-newqcdsyst-model5-exp0lep.log
 
 
+   echo makeMClikeData
+   cp datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave.dat  datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrigeff.dat
+   $ROOTSYS/bin/root -b -q makeMClikeData.C+\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrigeff.dat\"\) >&! logfiles/makeMClikeData.log
+
 
