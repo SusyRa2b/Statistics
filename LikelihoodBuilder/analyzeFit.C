@@ -26,6 +26,30 @@ using namespace RooStats ;
 using namespace std;
 
 
+void extractFromWorkspace(TString workspaceFile = "test.root", TString datFile = "")
+{
+
+  TFile* wstf = new TFile ( workspaceFile );
+  
+  RooWorkspace* ws = (RooWorkspace*)wstf->Get("workspace");
+
+  RooRealVar* signalUncertainty = ws->var("signalUncertainty"); 
+  double sigU = signalUncertainty->getVal();
+  
+  if(datFile != "") {
+    ofstream myfile;
+    myfile.open(datFile.Data(), ios::out | ios::app);
+    assert(myfile.is_open());
+    myfile << sigU << " ";
+    myfile.close();
+  }
+
+  wstf->Close();
+
+  return;
+  
+}
+
 void integratedTotals(TString workspaceFile = "test.root", TString binFilesFile = "binFilesFile.dat", TString datFile = "")
 {
   
@@ -83,22 +107,19 @@ void integratedTotals(TString workspaceFile = "test.root", TString binFilesFile 
   RooAddition* signalFractionAddition = new RooAddition("signalFractionAddition", "signalFractionAddition", *signalFractionSet);
   RooProduct*  signalYield = new RooProduct("signalYield","signalYield", RooArgSet(*signalFractionAddition,*signalCrossSection));;;
 
-  RooRealVar* signalUncertainty = ws->var("signalUncertainty"); 
-  double sigU = signalUncertainty->getVal();
 
   RooFitResult *fitResult = (RooFitResult*)wstf->Get("fitresult_likelihood_data");
   
   double sig = signalYield->getVal();
   double sigerr = signalYield->getPropagatedError(*fitResult);
   cout << "analyzeFitOutput: " << sig << "+-" << sigerr << " " << ttwjtot << " " << qcdtot << " " << znntot << endl; 
-  cout << "DEBUG: datFile: " << datFile << endl;
   
   if(datFile != "") {
     cout << "DEBUG: printing to file" << endl;
     ofstream myfile;
     myfile.open(datFile.Data(), ios::out | ios::app);
     assert(myfile.is_open());
-    myfile << sigU << " " << sig << " " << sigerr << " " << ttwjtot << " " << qcdtot << " " << znntot << " ";
+    myfile << sig << " " << sigerr << " " << ttwjtot << " " << qcdtot << " " << znntot << " ";
     myfile.close();
   }
 
@@ -430,6 +451,8 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
 
 
 void analyzeFit(TString workspaceFile = "test.root", TString binFilesFile = "", TString datFile= "") {
+
+  extractFromWorkspace(workspaceFile, datFile);
 
   integratedTotals(workspaceFile, binFilesFile, datFile);
   //integratedTotals(workspaceFile);
