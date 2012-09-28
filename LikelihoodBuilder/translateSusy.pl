@@ -11,6 +11,7 @@ my $nHTbins;
 my $nMETbins;
 my $nBTAGbins = 3;
 
+my $sigtot = 0;
 
 while(<$fin>) {
   if(/(Using HT bins:)(\s*)(\S*)(\s*)(Using MET bins:)(\s*)(\S*)/) {
@@ -53,10 +54,15 @@ while(<$fin>) {
       #IN:  sig sl  ldp
       #OUT: sig ldp sl
       
-      my $xsec = 4.41988000000000034e-02;
+      #my $xsec = 4.41988000000000034e-02;#850 600 7TeV
+      my $xsec = 9.66802999999999968e-02; #850 600 8TeV
       my $weight = 1.0/0.5/$xsec;
 
       my $sig = int($linea[3*$i+3]*$weight+0.5);
+      $sigtot += $sig; 
+      #my $sigunrounded = $linea[3*$i+3]*$weight;
+      #print "$sigunrounded -> $sig\n";
+      
       my $sigr = sqrt($sig);
       my $sl = int($linea[3*$i+4]*$weight+0.5);
       my $slr = sqrt($sl);
@@ -68,6 +74,8 @@ while(<$fin>) {
     }
     print $fout "\n";
     
+    print "sigtot = $sigtot\n";
+
   }
 }
 
