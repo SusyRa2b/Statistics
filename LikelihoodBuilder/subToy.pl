@@ -16,15 +16,16 @@ mkpath($dir.'/log_files');
 mkpath($dir.'/dat_files');
 mkpath($dir.'/root_files');
 
+my $subDirectory = $dir."/submission_scripts";
+my $datDirectory = $dir."/dat_files";
+my $rootDirectory = $dir."/root_files";
+my $tmpDirectory = "/tmp/ra2b_kreis";
+
 while(<$flist>) {
   
   if(/($dir)(\/)(\S+)/) {
     
     my $inputDirectory = $3;
-    my $subDirectory = $dir."/submission_scripts";
-    my $datDirectory = $dir."/dat_files";
-    my $rootDirectory = $dir."/root_files";
-    my $tmpDirectory = "/tmp/ra2b_kreis";
 
     open(my $fsub, ">", "$subDirectory/submit_$inputDirectory.sh")  or die  "Can't open output file!";
     
@@ -43,5 +44,13 @@ while(<$flist>) {
     system("bsub -q 1nh -N -oo $dir/log_files/log_$inputDirectory.txt < $subDirectory/submit_$inputDirectory.sh");
         
   }
+  
+  
+  open(my $fdel, ">", "$dir/clear.sh") or die "Can't open clear file";
+  print $fdel "rm -r dat_files";  
+  print $fdel "rm -r root_files";  
+  print $fdel "rm -r log_files";  
+  print $fdel "rm -r submission_scripts";  
+  close $fdel;
   
 }
