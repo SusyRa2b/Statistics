@@ -18,7 +18,7 @@ using namespace RooStats ;
 using namespace std;
 
 
-void minimalFit(TString workspaceFile = "test.root", double signalCrossSectionGuess = 50.0, double signalCrossSectionLow = 0.0, double signalCrossSectionHigh = 1000.0, bool updateWS = false, TString datFile = "") 
+int minimalFit(TString workspaceFile = "test.root", double signalCrossSectionGuess = 50.0, double signalCrossSectionLow = 0.0, double signalCrossSectionHigh = 1000.0, bool updateWS = false, TString datFile = "") 
 {
   
   TFile* wstf = 0;  
@@ -46,6 +46,9 @@ void minimalFit(TString workspaceFile = "test.root", double signalCrossSectionGu
   cout << "RooFitResult status = " << fitResult->status() << endl;
   cout << "RooFitResult minNll = " << fitResult->minNll() << endl;
 
+  //if(fitResult->status() != 0) return fitResult->status();
+  if(fabs((sig-signalCrossSectionGuess)/signalCrossSectionGuess)<1e-5) return 1;
+
   if(datFile != "") {
     ofstream myfile;
     myfile.open(datFile.Data(), ios::out | ios::app);
@@ -62,5 +65,6 @@ void minimalFit(TString workspaceFile = "test.root", double signalCrossSectionGu
   if(updateWS) ws->Write();
   wstf->Close();
 
-  return;
+  //return fitResult->status();
+  return 0;
 }
