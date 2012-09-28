@@ -1,6 +1,6 @@
 
 
    echo toymc3b
-   $ROOTSYS/bin/root -b -q toywrapper3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave.dat\",\"datfiles/T1bbbb-met4-ht4-v15.dat\",1100,300,\"datfiles/dummy_DeffDbtag-met4-ht4.dat\",50,\"output-toymc3b-test\",10,\"rootfiles/gi-plots-met4-ht4-v15.root\",1,4,0,0\)>&! logfiles/toymc3b.log
+   $ROOTSYS/bin/root -b -q toywrapper3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrigeff.dat\",\"datfiles/T1bbbb-met4-ht4-v15.dat\",1100,300,\"datfiles/dummy_DeffDbtag-met4-ht4.dat\",50,\"output-toymc3b-test-wtrig\",10,\"rootfiles/gi-plots-met4-ht4-v15.root\",true,4,false,false,\"null\",true\)>&! logfiles/toymc3b.log
 
 

@@ -197,9 +197,13 @@
    bool doSignif ;
    bool doUL ;
 
+   bool inputObservablesArePostTrigger ;
+
 
    bool useExpected0lep ;
 
+   double trigeff_0lep[nBinsMET][nBinsHT] ;
+   double trigeff_1lep[nBinsMET][nBinsHT] ;
 
 
    //-- Prototypes
@@ -244,7 +248,8 @@
                 int input_qcdModelIndex = 3,
                 bool input_doSignif = false,
                 bool input_doUL = false,
-                const char* input_blindBinsList = "null"
+                const char* input_blindBinsList = "null",
+                bool input_inputObservablesArePostTrigger = true
                         ) {
 
        char command[10000] ;
@@ -281,6 +286,7 @@
        gSystem->Exec( command ) ;
 
 
+       inputObservablesArePostTrigger = input_inputObservablesArePostTrigger ;
 
 
        mgl  = input_mgl ;
@@ -1084,8 +1090,12 @@
          for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
-               float exp_0lep_ttwj = sf_ttwj[mbi][hbi][bbi] * N_1lep[mbi][hbi][bbi] * initFit_R_ttwj_0lep_over_1lep ;
-
+               float exp_0lep_ttwj(0.) ;
+               if ( inputObservablesArePostTrigger ) {
+                  exp_0lep_ttwj = sf_ttwj[mbi][hbi][bbi] * (N_1lep[mbi][hbi][bbi]/trigeff_1lep[mbi][hbi]) * initFit_R_ttwj_0lep_over_1lep ;
+               } else {
+                  exp_0lep_ttwj = sf_ttwj[mbi][hbi][bbi] * N_1lep[mbi][hbi][bbi] * initFit_R_ttwj_0lep_over_1lep ;
+               }
 
                float exp_0lep_znn = 0.5 * ( N_Zee[mbi][hbi] * Zee_factor[bbi] + N_Zmm[mbi][hbi] * Zmm_factor[bbi] ) ;
 
@@ -1098,14 +1108,22 @@
                   qcdratio = initFit_qcd_0lepLDP_ratio_HT[hbi] * initFit_SFqcd_met[mbi] * initFit_SFqcd_nb[bbi] ;
                }
 
-               float exp_0lep_qcd =  sf_qcd[mbi][hbi][bbi] * ( N_ldp[mbi][hbi][bbi]
+               float exp_0lep_qcd(0.) ;
+               if ( inputObservablesArePostTrigger ) {
+                  exp_0lep_qcd =  sf_qcd[mbi][hbi][bbi] * ( N_ldp[mbi][hbi][bbi] / trigeff_0lep[mbi][hbi]
                       - exp_0lep_ttwj* ttwj_mc_ldpover0lep_ratio[mbi][hbi][bbi]
                       - exp_0lep_znn *  znn_mc_ldpover0lep_ratio[mbi][hbi][bbi] )
                       * qcdratio ;
+               } else {
+                  exp_0lep_qcd =  sf_qcd[mbi][hbi][bbi] * ( N_ldp[mbi][hbi][bbi]
+                      - exp_0lep_ttwj* ttwj_mc_ldpover0lep_ratio[mbi][hbi][bbi]
+                      - exp_0lep_znn *  znn_mc_ldpover0lep_ratio[mbi][hbi][bbi] )
+                      * qcdratio ;
+               }
 
                if ( exp_0lep_qcd < 0. ) { exp_0lep_qcd = 0. ; }
 
-               float exp_0lep = exp_0lep_ttwj + exp_0lep_qcd + exp_0lep_znn ;
+               float exp_0lep = trigeff_0lep[mbi][hbi] * ( exp_0lep_ttwj + exp_0lep_qcd + exp_0lep_znn ) ;
 
                if ( useExpected0lep ) {
                   toy_mean_N_0lep[mbi][hbi][bbi] = exp_0lep ;
@@ -2636,6 +2654,22 @@
 
       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
          for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+
+            char ename[1000] ;
+            float trigeff ;
+
+            sprintf( ename, "trigeff_val_0L_M%d_H%d", mbi+1, hbi+1 ) ;
+            if ( !getFileValue( datfile, ename, trigeff ) ) {
+               return false ;
+            }
+            trigeff_0lep[mbi][hbi] = trigeff ;
+
+            sprintf( ename, "trigeff_val_1L_M%d_H%d", mbi+1, hbi+1 ) ;
+            if ( !getFileValue( datfile, ename, trigeff ) ) {
+               return false ;
+            }
+            trigeff_1lep[mbi][hbi] = trigeff ;
+
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
                float val ;
