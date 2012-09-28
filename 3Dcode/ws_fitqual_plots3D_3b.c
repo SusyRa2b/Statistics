@@ -195,34 +195,45 @@
 
      for ( int i = 0 ; i < nBinsMET ; i++ ) {
        for ( int j = 0 ; j < nBinsHT ; j++ ) {
-	 for ( int k = 0 ; k < nBinsBtag ; k++ ) {
 
-	   TString ttString  = "mu_ttwj" ;
-	   TString qcdString = "mu_qcd" ;
+         double trigeff(1.) ;
+         char vname[1000] ;
+         sprintf( vname, "trigeff_M%d_H%d", i+1, j+1 ) ;
+         RooAbsReal* rar = (RooAbsReal*) ws->obj(vname) ;
+         if ( rar != 0x0 ) {
+            trigeff = rar->getVal() ;
+         } else {
+            printf("\n\n *** %s missing\n", vname ) ;
+         }
 
-	   ttString  += sMbins[i]+sHbins[j]+sBbins[k] ;
-	   qcdString += sMbins[i]+sHbins[j]+sBbins[k] ;
+         for ( int k = 0 ; k < nBinsBtag ; k++ ) {
 
-	   TObject* ttwj_obj = ws->obj(ttString) ;
-	   TObject* qcd_obj  = ws->obj(qcdString) ;
-	   
+           TString ttString  = "mu_ttwj" ;
+           TString qcdString = "mu_qcd" ;
+
+           ttString  += sMbins[i]+sHbins[j]+sBbins[k] ;
+           qcdString += sMbins[i]+sHbins[j]+sBbins[k] ;
+
+           RooAbsReal* ttwj_obj = (RooAbsReal*) ws->obj(ttString) ;
+           RooAbsReal* qcd_obj  = (RooAbsReal*) ws->obj(qcdString) ;
+
            if ( ttwj_obj == 0x0 ) {
               printf(" * %s missing\n", ttString.Data() ) ;
               AttwjVal[i][j][k] = 0. ;
            } else {
-	      AttwjVal[i][j][k] = ((RooRealVar*) ttwj_obj)->getVal() ;
+              AttwjVal[i][j][k] = trigeff * ( ttwj_obj->getVal() ) ;
            }
 
            if ( qcd_obj == 0x0 ) {
               printf(" * %s missing\n", qcdString.Data() ) ;
               AqcdVal[i][j][k] = 0. ;
            } else {
-	      AqcdVal[i][j][k]  = ((RooRealVar*) qcd_obj)->getVal() ;
+              AqcdVal[i][j][k]  = trigeff * ( qcd_obj->getVal() ) ;
            }
 
-	 }
-       }
-     }
+         } // k
+       } // j
+     } // i
 
 
      //--- unpack observables.
@@ -480,6 +491,8 @@
      TString binLabel ;
      int  binIndex ;
 
+     char teffvar[1000] ;
+
      double dataVal(0.) ;
      double dataErr(0.) ;
      double ttwjVal(0.) ;
@@ -487,7 +500,8 @@
      double znnVal(0.) ;
      double susyVal(0.) ;
      double lhtotalVal(0.) ;
-     
+     double trigeff(1.) ;
+
      double eff_sf(0.) ;
      double eff_sf_sl(0.) ;
      double eff_sf_ldp(0.) ;
@@ -501,34 +515,40 @@
 
      for ( int i = 0 ; i < nBinsMET ; i++ ) {
        for ( int j = 0 ; j < nBinsHT ; j++ ) {
-	 for ( int k = 0 ; k < nBinsBtag ; k++ ) {
+         for ( int k = 0 ; k < nBinsBtag ; k++ ) {
 
            printf(" here t1\n") ; cout << flush ;
-	   
-	   /// binIndex = 2 + ( nBinsHT*i + j + k ) + k*(nBinsMET*nBinsHT) ;
 
            binIndex = 1 + (nBinsHT+1)*i + j + 1 ;
 
 
-	   //+++++ 0 lep histograms:
+           //+++++ 0 lep histograms:
 
-	   binLabel = "0 lep" ;
-	   binLabel += sMbins[i]+sHbins[j]+sBbins[k] ;
+           binLabel = "0 lep" ;
+           binLabel += sMbins[i]+sHbins[j]+sBbins[k] ;
 
-	   TString EffSfString  = "eff_sf" ;
-	   TString MuSusyString = "mu_susy" ;
-	   TString ZnnString    = "mu_znn" ;
+           TString EffSfString  = "eff_sf" ;
+           TString MuSusyString = "mu_susy" ;
+           TString ZnnString    = "mu_znn" ;
 
-	   EffSfString  += sMbins[i]+sHbins[j]+sBbins[k] ;
-	   MuSusyString += sMbins[i]+sHbins[j]+sBbins[k] ;
-	   ZnnString    += sMbins[i]+sHbins[j]+sBbins[k] ;
+           EffSfString  += sMbins[i]+sHbins[j]+sBbins[k] ;
+           MuSusyString += sMbins[i]+sHbins[j]+sBbins[k] ;
+           ZnnString    += sMbins[i]+sHbins[j]+sBbins[k] ;
 
            printf(" here t2\n") ; cout << flush ;
 
-	   dataVal = dataN_0lep[i][j][k];
-	   eff_sf = 1.0 ;
-	   susyVal = 0. ;
-	   znnVal = 0. ;
+           dataVal = dataN_0lep[i][j][k];
+           eff_sf = 1.0 ;
+           susyVal = 0. ;
+           znnVal = 0. ;
+           trigeff = 1. ;
+           sprintf( teffvar, "trigeff_M%d_H%d", i+1, j+1 ) ;
+           if ( ws->obj( teffvar) != 0x0 ) {
+              trigeff = ((RooAbsReal*) ws->obj(teffvar)) -> getVal() ;
+           } else {
+              printf(" * %s missing.\n", teffvar ) ;
+              trigeff = 1. ;
+           }
            if ( ws->obj(EffSfString) != 0 ) {
               eff_sf = ((RooFormulaVar*) ws->obj(EffSfString)) -> getVal() ;
            } else {
@@ -536,203 +556,208 @@
               eff_sf = 1. ;
            }
            if ( ws->obj(MuSusyString) != 0 ) {
-              susyVal = eff_sf * ( ((RooRealVar*) ws->obj(MuSusyString)) -> getVal() ) ;
+              susyVal = trigeff * eff_sf * ( ((RooRealVar*) ws->obj(MuSusyString)) -> getVal() ) ;
            } else {
               printf(" * %s missing.\n", MuSusyString.Data() ) ;
               susyVal = 0. ;
            }
            if ( ws->obj(ZnnString) != 0 ) {
-              znnVal = ((RooRealVar*) ws->obj(ZnnString))  -> getVal() ;
+              znnVal = trigeff * ( ((RooRealVar*) ws->obj(ZnnString))  -> getVal() ) ;
            } else {
               printf(" * %s missing.\n", ZnnString.Data() ) ;
               znnVal = 0. ;
            }
-	 //eff_sf = ((RooFormulaVar*) ws->obj(EffSfString)) -> getVal() ;
-	 //susyVal = eff_sf * ( ((RooRealVar*) ws->obj(MuSusyString)) -> getVal() ) ;
-	 //znnVal = ((RooRealVar*) ws->obj(ZnnString))  -> getVal() ;
-	   ttwjVal = AttwjVal[i][j][k] ;
-	   qcdVal  = AqcdVal[i][j][k] ;
-	   lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+           ttwjVal = AttwjVal[i][j][k] ;
+           qcdVal  = AqcdVal[i][j][k] ;
+           lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
 
-	   dataErr = sqrt(dataVal) ;
+           dataErr = sqrt(dataVal) ;
 
-	   // skip for now..
-	   //-- get values for later 
-	   //susyVal = ((RooRealVar*) ws->obj(MuSusyString)) -> getVal() ;
-	   //susyErr = ((RooRealVar*) ws->obj(MuSusyString)) -> getError() ;
-	   //znnVal  = ((RooRealVar*) ws->obj(ZnnString))  -> getVal() ;
-	   //znnErr  = ((RooRealVar*) ws->obj(ZnnString))  -> getError() ;
 
-	   cout << "\n" << endl ;
-	   cout << "binIndex = " << binIndex << endl ;
-	   cout << binLabel << "       susy : " << susyVal << endl ;
-	   cout << binLabel << "       ttwj : " << ttwjVal << endl ;
-	   cout << binLabel << "        qcd : " << qcdVal << endl ;
-	   cout << binLabel << "        znn : " << znnVal << endl ;
-	   cout << binLabel << "   LH total : " << lhtotalVal << endl ;
-	   cout << binLabel << "       data : " << dataVal << endl ;
+           cout << "\n" << endl ;
+           cout << "binIndex = " << binIndex << endl ;
+           cout << binLabel << "       susy : " << susyVal << endl ;
+           cout << binLabel << "       ttwj : " << ttwjVal << endl ;
+           cout << binLabel << "        qcd : " << qcdVal << endl ;
+           cout << binLabel << "        znn : " << znnVal << endl ;
+           cout << binLabel << "   LH total : " << lhtotalVal << endl ;
+           cout << binLabel << "       data : " << dataVal << endl ;
            cout << flush ;
 
-	   if ( doNorm && dataVal > 0. ) {
-	     dataErr = dataErr / dataVal ;
-	     susyVal = susyVal / dataVal ;
-	     ttwjVal = ttwjVal / dataVal ;
-	     qcdVal  = qcdVal / dataVal ;
-	     znnVal  = znnVal / dataVal ;
-	     dataVal = 1. ;
-	   }
+           if ( doNorm && dataVal > 0. ) {
+             dataErr = dataErr / dataVal ;
+             susyVal = susyVal / dataVal ;
+             ttwjVal = ttwjVal / dataVal ;
+             qcdVal  = qcdVal / dataVal ;
+             znnVal  = znnVal / dataVal ;
+             dataVal = 1. ;
+           }
 
            if ( k == 0 ) {
-	      xaxis_0lep_1b->SetBinLabel(binIndex, binLabel ) ;
-	      hfitqual_data_0lep_1b -> SetBinContent( binIndex, dataVal ) ;
-	      hfitqual_data_0lep_1b -> SetBinError( binIndex, dataErr ) ;
-	      hfitqual_susy_0lep_1b -> SetBinContent( binIndex, susyVal ) ;
-	      hfitqual_ttwj_0lep_1b -> SetBinContent( binIndex, ttwjVal ) ;
-	      hfitqual_qcd_0lep_1b  -> SetBinContent( binIndex, qcdVal ) ;
-	      hfitqual_znn_0lep_1b  -> SetBinContent( binIndex, znnVal ) ;
-	      hfitqual_model_0lep_1b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
+              xaxis_0lep_1b->SetBinLabel(binIndex, binLabel ) ;
+              hfitqual_data_0lep_1b -> SetBinContent( binIndex, dataVal ) ;
+              hfitqual_data_0lep_1b -> SetBinError( binIndex, dataErr ) ;
+              hfitqual_susy_0lep_1b -> SetBinContent( binIndex, susyVal ) ;
+              hfitqual_ttwj_0lep_1b -> SetBinContent( binIndex, ttwjVal ) ;
+              hfitqual_qcd_0lep_1b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_znn_0lep_1b  -> SetBinContent( binIndex, znnVal ) ;
+              hfitqual_model_0lep_1b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            } else if ( k == 1 ) {
-	      xaxis_0lep_2b->SetBinLabel(binIndex, binLabel ) ;
-	      hfitqual_data_0lep_2b -> SetBinContent( binIndex, dataVal ) ;
-	      hfitqual_data_0lep_2b -> SetBinError( binIndex, dataErr ) ;
-	      hfitqual_susy_0lep_2b -> SetBinContent( binIndex, susyVal ) ;
-	      hfitqual_ttwj_0lep_2b -> SetBinContent( binIndex, ttwjVal ) ;
-	      hfitqual_qcd_0lep_2b  -> SetBinContent( binIndex, qcdVal ) ;
-	      hfitqual_znn_0lep_2b  -> SetBinContent( binIndex, znnVal ) ;
-	      hfitqual_model_0lep_2b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
+              xaxis_0lep_2b->SetBinLabel(binIndex, binLabel ) ;
+              hfitqual_data_0lep_2b -> SetBinContent( binIndex, dataVal ) ;
+              hfitqual_data_0lep_2b -> SetBinError( binIndex, dataErr ) ;
+              hfitqual_susy_0lep_2b -> SetBinContent( binIndex, susyVal ) ;
+              hfitqual_ttwj_0lep_2b -> SetBinContent( binIndex, ttwjVal ) ;
+              hfitqual_qcd_0lep_2b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_znn_0lep_2b  -> SetBinContent( binIndex, znnVal ) ;
+              hfitqual_model_0lep_2b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            } else if ( k == 2 ) {
-	      xaxis_0lep_3b->SetBinLabel(binIndex, binLabel ) ;
-	      hfitqual_data_0lep_3b -> SetBinContent( binIndex, dataVal ) ;
-	      hfitqual_data_0lep_3b -> SetBinError( binIndex, dataErr ) ;
-	      hfitqual_susy_0lep_3b -> SetBinContent( binIndex, susyVal ) ;
-	      hfitqual_ttwj_0lep_3b -> SetBinContent( binIndex, ttwjVal ) ;
-	      hfitqual_qcd_0lep_3b  -> SetBinContent( binIndex, qcdVal ) ;
-	      hfitqual_znn_0lep_3b  -> SetBinContent( binIndex, znnVal ) ;
-	      hfitqual_model_0lep_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
+              xaxis_0lep_3b->SetBinLabel(binIndex, binLabel ) ;
+              hfitqual_data_0lep_3b -> SetBinContent( binIndex, dataVal ) ;
+              hfitqual_data_0lep_3b -> SetBinError( binIndex, dataErr ) ;
+              hfitqual_susy_0lep_3b -> SetBinContent( binIndex, susyVal ) ;
+              hfitqual_ttwj_0lep_3b -> SetBinContent( binIndex, ttwjVal ) ;
+              hfitqual_qcd_0lep_3b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_znn_0lep_3b  -> SetBinContent( binIndex, znnVal ) ;
+              hfitqual_model_0lep_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            }
-	   
 
 
 
-	   //+++++ 1 lep histograms:
 
-	   binLabel = "1 lep" ;
-	   binLabel += sMbins[i]+sHbins[j]+sBbins[k] ;
+           //+++++ 1 lep histograms:
 
-	   TString EffSfSlString  = "eff_sf_sl" ;
-	   TString MuSusySlString = "mu_susy_sl" ;
-	   TString MuTtwjSlString = "mu_ttwj_sl" ;
+           binLabel = "1 lep" ;
+           binLabel += sMbins[i]+sHbins[j]+sBbins[k] ;
 
-	   EffSfSlString  += sMbins[i]+sHbins[j]+sBbins[k] ;
-	   MuSusySlString += sMbins[i]+sHbins[j]+sBbins[k] ;
-	   MuTtwjSlString += sMbins[i]+sHbins[j]+sBbins[k] ;
+           TString EffSfSlString  = "eff_sf_sl" ;
+           TString MuSusySlString = "mu_susy_sl" ;
+           TString MuTtwjSlString = "mu_ttwj_sl" ;
 
-	   dataVal = dataN_1lep[i][j][k];
+           EffSfSlString  += sMbins[i]+sHbins[j]+sBbins[k] ;
+           MuSusySlString += sMbins[i]+sHbins[j]+sBbins[k] ;
+           MuTtwjSlString += sMbins[i]+sHbins[j]+sBbins[k] ;
+
+           dataVal = dataN_1lep[i][j][k];
            eff_sf_sl = 1. ;
            susyVal = 0. ;
            ttwjVal = 0. ;
+           trigeff = 1. ;
+
+           sprintf( teffvar, "trigeff_sl_M%d_H%d", i+1, j+1 ) ;
+           if ( ws->obj( teffvar) != 0x0 ) {
+              trigeff = ((RooAbsReal*) ws->obj(teffvar)) -> getVal() ;
+           } else {
+              printf(" * %s missing.\n", teffvar ) ;
+              trigeff = 1. ;
+           }
            if ( ws->obj(EffSfSlString) != 0x0 ) {
-	      eff_sf_sl = ((RooFormulaVar*) ws->obj(EffSfSlString)) -> getVal() ;
+              eff_sf_sl = ((RooFormulaVar*) ws->obj(EffSfSlString)) -> getVal() ;
            } else {
               printf(" * %s missing.\n", EffSfSlString.Data() ) ;
               eff_sf_sl = 1. ;
            }
            if ( ws->obj(MuSusySlString) != 0x0 ) {
-              susyVal = eff_sf_sl * ( ((RooRealVar*) ws->obj(MuSusySlString)) -> getVal() ) ;
+              susyVal = trigeff * eff_sf_sl * ( ((RooRealVar*) ws->obj(MuSusySlString)) -> getVal() ) ;
            } else {
               printf(" * %s missing.\n", MuSusySlString.Data() ) ;
               susyVal = 0. ;
            }
            if ( ws->obj(MuTtwjSlString) != 0x0 ) {
-              ttwjVal = ((RooRealVar*) ws->obj(MuTtwjSlString)) -> getVal() ;
+              ttwjVal = trigeff * ( ((RooRealVar*) ws->obj(MuTtwjSlString)) -> getVal() ) ;
            } else {
               printf(" * %s missing.\n", MuTtwjSlString.Data() ) ;
               ttwjVal = 0. ;
            }
-	 //eff_sf_sl = ((RooFormulaVar*) ws->obj(EffSfSlString)) -> getVal() ;
-	 //susyVal = eff_sf_sl * ( ((RooRealVar*) ws->obj(MuSusySlString)) -> getVal() ) ;
-	 //ttwjVal = ((RooRealVar*) ws->obj(MuTtwjSlString)) -> getVal() ; ;
-	   qcdVal  = 0. ;
-	   znnVal  = 0. ;
-	   lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+           qcdVal  = 0. ;
+           znnVal  = 0. ;
+           lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
 
-	   dataErr = sqrt(dataVal) ;
+           dataErr = sqrt(dataVal) ;
 
 
-	   cout << "\n" << endl ;
-	   cout << binLabel << "       susy : " << susyVal << endl ;
-	   cout << binLabel << "       ttwj : " << ttwjVal << endl ;
-	   cout << binLabel << "        qcd : " << qcdVal << endl ;
-	   cout << binLabel << "        znn : " << znnVal << endl ;
-	   cout << binLabel << "   LH total : " << lhtotalVal << endl ;
-	   cout << binLabel << "       data : " << dataVal << endl ;
+           cout << "\n" << endl ;
+           cout << binLabel << "       susy : " << susyVal << endl ;
+           cout << binLabel << "       ttwj : " << ttwjVal << endl ;
+           cout << binLabel << "        qcd : " << qcdVal << endl ;
+           cout << binLabel << "        znn : " << znnVal << endl ;
+           cout << binLabel << "   LH total : " << lhtotalVal << endl ;
+           cout << binLabel << "       data : " << dataVal << endl ;
 
-	   if ( doNorm && dataVal > 0. ) {
-	     dataErr = dataErr / dataVal ;
-	     susyVal = susyVal / dataVal ;
-	     ttwjVal = ttwjVal / dataVal ;
-	     qcdVal  = qcdVal / dataVal ;
-	     znnVal  = znnVal / dataVal ;
-	     dataVal = 1. ;
-	   }
+           if ( doNorm && dataVal > 0. ) {
+             dataErr = dataErr / dataVal ;
+             susyVal = susyVal / dataVal ;
+             ttwjVal = ttwjVal / dataVal ;
+             qcdVal  = qcdVal / dataVal ;
+             znnVal  = znnVal / dataVal ;
+             dataVal = 1. ;
+           }
 
            if ( k == 0 ) {
-	      xaxis_1lep_1b->SetBinLabel(binIndex, binLabel ) ;
-	      hfitqual_data_1lep_1b -> SetBinContent( binIndex, dataVal ) ;
-	      hfitqual_data_1lep_1b -> SetBinError( binIndex, dataErr ) ;
-	      hfitqual_susy_1lep_1b -> SetBinContent( binIndex, susyVal ) ;
-	      hfitqual_ttwj_1lep_1b -> SetBinContent( binIndex, ttwjVal ) ;
-	      hfitqual_qcd_1lep_1b  -> SetBinContent( binIndex, qcdVal ) ;
-	      hfitqual_znn_1lep_1b  -> SetBinContent( binIndex, znnVal ) ;
-	      hfitqual_model_1lep_1b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
+              xaxis_1lep_1b->SetBinLabel(binIndex, binLabel ) ;
+              hfitqual_data_1lep_1b -> SetBinContent( binIndex, dataVal ) ;
+              hfitqual_data_1lep_1b -> SetBinError( binIndex, dataErr ) ;
+              hfitqual_susy_1lep_1b -> SetBinContent( binIndex, susyVal ) ;
+              hfitqual_ttwj_1lep_1b -> SetBinContent( binIndex, ttwjVal ) ;
+              hfitqual_qcd_1lep_1b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_znn_1lep_1b  -> SetBinContent( binIndex, znnVal ) ;
+              hfitqual_model_1lep_1b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            } else if ( k == 1 ) {
-	      xaxis_1lep_2b->SetBinLabel(binIndex, binLabel ) ;
-	      hfitqual_data_1lep_2b -> SetBinContent( binIndex, dataVal ) ;
-	      hfitqual_data_1lep_2b -> SetBinError( binIndex, dataErr ) ;
-	      hfitqual_susy_1lep_2b -> SetBinContent( binIndex, susyVal ) ;
-	      hfitqual_ttwj_1lep_2b -> SetBinContent( binIndex, ttwjVal ) ;
-	      hfitqual_qcd_1lep_2b  -> SetBinContent( binIndex, qcdVal ) ;
-	      hfitqual_znn_1lep_2b  -> SetBinContent( binIndex, znnVal ) ;
-	      hfitqual_model_1lep_2b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
+              xaxis_1lep_2b->SetBinLabel(binIndex, binLabel ) ;
+              hfitqual_data_1lep_2b -> SetBinContent( binIndex, dataVal ) ;
+              hfitqual_data_1lep_2b -> SetBinError( binIndex, dataErr ) ;
+              hfitqual_susy_1lep_2b -> SetBinContent( binIndex, susyVal ) ;
+              hfitqual_ttwj_1lep_2b -> SetBinContent( binIndex, ttwjVal ) ;
+              hfitqual_qcd_1lep_2b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_znn_1lep_2b  -> SetBinContent( binIndex, znnVal ) ;
+              hfitqual_model_1lep_2b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            } else if ( k == 2 ) {
-	      xaxis_1lep_3b->SetBinLabel(binIndex, binLabel ) ;
-	      hfitqual_data_1lep_3b -> SetBinContent( binIndex, dataVal ) ;
-	      hfitqual_data_1lep_3b -> SetBinError( binIndex, dataErr ) ;
-	      hfitqual_susy_1lep_3b -> SetBinContent( binIndex, susyVal ) ;
-	      hfitqual_ttwj_1lep_3b -> SetBinContent( binIndex, ttwjVal ) ;
-	      hfitqual_qcd_1lep_3b  -> SetBinContent( binIndex, qcdVal ) ;
-	      hfitqual_znn_1lep_3b  -> SetBinContent( binIndex, znnVal ) ;
-	      hfitqual_model_1lep_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
+              xaxis_1lep_3b->SetBinLabel(binIndex, binLabel ) ;
+              hfitqual_data_1lep_3b -> SetBinContent( binIndex, dataVal ) ;
+              hfitqual_data_1lep_3b -> SetBinError( binIndex, dataErr ) ;
+              hfitqual_susy_1lep_3b -> SetBinContent( binIndex, susyVal ) ;
+              hfitqual_ttwj_1lep_3b -> SetBinContent( binIndex, ttwjVal ) ;
+              hfitqual_qcd_1lep_3b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_znn_1lep_3b  -> SetBinContent( binIndex, znnVal ) ;
+              hfitqual_model_1lep_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            }
-	   
 
 
 
 
-	   //+++++ ldp histograms:
 
-	   binLabel = "ldp" ;
-	   binLabel += sMbins[i]+sHbins[j]+sBbins[k] ;
+           //+++++ ldp histograms:
 
-	   TString EffSfLdpString  = "eff_sf_ldp" ;
-	   TString MuSusyLdpString = "mu_susy_ldp" ;
-	   TString MuTtwjLdpString = "mu_ttwj_ldp" ;
-	   TString MuZnnLdpString = "mu_znn_ldp" ;
-	   TString MuQcdLdpString  = "mu_qcd_ldp" ;
+           binLabel = "ldp" ;
+           binLabel += sMbins[i]+sHbins[j]+sBbins[k] ;
 
-	   EffSfLdpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
-	   MuSusyLdpString += sMbins[i]+sHbins[j]+sBbins[k] ;
-	   MuTtwjLdpString += sMbins[i]+sHbins[j]+sBbins[k] ;
-	   MuZnnLdpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
-	   MuQcdLdpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
+           TString EffSfLdpString  = "eff_sf_ldp" ;
+           TString MuSusyLdpString = "mu_susy_ldp" ;
+           TString MuTtwjLdpString = "mu_ttwj_ldp" ;
+           TString MuZnnLdpString = "mu_znn_ldp" ;
+           TString MuQcdLdpString  = "mu_qcd_ldp" ;
 
-	   dataVal = dataN_ldp[i][j][k];
-	   eff_sf_ldp = 1. ;
-	   susyVal = 0. ;
-	   sf_mc = 1.0 ;
-	   ttwjVal = 0. ;
-	   znnVal  = 0. ;
-	   qcdVal  = 0. ;
+           EffSfLdpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
+           MuSusyLdpString += sMbins[i]+sHbins[j]+sBbins[k] ;
+           MuTtwjLdpString += sMbins[i]+sHbins[j]+sBbins[k] ;
+           MuZnnLdpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
+           MuQcdLdpString  += sMbins[i]+sHbins[j]+sBbins[k] ;
+
+           dataVal = dataN_ldp[i][j][k];
+           eff_sf_ldp = 1. ;
+           susyVal = 0. ;
+           sf_mc = 1.0 ;
+           ttwjVal = 0. ;
+           znnVal  = 0. ;
+           qcdVal  = 0. ;
+           trigeff = 1. ;
+           sprintf( teffvar, "trigeff_M%d_H%d", i+1, j+1 ) ;
+           if ( ws->obj( teffvar) != 0x0 ) {
+              trigeff = ((RooAbsReal*) ws->obj(teffvar)) -> getVal() ;
+           } else {
+              printf(" * %s missing.\n", teffvar ) ;
+              trigeff = 1. ;
+           }
            if ( ws->obj(EffSfLdpString) != 0 ) {
               eff_sf_ldp = ((RooFormulaVar*) ws->obj(EffSfLdpString)) -> getVal() ;
            } else {
@@ -740,7 +765,7 @@
               eff_sf_ldp = 1. ;
            }
            if ( ws->obj(MuSusyLdpString) != 0 ) {
-              susyVal = eff_sf_ldp * ( ((RooRealVar*) ws->obj(MuSusyLdpString)) -> getVal() ) ;
+              susyVal = trigeff * eff_sf_ldp * ( ((RooRealVar*) ws->obj(MuSusyLdpString)) -> getVal() ) ;
            } else {
               printf(" * %s missing\n", MuSusyLdpString.Data() ) ;
               susyVal = 0. ;
@@ -752,81 +777,75 @@
               sf_mc = 1. ;
            }
            if ( ws->obj(MuTtwjLdpString) != 0 ) {
-              ttwjVal = eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuTtwjLdpString))-> getVal() )   ) ;
+              ttwjVal = trigeff * eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuTtwjLdpString))-> getVal() )   ) ;
            } else {
               printf(" * %s missing\n", MuTtwjLdpString.Data() ) ;
               ttwjVal = 0. ;
            }
            if ( ws->obj(MuZnnLdpString) != 0) {
-              znnVal  = eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuZnnLdpString))-> getVal() )   ) ;
+              znnVal  = trigeff * eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuZnnLdpString))-> getVal() )   ) ;
            } else {
               printf(" * %s missing\n", MuZnnLdpString.Data() ) ;
               znnVal = 0. ;
            }
            if ( ws->obj(MuQcdLdpString) != 0 ) {
-              qcdVal  = ((RooRealVar*) ws->obj(MuQcdLdpString))-> getVal() ;
+              qcdVal  = trigeff * ( ((RooRealVar*) ws->obj(MuQcdLdpString))-> getVal() ) ;
            } else {
               printf(" * %s missing\n", MuQcdLdpString.Data() ) ;
               qcdVal = 0. ;
            }
 
-	// eff_sf_ldp = ((RooFormulaVar*) ws->obj(EffSfLdpString)) -> getVal() ;
-	// susyVal = eff_sf_ldp * ( ((RooRealVar*) ws->obj(MuSusyLdpString)) -> getVal() ) ;
-	// sf_mc = ((RooFormulaVar*) ws->obj("sf_mc")) -> getVal() ;
-	// ttwjVal = eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuTtwjLdpString))-> getVal() )   ) ; ;
-	// znnVal  = eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuZnnLdpString))-> getVal() )   ) ; ;
-	// qcdVal  = ((RooRealVar*) ws->obj(MuQcdLdpString))-> getVal() ;
-	   lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
+           lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
 
-	   dataErr = sqrt(dataVal) ;
+           dataErr = sqrt(dataVal) ;
 
-	   cout << "\n" << endl ;
-	   cout << binLabel << "       susy : " << susyVal << endl ;
-	   cout << binLabel << "       ttwj : " << ttwjVal << endl ;
-	   cout << binLabel << "        qcd : " << qcdVal << endl ;
-	   cout << binLabel << "        znn : " << znnVal << endl ;
-	   cout << binLabel << "   LH total : " << lhtotalVal << endl ;
-	   cout << binLabel << "       data : " << dataVal << endl ;
+           cout << "\n" << endl ;
+           cout << binLabel << "       susy : " << susyVal << endl ;
+           cout << binLabel << "       ttwj : " << ttwjVal << endl ;
+           cout << binLabel << "        qcd : " << qcdVal << endl ;
+           cout << binLabel << "        znn : " << znnVal << endl ;
+           cout << binLabel << "   LH total : " << lhtotalVal << endl ;
+           cout << binLabel << "       data : " << dataVal << endl ;
 
            printf(" here 1\n") ; cout << flush ;
 
-	   if ( doNorm && dataVal > 0. ) {
-	     dataErr = dataErr / dataVal ;
-	     susyVal = susyVal / dataVal ;
-	     ttwjVal = ttwjVal / dataVal ;
-	     qcdVal  = qcdVal / dataVal ;
-	     znnVal  = znnVal / dataVal ;
-	     dataVal = 1. ;
-	   }
+           if ( doNorm && dataVal > 0. ) {
+             dataErr = dataErr / dataVal ;
+             susyVal = susyVal / dataVal ;
+             ttwjVal = ttwjVal / dataVal ;
+             qcdVal  = qcdVal / dataVal ;
+             znnVal  = znnVal / dataVal ;
+             dataVal = 1. ;
+           }
 
            printf(" here 2\n") ; cout << flush ;
            if ( k == 0 ) {
-	      xaxis_ldp_1b->SetBinLabel(binIndex, binLabel ) ;
-	      hfitqual_data_ldp_1b -> SetBinContent( binIndex, dataVal ) ;
-	      hfitqual_data_ldp_1b -> SetBinError( binIndex, dataErr ) ;
-	      hfitqual_susy_ldp_1b -> SetBinContent( binIndex, susyVal ) ;
-	      hfitqual_ttwj_ldp_1b -> SetBinContent( binIndex, ttwjVal ) ;
-	      hfitqual_qcd_ldp_1b  -> SetBinContent( binIndex, qcdVal ) ;
-	      hfitqual_znn_ldp_1b  -> SetBinContent( binIndex, znnVal ) ;
-	      hfitqual_model_ldp_1b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
+              xaxis_ldp_1b->SetBinLabel(binIndex, binLabel ) ;
+              hfitqual_data_ldp_1b -> SetBinContent( binIndex, dataVal ) ;
+              hfitqual_data_ldp_1b -> SetBinError( binIndex, dataErr ) ;
+              hfitqual_susy_ldp_1b -> SetBinContent( binIndex, susyVal ) ;
+              hfitqual_ttwj_ldp_1b -> SetBinContent( binIndex, ttwjVal ) ;
+              hfitqual_qcd_ldp_1b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_znn_ldp_1b  -> SetBinContent( binIndex, znnVal ) ;
+              hfitqual_model_ldp_1b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            } else if ( k == 1 ) {
-	      xaxis_ldp_2b->SetBinLabel(binIndex, binLabel ) ;
-	      hfitqual_data_ldp_2b -> SetBinContent( binIndex, dataVal ) ;
-	      hfitqual_data_ldp_2b -> SetBinError( binIndex, dataErr ) ;
-	      hfitqual_susy_ldp_2b -> SetBinContent( binIndex, susyVal ) ;
-	      hfitqual_ttwj_ldp_2b -> SetBinContent( binIndex, ttwjVal ) ;
-	      hfitqual_qcd_ldp_2b  -> SetBinContent( binIndex, qcdVal ) ;
-	      hfitqual_znn_ldp_2b  -> SetBinContent( binIndex, znnVal ) ;
-	      hfitqual_model_ldp_2b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
+              xaxis_ldp_2b->SetBinLabel(binIndex, binLabel ) ;
+              hfitqual_data_ldp_2b -> SetBinContent( binIndex, dataVal ) ;
+              hfitqual_data_ldp_2b -> SetBinError( binIndex, dataErr ) ;
+              hfitqual_susy_ldp_2b -> SetBinContent( binIndex, susyVal ) ;
+              hfitqual_ttwj_ldp_2b -> SetBinContent( binIndex, ttwjVal ) ;
+              hfitqual_qcd_ldp_2b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_znn_ldp_2b  -> SetBinContent( binIndex, znnVal ) ;
+              hfitqual_model_ldp_2b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            } else if ( k == 2 ) {
-	      xaxis_ldp_3b->SetBinLabel(binIndex, binLabel ) ;
-	      hfitqual_data_ldp_3b -> SetBinContent( binIndex, dataVal ) ;
-	      hfitqual_data_ldp_3b -> SetBinError( binIndex, dataErr ) ;
-	      hfitqual_susy_ldp_3b -> SetBinContent( binIndex, susyVal ) ;
-	      hfitqual_ttwj_ldp_3b -> SetBinContent( binIndex, ttwjVal ) ;
-	      hfitqual_qcd_ldp_3b  -> SetBinContent( binIndex, qcdVal ) ;
-	      hfitqual_znn_ldp_3b  -> SetBinContent( binIndex, znnVal ) ;
-	      hfitqual_model_ldp_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
+              xaxis_ldp_3b->SetBinLabel(binIndex, binLabel ) ;
+              hfitqual_data_ldp_3b -> SetBinContent( binIndex, dataVal ) ;
+              hfitqual_data_ldp_3b -> SetBinError( binIndex, dataErr ) ;
+              hfitqual_susy_ldp_3b -> SetBinContent( binIndex, susyVal ) ;
+              hfitqual_ttwj_ldp_3b -> SetBinContent( binIndex, ttwjVal ) ;
+              hfitqual_qcd_ldp_3b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_znn_ldp_3b  -> SetBinContent( binIndex, znnVal ) ;
+              hfitqual_model_ldp_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            }
 
 
@@ -837,10 +856,10 @@
 
            printf(" here 4\n") ; cout << flush ;
 
-	   //+++++ Zee histogram:
+           //+++++ Zee histogram:
 
-	      binLabel = "Zee" ;
-	      binLabel += sMbins[i]+sHbins[j]+sBbins[k] ;
+              binLabel = "Zee" ;
+              binLabel += sMbins[i]+sHbins[j]+sBbins[k] ;
              
 
               TString nZeeModelString = "n_ee" ;
@@ -858,32 +877,32 @@
             //lhtotalVal = ((RooRealVar*) ws->obj(nZeeModelString)) -> getVal() ;
               printf("\n Model value for %s is %7.1f\n", nZeeModelString.Data(), lhtotalVal ) ; cout << flush ;
              
-	      dataVal = dataN_Zee[i][j];
+              dataVal = dataN_Zee[i][j];
              
-	      dataErr = sqrt(dataVal) ;
+              dataErr = sqrt(dataVal) ;
              
-	      cout << "\n" << endl ;
-	      cout << binLabel << "      model : " << lhtotalVal << endl ;
-	      cout << binLabel << "       data : " << dataVal << endl ;
+              cout << "\n" << endl ;
+              cout << binLabel << "      model : " << lhtotalVal << endl ;
+              cout << binLabel << "       data : " << dataVal << endl ;
              
-	      if ( doNorm && dataVal > 0. ) {
-	        dataErr = dataErr / dataVal ;
-		lhtotalVal = lhtotalVal / dataVal ;
-	        dataVal = 1. ;
-	      }
+              if ( doNorm && dataVal > 0. ) {
+                dataErr = dataErr / dataVal ;
+        	lhtotalVal = lhtotalVal / dataVal ;
+                dataVal = 1. ;
+              }
              
-	      xaxis_zee_1b->SetBinLabel(binIndex, binLabel ) ;
-	      hfitqual_data_zee_1b -> SetBinContent( binIndex, dataVal ) ;
-	      hfitqual_data_zee_1b -> SetBinError( binIndex, dataErr ) ;
-	      hfitqual_fit_zee_1b  -> SetBinContent( binIndex, lhtotalVal ) ;
+              xaxis_zee_1b->SetBinLabel(binIndex, binLabel ) ;
+              hfitqual_data_zee_1b -> SetBinContent( binIndex, dataVal ) ;
+              hfitqual_data_zee_1b -> SetBinError( binIndex, dataErr ) ;
+              hfitqual_fit_zee_1b  -> SetBinContent( binIndex, lhtotalVal ) ;
 
 
            printf(" here 5\n") ; cout << flush ;
 
-	   //+++++ Zmm histogram:
+           //+++++ Zmm histogram:
 
-	      binLabel = "Zmm" ;
-	      binLabel += sMbins[i]+sHbins[j]+sBbins[k] ;
+              binLabel = "Zmm" ;
+              binLabel += sMbins[i]+sHbins[j]+sBbins[k] ;
              
 
               TString nZmmModelString = "n_mm" ;
@@ -1037,41 +1056,6 @@
 
 
 
- //  //--- Efficiency scale factor primary Gaussian value.
-
- //  hfitqual_np->SetMinimum(-5.) ;
- //  hfitqual_np->SetMaximum( 5.) ;
- //  
- //  hfitqual_np->SetNdivisions(101,"x") ;
- //  hfitqual_np->SetNdivisions(101,"y") ;
- //  hfitqual_np->SetLabelOffset(99,"y") ;
- //  
-
- //  TPad* tp = new TPad("tp","tp",0.09,0.,0.18,1.0) ;
-
- //  tp->SetRightMargin(0.4) ;
-
- //  tp->Draw() ;
- //  tp->cd() ;
- //  hfitqual_np->SetLabelSize(0.5,"x") ;
- //  TAxis *xaxis ;
- //  xaxis = hfitqual_np->GetXaxis() ;
- //  xaxis->SetBinLabel(1,"Eff PG") ;
- //  hfitqual_np->GetXaxis()->LabelsOption("v") ;
- //  hfitqual_np->Draw() ;
-
- //  cfitqual->Update() ;
-
-
- //  TGaxis* axis = new TGaxis() ;
- //  axis->SetLabelOffset(0.1) ;
- //  axis->SetLabelSize(0.30) ;
- //  axis->SetTickSize(0.2) ;
- //  axis->DrawAxis( 1.0, -5., 1.0, 5., -5., 5., 510, "+LS") ;
- //  
- //  cfitqual->Update() ;
-
- //  cfitqual->SaveAs("fitqual.gif") ;
 
 
 
@@ -2452,21 +2436,21 @@ void saveHist(const char* filename, const char* pat)
 
      char varname[1000] ;
 
-     sprintf( varname, "passObs_%s", parName ) ;
-     RooAbsReal* passObs = (RooAbsReal*) ws->obj( varname ) ;
-     if ( passObs == 0x0 ) {
-        printf("\n\n *** getNPModeRMS : can't find pass obs for %s\n\n", parName ) ;
+     sprintf( varname, "alpha_%s", parName ) ;
+     RooAbsReal* rv_alpha = (RooAbsReal*) ws->obj( varname ) ;
+     if ( rv_alpha == 0x0 ) {
+        printf("\n\n *** getNPModeRMS : can't find alpha for %s\n\n", parName ) ;
         return false ;
      }
-     alpha = passObs->getVal() + 1. ;
+     alpha = rv_alpha->getVal()  ;
 
-     sprintf( varname, "failObs_%s", parName ) ;
-     RooAbsReal* failObs = (RooAbsReal*) ws->obj( varname ) ;
-     if ( failObs == 0x0 ) {
-        printf("\n\n *** getNPModeRMS : can't find fail obs for %s\n\n", parName ) ;
+     sprintf( varname, "beta_%s", parName ) ;
+     RooAbsReal* rv_beta = (RooAbsReal*) ws->obj( varname ) ;
+     if ( rv_beta == 0x0 ) {
+        printf("\n\n *** getNPModeRMS : can't find beta for %s\n\n", parName ) ;
         return false ;
      }
-     beta = failObs->getVal() + 1. ;
+     beta = rv_beta->getVal()  ;
 
      mode = (alpha - 1.)/(alpha+beta -2.) ;
 
