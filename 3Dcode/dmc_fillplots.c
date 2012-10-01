@@ -42,6 +42,7 @@
        sprintf( compname[compind], "data" ) ;
        compchain[compind] -> Add( "filesHCP_53_v1/MET_2012A_BLIND.root" ) ;
        compchain[compind] -> Add( "filesHCP_53_v1/MET_2012B_BLIND.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v1/HTMHT_2012B_BLIND.root" ) ;
        complumi[compind] = 5.295 ;
        compcolor[compind] = 0 ;
        compscale[compind] = 1. ;
