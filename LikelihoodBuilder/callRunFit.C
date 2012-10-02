@@ -6,6 +6,6 @@ void callRunFit(TString inpath, TString outpath, TString outname = ""){
   setup();
   setupAnalysis();
 
-  runFits(inpath, outpath, outname);
+  runFit(inpath, outpath, outname);
 
 }
