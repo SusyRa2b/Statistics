@@ -47,10 +47,10 @@ while(<$flist>) {
   
   
   open(my $fdel, ">", "$dir/clear.sh") or die "Can't open clear file";
-  print $fdel "rm -r dat_files";  
-  print $fdel "rm -r root_files";  
-  print $fdel "rm -r log_files";  
-  print $fdel "rm -r submission_scripts";  
+  print $fdel "rm -r dat_files\n";  
+  print $fdel "rm -r root_files\n";  
+  print $fdel "rm -r log_files\n";  
+  print $fdel "rm -r submission_scripts\n";  
   close $fdel;
   
 }
