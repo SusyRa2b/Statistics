@@ -11,35 +11,45 @@
 #include "TStyle.h"
 #include "TLine.h"
 #include "TText.h"
+#include "TString.h"
 
 #include <iostream>
 
 
+    bool first(true) ;
+    TH1F* effhist(0x0) ;
 
-    int nComps(3) ;
-    char compname[3][100] ;
+    int nComps(7) ;
+    char compname[7][100] ;
 
     bool savePdf ;
+    char inrootfile[10000] ;
 
   //----------
   // prototypes
 
-   void drawSet( const char* hname_base, const char* xtitle ) ;
+   void drawSet( const char* hname_base, const char* xtitle, bool do0lepMetEffCorr = false ) ;
    void loadHist(const char* filename="in.root", const char* pfx=0, const char* pat="*", Bool_t doAdd=kFALSE, Double_t scaleFactor=-1.0) ;
+   void efficiencyCorrect0lepMetHist( TH1F* hp ) ;
 
   //----------
 
-    void dmc_drawplots( const char* infile = "rootfiles/dmc_plots1.root", bool arg_savePdf = false ) {
+    void dmc_drawplots( const char* infile = "rootfiles/dmc_plots1_all.root", bool arg_savePdf = false ) {
 
        savePdf = arg_savePdf ;
+       sprintf( inrootfile, "%s", infile ) ;
 
        gDirectory->Delete("h*") ;
 
        gStyle -> SetOptStat(0) ;
 
        sprintf( compname[0], "data" ) ;
-       sprintf( compname[1], "ttbar" ) ;
-       sprintf( compname[2], "wjets" ) ;
+       sprintf( compname[1], "diboson" ) ;
+       sprintf( compname[2], "znn" ) ;
+       sprintf( compname[3], "qcd" ) ;
+       sprintf( compname[4], "singlet" ) ;
+       sprintf( compname[5], "wjets" ) ;
+       sprintf( compname[6], "ttbar" ) ;
 
 
        loadHist( infile ) ;
@@ -60,6 +70,19 @@
        drawSet( "h_nb_sl_all", "N btags" ) ;
 
 
+       drawSet( "h_ht_ldp_all", "HT (GeV)" ) ;
+       drawSet( "h_ht_ldp_nb1", "HT (GeV)" ) ;
+       drawSet( "h_ht_ldp_nb2", "HT (GeV)" ) ;
+       drawSet( "h_ht_ldp_nb3", "HT (GeV)" ) ;
+
+       drawSet( "h_met_ldp_all", "MET (GeV)", 1 ) ;
+       drawSet( "h_met_ldp_nb1", "MET (GeV)", 1 ) ;
+       drawSet( "h_met_ldp_nb2", "MET (GeV)", 1 ) ;
+       drawSet( "h_met_ldp_nb3", "MET (GeV)", 1 ) ;
+
+       drawSet( "h_nb_ldp_all", "N btags" ) ;
+
+
 
 
        gStyle->SetOptLogy(0) ;
@@ -76,12 +99,29 @@
 
        drawSet( "h_nb_sl_all", "N btags" ) ;
 
+
+
+       drawSet( "h_ht_ldp_all", "HT (GeV)" ) ;
+       drawSet( "h_ht_ldp_nb1", "HT (GeV)" ) ;
+       drawSet( "h_ht_ldp_nb2", "HT (GeV)" ) ;
+       drawSet( "h_ht_ldp_nb3", "HT (GeV)" ) ;
+
+       drawSet( "h_met_ldp_all", "MET (GeV)" ) ;
+       drawSet( "h_met_ldp_nb1", "MET (GeV)" ) ;
+       drawSet( "h_met_ldp_nb2", "MET (GeV)" ) ;
+       drawSet( "h_met_ldp_nb3", "MET (GeV)" ) ;
+
+       drawSet( "h_nb_ldp_all", "N btags" ) ;
+
+
+
+
     } // dmc_drawplots
 
   //--------------------------------------------------------
 
 
-   void drawSet( const char* hname_base, const char* xtitle ) {
+   void drawSet( const char* hname_base, const char* xtitle, bool do0lepMetEffCorr ) {
 
       bool islogy = gStyle->GetOptLogy() ;
 
@@ -114,7 +154,7 @@
       hdata -> SetLineWidth(2) ;
       hdata -> SetMarkerStyle(20) ;
 
-      TLegend* legend = new TLegend( 0.80, 0.80, 0.95, 0.95 ) ;
+      TLegend* legend = new TLegend( 0.80, 0.70, 0.95, 0.95 ) ;
       legend->SetFillColor(kWhite) ;
 
       for ( int ci=1; ci<nComps; ci++ ) {
@@ -122,6 +162,7 @@
          sprintf( hname, "%s_%s", hname_base, compname[ci] ) ;
          TH1F* hmc = (TH1F*) gDirectory->FindObject( hname ) ;
          if ( hmc == 0x0 ) { printf("\n\n *** drawSet: missing MC hist %s\n", hname ) ; return ; }
+         if ( do0lepMetEffCorr ) { efficiencyCorrect0lepMetHist( hmc ) ; }
          hmcsum -> Add( hmc ) ;
          hmcstack -> Add( hmc ) ;
          legend -> AddEntry( hmc, compname[ci] ) ;
@@ -132,7 +173,7 @@
       TH1F* hdiff = (TH1F*) hdata->Clone( hname ) ;
       hdiff->Reset() ;
 
-      for ( int bi=1; bi<hdata->GetNbinsX(); bi++ ) {
+      for ( int bi=1; bi<=hdata->GetNbinsX(); bi++ ) {
          double data = hdata->GetBinContent(bi) ;
          double data_err = hdata->GetBinError(bi) ;
          double mc = hmcsum->GetBinContent(bi) ;
@@ -157,6 +198,7 @@
 
 
       double hmax = hdata->GetBinContent( hdata->GetMaximumBin() ) ;
+      if ( hmcsum->GetBinContent( hdata->GetMaximumBin() ) > hmax ) { hmax = hmcsum->GetBinContent( hdata->GetMaximumBin() ) ; }
       if ( islogy ) {
          hmax = 3*hmax ;
       } else {
@@ -213,19 +255,79 @@
       dmccan->Update() ;
       dmccan->Draw() ;
 
+
       if ( savePdf ) {
+         TString dataset( inrootfile ) ;
+         dataset.ReplaceAll("rootfiles/dmc_plots1_","") ;
+         dataset.ReplaceAll(".root","") ;
          char filename[10000] ;
          if ( islogy ) {
-            sprintf( filename, "outputfiles/%s_logy.pdf", hname_base ) ;
+            sprintf( filename, "outputfiles/%s_%s_logy.pdf", hname_base, dataset.Data() ) ;
          } else {
-            sprintf( filename, "outputfiles/%s.pdf", hname_base ) ;
+            sprintf( filename, "outputfiles/%s_%s.pdf", hname_base, dataset.Data() ) ;
          }
          dmccan->SaveAs( filename ) ;
       }
 
    } // drawSet
 
+   //=======================================================================================
 
+   void efficiencyCorrect0lepMetHist( TH1F* hp ) {
+
+      if ( first ) {
+         printf("\n\n Creating efficiency hist.\n") ;
+         first = false ;
+         effhist = new TH1F("effhist","eff vs MET", 30, 125., 500. ) ;
+
+         effhist -> SetBinContent(  1, 0.47 ) ;
+         effhist -> SetBinContent(  2, 0.54 ) ;
+
+         effhist -> SetBinContent(  3, 0.65 ) ;
+         effhist -> SetBinContent(  4, 0.71 ) ;
+         effhist -> SetBinContent(  5, 0.77 ) ;
+         effhist -> SetBinContent(  6, 0.79 ) ;
+
+         effhist -> SetBinContent(  7, 0.85 ) ;
+         effhist -> SetBinContent(  8, 0.90 ) ;
+         effhist -> SetBinContent(  9, 0.91 ) ;
+         effhist -> SetBinContent( 10, 0.93 ) ;
+
+         effhist -> SetBinContent( 11, 0.94 ) ;
+         effhist -> SetBinContent( 12, 0.95 ) ;
+         effhist -> SetBinContent( 13, 0.95 ) ;
+         effhist -> SetBinContent( 14, 0.95 ) ;
+
+         effhist -> SetBinContent( 15, 0.95 ) ;
+         effhist -> SetBinContent( 16, 0.95 ) ;
+         effhist -> SetBinContent( 17, 0.95 ) ;
+         effhist -> SetBinContent( 18, 0.95 ) ;
+
+         effhist -> SetBinContent( 19, 0.98 ) ;
+         effhist -> SetBinContent( 20, 0.98 ) ;
+         effhist -> SetBinContent( 21, 0.98 ) ;
+         effhist -> SetBinContent( 22, 0.98 ) ;
+
+         effhist -> SetBinContent( 23, 0.98 ) ;
+         effhist -> SetBinContent( 24, 0.98 ) ;
+         effhist -> SetBinContent( 25, 0.98 ) ;
+         effhist -> SetBinContent( 26, 0.98 ) ;
+
+         effhist -> SetBinContent( 27, 0.99 ) ;
+         effhist -> SetBinContent( 28, 0.99 ) ;
+         effhist -> SetBinContent( 29, 0.99 ) ;
+         effhist -> SetBinContent( 30, 0.99 ) ;
+
+         for ( int bi=1; bi<=30; bi++ ) {
+            effhist -> SetBinError( bi, 0. ) ;
+         }
+
+      }
+
+      hp -> Multiply( effhist ) ;
+
+
+   }
 
 
    //=======================================================================================
