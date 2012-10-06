@@ -192,6 +192,12 @@
        char basecuts_0lep_nomindphin[10000] ;
        sprintf( basecuts_0lep_nomindphin, "(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
+       char basecuts_0lep[10000] ;
+       sprintf( basecuts_0lep, "minDelPhiN>4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+
+       char basecuts_0lep_nonb[10000] ;
+       sprintf( basecuts_0lep_nonb, "minDelPhiN>4&&(nMu==0&&nEl==0)&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+
 
 
        dcan = (TCanvas*) gDirectory->FindObject("dcan") ;
@@ -205,6 +211,8 @@
 
        sprintf( htitle, "MET, SL, %s", dataset_string ) ;
        bookSet( "h_met_sl_all", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, SL, nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_sl_nb0", htitle, 30, 125., 500. ) ;
        sprintf( htitle, "MET, SL, nB=1, %s", dataset_string ) ;
        bookSet( "h_met_sl_nb1", htitle, 30, 125., 500. ) ;
        sprintf( htitle, "MET, SL, nB=2, %s", dataset_string ) ;
@@ -232,6 +240,8 @@
 
        sprintf( htitle, "MET, SL, no MC trig correction, %s", dataset_string ) ;
        bookSet( "h_met_sl_nomctrigcorr_all", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, SL, no MC trig correction, nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_sl_nomctrigcorr_nb0", htitle, 30, 125., 500. ) ;
        sprintf( htitle, "MET, SL, no MC trig correction, nB=1, %s", dataset_string ) ;
        bookSet( "h_met_sl_nomctrigcorr_nb1", htitle, 30, 125., 500. ) ;
        sprintf( htitle, "MET, SL, no MC trig correction, nB=2, %s", dataset_string ) ;
@@ -239,8 +249,47 @@
        sprintf( htitle, "MET, SL, no MC trig correction, nB>=3, %s", dataset_string ) ;
        bookSet( "h_met_sl_nomctrigcorr_nb3", htitle, 30, 125., 500. ) ;
 
+       sprintf( htitle, "MET, SL, no MC trig correction, HT[400,500], nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_sl_nomctrigcorr_ht1_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, SL, no MC trig correction, HT[500,800], nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_sl_nomctrigcorr_ht2_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, SL, no MC trig correction, HT[800,1000], nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_sl_nomctrigcorr_ht3_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, SL, no MC trig correction, HT>1000, nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_sl_nomctrigcorr_ht4_nb1", htitle, 30, 125., 500. ) ;
+
+       sprintf( htitle, "MET, SL, HT[400,500], nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_sl_ht1_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, SL, HT[500,800], nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_sl_ht2_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, SL, HT[800,1000], nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_sl_ht3_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, SL, HT>1000, nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_sl_ht4_nb1", htitle, 30, 125., 500. ) ;
+
+       sprintf( htitle, "MET, SL, no MC trig correction, HT[400,500], nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_sl_nomctrigcorr_ht1_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, SL, no MC trig correction, HT[500,800], nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_sl_nomctrigcorr_ht2_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, SL, no MC trig correction, HT[800,1000], nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_sl_nomctrigcorr_ht3_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, SL, no MC trig correction, HT>1000, nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_sl_nomctrigcorr_ht4_nb0", htitle, 30, 125., 500. ) ;
+
+       sprintf( htitle, "MET, SL, HT[400,500], nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_sl_ht1_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, SL, HT[500,800], nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_sl_ht2_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, SL, HT[800,1000], nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_sl_ht3_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, SL, HT>1000, nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_sl_ht4_nb0", htitle, 30, 125., 500. ) ;
+
+
        sprintf( htitle, "MET, LDP, %s", dataset_string ) ;
        bookSet( "h_met_ldp_all", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, LDP, nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_ldp_nb0", htitle, 30, 125., 500. ) ;
        sprintf( htitle, "MET, LDP, nB=1, %s", dataset_string ) ;
        bookSet( "h_met_ldp_nb1", htitle, 30, 125., 500. ) ;
        sprintf( htitle, "MET, LDP, nB=2, %s", dataset_string ) ;
@@ -268,6 +317,8 @@
 
        sprintf( htitle, "MET, LDP, no MC trig correction, %s", dataset_string ) ;
        bookSet( "h_met_ldp_nomctrigcorr_all", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, LDP, no MC trig correction, nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_ldp_nomctrigcorr_nb0", htitle, 30, 125., 500. ) ;
        sprintf( htitle, "MET, LDP, no MC trig correction, nB=1, %s", dataset_string ) ;
        bookSet( "h_met_ldp_nomctrigcorr_nb1", htitle, 30, 125., 500. ) ;
        sprintf( htitle, "MET, LDP, no MC trig correction, nB=2, %s", dataset_string ) ;
@@ -275,12 +326,100 @@
        sprintf( htitle, "MET, LDP, no MC trig correction, nB>=3, %s", dataset_string ) ;
        bookSet( "h_met_ldp_nomctrigcorr_nb3", htitle, 30, 125., 500. ) ;
 
+       sprintf( htitle, "MET, LDP, no MC trig correction, HT[400,500], nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_ldp_nomctrigcorr_ht1_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, LDP, no MC trig correction, HT[500,800], nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_ldp_nomctrigcorr_ht2_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, LDP, no MC trig correction, HT[800,1000], nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_ldp_nomctrigcorr_ht3_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, LDP, no MC trig correction, HT>1000, nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_ldp_nomctrigcorr_ht4_nb1", htitle, 30, 125., 500. ) ;
+
+       sprintf( htitle, "MET, LDP, HT[400,500], nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_ldp_ht1_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, LDP, HT[500,800], nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_ldp_ht2_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, LDP, HT[800,1000], nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_ldp_ht3_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, LDP, HT>1000, nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_ldp_ht4_nb1", htitle, 30, 125., 500. ) ;
+
+       sprintf( htitle, "MET, LDP, no MC trig correction, HT[400,500], nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_ldp_nomctrigcorr_ht1_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, LDP, no MC trig correction, HT[500,800], nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_ldp_nomctrigcorr_ht2_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, LDP, no MC trig correction, HT[800,1000], nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_ldp_nomctrigcorr_ht3_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, LDP, no MC trig correction, HT>1000, nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_ldp_nomctrigcorr_ht4_nb0", htitle, 30, 125., 500. ) ;
+
+       sprintf( htitle, "MET, LDP, HT[400,500], nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_ldp_ht1_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, LDP, HT[500,800], nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_ldp_ht2_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, LDP, HT[800,1000], nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_ldp_ht3_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, LDP, HT>1000, nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_ldp_ht4_nb0", htitle, 30, 125., 500. ) ;
+
+       sprintf( htitle, "MET, ZL, no MC trig correction, nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_zl_nomctrigcorr_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, ZL, no MC trig correction, nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_zl_nomctrigcorr_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, ZL, no MC trig correction, nB=2, %s", dataset_string ) ;
+       bookSet( "h_met_zl_nomctrigcorr_nb2", htitle, 30, 125., 500. ) ;
+
+       sprintf( htitle, "MET, ZL, nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_zl_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, ZL, nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_zl_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, ZL, nB=2, %s", dataset_string ) ;
+       bookSet( "h_met_zl_nb2", htitle, 30, 125., 500. ) ;
+
+       sprintf( htitle, "MET, ZL, no MC trig correction, HT[400,500], nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_zl_nomctrigcorr_ht1_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, ZL, no MC trig correction, HT[500,800], nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_zl_nomctrigcorr_ht2_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, ZL, no MC trig correction, HT[800,1000], nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_zl_nomctrigcorr_ht3_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, ZL, no MC trig correction, HT>1000, nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_zl_nomctrigcorr_ht4_nb1", htitle, 30, 125., 500. ) ;
+
+       sprintf( htitle, "MET, ZL, HT[400,500], nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_zl_ht1_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, ZL, HT[500,800], nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_zl_ht2_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, ZL, HT[800,1000], nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_zl_ht3_nb1", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, ZL, HT>1000, nB=1, %s", dataset_string ) ;
+       bookSet( "h_met_zl_ht4_nb1", htitle, 30, 125., 500. ) ;
+
+       sprintf( htitle, "MET, ZL, no MC trig correction, HT[400,500], nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_zl_nomctrigcorr_ht1_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, ZL, no MC trig correction, HT[500,800], nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_zl_nomctrigcorr_ht2_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, ZL, no MC trig correction, HT[800,1000], nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_zl_nomctrigcorr_ht3_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, ZL, no MC trig correction, HT>1000, nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_zl_nomctrigcorr_ht4_nb0", htitle, 30, 125., 500. ) ;
+
+       sprintf( htitle, "MET, ZL, HT[400,500], nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_zl_ht1_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, ZL, HT[500,800], nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_zl_ht2_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, ZL, HT[800,1000], nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_zl_ht3_nb0", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, ZL, HT>1000, nB=0, %s", dataset_string ) ;
+       bookSet( "h_met_zl_ht4_nb0", htitle, 30, 125., 500. ) ;
+
 
 
      //-- HT
 
        sprintf( htitle, "HT, SL, %s", dataset_string ) ;
        bookSet( "h_ht_sl_all", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, SL, nB=0, %s", dataset_string ) ;
+       bookSet( "h_ht_sl_nb0", htitle, 32, 400., 2000. ) ;
        sprintf( htitle, "HT, SL, nB=1, %s", dataset_string ) ;
        bookSet( "h_ht_sl_nb1", htitle, 32, 400., 2000. ) ;
        sprintf( htitle, "HT, SL, nB=2, %s", dataset_string ) ;
@@ -308,6 +447,8 @@
 
        sprintf( htitle, "HT, SL, no MC trig correction, %s", dataset_string ) ;
        bookSet( "h_ht_sl_nomctrigcorr_all", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, SL, no MC trig correction, nB=0, %s", dataset_string ) ;
+       bookSet( "h_ht_sl_nomctrigcorr_nb0", htitle, 32, 400., 2000. ) ;
        sprintf( htitle, "HT, SL, no MC trig correction, nB=1, %s", dataset_string ) ;
        bookSet( "h_ht_sl_nomctrigcorr_nb1", htitle, 32, 400., 2000. ) ;
        sprintf( htitle, "HT, SL, no MC trig correction, nB=2, %s", dataset_string ) ;
@@ -315,10 +456,46 @@
        sprintf( htitle, "HT, SL, no MC trig correction, nB>=3, %s", dataset_string ) ;
        bookSet( "h_ht_sl_nomctrigcorr_nb3", htitle, 32, 400., 2000. ) ;
 
+       sprintf( htitle, "HT, SL, nB=1, no MC trig correction, MET[125,150], %s", dataset_string ) ;
+       bookSet( "h_ht_sl_nomctrigcorr_met1_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, SL, nB=1, no MC trig correction, MET[150,250], %s", dataset_string ) ;
+       bookSet( "h_ht_sl_nomctrigcorr_met2_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, SL, nB=1, no MC trig correction, MET[250,350], %s", dataset_string ) ;
+       bookSet( "h_ht_sl_nomctrigcorr_met3_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, SL, nB=1, no MC trig correction, MET>350, %s", dataset_string ) ;
+       bookSet( "h_ht_sl_nomctrigcorr_met4_nb1", htitle, 32, 400., 2000. ) ;
 
+       sprintf( htitle, "HT, SL, nB=1, MET[125,150], %s", dataset_string ) ;
+       bookSet( "h_ht_sl_met1_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, SL, nB=1, MET[150,250], %s", dataset_string ) ;
+       bookSet( "h_ht_sl_met2_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, SL, nB=1, MET[250,350], %s", dataset_string ) ;
+       bookSet( "h_ht_sl_met3_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, SL, nB=1, MET>350, %s", dataset_string ) ;
+       bookSet( "h_ht_sl_met4_nb1", htitle, 32, 400., 2000. ) ;
+
+       sprintf( htitle, "HT, SL, nb=0, no MC trig correction, MET[125,150], %s", dataset_string ) ;
+       bookSet( "h_ht_sl_nomctrigcorr_met1_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, SL, nb=0, no MC trig correction, MET[150,250], %s", dataset_string ) ;
+       bookSet( "h_ht_sl_nomctrigcorr_met2_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, SL, nb=0, no MC trig correction, MET[250,350], %s", dataset_string ) ;
+       bookSet( "h_ht_sl_nomctrigcorr_met3_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, SL, nb=0, no MC trig correction, MET>350, %s", dataset_string ) ;
+       bookSet( "h_ht_sl_nomctrigcorr_met4_nb0", htitle, 32, 400., 2000. ) ;
+
+       sprintf( htitle, "HT, SL, nb=0, MET[125,150], %s", dataset_string ) ;
+       bookSet( "h_ht_sl_met1_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, SL, nb=0, MET[150,250], %s", dataset_string ) ;
+       bookSet( "h_ht_sl_met2_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, SL, nb=0, MET[250,350], %s", dataset_string ) ;
+       bookSet( "h_ht_sl_met3_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, SL, nb=0, MET>350, %s", dataset_string ) ;
+       bookSet( "h_ht_sl_met4_nb0", htitle, 32, 400., 2000. ) ;
 
        sprintf( htitle, "HT, LDP, %s", dataset_string ) ;
        bookSet( "h_ht_ldp_all", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, LDP, nB=0, %s", dataset_string ) ;
+       bookSet( "h_ht_ldp_nb0", htitle, 32, 400., 2000. ) ;
        sprintf( htitle, "HT, LDP, nB=1, %s", dataset_string ) ;
        bookSet( "h_ht_ldp_nb1", htitle, 32, 400., 2000. ) ;
        sprintf( htitle, "HT, LDP, nB=2, %s", dataset_string ) ;
@@ -346,6 +523,8 @@
 
        sprintf( htitle, "HT, LDP, no MC trig correction, %s", dataset_string ) ;
        bookSet( "h_ht_ldp_nomctrigcorr_all", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, LDP, no MC trig correction, nB=0, %s", dataset_string ) ;
+       bookSet( "h_ht_ldp_nomctrigcorr_nb0", htitle, 32, 400., 2000. ) ;
        sprintf( htitle, "HT, LDP, no MC trig correction, nB=1, %s", dataset_string ) ;
        bookSet( "h_ht_ldp_nomctrigcorr_nb1", htitle, 32, 400., 2000. ) ;
        sprintf( htitle, "HT, LDP, no MC trig correction, nB=2, %s", dataset_string ) ;
@@ -353,8 +532,98 @@
        sprintf( htitle, "HT, LDP, no MC trig correction, nB>=3, %s", dataset_string ) ;
        bookSet( "h_ht_ldp_nomctrigcorr_nb3", htitle, 32, 400., 2000. ) ;
 
+       sprintf( htitle, "HT, LDP, nB=1, no MC trig correction, MET[125,150], %s", dataset_string ) ;
+       bookSet( "h_ht_ldp_nomctrigcorr_met1_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, LDP, nB=1, no MC trig correction, MET[150,250], %s", dataset_string ) ;
+       bookSet( "h_ht_ldp_nomctrigcorr_met2_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, LDP, nB=1, no MC trig correction, MET[250,350], %s", dataset_string ) ;
+       bookSet( "h_ht_ldp_nomctrigcorr_met3_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, LDP, nB=1, no MC trig correction, MET>350, %s", dataset_string ) ;
+       bookSet( "h_ht_ldp_nomctrigcorr_met4_nb1", htitle, 32, 400., 2000. ) ;
+
+       sprintf( htitle, "HT, LDP, nB=1, MET[125,150], %s", dataset_string ) ;
+       bookSet( "h_ht_ldp_met1_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, LDP, nB=1, MET[150,250], %s", dataset_string ) ;
+       bookSet( "h_ht_ldp_met2_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, LDP, nB=1, MET[250,350], %s", dataset_string ) ;
+       bookSet( "h_ht_ldp_met3_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, LDP, nB=1, MET>350, %s", dataset_string ) ;
+       bookSet( "h_ht_ldp_met4_nb1", htitle, 32, 400., 2000. ) ;
+
+       sprintf( htitle, "HT, LDP, nb=0, no MC trig correction, MET[125,150], %s", dataset_string ) ;
+       bookSet( "h_ht_ldp_nomctrigcorr_met1_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, LDP, nb=0, no MC trig correction, MET[150,250], %s", dataset_string ) ;
+       bookSet( "h_ht_ldp_nomctrigcorr_met2_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, LDP, nb=0, no MC trig correction, MET[250,350], %s", dataset_string ) ;
+       bookSet( "h_ht_ldp_nomctrigcorr_met3_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, LDP, nb=0, no MC trig correction, MET>350, %s", dataset_string ) ;
+       bookSet( "h_ht_ldp_nomctrigcorr_met4_nb0", htitle, 32, 400., 2000. ) ;
+
+       sprintf( htitle, "HT, LDP, nb=0, MET[125,150], %s", dataset_string ) ;
+       bookSet( "h_ht_ldp_met1_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, LDP, nb=0, MET[150,250], %s", dataset_string ) ;
+       bookSet( "h_ht_ldp_met2_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, LDP, nb=0, MET[250,350], %s", dataset_string ) ;
+       bookSet( "h_ht_ldp_met3_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, LDP, nb=0, MET>350, %s", dataset_string ) ;
+       bookSet( "h_ht_ldp_met4_nb0", htitle, 32, 400., 2000. ) ;
+
+       sprintf( htitle, "HT, ZL, no MC trig correction, nB=0, %s", dataset_string ) ;
+       bookSet( "h_ht_zl_nomctrigcorr_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, ZL, no MC trig correction, nB=1, %s", dataset_string ) ;
+       bookSet( "h_ht_zl_nomctrigcorr_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, ZL, no MC trig correction, MET<350, nB=2, %s", dataset_string ) ;
+       bookSet( "h_ht_zl_nomctrigcorr_nb2", htitle, 32, 400., 2000. ) ;
+
+       sprintf( htitle, "HT, ZL, nB=0, %s", dataset_string ) ;
+       bookSet( "h_ht_zl_nb0", htitle, 30, 400., 2000. ) ;
+       sprintf( htitle, "HT, ZL, nB=1, %s", dataset_string ) ;
+       bookSet( "h_ht_zl_nb1", htitle, 30, 400., 2000. ) ;
+       sprintf( htitle, "HT, ZL, MET<350, nB=2, %s", dataset_string ) ;
+       bookSet( "h_ht_zl_nb2", htitle, 30, 400., 2000. ) ;
+
+       sprintf( htitle, "HT, ZL, nB=1, no MC trig correction, MET[125,150], %s", dataset_string ) ;
+       bookSet( "h_ht_zl_nomctrigcorr_met1_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, ZL, nB=1, no MC trig correction, MET[150,250], %s", dataset_string ) ;
+       bookSet( "h_ht_zl_nomctrigcorr_met2_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, ZL, nB=1, no MC trig correction, MET[250,350], %s", dataset_string ) ;
+       bookSet( "h_ht_zl_nomctrigcorr_met3_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, ZL, nB=1, no MC trig correction, MET>350, %s", dataset_string ) ;
+       bookSet( "h_ht_zl_nomctrigcorr_met4_nb1", htitle, 32, 400., 2000. ) ;
+
+       sprintf( htitle, "HT, ZL, nB=1, MET[125,150], %s", dataset_string ) ;
+       bookSet( "h_ht_zl_met1_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, ZL, nB=1, MET[150,250], %s", dataset_string ) ;
+       bookSet( "h_ht_zl_met2_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, ZL, nB=1, MET[250,350], %s", dataset_string ) ;
+       bookSet( "h_ht_zl_met3_nb1", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, ZL, nB=1, MET>350, %s", dataset_string ) ;
+       bookSet( "h_ht_zl_met4_nb1", htitle, 32, 400., 2000. ) ;
+
+       sprintf( htitle, "HT, ZL, nb=0, no MC trig correction, MET[125,150], %s", dataset_string ) ;
+       bookSet( "h_ht_zl_nomctrigcorr_met1_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, ZL, nb=0, no MC trig correction, MET[150,250], %s", dataset_string ) ;
+       bookSet( "h_ht_zl_nomctrigcorr_met2_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, ZL, nb=0, no MC trig correction, MET[250,350], %s", dataset_string ) ;
+       bookSet( "h_ht_zl_nomctrigcorr_met3_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, ZL, nb=0, no MC trig correction, MET>350, %s", dataset_string ) ;
+       bookSet( "h_ht_zl_nomctrigcorr_met4_nb0", htitle, 32, 400., 2000. ) ;
+
+       sprintf( htitle, "HT, ZL, nb=0, MET[125,150], %s", dataset_string ) ;
+       bookSet( "h_ht_zl_met1_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, ZL, nb=0, MET[150,250], %s", dataset_string ) ;
+       bookSet( "h_ht_zl_met2_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, ZL, nb=0, MET[250,350], %s", dataset_string ) ;
+       bookSet( "h_ht_zl_met3_nb0", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, ZL, nb=0, MET>350, %s", dataset_string ) ;
+       bookSet( "h_ht_zl_met4_nb0", htitle, 32, 400., 2000. ) ;
 
 
+
+
+
+       sprintf( htitle, "HT vs MET, SL, nB=0, %s", dataset_string ) ;
+       bookSetLHB( "h_lhb_sl_nb0", htitle ) ;
        sprintf( htitle, "HT vs MET, SL, nB=1, %s", dataset_string ) ;
        bookSetLHB( "h_lhb_sl_nb1", htitle ) ;
        sprintf( htitle, "HT vs MET, SL, nB=2, %s", dataset_string ) ;
@@ -362,6 +631,8 @@
        sprintf( htitle, "HT vs MET, SL, nB=3, %s", dataset_string ) ;
        bookSetLHB( "h_lhb_sl_nb3", htitle ) ;
 
+       sprintf( htitle, "HT vs MET, LDP, nB=0, %s", dataset_string ) ;
+       bookSetLHB( "h_lhb_ldp_nb0", htitle ) ;
        sprintf( htitle, "HT vs MET, LDP, nB=1, %s", dataset_string ) ;
        bookSetLHB( "h_lhb_ldp_nb1", htitle ) ;
        sprintf( htitle, "HT vs MET, LDP, nB=2, %s", dataset_string ) ;
@@ -370,6 +641,8 @@
        bookSetLHB( "h_lhb_ldp_nb3", htitle ) ;
 
 
+       sprintf( htitle, "HT vs MET, SL, no MC trig correction, nB=0, %s", dataset_string ) ;
+       bookSetLHB( "h_lhb_sl_nomctrigcorr_nb0", htitle ) ;
        sprintf( htitle, "HT vs MET, SL, no MC trig correction, nB=1, %s", dataset_string ) ;
        bookSetLHB( "h_lhb_sl_nomctrigcorr_nb1", htitle ) ;
        sprintf( htitle, "HT vs MET, SL, no MC trig correction, nB=2, %s", dataset_string ) ;
@@ -377,6 +650,8 @@
        sprintf( htitle, "HT vs MET, SL, no MC trig correction, nB=3, %s", dataset_string ) ;
        bookSetLHB( "h_lhb_sl_nomctrigcorr_nb3", htitle ) ;
 
+       sprintf( htitle, "HT vs MET, LDP, no MC trig correction, nB=0, %s", dataset_string ) ;
+       bookSetLHB( "h_lhb_ldp_nomctrigcorr_nb0", htitle ) ;
        sprintf( htitle, "HT vs MET, LDP, no MC trig correction, nB=1, %s", dataset_string ) ;
        bookSetLHB( "h_lhb_ldp_nomctrigcorr_nb1", htitle ) ;
        sprintf( htitle, "HT vs MET, LDP, no MC trig correction, nB=2, %s", dataset_string ) ;
@@ -385,6 +660,19 @@
        bookSetLHB( "h_lhb_ldp_nomctrigcorr_nb3", htitle ) ;
 
 
+       sprintf( htitle, "HT vs MET, ZL, nB=0, %s", dataset_string ) ;
+       bookSetLHB( "h_lhb_zl_nb0", htitle ) ;
+       sprintf( htitle, "HT vs MET, ZL, nB=1, %s", dataset_string ) ;
+       bookSetLHB( "h_lhb_zl_nb1", htitle ) ;
+       sprintf( htitle, "HT vs MET, ZL, nB=2, %s", dataset_string ) ;
+       bookSetLHB( "h_lhb_zl_nb2", htitle ) ;
+
+       sprintf( htitle, "HT vs MET, ZL, no MC trig correction, nB=0, %s", dataset_string ) ;
+       bookSetLHB( "h_lhb_zl_nomctrigcorr_nb0", htitle ) ;
+       sprintf( htitle, "HT vs MET, ZL, no MC trig correction, nB=1, %s", dataset_string ) ;
+       bookSetLHB( "h_lhb_zl_nomctrigcorr_nb1", htitle ) ;
+       sprintf( htitle, "HT vs MET, ZL, no MC trig correction, nB=2, %s", dataset_string ) ;
+       bookSetLHB( "h_lhb_zl_nomctrigcorr_nb2", htitle ) ;
 
 
 
@@ -441,6 +729,14 @@
        fillSet( "h_ht_sl_all", "HT", cuts ) ;
        fillSet( "h_met_sl_nomctrigcorr_all", "MET", cuts, false ) ;
        fillSet( "h_ht_sl_nomctrigcorr_all", "HT", cuts, false ) ;
+
+       sprintf( cuts, "%s&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_met_sl_nb0", "MET", cuts ) ;
+       fillSet( "h_ht_sl_nb0", "HT", cuts ) ;
+       fillSet( "h_met_sl_nomctrigcorr_nb0", "MET", cuts, false ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_nb0", "HT", cuts, false ) ;
+       fillSetLHB( "h_lhb_sl_nb0", cuts ) ;
+       fillSetLHB( "h_lhb_sl_nomctrigcorr_nb0", cuts, false ) ;
 
        sprintf( cuts, "%s&&nB==1", basecuts_1lep ) ;
        fillSet( "h_met_sl_nb1", "MET", cuts ) ;
@@ -513,6 +809,14 @@
        fillSet( "h_met_ldp_nomctrigcorr_all", "MET", cuts, false ) ;
        fillSet( "h_ht_ldp_nomctrigcorr_all", "HT", cuts, false ) ;
 
+       sprintf( cuts, "%s&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_met_ldp_nb0", "MET", cuts ) ;
+       fillSet( "h_ht_ldp_nb0", "HT", cuts ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_nb0", "MET", cuts, false ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_nb0", "HT", cuts, false ) ;
+       fillSetLHB( "h_lhb_ldp_nb0", cuts ) ;
+       fillSetLHB( "h_lhb_ldp_nomctrigcorr_nb0", cuts, false ) ;
+
        sprintf( cuts, "%s&&nB==1", basecuts_ldp ) ;
        fillSet( "h_met_ldp_nb1", "MET", cuts ) ;
        fillSet( "h_ht_ldp_nb1", "HT", cuts ) ;
@@ -576,12 +880,196 @@
        fillSet( "h_ht_ldp_metgt250_nb3", "HT", cuts ) ;
 
 
+       sprintf( cuts, "%s&&HT>400&&HT<=500&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht1_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_ht1_nb1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>500&&HT<=800&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht2_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_ht2_nb1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>800&&HT<=1000&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht3_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_ht3_nb1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>1000&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht4_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_ht4_nb1", "MET", cuts ) ;
+
+       sprintf( cuts, "%s&&HT>400&&HT<=500&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht1_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_ht1_nb0", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>500&&HT<=800&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht2_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_ht2_nb0", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>800&&HT<=1000&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht3_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_ht3_nb0", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>1000&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht4_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_ht4_nb0", "MET", cuts ) ;
+
+       sprintf( cuts, "%s&&HT>400&&HT<=500&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht1_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_ht1_nb1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>500&&HT<=800&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht2_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_ht2_nb1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>800&&HT<=1000&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht3_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_ht3_nb1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>1000&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht4_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_ht4_nb1", "MET", cuts ) ;
+
+       sprintf( cuts, "%s&&HT>400&&HT<=500&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht1_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_ht1_nb0", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>500&&HT<=800&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht2_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_ht2_nb0", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>800&&HT<=1000&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht3_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_ht3_nb0", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>1000&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht4_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_ht4_nb0", "MET", cuts ) ;
+
+       sprintf( cuts, "%s&&HT>400&&HT<=500&&nB==1", basecuts_0lep ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht1_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_ht1_nb1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>500&&HT<=800&&nB==1", basecuts_0lep ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht2_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_ht2_nb1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>800&&HT<=1000&&nB==1", basecuts_0lep ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht3_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_ht3_nb1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>1000&&nB==1", basecuts_0lep ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht4_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_ht4_nb1", "MET", cuts ) ;
+
+       sprintf( cuts, "%s&&HT>400&&HT<=500&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht1_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_ht1_nb0", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>500&&HT<=800&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht2_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_ht2_nb0", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>800&&HT<=1000&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht3_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_ht3_nb0", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>1000&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht4_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_ht4_nb0", "MET", cuts ) ;
+
+
+
+
+
+       sprintf( cuts, "%s&&MET>125&&MET<=150&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_met1_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_sl_met1_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>150&&MET<=250&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_met2_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_sl_met2_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>250&&MET<=350&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_met3_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_sl_met3_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>350&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_met4_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_sl_met4_nb1", "HT", cuts ) ;
+
+       sprintf( cuts, "%s&&MET>125&&MET<=150&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_met1_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_sl_met1_nb0", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>150&&MET<=250&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_met2_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_sl_met2_nb0", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>250&&MET<=350&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_met3_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_sl_met3_nb0", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>350&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_met4_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_sl_met4_nb0", "HT", cuts ) ;
+
+
+       sprintf( cuts, "%s&&MET>125&&MET<=150&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_met1_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_ldp_met1_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>150&&MET<=250&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_met2_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_ldp_met2_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>250&&MET<=350&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_met3_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_ldp_met3_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>350&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_met4_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_ldp_met4_nb1", "HT", cuts ) ;
+
+       sprintf( cuts, "%s&&MET>125&&MET<=150&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_met1_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_ldp_met1_nb0", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>150&&MET<=250&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_met2_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_ldp_met2_nb0", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>250&&MET<=350&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_met3_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_ldp_met3_nb0", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>350&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_met4_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_ldp_met4_nb0", "HT", cuts ) ;
+
+
+       sprintf( cuts, "%s&&MET>125&&MET<=150&&nB==1", basecuts_0lep ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_met1_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_zl_met1_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>150&&MET<=250&&nB==1", basecuts_0lep ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_met2_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_zl_met2_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>250&&MET<=350&&nB==1", basecuts_0lep ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_met3_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_zl_met3_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>350&&nB==1", basecuts_0lep ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_met4_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_zl_met4_nb1", "HT", cuts ) ;
+
+       sprintf( cuts, "%s&&MET>125&&MET<=150&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_met1_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_zl_met1_nb0", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>150&&MET<=250&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_met2_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_zl_met2_nb0", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>250&&MET<=350&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_met3_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_zl_met3_nb0", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>350&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_met4_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_zl_met4_nb0", "HT", cuts ) ;
 
 
 
 
 
 
+       sprintf( cuts, "%s&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_met_zl_nb0", "MET", cuts ) ;
+       fillSet( "h_ht_zl_nb0", "HT", cuts ) ;
+       fillSet( "h_met_zl_nomctrigcorr_nb0", "MET", cuts, false ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_nb0", "HT", cuts, false ) ;
+       fillSetLHB( "h_lhb_zl_nb0", cuts ) ;
+       fillSetLHB( "h_lhb_zl_nomctrigcorr_nb0", cuts, false ) ;
+
+       sprintf( cuts, "%s&&nB==1", basecuts_0lep ) ;
+       fillSet( "h_met_zl_nb1", "MET", cuts ) ;
+       fillSet( "h_ht_zl_nb1", "HT", cuts ) ;
+       fillSet( "h_met_zl_nomctrigcorr_nb1", "MET", cuts, false ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_nb1", "HT", cuts, false ) ;
+       fillSetLHB( "h_lhb_zl_nb1", cuts ) ;
+       fillSetLHB( "h_lhb_zl_nomctrigcorr_nb1", cuts, false ) ;
+
+       sprintf( cuts, "%s&&nB==2&&MET<350", basecuts_0lep ) ;
+       fillSet( "h_met_zl_nb2", "MET", cuts ) ;
+       fillSet( "h_ht_zl_nb2", "HT", cuts ) ;
+       fillSet( "h_met_zl_nomctrigcorr_nb2", "MET", cuts, false ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_nb2", "HT", cuts, false ) ;
+       fillSetLHB( "h_lhb_zl_nb2", cuts ) ;
+       fillSetLHB( "h_lhb_zl_nomctrigcorr_nb2", cuts, false ) ;
 
 
 
