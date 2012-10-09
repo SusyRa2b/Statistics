@@ -20,7 +20,7 @@
 using namespace RooFit ;
 
 
-RooAbsArg* makeGaussianConstraint( RooWorkspace& ws, TString NP_name, const TString binName,
+RooAbsArg* getGaussianConstraint( RooWorkspace& ws, TString NP_name, const TString binName,
 				    const double NP_val, const double NP_err,
 				    const TString observables, const TString nuisances,
 				    bool allowNegative = false ) {
@@ -59,7 +59,7 @@ RooAbsArg* makeGaussianConstraint( RooWorkspace& ws, TString NP_name, const TStr
 
 
 
-RooAbsReal* makeCorrelatedGaussianConstraint( RooWorkspace& ws, TString NP_name, const TString binName,
+RooAbsReal* getCorrelatedGaussianConstraint( RooWorkspace& ws, TString NP_name, const TString binName,
 					      double NP_val, double NP_err, 
 					      const TString observables, const TString nuisances,
 					      const TString NP_base_name, 
