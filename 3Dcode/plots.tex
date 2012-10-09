@@ -11,7 +11,7 @@
   \begin{document}
 
 
-   Fri Oct  5 18:01:19 PDT 2012 \\
+   Mon Oct  8 17:20:39 PDT 2012 \\
 
    Datasets and selections
    \begin{itemize}
@@ -30,22 +30,18 @@
      \item MC has been corrected for trigger efficiency, {\it except} where noted otherwise.
      \item Trigger efficiency corrections are in likelihood MET,HT bins.
      \item Trigger efficiency corrections are not run dependent.
+     \item {\bf I have inserted these fudge factors: ttwj x 0.85 and QCD x 1.60.}
    \end{itemize}
 
 .\\
 
   Comments on recent additions
   \begin{itemize}
-    \item {\bf I have inserted these fudge factors: ttwj x 0.85 and QCD x 1.60.}
-    \item Now have MET distributions in HT bins and vice versa.
-    \item Added several nB=0 plots.  Much higher statistics.  Very useful for the data MC comparison.
-    \item Added some unblind ZL (zero lepton signal selection) distributions.  Conclusions
-          from these regarding data - MC agreement and trigger issues are consistent
-          with LDP and SL samples.  Data-MC agreement is roughly within 15\% without
-          any trigger corrections applied to MC and it gets worse after
-          trigger corrections are applied.
-    \item Added nB=1 MET distributions for SL, LDP, and ZL distributions in bins of HT,
-          with and without trigger corrections.
+    \item Added distributions of NPV, MT, minDeltaPhiN, and minDeltaPhi
+    \item Trigger efficiency corrections have been redone for the or of the three
+           analysis triggers (METxHT, dijet-MET, and HT).  There's a known
+           bug that 0lep efficiency for one bin (MET4,HT3) is set to zero.  This
+           will be fixed in the next iteration.
    \end{itemize}
 
 
@@ -200,11 +196,11 @@
      \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_nomctrigcorr_ht3_nb1_wide1_all.pdf}
      \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_nomctrigcorr_ht4_nb1_wide1_all.pdf}
 
- %% \noindent
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht1_nb1_wide1_all.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht2_nb1_wide1_all.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht3_nb1_wide1_all.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht4_nb1_wide1_all.pdf}
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht1_nb1_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht2_nb1_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht3_nb1_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht4_nb1_wide1_all.pdf}
 
     \clearpage
   %%===================================================
@@ -217,11 +213,11 @@
      \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_nomctrigcorr_ht4_nb1_wide1_all_logy.pdf}
 
 
- %% \noindent
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht1_nb1_wide1_all_logy.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht2_nb1_wide1_all_logy.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht3_nb1_wide1_all_logy.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht4_nb1_wide1_all_logy.pdf}
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht1_nb1_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht2_nb1_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht3_nb1_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht4_nb1_wide1_all_logy.pdf}
 
 
      \clearpage
@@ -269,10 +265,10 @@
      \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_nomctrigcorr_ht4_nb0_wide1_all.pdf}
 
     \noindent
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht1_nb0_wide1_all.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht2_nb0_wide1_all.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht3_nb0_wide1_all.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht4_nb0_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht1_nb0_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht2_nb0_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht3_nb0_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht4_nb0_wide1_all.pdf}
 
     \clearpage
   %%===================================================
@@ -286,40 +282,40 @@
 
 
     \noindent
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht1_nb0_wide1_all_logy.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht2_nb0_wide1_all_logy.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht3_nb0_wide1_all_logy.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht4_nb0_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht1_nb0_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht2_nb0_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht3_nb0_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_sl_ht4_nb0_wide1_all_logy.pdf}
 
 
      \clearpage
 
  %%%===================================================
- %   \subsection{ MET, SL, RunsAB}
+     \subsection{ MET, SL, RunsAB}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb1_RunsAB.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb2_RunsAB.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb3_RunsAB.pdf}
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb1_RunsAB.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb2_RunsAB.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb3_RunsAB.pdf}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb1_RunsAB_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb2_RunsAB_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb3_RunsAB_logy.pdf}
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb1_RunsAB_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb2_RunsAB_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb3_RunsAB_logy.pdf}
 
 
- %%%===================================================
- %   \subsection{ MET, SL, RunC}
+  %%===================================================
+     \subsection{ MET, SL, RunC}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb1_RunC.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb2_RunC.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb3_RunC.pdf}
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb1_RunC.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb2_RunC.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb3_RunC.pdf}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb1_RunC_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb2_RunC_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb3_RunC_logy.pdf}
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb1_RunC_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb2_RunC_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb3_RunC_logy.pdf}
 
 
   %%===================================================
@@ -425,10 +421,10 @@
      \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_nomctrigcorr_ht4_nb1_wide1_all.pdf}
 
     \noindent
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht1_nb1_wide1_all.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht2_nb1_wide1_all.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht3_nb1_wide1_all.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht4_nb1_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht1_nb1_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht2_nb1_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht3_nb1_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht4_nb1_wide1_all.pdf}
 
     \clearpage
   %%===================================================
@@ -441,10 +437,10 @@
      \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_nomctrigcorr_ht4_nb1_wide1_all_logy.pdf}
 
     \noindent
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht1_nb1_wide1_all_logy.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht2_nb1_wide1_all_logy.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht3_nb1_wide1_all_logy.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht4_nb1_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht1_nb1_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht2_nb1_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht3_nb1_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht4_nb1_wide1_all_logy.pdf}
 
 
     \clearpage
@@ -490,10 +486,10 @@
      \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_nomctrigcorr_ht4_nb0_wide1_all.pdf}
 
     \noindent
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht1_nb0_wide1_all.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht2_nb0_wide1_all.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht3_nb0_wide1_all.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht4_nb0_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht1_nb0_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht2_nb0_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht3_nb0_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht4_nb0_wide1_all.pdf}
 
     \clearpage
   %%===================================================
@@ -506,39 +502,39 @@
      \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_nomctrigcorr_ht4_nb0_wide1_all_logy.pdf}
 
     \noindent
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht1_nb0_wide1_all_logy.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht2_nb0_wide1_all_logy.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht3_nb0_wide1_all_logy.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht4_nb0_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht1_nb0_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht2_nb0_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht3_nb0_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_ldp_ht4_nb0_wide1_all_logy.pdf}
 
     \clearpage
 
  %%%===================================================
- %  \subsection{ MET, LDP, RunsAB}
+    \subsection{ MET, LDP, RunsAB}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb1_RunsAB.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb2_RunsAB.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb3_RunsAB.pdf}
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb1_RunsAB.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb2_RunsAB.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb3_RunsAB.pdf}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb1_RunsAB_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb2_RunsAB_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb3_RunsAB_logy.pdf}
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb1_RunsAB_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb2_RunsAB_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb3_RunsAB_logy.pdf}
 
 
- %%%===================================================
- %  \subsection{ MET, LDP, RunC}
+  %%===================================================
+    \subsection{ MET, LDP, RunC}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb1_RunC.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb2_RunC.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb3_RunC.pdf}
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb1_RunC.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb2_RunC.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb3_RunC.pdf}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb1_RunC_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb2_RunC_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb3_RunC_logy.pdf}
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb1_RunC_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb2_RunC_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb3_RunC_logy.pdf}
 
 
   %%===================================================
@@ -637,10 +633,10 @@
      \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_nomctrigcorr_ht4_nb1_wide1_all.pdf}
 
     \noindent
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht1_nb1_wide1_all.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht2_nb1_wide1_all.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht3_nb1_wide1_all.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht4_nb1_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht1_nb1_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht2_nb1_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht3_nb1_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht4_nb1_wide1_all.pdf}
 
     \clearpage
   %%===================================================
@@ -654,10 +650,10 @@
 
 
     \noindent
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht1_nb1_wide1_all_logy.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht2_nb1_wide1_all_logy.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht3_nb1_wide1_all_logy.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht4_nb1_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht1_nb1_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht2_nb1_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht3_nb1_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht4_nb1_wide1_all_logy.pdf}
 
 
     \clearpage
@@ -705,10 +701,10 @@
      \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_nomctrigcorr_ht4_nb0_wide1_all.pdf}
 
     \noindent
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht1_nb0_wide1_all.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht2_nb0_wide1_all.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht3_nb0_wide1_all.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht4_nb0_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht1_nb0_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht2_nb0_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht3_nb0_wide1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht4_nb0_wide1_all.pdf}
 
     \clearpage
   %%===================================================
@@ -722,10 +718,10 @@
 
 
     \noindent
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht1_nb0_wide1_all_logy.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht2_nb0_wide1_all_logy.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht3_nb0_wide1_all_logy.pdf}
- %%  \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht4_nb0_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht1_nb0_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht2_nb0_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht3_nb0_wide1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_met_zl_ht4_nb0_wide1_all_logy.pdf}
 
 
    \clearpage
@@ -862,32 +858,32 @@
 
 
 
- %%%===================================================
- %  \subsection{ HT, SL, RunsAB}
+  %%===================================================
+    \subsection{ HT, SL, RunsAB}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb1_RunsAB.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb2_RunsAB.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb3_RunsAB.pdf}
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb1_RunsAB.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb2_RunsAB.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb3_RunsAB.pdf}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb1_RunsAB_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb2_RunsAB_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb3_RunsAB_logy.pdf}
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb1_RunsAB_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb2_RunsAB_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb3_RunsAB_logy.pdf}
 
 
- %%%===================================================
- %  \subsection{ HT, SL, RunC}
+  %%===================================================
+    \subsection{ HT, SL, RunC}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb1_RunC.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb2_RunC.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb3_RunC.pdf}
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb1_RunC.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb2_RunC.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb3_RunC.pdf}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb1_RunC_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb2_RunC_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb3_RunC_logy.pdf}
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb1_RunC_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb2_RunC_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb3_RunC_logy.pdf}
 
 
   %%===================================================
@@ -1018,31 +1014,31 @@
      \includegraphics[width=0.24\linewidth]{outputfiles/h_ht_ldp_met4_nb0_all_logy.pdf}
 
    \clearpage
- %%%===================================================
- %  \subsection{ HT, LDP, RunsAB}
+  %%===================================================
+    \subsection{ HT, LDP, RunsAB}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb1_RunsAB.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb2_RunsAB.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb3_RunsAB.pdf}
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb1_RunsAB.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb2_RunsAB.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb3_RunsAB.pdf}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb1_RunsAB_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb2_RunsAB_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb3_RunsAB_logy.pdf}
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb1_RunsAB_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb2_RunsAB_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb3_RunsAB_logy.pdf}
 
- %%%===================================================
- %  \subsection{ HT, LDP, RunC}
+  %%===================================================
+    \subsection{ HT, LDP, RunC}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb1_RunC.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb2_RunC.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb3_RunC.pdf}
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb1_RunC.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb2_RunC.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb3_RunC.pdf}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb1_RunC_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb2_RunC_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb3_RunC_logy.pdf}
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb1_RunC_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb2_RunC_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb3_RunC_logy.pdf}
 
 
   %%===================================================
@@ -1194,6 +1190,10 @@
 
 
 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
 
    \section{Likelihood MET,HT,nB binning}
   %%===================================================
@@ -1230,33 +1230,39 @@
 
     \clearpage
 
- %%%===================================================
- %  \subsection{ Likelihood MET,HT,nB binning, SL, RunsAB}
+  %%===================================================
+    \subsection{ Likelihood MET,HT,nB binning, SL, RunsAB}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_sl_nb1_flat_RunsAB.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_sl_nb2_flat_RunsAB.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_sl_nb3_flat_RunsAB.pdf}
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_sl_nb0_flat_RunsAB.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_sl_nb1_flat_RunsAB.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_sl_nb2_flat_RunsAB.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_sl_nb3_flat_RunsAB.pdf}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_sl_nb1_flat_RunsAB_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_sl_nb2_flat_RunsAB_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_sl_nb3_flat_RunsAB_logy.pdf}
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_sl_nb0_flat_RunsAB_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_sl_nb1_flat_RunsAB_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_sl_nb2_flat_RunsAB_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_sl_nb3_flat_RunsAB_logy.pdf}
 
+    \clearpage
 
- %%%===================================================
- %  \subsection{ Likelihood MET,HT,nB binning, SL, RunC}
+  %%===================================================
+    \subsection{ Likelihood MET,HT,nB binning, SL, RunC}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_sl_nb1_flat_RunC.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_sl_nb2_flat_RunC.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_sl_nb3_flat_RunC.pdf}
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_sl_nb0_flat_RunC.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_sl_nb1_flat_RunC.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_sl_nb2_flat_RunC.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_sl_nb3_flat_RunC.pdf}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_sl_nb1_flat_RunC_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_sl_nb2_flat_RunC_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_sl_nb3_flat_RunC_logy.pdf}
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_sl_nb0_flat_RunC_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_sl_nb1_flat_RunC_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_sl_nb2_flat_RunC_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_sl_nb3_flat_RunC_logy.pdf}
 
+    \clearpage
 
 
 
@@ -1297,33 +1303,39 @@
 
    \clearpage
 
- %%%===================================================
- %  \subsection{ Likelihood MET,HT,nB binning, LDP, RunsAB}
+  %%===================================================
+    \subsection{ Likelihood MET,HT,nB binning, LDP, RunsAB}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_ldp_nb1_flat_RunsAB.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_ldp_nb2_flat_RunsAB.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_ldp_nb3_flat_RunsAB.pdf}
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_ldp_nb0_flat_RunsAB.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_ldp_nb1_flat_RunsAB.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_ldp_nb2_flat_RunsAB.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_ldp_nb3_flat_RunsAB.pdf}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_ldp_nb1_flat_RunsAB_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_ldp_nb2_flat_RunsAB_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_ldp_nb3_flat_RunsAB_logy.pdf}
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_ldp_nb0_flat_RunsAB_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_ldp_nb1_flat_RunsAB_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_ldp_nb2_flat_RunsAB_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_ldp_nb3_flat_RunsAB_logy.pdf}
 
+   \clearpage
 
- %%%===================================================
- %  \subsection{ Likelihood MET,HT,nB binning, LDP, RunC}
+  %%===================================================
+    \subsection{ Likelihood MET,HT,nB binning, LDP, RunC}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_ldp_nb1_flat_RunC.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_ldp_nb2_flat_RunC.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_ldp_nb3_flat_RunC.pdf}
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_ldp_nb0_flat_RunC.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_ldp_nb1_flat_RunC.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_ldp_nb2_flat_RunC.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_ldp_nb3_flat_RunC.pdf}
 
- %  \noindent
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_ldp_nb1_flat_RunC_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_ldp_nb2_flat_RunC_logy.pdf}
- %   \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_ldp_nb3_flat_RunC_logy.pdf}
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_ldp_nb0_flat_RunC_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_ldp_nb1_flat_RunC_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_ldp_nb2_flat_RunC_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_lhb_ldp_nb3_flat_RunC_logy.pdf}
 
+   \clearpage
 
   %%===================================================
     \subsection{ Likelihood MET,HT,nB binning, ZL, no MC trigger correction applied, all data}
@@ -1351,6 +1363,62 @@
      \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nb0_flat_all_logy.pdf}
      \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nb1_flat_all_logy.pdf}
      \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nb2_flat_all_logy.pdf}
+
+
+  %%===================================================
+    \subsection{ Likelihood MET,HT,nB binning, ZL, no MC trigger correction applied, RunsAB }
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nomctrigcorr_nb0_flat_RunsAB.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nomctrigcorr_nb1_flat_RunsAB.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nomctrigcorr_nb2_flat_RunsAB.pdf}
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nomctrigcorr_nb0_flat_RunsAB_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nomctrigcorr_nb1_flat_RunsAB_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nomctrigcorr_nb2_flat_RunsAB_logy.pdf}
+
+
+  %%===================================================
+    \subsection{ Likelihood MET,HT,nB binning, ZL, all data, RunsAB }
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nb0_flat_RunsAB.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nb1_flat_RunsAB.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nb2_flat_RunsAB.pdf}
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nb0_flat_RunsAB_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nb1_flat_RunsAB_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nb2_flat_RunsAB_logy.pdf}
+
+
+  %%===================================================
+    \subsection{ Likelihood MET,HT,nB binning, ZL, no MC trigger correction applied, RunC }
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nomctrigcorr_nb0_flat_RunC.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nomctrigcorr_nb1_flat_RunC.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nomctrigcorr_nb2_flat_RunC.pdf}
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nomctrigcorr_nb0_flat_RunC_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nomctrigcorr_nb1_flat_RunC_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nomctrigcorr_nb2_flat_RunC_logy.pdf}
+
+
+  %%===================================================
+    \subsection{ Likelihood MET,HT,nB binning, ZL, all data, RunC }
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nb0_flat_RunC.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nb1_flat_RunC.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nb2_flat_RunC.pdf}
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nb0_flat_RunC_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nb1_flat_RunC_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_lhb_zl_nb2_flat_RunC_logy.pdf}
 
 
 
@@ -1419,25 +1487,267 @@
      \includegraphics[width=0.40\linewidth]{outputfiles/h_nb_sl_all_all_logy.pdf}
      \includegraphics[width=0.40\linewidth]{outputfiles/h_nb_ldp_all_all_logy.pdf}
 
- %%%===================================================
+  %%===================================================
 
- %  \subsection{ Nbjets, RunsAB}
+    \subsection{ Nbjets, RunsAB}
 
- %  \noindent
- %   \includegraphics[width=0.40\linewidth]{outputfiles/h_nb_sl_all_RunsAB.pdf}
- %   \includegraphics[width=0.40\linewidth]{outputfiles/h_nb_ldp_all_RunsAB.pdf} \\
- %   \includegraphics[width=0.40\linewidth]{outputfiles/h_nb_sl_all_RunsAB_logy.pdf}
- %   \includegraphics[width=0.40\linewidth]{outputfiles/h_nb_ldp_all_RunsAB_logy.pdf}
+    \noindent
+     \includegraphics[width=0.40\linewidth]{outputfiles/h_nb_sl_all_RunsAB.pdf}
+     \includegraphics[width=0.40\linewidth]{outputfiles/h_nb_ldp_all_RunsAB.pdf} \\
+     \includegraphics[width=0.40\linewidth]{outputfiles/h_nb_sl_all_RunsAB_logy.pdf}
+     \includegraphics[width=0.40\linewidth]{outputfiles/h_nb_ldp_all_RunsAB_logy.pdf}
 
- %%%===================================================
+  %%===================================================
 
- %  \subsection{ Nbjets, RunC}
+    \subsection{ Nbjets, RunC}
 
- %  \noindent
- %   \includegraphics[width=0.40\linewidth]{outputfiles/h_nb_sl_all_RunC.pdf}
- %   \includegraphics[width=0.40\linewidth]{outputfiles/h_nb_ldp_all_RunC.pdf} \\
- %   \includegraphics[width=0.40\linewidth]{outputfiles/h_nb_sl_all_RunC_logy.pdf}
- %   \includegraphics[width=0.40\linewidth]{outputfiles/h_nb_ldp_all_RunC_logy.pdf}
+    \noindent
+     \includegraphics[width=0.40\linewidth]{outputfiles/h_nb_sl_all_RunC.pdf}
+     \includegraphics[width=0.40\linewidth]{outputfiles/h_nb_ldp_all_RunC.pdf} \\
+     \includegraphics[width=0.40\linewidth]{outputfiles/h_nb_sl_all_RunC_logy.pdf}
+     \includegraphics[width=0.40\linewidth]{outputfiles/h_nb_ldp_all_RunC_logy.pdf}
+
+
+
+
+
+
+    \section{Number of Primary Vertices }
+  %%===================================================
+
+    \subsection{ N PV, nB=0 }
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_npv_sl_nb0_all.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_npv_ldp_nb0_all.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_npv_zl_nb0_all.pdf}
+
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_npv_sl_nb0_all_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_npv_ldp_nb0_all_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_npv_zl_nb0_all_logy.pdf}
+
+
+
+  %%===================================================
+
+    \subsection{ N PV, nB=1 }
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_npv_sl_nb1_all.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_npv_ldp_nb1_all.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_npv_zl_nb1_all.pdf}
+
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_npv_sl_nb1_all_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_npv_ldp_nb1_all_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_npv_zl_nb1_all_logy.pdf}
+
+
+
+    \section{Single Lepton Transverse Mass (MT)}
+
+  %%===================================================
+
+    \subsection{ MT, SL }
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mt_sl_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mt_sl_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mt_sl_nb2_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mt_sl_nb3_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mt_sl_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mt_sl_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mt_sl_nb2_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mt_sl_nb3_all_logy.pdf}
+
+    \clearpage
+
+
+
+
+
+
+    \section{ MinDeltaPhiN }
+
+  %%===================================================
+    \subsection{ MinDeltaPhiN, 0 leptons, nB=0, MET bins }
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_met1_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_met2_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_met3_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_met4_nb0_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_met1_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_met2_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_met3_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_met4_nb0_all_logy.pdf}
+
+    \clearpage
+
+
+  %%===================================================
+
+    \subsection{ MinDeltaPhiN, 0 leptons, nB=0, HT bins }
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_ht1_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_ht2_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_ht3_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_ht4_nb0_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_ht1_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_ht2_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_ht3_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_ht4_nb0_all_logy.pdf}
+
+    \clearpage
+
+
+  %%===================================================
+    \subsection{ MinDeltaPhiN, 0 leptons, nB=1, MET bins }
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_met1_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_met2_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_met3_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_met4_nb1_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_met1_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_met2_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_met3_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_met4_nb1_all_logy.pdf}
+
+    \clearpage
+
+
+  %%===================================================
+
+    \subsection{ MinDeltaPhiN, 0 leptons, nB=1, HT bins }
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_ht1_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_ht2_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_ht3_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_ht4_nb1_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_ht1_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_ht2_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_ht3_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_ht4_nb1_all_logy.pdf}
+
+    \clearpage
+
+
+
+  %%===================================================
+
+    \subsection{ MinDeltaPhiN, 1 lepton, nB=1, HT bins }
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_1lep_ht1_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_1lep_ht2_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_1lep_ht3_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_1lep_ht4_nb1_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_1lep_ht1_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_1lep_ht2_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_1lep_ht3_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_1lep_ht4_nb1_all_logy.pdf}
+
+    \clearpage
+
+
+
+
+
+
+
+
+    \section{ MinDeltaPhi }
+
+  %%===================================================
+    \subsection{ MinDeltaPhi, 0 leptons, nB=0, MET bins }
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_met1_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_met2_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_met3_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_met4_nb0_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_met1_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_met2_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_met3_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_met4_nb0_all_logy.pdf}
+
+    \clearpage
+
+
+  %%===================================================
+
+    \subsection{ MinDeltaPhi, 0 leptons, nB=0, HT bins }
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_ht1_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_ht2_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_ht3_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_ht4_nb0_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_ht1_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_ht2_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_ht3_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_ht4_nb0_all_logy.pdf}
+
+    \clearpage
+
+
+  %%===================================================
+    \subsection{ MinDeltaPhi, 0 leptons, nB=1, MET bins }
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_met1_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_met2_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_met3_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_met4_nb1_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_met1_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_met2_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_met3_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_met4_nb1_all_logy.pdf}
+
+    \clearpage
+
+
+  %%===================================================
+
+    \subsection{ MinDeltaPhi, 0 leptons, nB=1, HT bins }
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_ht1_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_ht2_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_ht3_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_ht4_nb1_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_ht1_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_ht2_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_ht3_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphi_0lep_ht4_nb1_all_logy.pdf}
+
+    \clearpage
+
+
+
+
 
 
 

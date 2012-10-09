@@ -73,6 +73,7 @@
        gDirectory->Delete("h*") ;
 
        gStyle -> SetOptStat(0) ;
+       gStyle -> SetTitleH(0.035 ) ;
 
        sprintf( compname[0], "data" ) ;      kfactor[0] = 1.00 ;
        sprintf( compname[1], "diboson" ) ;   kfactor[1] = 1.00 ;
@@ -126,6 +127,11 @@
        sprintf( histnamelist[hind], "h_met_sl_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_met_sl_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
 
+       sprintf( histnamelist[hind], "h_met_sl_ht1_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht2_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht3_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht4_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+
        sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht1_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
@@ -140,6 +146,11 @@
        sprintf( histnamelist[hind], "h_met_sl_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_met_sl_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_met_sl_ht4_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+
+       sprintf( histnamelist[hind], "h_met_sl_ht1_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht2_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht3_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht4_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
 
        sprintf( histnamelist[hind], "h_met_ldp_all" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_met_ldp_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
@@ -178,6 +189,11 @@
        sprintf( histnamelist[hind], "h_met_ldp_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_met_ldp_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
 
+       sprintf( histnamelist[hind], "h_met_ldp_ht1_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht2_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht3_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht4_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+
        sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht1_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
@@ -192,6 +208,11 @@
        sprintf( histnamelist[hind], "h_met_ldp_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_met_ldp_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_met_ldp_ht4_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+
+       sprintf( histnamelist[hind], "h_met_ldp_ht1_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht2_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht3_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht4_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
 
 
        sprintf( histnamelist[hind], "h_met_zl_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
@@ -216,6 +237,11 @@
        sprintf( histnamelist[hind], "h_met_zl_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_met_zl_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
 
+       sprintf( histnamelist[hind], "h_met_zl_ht1_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht2_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht3_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht4_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+
        sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht1_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
@@ -230,6 +256,11 @@
        sprintf( histnamelist[hind], "h_met_zl_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_met_zl_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_met_zl_ht4_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+
+       sprintf( histnamelist[hind], "h_met_zl_ht1_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht2_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht3_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht4_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; hind++ ;
 
 
 
@@ -352,11 +383,6 @@
        sprintf( histnamelist[hind], "h_nb_sl_all" ) ; sprintf( histxtitlelist[hind], "N btags" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_nb_ldp_all" ) ; sprintf( histxtitlelist[hind], "N btags" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_mindphin_nolep_all" ) ; sprintf( histxtitlelist[hind], "minDPhiN" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_mindphin_nolep_nb1" ) ; sprintf( histxtitlelist[hind], "minDPhiN" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_mindphin_nolep_nb2" ) ; sprintf( histxtitlelist[hind], "minDPhiN" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_mindphin_nolep_nb3" ) ; sprintf( histxtitlelist[hind], "minDPhiN" ) ; hind++ ;
-
        sprintf( histnamelist[hind], "h_njets_sl_all" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_njets_sl_nb1" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_njets_sl_nb2" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
@@ -384,6 +410,16 @@
        sprintf( histnamelist[hind], "h_npv_ldp_nb1" ) ; sprintf( histxtitlelist[hind], "N PV" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_npv_zl_nb1"  ) ; sprintf( histxtitlelist[hind], "N PV" ) ; hind++ ;
 
+       sprintf( histnamelist[hind], "h_mindphi_0lep_nb0" ) ; sprintf( histxtitlelist[hind], "minDeltaPhi" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphi_0lep_met1_nb0" ) ; sprintf( histxtitlelist[hind], "minDeltaPhi" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphi_0lep_met2_nb0" ) ; sprintf( histxtitlelist[hind], "minDeltaPhi" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphi_0lep_met3_nb0" ) ; sprintf( histxtitlelist[hind], "minDeltaPhi" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphi_0lep_met4_nb0" ) ; sprintf( histxtitlelist[hind], "minDeltaPhi" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphi_0lep_ht1_nb0" ) ; sprintf( histxtitlelist[hind], "minDeltaPhi" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphi_0lep_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "minDeltaPhi" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphi_0lep_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "minDeltaPhi" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphi_0lep_ht4_nb0" ) ; sprintf( histxtitlelist[hind], "minDeltaPhi" ) ; hind++ ;
+
        sprintf( histnamelist[hind], "h_mindphi_0lep_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhi" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_mindphi_0lep_met1_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhi" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_mindphi_0lep_met2_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhi" ) ; hind++ ;
@@ -393,6 +429,37 @@
        sprintf( histnamelist[hind], "h_mindphi_0lep_ht2_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhi" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_mindphi_0lep_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhi" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_mindphi_0lep_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhi" ) ; hind++ ;
+
+
+       sprintf( histnamelist[hind], "h_mindphin_0lep_nb0" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_0lep_met1_nb0" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_0lep_met2_nb0" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_0lep_met3_nb0" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_0lep_met4_nb0" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_0lep_ht1_nb0" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_0lep_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_0lep_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_0lep_ht4_nb0" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+
+       sprintf( histnamelist[hind], "h_mindphin_0lep_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_0lep_met1_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_0lep_met2_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_0lep_met3_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_0lep_met4_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_0lep_ht1_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_0lep_ht2_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_0lep_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_0lep_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+
+       sprintf( histnamelist[hind], "h_mindphin_1lep_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_1lep_met1_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_1lep_met2_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_1lep_met3_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_1lep_met4_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_1lep_ht1_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_1lep_ht2_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_1lep_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_mindphin_1lep_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
 
 
 
@@ -631,6 +698,7 @@
       toppad->Update() ;
       toppad->Draw() ;
       TText* title = new TText() ;
+      title->SetTextSize(0.040) ;
       title->DrawTextNDC( 0.05, 0.95, hdata->GetTitle() ) ;
 
       dmccan->Update() ;
@@ -804,6 +872,7 @@
       toppad->Update() ;
       toppad->Draw() ;
       TText* title = new TText() ;
+      title->SetTextSize(0.040) ;
       title->DrawTextNDC( 0.05, 0.95, hdata->GetTitle() ) ;
       if ( isMetPlot ) { drawMetBinEdges( hdata ) ; }
       if ( isHtPlot )  { drawHtBinEdges( hdata ) ; }
