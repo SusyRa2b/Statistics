@@ -52,34 +52,34 @@
        sprintf( compname[compind], "data" ) ;
        if ( strcmp(dataset_string, "all" ) == 0 ) {
           printf("\n\n Loading all data.\n\n") ;
-          compchain[compind] -> Add( "filesHCP_53_v2/MET_2012A_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/MET_2012B_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/MET_2012C_pr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/MET_2012C_rr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/HT_2012A_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/HTMHT_2012B_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/HTMHT_2012C_pr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/HTMHT_2012C_rr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/JetHT_2012B_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/JetHT_2012C_pr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/JetHT_2012C_rr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/MET_2012A_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/MET_2012B_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/MET_2012C_pr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/MET_2012C_rr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/HT_2012A_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/HTMHT_2012B_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/HTMHT_2012C_pr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/HTMHT_2012C_rr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/JetHT_2012B_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/JetHT_2012C_pr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/JetHT_2012C_rr_BLIND.root" ) ;
           complumi[compind] = 12.03 ;
        } else if ( strcmp(dataset_string, "RunsAB" ) == 0 ) {
           printf("\n\n Loading runs A and B.\n\n") ;
-          compchain[compind] -> Add( "filesHCP_53_v2/MET_2012A_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/MET_2012B_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/HT_2012A_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/HTMHT_2012B_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/JetHT_2012B_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/MET_2012A_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/MET_2012B_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/HT_2012A_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/HTMHT_2012B_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/JetHT_2012B_BLIND.root" ) ;
           complumi[compind] = 5.23 ;
        } else if ( strcmp(dataset_string, "RunC" ) == 0 ) {
           printf("\n\n Loading run C.\n\n") ;
-          compchain[compind] -> Add( "filesHCP_53_v2/MET_2012C_pr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/MET_2012C_rr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/HTMHT_2012C_pr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/HTMHT_2012C_rr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/JetHT_2012C_pr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v2/JetHT_2012C_rr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/MET_2012C_pr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/MET_2012C_rr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/HTMHT_2012C_pr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/HTMHT_2012C_rr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/JetHT_2012C_pr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v3/JetHT_2012C_rr_BLIND.root" ) ;
           complumi[compind] = 6.81 ;
        } else {
           printf("\n\n *** Unknown dataset: %s\n\n", dataset_string ) ;
@@ -95,9 +95,9 @@
     //-- Diboson.
        compind = 1 ;
        sprintf( compname[compind], "diboson" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/WW.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/WZ.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/ZZ.root" ) ;
+ ////  compchain[compind] -> Add( "filesHCP_53_v3/WW.root" ) ;
+ ////  compchain[compind] -> Add( "filesHCP_53_v3/WZ.root" ) ;
+ ////  compchain[compind] -> Add( "filesHCP_53_v3/ZZ.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 800+7 ; // kOrange = 800
        compscale[compind] = complumi[0] / complumi[compind] ;
@@ -109,9 +109,9 @@
     //-- Zinvisible
        compind = 2 ;
        sprintf( compname[compind], "znn" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/Zinv-100to200.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/Zinv-200to400.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/Zinv-400.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/Zinv-100to200.root" ) ;
+ ////  compchain[compind] -> Add( "filesHCP_53_v3/Zinv-200to400.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/Zinv-400.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 416-3 ; // kGreen = 416
        compscale[compind] = complumi[0] / complumi[compind] ;
@@ -122,15 +122,15 @@
     //-- QCD
        compind = 3 ;
        sprintf( compname[compind], "qcd" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/QCD-120to170.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/QCD-170to300.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/QCD-300to470.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/QCD-470to600.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/QCD-600to800.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/QCD-800to1000.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/QCD-1000to1400.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/QCD-1400to1800.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/QCD-1800.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/QCD-120to170.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/QCD-170to300.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/QCD-300to470.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/QCD-470to600.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/QCD-600to800.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/QCD-800to1000.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/QCD-1000to1400.root" ) ;
+ ////  compchain[compind] -> Add( "filesHCP_53_v3/QCD-1400to1800.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/QCD-1800.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 2 ;
        compscale[compind] = complumi[0] / complumi[compind] ;
@@ -141,12 +141,12 @@
     //-- single top
        compind = 4 ;
        sprintf( compname[compind], "singlet" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/T-t.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/Tbar-t.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/T-s.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/Tbar-s.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/T-tW.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/Tbar-tW.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/T-t.root" ) ;
+ ////  compchain[compind] -> Add( "filesHCP_53_v3/Tbar-t.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/T-s.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/Tbar-s.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/T-tW.root" ) ;
+ ////  compchain[compind] -> Add( "filesHCP_53_v3/Tbar-tW.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 600-9 ; // kBlue = 600
        compscale[compind] = complumi[0] / complumi[compind] ;
@@ -156,9 +156,9 @@
     //-- W+jets
        compind = 5 ;
        sprintf( compname[compind], "wjets" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/WJets-250to300.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/WJets-300to400.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/WJets-400.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/WJets-250to300.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/WJets-300to400.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/WJets-400.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 600-4 ; // kBlue = 600
        compscale[compind] = complumi[0] / complumi[compind] ;
@@ -168,7 +168,7 @@
     //-- ttbar
        compind = 6 ;
        sprintf( compname[compind], "ttbar" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v1_newMCtrigeff/TT.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/TT.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 600-7 ; // kBlue = 600
        compscale[compind] = complumi[0] / complumi[compind] ;
@@ -981,507 +981,507 @@
 
        char cuts[10000] ;
 
- //    sprintf( cuts, "%s", basecuts_1lep_nonb ) ;
- //    fillSet( "h_nb_sl_all", "nB", cuts ) ;
-
- //    sprintf( cuts, "%s", basecuts_ldp_nonb ) ;
- //    fillSet( "h_nb_ldp_all", "nB", cuts ) ;
-
-
- //    sprintf( cuts, "%s", basecuts_1lep ) ;
- //    fillSet( "h_met_sl_all", "MET", cuts ) ;
- //    fillSet( "h_ht_sl_all", "HT", cuts ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_all", "MET", cuts, false ) ;
- //    fillSet( "h_ht_sl_nomctrigcorr_all", "HT", cuts, false ) ;
-
- //    sprintf( cuts, "%s&&nB==0", basecuts_1lep_nonb ) ;
- //    fillSet( "h_met_sl_nb0", "MET", cuts ) ;
- //    fillSet( "h_ht_sl_nb0", "HT", cuts ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_nb0", "MET", cuts, false ) ;
- //    fillSet( "h_ht_sl_nomctrigcorr_nb0", "HT", cuts, false ) ;
- //    fillSetLHB( "h_lhb_sl_nb0", cuts ) ;
- //    fillSetLHB( "h_lhb_sl_nomctrigcorr_nb0", cuts, false ) ;
-
- //    sprintf( cuts, "%s&&nB==1", basecuts_1lep ) ;
- //    fillSet( "h_met_sl_nb1", "MET", cuts ) ;
- //    fillSet( "h_ht_sl_nb1", "HT", cuts ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_nb1", "MET", cuts, false ) ;
- //    fillSet( "h_ht_sl_nomctrigcorr_nb1", "HT", cuts, false ) ;
- //    fillSetLHB( "h_lhb_sl_nb1", cuts ) ;
- //    fillSetLHB( "h_lhb_sl_nomctrigcorr_nb1", cuts, false ) ;
-
- //    sprintf( cuts, "%s&&nB==2", basecuts_1lep ) ;
- //    fillSet( "h_met_sl_nb2", "MET", cuts ) ;
- //    fillSet( "h_ht_sl_nb2", "HT", cuts ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_nb2", "MET", cuts, false ) ;
- //    fillSet( "h_ht_sl_nomctrigcorr_nb2", "HT", cuts, false ) ;
- //    fillSetLHB( "h_lhb_sl_nb2", cuts ) ;
- //    fillSetLHB( "h_lhb_sl_nomctrigcorr_nb2", cuts, false ) ;
-
- //    sprintf( cuts, "%s&&nB>=3", basecuts_1lep ) ;
- //    fillSet( "h_met_sl_nb3", "MET", cuts ) ;
- //    fillSet( "h_ht_sl_nb3", "HT", cuts ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_nb3", "MET", cuts, false ) ;
- //    fillSet( "h_ht_sl_nomctrigcorr_nb3", "HT", cuts, false ) ;
- //    fillSetLHB( "h_lhb_sl_nb3", cuts ) ;
- //    fillSetLHB( "h_lhb_sl_nomctrigcorr_nb3", cuts, false ) ;
-
-
- //    sprintf( cuts, "%s&&HT<800", basecuts_1lep ) ;
- //    fillSet( "h_met_sl_htlt800_all", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT<800&&nB==1", basecuts_1lep ) ;
- //    fillSet( "h_met_sl_htlt800_nb1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT<800&&nB==2", basecuts_1lep ) ;
- //    fillSet( "h_met_sl_htlt800_nb2", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT<800&&nB>=3", basecuts_1lep ) ;
- //    fillSet( "h_met_sl_htlt800_nb3", "MET", cuts ) ;
-
- //    sprintf( cuts, "%s&&HT>800", basecuts_1lep ) ;
- //    fillSet( "h_met_sl_htgt800_all", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>800&&nB==1", basecuts_1lep ) ;
- //    fillSet( "h_met_sl_htgt800_nb1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>800&&nB==2", basecuts_1lep ) ;
- //    fillSet( "h_met_sl_htgt800_nb2", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>800&&nB>=3", basecuts_1lep ) ;
- //    fillSet( "h_met_sl_htgt800_nb3", "MET", cuts ) ;
-
-
- //    sprintf( cuts, "%s&&MET<250", basecuts_1lep ) ;
- //    fillSet( "h_ht_sl_metlt250_all", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET<250&&nB==1", basecuts_1lep ) ;
- //    fillSet( "h_ht_sl_metlt250_nb1", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET<250&&nB==2", basecuts_1lep ) ;
- //    fillSet( "h_ht_sl_metlt250_nb2", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET<250&&nB>=3", basecuts_1lep ) ;
- //    fillSet( "h_ht_sl_metlt250_nb3", "HT", cuts ) ;
-
- //    sprintf( cuts, "%s&&MET>250", basecuts_1lep ) ;
- //    fillSet( "h_ht_sl_metgt250_all", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>250&&nB==1", basecuts_1lep ) ;
- //    fillSet( "h_ht_sl_metgt250_nb1", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>250&&nB==2", basecuts_1lep ) ;
- //    fillSet( "h_ht_sl_metgt250_nb2", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>250&&nB>=3", basecuts_1lep ) ;
- //    fillSet( "h_ht_sl_metgt250_nb3", "HT", cuts ) ;
-
-
-
-
- //    sprintf( cuts, "%s", basecuts_ldp ) ;
- //    fillSet( "h_met_ldp_all", "MET", cuts ) ;
- //    fillSet( "h_ht_ldp_all", "HT", cuts ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_all", "MET", cuts, false ) ;
- //    fillSet( "h_ht_ldp_nomctrigcorr_all", "HT", cuts, false ) ;
-
- //    sprintf( cuts, "%s&&nB==0", basecuts_ldp_nonb ) ;
- //    fillSet( "h_met_ldp_nb0", "MET", cuts ) ;
- //    fillSet( "h_ht_ldp_nb0", "HT", cuts ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_nb0", "MET", cuts, false ) ;
- //    fillSet( "h_ht_ldp_nomctrigcorr_nb0", "HT", cuts, false ) ;
- //    fillSetLHB( "h_lhb_ldp_nb0", cuts ) ;
- //    fillSetLHB( "h_lhb_ldp_nomctrigcorr_nb0", cuts, false ) ;
-
- //    sprintf( cuts, "%s&&nB==1", basecuts_ldp ) ;
- //    fillSet( "h_met_ldp_nb1", "MET", cuts ) ;
- //    fillSet( "h_ht_ldp_nb1", "HT", cuts ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_nb1", "MET", cuts, false ) ;
- //    fillSet( "h_ht_ldp_nomctrigcorr_nb1", "HT", cuts, false ) ;
- //    fillSetLHB( "h_lhb_ldp_nb1", cuts ) ;
- //    fillSetLHB( "h_lhb_ldp_nomctrigcorr_nb1", cuts, false ) ;
-
- //    sprintf( cuts, "%s&&nB==2", basecuts_ldp ) ;
- //    fillSet( "h_met_ldp_nb2", "MET", cuts ) ;
- //    fillSet( "h_ht_ldp_nb2", "HT", cuts ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_nb2", "MET", cuts, false ) ;
- //    fillSet( "h_ht_ldp_nomctrigcorr_nb2", "HT", cuts, false ) ;
- //    fillSetLHB( "h_lhb_ldp_nb2", cuts ) ;
- //    fillSetLHB( "h_lhb_ldp_nomctrigcorr_nb2", cuts, false ) ;
-
- //    sprintf( cuts, "%s&&nB>=3", basecuts_ldp ) ;
- //    fillSet( "h_met_ldp_nb3", "MET", cuts ) ;
- //    fillSet( "h_ht_ldp_nb3", "HT", cuts ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_nb3", "MET", cuts, false ) ;
- //    fillSet( "h_ht_ldp_nomctrigcorr_nb3", "HT", cuts, false ) ;
- //    fillSetLHB( "h_lhb_ldp_nb3", cuts ) ;
- //    fillSetLHB( "h_lhb_ldp_nomctrigcorr_nb3", cuts, false ) ;
-
-
- //    sprintf( cuts, "%s&&HT<800", basecuts_ldp ) ;
- //    fillSet( "h_met_ldp_htlt800_all", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT<800&&nB==1", basecuts_ldp ) ;
- //    fillSet( "h_met_ldp_htlt800_nb1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT<800&&nB==2", basecuts_ldp ) ;
- //    fillSet( "h_met_ldp_htlt800_nb2", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT<800&&nB>=3", basecuts_ldp ) ;
- //    fillSet( "h_met_ldp_htlt800_nb3", "MET", cuts ) ;
-
- //    sprintf( cuts, "%s&&HT>800", basecuts_ldp ) ;
- //    fillSet( "h_met_ldp_htgt800_all", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>800&&nB==1", basecuts_ldp ) ;
- //    fillSet( "h_met_ldp_htgt800_nb1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>800&&nB==2", basecuts_ldp ) ;
- //    fillSet( "h_met_ldp_htgt800_nb2", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>800&&nB>=3", basecuts_ldp ) ;
- //    fillSet( "h_met_ldp_htgt800_nb3", "MET", cuts ) ;
-
-
- //    sprintf( cuts, "%s&&MET<250", basecuts_ldp ) ;
- //    fillSet( "h_ht_ldp_metlt250_all", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET<250&&nB==1", basecuts_ldp ) ;
- //    fillSet( "h_ht_ldp_metlt250_nb1", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET<250&&nB==2", basecuts_ldp ) ;
- //    fillSet( "h_ht_ldp_metlt250_nb2", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET<250&&nB>=3", basecuts_ldp ) ;
- //    fillSet( "h_ht_ldp_metlt250_nb3", "HT", cuts ) ;
-
- //    sprintf( cuts, "%s&&MET>250", basecuts_ldp ) ;
- //    fillSet( "h_ht_ldp_metgt250_all", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>250&&nB==1", basecuts_ldp ) ;
- //    fillSet( "h_ht_ldp_metgt250_nb1", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>250&&nB==2", basecuts_ldp ) ;
- //    fillSet( "h_ht_ldp_metgt250_nb2", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>250&&nB>=3", basecuts_ldp ) ;
- //    fillSet( "h_ht_ldp_metgt250_nb3", "HT", cuts ) ;
-
-
- //    sprintf( cuts, "%s&&HT>400&&HT<=500&&nB==1", basecuts_1lep ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_ht1_nb1", "MET", cuts, false ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_ht1_nb1_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_sl_ht1_nb1", "MET", cuts ) ;
- //    fillSet( "h_met_sl_ht1_nb1_wide1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>500&&HT<=800&&nB==1", basecuts_1lep ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_ht2_nb1", "MET", cuts, false ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_ht2_nb1_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_sl_ht2_nb1", "MET", cuts ) ;
- //    fillSet( "h_met_sl_ht2_nb1_wide1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>800&&HT<=1000&&nB==1", basecuts_1lep ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_ht3_nb1", "MET", cuts, false ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_ht3_nb1_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_sl_ht3_nb1", "MET", cuts ) ;
- //    fillSet( "h_met_sl_ht3_nb1_wide1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>1000&&nB==1", basecuts_1lep ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_ht4_nb1", "MET", cuts, false ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_ht4_nb1_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_sl_ht4_nb1", "MET", cuts ) ;
- //    fillSet( "h_met_sl_ht4_nb1_wide1", "MET", cuts ) ;
-
- //    sprintf( cuts, "%s&&HT>400&&HT<=500&&nB==0", basecuts_1lep_nonb ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_ht1_nb0", "MET", cuts, false ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_ht1_nb0_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_sl_ht1_nb0", "MET", cuts ) ;
- //    fillSet( "h_met_sl_ht1_nb0_wide1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>500&&HT<=800&&nB==0", basecuts_1lep_nonb ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_ht2_nb0", "MET", cuts, false ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_ht2_nb0_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_sl_ht2_nb0", "MET", cuts ) ;
- //    fillSet( "h_met_sl_ht2_nb0_wide1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>800&&HT<=1000&&nB==0", basecuts_1lep_nonb ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_ht3_nb0", "MET", cuts, false ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_ht3_nb0_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_sl_ht3_nb0", "MET", cuts ) ;
- //    fillSet( "h_met_sl_ht3_nb0_wide1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>1000&&nB==0", basecuts_1lep_nonb ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_ht4_nb0", "MET", cuts, false ) ;
- //    fillSet( "h_met_sl_nomctrigcorr_ht4_nb0_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_sl_ht4_nb0", "MET", cuts ) ;
- //    fillSet( "h_met_sl_ht4_nb0_wide1", "MET", cuts ) ;
-
- //    sprintf( cuts, "%s&&HT>400&&HT<=500&&nB==1", basecuts_ldp ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_ht1_nb1", "MET", cuts, false ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_ht1_nb1_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_ldp_ht1_nb1", "MET", cuts ) ;
- //    fillSet( "h_met_ldp_ht1_nb1_wide1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>500&&HT<=800&&nB==1", basecuts_ldp ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_ht2_nb1", "MET", cuts, false ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_ht2_nb1_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_ldp_ht2_nb1", "MET", cuts ) ;
- //    fillSet( "h_met_ldp_ht2_nb1_wide1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>800&&HT<=1000&&nB==1", basecuts_ldp ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_ht3_nb1", "MET", cuts, false ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_ht3_nb1_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_ldp_ht3_nb1", "MET", cuts ) ;
- //    fillSet( "h_met_ldp_ht3_nb1_wide1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>1000&&nB==1", basecuts_ldp ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_ht4_nb1", "MET", cuts, false ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_ht4_nb1_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_ldp_ht4_nb1", "MET", cuts ) ;
- //    fillSet( "h_met_ldp_ht4_nb1_wide1", "MET", cuts ) ;
-
- //    sprintf( cuts, "%s&&HT>400&&HT<=500&&nB==0", basecuts_ldp_nonb ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_ht1_nb0", "MET", cuts, false ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_ht1_nb0_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_ldp_ht1_nb0", "MET", cuts ) ;
- //    fillSet( "h_met_ldp_ht1_nb0_wide1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>500&&HT<=800&&nB==0", basecuts_ldp_nonb ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_ht2_nb0", "MET", cuts, false ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_ht2_nb0_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_ldp_ht2_nb0", "MET", cuts ) ;
- //    fillSet( "h_met_ldp_ht2_nb0_wide1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>800&&HT<=1000&&nB==0", basecuts_ldp_nonb ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_ht3_nb0", "MET", cuts, false ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_ht3_nb0_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_ldp_ht3_nb0", "MET", cuts ) ;
- //    fillSet( "h_met_ldp_ht3_nb0_wide1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>1000&&nB==0", basecuts_ldp_nonb ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_ht4_nb0", "MET", cuts, false ) ;
- //    fillSet( "h_met_ldp_nomctrigcorr_ht4_nb0_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_ldp_ht4_nb0", "MET", cuts ) ;
- //    fillSet( "h_met_ldp_ht4_nb0_wide1", "MET", cuts ) ;
-
- //    sprintf( cuts, "%s&&HT>400&&HT<=500&&nB==1", basecuts_0lep ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_ht1_nb1", "MET", cuts, false ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_ht1_nb1_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_zl_ht1_nb1", "MET", cuts ) ;
- //    fillSet( "h_met_zl_ht1_nb1_wide1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>500&&HT<=800&&nB==1", basecuts_0lep ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_ht2_nb1", "MET", cuts, false ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_ht2_nb1_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_zl_ht2_nb1", "MET", cuts ) ;
- //    fillSet( "h_met_zl_ht2_nb1_wide1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>800&&HT<=1000&&nB==1", basecuts_0lep ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_ht3_nb1", "MET", cuts, false ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_ht3_nb1_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_zl_ht3_nb1", "MET", cuts ) ;
- //    fillSet( "h_met_zl_ht3_nb1_wide1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>1000&&nB==1", basecuts_0lep ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_ht4_nb1", "MET", cuts, false ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_ht4_nb1_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_zl_ht4_nb1", "MET", cuts ) ;
- //    fillSet( "h_met_zl_ht4_nb1_wide1", "MET", cuts ) ;
-
- //    sprintf( cuts, "%s&&HT>400&&HT<=500&&nB==0", basecuts_0lep_nonb ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_ht1_nb0", "MET", cuts, false ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_ht1_nb0_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_zl_ht1_nb0", "MET", cuts ) ;
- //    fillSet( "h_met_zl_ht1_nb0_wide1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>500&&HT<=800&&nB==0", basecuts_0lep_nonb ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_ht2_nb0", "MET", cuts, false ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_ht2_nb0_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_zl_ht2_nb0", "MET", cuts ) ;
- //    fillSet( "h_met_zl_ht2_nb0_wide1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>800&&HT<=1000&&nB==0", basecuts_0lep_nonb ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_ht3_nb0", "MET", cuts, false ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_ht3_nb0_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_zl_ht3_nb0", "MET", cuts ) ;
- //    fillSet( "h_met_zl_ht3_nb0_wide1", "MET", cuts ) ;
- //    sprintf( cuts, "%s&&HT>1000&&nB==0", basecuts_0lep_nonb ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_ht4_nb0", "MET", cuts, false ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_ht4_nb0_wide1", "MET", cuts, false ) ;
- //    fillSet( "h_met_zl_ht4_nb0", "MET", cuts ) ;
- //    fillSet( "h_met_zl_ht4_nb0_wide1", "MET", cuts ) ;
-
-
-
-
-
- //    sprintf( cuts, "%s&&MET>125&&MET<=150&&nB==1", basecuts_1lep ) ;
- //    fillSet( "h_ht_sl_nomctrigcorr_met1_nb1", "HT", cuts, false ) ;
- //    fillSet( "h_ht_sl_met1_nb1", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>150&&MET<=250&&nB==1", basecuts_1lep ) ;
- //    fillSet( "h_ht_sl_nomctrigcorr_met2_nb1", "HT", cuts, false ) ;
- //    fillSet( "h_ht_sl_met2_nb1", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>250&&MET<=350&&nB==1", basecuts_1lep ) ;
- //    fillSet( "h_ht_sl_nomctrigcorr_met3_nb1", "HT", cuts, false ) ;
- //    fillSet( "h_ht_sl_met3_nb1", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>350&&nB==1", basecuts_1lep ) ;
- //    fillSet( "h_ht_sl_nomctrigcorr_met4_nb1", "HT", cuts, false ) ;
- //    fillSet( "h_ht_sl_met4_nb1", "HT", cuts ) ;
-
- //    sprintf( cuts, "%s&&MET>125&&MET<=150&&nB==0", basecuts_1lep_nonb ) ;
- //    fillSet( "h_ht_sl_nomctrigcorr_met1_nb0", "HT", cuts, false ) ;
- //    fillSet( "h_ht_sl_met1_nb0", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>150&&MET<=250&&nB==0", basecuts_1lep_nonb ) ;
- //    fillSet( "h_ht_sl_nomctrigcorr_met2_nb0", "HT", cuts, false ) ;
- //    fillSet( "h_ht_sl_met2_nb0", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>250&&MET<=350&&nB==0", basecuts_1lep_nonb ) ;
- //    fillSet( "h_ht_sl_nomctrigcorr_met3_nb0", "HT", cuts, false ) ;
- //    fillSet( "h_ht_sl_met3_nb0", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>350&&nB==0", basecuts_1lep_nonb ) ;
- //    fillSet( "h_ht_sl_nomctrigcorr_met4_nb0", "HT", cuts, false ) ;
- //    fillSet( "h_ht_sl_met4_nb0", "HT", cuts ) ;
-
-
- //    sprintf( cuts, "%s&&MET>125&&MET<=150&&nB==1", basecuts_ldp ) ;
- //    fillSet( "h_ht_ldp_nomctrigcorr_met1_nb1", "HT", cuts, false ) ;
- //    fillSet( "h_ht_ldp_met1_nb1", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>150&&MET<=250&&nB==1", basecuts_ldp ) ;
- //    fillSet( "h_ht_ldp_nomctrigcorr_met2_nb1", "HT", cuts, false ) ;
- //    fillSet( "h_ht_ldp_met2_nb1", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>250&&MET<=350&&nB==1", basecuts_ldp ) ;
- //    fillSet( "h_ht_ldp_nomctrigcorr_met3_nb1", "HT", cuts, false ) ;
- //    fillSet( "h_ht_ldp_met3_nb1", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>350&&nB==1", basecuts_ldp ) ;
- //    fillSet( "h_ht_ldp_nomctrigcorr_met4_nb1", "HT", cuts, false ) ;
- //    fillSet( "h_ht_ldp_met4_nb1", "HT", cuts ) ;
-
- //    sprintf( cuts, "%s&&MET>125&&MET<=150&&nB==0", basecuts_ldp_nonb ) ;
- //    fillSet( "h_ht_ldp_nomctrigcorr_met1_nb0", "HT", cuts, false ) ;
- //    fillSet( "h_ht_ldp_met1_nb0", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>150&&MET<=250&&nB==0", basecuts_ldp_nonb ) ;
- //    fillSet( "h_ht_ldp_nomctrigcorr_met2_nb0", "HT", cuts, false ) ;
- //    fillSet( "h_ht_ldp_met2_nb0", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>250&&MET<=350&&nB==0", basecuts_ldp_nonb ) ;
- //    fillSet( "h_ht_ldp_nomctrigcorr_met3_nb0", "HT", cuts, false ) ;
- //    fillSet( "h_ht_ldp_met3_nb0", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>350&&nB==0", basecuts_ldp_nonb ) ;
- //    fillSet( "h_ht_ldp_nomctrigcorr_met4_nb0", "HT", cuts, false ) ;
- //    fillSet( "h_ht_ldp_met4_nb0", "HT", cuts ) ;
-
-
- //    sprintf( cuts, "%s&&MET>125&&MET<=150&&nB==1", basecuts_0lep ) ;
- //    fillSet( "h_ht_zl_nomctrigcorr_met1_nb1", "HT", cuts, false ) ;
- //    fillSet( "h_ht_zl_met1_nb1", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>150&&MET<=250&&nB==1", basecuts_0lep ) ;
- //    fillSet( "h_ht_zl_nomctrigcorr_met2_nb1", "HT", cuts, false ) ;
- //    fillSet( "h_ht_zl_met2_nb1", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>250&&MET<=350&&nB==1", basecuts_0lep ) ;
- //    fillSet( "h_ht_zl_nomctrigcorr_met3_nb1", "HT", cuts, false ) ;
- //    fillSet( "h_ht_zl_met3_nb1", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>350&&nB==1", basecuts_0lep ) ;
- //    fillSet( "h_ht_zl_nomctrigcorr_met4_nb1", "HT", cuts, false ) ;
- //    fillSet( "h_ht_zl_met4_nb1", "HT", cuts ) ;
-
- //    sprintf( cuts, "%s&&MET>125&&MET<=150&&nB==0", basecuts_0lep_nonb ) ;
- //    fillSet( "h_ht_zl_nomctrigcorr_met1_nb0", "HT", cuts, false ) ;
- //    fillSet( "h_ht_zl_met1_nb0", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>150&&MET<=250&&nB==0", basecuts_0lep_nonb ) ;
- //    fillSet( "h_ht_zl_nomctrigcorr_met2_nb0", "HT", cuts, false ) ;
- //    fillSet( "h_ht_zl_met2_nb0", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>250&&MET<=350&&nB==0", basecuts_0lep_nonb ) ;
- //    fillSet( "h_ht_zl_nomctrigcorr_met3_nb0", "HT", cuts, false ) ;
- //    fillSet( "h_ht_zl_met3_nb0", "HT", cuts ) ;
- //    sprintf( cuts, "%s&&MET>350&&nB==0", basecuts_0lep_nonb ) ;
- //    fillSet( "h_ht_zl_nomctrigcorr_met4_nb0", "HT", cuts, false ) ;
- //    fillSet( "h_ht_zl_met4_nb0", "HT", cuts ) ;
-
-
-
-
-
-
- //    sprintf( cuts, "%s&&nB==0", basecuts_0lep_nonb ) ;
- //    fillSet( "h_met_zl_nb0", "MET", cuts ) ;
- //    fillSet( "h_ht_zl_nb0", "HT", cuts ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_nb0", "MET", cuts, false ) ;
- //    fillSet( "h_ht_zl_nomctrigcorr_nb0", "HT", cuts, false ) ;
- //    fillSetLHB( "h_lhb_zl_nb0", cuts ) ;
- //    fillSetLHB( "h_lhb_zl_nomctrigcorr_nb0", cuts, false ) ;
-
- //    sprintf( cuts, "%s&&nB==1", basecuts_0lep ) ;
- //    fillSet( "h_met_zl_nb1", "MET", cuts ) ;
- //    fillSet( "h_ht_zl_nb1", "HT", cuts ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_nb1", "MET", cuts, false ) ;
- //    fillSet( "h_ht_zl_nomctrigcorr_nb1", "HT", cuts, false ) ;
- //    fillSetLHB( "h_lhb_zl_nb1", cuts ) ;
- //    fillSetLHB( "h_lhb_zl_nomctrigcorr_nb1", cuts, false ) ;
-
- //    sprintf( cuts, "%s&&nB==2&&MET<350", basecuts_0lep ) ;
- //    fillSet( "h_met_zl_nb2", "MET", cuts ) ;
- //    fillSet( "h_ht_zl_nb2", "HT", cuts ) ;
- //    fillSet( "h_met_zl_nomctrigcorr_nb2", "MET", cuts, false ) ;
- //    fillSet( "h_ht_zl_nomctrigcorr_nb2", "HT", cuts, false ) ;
- //    fillSetLHB( "h_lhb_zl_nb2", cuts ) ;
- //    fillSetLHB( "h_lhb_zl_nomctrigcorr_nb2", cuts, false ) ;
-
-
-
-
-
-
- //    sprintf( cuts, "%s", basecuts_1lep_nonjet ) ;
- //    fillSet( "h_njets_sl_all", "nJets", cuts ) ;
- //    sprintf( cuts, "%s&&nB==1", basecuts_1lep_nonjet ) ;
- //    fillSet( "h_njets_sl_nb1", "nJets", cuts ) ;
- //    sprintf( cuts, "%s&&nB==2", basecuts_1lep_nonjet ) ;
- //    fillSet( "h_njets_sl_nb2", "nJets", cuts ) ;
- //    sprintf( cuts, "%s&&nB==3", basecuts_1lep_nonjet ) ;
- //    fillSet( "h_njets_sl_nb3", "nJets", cuts ) ;
-
- //    sprintf( cuts, "%s", basecuts_ldp_nonjet ) ;
- //    fillSet( "h_njets_ldp_all", "nJets", cuts ) ;
- //    sprintf( cuts, "%s&&nB==1", basecuts_ldp_nonjet ) ;
- //    fillSet( "h_njets_ldp_nb1", "nJets", cuts ) ;
- //    sprintf( cuts, "%s&&nB==2", basecuts_ldp_nonjet ) ;
- //    fillSet( "h_njets_ldp_nb2", "nJets", cuts ) ;
- //    sprintf( cuts, "%s&&nB==3", basecuts_ldp_nonjet ) ;
- //    fillSet( "h_njets_ldp_nb3", "nJets", cuts ) ;
-
-
- //  //-- MT
-
- //    sprintf( cuts, "%s", basecuts_1lep ) ;
- //    fillSet( "h_mt_sl_all", "MT", cuts ) ;
- //    sprintf( cuts, "%s&&nB==0", basecuts_1lep_nonb ) ;
- //    fillSet( "h_mt_sl_nb0", "MT", cuts ) ;
- //    sprintf( cuts, "%s&&nB==1", basecuts_1lep_nonb ) ;
- //    fillSet( "h_mt_sl_nb1", "MT", cuts ) ;
- //    sprintf( cuts, "%s&&nB==2", basecuts_1lep_nonb ) ;
- //    fillSet( "h_mt_sl_nb2", "MT", cuts ) ;
- //    sprintf( cuts, "%s&&nB>=3", basecuts_1lep_nonb ) ;
- //    fillSet( "h_mt_sl_nb3", "MT", cuts ) ;
-
-
- //  //-- NPV
-
- //    sprintf( cuts, "%s&&nB==0", basecuts_1lep_nonb ) ;
- //    fillSet( "h_npv_sl_nb0", "nPV", cuts ) ;
- //    sprintf( cuts, "%s&&nB==0", basecuts_ldp_nonb ) ;
- //    fillSet( "h_npv_ldp_nb0", "nPV", cuts ) ;
- //    sprintf( cuts, "%s&&nB==0", basecuts_0lep_nonb ) ;
- //    fillSet( "h_npv_zl_nb0", "nPV", cuts ) ;
-
- //    sprintf( cuts, "%s&&nB==1", basecuts_1lep_nonb ) ;
- //    fillSet( "h_npv_sl_nb1", "nPV", cuts ) ;
- //    sprintf( cuts, "%s&&nB==1", basecuts_ldp_nonb ) ;
- //    fillSet( "h_npv_ldp_nb1", "nPV", cuts ) ;
- //    sprintf( cuts, "%s&&nB==1", basecuts_0lep_nonb ) ;
- //    fillSet( "h_npv_zl_nb1", "nPV", cuts ) ;
+       sprintf( cuts, "%s", basecuts_1lep_nonb ) ;
+       fillSet( "h_nb_sl_all", "nB", cuts ) ;
+
+       sprintf( cuts, "%s", basecuts_ldp_nonb ) ;
+       fillSet( "h_nb_ldp_all", "nB", cuts ) ;
+
+
+       sprintf( cuts, "%s", basecuts_1lep ) ;
+       fillSet( "h_met_sl_all", "MET", cuts ) ;
+       fillSet( "h_ht_sl_all", "HT", cuts ) ;
+       fillSet( "h_met_sl_nomctrigcorr_all", "MET", cuts, false ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_all", "HT", cuts, false ) ;
+
+       sprintf( cuts, "%s&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_met_sl_nb0", "MET", cuts ) ;
+       fillSet( "h_ht_sl_nb0", "HT", cuts ) ;
+       fillSet( "h_met_sl_nomctrigcorr_nb0", "MET", cuts, false ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_nb0", "HT", cuts, false ) ;
+       fillSetLHB( "h_lhb_sl_nb0", cuts ) ;
+       fillSetLHB( "h_lhb_sl_nomctrigcorr_nb0", cuts, false ) ;
+
+       sprintf( cuts, "%s&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_met_sl_nb1", "MET", cuts ) ;
+       fillSet( "h_ht_sl_nb1", "HT", cuts ) ;
+       fillSet( "h_met_sl_nomctrigcorr_nb1", "MET", cuts, false ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_nb1", "HT", cuts, false ) ;
+       fillSetLHB( "h_lhb_sl_nb1", cuts ) ;
+       fillSetLHB( "h_lhb_sl_nomctrigcorr_nb1", cuts, false ) ;
+
+       sprintf( cuts, "%s&&nB==2", basecuts_1lep ) ;
+       fillSet( "h_met_sl_nb2", "MET", cuts ) ;
+       fillSet( "h_ht_sl_nb2", "HT", cuts ) ;
+       fillSet( "h_met_sl_nomctrigcorr_nb2", "MET", cuts, false ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_nb2", "HT", cuts, false ) ;
+       fillSetLHB( "h_lhb_sl_nb2", cuts ) ;
+       fillSetLHB( "h_lhb_sl_nomctrigcorr_nb2", cuts, false ) ;
+
+       sprintf( cuts, "%s&&nB>=3", basecuts_1lep ) ;
+       fillSet( "h_met_sl_nb3", "MET", cuts ) ;
+       fillSet( "h_ht_sl_nb3", "HT", cuts ) ;
+       fillSet( "h_met_sl_nomctrigcorr_nb3", "MET", cuts, false ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_nb3", "HT", cuts, false ) ;
+       fillSetLHB( "h_lhb_sl_nb3", cuts ) ;
+       fillSetLHB( "h_lhb_sl_nomctrigcorr_nb3", cuts, false ) ;
+
+
+       sprintf( cuts, "%s&&HT<800", basecuts_1lep ) ;
+       fillSet( "h_met_sl_htlt800_all", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT<800&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_met_sl_htlt800_nb1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT<800&&nB==2", basecuts_1lep ) ;
+       fillSet( "h_met_sl_htlt800_nb2", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT<800&&nB>=3", basecuts_1lep ) ;
+       fillSet( "h_met_sl_htlt800_nb3", "MET", cuts ) ;
+
+       sprintf( cuts, "%s&&HT>800", basecuts_1lep ) ;
+       fillSet( "h_met_sl_htgt800_all", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>800&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_met_sl_htgt800_nb1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>800&&nB==2", basecuts_1lep ) ;
+       fillSet( "h_met_sl_htgt800_nb2", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>800&&nB>=3", basecuts_1lep ) ;
+       fillSet( "h_met_sl_htgt800_nb3", "MET", cuts ) ;
+
+
+       sprintf( cuts, "%s&&MET<250", basecuts_1lep ) ;
+       fillSet( "h_ht_sl_metlt250_all", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET<250&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_ht_sl_metlt250_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET<250&&nB==2", basecuts_1lep ) ;
+       fillSet( "h_ht_sl_metlt250_nb2", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET<250&&nB>=3", basecuts_1lep ) ;
+       fillSet( "h_ht_sl_metlt250_nb3", "HT", cuts ) ;
+
+       sprintf( cuts, "%s&&MET>250", basecuts_1lep ) ;
+       fillSet( "h_ht_sl_metgt250_all", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>250&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_ht_sl_metgt250_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>250&&nB==2", basecuts_1lep ) ;
+       fillSet( "h_ht_sl_metgt250_nb2", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>250&&nB>=3", basecuts_1lep ) ;
+       fillSet( "h_ht_sl_metgt250_nb3", "HT", cuts ) ;
+
+
+
+
+       sprintf( cuts, "%s", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_all", "MET", cuts ) ;
+       fillSet( "h_ht_ldp_all", "HT", cuts ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_all", "MET", cuts, false ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_all", "HT", cuts, false ) ;
+
+       sprintf( cuts, "%s&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_met_ldp_nb0", "MET", cuts ) ;
+       fillSet( "h_ht_ldp_nb0", "HT", cuts ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_nb0", "MET", cuts, false ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_nb0", "HT", cuts, false ) ;
+       fillSetLHB( "h_lhb_ldp_nb0", cuts ) ;
+       fillSetLHB( "h_lhb_ldp_nomctrigcorr_nb0", cuts, false ) ;
+
+       sprintf( cuts, "%s&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_nb1", "MET", cuts ) ;
+       fillSet( "h_ht_ldp_nb1", "HT", cuts ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_nb1", "MET", cuts, false ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_nb1", "HT", cuts, false ) ;
+       fillSetLHB( "h_lhb_ldp_nb1", cuts ) ;
+       fillSetLHB( "h_lhb_ldp_nomctrigcorr_nb1", cuts, false ) ;
+
+       sprintf( cuts, "%s&&nB==2", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_nb2", "MET", cuts ) ;
+       fillSet( "h_ht_ldp_nb2", "HT", cuts ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_nb2", "MET", cuts, false ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_nb2", "HT", cuts, false ) ;
+       fillSetLHB( "h_lhb_ldp_nb2", cuts ) ;
+       fillSetLHB( "h_lhb_ldp_nomctrigcorr_nb2", cuts, false ) ;
+
+       sprintf( cuts, "%s&&nB>=3", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_nb3", "MET", cuts ) ;
+       fillSet( "h_ht_ldp_nb3", "HT", cuts ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_nb3", "MET", cuts, false ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_nb3", "HT", cuts, false ) ;
+       fillSetLHB( "h_lhb_ldp_nb3", cuts ) ;
+       fillSetLHB( "h_lhb_ldp_nomctrigcorr_nb3", cuts, false ) ;
+
+
+       sprintf( cuts, "%s&&HT<800", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_htlt800_all", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT<800&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_htlt800_nb1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT<800&&nB==2", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_htlt800_nb2", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT<800&&nB>=3", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_htlt800_nb3", "MET", cuts ) ;
+
+       sprintf( cuts, "%s&&HT>800", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_htgt800_all", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>800&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_htgt800_nb1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>800&&nB==2", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_htgt800_nb2", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>800&&nB>=3", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_htgt800_nb3", "MET", cuts ) ;
+
+
+       sprintf( cuts, "%s&&MET<250", basecuts_ldp ) ;
+       fillSet( "h_ht_ldp_metlt250_all", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET<250&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_ht_ldp_metlt250_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET<250&&nB==2", basecuts_ldp ) ;
+       fillSet( "h_ht_ldp_metlt250_nb2", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET<250&&nB>=3", basecuts_ldp ) ;
+       fillSet( "h_ht_ldp_metlt250_nb3", "HT", cuts ) ;
+
+       sprintf( cuts, "%s&&MET>250", basecuts_ldp ) ;
+       fillSet( "h_ht_ldp_metgt250_all", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>250&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_ht_ldp_metgt250_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>250&&nB==2", basecuts_ldp ) ;
+       fillSet( "h_ht_ldp_metgt250_nb2", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>250&&nB>=3", basecuts_ldp ) ;
+       fillSet( "h_ht_ldp_metgt250_nb3", "HT", cuts ) ;
+
+
+       sprintf( cuts, "%s&&HT>400&&HT<=500&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht1_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht1_nb1_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_ht1_nb1", "MET", cuts ) ;
+       fillSet( "h_met_sl_ht1_nb1_wide1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>500&&HT<=800&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht2_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht2_nb1_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_ht2_nb1", "MET", cuts ) ;
+       fillSet( "h_met_sl_ht2_nb1_wide1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>800&&HT<=1000&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht3_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht3_nb1_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_ht3_nb1", "MET", cuts ) ;
+       fillSet( "h_met_sl_ht3_nb1_wide1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>1000&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht4_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht4_nb1_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_ht4_nb1", "MET", cuts ) ;
+       fillSet( "h_met_sl_ht4_nb1_wide1", "MET", cuts ) ;
+
+       sprintf( cuts, "%s&&HT>400&&HT<=500&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht1_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht1_nb0_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_ht1_nb0", "MET", cuts ) ;
+       fillSet( "h_met_sl_ht1_nb0_wide1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>500&&HT<=800&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht2_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht2_nb0_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_ht2_nb0", "MET", cuts ) ;
+       fillSet( "h_met_sl_ht2_nb0_wide1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>800&&HT<=1000&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht3_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht3_nb0_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_ht3_nb0", "MET", cuts ) ;
+       fillSet( "h_met_sl_ht3_nb0_wide1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>1000&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht4_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_nomctrigcorr_ht4_nb0_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_sl_ht4_nb0", "MET", cuts ) ;
+       fillSet( "h_met_sl_ht4_nb0_wide1", "MET", cuts ) ;
+
+       sprintf( cuts, "%s&&HT>400&&HT<=500&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht1_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht1_nb1_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_ht1_nb1", "MET", cuts ) ;
+       fillSet( "h_met_ldp_ht1_nb1_wide1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>500&&HT<=800&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht2_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht2_nb1_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_ht2_nb1", "MET", cuts ) ;
+       fillSet( "h_met_ldp_ht2_nb1_wide1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>800&&HT<=1000&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht3_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht3_nb1_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_ht3_nb1", "MET", cuts ) ;
+       fillSet( "h_met_ldp_ht3_nb1_wide1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>1000&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht4_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht4_nb1_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_ht4_nb1", "MET", cuts ) ;
+       fillSet( "h_met_ldp_ht4_nb1_wide1", "MET", cuts ) ;
+
+       sprintf( cuts, "%s&&HT>400&&HT<=500&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht1_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht1_nb0_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_ht1_nb0", "MET", cuts ) ;
+       fillSet( "h_met_ldp_ht1_nb0_wide1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>500&&HT<=800&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht2_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht2_nb0_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_ht2_nb0", "MET", cuts ) ;
+       fillSet( "h_met_ldp_ht2_nb0_wide1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>800&&HT<=1000&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht3_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht3_nb0_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_ht3_nb0", "MET", cuts ) ;
+       fillSet( "h_met_ldp_ht3_nb0_wide1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>1000&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht4_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_nomctrigcorr_ht4_nb0_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_ldp_ht4_nb0", "MET", cuts ) ;
+       fillSet( "h_met_ldp_ht4_nb0_wide1", "MET", cuts ) ;
+
+       sprintf( cuts, "%s&&HT>400&&HT<=500&&nB==1", basecuts_0lep ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht1_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht1_nb1_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_ht1_nb1", "MET", cuts ) ;
+       fillSet( "h_met_zl_ht1_nb1_wide1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>500&&HT<=800&&nB==1", basecuts_0lep ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht2_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht2_nb1_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_ht2_nb1", "MET", cuts ) ;
+       fillSet( "h_met_zl_ht2_nb1_wide1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>800&&HT<=1000&&nB==1", basecuts_0lep ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht3_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht3_nb1_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_ht3_nb1", "MET", cuts ) ;
+       fillSet( "h_met_zl_ht3_nb1_wide1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>1000&&nB==1", basecuts_0lep ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht4_nb1", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht4_nb1_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_ht4_nb1", "MET", cuts ) ;
+       fillSet( "h_met_zl_ht4_nb1_wide1", "MET", cuts ) ;
+
+       sprintf( cuts, "%s&&HT>400&&HT<=500&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht1_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht1_nb0_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_ht1_nb0", "MET", cuts ) ;
+       fillSet( "h_met_zl_ht1_nb0_wide1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>500&&HT<=800&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht2_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht2_nb0_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_ht2_nb0", "MET", cuts ) ;
+       fillSet( "h_met_zl_ht2_nb0_wide1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>800&&HT<=1000&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht3_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht3_nb0_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_ht3_nb0", "MET", cuts ) ;
+       fillSet( "h_met_zl_ht3_nb0_wide1", "MET", cuts ) ;
+       sprintf( cuts, "%s&&HT>1000&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht4_nb0", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_nomctrigcorr_ht4_nb0_wide1", "MET", cuts, false ) ;
+       fillSet( "h_met_zl_ht4_nb0", "MET", cuts ) ;
+       fillSet( "h_met_zl_ht4_nb0_wide1", "MET", cuts ) ;
+
+
+
+
+
+       sprintf( cuts, "%s&&MET>125&&MET<=150&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_met1_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_sl_met1_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>150&&MET<=250&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_met2_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_sl_met2_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>250&&MET<=350&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_met3_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_sl_met3_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>350&&nB==1", basecuts_1lep ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_met4_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_sl_met4_nb1", "HT", cuts ) ;
+
+       sprintf( cuts, "%s&&MET>125&&MET<=150&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_met1_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_sl_met1_nb0", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>150&&MET<=250&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_met2_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_sl_met2_nb0", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>250&&MET<=350&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_met3_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_sl_met3_nb0", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>350&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_ht_sl_nomctrigcorr_met4_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_sl_met4_nb0", "HT", cuts ) ;
+
+
+       sprintf( cuts, "%s&&MET>125&&MET<=150&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_met1_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_ldp_met1_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>150&&MET<=250&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_met2_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_ldp_met2_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>250&&MET<=350&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_met3_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_ldp_met3_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>350&&nB==1", basecuts_ldp ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_met4_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_ldp_met4_nb1", "HT", cuts ) ;
+
+       sprintf( cuts, "%s&&MET>125&&MET<=150&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_met1_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_ldp_met1_nb0", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>150&&MET<=250&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_met2_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_ldp_met2_nb0", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>250&&MET<=350&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_met3_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_ldp_met3_nb0", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>350&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_ht_ldp_nomctrigcorr_met4_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_ldp_met4_nb0", "HT", cuts ) ;
+
+
+       sprintf( cuts, "%s&&MET>125&&MET<=150&&nB==1", basecuts_0lep ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_met1_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_zl_met1_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>150&&MET<=250&&nB==1", basecuts_0lep ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_met2_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_zl_met2_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>250&&MET<=350&&nB==1", basecuts_0lep ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_met3_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_zl_met3_nb1", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>350&&nB==1", basecuts_0lep ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_met4_nb1", "HT", cuts, false ) ;
+       fillSet( "h_ht_zl_met4_nb1", "HT", cuts ) ;
+
+       sprintf( cuts, "%s&&MET>125&&MET<=150&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_met1_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_zl_met1_nb0", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>150&&MET<=250&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_met2_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_zl_met2_nb0", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>250&&MET<=350&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_met3_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_zl_met3_nb0", "HT", cuts ) ;
+       sprintf( cuts, "%s&&MET>350&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_met4_nb0", "HT", cuts, false ) ;
+       fillSet( "h_ht_zl_met4_nb0", "HT", cuts ) ;
+
+
+
+
+
+
+       sprintf( cuts, "%s&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_met_zl_nb0", "MET", cuts ) ;
+       fillSet( "h_ht_zl_nb0", "HT", cuts ) ;
+       fillSet( "h_met_zl_nomctrigcorr_nb0", "MET", cuts, false ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_nb0", "HT", cuts, false ) ;
+       fillSetLHB( "h_lhb_zl_nb0", cuts ) ;
+       fillSetLHB( "h_lhb_zl_nomctrigcorr_nb0", cuts, false ) ;
+
+       sprintf( cuts, "%s&&nB==1", basecuts_0lep ) ;
+       fillSet( "h_met_zl_nb1", "MET", cuts ) ;
+       fillSet( "h_ht_zl_nb1", "HT", cuts ) ;
+       fillSet( "h_met_zl_nomctrigcorr_nb1", "MET", cuts, false ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_nb1", "HT", cuts, false ) ;
+       fillSetLHB( "h_lhb_zl_nb1", cuts ) ;
+       fillSetLHB( "h_lhb_zl_nomctrigcorr_nb1", cuts, false ) ;
+
+       sprintf( cuts, "%s&&nB==2&&MET<350", basecuts_0lep ) ;
+       fillSet( "h_met_zl_nb2", "MET", cuts ) ;
+       fillSet( "h_ht_zl_nb2", "HT", cuts ) ;
+       fillSet( "h_met_zl_nomctrigcorr_nb2", "MET", cuts, false ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_nb2", "HT", cuts, false ) ;
+       fillSetLHB( "h_lhb_zl_nb2", cuts ) ;
+       fillSetLHB( "h_lhb_zl_nomctrigcorr_nb2", cuts, false ) ;
+
+
+
+
+
+
+       sprintf( cuts, "%s", basecuts_1lep_nonjet ) ;
+       fillSet( "h_njets_sl_all", "nJets", cuts ) ;
+       sprintf( cuts, "%s&&nB==1", basecuts_1lep_nonjet ) ;
+       fillSet( "h_njets_sl_nb1", "nJets", cuts ) ;
+       sprintf( cuts, "%s&&nB==2", basecuts_1lep_nonjet ) ;
+       fillSet( "h_njets_sl_nb2", "nJets", cuts ) ;
+       sprintf( cuts, "%s&&nB==3", basecuts_1lep_nonjet ) ;
+       fillSet( "h_njets_sl_nb3", "nJets", cuts ) ;
+
+       sprintf( cuts, "%s", basecuts_ldp_nonjet ) ;
+       fillSet( "h_njets_ldp_all", "nJets", cuts ) ;
+       sprintf( cuts, "%s&&nB==1", basecuts_ldp_nonjet ) ;
+       fillSet( "h_njets_ldp_nb1", "nJets", cuts ) ;
+       sprintf( cuts, "%s&&nB==2", basecuts_ldp_nonjet ) ;
+       fillSet( "h_njets_ldp_nb2", "nJets", cuts ) ;
+       sprintf( cuts, "%s&&nB==3", basecuts_ldp_nonjet ) ;
+       fillSet( "h_njets_ldp_nb3", "nJets", cuts ) ;
+
+
+     //-- MT
+
+       sprintf( cuts, "%s", basecuts_1lep ) ;
+       fillSet( "h_mt_sl_all", "MT", cuts ) ;
+       sprintf( cuts, "%s&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_mt_sl_nb0", "MT", cuts ) ;
+       sprintf( cuts, "%s&&nB==1", basecuts_1lep_nonb ) ;
+       fillSet( "h_mt_sl_nb1", "MT", cuts ) ;
+       sprintf( cuts, "%s&&nB==2", basecuts_1lep_nonb ) ;
+       fillSet( "h_mt_sl_nb2", "MT", cuts ) ;
+       sprintf( cuts, "%s&&nB>=3", basecuts_1lep_nonb ) ;
+       fillSet( "h_mt_sl_nb3", "MT", cuts ) ;
+
+
+     //-- NPV
+
+       sprintf( cuts, "%s&&nB==0", basecuts_1lep_nonb ) ;
+       fillSet( "h_npv_sl_nb0", "nPV", cuts ) ;
+       sprintf( cuts, "%s&&nB==0", basecuts_ldp_nonb ) ;
+       fillSet( "h_npv_ldp_nb0", "nPV", cuts ) ;
+       sprintf( cuts, "%s&&nB==0", basecuts_0lep_nonb ) ;
+       fillSet( "h_npv_zl_nb0", "nPV", cuts ) ;
+
+       sprintf( cuts, "%s&&nB==1", basecuts_1lep_nonb ) ;
+       fillSet( "h_npv_sl_nb1", "nPV", cuts ) ;
+       sprintf( cuts, "%s&&nB==1", basecuts_ldp_nonb ) ;
+       fillSet( "h_npv_ldp_nb1", "nPV", cuts ) ;
+       sprintf( cuts, "%s&&nB==1", basecuts_0lep_nonb ) ;
+       fillSet( "h_npv_zl_nb1", "nPV", cuts ) ;
 
 
       //-- min Delta phi
 
- //    sprintf( cuts, "%s&&nB==0", basecuts_0lep_nomindphin_nonb ) ;
- //    fillSet( "h_mindphi_0lep_nb0", "minDelPhi", cuts ) ;
+       sprintf( cuts, "%s&&nB==0", basecuts_0lep_nomindphin_nonb ) ;
+       fillSet( "h_mindphi_0lep_nb0", "minDelPhi", cuts ) ;
 
- //    sprintf( cuts, "%s&&nB==0&&MET>125&&MET<150", basecuts_0lep_nomindphin_nonb ) ;
- //    fillSet( "h_mindphi_0lep_met1_nb0", "minDelPhi", cuts ) ;
- //    sprintf( cuts, "%s&&nB==0&&MET>150&&MET<250", basecuts_0lep_nomindphin_nonb ) ;
- //    fillSet( "h_mindphi_0lep_met2_nb0", "minDelPhi", cuts ) ;
- //    sprintf( cuts, "%s&&nB==0&&MET>250&&MET<350", basecuts_0lep_nomindphin_nonb ) ;
- //    fillSet( "h_mindphi_0lep_met3_nb0", "minDelPhi", cuts ) ;
- //    sprintf( cuts, "%s&&nB==0&&MET>350", basecuts_0lep_nomindphin_nonb ) ;
- //    fillSet( "h_mindphi_0lep_met4_nb0", "minDelPhi", cuts ) ;
+       sprintf( cuts, "%s&&nB==0&&MET>125&&MET<150", basecuts_0lep_nomindphin_nonb ) ;
+       fillSet( "h_mindphi_0lep_met1_nb0", "minDelPhi", cuts ) ;
+       sprintf( cuts, "%s&&nB==0&&MET>150&&MET<250", basecuts_0lep_nomindphin_nonb ) ;
+       fillSet( "h_mindphi_0lep_met2_nb0", "minDelPhi", cuts ) ;
+       sprintf( cuts, "%s&&nB==0&&MET>250&&MET<350", basecuts_0lep_nomindphin_nonb ) ;
+       fillSet( "h_mindphi_0lep_met3_nb0", "minDelPhi", cuts ) ;
+       sprintf( cuts, "%s&&nB==0&&MET>350", basecuts_0lep_nomindphin_nonb ) ;
+       fillSet( "h_mindphi_0lep_met4_nb0", "minDelPhi", cuts ) ;
 
- //    sprintf( cuts, "%s&&nB==0&&HT>400&&HT<500", basecuts_0lep_nomindphin_nonb ) ;
- //    fillSet( "h_mindphi_0lep_ht1_nb0", "minDelPhi", cuts ) ;
- //    sprintf( cuts, "%s&&nB==0&&HT>500&&HT<800", basecuts_0lep_nomindphin_nonb ) ;
- //    fillSet( "h_mindphi_0lep_ht2_nb0", "minDelPhi", cuts ) ;
- //    sprintf( cuts, "%s&&nB==0&&HT>800&&HT<1000", basecuts_0lep_nomindphin_nonb ) ;
- //    fillSet( "h_mindphi_0lep_ht3_nb0", "minDelPhi", cuts ) ;
- //    sprintf( cuts, "%s&&nB==0&&HT>1000", basecuts_0lep_nomindphin_nonb ) ;
- //    fillSet( "h_mindphi_0lep_ht4_nb0", "minDelPhi", cuts ) ;
+       sprintf( cuts, "%s&&nB==0&&HT>400&&HT<500", basecuts_0lep_nomindphin_nonb ) ;
+       fillSet( "h_mindphi_0lep_ht1_nb0", "minDelPhi", cuts ) ;
+       sprintf( cuts, "%s&&nB==0&&HT>500&&HT<800", basecuts_0lep_nomindphin_nonb ) ;
+       fillSet( "h_mindphi_0lep_ht2_nb0", "minDelPhi", cuts ) ;
+       sprintf( cuts, "%s&&nB==0&&HT>800&&HT<1000", basecuts_0lep_nomindphin_nonb ) ;
+       fillSet( "h_mindphi_0lep_ht3_nb0", "minDelPhi", cuts ) ;
+       sprintf( cuts, "%s&&nB==0&&HT>1000", basecuts_0lep_nomindphin_nonb ) ;
+       fillSet( "h_mindphi_0lep_ht4_nb0", "minDelPhi", cuts ) ;
 
 
- //    sprintf( cuts, "%s&&nB==1", basecuts_0lep_nomindphin ) ;
- //    fillSet( "h_mindphi_0lep_nb1", "minDelPhi", cuts ) ;
+       sprintf( cuts, "%s&&nB==1", basecuts_0lep_nomindphin ) ;
+       fillSet( "h_mindphi_0lep_nb1", "minDelPhi", cuts ) ;
 
- //    sprintf( cuts, "%s&&nB==1&&MET>125&&MET<150", basecuts_0lep_nomindphin ) ;
- //    fillSet( "h_mindphi_0lep_met1_nb1", "minDelPhi", cuts ) ;
- //    sprintf( cuts, "%s&&nB==1&&MET>150&&MET<250", basecuts_0lep_nomindphin ) ;
- //    fillSet( "h_mindphi_0lep_met2_nb1", "minDelPhi", cuts ) ;
- //    sprintf( cuts, "%s&&nB==1&&MET>250&&MET<350", basecuts_0lep_nomindphin ) ;
- //    fillSet( "h_mindphi_0lep_met3_nb1", "minDelPhi", cuts ) ;
- //    sprintf( cuts, "%s&&nB==1&&MET>350", basecuts_0lep_nomindphin ) ;
- //    fillSet( "h_mindphi_0lep_met4_nb1", "minDelPhi", cuts ) ;
+       sprintf( cuts, "%s&&nB==1&&MET>125&&MET<150", basecuts_0lep_nomindphin ) ;
+       fillSet( "h_mindphi_0lep_met1_nb1", "minDelPhi", cuts ) ;
+       sprintf( cuts, "%s&&nB==1&&MET>150&&MET<250", basecuts_0lep_nomindphin ) ;
+       fillSet( "h_mindphi_0lep_met2_nb1", "minDelPhi", cuts ) ;
+       sprintf( cuts, "%s&&nB==1&&MET>250&&MET<350", basecuts_0lep_nomindphin ) ;
+       fillSet( "h_mindphi_0lep_met3_nb1", "minDelPhi", cuts ) ;
+       sprintf( cuts, "%s&&nB==1&&MET>350", basecuts_0lep_nomindphin ) ;
+       fillSet( "h_mindphi_0lep_met4_nb1", "minDelPhi", cuts ) ;
 
- //    sprintf( cuts, "%s&&nB==1&&HT>400&&HT<500", basecuts_0lep_nomindphin ) ;
- //    fillSet( "h_mindphi_0lep_ht1_nb1", "minDelPhi", cuts ) ;
- //    sprintf( cuts, "%s&&nB==1&&HT>500&&HT<800", basecuts_0lep_nomindphin ) ;
- //    fillSet( "h_mindphi_0lep_ht2_nb1", "minDelPhi", cuts ) ;
- //    sprintf( cuts, "%s&&nB==1&&HT>800&&HT<1000", basecuts_0lep_nomindphin ) ;
- //    fillSet( "h_mindphi_0lep_ht3_nb1", "minDelPhi", cuts ) ;
- //    sprintf( cuts, "%s&&nB==1&&HT>1000", basecuts_0lep_nomindphin ) ;
- //    fillSet( "h_mindphi_0lep_ht4_nb1", "minDelPhi", cuts ) ;
+       sprintf( cuts, "%s&&nB==1&&HT>400&&HT<500", basecuts_0lep_nomindphin ) ;
+       fillSet( "h_mindphi_0lep_ht1_nb1", "minDelPhi", cuts ) ;
+       sprintf( cuts, "%s&&nB==1&&HT>500&&HT<800", basecuts_0lep_nomindphin ) ;
+       fillSet( "h_mindphi_0lep_ht2_nb1", "minDelPhi", cuts ) ;
+       sprintf( cuts, "%s&&nB==1&&HT>800&&HT<1000", basecuts_0lep_nomindphin ) ;
+       fillSet( "h_mindphi_0lep_ht3_nb1", "minDelPhi", cuts ) ;
+       sprintf( cuts, "%s&&nB==1&&HT>1000", basecuts_0lep_nomindphin ) ;
+       fillSet( "h_mindphi_0lep_ht4_nb1", "minDelPhi", cuts ) ;
 
 
 
