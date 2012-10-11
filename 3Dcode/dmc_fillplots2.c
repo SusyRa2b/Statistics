@@ -110,7 +110,7 @@
        compind = 2 ;
        sprintf( compname[compind], "znn" ) ;
        compchain[compind] -> Add( "filesHCP_53_v3/Zinv-100to200.root" ) ;
- ////  compchain[compind] -> Add( "filesHCP_53_v3/Zinv-200to400.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/Zinv-200to400.root" ) ;
        compchain[compind] -> Add( "filesHCP_53_v3/Zinv-400.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 416-3 ; // kGreen = 416
@@ -129,7 +129,7 @@
        compchain[compind] -> Add( "filesHCP_53_v3/QCD-600to800.root" ) ;
        compchain[compind] -> Add( "filesHCP_53_v3/QCD-800to1000.root" ) ;
        compchain[compind] -> Add( "filesHCP_53_v3/QCD-1000to1400.root" ) ;
- ////  compchain[compind] -> Add( "filesHCP_53_v3/QCD-1400to1800.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v3/QCD-1400to1800.root" ) ;
        compchain[compind] -> Add( "filesHCP_53_v3/QCD-1800.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 2 ;
