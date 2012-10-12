@@ -1035,11 +1035,29 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   
     // Z -> ll efficiencies
   
-  // use 2011 values for now.
-    inFile << "Z_ee_eff  \t" << 0.6774 << endl;
-    inFile << "Z_ee_eff_err  \t" << 0.0580 << endl;
-    inFile << "Z_mm_eff  \t" << 0.7217 << endl;
-    inFile << "Z_mm_eff_err  \t" << 0.0506 << endl;
+    for (int j = 0 ; j < nBinsHT ; j++) {
+  
+      TString Zee_eff = "Z_ee_eff";
+      Zee_eff = Zee_eff+sHbins[j];
+  
+      inFile << Zee_eff << "  \t" << 0.6774 << endl;
+  
+      Zee_eff = Zee_eff+"_err";
+      inFile << Zee_eff << "  \t" << 0.0580 << endl;
+  
+    }
+
+    for (int j = 0 ; j < nBinsHT ; j++) {
+  
+      TString Zmm_eff = "Z_mm_eff";
+      Zmm_eff = Zmm_eff+sHbins[j];
+  
+      inFile << Zmm_eff << "  \t" << 0.7217 << endl;
+  
+      Zmm_eff = Zmm_eff+"_err";
+      inFile << Zmm_eff << "  \t" << 0.0506 << endl;
+  
+    }
   
   
     // Z -> ee VL to nominal scale factors
@@ -1065,8 +1083,19 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
    //
 
     // updated SF's to improve MC closure (the errors are the same as before)
-    inFile << "knn_1b     \t" << 0.394  << endl;
-    inFile << "knn_1b_err \t" << 0.018  << endl;
+  
+    for (int i = 0 ; i < nBinsMET ; i++) {
+  
+      TString knn_1bS = "knn_1b";
+      knn_1bS = knn_1bS+sMbins[i];
+  
+      inFile << knn_1bS << "  \t" << 0.394 << endl;
+  
+      knn_1bS = knn_1bS+"_err";
+      inFile << knn_1bS << "  \t" << 0.018 << endl;
+  
+    }
+
     inFile << "knn_2b     \t" << 0.0626 << endl;
     inFile << "knn_2b_err \t" << 0.009  << endl;
     inFile << "knn_3b     \t" << 0.0036 << endl;
@@ -1127,32 +1156,14 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   
     // sf_ee
   
-    for (int k = 0 ; k < nBinsBjets ; k++) {
-  
-      TString sf_ee = "sf_ee" ;
-      sf_ee = sf_ee+sBbins[k] ;
-  
-      inFile << sf_ee << "  \t" << dummyOne << endl;
-      
-      sf_ee = sf_ee+"_err" ;
-      inFile << sf_ee << "  \t" << dummyErr << endl;
-  
-    }
-  
+    inFile << "sf_ee \t" << dummyOne << endl;
+    inFile << "sf_ee_err \t" << dummyErr << endl;
+    
   
     // sf_mm
   
-    for (int k = 0 ; k < nBinsBjets ; k++) {
-  
-      TString sf_mm = "sf_mm" ;
-      sf_mm = sf_mm+sBbins[k] ;
-  
-      inFile << sf_mm << "  \t" << dummyOne << endl;
-      
-      sf_mm = sf_mm+"_err" ;
-      inFile << sf_mm << "  \t" << dummyErr << endl;
-  
-    }
+    inFile << "sf_mm \t" << dummyOne << endl;
+    inFile << "sf_mm_err \t" << dummyErr << endl;
 
 
     // btag eff err (Note: this was missing until Aug 3, 2012, but it's apparently not used.)

@@ -264,13 +264,17 @@
       float acc_Zmm[nBinsMET] ;
       float acc_Zmm_err[nBinsMET] ;
 
-      float eff_Zee ;
-      float eff_Zee_err ;
-      float eff_Zmm ;
-      float eff_Zmm_err ;
+      float eff_Zee[nBinsHT] ;
+      float eff_Zee_err[nBinsHT] ;
+      float eff_Zmm[nBinsHT] ;
+      float eff_Zmm_err[nBinsHT] ;
       
-      float knn[nBinsBtag] ;
-      float knn_err[nBinsBtag] ;
+      float knn_1b[nBinsMET] ;
+      float knn_1b_err[nBinsMET] ;
+      float knn_2b ;
+      float knn_2b_err ;
+      float knn_3b ;
+      float knn_3b_err ;
 
       float pur_Zee;
       float pur_Zee_err;
@@ -283,10 +287,10 @@
       float sf_qcd_err[nBinsMET][nBinsHT][nBinsBtag] ;
       float sf_ttwj[nBinsMET][nBinsHT][nBinsBtag] ;
       float sf_ttwj_err[nBinsMET][nBinsHT][nBinsBtag] ;
-      float sf_ee[nBinsBtag];
-      float sf_ee_err[nBinsBtag];       
-      float sf_mm[nBinsBtag];
-      float sf_mm_err[nBinsBtag];       
+      float sf_ee ;
+      float sf_ee_err ;       
+      float sf_mm ;
+      float sf_mm_err ;       
       
       float btageff_err ;
 
@@ -551,29 +555,62 @@
 
 
       // Z -> ll efficiencies
+      
+      for (int j = 0 ; j < nBinsHT ; j++) {
+	    
+	TString inPar = "Z_ee_eff"+sHbins[j] ;
+	fscanf( infp, "%s %g", label, &eff_Zee[j] ) ;
+	
+	if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
+	cout << inPar << " = " << eff_Zee[j] << endl ;	  
+	
+	inPar += "_err" ;
+	fscanf( infp, "%s %g", label, &eff_Zee_err[j] ) ;
+	cout << inPar << " = " << eff_Zee_err[j] << endl ;	  
 
-      fscanf( infp, "%s %g", label, &eff_Zee ) ; cout << "Z_ee_eff" << " = " << eff_Zee << endl ;
-      fscanf( infp, "%s %g", label, &eff_Zee_err ) ; cout << "Z_ee_eff_err" << " = " << eff_Zee_err << endl ;
-      fscanf( infp, "%s %g", label, &eff_Zmm ) ; cout << "Z_mm_eff" << " = " << eff_Zmm << endl ;
-      fscanf( infp, "%s %g", label, &eff_Zmm_err ) ; cout << "Z_mm_eff_err" << " = " << eff_Zmm_err << endl ;
+      }
+      
+      for (int j = 0 ; j < nBinsHT ; j++) {
+	    
+	TString inPar = "Z_mm_eff"+sHbins[j] ;
+	fscanf( infp, "%s %g", label, &eff_Zmm[j] ) ;
+	
+	if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
+	cout << inPar << " = " << eff_Zmm[j] << endl ;	  
+	
+	inPar += "_err" ;
+	fscanf( infp, "%s %g", label, &eff_Zmm_err[j] ) ;
+	cout << inPar << " = " << eff_Zmm_err[j] << endl ;	  
+
+      }
 
 
       // VL -> nominal scale factors
       
-      for (int k = 0 ; k < nBinsBtag ; k++) {
+      // 1b scale factors have a MET dependence
+
+      for (int i = 0 ; i < nBinsMET ; i++) {
 	    
-	TString inPar = "knn"+sBbins[k] ;
-	fscanf( infp, "%s %g", label, &knn[k] ) ;
+	TString inPar = "knn_1b"+sMbins[i] ;
+	fscanf( infp, "%s %g", label, &knn_1b[i] ) ;
 	
 	if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
-	cout << inPar << " = " << knn[k] << endl ;	  
+	cout << inPar << " = " << knn_1b[i] << endl ;	  
 	
 	inPar += "_err" ;
-	fscanf( infp, "%s %g", label, &knn_err[k] ) ;
-	cout << inPar << " = " << knn_err[k] << endl ;	  
+	fscanf( infp, "%s %g", label, &knn_1b_err[i] ) ;
+	cout << inPar << " = " << knn_1b_err[i] << endl ;	  
 
       }
       
+
+      // 2b and 3b scale factors:
+
+      fscanf( infp, "%s %g", label, &knn_2b ) ; cout << "knn_2b" << " = " << knn_2b << endl ;
+      fscanf( infp, "%s %g", label, &knn_2b_err ) ; cout << "knn_2b_err" << " = " << knn_2b_err << endl ;
+      fscanf( infp, "%s %g", label, &knn_3b ) ; cout << "knn_3b" << " = " << knn_3b << endl ;
+      fscanf( infp, "%s %g", label, &knn_3b_err ) ; cout << "knn_3b_err" << " = " << knn_3b_err << endl ;
+
 
       // Z -> ll purities
 
@@ -632,34 +669,11 @@
 
       
       // sf Z -> ll
-      
-      for (int k = 0 ; k < nBinsBtag ; k++) {
-	    
-	TString inPar = "sf_ee"+sBbins[k] ;
-	fscanf( infp, "%s %g", label, &sf_ee[k] ) ;
-	
-	if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
-	cout << inPar << " = " << sf_ee[k] << endl ;	  
-	
-	inPar += "_err" ;
-	fscanf( infp, "%s %g", label, &sf_ee_err[k] ) ;
-	cout << inPar << " = " << sf_ee_err[k] << endl ;	  
 
-      }
-      
-      for (int k = 0 ; k < nBinsBtag ; k++) {
-	    
-	TString inPar = "sf_mm"+sBbins[k] ;
-	fscanf( infp, "%s %g", label, &sf_mm[k] ) ;
-	
-	if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
-	cout << inPar << " = " << sf_mm[k] << endl ;	  
-	
-	inPar += "_err" ;
-	fscanf( infp, "%s %g", label, &sf_mm_err[k] ) ;
-	cout << inPar << " = " << sf_mm_err[k] << endl ;	  
-
-      }
+      fscanf( infp, "%s %g", label, &sf_ee ) ; cout << "sf_ee" << " = " << sf_ee << endl ;
+      fscanf( infp, "%s %g", label, &sf_ee_err ) ; cout << "sf_ee_err" << " = " << sf_ee_err << endl ;
+      fscanf( infp, "%s %g", label, &sf_mm ) ; cout << "sf_mm" << " = " << sf_mm << endl ;
+      fscanf( infp, "%s %g", label, &sf_mm_err ) ; cout << "sf_mm_err" << " = " << sf_mm_err << endl ;
 
       
       // btag efficiency error
@@ -832,9 +846,23 @@
             initialval_ttwj_ldp[i][j][k] = ttwj_ldp0lep_ratio[i][j][k] * initialval_ttwj[i][j][k] ;
 
             // Z -> invis stuff :
+	    
+	    if ( k == 0 ) {
+	      initialval_znn_ee[i][j][k] = (N_Zee[i][j]) * ( 5.95 * pur_Zee * knn_1b[i] ) / ( acc_Zee[i] * eff_Zee[j] ) ;
+	      initialval_znn_mm[i][j][k] = (N_Zmm[i][j]) * ( 5.95 * pur_Zmm * knn_1b[i] ) / ( acc_Zmm[i] * eff_Zmm[j] ) ;
+	    }
+	    else if ( k == 1 ) {
+	      initialval_znn_ee[i][j][k] = (N_Zee[i][j]) * ( 5.95 * pur_Zee * knn_2b ) / ( acc_Zee[i] * eff_Zee[j] ) ;
+	      initialval_znn_mm[i][j][k] = (N_Zmm[i][j]) * ( 5.95 * pur_Zmm * knn_2b ) / ( acc_Zmm[i] * eff_Zmm[j] ) ;
+	    }
+	    else if ( k == 2 ) { 
+	      initialval_znn_ee[i][j][k] = (N_Zee[i][j]) * ( 5.95 * pur_Zee * knn_3b ) / ( acc_Zee[i] * eff_Zee[j] ) ;
+	      initialval_znn_mm[i][j][k] = (N_Zmm[i][j]) * ( 5.95 * pur_Zmm * knn_3b ) / ( acc_Zmm[i] * eff_Zmm[j] ) ;
+	    }
+	    else {
+	      cout << "\n\n It looks like you are using more than 3 b-jet bins, you need to adjust the Z -> inv stuff! \n" << endl ;
+	    }
 
-            initialval_znn_ee[i][j][k] = (N_Zee[i][j]) * ( 5.95 * pur_Zee * knn[k] ) / ( acc_Zee[i] * eff_Zee ) ;
-            initialval_znn_mm[i][j][k] = (N_Zmm[i][j]) * ( 5.95 * pur_Zmm * knn[k] ) / ( acc_Zmm[i] * eff_Zmm ) ;
 
             // simple average
             initialval_znn[i][j][k] = 0.5 * ( initialval_znn_ee[i][j][k] + initialval_znn_mm[i][j][k] ) ;
@@ -1518,17 +1546,18 @@
 
       // Z -> ll efficiencies
 
-       sprintf( NP_name, "eff_Zee" ) ;
-       RooAbsReal* rar_eff_Zee = makeBetaConstraint( NP_name, eff_Zee, eff_Zee_err ) ;
+      RooAbsReal* rar_eff_Zee[nBinsHT] ;
+      RooAbsReal* rar_eff_Zmm[nBinsHT] ;
 
-       sprintf( NP_name, "eff_Zmm" ) ;
-       RooAbsReal* rar_eff_Zmm = makeBetaConstraint( NP_name, eff_Zmm, eff_Zmm_err ) ;
+      for (int j = 0 ; j < nBinsHT ; j++) {
 
+         sprintf( NP_name, "eff_Zee_H%d", j+1 ) ;
+         rar_eff_Zee[j] = makeBetaConstraint( NP_name, eff_Zee[j], eff_Zee_err[j] ) ;
 
+         sprintf( NP_name, "eff_Zmm_H%d", j+1 ) ;
+         rar_eff_Zmm[j] = makeBetaConstraint( NP_name, eff_Zmm[j], eff_Zmm_err[j] ) ;
 
-
-
-
+      }
 
 
 
@@ -1555,19 +1584,22 @@
 
       // VL -> nominal scale factors
 
-      RooAbsReal* rar_knn[nBinsBtag] ;
+      RooAbsReal* rar_knn_1b[nBinsMET] ;
+      RooAbsReal* rar_knn_2b ;
+      RooAbsReal* rar_knn_3b ;
 
-      for (int k = 0 ; k < nBinsBtag ; k++) {
+      for (int i = 0 ; i < nBinsMET ; i++) {
 
-         sprintf( NP_name, "knn_%db", k+1 ) ;
-         ////// rar_knn[k] = makeBetaPrimeConstraint( NP_name, knn[k], knn_err[k] ) ;
-         rar_knn[k] = makeGaussianConstraint( NP_name, knn[k], knn_err[k] ) ;
+         sprintf( NP_name, "knn_1b_M%d", i+1 ) ;
+         rar_knn_1b[i] = makeGaussianConstraint( NP_name, knn_1b[i], knn_1b_err[i] ) ;
 
       }
 
+      sprintf( NP_name, "knn_2b" ) ;
+      rar_knn_2b = makeGaussianConstraint( NP_name, knn_2b, knn_2b_err ) ;
 
-
-
+      sprintf( NP_name, "knn_3b" ) ;
+      rar_knn_3b = makeGaussianConstraint( NP_name, knn_3b, knn_3b_err ) ;
 
 
 
@@ -1576,23 +1608,17 @@
 
       // sf_ee and sf_mm derived from a common underlying parameter
 
-      RooAbsReal* rar_sf_ee[nBinsBtag] ;
-      RooAbsReal* rar_sf_mm[nBinsBtag] ;
+      RooAbsReal* rar_sf_ee ;
+      RooAbsReal* rar_sf_mm ;
 
       char sfllbpname[1000] ;
       sprintf( sfllbpname, "sf_ll" ) ;
 
-      for (int k = 0 ; k < nBinsBtag ; k++) {
-
-         sprintf( NP_name, "sf_ee_%db", k+1 ) ;
-         ///// rar_sf_ee[k] = makeCorrelatedBetaPrimeConstraint( NP_name, sf_ee[k], sf_ee_err[k], "sf_ll" ) ;
-         rar_sf_ee[k] = makeCorrelatedGaussianConstraint( NP_name, sf_ee[k], sf_ee_err[k], sfllbpname ) ;
-
-         sprintf( NP_name, "sf_mm_%db", k+1 ) ;
-         ///// rar_sf_mm[k] = makeCorrelatedBetaPrimeConstraint( NP_name, sf_mm[k], sf_mm_err[k], "sf_ll" ) ;
-         rar_sf_mm[k] = makeCorrelatedGaussianConstraint( NP_name, sf_mm[k], sf_mm_err[k], sfllbpname ) ;
-
-      }
+      sprintf( NP_name, "sf_ee" ) ;
+      rar_sf_ee = makeCorrelatedGaussianConstraint( NP_name, sf_ee, sf_ee_err, sfllbpname ) ;
+      
+      sprintf( NP_name, "sf_mm" ) ;
+      rar_sf_mm = makeCorrelatedGaussianConstraint( NP_name, sf_mm, sf_mm_err, sfllbpname ) ;
 
 
 
@@ -2010,26 +2036,36 @@
 	      TString rfvZeeString = "( @0 / @1 ) * @2 * ( ( @3 * @4 ) / ( @5 * @6 ) )" ;
 
 	      rv_mu_zee[i][j] = new RooFormulaVar( muZeeString, rfvZeeString,
-						   RooArgSet( *rv_mu_znn[i][j][k], *rar_knn[k], *rar_sf_ee[k], *rar_acc_Zee[i], 
-							      *rar_eff_Zee, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
+						   RooArgSet( *rv_mu_znn[i][j][k], *rar_knn_1b[i], *rar_sf_ee, *rar_acc_Zee[i], 
+							      *rar_eff_Zee[j], *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
 
 
 	      TString rfvZmmString = "( @0 / @1 ) * @2 * ( ( @3 * @4 ) / ( @5 * @6 ) )" ;
 
 	      rv_mu_zmm[i][j] = new RooFormulaVar( muZmmString, rfvZmmString,
-						   RooArgSet( *rv_mu_znn[i][j][k], *rar_knn[k], *rar_sf_mm[k], *rar_acc_Zmm[i], 
-							      *rar_eff_Zmm, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
+						   RooArgSet( *rv_mu_znn[i][j][k], *rar_knn_1b[i], *rar_sf_mm, *rar_acc_Zmm[i], 
+							      *rar_eff_Zmm[j], *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
 
 	    }
-	    else {
+	    else if ( k == 1 ) {
 	      
 	      TString rfvZnnString = "@0 * ( @1 / @2 )" ;
 
 	      rv_mu_znn[i][j][k] = new RooFormulaVar( muZnnString, rfvZnnString,
-						      RooArgSet( *rv_mu_znn[i][j][0], *rar_knn[k], *rar_knn[0] ) ) ;
+						      RooArgSet( *rv_mu_znn[i][j][0], *rar_knn_2b, *rar_knn_1b[i] ) ) ;
 	      
 	    }
+	    else if ( k == 2 ) {
+	      
+	      TString rfvZnnString = "@0 * ( @1 / @2 )" ;
 
+	      rv_mu_znn[i][j][k] = new RooFormulaVar( muZnnString, rfvZnnString,
+						      RooArgSet( *rv_mu_znn[i][j][0], *rar_knn_3b, *rar_knn_1b[i] ) ) ;
+	      
+	    }
+	    else {
+	      cout << "\n\n It looks like you are using more than 3 b-jet bins, you need to adjust the Z -> inv stuff! \n" << endl ;
+	    }
       
 
 
