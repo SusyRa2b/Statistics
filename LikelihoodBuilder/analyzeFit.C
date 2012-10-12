@@ -26,13 +26,25 @@ using namespace RooStats ;
 using namespace std;
 
 
-void extractFromWorkspace(TString workspaceFile = "test.root", TString datFile = "")
+void extractFromWorkspace(TString workspaceFile = "test.root", TString datFile = "", bool skip = true)
 {
 
+  if(skip) {
+    if(datFile != "") {
+      ofstream myfile;
+      myfile.open(datFile.Data(), ios::out | ios::app);
+      assert(myfile.is_open());
+      myfile << "-99" << " ";
+      myfile.close();
+    }
+    return;
+  }
+  
+  cout <<  "Starting extractFromWorkspace" << endl;
   TFile* wstf = new TFile ( workspaceFile );
   
   RooWorkspace* ws = (RooWorkspace*)wstf->Get("workspace");
-
+  
   RooRealVar* signalUncertainty = ws->var("signalUncertainty"); 
   double sigU = signalUncertainty->getVal();
   
@@ -52,6 +64,8 @@ void extractFromWorkspace(TString workspaceFile = "test.root", TString datFile =
 
 void integratedTotals(TString workspaceFile = "test.root", TString binFilesFile = "binFilesFile.dat", TString datFile = "")
 {
+  
+  cout << "Starting integratedTotals" << endl;
   
   TFile* wstf = new TFile ( workspaceFile );
   
@@ -183,7 +197,7 @@ struct s3d {
 
 
 
-void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binFilesFile.dat") {
+void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binFilesFile.dat", bool logy=false) {
   //This function assumes bin dat files are named like bin_Mx_Hy_zb
 
   gStyle->SetOptStat(0);
@@ -289,7 +303,7 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
 
     hsZL.push_back(new THStack("ZL_"+b+"b","ZL_"+b+"b"));
     hsZL[i-1]->Add(hZL_znn[i-1]);   
-    hsZL[i-1]->Add(hZL_qcd[i-1]);
+    hsZL[i-1]->Add(hZL_qcd[i-1]);   
     hsZL[i-1]->Add(hZL_ttwj[i-1]);
     hsZL[i-1]->Add(hZL_sig[i-1]);
     
@@ -301,7 +315,7 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
     
     hsLDP.push_back(new THStack("LDP_"+b+"b","LDP_"+b+"b"));
     hsLDP[i-1]->Add(hLDP_znn[i-1]);
-    hsLDP[i-1]->Add(hLDP_qcd[i-1]);
+    hsLDP[i-1]->Add(hLDP_qcd[i-1]);  
     hsLDP[i-1]->Add(hLDP_ttwj[i-1]);
     hsLDP[i-1]->Add(hLDP_sig[i-1]);
     
@@ -367,50 +381,72 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
     hsLDP[i-1]->SetMaximum(maxS*hLDP_data[i-1]->GetMaximum());
   }
 
+  if(logy) {
+    hZee_z->SetMinimum(.1);
+    hZmm_z->SetMinimum(.1);
+
+    for(int i = 1; i<=maxNB; i++) {
+      hsZL[i-1]->SetMinimum(.1);
+      hsSL[i-1]->SetMinimum(.1);
+      hsLDP[i-1]->SetMinimum(.1);
+    }
+  }
+
 
   TCanvas * c = new TCanvas("c", "c", 1000, 1000);
   c->Divide(3,4);
   c->cd(1);
+  gPad->SetLogy(logy);
   hsZL[0]->Draw();
   hZL_data[0]->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);
   c->cd(2);
+  gPad->SetLogy(logy);
   hsZL[1]->Draw();
   hZL_data[1]->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);  
   c->cd(3);
+  gPad->SetLogy(logy);
   hsZL[2]->Draw();
   hZL_data[2]->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);
   c->cd(4);
+  gPad->SetLogy(logy);
   hsSL[0]->Draw();
   hSL_data[0]->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);  
   c->cd(5);
+  gPad->SetLogy(logy);
   hsSL[1]->Draw();
   hSL_data[1]->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);
   c->cd(6);
+  gPad->SetLogy(logy);
   hsSL[2]->Draw();
   hSL_data[2]->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);
   c->cd(7);
+  gPad->SetLogy(logy);
   hsLDP[0]->Draw();
   hLDP_data[0]->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);
   c->cd(8);
+  gPad->SetLogy(logy);
   hsLDP[1]->Draw();
   hLDP_data[1]->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);
   c->cd(9);
+  gPad->SetLogy(logy);
   hsLDP[2]->Draw();
   hLDP_data[2]->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);
   c->cd(10);
+  gPad->SetLogy(logy);
   hZee_z->Draw();
   hZee_d->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);
   c->cd(11);
+  gPad->SetLogy(logy);
   hZmm_z->Draw();
   hZmm_d->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);
@@ -441,8 +477,9 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
 
   gPad->Modified();
 
-
-  c->SaveAs("test.pdf");
+  TString logstring="";
+  if(logy) logstring="_log";
+  c->SaveAs("stack"+logstring+".pdf");
   
   
   wstf->Close();
@@ -451,6 +488,7 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
 
 
 void analyzeFit(TString workspaceFile = "test.root", TString binFilesFile = "", TString datFile= "") {
+  cout << "Starting analyzeFit" << endl;
 
   extractFromWorkspace(workspaceFile, datFile);
 
