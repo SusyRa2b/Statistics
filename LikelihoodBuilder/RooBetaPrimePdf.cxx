@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: RooFit                                                           *
  * Package: RooFitModels                                                     *
- * @(#)root/roofit:$Id: RooBetaPrimePdf.cxx,v 1.2 2012/07/31 12:33:59 winstrom Exp $
+ * @(#)root/roofit:$Id: RooBetaPrimePdf.cxx,v 1.3 2012/08/30 13:16:34 kreis Exp $
  * Authors:                                                                  *
  *   WV, Wouter Verkerke, UC Santa Barbara, verkerke@slac.stanford.edu       *
  *   DK, David Kirkby,    UC Irvine,         dkirkby@uci.edu                 *
@@ -62,9 +62,124 @@ RooBetaPrimePdf::RooBetaPrimePdf(const RooBetaPrimePdf& other, const char* name)
 //_____________________________________________________________________________
 Double_t RooBetaPrimePdf::evaluate() const
 {
-  if(x<=0) return 0;
-  //return pow(x,alpha-1)*pow(1+x,-alpha-beta)/ROOT::Math::beta(alpha,beta); // beta function has problems with large alpha/beta
-  return exp( (alpha-1)*log(x) - (alpha + beta)*log(1+x) - (ROOT::Math::lgamma(alpha)+ROOT::Math::lgamma(beta)-ROOT::Math::lgamma(alpha+beta)) );
+
+  if (x<=0)
+    {
+      _logValue = log(0.0);
+      return 0;
+    }
+  else {
+    Double_t lnval = (alpha-1)*log(x) - (alpha + beta)*log(1+x) - (ROOT::Math::lgamma(alpha)+ROOT::Math::lgamma(beta)-ROOT::Math::lgamma(alpha+beta));
+    //cout << "the log value is " << lnval << endl;
+    _logValue = lnval;
+    return exp(lnval);
+  }
+
+  //return pow(x,alpha-1)*pow(1+x,-alpha-beta)/ROOT::Math::beta(alpha,beta); // this version has problems with large alpha/beta
+}
+
+
+
+Double_t RooBetaPrimePdf::getValV(const RooArgSet* nset) const
+{
+  // Return current value, normalizated by integrating over
+  // the observables in 'nset'. If 'nset' is 0, the unnormalized value. 
+  // is returned. All elements of 'nset' must be lvalues
+  //
+  // Unnormalized values are not cached
+  // Doing so would be complicated as _norm->getVal() could
+  // spoil the cache and interfere with returning the cached
+  // return value. Since unnormalized calls are typically
+  // done in integration calls, there is no performance hit.
+
+  // Fast-track processing of clean-cache objects
+  //   if (_operMode==AClean) {
+  //     cout << "RooAbsPdf::getValV(" << this << "," << GetName() << ") CLEAN  value = " << _value << endl ;
+  //     return _value ;
+  //   }
+
+  // Special handling of case without normalization set (used in numeric integration of pdfs)
+  if (!nset) {
+    RooArgSet* tmp = _normSet ;
+    _normSet = 0 ;
+    Double_t val = evaluate() ;
+    _normSet = tmp ;
+    Bool_t error = traceEvalPdf(val) ;
+
+    if (error) {
+//       raiseEvalError() ;
+      return 0 ;
+    }
+    return val ;
+  }
+
+
+  // Process change in last data set used
+  Bool_t nsetChanged(kFALSE) ;
+  if (nset!=_normSet || _norm==0) {
+    nsetChanged = syncNormalization(nset) ;
+  }
+
+  // Return value of object. Calculated if dirty, otherwise cached value is returned.
+  if (isValueDirty() || nsetChanged || _norm->isValueDirty()) {
+
+    // Evaluate numerator
+    Double_t rawVal = evaluate() ;
+    Bool_t error = traceEvalPdf(rawVal) ; // Error checking and printing
+
+    // Evaluate denominator
+    Double_t normVal(_norm->getVal()) ;
+    
+    if (normVal<=0.) {
+      error=kTRUE ;
+      logEvalError("p.d.f normalization integral is zero or negative") ;  
+    }
+
+    // Raise global error flag if problems occur
+    if (error) {
+//       raiseEvalError() ;
+      _value = 0 ;
+      _logValue = log(_value);
+    } else {
+      _value = rawVal / normVal ;
+      _logValue = _logValue - log(normVal);
+//       cout << "RooAbsPdf::getValV(" << GetName() << ") writing _value = " << _value << endl ;
+    }
+
+    clearValueAndShapeDirty() ; //setValueDirty(kFALSE) ;
+  } 
+
+  return _value ;
+}
+
+
+
+Double_t RooBetaPrimePdf::getLogVal(const RooArgSet* nset) const 
+{
+  Double_t prob = getVal(nset) ;
+  //evaluate();
+  //cout << "returning log value is " << _logValue << endl;
+  return _logValue;
+  //if(prob < 0) {
+  //
+  //  logEvalError("getLogVal() top-level p.d.f evaluates to a negative number") ;
+  //
+  //  return 0;
+  //}
+  //if(prob == 0) {
+  //
+  //  logEvalError("getLogVal() top-level p.d.f evaluates to zero") ;
+  //
+  //  return log((double)0);
+  //}
+  //
+  //if (TMath::IsNaN(prob)) {
+  //  logEvalError("getLogVal() top-level p.d.f evaluates to NaN") ;
+  //
+  //  return log((double)0);
+  //  
+  //}
+  //return log(prob);
 }
 
 
