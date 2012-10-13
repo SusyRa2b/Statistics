@@ -79,27 +79,14 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   chainQCD.Add("files15fb_8TeV/QCD-1400to1800.root");
   chainQCD.Add("files15fb_8TeV/QCD-1800.root");
 
-
-
-
-
-
   TChain chainZnn("tree") ;
   chainZnn.Add("files15fb_8TeV/Zinv-100to200.root") ;
   chainZnn.Add("files15fb_8TeV/Zinv-200to400.root") ;
   chainZnn.Add("files15fb_8TeV/Zinv-400.root") ;
 
-
-
-
-
-
-
-
-
   TChain chainTT("tree") ;
   chainTT.Add("files15fb_8TeV/TT.root") ;
-
+  //chainTT.Add("files15fb_8TeV/TT-powheg.root");
 
   TChain chainWJets("tree") ;
   chainWJets.Add("files15fb_8TeV/WJets-250to300.root") ;
@@ -1260,15 +1247,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
       } // mbi
     } // si
 
-    // next write out measured trigger efficiencies
-    float trigeff0LVal[4][4] = {{0.50,0.50,0.50,0.50},{0.60,0.60,0.60,0.60},{0.60,0.95,0.95,0.95},{1.00,1.00,1.00,1.00}};
-    float trigeff0LErr[4][4] = {{0.01,0.01,0.01,0.01},{0.01,0.01,0.01,0.01},{0.01,0.01,0.01,0.01},{0.01,0.01,0.01,0.01}};
-    float trigeff1LVal[4][4] = {{0.85,0.85,0.85,0.85},{0.95,0.95,0.95,0.95},{1.00,1.00,1.00,1.00},{1.00,1.00,1.00,1.00}};
-    float trigeff1LErr[4][4] = {{0.01,0.01,0.01,0.01},{0.01,0.01,0.01,0.01},{0.01,0.01,0.01,0.01},{0.01,0.01,0.01,0.01}};
-    //float trigeff0LVal[4][4] = {{1.00,1.00,1.00,1.00},{1.00,1.00,1.00,1.00},{1.00,1.00,1.00,1.00},{1.00,1.00,1.00,1.00}};
-    //float trigeff0LErr[4][4] = {{0.0,0.0,0.0,0.0},{0.0,0.0,0.0,0.0},{0.0,0.0,0.0,0.0},{0.0,0.0,0.0,0.0}};
-    //float trigeff1LVal[4][4] = {{1.00,1.00,1.00,1.00},{1.00,1.00,1.00,1.00},{1.00,1.00,1.00,1.00},{1.00,1.00,1.00,1.00}};
-    //float trigeff1LErr[4][4] = {{0.0,0.0,0.0,0.0},{0.0,0.0,0.0,0.0},{0.0,0.0,0.0,0.0},{0.0,0.0,0.0,0.0}};
+    // next write out measured trigger efficiencies. Values from plotEMuFrac.C from averaging e/mu bin by bin.
+    float trigeff0LVal[nBinsMET][nBinsHT] = {{0.898873,0.985567,1.0,1.0},{0.942407,0.990288,0.998154,1.0},{0.942064,1.0,0.988108,1.0},{0.941061,0.928571,1.0,1.0}};
+    float trigeff0LErr[nBinsMET][nBinsHT] = {{0.0300214,0.0300001,0.03,0.03},{0.0300002,0.0300024,0.03,0.03},{0.03,0.03,0.0300046,0.03},{0.0301012,0.03,0.03,0.03}};
+    float trigeff0LVal[nBinsMET][nBinsHT] = {{0.571429,0.614458,0.958333,1.0},{0.65,0.754098,1.0,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0}};
+    float trigeff0LErr[nBinsMET][nBinsHT] = {{0.06613,0.0534248,0.0407894,0.03},{0.106654,0.0551353,0.03,0.03},{0.03,0.03,0.03,0.03},{0.03,0.03,0.03,0.03}};
     for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
       for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
     	char parname[1000] ;
