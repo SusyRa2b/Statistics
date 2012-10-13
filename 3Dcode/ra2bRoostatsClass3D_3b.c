@@ -1037,8 +1037,8 @@
 
 	  for (int k = 0 ; k < nBinsBtag ; k++) {     
 
-            double model_0lep = trigeff_0L[i][j] * ( initialval_ttwj[i][j][k] + initialval_qcd[i][j][k] + initialval_znn[i][j][k] ) ;
-            double model_ldp  = trigeff_0L[i][j] * ( initialval_qcd_ldp[i][j][k] + initialval_ttwj_ldp[i][j][k] + initialval_znn_ldp[i][j][k] ) ;
+            double model_0lep = trigeff_0L[i][j] * initialval_qcd[i][j][k] + trigeff_1L[i][j] * ( initialval_ttwj[i][j][k] + initialval_znn[i][j][k] ) ;
+            double model_ldp  = trigeff_0L[i][j] * initialval_qcd_ldp[i][j][k] + trigeff_1L[i][j] * ( initialval_ttwj_ldp[i][j][k] + initialval_znn_ldp[i][j][k] ) ;
             double pdf_0lep = TMath::PoissonI( N_0lep[i][j][k], model_0lep ) ;
             double pdf_ldp  = TMath::PoissonI( N_ldp[i][j][k] , model_ldp  ) ;
             char warning0lep[4] ;
@@ -1053,9 +1053,9 @@
             if ( pdf_ldp < 0.000001 ) { sprintf( warningldp, "***") ; }
 	    cout << " MET bin " << i+1 << ", HT bin " << j+1 << ", Btag bin " << k+1 << endl;
 	    printf(" 0-lep     | %6d   | %7.1f | %8.6f %4s ||  %7.1f | %7.1f | %7.1f |\n", N_0lep[i][j][k], model_0lep, pdf_0lep, warning0lep,
-                            trigeff_0L[i][j] * initialval_ttwj[i][j][k], trigeff_0L[i][j] * initialval_qcd[i][j][k], trigeff_0L[i][j] * initialval_znn[i][j][k] ) ;
+                            trigeff_1L[i][j] * initialval_ttwj[i][j][k], trigeff_0L[i][j] * initialval_qcd[i][j][k], trigeff_1L[i][j] * initialval_znn[i][j][k] ) ;
 	    printf(" ldp       | %6d   | %7.1f | %8.6f %4s ||  %7.1f | %7.1f | %7.1f |\n", N_ldp[i][j][k], model_ldp, pdf_ldp, warningldp,
-                            trigeff_0L[i][j] * initialval_ttwj_ldp[i][j][k], trigeff_0L[i][j] * initialval_qcd_ldp[i][j][k], trigeff_0L[i][j] * initialval_znn_ldp[i][j][k] ) ;
+                            trigeff_1L[i][j] * initialval_ttwj_ldp[i][j][k], trigeff_0L[i][j] * initialval_qcd_ldp[i][j][k], trigeff_1L[i][j] * initialval_znn_ldp[i][j][k] ) ;
             printf("-----------+----------+---------+---------------++----------+---------+---------+\n") ;
 
 	  }
@@ -2112,7 +2112,7 @@
 // for trigger efficiency will need: *rar_trigeff[i][j]
 	    rv_n[i][j][k] = new RooFormulaVar( nString, rfvNString,
 	    				       RooArgSet( *rv_mu_ttwj[i][j][k], *rv_mu_qcd[i][j][k], *rv_mu_znn[i][j][k],  *rv_mu_vv[i][j][k],
-							  *rar_btageff_sf[i][j][k], *rar_eff_sf[i][j][k], *rv_mu_susy[i][j][k], *rar_trigeff[i][j] ) ) ;
+							  *rar_btageff_sf[i][j][k], *rar_eff_sf[i][j][k], *rv_mu_susy[i][j][k], *rar_trigeff_sl[i][j] ) ) ;
 
        ///  printf(" *** debug1: m%d,h%d,b%d : n_0lep = mu_ttwj + mu_qcd + mu_znn = %7.1f + %7.1f + %7.1f = %7.1f\n",
        ///       i+1, j+1, k+1, ((RooFormulaVar*)rv_mu_ttwj[i][j][k])->getVal(),
@@ -2132,7 +2132,7 @@
 	      
 	    rv_n_ldp[i][j][k] = new RooFormulaVar( nLdpString, rfvNLdpString,
 						   RooArgSet( *rv_mu_qcd_ldp[i][j][k], *rv_mu_vv_ldp[i][j][k], *rar_btageff_sf_ldp[i][j][k], *rar_eff_sf_ldp[i][j][k], 
-							      *rar_sf_mc, *rv_mu_ttwj_ldp[i][j][k], *rv_mu_znn_ldp[i][j][k], *rv_mu_susy_ldp[i][j][k], *rar_trigeff[i][j] ) ) ;
+							      *rar_sf_mc, *rv_mu_ttwj_ldp[i][j][k], *rv_mu_znn_ldp[i][j][k], *rv_mu_susy_ldp[i][j][k], *rar_trigeff_sl[i][j] ) ) ;
 
 
 	    // pdf's
@@ -2242,8 +2242,6 @@
 
          printf("\n\n Initial guess for ttwj 0lep/1lep ratio: %6.3f\n\n", rv_ttwj_0lep1lep_ratio->getVal() ) ;
 
-         ///double scanLow  = 1.0*(trigeff_1L[0][0]/trigeff_0L[0][0]) ;
-         ///double scanHigh = 2.0*(trigeff_1L[0][0]/trigeff_0L[0][0]) ;
          double scanLow  = 1.0 ;
          double scanHigh = 2.0 ;
          double bestVal = rv_ttwj_0lep1lep_ratio->getVal() ;
