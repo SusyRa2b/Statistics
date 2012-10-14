@@ -2107,32 +2107,51 @@
 	    nSlString  += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    nLdpString += sMbins[i]+sHbins[j]+sBbins[k] ;
 
-	    TString rfvNString =  "(@0 + @1 + @2 + @3 + (@4 * @5 * @6)) * @7" ;
+            //// TString rfvNString =  "(@0 + @1 + @2 + @3 + (@4 * @5 * @6)) * @7" ;
+            TString rfvNString =  "@0 * @1 + (@2 + @3 + @4 + (@5 * @6 * @7)) * @8" ;
 
-// for trigger efficiency will need: *rar_trigeff[i][j]
-	    rv_n[i][j][k] = new RooFormulaVar( nString, rfvNString,
-	    				       RooArgSet( *rv_mu_ttwj[i][j][k], *rv_mu_qcd[i][j][k], *rv_mu_znn[i][j][k],  *rv_mu_vv[i][j][k],
-							  *rar_btageff_sf[i][j][k], *rar_eff_sf[i][j][k], *rv_mu_susy[i][j][k], *rar_trigeff_sl[i][j] ) ) ;
-
-       ///  printf(" *** debug1: m%d,h%d,b%d : n_0lep = mu_ttwj + mu_qcd + mu_znn = %7.1f + %7.1f + %7.1f = %7.1f\n",
-       ///       i+1, j+1, k+1, ((RooFormulaVar*)rv_mu_ttwj[i][j][k])->getVal(),
-       ///                      ((RooFormulaVar*)rv_mu_qcd[i][j][k])->getVal(),
-       ///                      ((RooFormulaVar*)rv_mu_znn[i][j][k])->getVal(),
-       ///                      rv_n[i][j][k]->getVal() ) ;
+            rv_n[i][j][k] = new RooFormulaVar( nString, rfvNString,
+                                               RooArgSet( *rv_mu_qcd[i][j][k], *rar_trigeff[i][j],
+                                                          *rv_mu_ttwj[i][j][k], *rv_mu_znn[i][j][k],  *rv_mu_vv[i][j][k],
+                                                          *rar_btageff_sf[i][j][k], *rar_eff_sf[i][j][k], *rv_mu_susy[i][j][k], *rar_trigeff_sl[i][j] ) ) ;
 
 
-	    TString rfvNSlString = "(@0 + @1 + (@2 * @3 * @4)) * @5" ;
 
-	    rv_n_sl[i][j][k] = new RooFormulaVar( nSlString, rfvNSlString,
-						  RooArgSet( *rv_mu_ttwj_sl[i][j][k], *rv_mu_vv_sl[i][j][k], *rar_btageff_sf_sl[i][j][k], 
-							     *rar_eff_sf_sl[i][j][k], *rv_mu_susy_sl[i][j][k], *rar_trigeff_sl[i][j] ) ) ;
+            TString rfvNSlString = "(@0 + @1 + (@2 * @3 * @4)) * @5" ;
 
-	    
-	    TString rfvNLdpString = "(@0 + @1 + @2 * @3 * ( @4 * ( @5 + @6 ) + @7 ) ) * @8" ;
-	      
-	    rv_n_ldp[i][j][k] = new RooFormulaVar( nLdpString, rfvNLdpString,
-						   RooArgSet( *rv_mu_qcd_ldp[i][j][k], *rv_mu_vv_ldp[i][j][k], *rar_btageff_sf_ldp[i][j][k], *rar_eff_sf_ldp[i][j][k], 
-							      *rar_sf_mc, *rv_mu_ttwj_ldp[i][j][k], *rv_mu_znn_ldp[i][j][k], *rv_mu_susy_ldp[i][j][k], *rar_trigeff_sl[i][j] ) ) ;
+            rv_n_sl[i][j][k] = new RooFormulaVar( nSlString, rfvNSlString,
+                                                  RooArgSet( *rv_mu_ttwj_sl[i][j][k], *rv_mu_vv_sl[i][j][k], *rar_btageff_sf_sl[i][j][k], 
+                                                             *rar_eff_sf_sl[i][j][k], *rv_mu_susy_sl[i][j][k], *rar_trigeff_sl[i][j] ) ) ;
+
+      //////--------------------------------
+      //
+      ////  TString rfvNLdpString = "@0 * @1 + @2 * ( @3 + @4 + @5 + (@6 * @7 * @8 ) ) * @9" ;
+      //
+      //
+      ////  rv_n_ldp[i][j][k] = new RooFormulaVar( nLdpString, rfvNLdpString,
+      ////                                         RooArgSet( *rar_trigeff[i][j], *rv_mu_qcd_ldp[i][j][k],
+      ////                                                    *rar_sf_mc, *rv_mu_vv_ldp[i][j][k], *rv_mu_ttwj_ldp[i][j][k], *rv_mu_znn_ldp[i][j][k],
+      ////                                                    *rar_btageff_sf_ldp[i][j][k], *rar_eff_sf_ldp[i][j][k], *rv_mu_susy_ldp[i][j][k],
+      ////                                                    *rar_trigeff_sl[i][j] ) ) ;
+      //
+      ////  ///---  Above won't work because damn RooArgSet constructor only takes a maximum of 9 terms.  This stupid equation needs 10...
+      //
+      //////--------------------------------
+
+            char mu_nonqcdsm_name[1000] ;
+            sprintf( mu_nonqcdsm_name, "mu_nonqcdsm_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+            RooFormulaVar* mu_nonqcdsm_ldp = new RooFormulaVar( mu_nonqcdsm_name, "@0 + @1 + @2",
+                                                                RooArgSet( *rv_mu_vv_ldp[i][j][k], *rv_mu_ttwj_ldp[i][j][k], *rv_mu_znn_ldp[i][j][k] ) ) ;
+
+            TString rfvNLdpString = "@0 * @1 + @2 * ( @3 + (@4 * @5 * @6 ) ) * @7" ;
+
+            rv_n_ldp[i][j][k] = new RooFormulaVar( nLdpString, rfvNLdpString,
+                                                   RooArgSet( *rar_trigeff[i][j], *rv_mu_qcd_ldp[i][j][k],
+                                                              *rar_sf_mc, *mu_nonqcdsm_ldp,
+                                                              *rar_btageff_sf_ldp[i][j][k], *rar_eff_sf_ldp[i][j][k], *rv_mu_susy_ldp[i][j][k],
+                                                              *rar_trigeff_sl[i][j] ) ) ;
+
+      //////--------------------------------
 
 
 	    // pdf's
@@ -2218,10 +2237,6 @@
 
 
       { // begin scoping bracket.
-
-         //let's try scaling this by the trig eff in the first met and ht bin since that has the most events
-         ////double initialGuess = 1.3*(trigeff_1L[0][0]/trigeff_0L[0][0]) ;
-
 
          ((RooRealVar*)rv_mu_susy_all0lep) -> setVal(0.) ;
 

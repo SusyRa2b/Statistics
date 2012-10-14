@@ -11,10 +11,11 @@
   \begin{document}
 
 
-   Mon Oct  8 17:20:39 PDT 2012 \\
+   Thu Oct 11 12:49:35 PDT 2012 \\
 
    Datasets and selections
    \begin{itemize}
+     \item cfA version 66.
      \item all : all of the HCP dataset (12.0 fb$^{-1}$).
      \item RunsAB : 5.2 fb$^{-1}$.
      \item RunC : 6.8 fb$^{-1}$.
@@ -27,21 +28,20 @@
 
    Other details
    \begin{itemize}
+     \item The following MC samples are missing: WW, WZ, ZZ (diboson); Tbar-t, Tbar-tW (part of singlet).
+     \item Data events failing laser-calibration-problem filter have been removed.
+     \item {\bf Trigger corrections are still for cfA v65.  They need to be redone in cfA v66. }
      \item MC has been corrected for trigger efficiency, {\it except} where noted otherwise.
      \item Trigger efficiency corrections are in likelihood MET,HT bins.
      \item Trigger efficiency corrections are not run dependent.
-     \item {\bf I have inserted these fudge factors: ttwj x 0.85 and QCD x 1.60.}
+     \item {\bf I have inserted these fudge factors: ttwj x 0.90 and QCD x 1.80.  Numbers have been tweaked for cfA v66.}
    \end{itemize}
 
 .\\
 
   Comments on recent additions
   \begin{itemize}
-    \item Added distributions of NPV, MT, minDeltaPhiN, and minDeltaPhi
-    \item Trigger efficiency corrections have been redone for the or of the three
-           analysis triggers (METxHT, dijet-MET, and HT).  There's a known
-           bug that 0lep efficiency for one bin (MET4,HT3) is set to zero.  This
-           will be fixed in the next iteration.
+    \item Anomaly from laser calibration has gone away, as expected.
    \end{itemize}
 
 
@@ -1448,29 +1448,35 @@
     \subsection{ N jets, SL, all data}
 
     \noindent
-     \includegraphics[width=0.32\linewidth]{outputfiles/h_njets_sl_nb1_all.pdf}
-     \includegraphics[width=0.32\linewidth]{outputfiles/h_njets_sl_nb2_all.pdf}
-     \includegraphics[width=0.32\linewidth]{outputfiles/h_njets_sl_nb3_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_njets_sl_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_njets_sl_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_njets_sl_nb2_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_njets_sl_nb3_all.pdf}
 
     \noindent
-     \includegraphics[width=0.32\linewidth]{outputfiles/h_njets_sl_nb1_all_logy.pdf}
-     \includegraphics[width=0.32\linewidth]{outputfiles/h_njets_sl_nb2_all_logy.pdf}
-     \includegraphics[width=0.32\linewidth]{outputfiles/h_njets_sl_nb3_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_njets_sl_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_njets_sl_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_njets_sl_nb2_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_njets_sl_nb3_all_logy.pdf}
 
+   \clearpage
 
   %%===================================================
     \subsection{ N jets, LDP, all data}
 
     \noindent
-     \includegraphics[width=0.32\linewidth]{outputfiles/h_njets_ldp_nb1_all.pdf}
-     \includegraphics[width=0.32\linewidth]{outputfiles/h_njets_ldp_nb2_all.pdf}
-     \includegraphics[width=0.32\linewidth]{outputfiles/h_njets_ldp_nb3_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_njets_ldp_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_njets_ldp_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_njets_ldp_nb2_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_njets_ldp_nb3_all.pdf}
 
     \noindent
-     \includegraphics[width=0.32\linewidth]{outputfiles/h_njets_ldp_nb1_all_logy.pdf}
-     \includegraphics[width=0.32\linewidth]{outputfiles/h_njets_ldp_nb2_all_logy.pdf}
-     \includegraphics[width=0.32\linewidth]{outputfiles/h_njets_ldp_nb3_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_njets_ldp_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_njets_ldp_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_njets_ldp_nb2_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_njets_ldp_nb3_all_logy.pdf}
 
+   \clearpage
 
 
 

@@ -78,10 +78,10 @@
        sprintf( compname[0], "data" ) ;      kfactor[0] = 1.00 ;
        sprintf( compname[1], "diboson" ) ;   kfactor[1] = 1.00 ;
        sprintf( compname[2], "znn" ) ;       kfactor[2] = 1.00 ;
-       sprintf( compname[3], "qcd" ) ;       kfactor[3] = 1.60 ; //**********************
+       sprintf( compname[3], "qcd" ) ;       kfactor[3] = 1.80 ; //**********************
        sprintf( compname[4], "singlet" ) ;   kfactor[4] = 1.00 ;
-       sprintf( compname[5], "wjets" ) ;     kfactor[5] = 0.85 ; //**********************
-       sprintf( compname[6], "ttbar" ) ;     kfactor[6] = 0.85 ; //**********************
+       sprintf( compname[5], "wjets" ) ;     kfactor[5] = 0.90 ; //**********************
+       sprintf( compname[6], "ttbar" ) ;     kfactor[6] = 0.90 ; //**********************
 
 
      //---------
@@ -384,11 +384,13 @@
        sprintf( histnamelist[hind], "h_nb_ldp_all" ) ; sprintf( histxtitlelist[hind], "N btags" ) ; hind++ ;
 
        sprintf( histnamelist[hind], "h_njets_sl_all" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_njets_sl_nb0" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_njets_sl_nb1" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_njets_sl_nb2" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_njets_sl_nb3" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
 
        sprintf( histnamelist[hind], "h_njets_ldp_all" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_njets_ldp_nb0" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_njets_ldp_nb1" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_njets_ldp_nb2" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_njets_ldp_nb3" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
