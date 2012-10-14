@@ -43,9 +43,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   sprintf( susycutstring, "&&mgluino==%.0f&&mlsp==%.0f", mgl, mlsp ) ;
   TString susycut( susycutstring ) ;
   if ( mgl>0. && mlsp>0. ) {
-     nAdded = chainT1bbbb.Add("files5fb_MT/T1bbbb.root") ;
+     nAdded = chainT1bbbb.Add("filesHCP_53_v3_QCDweights/T1bbbb.root") ;
      if ( nAdded <= 0 ) {
-        printf("\n\n\n *** No tree in files5fb_MT/T1bbbb.root\n\n\n") ;
+        printf("\n\n\n *** No tree in filesHCP_53_v3_QCDweights/T1bbbb.root\n\n\n") ;
         return ;
      }
      TFile f("referenceXSecs.root") ;
@@ -65,62 +65,56 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 
   TChain chainQCD("tree") ;
-   //--- these have high weight
-//chainQCD.Add("files15fb_8TeV/QCD-50to80.root");
-//chainQCD.Add("files15fb_8TeV/QCD-80to120.root");
-  chainQCD.Add("files15fb_8TeV/QCD-120to170.root");
-  chainQCD.Add("files15fb_8TeV/QCD-170to300.root");
-   //--- below here, these have weight less than one.
-  chainQCD.Add("files15fb_8TeV/QCD-300to470.root");
-  chainQCD.Add("files15fb_8TeV/QCD-470to600.root");
-  chainQCD.Add("files15fb_8TeV/QCD-600to800.root");
-  chainQCD.Add("files15fb_8TeV/QCD-800to1000.root");
-  chainQCD.Add("files15fb_8TeV/QCD-1000to1400.root");
-  chainQCD.Add("files15fb_8TeV/QCD-1400to1800.root");
-  chainQCD.Add("files15fb_8TeV/QCD-1800.root");
+  chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-120to170.root");
+  chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-170to300.root");
+  chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-300to470.root");
+  chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-470to600.root");
+  chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-600to800.root");
+  chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-800to1000.root");
+  chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-1000to1400.root");
+  chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-1400to1800.root");
+  chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-1800.root");
 
   TChain chainZnn("tree") ;
-  chainZnn.Add("files15fb_8TeV/Zinv-100to200.root") ;
-  chainZnn.Add("files15fb_8TeV/Zinv-200to400.root") ;
-  chainZnn.Add("files15fb_8TeV/Zinv-400.root") ;
+  chainZnn.Add("filesHCP_53_v3_QCDweights/Zinv-100to200.root") ;
+  chainZnn.Add("filesHCP_53_v3_QCDweights/Zinv-200to400.root") ;
+  chainZnn.Add("filesHCP_53_v3_QCDweights/Zinv-400.root") ;
 
   TChain chainTT("tree") ;
-  chainTT.Add("files15fb_8TeV/TT.root") ;
-  //chainTT.Add("files15fb_8TeV/TT-powheg.root");
+  chainTT.Add("filesHCP_53_v3_QCDweights/TT.root") ;
+  //chainTT.Add("filesHCP_53_v3_QCDweights/TT-powheg.root");
 
   TChain chainWJets("tree") ;
-  chainWJets.Add("files15fb_8TeV/WJets-250to300.root") ;
-  chainWJets.Add("files15fb_8TeV/WJets-300to400.root") ;
-  chainWJets.Add("files15fb_8TeV/WJets-400.root") ;
-  chainWJets.Add("files15fb_8TeV/T-s.root") ;
-  chainWJets.Add("files15fb_8TeV/T-t.root") ;
-  chainWJets.Add("files15fb_8TeV/T-tW.root") ;
-  chainWJets.Add("files15fb_8TeV/Tbar-s.root") ;
-  chainWJets.Add("files15fb_8TeV/Tbar-t.root") ;
-  chainWJets.Add("files15fb_8TeV/Tbar-tW.root") ;
+  chainWJets.Add("filesHCP_53_v3_QCDweights/WJets-250to300.root") ;
+  chainWJets.Add("filesHCP_53_v3_QCDweights/WJets-300to400.root") ;
+  chainWJets.Add("filesHCP_53_v3_QCDweights/WJets-400.root") ;
+  chainWJets.Add("filesHCP_53_v3_QCDweights/T-s.root") ;
+  chainWJets.Add("filesHCP_53_v3_QCDweights/T-t.root") ;
+  chainWJets.Add("filesHCP_53_v3_QCDweights/T-tW.root") ;
+  chainWJets.Add("filesHCP_53_v3_QCDweights/Tbar-s.root") ;
+  ///////// chainWJets.Add("filesHCP_53_v3_QCDweights/Tbar-t.root") ; /////// missing (Oct 13)
+  ///////// chainWJets.Add("filesHCP_53_v3_QCDweights/Tbar-tW.root") ; /////// missing (Oct 13)
 
 //include Z->ll in VV contribution
   TChain chainVV("tree");
-  chainVV.Add("files15fb_8TeV/WW.root");
-  chainVV.Add("files15fb_8TeV/WZ.root");
-  chainVV.Add("files15fb_8TeV/ZZ.root");
-//  chainVV.Add("files15fb_8TeV_old1/DY-200to400.root");
-// chainVV.Add("files15fb_8TeV_old1/DY-400.root");
+  chainVV.Add("filesHCP_53_v2/WW.root"); ////////////   O L D    V E R S I O N   !  !   !
+  chainVV.Add("filesHCP_53_v2/WZ.root"); ////////////   O L D    V E R S I O N   !  !   !
+  chainVV.Add("filesHCP_53_v2/ZZ.root"); ////////////   O L D    V E R S I O N   !  !   !
 
 
 
 
 
       char qcdinputfile[9][1000] = {
-        "files15fb_8TeV/QCD-120to170.root"
-       ,"files15fb_8TeV/QCD-170to300.root"
-       ,"files15fb_8TeV/QCD-300to470.root"
-       ,"files15fb_8TeV/QCD-470to600.root"
-       ,"files15fb_8TeV/QCD-600to800.root"
-       ,"files15fb_8TeV/QCD-800to1000.root"
-       ,"files15fb_8TeV/QCD-1000to1400.root"
-       ,"files15fb_8TeV/QCD-1400to1800.root"
-       ,"files15fb_8TeV/QCD-1800.root"
+        "filesHCP_53_v3_QCDweights/QCD-120to170.root"
+       ,"filesHCP_53_v3_QCDweights/QCD-170to300.root"
+       ,"filesHCP_53_v3_QCDweights/QCD-300to470.root"
+       ,"filesHCP_53_v3_QCDweights/QCD-470to600.root"
+       ,"filesHCP_53_v3_QCDweights/QCD-600to800.root"
+       ,"filesHCP_53_v3_QCDweights/QCD-800to1000.root"
+       ,"filesHCP_53_v3_QCDweights/QCD-1000to1400.root"
+       ,"filesHCP_53_v3_QCDweights/QCD-1400to1800.root"
+       ,"filesHCP_53_v3_QCDweights/QCD-1800.root"
       } ;
 
       char qcdsamplename[9][100] = {
@@ -1248,8 +1242,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     } // si
 
     // next write out measured trigger efficiencies. Values from plotEMuFrac.C from averaging e/mu bin by bin.
-    float trigeff0LVal[nBinsMET][nBinsHT] = {{0.898873,0.985567,1.0,1.0},{0.942407,0.990288,0.998154,1.0},{0.942064,1.0,0.988108,1.0},{0.941061,0.928571,1.0,1.0}};
-    float trigeff0LErr[nBinsMET][nBinsHT] = {{0.0300214,0.0300001,0.03,0.03},{0.0300002,0.0300024,0.03,0.03},{0.03,0.03,0.0300046,0.03},{0.0301012,0.03,0.03,0.03}};
+    float trigeff1LVal[nBinsMET][nBinsHT] = {{0.898873,0.985567,1.0,1.0},{0.942407,0.990288,0.998154,1.0},{0.942064,1.0,0.988108,1.0},{0.941061,0.928571,1.0,1.0}};
+    float trigeff1LErr[nBinsMET][nBinsHT] = {{0.0300214,0.0300001,0.03,0.03},{0.0300002,0.0300024,0.03,0.03},{0.03,0.03,0.0300046,0.03},{0.0301012,0.03,0.03,0.03}};
     float trigeff0LVal[nBinsMET][nBinsHT] = {{0.571429,0.614458,0.958333,1.0},{0.65,0.754098,1.0,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0}};
     float trigeff0LErr[nBinsMET][nBinsHT] = {{0.06613,0.0534248,0.0407894,0.03},{0.106654,0.0551353,0.03,0.03},{0.03,0.03,0.03,0.03},{0.03,0.03,0.03,0.03}};
     for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
