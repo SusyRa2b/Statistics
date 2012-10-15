@@ -831,7 +831,10 @@
       double initialval_ttwj_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
 
 
-      double initialguess_ttwj_0lep1lep_ratio = 1.59 ;
+      //// double initialguess_ttwj_0lep1lep_ratio = 1.59 ;
+      double initialguess_ttwj_0lep1lep_ratio = 1.28 ;
+
+      printf("\n\n initial guess for ttwj 0lep/1lep ratio : %5.2f\n\n", initialguess_ttwj_0lep1lep_ratio ) ;
 
       for (int i = 0 ; i < nBinsMET ; i++) {
         for (int j = 0 ; j < nBinsHT ; j++) {
@@ -872,7 +875,9 @@
 
             // QCD stuff:
 
-            initialval_qcd_ldp[i][j][k] = N_ldp[i][j][k] / trigeff_0L[i][j] - ( initialval_ttwj_ldp[i][j][k] + initialval_znn_ldp[i][j][k] ) ;
+            //// initialval_qcd_ldp[i][j][k] = N_ldp[i][j][k] / trigeff_0L[i][j] - ( initialval_ttwj_ldp[i][j][k] + initialval_znn_ldp[i][j][k] ) ;
+
+            initialval_qcd_ldp[i][j][k] = (1./trigeff_0L[i][j]) * ( N_ldp[i][j][k] - trigeff_1L[i][j] * ( initialval_ttwj_ldp[i][j][k] + initialval_znn_ldp[i][j][k] ) ) ;
 
           }
         }
@@ -894,7 +899,8 @@
 
          //-- Estimate the HT ratios from the first MET and nbjet bins
          for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
-            tmp_qcd = N_0lep[0][hbi][0] / trigeff_0L[0][hbi] - initialval_ttwj[0][hbi][0] - initialval_znn[0][hbi][0] ;
+            ///// tmp_qcd = N_0lep[0][hbi][0] / trigeff_0L[0][hbi] - initialval_ttwj[0][hbi][0] - initialval_znn[0][hbi][0] ;
+            tmp_qcd = (1./trigeff_0L[0][hbi])*( N_0lep[0][hbi][0] - trigeff_1L[0][hbi] * ( initialval_ttwj[0][hbi][0] + initialval_znn[0][hbi][0] )) ;
             if ( initialval_qcd_ldp[0][hbi][0] > 0. ) {
                initialguess_model24_qcd_0lepLDP_ratio[hbi] = tmp_qcd / ( sf_qcd[0][hbi][0] * initialval_qcd_ldp[0][hbi][0] ) ;
             } else {
@@ -909,7 +915,8 @@
             if ( bbi == 0 ) {
                initialguess_model4_SFqcd_nb[0] = 1.0 ; //-- first one is 1 by definition.
             } else {
-               tmp_qcd = N_0lep[0][0][bbi] / trigeff_0L[0][0] - initialval_ttwj[0][0][bbi] - initialval_znn[0][0][bbi] ;
+               ///// tmp_qcd = N_0lep[0][0][bbi] / trigeff_0L[0][0] - initialval_ttwj[0][0][bbi] - initialval_znn[0][0][bbi] ;
+               tmp_qcd = (1./trigeff_0L[0][0])*( N_0lep[0][0][bbi] - trigeff_1L[0][0] * ( initialval_ttwj[0][0][bbi] + initialval_znn[0][0][bbi] )) ;
                double tmp_denom = sf_qcd[0][0][bbi] * initialguess_model24_qcd_0lepLDP_ratio[0] * initialval_qcd_ldp[0][0][bbi] ;
                if ( tmp_denom > 0. ) {
                   initialguess_model4_SFqcd_nb[bbi] = tmp_qcd / tmp_denom ;
@@ -933,7 +940,8 @@
             if ( mbi == 0 ) {
                initialguess_model4_SFqcd_met[0] = 1.0 ; //-- first one is 1 by definition.
             } else if ( mbi == 1 ) {
-               tmp_qcd = N_0lep[mbi][0][0] / trigeff_0L[mbi][0] - initialval_ttwj[mbi][0][0] - initialval_znn[mbi][0][0] ;
+               ///// tmp_qcd = N_0lep[mbi][0][0] / trigeff_0L[mbi][0] - initialval_ttwj[mbi][0][0] - initialval_znn[mbi][0][0] ;
+               tmp_qcd = (1./trigeff_0L[mbi][0])*( N_0lep[mbi][0][0] - trigeff_1L[mbi][0] * ( initialval_ttwj[mbi][0][0] + initialval_znn[mbi][0][0] )) ;
                double tmp_denom = sf_qcd[mbi][0][0] * initialguess_model24_qcd_0lepLDP_ratio[0] * initialval_qcd_ldp[mbi][0][0] ;
                if ( tmp_denom > 0. ) {
                   initialguess_model4_SFqcd_met[mbi] = tmp_qcd / tmp_denom ;
@@ -2518,6 +2526,7 @@
 	return false ;
       }
 
+      printf("\n\n Skipping processing %s for now.\n\n", systFile1 ) ;
 
       // defer treatment of syst uncertainties for later
       /*
@@ -2678,6 +2687,9 @@
 
       while ( infb.good() ) {
 
+	float pointMgl ;
+	float pointMlsp ;
+
 	float deff_dbtageff_0l[nBinsMET][nBinsHT][nBinsBtag] ;
 	float deff_dbtageff_1l[nBinsMET][nBinsHT][nBinsBtag] ;
 	float deff_dbtageff_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
@@ -2689,8 +2701,8 @@
 	  infb >> ArrayContent[i];
 	}
 
-	pointM0  = ArrayContent[0] ;
-	pointM12 = ArrayContent[1] ;
+	pointMgl  = ArrayContent[0] ;
+	pointMlsp = ArrayContent[1] ;
 
 	int nBins = nBinsMET*nBinsHT*nBinsBtag ;
 
@@ -2706,9 +2718,9 @@
 	  }
 	}
 
-	//// printf("  pointM0 = %g , pointM12 = %g\n", pointM0, pointM12 ) ;
+	//// printf("  pointMgl = %g , pointMlsp = %g\n", pointMgl, pointMlsp ) ;
 
-	if (    fabs( pointM0 - m0 ) <= deltaM0/2. && fabs( pointM12 - m12 ) <= deltaM12/2. ) {
+	if (    fabs( pointMgl - m0 ) <= deltaM0/2. && fabs( pointMlsp - m12 ) <= deltaM12/2. ) {
 	 
 	  cout << "Setting susy deff_dbtag derivatives: " << endl ;
 
