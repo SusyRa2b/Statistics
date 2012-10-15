@@ -17,7 +17,17 @@
 
        ra2bRoostatsClass3D_3b ra2b ;
 
-       ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, qcdModelIndex, wsrootfilename, blindBinsList ) ;
+       ra2b.initialize( input_datfile,
+                        input_susyfile,
+                        mgl,
+                        mlsp,
+                        false,
+                        0.,
+                        input_deffdbtagfile,
+                        qcdModelIndex,
+                        wsrootfilename,
+                        blindBinsList,
+                        "null" ) ;
 
 
    }
