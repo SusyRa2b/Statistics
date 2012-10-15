@@ -2503,6 +2503,8 @@
       }
 
 
+      // defer treatment of syst uncertainties for later
+      /*
       // now open the file with the systematic uncertainties
 
       printf("\n\n Opening signal systematics input file : %s\n", systFile1 ) ;
@@ -2566,6 +2568,8 @@
       }
 
 
+
+
       // print out input values
 
       for (int i = 0 ; i < nBinsMET ; i++) {
@@ -2581,9 +2585,10 @@
 	    
 	  }
 	}
-      }
+      } 
+      */     
       
-      
+
       double setVal_n_0l[nBinsMET][nBinsHT][nBinsBtag] ;
       double setVal_n_1l[nBinsMET][nBinsHT][nBinsBtag] ;
       double setVal_n_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
@@ -2600,6 +2605,13 @@
 	    setVal_n_ldp[i][j][k] = n_ldp_raw[i][j][k] * n_ldp_correction[i][j][k] ;
 	    
 	    all0lep += setVal_n_0l[i][j][k] ;
+
+	    // statistical uncertainty from event counts
+	    // the error is in %
+
+	    n_0l_error[i][j][k]  = 100 * sqrt ( 1 /sqrt( setVal_n_0l[i][j][k] ) ) ;
+	    n_1l_error[i][j][k]  = 0.1 ;  // dummy tiny value
+	    n_ldp_error[i][j][k] = 100 * sqrt ( 1 /sqrt( setVal_n_ldp[i][j][k] ) ) ;
 	    
 	    rv_mu_susymc[i][j][k]     -> setVal( setVal_n_0l[i][j][k] ) ;
 	    rv_mu_susymc_sl[i][j][k]  -> setVal( setVal_n_1l[i][j][k] ) ;
