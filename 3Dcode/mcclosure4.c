@@ -37,6 +37,9 @@
    const int nBinsBjets(3) ;
    const int nQcdSamples(9) ;
 
+      int ncomps(5) ;
+      char compname[5][100] = { "ttbar", "wjets", "qcd", "znn", "vv" } ;
+
   //-----------
 
    void minuit_fcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag) {
@@ -91,7 +94,8 @@
                     const char* datfile = "Input-met4-ht4-wsyst1.dat",
                     int qcdModelIndex = 4,
                     bool setExpected0lepObs = true,
-                    bool useAverageTtwjClosure = false
+                    bool useAverageTtwjClosure = false,
+                    bool applyTriggerEfficiencyToNobs = false
                     ) {
 
       if ( qcdModelIndex < 2 || qcdModelIndex > 4 ) {
@@ -2033,6 +2037,138 @@
 
 
 
+      if ( !setExpected0lepObs && !applyTriggerEfficiencyToNobs ) {
+         printf("\n\n Both setExpected0lepObs and applyTriggerEfficiencyToNobs false, so I'm done.\n\n") ;
+         return ;
+      }
+
+     //--- Apply trigger efficiencies to observables, if requested.
+
+      double trig_eff_0lep[10][10] ; // 0lep = fake met.
+      double trig_eff_1lep[10][10] ; // 1lep = real met.
+      for ( int i=0; i<10; i++ ) {
+         for ( int j=0; j<10; j++ ) {
+            trig_eff_0lep[i][j] = 1. ;
+            trig_eff_1lep[i][j] = 1. ;
+         } // j
+      } // i
+
+      if ( applyTriggerEfficiencyToNobs ) {
+
+         //--- read in efficiencies from input dat file.
+         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+            for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+
+               char tpname[1000] ;
+               float teffval ;
+
+               sprintf( tpname, "trigeff_val_0L_M%d_H%d", mbi+1, hbi+1 ) ;
+               getFileValue( datfile, tpname, teffval ) ;
+               trig_eff_0lep[mbi][hbi] = teffval ;
+
+               sprintf( tpname, "trigeff_val_1L_M%d_H%d", mbi+1, hbi+1 ) ;
+               getFileValue( datfile, tpname, teffval ) ;
+               trig_eff_1lep[mbi][hbi] = teffval ;
+
+            } // hbi.
+         } // mbi.
+
+         printf("\n\n ---- Trigger efficiency, 0lep (fake met) ------------------------------\n") ;
+         printf("           H1      H2      H3      H4\n") ;
+         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+            printf("  M%d : ", mbi+1 ) ;
+            for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+               printf(" %6.3f ", trig_eff_0lep[mbi][hbi] ) ;
+            } // hbi.
+            printf("\n") ;
+         } // mbi.
+
+         printf("\n\n ---- Trigger efficiency, 1lep (real met) ------------------------------\n") ;
+         printf("           H1      H2      H3      H4\n") ;
+         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+            printf("  M%d : ", mbi+1 ) ;
+            for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+               printf(" %6.3f ", trig_eff_1lep[mbi][hbi] ) ;
+            } // hbi.
+            printf("\n") ;
+         } // mbi.
+
+
+      } // applyTriggerEfficiencyToNobs?
+
+
+
+
+
+
+
+     //--- Compute new vals including trigger inefficiencies.
+
+      int nselections ;
+      char sel_name[3][100] = { "1lep", "ldp", "0lep" } ;
+
+      if ( setExpected0lepObs ) {
+         nselections = 2 ; // don't do 0lep (the 3rd).
+      } else {
+         nselections = 3 ; // do all three.
+      }
+
+      printf("\n\n") ;
+      for ( int csi=0; csi<nselections; csi++ ) {
+         for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+            for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+               for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+
+
+                  int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+
+                  double fakemetsum_notrig(0.) ;
+                  double realmetsum_notrig(0.) ;
+                  double fakemetsum(0.) ;
+                  double realmetsum(0.) ;
+
+                  for ( int ci=0; ci<ncomps; ci++ ) {
+
+                     char mcthname[1000] ;
+                     sprintf( mcthname, "hmctruth_%s_%s_%db", compname[ci], sel_name[csi], bbi+1 ) ;
+                     TH1F* mcthist = (TH1F*) gDirectory->FindObject( mcthname ) ;
+                     if ( mcthist == 0x0 ) {
+                        printf("\n\n\n ***** Missing MCT hist: %s\n\n\n", mcthname ) ;
+                        return ;
+                     }
+
+                     double compval = mcthist->GetBinContent( histbin ) ;
+
+                     printf( "%4s, %5s : m%d,h%d,b%d : %8.1f\n", 
+                       sel_name[csi], compname[ci], mbi+1, hbi+1, bbi+1, compval ) ;
+
+                     if ( strcmp( compname[ci], "qcd" ) == 0 ) {
+                        fakemetsum_notrig += compval ;
+                        fakemetsum        += trig_eff_0lep[mbi][hbi] * compval ;
+                     } else {
+                        realmetsum_notrig += compval ;
+                        realmetsum        += trig_eff_1lep[mbi][hbi] * compval ;
+                     }
+
+                  } // ci.
+
+                  double allsum = fakemetsum + realmetsum ;
+                  printf(" %4s : m%d,h%d,b%d :   (%5.3f * %8.1f)   +   (%5.3f * %8.1f)   =   %8.1f\n",
+                       sel_name[csi], mbi+1, hbi+1, bbi+1,
+                       trig_eff_0lep[mbi][hbi], fakemetsum_notrig,
+                       trig_eff_1lep[mbi][hbi], realmetsum_notrig,
+                       allsum ) ;
+
+                  char obsname[1000] ;
+                  sprintf( obsname, "N_%s_M%d_H%d_%db", sel_name[csi], mbi+1, hbi+1, bbi+1 ) ;
+                  updateFileValue( datfile, obsname, allsum ) ;
+
+                  printf("\n") ;
+
+               } // hbi.
+            } // mbi.
+         } // bbi.
+      } // csi.
 
 
 
@@ -2046,48 +2182,53 @@
 
          printf("\n\n\n ============== Resetting 0lep observables to expectations from model in %s ================\n\n", datfile ) ;
 
-         char pname[1000] ;
-
-         sprintf( pname, "Z_ee_pur" ) ;
-         float Z_ee_pur ;
-         getFileValue( datfile, pname, Z_ee_pur ) ;
-
-         sprintf( pname, "Z_mm_pur" ) ;
-         float Z_mm_pur ;
-         getFileValue( datfile, pname, Z_mm_pur ) ;
-
-         sprintf( pname, "Z_ee_eff" ) ;
-         float Z_ee_eff ;
-         getFileValue( datfile, pname, Z_ee_eff ) ;
-
-         sprintf( pname, "Z_mm_eff" ) ;
-         float Z_mm_eff ;
-         getFileValue( datfile, pname, Z_mm_eff ) ;
-
-         sprintf( pname, "acc_Zee_M1" ) ;
-         float acc_Zee ;
-         getFileValue( datfile, pname, acc_Zee ) ;
-
-         sprintf( pname, "acc_Zmm_M1" ) ;
-         float acc_Zmm ;
-         getFileValue( datfile, pname, acc_Zmm ) ;
-
-
-         float Zee_factor[10] ;
-         float Zmm_factor[10] ;
-         for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-
-            sprintf( pname, "knn_%db", bbi+1 ) ;
-            float knn ;
-            getFileValue( datfile, pname, knn ) ;
-
-            Zee_factor[bbi] = (5.94 * Z_ee_pur * knn ) / ( acc_Zee * Z_ee_eff ) ;
-            Zmm_factor[bbi] = (5.94 * Z_mm_pur * knn ) / ( acc_Zmm * Z_mm_eff ) ;
-
-         } // bbi.
-
          for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
             for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+
+               char pname[1000] ;
+
+               sprintf( pname, "Z_ee_pur" ) ;
+               float Z_ee_pur ;
+               getFileValue( datfile, pname, Z_ee_pur ) ;
+
+               sprintf( pname, "Z_mm_pur" ) ;
+               float Z_mm_pur ;
+               getFileValue( datfile, pname, Z_mm_pur ) ;
+
+               sprintf( pname, "Z_ee_eff_H%d", hbi+1 ) ;
+               float Z_ee_eff ;
+               getFileValue( datfile, pname, Z_ee_eff ) ;
+
+               sprintf( pname, "Z_mm_eff_H%d", hbi+1 ) ;
+               float Z_mm_eff ;
+               getFileValue( datfile, pname, Z_mm_eff ) ;
+
+               sprintf( pname, "acc_Zee_M%d", mbi+1 ) ;
+               float acc_Zee ;
+               getFileValue( datfile, pname, acc_Zee ) ;
+
+               sprintf( pname, "acc_Zmm_M%d", mbi+1 ) ;
+               float acc_Zmm ;
+               getFileValue( datfile, pname, acc_Zmm ) ;
+
+
+               float Zee_factor[10] ;
+               float Zmm_factor[10] ;
+               for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+
+                  float knn ;
+                  if ( bbi==0 ) {
+                     sprintf( pname, "knn_%db_M%d", bbi+1, mbi+1 ) ;
+                     getFileValue( datfile, pname, knn ) ;
+                  } else {
+                     sprintf( pname, "knn_%db", bbi+1 ) ;
+                     getFileValue( datfile, pname, knn ) ;
+                  }
+
+                  Zee_factor[bbi] = (5.94 * Z_ee_pur * knn ) / ( acc_Zee * Z_ee_eff ) ;
+                  Zmm_factor[bbi] = (5.94 * Z_mm_pur * knn ) / ( acc_Zmm * Z_mm_eff ) ;
+
+               } // bbi.
 
                sprintf( pname, "N_Zee_M%d_H%d", mbi+1, hbi+1 ) ;
                float NZee ;
@@ -2099,37 +2240,35 @@
 
                for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
+                  double exp_0lep_ttwj, exp_0lep_znn, exp_0lep_qcd ;
+
+
+                //--- Znn
+
+                  exp_0lep_znn = 0.5 * ( NZee * Zee_factor[bbi] + NZmm * Zmm_factor[bbi] ) ;
+
+
+
+                //--- ttwj
 
                   sprintf( pname, "N_1lep_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                   float N1lep ;
                   getFileValue( datfile, pname, N1lep ) ;
 
-                  sprintf( pname, "N_ldp_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                  float Nldp ;
-                  getFileValue( datfile, pname, Nldp ) ;
-
-                  sprintf( pname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                  float sf_qcd ;
-                  getFileValue( datfile, pname, sf_qcd ) ;
-
                   sprintf( pname, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                   float sf_ttwj ;
                   getFileValue( datfile, pname, sf_ttwj ) ;
 
-                  sprintf( pname, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                  float ttwj_mc_ldpover0lep_ratio ;
-                  getFileValue( datfile, pname, ttwj_mc_ldpover0lep_ratio ) ;
-
-                  sprintf( pname, "znn_mc_ldpover0lep_ratio_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                  float znn_mc_ldpover0lep_ratio ;
-                  getFileValue( datfile, pname, znn_mc_ldpover0lep_ratio ) ;
+                  exp_0lep_ttwj = sf_ttwj * N1lep * simpleAveR_0over1 ;  //--- N1lep has already been lowered by trig eff, so no need
+                                                                         //      to do it again here.
 
 
-                  double exp_0lep_ttwj, exp_0lep_znn, exp_0lep_qcd ;
 
-                  exp_0lep_ttwj = sf_ttwj * N1lep * simpleAveR_0over1 ;
+                //--- qcd
 
-                  exp_0lep_znn = 0.5 * ( NZee * Zee_factor[bbi] + NZmm * Zmm_factor[bbi] ) ;
+                  sprintf( pname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                  float sf_qcd ;
+                  getFileValue( datfile, pname, sf_qcd ) ;
 
                   double qcdratio(0.) ;
 
@@ -2140,7 +2279,19 @@
                   } else if ( qcdModelIndex == 4 ) {
                      qcdratio = fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ;
                   }
-                  exp_0lep_qcd = sf_qcd * ( Nldp - exp_0lep_ttwj * ttwj_mc_ldpover0lep_ratio - exp_0lep_znn * znn_mc_ldpover0lep_ratio ) * qcdratio ;
+                  char mcthname[1000] ;
+                  sprintf( mcthname, "hmctruth_qcd_ldp_%db", bbi+1 ) ;
+                  TH1F* mcthist = (TH1F*) gDirectory->FindObject( mcthname ) ;
+                  if ( mcthist == 0x0 ) {
+                     printf("\n\n\n ***** Missing MCT hist: %s\n\n\n", mcthname ) ;
+                     return ;
+                  }
+                  int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+                  double qcd_ldp = mcthist->GetBinContent( histbin ) ;
+                  exp_0lep_qcd = sf_qcd * qcd_ldp * qcdratio * trig_eff_0lep[mbi][hbi] ;
+
+
+
 
                   double newN0lep = exp_0lep_ttwj + exp_0lep_znn + exp_0lep_qcd ;
 
@@ -2161,12 +2312,6 @@
 
 
       } // setExpected0lepObs?
-
-
-
-
-
-
 
 
 

@@ -1,0 +1,5 @@
+
+
+  echo fitqual-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-nosusy-ttwjave-wtrig
+  root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave-wtrig.root\"\) >& logfiles/fitqual-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-nosusy-ttwjave-wtrig.log
+
