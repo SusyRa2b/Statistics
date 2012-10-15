@@ -2457,7 +2457,7 @@
 
 	if ( found ) break ;
 
-	int ArraySize = 3 + 2*(nBinsMET*nBinsHT*nBinsBtag) ;
+	int ArraySize = 3 + 4*(nBinsMET*nBinsHT*nBinsBtag) ;
 	double ArrayContent[ArraySize] ;
 
 	for (int i = 0; infp && i < ArraySize; ++ i) {
@@ -2484,7 +2484,23 @@
 		n_0l_correction[i][j][k]  = 1. ;
 		n_1l_correction[i][j][k]  = 1. ;
 		n_ldp_correction[i][j][k] = 1. ;
+
+		// relative errors (in %)
 		
+		n_0l_error[i][j][k]  = ArrayContent[3 + 2*(nBinsMET*nBinsHT*nBinsBtag) + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
+		n_1l_error[i][j][k]  = 0.1 ;  // dummy tiny value
+		n_ldp_error[i][j][k] = ArrayContent[3 + 3*(nBinsMET*nBinsHT*nBinsBtag) + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
+	    
+		if ( n_0l_raw[i][j][k] > 0.00001 ) {
+		  n_0l_error[i][j][k] = 100 * n_0l_error[i][j][k] / n_0l_raw[i][j][k] ;
+		}
+		else n_0l_error[i][j][k] = 0.1 ;
+	    
+		if ( n_ldp_raw[i][j][k] > 0.00001 ) {
+		  n_ldp_error[i][j][k] = 100 * n_ldp_error[i][j][k] / n_ldp_raw[i][j][k] ;
+		}
+		else n_ldp_error[i][j][k] = 0.1 ;
+
 	      }
 	    }
 	  }
@@ -2605,13 +2621,6 @@
 	    setVal_n_ldp[i][j][k] = n_ldp_raw[i][j][k] * n_ldp_correction[i][j][k] ;
 	    
 	    all0lep += setVal_n_0l[i][j][k] ;
-
-	    // statistical uncertainty from event counts
-	    // the error is in %
-
-	    n_0l_error[i][j][k]  = 100 * sqrt ( 1 /sqrt( setVal_n_0l[i][j][k] ) ) ;
-	    n_1l_error[i][j][k]  = 0.1 ;  // dummy tiny value
-	    n_ldp_error[i][j][k] = 100 * sqrt ( 1 /sqrt( setVal_n_ldp[i][j][k] ) ) ;
 	    
 	    rv_mu_susymc[i][j][k]     -> setVal( setVal_n_0l[i][j][k] ) ;
 	    rv_mu_susymc_sl[i][j][k]  -> setVal( setVal_n_1l[i][j][k] ) ;
@@ -2641,9 +2650,9 @@
 	    TString binString = "";
 	    binString += sMbins[i]+sHbins[j]+sBbins[k] ;	  
 	    
-	    cout << binString + " - 0 lep - setting susy signal to " << setVal_n_0l[i][j][k] << endl ;
-	    cout << binString + " - 1 lep - setting susy signal to " << setVal_n_1l[i][j][k] << endl ;
-	    cout << binString + " - ldp   - setting susy signal to " << setVal_n_ldp[i][j][k] << endl ;
+	    cout << binString + " - 0 lep - setting susy signal to " << setVal_n_0l[i][j][k] << " +/- " << n_0l_error[i][j][k] << " %" << endl ;
+	    cout << binString + " - 1 lep - setting susy signal to " << setVal_n_1l[i][j][k] << " +/- " << n_1l_error[i][j][k] << " %" << endl ;
+	    cout << binString + " - ldp   - setting susy signal to " << setVal_n_ldp[i][j][k] << " +/- " << n_ldp_error[i][j][k] << " %" << endl ; 
 	    
 	    total0lep += setVal_n_0l[i][j][k] ;
 	    
@@ -2668,9 +2677,6 @@
       found = false ;
 
       while ( infb.good() ) {
-
-	float pointM0 ;
-	float pointM12 ;
 
 	float deff_dbtageff_0l[nBinsMET][nBinsHT][nBinsBtag] ;
 	float deff_dbtageff_1l[nBinsMET][nBinsHT][nBinsBtag] ;
