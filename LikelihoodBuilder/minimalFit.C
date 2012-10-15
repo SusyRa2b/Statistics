@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <fstream>
 
@@ -12,6 +13,7 @@
 
 #include "RooStats/ModelConfig.h"
 
+#include "RooProdPdfLogSum.h"
 
 using namespace RooFit ;
 using namespace RooStats ;
@@ -36,6 +38,13 @@ int minimalFit(TString workspaceFile = "test.root", double signalCrossSectionGue
   RooRealVar* signalCrossSection = ws->var( "signalCrossSection" );
   signalCrossSection->setVal( signalCrossSectionGuess );
   signalCrossSection->setRange( signalCrossSectionLow, signalCrossSectionHigh );
+  
+  /* 
+  RooAbsReal* nll = likelihood->createNLL(*rds);
+  nll->Print("T");
+  nll->findServer(0)->Print();
+  nll->findServer(1)->Print("V");
+  */
 
   RooFitResult* fitResult = likelihood->fitTo( *rds, Save(true), PrintLevel(0) );
   fitResult->Print();
