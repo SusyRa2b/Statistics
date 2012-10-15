@@ -1,6 +1,8 @@
 #include "TSystem.h"
 
 void setup(){
+  gSystem->CompileMacro("RooProdPdfLogSum.cxx"       ,"k0") ;
+  gSystem->CompileMacro("RooPoissonLogEval.cxx"      ,"k0") ;
   gSystem->CompileMacro("RooRatio.cxx"               ,"kO") ;
   gSystem->CompileMacro("RooBetaPdf.cxx"             ,"kO") ;
   gSystem->CompileMacro("RooBetaPrimePdf.cxx"        ,"kO") ;
