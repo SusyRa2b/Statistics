@@ -106,13 +106,14 @@
   //===================================================================
 
     bool ra2bRoostatsClass3D_3b::initialize( const char* infile ,
-					    const char* inputScanFile,
-					    double m0, double m12, bool isT1bbbb, double t1bbbbXsec,
-					    const char* inputSusy_deff_dbtageff_file,
-                                            int   qcdModelIndex,
-                                            const char* wsrootfilename,
-                                            const char* blindBinsList
-					    ) {
+					     const char* inputScanFile,
+					     double m0, double m12, bool isT1bbbb, double t1bbbbXsec,
+					     const char* inputSusy_deff_dbtageff_file,
+					     int   qcdModelIndex,
+					     const char* wsrootfilename,
+					     const char* blindBinsList,
+					     const char* systFile1
+					     ) {
 
 
 
@@ -1366,7 +1367,7 @@
 
       //++++++++++
 
-      bool ssspOk = setSusyScanPoint( inputScanFile,  m0,  m12,  isT1bbbb,  t1bbbbXsec, inputSusy_deff_dbtageff_file ) ;
+      bool ssspOk = setSusyScanPoint( inputScanFile,  m0,  m12,  isT1bbbb,  t1bbbbXsec, inputSusy_deff_dbtageff_file, systFile1 ) ;
 
       if ( !ssspOk ) {
          printf("\n\n\n *** setSusyScanPoint failed.  I quit.\n\n\n") ;
@@ -2380,9 +2381,10 @@
    //=====================================================================================================================
 
     bool ra2bRoostatsClass3D_3b::setSusyScanPoint( const char* inputScanFile,
-						  double m0, double m12, bool isT1bbbb, double t1bbbbXsec,
-						  const char* inputSusy_deff_dbtageff_file
-						  ) {
+						   double m0, double m12, bool isT1bbbb, double t1bbbbXsec,
+						   const char* inputSusy_deff_dbtageff_file,
+						   const char* systFile1
+						   ) {
 
       double dummy ;
       dummy = t1bbbbXsec ;
@@ -2432,27 +2434,30 @@
       }
 
 
+      float pointM0 ;
+      float pointM12 ;
+      
+      float n_0l_raw[nBinsMET][nBinsHT][nBinsBtag] ;
+      float n_1l_raw[nBinsMET][nBinsHT][nBinsBtag] ;
+      float n_ldp_raw[nBinsMET][nBinsHT][nBinsBtag] ;
+      
+      float n_0l_correction[nBinsMET][nBinsHT][nBinsBtag] ;
+      float n_1l_correction[nBinsMET][nBinsHT][nBinsBtag] ;
+      float n_ldp_correction[nBinsMET][nBinsHT][nBinsBtag] ;
+      
+      float n_0l_error[nBinsMET][nBinsHT][nBinsBtag] ;
+      float n_1l_error[nBinsMET][nBinsHT][nBinsBtag] ;
+      float n_ldp_error[nBinsMET][nBinsHT][nBinsBtag] ;
+      
+      int nGen ;
+
+
       //--- Loop over the scan points.
       while ( infp.good() ) {
 
-	float pointM0 ;
-	float pointM12 ;
-	
-	float n_0l_raw[nBinsMET][nBinsHT][nBinsBtag] ;
-	float n_1l_raw[nBinsMET][nBinsHT][nBinsBtag] ;
-	float n_ldp_raw[nBinsMET][nBinsHT][nBinsBtag] ;
-	
-	float n_0l_correction[nBinsMET][nBinsHT][nBinsBtag] ;
-	float n_1l_correction[nBinsMET][nBinsHT][nBinsBtag] ;
-	float n_ldp_correction[nBinsMET][nBinsHT][nBinsBtag] ;
-	
-	float n_0l_error[nBinsMET][nBinsHT][nBinsBtag] ;
-	float n_1l_error[nBinsMET][nBinsHT][nBinsBtag] ;
-	float n_ldp_error[nBinsMET][nBinsHT][nBinsBtag] ;
+	if ( found ) break ;
 
-	int nGen ;
-
-	int ArraySize = 3 + 9*(nBinsMET*nBinsHT*nBinsBtag) ;
+	int ArraySize = 3 + 2*(nBinsMET*nBinsHT*nBinsBtag) ;
 	double ArrayContent[ArraySize] ;
 
 	for (int i = 0; infp && i < ArraySize; ++ i) {
@@ -2464,126 +2469,31 @@
 
 	nGen = (int)ArrayContent[2] ;
 
-	int nBins = nBinsMET*nBinsHT*nBinsBtag*3 ;
-
-	for (int i = 0 ; i < nBinsMET ; i++) {
-	  for (int j = 0 ; j < nBinsHT ; j++) {
-	    for (int k = 0 ; k < nBinsBtag ; k++) {     
-
-	      n_0l_raw[i][j][k]  = ArrayContent[3 + i*(nBinsHT*nBinsBtag*3) + j*(nBinsBtag*3) + k*3] ;
-	      n_1l_raw[i][j][k]  = ArrayContent[4 + i*(nBinsHT*nBinsBtag*3) + j*(nBinsBtag*3) + k*3] ;
-	      n_ldp_raw[i][j][k] = ArrayContent[5 + i*(nBinsHT*nBinsBtag*3) + j*(nBinsBtag*3) + k*3] ;
-
-	      n_0l_correction[i][j][k]  = ArrayContent[3 + nBins + i*(nBinsHT*nBinsBtag*3) + j*(nBinsBtag*3) + k*3] ;
-	      n_1l_correction[i][j][k]  = ArrayContent[4 + nBins + i*(nBinsHT*nBinsBtag*3) + j*(nBinsBtag*3) + k*3] ;
-	      n_ldp_correction[i][j][k] = ArrayContent[5 + nBins + i*(nBinsHT*nBinsBtag*3) + j*(nBinsBtag*3) + k*3] ;
-
-	      n_0l_error[i][j][k]  = ArrayContent[3 + 2*nBins + i*(nBinsHT*nBinsBtag*3) + j*(nBinsBtag*3) + k*3] ;
-	      n_1l_error[i][j][k]  = ArrayContent[4 + 2*nBins + i*(nBinsHT*nBinsBtag*3) + j*(nBinsBtag*3) + k*3] ;
-	      n_ldp_error[i][j][k] = ArrayContent[5 + 2*nBins + i*(nBinsHT*nBinsBtag*3) + j*(nBinsBtag*3) + k*3] ;
-
-	    }
-	  }
-	}
-
-
-	//// printf("  pointM0 = %g , pointM12 = %g\n", pointM0, pointM12 ) ;
-
 	if (    fabs( pointM0 - m0 ) <= deltaM0/2 && fabs( pointM12 - m12 ) <= deltaM12/2 ) {
-	  
-	  // double nGenPerPoint = 10000 ; // for SMS's
-	  
-	  cout << "Systematic uncertainties (in %):" << endl;
-
-	  for (int i = 0 ; i < nBinsMET ; i++) {
-	    for (int j = 0 ; j < nBinsHT ; j++) {
-	      for (int k = 0 ; k < nBinsBtag ; k++) {     
-
-		TString binString = "";
-		binString += sMbins[i]+sHbins[j]+sBbins[k] ;
-		
-		cout << binString + " - 0 lep  = " << n_0l_error[i][j][k] << endl ; 
-		cout << binString + " - 1 lep  = " << n_1l_error[i][j][k] << endl ; 
-		cout << binString + " - ldp    = " << n_ldp_error[i][j][k] << endl ; 
-		
-	      }
-	    }
-	  }
-	  
-
-
-
-	  double setVal_n_0l[nBinsMET][nBinsHT][nBinsBtag] ;
-	  double setVal_n_1l[nBinsMET][nBinsHT][nBinsBtag] ;
-	  double setVal_n_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
-
-          double all0lep(0.) ;
-
-	  for (int i = 0 ; i < nBinsMET ; i++) {
-	    for (int j = 0 ; j < nBinsHT ; j++) {
-              if ( ignoreBin[i][j] ) continue ;
-	      for (int k = 0 ; k < nBinsBtag ; k++) {     
-		
-                setVal_n_0l[i][j][k]  = n_0l_raw[i][j][k]  * n_0l_correction[i][j][k] ;
-                setVal_n_1l[i][j][k]  = n_1l_raw[i][j][k]  * n_1l_correction[i][j][k] ;
-                setVal_n_ldp[i][j][k] = n_ldp_raw[i][j][k] * n_ldp_correction[i][j][k] ;
-
-                all0lep += setVal_n_0l[i][j][k] ;
-
-		rv_mu_susymc[i][j][k]     -> setVal( setVal_n_0l[i][j][k] ) ;
-		rv_mu_susymc_sl[i][j][k]  -> setVal( setVal_n_1l[i][j][k] ) ;
-		rv_mu_susymc_ldp[i][j][k] -> setVal( setVal_n_ldp[i][j][k] ) ;
-
-		rv_width_eff_sf[i][j][k]     -> setVal( n_0l_error[i][j][k] / 100. ) ;
-		rv_width_eff_sf_sl[i][j][k]  -> setVal( n_1l_error[i][j][k] / 100. ) ;
-		rv_width_eff_sf_ldp[i][j][k] -> setVal( n_ldp_error[i][j][k] / 100. ) ;
-
-	      }
-	    }
-	  }
-
-
-	  if ( !isT1bbbb ) {
-	    printf("\n\n Found point m0 = %4.0f,  m1/2 = %4.0f,  Npred = %7.1f\n\n\n", pointM0, pointM12, all0lep ) ;
-	  } else {
-	    printf("\n\n Found point mGluino = %4.0f,  mLSP = %4.0f,  Npred = %7.1f\n\n\n", pointM0, pointM12, all0lep ) ;
-	  }
-	  
-
-	  // print out signal values
-
-	  cout << "\n\nSetting susy signal: \n" << endl ;
-
-          double total0lep(0.) ;
-	  
-	  for (int i = 0 ; i < nBinsMET ; i++) {
-	    for (int j = 0 ; j < nBinsHT ; j++) {
-              if ( ignoreBin[i][j] ) continue ;
-	      for (int k = 0 ; k < nBinsBtag ; k++) {     
-
-		TString binString = "";
-		binString += sMbins[i]+sHbins[j]+sBbins[k] ;	  
-
-		cout << binString + " - 0 lep - setting susy signal to " << setVal_n_0l[i][j][k] << endl ;
-		cout << binString + " - 1 lep - setting susy signal to " << setVal_n_1l[i][j][k] << endl ;
-		cout << binString + " - ldp   - setting susy signal to " << setVal_n_ldp[i][j][k] << endl ;
-
-                total0lep += setVal_n_0l[i][j][k] ;
-
-	      }
-	    }
-	  }
-
-          printf("\n\n SUSY 0lep total: %7.2f\n\n", total0lep ) ;
 
 	  found = true ;
 
-	  break ;
+	  for (int i = 0 ; i < nBinsMET ; i++) {
+	    for (int j = 0 ; j < nBinsHT ; j++) {
+	      for (int k = 0 ; k < nBinsBtag ; k++) {     
+		
+		n_0l_raw[i][j][k]  = ArrayContent[3 + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
+		n_1l_raw[i][j][k]  = 0. ;   // for now we are using only T1bbbb and we assume no contamination in the SL sample
+		n_ldp_raw[i][j][k] = ArrayContent[3 + (nBinsMET*nBinsHT*nBinsBtag) + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
+		
+		n_0l_correction[i][j][k]  = 1. ;
+		n_1l_correction[i][j][k]  = 1. ;
+		n_ldp_correction[i][j][k] = 1. ;
+		
+	      }
+	    }
+	  }
 
-	}
+	  printf("\n\n Found event counts for point m0 = %4.0f,  m1/2 = %4.0f.", pointM0, pointM12 ) ;
 
-      }
+	} // end check on mass point
 
+      }	
 
       infp.close() ;
 
@@ -2591,6 +2501,145 @@
 	printf("\n\n *** Point not found in scan.  Check this file %s\n  to see if this point is there: mgl=%4.0f, mlsp=%4.0f\n\n", inputScanFile, m0, m12 ) ;
 	return false ;
       }
+
+
+      // now open the file with the systematic uncertainties
+
+      printf("\n\n Opening signal systematics input file : %s\n", systFile1 ) ;
+
+      ifstream infq ;
+      infq.open(systFile1) ;
+      if ( !infq.good() ) {
+	printf("\n\n *** Problem opening input file: %s.\n\n", systFile1 ) ;
+	return false ;
+      } 
+
+      found = false ;
+	  
+      cout << "Systematic uncertainties (in %):" << endl;
+
+
+      while ( infq.good() ) {
+
+	if ( found ) break ;
+
+	int ArraySize = 2 + 2*(nBinsMET*nBinsHT*nBinsBtag) ;
+	double ArrayContent[ArraySize] ;
+
+	for (int i = 0; infp && i < ArraySize; ++ i) {
+	  infq >> ArrayContent[i];
+	}
+
+	pointM0  = ArrayContent[0] ;
+	pointM12 = ArrayContent[1] ;
+	
+	//nGen = (int)ArrayContent[2] ;
+
+	if (    fabs( pointM0 - m0 ) <= deltaM0/2 && fabs( pointM12 - m12 ) <= deltaM12/2 ) {
+
+	  found = true ;
+
+	  for (int i = 0 ; i < nBinsMET ; i++) {
+	    for (int j = 0 ; j < nBinsHT ; j++) {
+	      for (int k = 0 ; k < nBinsBtag ; k++) {     
+		
+		n_0l_error[i][j][k]  = fabs( ArrayContent[2 + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ) ;
+		n_1l_error[i][j][k]  = 0. ;   // for now we are using only T1bbbb and we assume no contamination in the SL sample
+		n_ldp_error[i][j][k] = fabs( ArrayContent[2 + (nBinsMET*nBinsHT*nBinsBtag) + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ) ;
+		
+	      }
+	    }
+	  }
+
+	  printf("\n\n Found systematics for point m0 = %4.0f,  m1/2 = %4.0f.\n\n", pointM0, pointM12 ) ;
+
+	}  // end check on mass point
+
+      }
+
+      infq.close() ;
+
+
+      if ( !found ) {
+	printf("\n\n *** Point not found in scan.  Check this file %s\n  to see if this point is there: mgl=%4.0f, mlsp=%4.0f\n\n", systFile1, m0, m12 ) ;
+	return false ;
+      }
+
+
+      // print out input values
+
+      for (int i = 0 ; i < nBinsMET ; i++) {
+	for (int j = 0 ; j < nBinsHT ; j++) {
+	  for (int k = 0 ; k < nBinsBtag ; k++) {     
+	    
+	    TString binString = "";
+	    binString += sMbins[i]+sHbins[j]+sBbins[k] ;
+	    
+	    cout << binString + " - 0 lep  = " << n_0l_error[i][j][k] << endl ; 
+	    cout << binString + " - 1 lep  = " << n_1l_error[i][j][k] << endl ; 
+	    cout << binString + " - ldp    = " << n_ldp_error[i][j][k] << endl ; 
+	    
+	  }
+	}
+      }
+      
+      
+      double setVal_n_0l[nBinsMET][nBinsHT][nBinsBtag] ;
+      double setVal_n_1l[nBinsMET][nBinsHT][nBinsBtag] ;
+      double setVal_n_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
+      
+      double all0lep(0.) ;
+      
+      for (int i = 0 ; i < nBinsMET ; i++) {
+	for (int j = 0 ; j < nBinsHT ; j++) {
+	  if ( ignoreBin[i][j] ) continue ;
+	  for (int k = 0 ; k < nBinsBtag ; k++) {     
+		
+	    setVal_n_0l[i][j][k]  = n_0l_raw[i][j][k]  * n_0l_correction[i][j][k] ;
+	    setVal_n_1l[i][j][k]  = n_1l_raw[i][j][k]  * n_1l_correction[i][j][k] ;
+	    setVal_n_ldp[i][j][k] = n_ldp_raw[i][j][k] * n_ldp_correction[i][j][k] ;
+	    
+	    all0lep += setVal_n_0l[i][j][k] ;
+	    
+	    rv_mu_susymc[i][j][k]     -> setVal( setVal_n_0l[i][j][k] ) ;
+	    rv_mu_susymc_sl[i][j][k]  -> setVal( setVal_n_1l[i][j][k] ) ;
+	    rv_mu_susymc_ldp[i][j][k] -> setVal( setVal_n_ldp[i][j][k] ) ;
+	    
+	    rv_width_eff_sf[i][j][k]     -> setVal( n_0l_error[i][j][k] / 100. ) ;
+	    rv_width_eff_sf_sl[i][j][k]  -> setVal( n_1l_error[i][j][k] / 100. ) ;
+	    rv_width_eff_sf_ldp[i][j][k] -> setVal( n_ldp_error[i][j][k] / 100. ) ;
+	    
+	  }
+	}
+      }
+
+	  
+
+      // print out signal values
+      
+      cout << "\n\nSetting susy signal: \n" << endl ;
+      
+      double total0lep(0.) ;
+      
+      for (int i = 0 ; i < nBinsMET ; i++) {
+	for (int j = 0 ; j < nBinsHT ; j++) {
+	  if ( ignoreBin[i][j] ) continue ;
+	  for (int k = 0 ; k < nBinsBtag ; k++) {     
+	    
+	    TString binString = "";
+	    binString += sMbins[i]+sHbins[j]+sBbins[k] ;	  
+	    
+	    cout << binString + " - 0 lep - setting susy signal to " << setVal_n_0l[i][j][k] << endl ;
+	    cout << binString + " - 1 lep - setting susy signal to " << setVal_n_1l[i][j][k] << endl ;
+	    cout << binString + " - ldp   - setting susy signal to " << setVal_n_ldp[i][j][k] << endl ;
+	    
+	    total0lep += setVal_n_0l[i][j][k] ;
+	    
+	  }
+	}
+      }
+
+      printf("\n\n SUSY 0lep total: %7.2f\n\n", total0lep ) ;
 
 
       //----- Now, read in the deff_dbtageff numbers.

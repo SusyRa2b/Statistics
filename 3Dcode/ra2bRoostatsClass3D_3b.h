@@ -28,11 +28,13 @@
                         const char* inputSusy_deff_dbtageff_file = "deff_dbtag_file.txt",
                         int   qcdModelIndex = 3,
                         const char* wsrootfilename = "ws.root",
-                        const char* blindBinsList = "null"
+                        const char* blindBinsList = "null",
+			const char* systFile1 = "systFile1.txt"
                         ) ;
        bool setSusyScanPoint( const char* inputScanFile,
                               double m0, double m12, bool isT1bbbb = false, double t1bbbbXsec=0.,
-                              const char* inputSusy_deff_dbtageff_file = "deff_dbtag_file.txt"
+                              const char* inputSusy_deff_dbtageff_file = "deff_dbtag_file.txt",
+			      const char* systFile1 = "systFile1.txt"
                             ) ;
 
        void mismatchErr(char* label, TString inPar);
