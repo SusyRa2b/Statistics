@@ -1007,7 +1007,7 @@
       	 nread = fscanf( infp, "%s %g", pname, &pval ) ;
 	 int htbin ;
 	 int nmatch = sscanf( pname, "Z_ee_eff_H%d", &htbin ) ;
-	 printf("  trying to find %s  but found %s  ", infp, pname);
+	 printf("  trying to find Z_ee_eff_H%d  but found %s  ", hbi+1, pname);
       	 if ( nmatch == 1 ) {
       	    Z_ee_eff[hbi] = pval ;
       	    printf(" Set Z_ee_eff for hbi=%d to %g\n", hbi, pval ) ;
@@ -1138,9 +1138,14 @@
 
                float exp_0lep_qcd(0.) ;
                if ( inputObservablesArePostTrigger ) {
-                  exp_0lep_qcd =  sf_qcd[mbi][hbi][bbi] * ( N_ldp[mbi][hbi][bbi] / trigeff_0lep[mbi][hbi]
-                      - exp_0lep_ttwj* ttwj_mc_ldpover0lep_ratio[mbi][hbi][bbi]
-                      - exp_0lep_znn *  znn_mc_ldpover0lep_ratio[mbi][hbi][bbi] )
+               // exp_0lep_qcd =  sf_qcd[mbi][hbi][bbi] * ( N_ldp[mbi][hbi][bbi] / trigeff_0lep[mbi][hbi]
+               //     - exp_0lep_ttwj* ttwj_mc_ldpover0lep_ratio[mbi][hbi][bbi]
+               //     - exp_0lep_znn *  znn_mc_ldpover0lep_ratio[mbi][hbi][bbi] )
+               //     * qcdratio ;
+                  exp_0lep_qcd =  sf_qcd[mbi][hbi][bbi] * (
+                  (1./trigeff_0lep[mbi][hbi])*(N_ldp[mbi][hbi][bbi]
+                      - trigeff_1lep[mbi][hbi]*( exp_0lep_ttwj* ttwj_mc_ldpover0lep_ratio[mbi][hbi][bbi]
+                                               + exp_0lep_znn *  znn_mc_ldpover0lep_ratio[mbi][hbi][bbi] ) ) )
                       * qcdratio ;
                } else {
                   exp_0lep_qcd =  sf_qcd[mbi][hbi][bbi] * ( N_ldp[mbi][hbi][bbi]
@@ -1151,7 +1156,8 @@
 
                if ( exp_0lep_qcd < 0. ) { exp_0lep_qcd = 0. ; }
 
-               float exp_0lep = trigeff_0lep[mbi][hbi] * ( exp_0lep_ttwj + exp_0lep_qcd + exp_0lep_znn ) ;
+               /// float exp_0lep = trigeff_0lep[mbi][hbi] * ( exp_0lep_ttwj + exp_0lep_qcd + exp_0lep_znn ) ;
+               float exp_0lep = trigeff_0lep[mbi][hbi] * ( exp_0lep_qcd ) + trigeff_1lep[mbi][hbi] * ( exp_0lep_ttwj + exp_0lep_znn ) ;
 
                if ( useExpected0lep ) {
                   toy_mean_N_0lep[mbi][hbi][bbi] = exp_0lep ;
@@ -1226,7 +1232,7 @@
 
             nGen = (int)ArrayContent[2] ;
 
-            int nBins = nBinsMET*nBinsHT*nBinsBjets*3 ;
+            /// int nBins = nBinsMET*nBinsHT*nBinsBjets*3 ;
 
             float input0lepSusyTotal(0.) ;
 
@@ -1312,9 +1318,12 @@
                printf("  0lep (%d,%d,%d) :  SM = %8.1f,  SUSY = %6.1f\n", i,j,k, toy_mean_N_0lep[i][j][k], susy_0lep[i][j][k] ) ;
                printf("  1lep (%d,%d,%d) :  SM = %8.1f,  SUSY = %6.1f\n", i,j,k, toy_mean_N_1lep[i][j][k], susy_1lep[i][j][k] ) ;
                printf("  ldp  (%d,%d,%d) :  SM = %8.1f,  SUSY = %6.1f\n", i,j,k, toy_mean_N_ldp [i][j][k], susy_ldp [i][j][k] ) ;
-               toy_mean_N_0lep[i][j][k] += susy_0lep[i][j][k]  ;
-               toy_mean_N_1lep[i][j][k] += susy_1lep[i][j][k]  ;
-               toy_mean_N_ldp [i][j][k] += susy_ldp [i][j][k]   ;
+            // toy_mean_N_0lep[i][j][k] += susy_0lep[i][j][k]  ;
+            // toy_mean_N_1lep[i][j][k] += susy_1lep[i][j][k]  ;
+            // toy_mean_N_ldp [i][j][k] += susy_ldp [i][j][k]   ;
+               toy_mean_N_0lep[i][j][k] += trigeff_1lep[i][j] * susy_0lep[i][j][k]  ;
+               toy_mean_N_1lep[i][j][k] += trigeff_1lep[i][j] * susy_1lep[i][j][k]  ;
+               toy_mean_N_ldp [i][j][k] += trigeff_1lep[i][j] * susy_ldp [i][j][k]   ;
                printf("\n") ;
             }
                printf(" ---- \n") ;

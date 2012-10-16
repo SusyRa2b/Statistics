@@ -1668,8 +1668,11 @@
 
              sprintf( NP_name, "sf_qcd_M%d_H%d_%db", i+1, j+1, k+1 ) ;
              ///// rar_sf_qcd[i][j][k] = makeBetaPrimeConstraint( NP_name, sf_qcd[i][j][k], sf_qcd_err[i][j][k] ) ;
-             rar_sf_qcd[i][j][k] = makeGaussianConstraint( NP_name, sf_qcd[i][j][k], sf_qcd_err[i][j][k] ) ;
-
+             if ( ! (blindStudy && blind0lepBin[i][j][k]) ) {
+                rar_sf_qcd[i][j][k] = makeGaussianConstraint( NP_name, sf_qcd[i][j][k], sf_qcd_err[i][j][k] ) ;
+             } else {
+                rar_sf_qcd[i][j][k] = makeGaussianConstraint( NP_name, sf_qcd[i][j][k], 0. ) ;
+             }
 
 
 
@@ -1678,7 +1681,11 @@
 
              sprintf( NP_name, "sf_ttwj_M%d_H%d_%db", i+1, j+1, k+1 ) ;
              ///// rar_sf_ttwj[i][j][k] = makeBetaPrimeConstraint( NP_name, sf_ttwj[i][j][k], sf_ttwj_err[i][j][k] ) ;
-             rar_sf_ttwj[i][j][k] = makeGaussianConstraint( NP_name, sf_ttwj[i][j][k], sf_ttwj_err[i][j][k] ) ;
+             if ( ! (blindStudy && blind0lepBin[i][j][k]) ) {
+                rar_sf_ttwj[i][j][k] = makeGaussianConstraint( NP_name, sf_ttwj[i][j][k], sf_ttwj_err[i][j][k] ) ;
+             } else {
+                rar_sf_ttwj[i][j][k] = makeGaussianConstraint( NP_name, sf_ttwj[i][j][k], 0. ) ;
+             }
 
 
              printf("--------\n") ;
