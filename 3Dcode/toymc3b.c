@@ -590,7 +590,6 @@
           //-- Calculate significance from delta log likelihood, if requested.
 
           if ( doSignif && !blindStudy ) {
-
              double susy_yield = rrv_susy_poi->getVal();
              rrv_susy_poi->setVal(0.) ;
              rrv_susy_poi->setConstant( kTRUE ) ;
@@ -629,58 +628,68 @@
              for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
                 for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
                    for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+		      //skip highest met, lowest ht bin, which is omitted from the analysis
+		      if (mbi==3&&hbi==0) {
+	                 fit_susy_0lep_at0susy_3da[mbi][hbi][bbi] = 0.0;
+	                 fit_ttwj_0lep_at0susy_3da[mbi][hbi][bbi] = 0.0;
+	                 fit_qcd_0lep_at0susy_3da[mbi][hbi][bbi] = 0.0;
+	                 fit_znn_0lep_at0susy_3da[mbi][hbi][bbi] = 0.0;
+	                 fit_sf_ttwj_0lep_at0susy_3da[mbi][hbi][bbi] = 1.0;
+	                 fit_sf_qcd_0lep_at0susy_3da[mbi][hbi][bbi] = 1.0;
+		      } else {
 
-                      char vname[1000] ;
-                      RooAbsReal* rar ;
-                      RooAbsReal* effsf  ;
-                      RooAbsReal* btagsf  ;
-
-
-                      sprintf( vname, "mu_susy_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                      rar = workspace -> function( vname ) ;
-                      if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
-                      sprintf( vname, "btageff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                      btagsf = (RooAbsReal*) workspace -> obj( vname ) ;
-                      if ( btagsf == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ;  }
-                      sprintf( vname, "eff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                      effsf = (RooAbsReal*) workspace -> obj( vname ) ;
-                      if ( effsf == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
-                      double nsusy = ( btagsf -> getVal() ) * ( effsf -> getVal() ) * ( rar -> getVal() ) ;
-
-                      fit_susy_0lep_wsfs += nsusy ;
-
-                      fit_susy_0lep_at0susy_3da[mbi][hbi][bbi] = nsusy ;
-
-                      sprintf( vname, "mu_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                      rar = (RooAbsReal*) workspace -> obj( vname ) ;
-                      if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ;  }
-                      double nttwj = rar -> getVal() ;
-                      fit_ttwj_0lep_at0susy_3da[mbi][hbi][bbi] = nttwj ;
+                         char vname[1000] ;
+                         RooAbsReal* rar ;
+                         RooAbsReal* effsf  ;
+                         RooAbsReal* btagsf  ;
 
 
-                      sprintf( vname, "mu_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                      rar = workspace -> function( vname ) ;
-                      if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ;}
-                      double nqcd = rar -> getVal() ;
-                      fit_qcd_0lep_at0susy_3da[mbi][hbi][bbi] = nqcd ;
+                         sprintf( vname, "mu_susy_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                         rar = workspace -> function( vname ) ;
+                         if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
+                         sprintf( vname, "btageff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                         btagsf = (RooAbsReal*) workspace -> obj( vname ) ;
+                         if ( btagsf == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ;  }
+                         sprintf( vname, "eff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                         effsf = (RooAbsReal*) workspace -> obj( vname ) ;
+                         if ( effsf == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
+                         double nsusy = ( btagsf -> getVal() ) * ( effsf -> getVal() ) * ( rar -> getVal() ) ;
 
-                      sprintf( vname, "mu_znn_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                      rar = (RooAbsReal*) workspace -> obj( vname ) ;
-                      if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
-                      double nznn = rar -> getVal() ;
-                      fit_znn_0lep_at0susy_3da[mbi][hbi][bbi] = nznn ;
+                         fit_susy_0lep_wsfs += nsusy ;
 
-                      sprintf( vname, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                      rar = (RooAbsReal*) workspace -> obj( vname ) ;
-                      if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ;  }
-                      fit_sf_ttwj_0lep_at0susy_3da[mbi][hbi][bbi] = rar -> getVal() ;
+                         fit_susy_0lep_at0susy_3da[mbi][hbi][bbi] = nsusy ;
 
-                      sprintf( vname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                      rar = (RooAbsReal*) workspace -> obj( vname ) ;
-                      if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
-                      fit_sf_qcd_0lep_at0susy_3da[mbi][hbi][bbi] = rar -> getVal() ;               
+                         sprintf( vname, "mu_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                         rar = (RooAbsReal*) workspace -> obj( vname ) ;
+                         if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ;  }
+                         double nttwj = rar -> getVal() ;
+                         fit_ttwj_0lep_at0susy_3da[mbi][hbi][bbi] = nttwj ;
 
-                   }
+
+                         sprintf( vname, "mu_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                         rar = workspace -> function( vname ) ;
+                         if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ;}
+                         double nqcd = rar -> getVal() ;
+                         fit_qcd_0lep_at0susy_3da[mbi][hbi][bbi] = nqcd ;
+
+                         sprintf( vname, "mu_znn_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                         rar = (RooAbsReal*) workspace -> obj( vname ) ;
+                         if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
+                         double nznn = rar -> getVal() ;
+                         fit_znn_0lep_at0susy_3da[mbi][hbi][bbi] = nznn ;
+
+                         sprintf( vname, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                         rar = (RooAbsReal*) workspace -> obj( vname ) ;
+                         if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ;  }
+                         fit_sf_ttwj_0lep_at0susy_3da[mbi][hbi][bbi] = rar -> getVal() ;
+
+                         sprintf( vname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                         rar = (RooAbsReal*) workspace -> obj( vname ) ;
+                         if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
+                         fit_sf_qcd_0lep_at0susy_3da[mbi][hbi][bbi] = rar -> getVal() ; 	      
+
+                      }
+		   }
                 }
              }
 
@@ -2381,59 +2390,67 @@
 
       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
          for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-            for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+	    for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+               if (mbi==3 && hbi==0) {
+	          fit_susy_0lep_atUL_3da[mbi][hbi][bbi] = 0.0;
+	          fit_ttwj_0lep_atUL_3da[mbi][hbi][bbi] = 0.0;
+	          fit_qcd_0lep_atUL_3da[mbi][hbi][bbi] = 0.0;
+	          fit_znn_0lep_atUL_3da[mbi][hbi][bbi] = 0.0;
+	          fit_sf_ttwj_0lep_atUL_3da[mbi][hbi][bbi] = 1.0;
+	          fit_sf_qcd_0lep_atUL_3da[mbi][hbi][bbi] = 1.0;
+	       } else {
 
-               char vname[1000] ;
-               RooAbsReal* rar ;
-               RooAbsReal* effsf  ;
-               RooAbsReal* btagsf  ;
-
-
-               sprintf( vname, "mu_susy_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-               rar = workspace -> function( vname ) ;
-               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
-               sprintf( vname, "btageff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-               btagsf = (RooAbsReal*) workspace -> obj( vname ) ;
-               if ( btagsf == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
-               sprintf( vname, "eff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-               effsf = (RooAbsReal*) workspace -> obj( vname ) ;
-               if ( effsf == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
-               double nsusy = ( btagsf -> getVal() ) * ( effsf -> getVal() ) * ( rar -> getVal() ) ;
-
-               fit_susy_0lep_wsfs += nsusy ;
-
-               fit_susy_0lep_atUL_3da[mbi][hbi][bbi] = nsusy ;
-
-               sprintf( vname, "mu_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-               rar = (RooAbsReal*) workspace -> obj( vname ) ;
-               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
-               double nttwj = rar -> getVal() ;
-               fit_ttwj_0lep_atUL_3da[mbi][hbi][bbi] = nttwj ;
+                  char vname[1000] ;
+                  RooAbsReal* rar ;
+                  RooAbsReal* effsf  ;
+                  RooAbsReal* btagsf  ;
 
 
-               sprintf( vname, "mu_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-               rar = workspace -> function( vname ) ;
-               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
-               double nqcd = rar -> getVal() ;
-               fit_qcd_0lep_atUL_3da[mbi][hbi][bbi] = nqcd ;
+                  sprintf( vname, "mu_susy_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                  rar = workspace -> function( vname ) ;
+                  if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
+                  sprintf( vname, "btageff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                  btagsf = (RooAbsReal*) workspace -> obj( vname ) ;
+                  if ( btagsf == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
+                  sprintf( vname, "eff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                  effsf = (RooAbsReal*) workspace -> obj( vname ) ;
+                  if ( effsf == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
+                  double nsusy = ( btagsf -> getVal() ) * ( effsf -> getVal() ) * ( rar -> getVal() ) ;
 
-               sprintf( vname, "mu_znn_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-               rar = (RooAbsReal*) workspace -> obj( vname ) ;
-               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
-               double nznn = rar -> getVal() ;
-               fit_znn_0lep_atUL_3da[mbi][hbi][bbi] = nznn ;
+                  fit_susy_0lep_wsfs += nsusy ;
 
-               sprintf( vname, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-               rar = (RooAbsReal*) workspace -> obj( vname ) ;
-               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ;  }
-               fit_sf_ttwj_0lep_atUL_3da[mbi][hbi][bbi] = rar -> getVal() ;
+                  fit_susy_0lep_atUL_3da[mbi][hbi][bbi] = nsusy ;
 
-               sprintf( vname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-               rar = (RooAbsReal*) workspace -> obj( vname ) ;
-               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
-               fit_sf_qcd_0lep_atUL_3da[mbi][hbi][bbi] = rar -> getVal() ;
+                  sprintf( vname, "mu_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                  rar = (RooAbsReal*) workspace -> obj( vname ) ;
+                  if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
+                  double nttwj = rar -> getVal() ;
+                  fit_ttwj_0lep_atUL_3da[mbi][hbi][bbi] = nttwj ;
 
 
+                  sprintf( vname, "mu_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                  rar = workspace -> function( vname ) ;
+                  if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
+                  double nqcd = rar -> getVal() ;
+                  fit_qcd_0lep_atUL_3da[mbi][hbi][bbi] = nqcd ;
+
+                  sprintf( vname, "mu_znn_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                  rar = (RooAbsReal*) workspace -> obj( vname ) ;
+                  if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
+                  double nznn = rar -> getVal() ;
+                  fit_znn_0lep_atUL_3da[mbi][hbi][bbi] = nznn ;
+
+                  sprintf( vname, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                  rar = (RooAbsReal*) workspace -> obj( vname ) ;
+                  if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ;  }
+                  fit_sf_ttwj_0lep_atUL_3da[mbi][hbi][bbi] = rar -> getVal() ;
+
+                  sprintf( vname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                  rar = (RooAbsReal*) workspace -> obj( vname ) ;
+                  if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
+                  fit_sf_qcd_0lep_atUL_3da[mbi][hbi][bbi] = rar -> getVal() ;
+
+               }
             }
          }
       }

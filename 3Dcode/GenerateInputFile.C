@@ -103,7 +103,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 //include Z->ll in VV contribution
   TChain chainVV("tree");
-  ///////// chainVV.Add("filesHCP_53_v3_QCDweights/WW.root"); //////// missing (Oct 14)
+  chainVV.Add("filesHCP_53_v3_QCDweights/WW.root"); 
   chainVV.Add("filesHCP_53_v3_QCDweights/WZ.root");
   chainVV.Add("filesHCP_53_v3_QCDweights/ZZ.root");
   chainVV.Add("filesHCP_53_v3_QCDweights/DY-200to400.root");
