@@ -11,7 +11,7 @@
   \begin{document}
 
 
-   Thu Oct 11 12:49:35 PDT 2012 \\
+   Fri Oct 12 17:53:40 PDT 2012 \\
 
    Datasets and selections
    \begin{itemize}
@@ -30,8 +30,11 @@
    \begin{itemize}
      \item The following MC samples are missing: WW, WZ, ZZ (diboson); Tbar-t, Tbar-tW (part of singlet).
      \item Data events failing laser-calibration-problem filter have been removed.
-     \item {\bf Trigger corrections are still for cfA v65.  They need to be redone in cfA v66. }
      \item MC has been corrected for trigger efficiency, {\it except} where noted otherwise.
+     \item {\bf The trigger efficiency corrections are now divided by real-MET vs fake-MET
+             instead of 1-lepton vs 0-leptons.  The fake-MET corrections have been
+             measured in cfA 66.  The real-MET corrections (from single lepton datasets)
+             are still from cfA 65. }
      \item Trigger efficiency corrections are in likelihood MET,HT bins.
      \item Trigger efficiency corrections are not run dependent.
      \item {\bf I have inserted these fudge factors: ttwj x 0.90 and QCD x 1.80.  Numbers have been tweaked for cfA v66.}
@@ -41,7 +44,8 @@
 
   Comments on recent additions
   \begin{itemize}
-    \item Anomaly from laser calibration has gone away, as expected.
+    \item The trigger efficiency corrected Data/MC comparisons look a bit better in this
+          new scheme, where we divide the trigger efficiency by real-MET and fake-MET.
    \end{itemize}
 
 
@@ -56,6 +60,12 @@
   \section{Trigger efficiencies in likelihood bins}
 
 
+    \noindent
+    Updated to be separate for fake-MET (QCD) and real-MET (non-QCD) samples.
+    The real-MET efficiency is measured in the single-mu sample and is currently
+    from cfA v65.  The fake-MET efficiency is measured in cfA v66 from the
+    PFHT350 trigger sample for events with no leptons and minDeltaPhiN$<$4.
+
      \begin{table}[hb]
        \begin{tabular}{|l|c|c|c|c|}
            \multicolumn{5}{ c }{ \large \bf Single Mu } \\
@@ -63,9 +73,9 @@
           & HT1  &  HT2  &  HT3  &  HT4  \\
           & [400,500] & [500,800] &  [800,100]  &  $>1000$ \\
          \hline\hline
-    MET1 [125,150] & 0.962 & 0.950 & 0.886 & 0.842 \\
+    MET1 [125,150] & 0.962 & 0.964 & 0.943 & 0.947 \\
       \hline
-    MET2 [150,150] & 0.995 & 0.991 & 0.991 & 0.963 \\
+    MET2 [150,150] & 0.995 & 0.994 & 1.000 & 0.929 \\
       \hline
     MET3 [250,350] & 1.000 & 0.997 & 1.000 & 1.000 \\
       \hline
@@ -76,25 +86,6 @@
 
     %%--------
 
-     \begin{table}[hb]
-       \begin{tabular}{|l|c|c|c|c|}
-           \multicolumn{5}{ c }{ \large \bf Single e } \\
-         \hline
-          & HT1  &  HT2  &  HT3  &  HT4  \\
-          & [400,500] & [500,800] &  [800,100]  &  $>1000$ \\
-         \hline\hline
-    MET1 [125,150] & 0.792 & 0.748 & 0.794 & 0.733 \\
-      \hline
-    MET2 [150,150] & 0.964 & 0.953 & 0.964 & 0.907 \\
-      \hline
-    MET3 [250,350] & 1.000 & 0.996 & 0.976 & 1.000 \\
-      \hline
-    MET4 $>350$    & 1.000 & 1.000 & 1.000 & 1.000 \\
-         \hline\hline
-       \end{tabular}
-     \end{table}
-
-    %%--------
 
      \begin{table}[hb]
        \begin{tabular}{|l|c|c|c|c|}
@@ -103,18 +94,29 @@
           & HT1  &  HT2  &  HT3  &  HT4  \\
           & [400,500] & [500,800] &  [800,100]  &  $>1000$ \\
          \hline\hline
-    MET1 [125,150] & $0.696\pm 0.10$ & $0.750\pm 0.10$ & $0.492\pm 0.01$ & $0.483\pm0.01$ \\
+    MET1 [125,150] & $0.571\pm 0.06$ & $0.614\pm 0.05$ & $0.958\pm 0.06$ & $1.000\pm0.05$ \\
       \hline                                              
-    MET2 [150,150] & $0.895\pm 0.08$ & $0.864\pm 0.08$ & $0.751\pm 0.01$ & $0.667\pm 0.01$ \\
+    MET2 [150,150] & $0.650\pm 0.10$ & $0.754\pm 0.06$ & $1.000$ & $1.000$ \\
       \hline                                              
-    MET3 [250,350] & $1.000\pm 0.32$ & $1.000\pm 0.32$ & $0.936\pm 0.01$ & $0.867\pm 0.02$ \\
+    MET3 [250,350] & $1.000$ & $1.000$ & $1.000$ & $1.000$ \\
       \hline                                              
-    MET4 $>350$    & $1.000\pm 0.32$ & $1.000\pm 0.25$ & $0.992\pm 0.01$ & $0.980\pm 0.02$ \\
+    MET4 $>350$    & $1.000$ & $1.000$ & $1.000$ & $1.000$ \\
          \hline\hline
        \end{tabular}
      \end{table}
 
-
+    \begin{figure}
+     \begin{center}
+     \includegraphics[width=0.8\linewidth]{outputfiles/trig-eff-combined.pdf}
+     \caption{Fake-MET trigger efficiency.  The left column is selected
+          events (top and middle) and efficiency (bottom) vs MET for
+          all events with HT$>$400.
+          The plots on the right are in the likelihood MET,HT bins.
+          The light and dark distributions are for all events and
+          all events passing the trigger requirements, respectively.
+          }
+     \end{center}
+    \end{figure}
 
 
 

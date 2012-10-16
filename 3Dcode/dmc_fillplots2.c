@@ -52,34 +52,34 @@
        sprintf( compname[compind], "data" ) ;
        if ( strcmp(dataset_string, "all" ) == 0 ) {
           printf("\n\n Loading all data.\n\n") ;
-          compchain[compind] -> Add( "filesHCP_53_v3/MET_2012A_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/MET_2012B_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/MET_2012C_pr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/MET_2012C_rr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/HT_2012A_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/HTMHT_2012B_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/HTMHT_2012C_pr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/HTMHT_2012C_rr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/JetHT_2012B_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/JetHT_2012C_pr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/JetHT_2012C_rr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012A_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012B_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012C_pr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012C_rr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/HT_2012A_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/HTMHT_2012B_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/HTMHT_2012C_pr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/HTMHT_2012C_rr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/JetHT_2012B_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/JetHT_2012C_pr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/JetHT_2012C_rr_BLIND.root" ) ;
           complumi[compind] = 12.03 ;
        } else if ( strcmp(dataset_string, "RunsAB" ) == 0 ) {
           printf("\n\n Loading runs A and B.\n\n") ;
-          compchain[compind] -> Add( "filesHCP_53_v3/MET_2012A_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/MET_2012B_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/HT_2012A_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/HTMHT_2012B_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/JetHT_2012B_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012A_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012B_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/HT_2012A_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/HTMHT_2012B_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/JetHT_2012B_BLIND.root" ) ;
           complumi[compind] = 5.23 ;
        } else if ( strcmp(dataset_string, "RunC" ) == 0 ) {
           printf("\n\n Loading run C.\n\n") ;
-          compchain[compind] -> Add( "filesHCP_53_v3/MET_2012C_pr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/MET_2012C_rr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/HTMHT_2012C_pr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/HTMHT_2012C_rr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/JetHT_2012C_pr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v3/JetHT_2012C_rr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012C_pr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012C_rr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/HTMHT_2012C_pr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/HTMHT_2012C_rr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/JetHT_2012C_pr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/JetHT_2012C_rr_BLIND.root" ) ;
           complumi[compind] = 6.81 ;
        } else {
           printf("\n\n *** Unknown dataset: %s\n\n", dataset_string ) ;
@@ -95,9 +95,9 @@
     //-- Diboson.
        compind = 1 ;
        sprintf( compname[compind], "diboson" ) ;
- ////  compchain[compind] -> Add( "filesHCP_53_v3/WW.root" ) ;
- ////  compchain[compind] -> Add( "filesHCP_53_v3/WZ.root" ) ;
- ////  compchain[compind] -> Add( "filesHCP_53_v3/ZZ.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/WW.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/WZ.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/ZZ.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 800+7 ; // kOrange = 800
        compscale[compind] = complumi[0] / complumi[compind] ;
@@ -109,9 +109,9 @@
     //-- Zinvisible
        compind = 2 ;
        sprintf( compname[compind], "znn" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/Zinv-100to200.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/Zinv-200to400.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/Zinv-400.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/Zinv-100to200.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/Zinv-200to400.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/Zinv-400.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 416-3 ; // kGreen = 416
        compscale[compind] = complumi[0] / complumi[compind] ;
@@ -122,15 +122,15 @@
     //-- QCD
        compind = 3 ;
        sprintf( compname[compind], "qcd" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/QCD-120to170.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/QCD-170to300.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/QCD-300to470.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/QCD-470to600.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/QCD-600to800.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/QCD-800to1000.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/QCD-1000to1400.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/QCD-1400to1800.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/QCD-1800.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/QCD-120to170.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/QCD-170to300.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/QCD-300to470.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/QCD-470to600.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/QCD-600to800.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/QCD-800to1000.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/QCD-1000to1400.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/QCD-1400to1800.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/QCD-1800.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 2 ;
        compscale[compind] = complumi[0] / complumi[compind] ;
@@ -141,12 +141,12 @@
     //-- single top
        compind = 4 ;
        sprintf( compname[compind], "singlet" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/T-t.root" ) ;
- ////  compchain[compind] -> Add( "filesHCP_53_v3/Tbar-t.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/T-s.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/Tbar-s.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/T-tW.root" ) ;
- ////  compchain[compind] -> Add( "filesHCP_53_v3/Tbar-tW.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/T-t.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/Tbar-t.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/T-s.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/Tbar-s.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/T-tW.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/Tbar-tW.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 600-9 ; // kBlue = 600
        compscale[compind] = complumi[0] / complumi[compind] ;
@@ -156,9 +156,9 @@
     //-- W+jets
        compind = 5 ;
        sprintf( compname[compind], "wjets" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/WJets-250to300.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/WJets-300to400.root" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/WJets-400.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/WJets-250to300.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/WJets-300to400.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/WJets-400.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 600-4 ; // kBlue = 600
        compscale[compind] = complumi[0] / complumi[compind] ;
@@ -168,7 +168,7 @@
     //-- ttbar
        compind = 6 ;
        sprintf( compname[compind], "ttbar" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v3/TT.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/TT.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 600-7 ; // kBlue = 600
        compscale[compind] = complumi[0] / complumi[compind] ;
@@ -179,43 +179,52 @@
     //--- cuts
 
        char basecuts_1lep[10000] ;
-       sprintf( basecuts_1lep, "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep, "pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+
+       char basecuts_1lep_nometratiocut[10000] ;
+       sprintf( basecuts_1lep_nometratiocut, "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_1lep_nomindphin[10000] ;
-       sprintf( basecuts_1lep_nomindphin, "( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nomindphin, "pfOcaloMET<2&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_1lep_nonb[10000] ;
-       sprintf( basecuts_1lep_nonb, "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nonb, "pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_1lep_nonjet[10000] ;
-       sprintf( basecuts_1lep_nonjet, "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nonjet, "pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_1lep_nonjet_nonb[10000] ;
        sprintf( basecuts_1lep_nonjet_nonb, "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_ldp[10000] ;
-       sprintf( basecuts_ldp, "minDelPhiN<=4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_ldp, "pfOcaloMET<2&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+
+       char basecuts_ldp_nometratiocut[10000] ;
+       sprintf( basecuts_ldp_nometratiocut, "minDelPhiN<=4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_ldp_nonb[10000] ;
-       sprintf( basecuts_ldp_nonb, "minDelPhiN<=4&&(nMu==0&&nEl==0)&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_ldp_nonb, "pfOcaloMET<2&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_ldp_nonjet[10000] ;
-       sprintf( basecuts_ldp_nonjet, "minDelPhiN<=4&&(nMu==0&&nEl==0)&&nB>0&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_ldp_nonjet, "pfOcaloMET<2&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nB>0&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_ldp_nonjet_nonb[10000] ;
        sprintf( basecuts_ldp_nonjet_nonb, "minDelPhiN<=4&&(nMu==0&&nEl==0)&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_0lep_nomindphin[10000] ;
-       sprintf( basecuts_0lep_nomindphin, "(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_0lep_nomindphin, "pfOcaloMET<2&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_0lep_nomindphin_nonb[10000] ;
-       sprintf( basecuts_0lep_nomindphin_nonb, "(nMu==0&&nEl==0)&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_0lep_nomindphin_nonb, "pfOcaloMET<2&&(nMu==0&&nEl==0)&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_0lep[10000] ;
-       sprintf( basecuts_0lep, "minDelPhiN>4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_0lep, "pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+
+       char basecuts_0lep_nometratiocut[10000] ;
+       sprintf( basecuts_0lep_nometratiocut, "minDelPhiN>4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_0lep_nonb[10000] ;
-       sprintf( basecuts_0lep_nonb, "minDelPhiN>4&&(nMu==0&&nEl==0)&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_0lep_nonb, "pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
 
 
@@ -985,6 +994,30 @@
        bookSet( "h_mindphin_1lep_ht4_nb1", htitle, 30, 0., 30. ) ;
 
 
+      //--- met ratio
+
+       sprintf( htitle, "pfMET/caloMET, LDP, %s", dataset_string ) ;
+       bookSet( "h_pfOcaloMET_ldp", htitle, 30, 0., 3. ) ;
+       bookSet( "h_pfOcaloMET_ldp_wide", htitle, 30, 0., 30. ) ;
+
+       sprintf( htitle, "pfMET/caloMET, SL, %s", dataset_string ) ;
+       bookSet( "h_pfOcaloMET_sl", htitle, 30, 0., 3. ) ;
+       bookSet( "h_pfOcaloMET_sl_wide", htitle, 30, 0., 30. ) ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
      //--- Fill the histograms. -----------------------------------------------
@@ -1570,7 +1603,15 @@
  //    fillSet( "h_mindphin_1lep_ht4_nb1", "minDelPhiN", cuts ) ;
 
 
+     //--- met ratio
 
+       sprintf( cuts, "%s", basecuts_ldp_nometratiocut ) ;
+       fillSet( "h_pfOcaloMET_ldp", "pfOcaloMET", cuts ) ;
+       fillSet( "h_pfOcaloMET_ldp_wide", "pfOcaloMET", cuts ) ;
+
+       sprintf( cuts, "%s", basecuts_1lep_nometratiocut ) ;
+       fillSet( "h_pfOcaloMET_sl", "pfOcaloMET", cuts ) ;
+       fillSet( "h_pfOcaloMET_sl_wide", "pfOcaloMET", cuts ) ;
 
 
 
