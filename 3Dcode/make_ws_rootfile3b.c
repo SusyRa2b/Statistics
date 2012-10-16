@@ -7,7 +7,8 @@
                            const char* input_deffdbtagfile = "datfiles/dummy_DeffDbtag-met3-ht3.dat",
                            int qcdModelIndex = 3,
                            const char* wsrootfilename = "ws3b.root",
-                           const char* blindBinsList = "null"
+                           const char* blindBinsList = "null",
+			   const char* systfilename = "datfiles/sigsystematics.T1bbbb.JES.txt"
                          ) {
 
        gROOT->LoadMacro("RooRatio.cxx+") ;
@@ -17,17 +18,7 @@
 
        ra2bRoostatsClass3D_3b ra2b ;
 
-       ra2b.initialize( input_datfile,
-                        input_susyfile,
-                        mgl,
-                        mlsp,
-                        false,
-                        0.,
-                        input_deffdbtagfile,
-                        qcdModelIndex,
-                        wsrootfilename,
-                        blindBinsList,
-                        "null" ) ;
+       ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, qcdModelIndex, wsrootfilename, blindBinsList, systfilename ) ;
 
 
    }

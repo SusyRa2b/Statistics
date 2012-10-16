@@ -249,7 +249,8 @@
                 bool input_doSignif = false,
                 bool input_doUL = false,
                 const char* input_blindBinsList = "null",
-                bool input_inputObservablesArePostTrigger = true
+                bool input_inputObservablesArePostTrigger = true,
+		const char* systfilename = "systFile1.txt"
                         ) {
 
        char command[10000] ;
@@ -315,8 +316,7 @@
 
        char wsfilename[10000] ;
        sprintf( wsfilename, "%s/ws.root", outputDir ) ;
-       ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, qcdModelIndex, wsfilename, blindBinsList ) ;
-
+       ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, qcdModelIndex, wsfilename, blindBinsList, systfilename ) ;
        TFile wsfile( wsfilename ) ;
        workspace = (RooWorkspace*) wsfile.Get("ws") ;
        if ( workspace == 0x0 ) {
@@ -757,10 +757,10 @@
       float acc_Zee      [nBinsMET] ;
       float acc_Zmm      [nBinsMET] ;
 
-      float Z_ee_eff(0.) ;
-      float Z_mm_eff(0.) ;
+      float Z_ee_eff     [nBinsHT];
+      float Z_mm_eff     [nBinsHT];
 
-      float knn[nBinsBjets] ;
+      float knn[nBinsMET][nBinsBjets] ;
 
       float Z_ee_pur(0.) ;
       float Z_mm_pur(0.) ;
@@ -1002,46 +1002,73 @@
          nread = fscanf( infp, "%s %g", pname, &pval ) ;
       } // mbi
 
-
       //--- Z_ee_eff
-      nread = fscanf( infp, "%s %g", pname, &pval ) ;
-      if ( strcmp( pname, "Z_ee_eff" ) == 0 ) {
-         Z_ee_eff = pval ;
-         printf(" Set Z_ee_eff to %g\n", pval ) ;
-      } else {
-         printf("\n\n *** bad input line.\n\n") ; return false ;
+      for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      	 nread = fscanf( infp, "%s %g", pname, &pval ) ;
+	 int htbin ;
+	 int nmatch = sscanf( pname, "Z_ee_eff_H%d", &htbin ) ;
+	 printf("  trying to find %s  but found %s  ", infp, pname);
+      	 if ( nmatch == 1 ) {
+      	    Z_ee_eff[hbi] = pval ;
+      	    printf(" Set Z_ee_eff for hbi=%d to %g\n", hbi, pval ) ;
+      	 } else {
+	    printf("\n\n *** bad input line.\n\n") ; 
+	    printf("  bad line is %d  %g", hbi, pval);
+	    return false ;
+      	 }
+      	 nread = fscanf( infp, "%s %g", pname, &pval ) ;
       }
-      nread = fscanf( infp, "%s %g", pname, &pval ) ;
-
 
       //--- Z_mm_eff
-      nread = fscanf( infp, "%s %g", pname, &pval ) ;
-      if ( strcmp( pname, "Z_mm_eff" ) == 0 ) {
-         Z_mm_eff = pval ;
-         printf(" Set Z_mm_eff to %g\n", pval ) ;
-      } else {
-         printf("\n\n *** bad input line.\n\n") ; return false ;
+      for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      	 nread = fscanf( infp, "%s %g", pname, &pval ) ;
+	 int htbin ;
+	 int nmatch = sscanf( pname, "Z_mm_eff_H%d", &htbin ) ;
+      	 if ( nmatch == 1 ) {
+      	    Z_mm_eff[hbi] = pval ;
+      	    printf(" Set Z_mm_eff for hbi=%d to %g\n", hbi, pval ) ;
+      	 } else {
+      	    printf("\n\n *** bad input line.\n\n") ; return false ;
+      	 }
+      	 nread = fscanf( infp, "%s %g", pname, &pval ) ;
       }
-      nread = fscanf( infp, "%s %g", pname, &pval ) ;
-
 
       //--- knn
       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-         nread = fscanf( infp, "%s %g", pname, &pval ) ;
-         int nbbin ;
-         int nmatch = sscanf( pname, "knn_%db", &nbbin ) ;
-         if ( nmatch == 1 ) {
-            if ( nbbin == bbi+1 ) {
-               knn[bbi] = pval ;
-               printf(" Set knn for bbi=%d to %g\n", bbi, pval ) ;
+         if (bbi==0) {
+	    for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+	       nread = fscanf( infp, "%s %g", pname, &pval ) ;
+               int nbbin ;
+               int metbin ;
+               int nmatch = sscanf( pname, "knn_%db_M%d", &nbbin, &metbin ) ;
+               if ( nmatch == 1 ) {
+	           if ( nbbin == bbi+1 ) {
+                      knn[mbi][bbi] = pval ;
+                      printf(" Set knn for bbi=%d and mbi=%d to %g\n", bbi, mbi, pval ) ;
+                   } else {
+                      printf("\n\n *** bad input line.\n\n") ; return false ;
+                   }
+               }
+               nread = fscanf( infp, "%s %g", pname, &pval ) ;  
+	    }
+	 } else {
+	    nread = fscanf( infp, "%s %g", pname, &pval ) ;
+            int nbbin ;
+            int nmatch = sscanf( pname, "knn_%db", &nbbin ) ;
+            if ( nmatch == 1 ) {
+               if ( nbbin == bbi+1 ) {
+           	  knn[0][bbi] = pval ;
+           	  printf(" Set knn for bbi=%d to %g\n", bbi, pval ) ;
+               } else {
+           	  printf("\n\n *** bad input line.\n\n") ; return false ;
+               }
             } else {
                printf("\n\n *** bad input line.\n\n") ; return false ;
             }
-         } else {
-            printf("\n\n *** bad input line.\n\n") ; return false ;
-         }
-         nread = fscanf( infp, "%s %g", pname, &pval ) ;
+            nread = fscanf( infp, "%s %g", pname, &pval ) ;
+	 }
       } // bbi.
+
 
 
       //--- Z_ee_pur
@@ -1065,6 +1092,7 @@
       }
       nread = fscanf( infp, "%s %g", pname, &pval ) ;
 
+
       fclose(infp) ;
 
 
@@ -1078,8 +1106,8 @@
       float Zmm_factor[nBinsBjets] ;
 
       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-         Zee_factor[bbi] = ( 5.94 * Z_ee_pur * knn[bbi] ) / ( acc_Zee[0] * Z_ee_eff ) ; // ignoring MET dependence of acceptance.
-         Zmm_factor[bbi] = ( 5.94 * Z_mm_pur * knn[bbi] ) / ( acc_Zmm[0] * Z_mm_eff ) ; // ignoring MET dependence of acceptance.
+         Zee_factor[bbi] = ( 5.94 * Z_ee_pur * knn[0][bbi] ) / ( acc_Zee[0] * Z_ee_eff[0] ) ; // ignoring MET dependence of acceptance, knn and HT dependence of eff
+         Zmm_factor[bbi] = ( 5.94 * Z_mm_pur * knn[0][bbi] ) / ( acc_Zmm[0] * Z_mm_eff[0] ) ; // ignoring MET dependence of acceptance, knn and HT dependence of eff
          printf("  nB=%d Zll scale factors:  ee=%g, mm=%g\n", bbi, Zee_factor[bbi], Zmm_factor[bbi] ) ;
       } // bbi.
 
@@ -1184,7 +1212,7 @@
 
             int nGen ;
 
-            int ArraySize = 3 + 9*(nBinsMET*nBinsHT*nBinsBjets) ;
+            int ArraySize = 3 + 4*(nBinsMET*nBinsHT*nBinsBjets) ;
             double ArrayContent[ArraySize] ;
 
             for (int i = 0; i < ArraySize; ++ i) {
@@ -1206,19 +1234,36 @@
               for (int j = 0 ; j < nBinsHT ; j++) {
                 for (int k = 0 ; k < nBinsBjets ; k++) {
 
-                  float n_0l_raw  = ArrayContent[3 + i*(nBinsHT*nBinsBjets*3) + j*(nBinsBjets*3) + k*3] ;
-                  float n_1l_raw  = ArrayContent[4 + i*(nBinsHT*nBinsBjets*3) + j*(nBinsBjets*3) + k*3] ;
-                  float n_ldp_raw = ArrayContent[5 + i*(nBinsHT*nBinsBjets*3) + j*(nBinsBjets*3) + k*3] ;
 
-                  float n_0l_correction  = ArrayContent[3 + nBins + i*(nBinsHT*nBinsBjets*3) + j*(nBinsBjets*3) + k*3] ;
-                  float n_1l_correction  = ArrayContent[4 + nBins + i*(nBinsHT*nBinsBjets*3) + j*(nBinsBjets*3) + k*3] ;
-                  float n_ldp_correction = ArrayContent[5 + nBins + i*(nBinsHT*nBinsBjets*3) + j*(nBinsBjets*3) + k*3] ;
+                  float n_0l_raw  =  ArrayContent[3 + i*(nBinsHT*nBinsBjets) + j*(nBinsBjets) + k] ;
+                  float n_1l_raw  =  0. ;   // for now we are using only T1bbbb and we assume no contamination in the SL sample
+                  float n_ldp_raw =  ArrayContent[3 + (nBinsMET*nBinsHT*nBinsBjets) + i*(nBinsHT*nBinsBjets) + j*(nBinsBjets) + k] ;
+
+                  float n_0l_correction  =  1. ;
+                  float n_1l_correction  =  1. ;
+                  float n_ldp_correction =  1. ;
 
                   susy_0lep[i][j][k] = n_0l_raw * n_0l_correction ;
                   susy_1lep[i][j][k] = n_1l_raw * n_1l_correction ;
                   susy_ldp[i][j][k]  = n_ldp_raw * n_ldp_correction ;
 
                   input0lepSusyTotal += n_0l_raw * n_0l_correction ;
+
+                  /* here's how to read in the errors, but not sure what to do with them yet
+		  n_0l_error[i][j][k]  = ArrayContent[3 + 2*(nBinsMET*nBinsHT*nBinsBtag) + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
+		  n_1l_error[i][j][k]  = 0.1 ;  // dummy tiny value
+		  n_ldp_error[i][j][k] = ArrayContent[3 + 3*(nBinsMET*nBinsHT*nBinsBtag) + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
+	    
+		  if ( n_0l_raw[i][j][k] > 0.00001 ) {
+		    n_0l_error[i][j][k] = 100 * n_0l_error[i][j][k] / n_0l_raw[i][j][k] ;
+		  }
+		  else n_0l_error[i][j][k] = 0.1 ;
+	    
+		  if ( n_ldp_raw[i][j][k] > 0.00001 ) {
+		    n_ldp_error[i][j][k] = 100 * n_ldp_error[i][j][k] / n_ldp_raw[i][j][k] ;
+		  }
+		  else n_ldp_error[i][j][k] = 0.1 ;
+                  */
 
                 }
               }
@@ -1814,7 +1859,7 @@
       sprintf( npname, "sf_ll" ) ;
       fit_chi2_np += getChi2GausNP( npname ) ;
 
-      sprintf( npname, "knn_1b" ) ;
+      sprintf( npname, "knn_1b" ) ; //now split by met
       fit_chi2_np += getChi2GausNP( npname ) ;
 
       sprintf( npname, "knn_2b" ) ;
