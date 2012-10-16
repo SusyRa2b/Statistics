@@ -1041,13 +1041,18 @@
                int nbbin ;
                int metbin ;
                int nmatch = sscanf( pname, "knn_%db_M%d", &nbbin, &metbin ) ;
-               if ( nmatch == 1 ) {
+               if ( nmatch == 2 ) {
 	           if ( nbbin == bbi+1 ) {
                       knn[mbi][bbi] = pval ;
                       printf(" Set knn for bbi=%d and mbi=%d to %g\n", bbi, mbi, pval ) ;
                    } else {
-                      printf("\n\n *** bad input line.\n\n") ; return false ;
+                      printf(" Expecting nB=%d but found %d.  Label is %s, val is %g, nmatch=%d\n",
+                           bbi+1, nbbin, pname, pval, nmatch ) ;
+                      return false ;
                    }
+               } else {
+                  printf("\n\n *** bad input line.  Label = %s, val = %g\n\n", pname, pval) ;
+                  return false ;
                }
                nread = fscanf( infp, "%s %g", pname, &pval ) ;  
 	    }
