@@ -74,6 +74,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-1000to1400.root");
   chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-1400to1800.root");
   chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-1800.root");
+  double kfactor_qcd = 1.8 ;
+  printf("\n\n Rescaling QCD by %5.3f\n\n", kfactor_qcd ) ;
 
   TChain chainZnn("tree") ;
   chainZnn.Add("filesHCP_53_v3_QCDweights/Zinv-100to200.root") ;
@@ -83,6 +85,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   TChain chainTT("tree") ;
   chainTT.Add("filesHCP_53_v3_QCDweights/TT.root") ;
   //chainTT.Add("filesHCP_53_v3_QCDweights/TT-powheg.root");
+  double kfactor_tt = 0.90 ;
+  printf("\n\n Rescaling ttbar by %5.3f\n\n", kfactor_tt ) ;
 
   TChain chainWJets("tree") ;
   chainWJets.Add("filesHCP_53_v3_QCDweights/WJets-250to300.root") ;
@@ -94,6 +98,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   chainWJets.Add("filesHCP_53_v3_QCDweights/Tbar-s.root") ;
   chainWJets.Add("filesHCP_53_v3_QCDweights/Tbar-t.root") ;
   chainWJets.Add("filesHCP_53_v3_QCDweights/Tbar-tW.root") ;
+  double kfactor_wjets = 0.90 ;
+  printf("\n\n Rescaling wjets by %5.3f\n\n", kfactor_wjets ) ;
 
 //include Z->ll in VV contribution
   TChain chainVV("tree");
@@ -574,16 +580,19 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
         sprintf( hname, "h_tt_%db", k+1 ) ;
         if(doPUreweighting) FillHTMET(&chainTT, h_tt[k], si, k);
 	else chainTT.Project (hname,"HT:MET",allcuts);
+        h_tt[k] -> Scale( kfactor_tt ) ;
 	printf("    %12s %7.1f events\n", hname, h_tt[k]->Integral() ) ; cout << flush ;
 
         sprintf( hname, "h_wjets_%db", k+1 ) ;
         if(doPUreweighting) FillHTMET(&chainWJets, h_wjets[k], si, k);
 	else chainWJets.Project(hname,"HT:MET",allcuts);
+        h_wjets[k] -> Scale( kfactor_wjets ) ;
 	printf("    %12s %7.1f events\n", hname, h_wjets[k]->Integral() ) ; cout << flush ;
 
         sprintf( hname, "h_qcd_%db", k+1 ) ;
         if (doPUreweighting) FillHTMET(&chainQCD, h_qcd[k], si, k);
 	else chainQCD.Project(hname,"HT:MET",allcuts);
+        h_qcd[k] -> Scale( kfactor_qcd ) ;
 	printf("    %12s %7.1f events\n", hname, h_qcd[k]->Integral() ) ; cout << flush ;
 
         sprintf( hname, "h_znn_%db", k+1 ) ;
