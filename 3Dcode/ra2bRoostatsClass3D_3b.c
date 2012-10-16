@@ -2475,6 +2475,8 @@
 	pointM0  = ArrayContent[0] ;
 	pointM12 = ArrayContent[1] ;
 
+        printf("  mgl=%g, mlsp=%g.  looking for %g, %g.\n", pointM0, pointM12, m0, m12 ) ;
+
 	nGen = (int)ArrayContent[2] ;
 
 	if (    fabs( pointM0 - m0 ) <= deltaM0/2 && fabs( pointM12 - m12 ) <= deltaM12/2 ) {

@@ -196,12 +196,22 @@
      for ( int i = 0 ; i < nBinsMET ; i++ ) {
        for ( int j = 0 ; j < nBinsHT ; j++ ) {
 
-         double trigeff(1.) ;
          char vname[1000] ;
+
+         double trigeff(1.) ;
          sprintf( vname, "trigeff_M%d_H%d", i+1, j+1 ) ;
          RooAbsReal* rar = (RooAbsReal*) ws->obj(vname) ;
          if ( rar != 0x0 ) {
             trigeff = rar->getVal() ;
+         } else {
+            printf("\n\n *** %s missing\n", vname ) ;
+         }
+
+         double trigeff_sl(1.) ;
+         sprintf( vname, "trigeff_sl_M%d_H%d", i+1, j+1 ) ;
+         RooAbsReal* rarsl = (RooAbsReal*) ws->obj(vname) ;
+         if ( rarsl != 0x0 ) {
+            trigeff_sl = rarsl->getVal() ;
          } else {
             printf("\n\n *** %s missing\n", vname ) ;
          }
@@ -221,7 +231,7 @@
               printf(" * %s missing\n", ttString.Data() ) ;
               AttwjVal[i][j][k] = 0. ;
            } else {
-              AttwjVal[i][j][k] = trigeff * ( ttwj_obj->getVal() ) ;
+              AttwjVal[i][j][k] = trigeff_sl * ( ttwj_obj->getVal() ) ;
            }
 
            if ( qcd_obj == 0x0 ) {
@@ -501,6 +511,7 @@
      double susyVal(0.) ;
      double lhtotalVal(0.) ;
      double trigeff(1.) ;
+     double trigeff_sl(1.) ;
 
      double eff_sf(0.) ;
      double eff_sf_sl(0.) ;
@@ -542,12 +553,20 @@
            susyVal = 0. ;
            znnVal = 0. ;
            trigeff = 1. ;
+           trigeff_sl = 1. ;
            sprintf( teffvar, "trigeff_M%d_H%d", i+1, j+1 ) ;
            if ( ws->obj( teffvar) != 0x0 ) {
               trigeff = ((RooAbsReal*) ws->obj(teffvar)) -> getVal() ;
            } else {
               printf(" * %s missing.\n", teffvar ) ;
               trigeff = 1. ;
+           }
+           sprintf( teffvar, "trigeff_sl_M%d_H%d", i+1, j+1 ) ;
+           if ( ws->obj( teffvar) != 0x0 ) {
+              trigeff_sl = ((RooAbsReal*) ws->obj(teffvar)) -> getVal() ;
+           } else {
+              printf(" * %s missing.\n", teffvar ) ;
+              trigeff_sl = 1. ;
            }
            if ( ws->obj(EffSfString) != 0 ) {
               eff_sf = ((RooFormulaVar*) ws->obj(EffSfString)) -> getVal() ;
@@ -556,13 +575,13 @@
               eff_sf = 1. ;
            }
            if ( ws->obj(MuSusyString) != 0 ) {
-              susyVal = trigeff * eff_sf * ( ((RooRealVar*) ws->obj(MuSusyString)) -> getVal() ) ;
+              susyVal = trigeff_sl * eff_sf * ( ((RooRealVar*) ws->obj(MuSusyString)) -> getVal() ) ;
            } else {
               printf(" * %s missing.\n", MuSusyString.Data() ) ;
               susyVal = 0. ;
            }
            if ( ws->obj(ZnnString) != 0 ) {
-              znnVal = trigeff * ( ((RooRealVar*) ws->obj(ZnnString))  -> getVal() ) ;
+              znnVal = trigeff_sl * ( ((RooRealVar*) ws->obj(ZnnString))  -> getVal() ) ;
            } else {
               printf(" * %s missing.\n", ZnnString.Data() ) ;
               znnVal = 0. ;
@@ -643,13 +662,14 @@
            susyVal = 0. ;
            ttwjVal = 0. ;
            trigeff = 1. ;
+           trigeff_sl = 1. ;
 
            sprintf( teffvar, "trigeff_sl_M%d_H%d", i+1, j+1 ) ;
            if ( ws->obj( teffvar) != 0x0 ) {
-              trigeff = ((RooAbsReal*) ws->obj(teffvar)) -> getVal() ;
+              trigeff_sl = ((RooAbsReal*) ws->obj(teffvar)) -> getVal() ;
            } else {
               printf(" * %s missing.\n", teffvar ) ;
-              trigeff = 1. ;
+              trigeff_sl = 1. ;
            }
            if ( ws->obj(EffSfSlString) != 0x0 ) {
               eff_sf_sl = ((RooFormulaVar*) ws->obj(EffSfSlString)) -> getVal() ;
@@ -658,13 +678,13 @@
               eff_sf_sl = 1. ;
            }
            if ( ws->obj(MuSusySlString) != 0x0 ) {
-              susyVal = trigeff * eff_sf_sl * ( ((RooRealVar*) ws->obj(MuSusySlString)) -> getVal() ) ;
+              susyVal = trigeff_sl * eff_sf_sl * ( ((RooRealVar*) ws->obj(MuSusySlString)) -> getVal() ) ;
            } else {
               printf(" * %s missing.\n", MuSusySlString.Data() ) ;
               susyVal = 0. ;
            }
            if ( ws->obj(MuTtwjSlString) != 0x0 ) {
-              ttwjVal = trigeff * ( ((RooRealVar*) ws->obj(MuTtwjSlString)) -> getVal() ) ;
+              ttwjVal = trigeff_sl * ( ((RooRealVar*) ws->obj(MuTtwjSlString)) -> getVal() ) ;
            } else {
               printf(" * %s missing.\n", MuTtwjSlString.Data() ) ;
               ttwjVal = 0. ;
@@ -751,12 +771,20 @@
            znnVal  = 0. ;
            qcdVal  = 0. ;
            trigeff = 1. ;
+           trigeff_sl = 1. ;
            sprintf( teffvar, "trigeff_M%d_H%d", i+1, j+1 ) ;
            if ( ws->obj( teffvar) != 0x0 ) {
               trigeff = ((RooAbsReal*) ws->obj(teffvar)) -> getVal() ;
            } else {
               printf(" * %s missing.\n", teffvar ) ;
               trigeff = 1. ;
+           }
+           sprintf( teffvar, "trigeff_sl_M%d_H%d", i+1, j+1 ) ;
+           if ( ws->obj( teffvar) != 0x0 ) {
+              trigeff_sl = ((RooAbsReal*) ws->obj(teffvar)) -> getVal() ;
+           } else {
+              printf(" * %s missing.\n", teffvar ) ;
+              trigeff_sl = 1. ;
            }
            if ( ws->obj(EffSfLdpString) != 0 ) {
               eff_sf_ldp = ((RooFormulaVar*) ws->obj(EffSfLdpString)) -> getVal() ;
@@ -765,7 +793,7 @@
               eff_sf_ldp = 1. ;
            }
            if ( ws->obj(MuSusyLdpString) != 0 ) {
-              susyVal = trigeff * eff_sf_ldp * ( ((RooRealVar*) ws->obj(MuSusyLdpString)) -> getVal() ) ;
+              susyVal = trigeff_sl * eff_sf_ldp * ( ((RooRealVar*) ws->obj(MuSusyLdpString)) -> getVal() ) ;
            } else {
               printf(" * %s missing\n", MuSusyLdpString.Data() ) ;
               susyVal = 0. ;
@@ -777,13 +805,13 @@
               sf_mc = 1. ;
            }
            if ( ws->obj(MuTtwjLdpString) != 0 ) {
-              ttwjVal = trigeff * eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuTtwjLdpString))-> getVal() )   ) ;
+              ttwjVal = trigeff_sl * eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuTtwjLdpString))-> getVal() )   ) ;
            } else {
               printf(" * %s missing\n", MuTtwjLdpString.Data() ) ;
               ttwjVal = 0. ;
            }
            if ( ws->obj(MuZnnLdpString) != 0) {
-              znnVal  = trigeff * eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuZnnLdpString))-> getVal() )   ) ;
+              znnVal  = trigeff_sl * eff_sf_ldp * sf_mc * ((((RooRealVar*) ws->obj(MuZnnLdpString))-> getVal() )   ) ;
            } else {
               printf(" * %s missing\n", MuZnnLdpString.Data() ) ;
               znnVal = 0. ;
