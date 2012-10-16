@@ -11,7 +11,7 @@
   \begin{document}
 
 
-   Fri Oct 12 17:53:40 PDT 2012 \\
+   Tue Oct 16 16:14:26 PDT 2012 \\
 
    Datasets and selections
    \begin{itemize}
@@ -28,24 +28,29 @@
 
    Other details
    \begin{itemize}
-     \item The following MC samples are missing: WW, WZ, ZZ (diboson); Tbar-t, Tbar-tW (part of singlet).
+     \item {\bf A cut of pfMET/caloMET$<$2 has been added.}
+     \item {\bf I'm using these fudge factors: ttwj x 0.90 and QCD x 1.80.}
+     \item Most QCD saples are now 53X with a better pileup distribution.
      \item Data events failing laser-calibration-problem filter have been removed.
      \item MC has been corrected for trigger efficiency, {\it except} where noted otherwise.
-     \item {\bf The trigger efficiency corrections are now divided by real-MET vs fake-MET
+     \item  The trigger efficiency corrections are now divided by real-MET vs fake-MET
              instead of 1-lepton vs 0-leptons.  The fake-MET corrections have been
              measured in cfA 66.  The real-MET corrections (from single lepton datasets)
-             are still from cfA 65. }
+             are still from cfA 65.
      \item Trigger efficiency corrections are in likelihood MET,HT bins.
      \item Trigger efficiency corrections are not run dependent.
-     \item {\bf I have inserted these fudge factors: ttwj x 0.90 and QCD x 1.80.  Numbers have been tweaked for cfA v66.}
    \end{itemize}
 
 .\\
 
   Comments on recent additions
   \begin{itemize}
-    \item The trigger efficiency corrected Data/MC comparisons look a bit better in this
-          new scheme, where we divide the trigger efficiency by real-MET and fake-MET.
+    \item The data/MC agreement looks even better than before.  There's only
+           one place where there seems to be a new disagreement, which
+           is LDP, nB=3, the lowest MET bin and the lowest two HT bins.
+           The QCD MC events that are contributing in that neighborhood seem
+           to have very high weight, so it may be that we are just missing a
+           handful of high-weight QCD MC events there.
    \end{itemize}
 
 
@@ -591,6 +596,62 @@
      \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nb1_all_logy.pdf}
      \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nb2_all_logy.pdf}
 
+
+
+
+  %%===================================================
+     \subsection{ MET, ZL, no MC trigger correction applied, RunsAB}
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nomctrigcorr_nb1_RunsAB.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nomctrigcorr_nb2_RunsAB.pdf} \\
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nomctrigcorr_nb1_RunsAB_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nomctrigcorr_nb2_RunsAB_logy.pdf}
+
+
+  %%===================================================
+     \subsection{ MET, ZL, RunsAB}
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nb1_RunsAB.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nb2_RunsAB.pdf} \\
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nb1_RunsAB_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nb2_RunsAB_logy.pdf}
+
+
+
+
+  %%===================================================
+     \subsection{ MET, ZL, no MC trigger correction applied, RunC}
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nomctrigcorr_nb1_RunC.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nomctrigcorr_nb2_RunC.pdf} \\
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nomctrigcorr_nb1_RunC_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nomctrigcorr_nb2_RunC_logy.pdf}
+
+
+  %%===================================================
+     \subsection{ MET, ZL, RunsAB}
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nb1_RunC.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nb2_RunC.pdf} \\
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nb1_RunC_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nb2_RunC_logy.pdf}
+
+
+
+
+
   %%===================================================
      \subsection{ MET, ZL, nB=1, with and without MC trigger correction applied, HT bins, all data}
 
@@ -753,6 +814,64 @@
     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb0_all_logy.pdf}
     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nb0_all_logy.pdf}
     \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb0_all_logy.pdf}
+
+
+  %%===================================================
+    \subsection{ MET, nB=0, without MC trigger correction applied, RunsAB}
+
+    \noindent
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nomctrigcorr_nb0_RunsAB.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nomctrigcorr_nb0_RunsAB.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nomctrigcorr_nb0_RunsAB.pdf}
+
+    \noindent
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nomctrigcorr_nb0_RunsAB_logy.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nomctrigcorr_nb0_RunsAB_logy.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nomctrigcorr_nb0_RunsAB_logy.pdf}
+
+
+  %%===================================================
+    \subsection{ MET, nB=0, RunsAB}
+
+    \noindent
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb0_RunsAB.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nb0_RunsAB.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb0_RunsAB.pdf}
+
+    \noindent
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb0_RunsAB_logy.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nb0_RunsAB_logy.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb0_RunsAB_logy.pdf}
+
+
+
+
+  %%===================================================
+    \subsection{ MET, nB=0, without MC trigger correction applied, RunC}
+
+    \noindent
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nomctrigcorr_nb0_RunC.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nomctrigcorr_nb0_RunC.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nomctrigcorr_nb0_RunC.pdf}
+
+    \noindent
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nomctrigcorr_nb0_RunC_logy.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nomctrigcorr_nb0_RunC_logy.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nomctrigcorr_nb0_RunC_logy.pdf}
+
+
+  %%===================================================
+    \subsection{ MET, nB=0, RunC}
+
+    \noindent
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb0_RunC.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nb0_RunC.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb0_RunC.pdf}
+
+    \noindent
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_ldp_nb0_RunC_logy.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_zl_nb0_RunC_logy.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_met_sl_nb0_RunC_logy.pdf}
 
 
 
@@ -1096,6 +1215,63 @@
 
 
    \clearpage
+
+  %%===================================================
+     \subsection{ HT, ZL, no MC trigger correction applied, RunsAB}
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nomctrigcorr_nb1_RunsAB.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nomctrigcorr_nb2_RunsAB.pdf} \\
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nomctrigcorr_nb1_RunsAB_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nomctrigcorr_nb2_RunsAB_logy.pdf}
+
+
+  %%===================================================
+     \subsection{ HT, ZL, RunsAB}
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nb1_RunsAB.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nb2_RunsAB.pdf} \\
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nb1_RunsAB_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nb2_RunsAB_logy.pdf}
+
+
+   \clearpage
+
+
+
+  %%===================================================
+     \subsection{ HT, ZL, no MC trigger correction applied, RunC}
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nomctrigcorr_nb1_RunC.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nomctrigcorr_nb2_RunC.pdf} \\
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nomctrigcorr_nb1_RunC_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nomctrigcorr_nb2_RunC_logy.pdf}
+
+
+  %%===================================================
+     \subsection{ HT, ZL, RunC}
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nb1_RunC.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nb2_RunC.pdf} \\
+
+    \noindent
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nb1_RunC_logy.pdf}
+     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nb2_RunC_logy.pdf}
+
+
+   \clearpage
+
+
+
   %%===================================================
      \subsection{ HT, ZL, nB=1, with and without MC trigger correction applied, MET bins, all data}
 
@@ -1186,6 +1362,67 @@
     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb0_all_logy.pdf}
     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nb0_all_logy.pdf}
     \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb0_all_logy.pdf}
+
+
+
+
+  %%===================================================
+    \subsection{ HT, nB=0, without MC trigger correction applied, RunsAB}
+
+    \noindent
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nomctrigcorr_nb0_RunsAB.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nomctrigcorr_nb0_RunsAB.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nomctrigcorr_nb0_RunsAB.pdf}
+
+    \noindent
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nomctrigcorr_nb0_RunsAB_logy.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nomctrigcorr_nb0_RunsAB_logy.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nomctrigcorr_nb0_RunsAB_logy.pdf}
+
+
+  %%===================================================
+    \subsection{ HT, nB=0, RunsAB}
+
+    \noindent
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb0_RunsAB.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nb0_RunsAB.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb0_RunsAB.pdf}
+
+    \noindent
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb0_RunsAB_logy.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nb0_RunsAB_logy.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb0_RunsAB_logy.pdf}
+
+
+
+
+
+  %%===================================================
+    \subsection{ HT, nB=0, without MC trigger correction applied, RunC}
+
+    \noindent
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nomctrigcorr_nb0_RunC.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nomctrigcorr_nb0_RunC.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nomctrigcorr_nb0_RunC.pdf}
+
+    \noindent
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nomctrigcorr_nb0_RunC_logy.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nomctrigcorr_nb0_RunC_logy.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nomctrigcorr_nb0_RunC_logy.pdf}
+
+
+  %%===================================================
+    \subsection{ HT, nB=0, RunC}
+
+    \noindent
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb0_RunC.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nb0_RunC.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb0_RunC.pdf}
+
+    \noindent
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_ldp_nb0_RunC_logy.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_zl_nb0_RunC_logy.pdf}
+    \includegraphics[width=0.32\linewidth]{outputfiles/h_ht_sl_nb0_RunC_logy.pdf}
 
 
 
@@ -1756,6 +1993,114 @@
 
 
 
+
+   \section{ pfMET/caloMET}
+  %%===================================================
+
+    \subsection{ pfMET/caloMET, LDP, range [0,3]}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_ldp_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_ldp_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_ldp_nb2_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_ldp_nb3_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_ldp_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_ldp_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_ldp_nb2_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_ldp_nb3_all_logy.pdf}
+
+    \clearpage
+
+
+  %%===================================================
+
+    \subsection{ pfMET/caloMET, LDP, range [0,30]}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_ldp_nb0_wide_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_ldp_nb1_wide_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_ldp_nb2_wide_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_ldp_nb3_wide_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_ldp_nb0_wide_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_ldp_nb1_wide_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_ldp_nb2_wide_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_ldp_nb3_wide_all_logy.pdf}
+
+    \clearpage
+
+
+  %%===================================================
+
+    \subsection{ pfMET/caloMET, SL, range [0,3]}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_sl_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_sl_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_sl_nb2_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_sl_nb3_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_sl_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_sl_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_sl_nb2_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_sl_nb3_all_logy.pdf}
+
+    \clearpage
+
+
+
+  %%===================================================
+
+    \subsection{ pfMET/caloMET, SL, range [0,30]}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_sl_nb0_wide_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_sl_nb1_wide_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_sl_nb2_wide_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_sl_nb3_wide_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_sl_nb0_wide_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_sl_nb1_wide_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_sl_nb2_wide_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_sl_nb3_wide_all_logy.pdf}
+
+    \clearpage
+
+
+
+  %%===================================================
+
+    \subsection{ pfMET/caloMET, ZL, range [0,3]}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb1_all.pdf} \\
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb1_all_logy.pdf}
+
+    \clearpage
+
+
+  %%===================================================
+
+    \subsection{ pfMET/caloMET, ZL, range [0,30]}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb0_wide_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb1_wide_all.pdf} \\
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb0_wide_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb1_wide_all_logy.pdf}
+
+    \clearpage
 
 
 

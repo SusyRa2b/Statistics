@@ -1017,6 +1017,14 @@
        bookSet( "h_pfOcaloMET_ldp_nb1", htitle, 30, 0., 3. ) ;
        bookSet( "h_pfOcaloMET_ldp_nb1_wide", htitle, 30, 0., 30. ) ;
 
+       sprintf( htitle, "pfMET/caloMET, LDP, nB=2, %s", dataset_string ) ;
+       bookSet( "h_pfOcaloMET_ldp_nb2", htitle, 30, 0., 3. ) ;
+       bookSet( "h_pfOcaloMET_ldp_nb2_wide", htitle, 30, 0., 30. ) ;
+
+       sprintf( htitle, "pfMET/caloMET, LDP, nB>=3, %s", dataset_string ) ;
+       bookSet( "h_pfOcaloMET_ldp_nb3", htitle, 30, 0., 3. ) ;
+       bookSet( "h_pfOcaloMET_ldp_nb3_wide", htitle, 30, 0., 30. ) ;
+
 
        sprintf( htitle, "pfMET/caloMET, SL, %s", dataset_string ) ;
        bookSet( "h_pfOcaloMET_sl", htitle, 30, 0., 3. ) ;
@@ -1029,6 +1037,16 @@
        sprintf( htitle, "pfMET/caloMET, SL, nB=1, %s", dataset_string ) ;
        bookSet( "h_pfOcaloMET_sl_nb1", htitle, 30, 0., 3. ) ;
        bookSet( "h_pfOcaloMET_sl_nb1_wide", htitle, 30, 0., 30. ) ;
+
+       sprintf( htitle, "pfMET/caloMET, SL, nB=2, %s", dataset_string ) ;
+       bookSet( "h_pfOcaloMET_sl_nb2", htitle, 30, 0., 3. ) ;
+       bookSet( "h_pfOcaloMET_sl_nb2_wide", htitle, 30, 0., 30. ) ;
+
+       sprintf( htitle, "pfMET/caloMET, SL, nB>=3, %s", dataset_string ) ;
+       bookSet( "h_pfOcaloMET_sl_nb3", htitle, 30, 0., 3. ) ;
+       bookSet( "h_pfOcaloMET_sl_nb3_wide", htitle, 30, 0., 30. ) ;
+
+
 
 
        sprintf( htitle, "pfMET/caloMET, ZL, nB=0, %s", dataset_string ) ;
@@ -1652,6 +1670,17 @@
        fillSet( "h_pfOcaloMET_ldp_nb1", "pfOcaloMET", cuts ) ;
        fillSet( "h_pfOcaloMET_ldp_nb1_wide", "pfOcaloMET", cuts ) ;
 
+       sprintf( cuts, "%s&&nB==2", basecuts_ldp_nonb_nometratiocut ) ;
+       fillSet( "h_pfOcaloMET_ldp_nb2", "pfOcaloMET", cuts ) ;
+       fillSet( "h_pfOcaloMET_ldp_nb2_wide", "pfOcaloMET", cuts ) ;
+
+       sprintf( cuts, "%s&&nB>=3", basecuts_ldp_nonb_nometratiocut ) ;
+       fillSet( "h_pfOcaloMET_ldp_nb3", "pfOcaloMET", cuts ) ;
+       fillSet( "h_pfOcaloMET_ldp_nb3_wide", "pfOcaloMET", cuts ) ;
+
+
+
+
        sprintf( cuts, "%s", basecuts_1lep_nometratiocut ) ;
        fillSet( "h_pfOcaloMET_sl", "pfOcaloMET", cuts ) ;
        fillSet( "h_pfOcaloMET_sl_wide", "pfOcaloMET", cuts ) ;
@@ -1663,6 +1692,17 @@
        sprintf( cuts, "%s&&nB==1", basecuts_1lep_nonb_nometratiocut ) ;
        fillSet( "h_pfOcaloMET_sl_nb1", "pfOcaloMET", cuts ) ;
        fillSet( "h_pfOcaloMET_sl_nb1_wide", "pfOcaloMET", cuts ) ;
+
+       sprintf( cuts, "%s&&nB==2", basecuts_1lep_nonb_nometratiocut ) ;
+       fillSet( "h_pfOcaloMET_sl_nb2", "pfOcaloMET", cuts ) ;
+       fillSet( "h_pfOcaloMET_sl_nb2_wide", "pfOcaloMET", cuts ) ;
+
+       sprintf( cuts, "%s&&nB>=3", basecuts_1lep_nonb_nometratiocut ) ;
+       fillSet( "h_pfOcaloMET_sl_nb3", "pfOcaloMET", cuts ) ;
+       fillSet( "h_pfOcaloMET_sl_nb3_wide", "pfOcaloMET", cuts ) ;
+
+
+
 
 
        sprintf( cuts, "%s&&nB==0", basecuts_0lep_nonb_nometratiocut ) ;
