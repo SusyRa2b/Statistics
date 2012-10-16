@@ -463,6 +463,22 @@
        sprintf( histnamelist[hind], "h_mindphin_1lep_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_mindphin_1lep_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "minDeltaPhiN" ) ; hind++ ;
 
+       sprintf( histnamelist[hind], "h_pfOcaloMET_ldp" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_ldp_wide" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_ldp_nb0" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_ldp_nb0_wide" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_ldp_nb1" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_ldp_nb1_wide" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_sl" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_sl_wide" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_sl_nb0" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_sl_nb0_wide" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_sl_nb1" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_sl_nb1_wide" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_zl_nb0" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_zl_nb0_wide" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_zl_nb1" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_zl_nb1_wide" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
 
 
 
