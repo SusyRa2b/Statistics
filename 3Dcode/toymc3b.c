@@ -206,6 +206,12 @@
    double trigeff_1lep[nBinsMET][nBinsHT] ;
 
 
+   bool ignoreBin[nBinsMET][nBinsHT] ;
+   bool blind0lepBin[nBinsMET][nBinsHT][nBinsBjets] ;
+   int  num_ignoreBin(0) ;
+   int  num_blind0lepBin(0) ;
+
+
    //-- Prototypes
 
    bool readMCvals() ;
@@ -250,12 +256,10 @@
                 bool input_doUL = false,
                 const char* input_blindBinsList = "null",
                 bool input_inputObservablesArePostTrigger = true,
-		const char* systfilename = "systFile1.txt"
+                const char* systfilename = "systFile1.txt"
                         ) {
 
        char command[10000] ;
-
-
 
        sprintf( datfile, "%s", input_datfile ) ;
        sprintf( susyfile, "%s", input_susyfile ) ;
@@ -263,6 +267,77 @@
        sprintf( deffdbtagfile, "%s", input_deffdbtagfile ) ;
        sprintf( mcvals_rootfile, "%s", input_mcvals_rootfile ) ;
        sprintf( blindBinsList, "%s", input_blindBinsList ) ;
+
+
+      //-- Hardwire in to ignore the highest MET bin in the lowest HT bin.
+      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            ignoreBin[mbi][hbi] = false ;
+         } // hbi
+      } // mbi
+      ignoreBin[3][0] = true ; // ignore MET4, HT1
+
+      printf("\n\n *** Ignoring these bins in the analysis.\n\n") ;
+      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            if ( ignoreBin[mbi][hbi] ) {
+               num_ignoreBin ++ ;
+               printf("  MET %d, HT %d\n", mbi+1, hbi+1 ) ;
+            }
+         } // hbi
+      } // mbi
+      printf("\n\n\n") ;
+
+
+     //--- read in blind bins, if file given.
+
+      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+               blind0lepBin[mbi][hbi][bbi] = false ;
+            } // bbi.
+         } // hbi.
+      } // mbi.
+
+      blindStudy = false ;
+
+      if ( strcmp( blindBinsList, "null" ) != 0 ) {
+         sprintf( command, "ls %s >& /dev/null", blindBinsList ) ;
+         int returnstat = gSystem->Exec( command ) ;
+         if ( returnstat != 0 ) {
+            printf("\n\n *** Given non-null blindBinsList file, but it doesn't exist: %s\n\n", blindBinsList ) ;
+            return ;
+         }
+         FILE* bbl_file ;
+         if ( (bbl_file = fopen( blindBinsList, "r"))==NULL ) {
+            printf("\n\n *** Problem opening blindBinsList file: %s\n\n", blindBinsList ) ;
+            return ;
+         }
+         blindStudy = true ;
+         printf("\n\n Reading blindBinsList file: %s\n\n", blindBinsList ) ;
+         while ( ! feof(bbl_file) ) {
+            char binlabel[1000] ;
+            fscanf( bbl_file, "%s", binlabel ) ;
+            if ( feof(bbl_file) ) break ;
+            int bmb(-1), bhb(-1), bbb(-1) ;
+            int rv = sscanf( binlabel, "N_0lep_M%d_H%d_%db", &bmb, &bhb, &bbb ) ;
+            if ( rv == 0 ) {
+               printf("\n\n *** bad bin label format: %s\n\n", binlabel ) ;
+               return ;
+            }
+            if ( bmb < 1 || bhb < 1 || bbb < 1 || bmb > nBinsMET || bhb > nBinsHT || bbb > nBinsBjets ) {
+               printf("\n\n *** bin index out of range: met=%d, ht=%d, nb=%d\n\n", bmb, bhb, bbb ) ;
+               return ;
+            }
+            num_blind0lepBin++ ;
+            blind0lepBin[bmb-1][bhb-1][bbb-1] = true ;
+            printf("   bin label %s : will blind met=%d, ht=%d, nb=%d 0lep bin.\n", binlabel, bmb, bhb, bbb ) ;
+         } // still reading?
+      } // process blindBinsList file?
+
+
+
+
 
        if ( strcmp( blindBinsList, "null") == 0 ) {
           blindStudy = false ;
@@ -1639,9 +1714,11 @@
 
       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
          for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            char vname[1000] ;
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
-               char vname[1000] ;
+               if ( ignoreBin[mbi][hbi] ) continue ;
+
                RooAbsReal* rar ;
                RooAbsReal* effsf  ;
                RooAbsReal* btagsf  ;
@@ -1650,13 +1727,13 @@
                double nsusy(0.) ;
                sprintf( vname, "mu_susy_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                rar = workspace -> function( vname ) ;
-               if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
+               if ( rar == 0x0 ) { printf("\n\n *** processToyResult: missing var %s\n\n", vname ) ; }
                sprintf( vname, "btageff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                btagsf = (RooAbsReal*) workspace -> obj( vname ) ;
-               if ( btagsf == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
+               if ( btagsf == 0x0 ) { printf("\n\n *** processToyResult: missing var %s\n\n", vname ) ; }
                sprintf( vname, "eff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                effsf = (RooAbsReal*) workspace -> obj( vname ) ;
-               if ( effsf == 0x0 ) { printf("\n\n *** missing var %s\n\n", vname ) ; }
+               if ( effsf == 0x0 ) { printf("\n\n *** processToyResult: missing var %s\n\n", vname ) ; }
                if ( rar != 0x0 && btagsf != 0x0 && effsf != 0x0 ) {
                   nsusy = ( btagsf -> getVal() ) * ( effsf -> getVal() ) * ( rar -> getVal() ) ;
                }
@@ -1819,9 +1896,11 @@
                char modelname[1000] ;
 
                //-- 0lep observable
-               sprintf( obsname,   "N_0lep_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-               sprintf( modelname, "n_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-               fit_chi2_obs += getChi2Obs( obsname, modelname ) ;
+               if ( !blind0lepBin[mbi][hbi][bbi] ) {
+                  sprintf( obsname,   "N_0lep_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                  sprintf( modelname, "n_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                  fit_chi2_obs += getChi2Obs( obsname, modelname ) ;
+               }
 
                //-- 1lep observable
                sprintf( obsname,   "N_1lep_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
@@ -1852,26 +1931,71 @@
 
 
 
-               //-- ttwj and QCD SFs
 
-               sprintf( vname, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-               fit_chi2_np += getChi2GausNP( vname ) ;
+               if ( !blind0lepBin[mbi][hbi][bbi] ) {
 
-               sprintf( vname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-               fit_chi2_np += getChi2GausNP( vname ) ;
+
+                 //-- ttwj and QCD SFs
+
+                  sprintf( vname, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                  fit_chi2_np += getChi2GausNP( vname ) ;
+
+                  sprintf( vname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                  fit_chi2_np += getChi2GausNP( vname ) ;
+
+
+
+                 //-- Signal efficiency uncertainties (bin-by-bin MC stat err).
+
+                  sprintf( vname, "eff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                  fit_chi2_np += getChi2GausNP( vname ) ;
+
+                  sprintf( vname, "eff_sf_ldp_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                  fit_chi2_np += getChi2GausNP( vname ) ;
+
+                  sprintf( vname, "eff_sf_sl_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                  fit_chi2_np += getChi2GausNP( vname ) ;
+
+
+
+               }
 
 
 
 
             } // bbi.
+
+            //-- trigger efficiencies.
+
+            sprintf( vname, "trigeff_M%d_H%d", mbi+1, hbi+1 ) ;
+            fit_chi2_np += getChi2BetaNP( vname ) ;
+
+            sprintf( vname, "trigeff_sl_M%d_H%d", mbi+1, hbi+1 ) ;
+            fit_chi2_np += getChi2BetaNP( vname ) ;
+
+
          } // hbi.
       } // mbi.
 
       //-- more nuisance parameter chi2 contributions.
       char npname[1000] ;
 
-      sprintf( npname, "eff_sf" ) ;
+      ////// sprintf( npname, "eff_sf" ) ;             /// obsolete
+      ////// fit_chi2_np += getChi2GausNP( npname ) ;  /// obsolete
+
+      sprintf( npname, "rar_vv_sf" ) ;
       fit_chi2_np += getChi2GausNP( npname ) ;
+
+
+      sprintf( npname, "SFqcd_met3" ) ;
+      fit_chi2_np += getChi2GausNP( npname ) ;
+
+      sprintf( npname, "SFqcd_met4" ) ;
+      fit_chi2_np += getChi2GausNP( npname ) ;
+
+      sprintf( npname, "SFqcd_nb3" ) ;
+      fit_chi2_np += getChi2GausNP( npname ) ;
+
 
       sprintf( npname, "btageff_sf" ) ;
       fit_chi2_np += getChi2GausNP( npname ) ;
@@ -1882,8 +2006,10 @@
       sprintf( npname, "sf_ll" ) ;
       fit_chi2_np += getChi2GausNP( npname ) ;
 
-      sprintf( npname, "knn_1b" ) ; //now split by met
-      fit_chi2_np += getChi2GausNP( npname ) ;
+      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+         sprintf( npname, "knn_1b_M%d", mbi+1 ) ;
+         fit_chi2_np += getChi2GausNP( npname ) ;
+      } // mbi
 
       sprintf( npname, "knn_2b" ) ;
       fit_chi2_np += getChi2GausNP( npname ) ;
@@ -1891,11 +2017,15 @@
       sprintf( npname, "knn_3b" ) ;
       fit_chi2_np += getChi2GausNP( npname ) ;
 
-      sprintf( npname, "eff_Zee" ) ;
-      fit_chi2_np += getChi2BetaNP( npname ) ;
+      for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
 
-      sprintf( npname, "eff_Zmm" ) ;
-      fit_chi2_np += getChi2BetaNP( npname ) ;
+         sprintf( npname, "eff_Zee_H%d", hbi+1 ) ;
+         fit_chi2_np += getChi2BetaNP( npname ) ;
+
+         sprintf( npname, "eff_Zmm_H%d", hbi+1 ) ;
+         fit_chi2_np += getChi2BetaNP( npname ) ;
+
+      } // hbi
 
       sprintf( npname, "pur_Zee" ) ;
       fit_chi2_np += getChi2BetaNP( npname ) ;
@@ -1903,24 +2033,25 @@
       sprintf( npname, "pur_Zmm" ) ;
       fit_chi2_np += getChi2BetaNP( npname ) ;
 
-      for ( int i=0; i<nBinsMET; i++ ) {
+      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
 
-         sprintf( npname, "acc_Zee_M%d", i+1 ) ;
+         sprintf( npname, "acc_Zee_M%d", mbi+1 ) ;
          fit_chi2_np += getChi2BetaNP( npname ) ;
 
-         sprintf( npname, "acc_Zmm_M%d", i+1 ) ;
+         sprintf( npname, "acc_Zmm_M%d", mbi+1 ) ;
          fit_chi2_np += getChi2BetaNP( npname ) ;
 
-      } // i.
+      } // mbi.
 
       fit_chi2_overall = fit_chi2_obs + fit_chi2_np ;
 
       //-- 3 is ZL,SL,LDP, 2 is ee,mm.
-      int nobs = 3 * (nBinsMET*nBinsHT*nBinsBjets) + 2 * (nBinsMET*nBinsHT) ;
-      //-- 2 is ttwj,QCD, 3 at end is ttwj ZL/SL + QCD ZL/LDP + signal yield.
-      int nfloat = 2 * (nBinsMET*nBinsHT*nBinsBjets) + (nBinsMET*nBinsHT) + 3 ;
+      int nobs = 3 * ( ( nBinsMET*nBinsHT - num_ignoreBin ) * nBinsBjets ) + 2 * ( nBinsMET*nBinsHT - num_ignoreBin ) - num_blind0lepBin ;
+      //-- 2 is ttwj,QCD, 8 at end is ttwj ZL/SL + 6 QCD model pars + signal yield.
+      int nfloat = 2 * ( ( nBinsMET*nBinsHT - num_ignoreBin ) * nBinsBjets) + (nBinsMET*nBinsHT - num_ignoreBin ) + 8 ;
 
       int ndof = nobs - nfloat ;
+      printf(" Nobs = %d, Nfloat = %d\n", nobs, nfloat ) ;
 
       fit_chi2_prob = TMath::Prob( fit_chi2_overall, ndof ) ;
       printf(" toy %4d : chi2 / ndof = %8.2f / %d,  prob = %7.4f\n", ti, fit_chi2_overall, ndof, fit_chi2_prob ) ;
@@ -2876,21 +3007,21 @@
 
      char varname[1000] ;
 
-     sprintf( varname, "passObs_%s", parName ) ;
-     RooAbsReal* passObs = (RooAbsReal*) workspace->obj( varname ) ;
-     if ( passObs == 0x0 ) {
-        printf("\n\n *** getNPModeRMS : can't find pass obs for %s\n\n", parName ) ;
+     sprintf( varname, "alpha_%s", parName ) ;
+     RooAbsReal* alphaPar = (RooAbsReal*) workspace->obj( varname ) ;
+     if ( alphaPar == 0x0 ) {
+        printf("\n\n *** getNPModeRMS : can't find alpha for %s\n\n", parName ) ;
         return false ;
      }
-     alpha = passObs->getVal() + 1. ;
+     alpha = alphaPar->getVal() ;
 
-     sprintf( varname, "failObs_%s", parName ) ;
-     RooAbsReal* failObs = (RooAbsReal*) workspace->obj( varname ) ;
-     if ( failObs == 0x0 ) {
-        printf("\n\n *** getNPModeRMS : can't find fail obs for %s\n\n", parName ) ;
+     sprintf( varname, "beta_%s", parName ) ;
+     RooAbsReal* betaPar = (RooAbsReal*) workspace->obj( varname ) ;
+     if ( betaPar == 0x0 ) {
+        printf("\n\n *** getNPModeRMS : can't find beta for %s\n\n", parName ) ;
         return false ;
      }
-     beta = failObs->getVal() + 1. ;
+     beta = betaPar->getVal() ;
 
      mode = (alpha - 1.)/(alpha+beta -2.) ;
 
