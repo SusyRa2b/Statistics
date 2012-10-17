@@ -43,9 +43,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   sprintf( susycutstring, "&&mgluino==%.0f&&mlsp==%.0f", mgl, mlsp ) ;
   TString susycut( susycutstring ) ;
   if ( mgl>0. && mlsp>0. ) {
-     nAdded = chainT1bbbb.Add("filesHCP_53_v3_QCDweights/T1bbbb.root") ;
+     nAdded = chainT1bbbb.Add("filesHCP_53_v4/T1bbbb.root") ;
      if ( nAdded <= 0 ) {
-        printf("\n\n\n *** No tree in filesHCP_53_v3_QCDweights/T1bbbb.root\n\n\n") ;
+        printf("\n\n\n *** No tree in filesHCP_53_v4/T1bbbb.root\n\n\n") ;
         return ;
      }
      TFile f("referenceXSecs.root") ;
@@ -65,64 +65,64 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 
   TChain chainQCD("tree") ;
-  chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-120to170.root");
-  chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-170to300.root");
-  chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-300to470.root");
-  chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-470to600.root");
-  chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-600to800.root");
-  chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-800to1000.root");
-  chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-1000to1400.root");
-  chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-1400to1800.root");
-  chainQCD.Add("filesHCP_53_v3_QCDweights/QCD-1800.root");
+  chainQCD.Add("filesHCP_53_v4/QCD-120to170.root");
+  chainQCD.Add("filesHCP_53_v4/QCD-170to300.root");
+  chainQCD.Add("filesHCP_53_v4/QCD-300to470.root");
+  chainQCD.Add("filesHCP_53_v4/QCD-470to600.root");
+  chainQCD.Add("filesHCP_53_v4/QCD-600to800.root");
+  chainQCD.Add("filesHCP_53_v4/QCD-800to1000.root");
+  chainQCD.Add("filesHCP_53_v4/QCD-1000to1400.root");
+  chainQCD.Add("filesHCP_53_v4/QCD-1400to1800.root");
+  chainQCD.Add("filesHCP_53_v4/QCD-1800.root");
   double kfactor_qcd = 1.8 ;
   printf("\n\n Rescaling QCD by %5.3f\n\n", kfactor_qcd ) ;
 
   TChain chainZnn("tree") ;
-  chainZnn.Add("filesHCP_53_v3_QCDweights/Zinv-100to200.root") ;
-  chainZnn.Add("filesHCP_53_v3_QCDweights/Zinv-200to400.root") ;
-  chainZnn.Add("filesHCP_53_v3_QCDweights/Zinv-400.root") ;
+  chainZnn.Add("filesHCP_53_v4/Zinv-100to200.root") ;
+  chainZnn.Add("filesHCP_53_v4/Zinv-200to400.root") ;
+  chainZnn.Add("filesHCP_53_v4/Zinv-400.root") ;
 
   TChain chainTT("tree") ;
-  chainTT.Add("filesHCP_53_v3_QCDweights/TT.root") ;
-  //chainTT.Add("filesHCP_53_v3_QCDweights/TT-powheg.root");
+  chainTT.Add("filesHCP_53_v4/TT.root") ;
+  //chainTT.Add("filesHCP_53_v4/TT-powheg.root");
   double kfactor_tt = 0.90 ;
   printf("\n\n Rescaling ttbar by %5.3f\n\n", kfactor_tt ) ;
 
   TChain chainWJets("tree") ;
-  chainWJets.Add("filesHCP_53_v3_QCDweights/WJets-250to300.root") ;
-  chainWJets.Add("filesHCP_53_v3_QCDweights/WJets-300to400.root") ;
-  chainWJets.Add("filesHCP_53_v3_QCDweights/WJets-400.root") ;
-  chainWJets.Add("filesHCP_53_v3_QCDweights/T-s.root") ;
-  chainWJets.Add("filesHCP_53_v3_QCDweights/T-t.root") ;
-  chainWJets.Add("filesHCP_53_v3_QCDweights/T-tW.root") ;
-  chainWJets.Add("filesHCP_53_v3_QCDweights/Tbar-s.root") ;
-  chainWJets.Add("filesHCP_53_v3_QCDweights/Tbar-t.root") ;
-  chainWJets.Add("filesHCP_53_v3_QCDweights/Tbar-tW.root") ;
+  chainWJets.Add("filesHCP_53_v4/WJets-250to300.root") ;
+  chainWJets.Add("filesHCP_53_v4/WJets-300to400.root") ;
+  chainWJets.Add("filesHCP_53_v4/WJets-400.root") ;
+  chainWJets.Add("filesHCP_53_v4/T-s.root") ;
+  chainWJets.Add("filesHCP_53_v4/T-t.root") ;
+  chainWJets.Add("filesHCP_53_v4/T-tW.root") ;
+  chainWJets.Add("filesHCP_53_v4/Tbar-s.root") ;
+  chainWJets.Add("filesHCP_53_v4/Tbar-t.root") ;
+  chainWJets.Add("filesHCP_53_v4/Tbar-tW.root") ;
   double kfactor_wjets = 0.90 ;
   printf("\n\n Rescaling wjets by %5.3f\n\n", kfactor_wjets ) ;
 
 //include Z->ll in VV contribution
   TChain chainVV("tree");
-  chainVV.Add("filesHCP_53_v3_QCDweights/WW.root"); 
-  chainVV.Add("filesHCP_53_v3_QCDweights/WZ.root");
-  chainVV.Add("filesHCP_53_v3_QCDweights/ZZ.root");
-  chainVV.Add("filesHCP_53_v3_QCDweights/DY-200to400.root");
-  chainVV.Add("filesHCP_53_v3_QCDweights/DY-400.root");
+  chainVV.Add("filesHCP_53_v4/WW.root"); 
+  chainVV.Add("filesHCP_53_v4/WZ.root");
+  chainVV.Add("filesHCP_53_v4/ZZ.root");
+  chainVV.Add("filesHCP_53_v4/DY-200to400.root");
+  chainVV.Add("filesHCP_53_v4/DY-400.root");
 
 
 
 
 
       char qcdinputfile[9][1000] = {
-        "filesHCP_53_v3_QCDweights/QCD-120to170.root"
-       ,"filesHCP_53_v3_QCDweights/QCD-170to300.root"
-       ,"filesHCP_53_v3_QCDweights/QCD-300to470.root"
-       ,"filesHCP_53_v3_QCDweights/QCD-470to600.root"
-       ,"filesHCP_53_v3_QCDweights/QCD-600to800.root"
-       ,"filesHCP_53_v3_QCDweights/QCD-800to1000.root"
-       ,"filesHCP_53_v3_QCDweights/QCD-1000to1400.root"
-       ,"filesHCP_53_v3_QCDweights/QCD-1400to1800.root"
-       ,"filesHCP_53_v3_QCDweights/QCD-1800.root"
+        "filesHCP_53_v4/QCD-120to170.root"
+       ,"filesHCP_53_v4/QCD-170to300.root"
+       ,"filesHCP_53_v4/QCD-300to470.root"
+       ,"filesHCP_53_v4/QCD-470to600.root"
+       ,"filesHCP_53_v4/QCD-600to800.root"
+       ,"filesHCP_53_v4/QCD-800to1000.root"
+       ,"filesHCP_53_v4/QCD-1000to1400.root"
+       ,"filesHCP_53_v4/QCD-1400to1800.root"
+       ,"filesHCP_53_v4/QCD-1800.root"
       } ;
 
       char qcdsamplename[9][100] = {
@@ -566,11 +566,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
         char allsusycuts[10000] ;
 
         if ( k < (nBinsBjets-1) ) {
-          sprintf( allcuts, "%snB==%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
-          sprintf( allsusycuts, "%snB==%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)%s", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt, susycut.Data() ) ;
+          sprintf( allcuts, "%snB==%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&pfOcaloMET<2", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
+          sprintf( allsusycuts, "%snB==%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)%s&&pfOcaloMET<2", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt, susycut.Data() ) ;
         } else {
-          sprintf( allcuts, "%snB>=%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
-          sprintf( allsusycuts, "%snB>=%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)%s", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt, susycut.Data() ) ;
+          sprintf( allcuts, "%snB>=%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&pfOcaloMET<2", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
+          sprintf( allsusycuts, "%snB>=%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)%s&&pfOcaloMET<2", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt, susycut.Data() ) ;
         }
 
 
@@ -808,7 +808,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
                char arg1[1000] ;
 
                char cuts0lep[10000] ;
-               sprintf( cuts0lep, "%s(%s)&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)", selcuts[0], bcut[bbi], nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
+               sprintf( cuts0lep, "%s(%s)&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&pfOcaloMET<2", selcuts[0], bcut[bbi], nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
                printf("     %db, 0lep cuts : %s\n", bbi+1, cuts0lep ) ;
                sprintf( arg1, "HT:MET>>h_0lep_%db_%s", bbi+1, qcdsamplename[si] ) ;
                qcdch[si] -> Draw( arg1, cuts0lep ) ;
@@ -818,7 +818,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 
                char cutsldp[10000] ;
-               sprintf( cutsldp, "%s(%s)&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)", selcuts[2], bcut[bbi], nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
+               sprintf( cutsldp, "%s(%s)&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&pfOcaloMET<2", selcuts[2], bcut[bbi], nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
                printf("     %db, ldp  cuts : %s\n", bbi+1, cutsldp  ) ;
                sprintf( arg1, "HT:MET>>h_ldp_%db_%s", bbi+1, qcdsamplename[si] ) ;
                qcdch[si] -> Draw( arg1, cutsldp, "colz" ) ;
