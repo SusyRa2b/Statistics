@@ -20,14 +20,9 @@ void runFit(TString inpath, TString outpath, TString outname = "")
     assert(myfile.is_open());
     myfile.close();
   }
-  
-  likelihoodBuilder(inpath,
-		    inpath+"setupFile.dat",
-		    inpath+"binFilesFile.dat",
-		    inpath+"signalModelFile.dat",
-		    0,"workspace",
-		    outpath+"likelihood_"+outname+".root");
-  
+
+  likelihoodBuilder(inpath+"setupFile.dat", inpath+"binFilesFile.dat", inpath, inpath+"sig1/", "workspace", outpath+"likelihood_"+outname+".root");
+   
   int status = minimalFit(outpath+"likelihood_"+outname+".root", 5, 0, 500, true, outpath+"dat_"+outname+".dat");
   if(status != 0) return;
   
