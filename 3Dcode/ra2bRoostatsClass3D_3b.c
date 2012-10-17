@@ -1672,6 +1672,7 @@
                 rar_sf_qcd[i][j][k] = makeGaussianConstraint( NP_name, sf_qcd[i][j][k], sf_qcd_err[i][j][k] ) ;
              } else {
                 rar_sf_qcd[i][j][k] = makeGaussianConstraint( NP_name, sf_qcd[i][j][k], 0. ) ;
+                workspace.import( *(rar_sf_qcd[i][j][k]) ) ;
              }
 
 

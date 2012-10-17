@@ -1,7 +1,7 @@
 
 
    echo toymc3b
-   $ROOTSYS/bin/root -b -q toywrapper3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat\",\"datfiles/sigcounts.T1bbbb.txt\",1100,300,\"datfiles/dummy_DeffDbtag-met4-ht4.dat\",50,\"output-toymc3b-test-hcp\",10,\"rootfiles/gi-plots-met4-ht4-v15.root\",true,4,true,false,\"null\",true,\"datfiles/sigsystematics.T1bbbb.JES.txt\"\)>&! logfiles/toymc3b.log
+   $ROOTSYS/bin/root -b -q toywrapper3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat\",\"datfiles/sigcounts.T1bbbb.txt\",1100,300,\"datfiles/dummy_DeffDbtag-met4-ht4.dat\",0,\"output-toymc3b-test-hcp\",100,\"rootfiles/gi-plots-met4-ht4-v15.root\",true,4,false,false,\"null\",true,\"datfiles/sigsystematics.T1bbbb.JES.txt\"\)>&! logfiles/toymc3b.log
 
 
 

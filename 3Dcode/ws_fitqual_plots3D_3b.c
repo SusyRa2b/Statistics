@@ -89,6 +89,25 @@
         nBinsHT = bi ;
      }
 
+      //-- Hardwire in to ignore the highest MET bin in the lowest HT bin.
+      bool ignoreBin[4][4] ;
+      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            ignoreBin[mbi][hbi] = false ;
+         } // hbi
+      } // mbi
+      ignoreBin[nBinsMET-1][0] = true ;
+
+      printf("\n\n *** Ignoring these bins in the analysis.\n\n") ;
+      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            if ( ignoreBin[mbi][hbi] ) {
+               printf("  MET %d, HT %d\n", mbi+1, hbi+1 ) ;
+            }
+         } // hbi
+      } // mbi
+      printf("\n\n\n") ;
+
      printf("\n\n Binning: nBinsMET = %d, nBinsHT = %d\n\n", nBinsMET, nBinsHT ) ;
 
      TString sMbins[nBinsMET];
@@ -196,6 +215,8 @@
      for ( int i = 0 ; i < nBinsMET ; i++ ) {
        for ( int j = 0 ; j < nBinsHT ; j++ ) {
 
+         if ( ignoreBin[i][j] ) continue ;
+
          char vname[1000] ;
 
          double trigeff(1.) ;
@@ -274,6 +295,7 @@
 
        for ( int i = 0 ; i < nBinsMET ; i++ ) {
 	 for ( int j = 0 ; j < nBinsHT ; j++ ) {
+           if ( ignoreBin[i][j] ) continue ;
 	   for ( int k = 0 ; k < nBinsBtag ; k++ ) {
 
 	     TString String_0lep  = "N_0lep" ;
@@ -526,6 +548,7 @@
 
      for ( int i = 0 ; i < nBinsMET ; i++ ) {
        for ( int j = 0 ; j < nBinsHT ; j++ ) {
+         if ( ignoreBin[i][j] ) continue ;
          for ( int k = 0 ; k < nBinsBtag ; k++ ) {
 
            printf(" here t1\n") ; cout << flush ;
@@ -587,7 +610,42 @@
               znnVal = 0. ;
            }
            ttwjVal = AttwjVal[i][j][k] ;
-           qcdVal  = AqcdVal[i][j][k] ;
+           ///qcdVal  = AqcdVal[i][j][k] ;
+           char pname[1000] ;
+           sprintf( pname, "mu_qcd_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+           if ( ws->obj(pname) != 0 ) {
+              qcdVal = trigeff * ( ((RooAbsReal*) ws->obj(pname)) -> getVal() ) ;
+           } else {
+              printf(" * %s missing.  Will try to compute it...\n", pname ) ;
+
+              sprintf( pname, "mu_qcd_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+              RooAbsReal* mu_qcd_ldp = (RooAbsReal*) ws->obj(pname) ;
+
+              sprintf( pname, "sf_qcd_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+              RooAbsReal* sf_qcd = (RooAbsReal*) ws->obj(pname) ;
+
+              sprintf( pname, "qcd_0lepLDP_ratio_H%d", j+1 ) ;
+              RooAbsReal* r_qcd_ht = (RooAbsReal*) ws->obj(pname) ;
+
+              sprintf( pname, "SFqcd_met%d", i+1 ) ;
+              RooAbsReal* sf_qcd_met = (RooAbsReal*) ws->obj(pname) ;
+
+              sprintf( pname, "SFqcd_nb%d", k+1 ) ;
+              RooAbsReal* sf_qcd_nb = (RooAbsReal*) ws->obj(pname) ;
+
+              if ( mu_qcd_ldp != 0 && sf_qcd != 0 && r_qcd_ht != 0 && sf_qcd_met != 0 && sf_qcd_nb != 0 ) {
+                 qcdVal = trigeff * (mu_qcd_ldp -> getVal())
+                        * (sf_qcd -> getVal())
+                        * (r_qcd_ht -> getVal())
+                        * (sf_qcd_met -> getVal())
+                        * (sf_qcd_nb -> getVal()) ;
+              } else {
+                 printf("\n\n *** missing one of the inputs. mu_qcd_ldp %p : sf_qcd %p : r_qcd_ht %p : sf_qcd_met %p : sf_qcd_nb %p\n",
+                     mu_qcd_ldp, sf_qcd, r_qcd_ht, sf_qcd_met, sf_qcd_nb ) ;
+              }
+
+           }
+
            lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
 
            dataErr = sqrt(dataVal) ;
@@ -1186,6 +1244,7 @@
 
         for ( int mbi=0 ; mbi < nBinsMET; mbi ++ ) {
            for ( int hbi=0 ; hbi < nBinsHT; hbi ++ ) {
+              if ( ignoreBin[mbi][hbi] ) continue ;
               for ( int bbi=0 ; bbi < nBinsBtag; bbi ++ ) {
                  char parName[1000] ;
                  sprintf( parName, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
@@ -1248,6 +1307,7 @@
 
         for ( int mbi=0 ; mbi < nBinsMET; mbi ++ ) {
            for ( int hbi=0 ; hbi < nBinsHT; hbi ++ ) {
+              if ( ignoreBin[mbi][hbi] ) continue ;
               for ( int bbi=0 ; bbi < nBinsBtag; bbi ++ ) {
                  char parName[1000] ;
                  sprintf( parName, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
@@ -1484,6 +1544,7 @@
 
         for ( int mbi=0 ; mbi < nBinsMET; mbi ++ ) {
            for ( int hbi=0 ; hbi < nBinsHT; hbi ++ ) {
+              if ( ignoreBin[mbi][hbi] ) continue ;
               for ( int bbi=0 ; bbi < nBinsBtag; bbi ++ ) {
 
                  char vname[1000] ;
