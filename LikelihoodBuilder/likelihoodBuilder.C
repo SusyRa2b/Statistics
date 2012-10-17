@@ -240,7 +240,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
   }
   double qcdGuess = observed.zeroLeptonLowDeltaPhiN - abcd.zeroLeptonLowDeltaPhiNMC;
   if(qcdGuess < 1e-5) qcdGuess = 1e-5;
-  RooRealVar zeroLeptonLowDeltaPhiNQCDYield(zeroLeptonLowDeltaPhiNName+"_QCDYield",zeroLeptonLowDeltaPhiNName+"_QCDYield",qcdGuess,1e-5,1e5);
+  RooRealVar zeroLeptonLowDeltaPhiNQCDYield(zeroLeptonLowDeltaPhiNName+"_QCDYield",zeroLeptonLowDeltaPhiNName+"_QCDYield",qcdGuess,1e-5,1e6);
   ws.import(zeroLeptonLowDeltaPhiNQCDYield);
   ws.extendSet(names.nuisances,zeroLeptonLowDeltaPhiNQCDYield.GetName());
   //RooAbsArg* zeroLeptonQCDClosure = 
@@ -296,7 +296,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
   RooRealVar* ZtoNuNu = ws.var("ZtoNuNu_"+observed.diMuonName);//use MuonName, which should be the same as ElectronName
   if(ZtoNuNu == NULL) 
     {
-      RooRealVar ZtoNuNu_temp("ZtoNuNu_"+observed.diMuonName,"ZtoNuNu_"+observed.diMuonName,(1./numbers.ZtollOverZtoNuNuRatio)*0.5*(observed.diMuon*numbers.ZtomumuPurity/(numbers.ZtomumuEfficiency*abcd.ZtomumuAcceptance) + observed.diElectron*numbers.ZtoeePurity/(numbers.ZtoeeEfficiency*abcd.ZtoeeAcceptance)),0.0,1e3);
+      RooRealVar ZtoNuNu_temp("ZtoNuNu_"+observed.diMuonName,"ZtoNuNu_"+observed.diMuonName,(1./numbers.ZtollOverZtoNuNuRatio)*0.5*(observed.diMuon*numbers.ZtomumuPurity/(numbers.ZtomumuEfficiency*abcd.ZtomumuAcceptance) + observed.diElectron*numbers.ZtoeePurity/(numbers.ZtoeeEfficiency*abcd.ZtoeeAcceptance)),0.0,1e5);
       ws.import(ZtoNuNu_temp);
       ZtoNuNu = ws.var("ZtoNuNu_"+observed.diMuonName);
       ws.extendSet(names.nuisances,ZtoNuNu->GetName());
@@ -598,7 +598,7 @@ void makeUnderlyingLikelihood(const likelihoodOptions options, RooWorkspace& ws 
   names.MCUncertainty = MCUncertainty->GetName();
   */
   
-  RooRealVar luminosity("luminosity","luminosity",luminosityInput,0.0,100.0);
+  RooRealVar luminosity("luminosity","luminosity",luminosityInput,0.0,1e2);
   luminosity.setConstant();//should eventually have error
   ws.import(luminosity);
   
