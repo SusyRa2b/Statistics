@@ -5,7 +5,7 @@
 
 
 
-    void MakeDataFile( const char* outputfilename = "datfiles/data-vals.txt" ) {
+    void MakeDataFile( const char* outputfilename = "datfiles/data-vals.dat" ) {
 
   //-- met4-ht4-v15
        const int nBinsBjets = 3 ;

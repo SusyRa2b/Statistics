@@ -148,7 +148,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   double minLeadJetPt = 70. ;
   double min3rdJetPt = 50. ;
   
-  bool doPUreweighting = false;
+  bool doPUreweighting = true;
 
   //-- met2-ht1-v1
 //const int nBinsMET   = 2 ;
@@ -443,9 +443,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
    char selname[3][100] = { "0lep", "1lep", "ldp" } ;
 
    char selcuts[3][10000] = {
-        "minDelPhiN>4&&nMu==0&&nEl==0&&",
-        "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&",
-        "minDelPhiN<4&&nMu==0&&nEl==0&&" } ;
+        "pfOcaloMET<2.0&&minDelPhiN>4&&nMu==0&&nEl==0&&",
+        "pfOcaloMET<2.0&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&",
+        "pfOcaloMET<2.0&&minDelPhiN<4&&nMu==0&&nEl==0&&" } ;
 
 
   //--- Output histograms.
@@ -844,7 +844,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     stringstream njcut ; njcut << nJetsCut ;
     cutszee += njcut.str();
     cutszee += "&&";
-
+/*
     for (int i = 0 ; i < nBinsMET ; i++) {
       for (int j = 0 ; j < nBinsHT ; j++) {
   
@@ -882,12 +882,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   
       }
     }
-  
+  */
     
     printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
   
     // Z -> mm observables
-  
+ /* 
     TString cutszmm = "cat==1&&minDelPhiNmm>4&&nVLB>=1&&nJets>=";
     cutszmm += njcut.str();
     cutszmm += "&&";
@@ -930,6 +930,43 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   
       }
     }
+  */
+
+//these are the values from data
+  
+inFile << "N_Zee_M1_H1      \t" << 26<< endl;
+inFile << "N_Zee_M1_H2      \t" << 13<< endl;
+inFile << "N_Zee_M1_H3      \t" << 4<< endl;
+inFile << "N_Zee_M1_H4      \t" << 1<< endl;
+inFile << "N_Zee_M2_H1      \t" << 73<< endl;
+inFile << "N_Zee_M2_H2      \t" << 51<< endl;
+inFile << "N_Zee_M2_H3      \t" << 11<< endl;
+inFile << "N_Zee_M2_H4      \t" << 7<< endl;
+inFile << "N_Zee_M3_H1      \t" << 35<< endl;
+inFile << "N_Zee_M3_H2      \t" << 34<< endl;
+inFile << "N_Zee_M3_H3      \t" << 2<< endl;
+inFile << "N_Zee_M3_H4      \t" << 3<< endl;
+inFile << "N_Zee_M4_H1      \t" << 10<< endl;
+inFile << "N_Zee_M4_H2      \t" << 19<< endl;
+inFile << "N_Zee_M4_H3      \t" << 2<< endl;
+inFile << "N_Zee_M4_H4      \t" << 4<< endl;
+inFile << "N_Zmm_M1_H1      \t" << 35<< endl;
+inFile << "N_Zmm_M1_H2      \t" << 28<< endl;
+inFile << "N_Zmm_M1_H3      \t" << 0<< endl;
+inFile << "N_Zmm_M1_H4      \t" << 1<< endl;
+inFile << "N_Zmm_M2_H1      \t" << 96<< endl;
+inFile << "N_Zmm_M2_H2      \t" << 84<< endl;
+inFile << "N_Zmm_M2_H3      \t" << 10<< endl;
+inFile << "N_Zmm_M2_H4      \t" << 2<< endl;
+inFile << "N_Zmm_M3_H1      \t" << 50<< endl;
+inFile << "N_Zmm_M3_H2      \t" << 34<< endl;
+inFile << "N_Zmm_M3_H3      \t" << 6<< endl;
+inFile << "N_Zmm_M3_H4      \t" << 2<< endl;
+inFile << "N_Zmm_M4_H1      \t" << 15<< endl;
+inFile << "N_Zmm_M4_H2      \t" << 28<< endl;
+inFile << "N_Zmm_M4_H3      \t" << 5<< endl;
+inFile << "N_Zmm_M4_H4      \t" << 4<< endl;
+
   
     //inFile << "Why are all three of these MC categories separate? I've just put them together (only QCD, Zinv, tt)" << endl;
     // Nttbarsingletopzjetsmc_ldp
@@ -996,7 +1033,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     // various parameters needed for Z -> invis.
   
     // Z -> ee acceptance
-  
+/*  
     for (int i = 0 ; i < nBinsMET ; i++) {
   
       TString Zee_acc = "acc_Zee";
@@ -1008,10 +1045,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
       inFile << Zee_acc << "  \t" << dummyErr << endl;
   
     }
-  
+*/
   
     // Z -> mm acceptance
   
+  /*
     for (int i = 0 ; i < nBinsMET ; i++) {
   
       TString Zmm_acc = "acc_Zmm";
@@ -1023,10 +1061,32 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
       inFile << Zmm_acc << "  \t" << dummyErr << endl;
   
     }
-  
+*/
+      
+
+
+
+inFile << "acc_Zee_M1       \t" << 0.675<< endl;
+inFile << "acc_Zee_M1_err  \t" << 0.014<< endl;
+inFile << "acc_Zee_M2       \t" << 0.706<< endl;
+inFile << "acc_Zee_M2_err  \t" << 0.014<< endl;
+inFile << "acc_Zee_M3       \t" << 0.753<< endl;
+inFile << "acc_Zee_M3_err  \t" << 0.015<< endl;
+inFile << "acc_Zee_M4       \t" << 0.801<< endl;
+inFile << "acc_Zee_M4_err \t" <<  0.016<< endl;
+inFile << "acc_Zmm_M1       \t" << 0.664<< endl;
+inFile << "acc_Zmm_M1_err  \t" << 0.014<< endl;
+inFile << "acc_Zmm_M2       \t" << 0.725<< endl;
+inFile << "acc_Zmm_M2_err  \t" << 0.015<< endl;
+inFile << "acc_Zmm_M3       \t" << 0.805<< endl;
+inFile << "acc_Zmm_M3_err \t" <<  0.016<< endl;
+inFile << "acc_Zmm_M4       \t" << 0.861<< endl;
+inFile << "acc_Zmm_M4_err  \t" << 0.018<< endl;
+
   
     // Z -> ll efficiencies
-  
+
+/*  
     for (int j = 0 ; j < nBinsHT ; j++) {
   
       TString Zee_eff = "Z_ee_eff";
@@ -1050,7 +1110,25 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
       inFile << Zmm_eff << "  \t" << 0.0506 << endl;
   
     }
-  
+*/
+
+inFile << "Z_ee_eff_H1           \t" << 0.876<< endl;
+inFile << "Z_ee_eff_H1_err      \t" << 0.035<< endl;
+inFile << "Z_ee_eff_H2          \t" << 0.876<< endl;
+inFile << "Z_ee_eff_H2_err      \t" << 0.035<< endl;
+inFile << "Z_ee_eff_H3           \t" << 0.876<< endl;
+inFile << "Z_ee_eff_H3_err      \t" << 0.035<< endl;
+inFile << "Z_ee_eff_H4           \t" << 0.876<< endl;
+inFile << "Z_ee_eff_H4_err      \t" << 0.035<< endl;
+inFile << "Z_mm_eff_H1           \t" << 0.877<< endl;
+inFile << "Z_mm_eff_H1_err      \t" << 0.013<< endl;
+inFile << "Z_mm_eff_H2           \t" << 0.877<< endl;
+inFile << "Z_mm_eff_H2_err      \t" << 0.013<< endl;
+inFile << "Z_mm_eff_H3           \t" << 0.877<< endl;
+inFile << "Z_mm_eff_H3_err      \t" << 0.013<< endl;
+inFile << "Z_mm_eff_H4           \t" << 0.877<< endl;
+inFile << "Z_mm_eff_H4_err     \t" <<  0.013<< endl;
+
   
     // Z -> ee VL to nominal scale factors
   // would it make more sense to count events in only the loosest HT and/or MET bin and
@@ -1075,7 +1153,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
    //
 
     // updated SF's to improve MC closure (the errors are the same as before)
-  
+  /*
     for (int i = 0 ; i < nBinsMET ; i++) {
   
       TString knn_1bS = "knn_1b";
@@ -1092,14 +1170,30 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     inFile << "knn_2b_err \t" << 0.009  << endl;
     inFile << "knn_3b     \t" << 0.0036 << endl;
     inFile << "knn_3b_err \t" << 0.003  << endl;
+*/
+
+inFile << "knn_1b_M1        \t" <<  0.426<< endl;
+inFile << "knn_1b_M1_err    \t" << 0.077<< endl;
+inFile << "knn_1b_M2        \t" << 0.411<< endl;
+inFile << "knn_1b_M2_err    \t" << 0.074<< endl;
+inFile << "knn_1b_M3       \t" <<  0.376<< endl;
+inFile << "knn_1b_M3_err    \t" << 0.069<< endl;
+inFile << "knn_1b_M4        \t" << 0.317<< endl;
+inFile << "knn_1b_M4_err    \t" << 0.062<< endl;
+inFile << "knn_2b           \t" << 0.110<< endl;
+inFile << "knn_2b_err       \t" << 0.054<< endl;
+inFile << "knn_3b           \t" << 0.012<< endl;
+inFile << "knn_3b_err       \t" << 0.007<< endl;
+
+
 
     // Z -> ll purity
   
     // use 2011 values for now.
-    inFile << "Z_ee_pur  \t" << 0.911 << endl;
-    inFile << "Z_ee_pur_err  \t" << 0.079 << endl;
-    inFile << "Z_mm_pur  \t" << 0.866 << endl;
-    inFile << "Z_mm_pur_err  \t" << 0.079 << endl;
+    inFile << "Z_ee_pur  \t" << 0.839 << endl;
+    inFile << "Z_ee_pur_err  \t" << 0.112 << endl;
+    inFile << "Z_mm_pur  \t" << 0.803 << endl;
+    inFile << "Z_mm_pur_err  \t" << 0.092 << endl;
   
   
     // scale factors:
@@ -1148,14 +1242,14 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   
     // sf_ee
   
-    inFile << "sf_ee \t" << dummyOne << endl;
-    inFile << "sf_ee_err \t" << dummyErr << endl;
+    inFile << "sf_ee \t" << 1.0 << endl;
+    inFile << "sf_ee_err \t" << 0.12 << endl;
     
   
     // sf_mm
   
-    inFile << "sf_mm \t" << dummyOne << endl;
-    inFile << "sf_mm_err \t" << dummyErr << endl;
+    inFile << "sf_mm \t" << 1.0 << endl;
+    inFile << "sf_mm_err \t" << 0.15 << endl;
 
 
     // btag eff err (Note: this was missing until Aug 3, 2012, but it's apparently not used.)

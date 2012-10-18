@@ -1,4 +1,3 @@
-
 #include "TH1F.h"
 #include "TH2F.h"
 #include "TFile.h"
@@ -707,13 +706,13 @@
             printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1,
                   parameterName,
                   hmctruth_ttwj_0lep_1b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
-            if ( useAverageTtwjClosure ) {
-               err        = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin)  ;
-               correction = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinContent(hbin)  ;
-            } else {
+            //if ( useAverageTtwjClosure ) {
+            //   err        = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin)  ;
+            //   correction = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinContent(hbin)  ;
+            //} else {
                err        = hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinError(hbin)  ;
                correction = hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinContent(hbin)  ;
-            }
+            //}
             if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
             if ( doTTWJSyst ) {
                updateFileValue( datfile, parameterName, systValue ) ;
@@ -734,13 +733,13 @@
             printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1,
                   parameterName,
                   hmctruth_ttwj_0lep_2b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
-            if ( useAverageTtwjClosure ) {
-               err        = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin)  ;
-               correction = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinContent(hbin)  ;
-            } else {
+            //if ( useAverageTtwjClosure ) {
+            //   err        = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin)  ;
+            //   correction = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinContent(hbin)  ;
+            //} else {
                err        = hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinError(hbin)  ;
                correction = hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinContent(hbin)  ;
-            }
+            //}
             if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
             if ( doTTWJSyst ) {
                updateFileValue( datfile, parameterName, systValue ) ;
