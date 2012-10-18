@@ -1153,7 +1153,7 @@
 
 
 
-
+   //=======================================================================================================
 
 
      printf("\n\n Now doing nuisance parameters.\n\n") ; cout << flush ;
@@ -1235,9 +1235,12 @@
         TH1F* hnp_eff_btageff_sf_ldp_prod_2b_val  = new TH1F("hnp_eff_btageff_sf_ldp_prod_2b_val" , "Nuisance parameters, eff SF * btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
         TH1F* hnp_eff_btageff_sf_ldp_prod_3b_val  = new TH1F("hnp_eff_btageff_sf_ldp_prod_3b_val" , "Nuisance parameters, eff SF * btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
 
-        TH1F* hnp_prim_eff = new TH1F("hnp_prim_eff", "Nuisance parameters, Efficiency primary Gaussians, pull", 7, 0.5, 7.5 ) ;
+        TH1F* hnp_prim_eff = new TH1F("hnp_prim_eff", "Nuisance parameters, Efficiency primary Gaussians, pull", 8, 0.5, 8.5 ) ;
 
-        TH1F* hnp_znn = new TH1F("hnp_znn", "Nuisance parameters, Znn, pull", 10+2*nBinsMET, 0.5, 10+2*nBinsMET+0.5 ) ;
+        TH1F* hnp_znn = new TH1F("hnp_znn", "Nuisance parameters, Znn, pull", 3*nBinsMET+2*nBinsHT+7, 0.5, 3*nBinsMET+2*nBinsHT+7+0.5 ) ;
+
+        TH1F* hnp_trig_0lep = new TH1F("hnp_trig_0lep", "Nuisance parameters, trigger (0lep), pull", 2+nBinsMET*nBinsHT-1, 0.5, 2+nBinsMET*nBinsHT-1+0.5 ) ;
+        TH1F* hnp_trig_1lep = new TH1F("hnp_trig_1lep", "Nuisance parameters, trigger (1lep), pull", 2+nBinsMET*nBinsHT-1, 0.5, 2+nBinsMET*nBinsHT-1+0.5 ) ;
 
 
 
@@ -1246,6 +1249,9 @@
            for ( int hbi=0 ; hbi < nBinsHT; hbi ++ ) {
               if ( ignoreBin[mbi][hbi] ) continue ;
               for ( int bbi=0 ; bbi < nBinsBtag; bbi ++ ) {
+
+                 if ( dataN_0lep[mbi][hbi][bbi] == 0 ) continue ; //-- to do something sensible for blind fit.
+
                  char parName[1000] ;
                  sprintf( parName, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  RooAbsReal* np = (RooAbsReal*) ws->obj( parName ) ;
@@ -1309,6 +1315,9 @@
            for ( int hbi=0 ; hbi < nBinsHT; hbi ++ ) {
               if ( ignoreBin[mbi][hbi] ) continue ;
               for ( int bbi=0 ; bbi < nBinsBtag; bbi ++ ) {
+
+                 if ( dataN_0lep[mbi][hbi][bbi] == 0 ) continue ; //-- to do something sensible for blind fit.
+
                  char parName[1000] ;
                  sprintf( parName, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  RooAbsReal* np = (RooAbsReal*) ws->obj( parName ) ;
@@ -1367,31 +1376,182 @@
         printf("\n\n") ;
 
 
-        //--- Efficiency primary Gaussians.
+        //--- General parameters
         {
             char parName[1000] ;
             RooAbsReal* np(0x0) ;
 
-            sprintf( parName, "eff_sf" ) ;
+        /////////// obsolete //////////////////////////
+        /// sprintf( parName, "eff_sf" ) ;
+        /// np = (RooAbsReal*) ws->obj( parName ) ;
+        /// double global_eff_sf(0.) ;
+        /// if ( np == 0x0 ) {
+        ///    printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+        ///    /// return ;
+        /// } else {
+        ///    global_eff_sf = np -> getVal() ;
+        /// }
+        /////////// obsolete //////////////////////////
+
+
+
+
+
+
+           //--- QCD SF_met3
+
+            sprintf( parName, "SFqcd_met3" ) ;
             np = (RooAbsReal*) ws->obj( parName ) ;
-            double global_eff_sf(0.) ;
+            double SFqcd_met3_val = 0. ;
             if ( np == 0x0 ) {
                printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-               /// return ;
             } else {
-               global_eff_sf = np -> getVal() ;
+               SFqcd_met3_val =  np -> getVal() ;
             }
 
-            sprintf( parName, "btageff_sf" ) ;
+            sprintf( parName, "pdf_mean_SFqcd_met3" ) ;
             np = (RooAbsReal*) ws->obj( parName ) ;
-            double global_btageff_sf = 1. ;
+            double SFqcd_met3_mean = 0. ;
             if ( np == 0x0 ) {
                printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
             } else {
-               global_btageff_sf = np -> getVal() ;
+               SFqcd_met3_mean =  np -> getVal() ;
             }
 
-            //--- don't know where else to put this...
+            sprintf( parName, "pdf_sigma_SFqcd_met3" ) ;
+            np = (RooAbsReal*) ws->obj( parName ) ;
+            double SFqcd_met3_sigma = 1. ;
+            if ( np == 0x0 ) {
+               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+            } else {
+               SFqcd_met3_sigma =  np -> getVal() ;
+            }
+            double SFqcd_met3_pull = (SFqcd_met3_val-SFqcd_met3_mean) / SFqcd_met3_sigma ;
+
+            printf("\n SFqcd_met3 : val = %6.3f, mean = %6.3f, sigma = %6.3f, pull = %6.3f\n",
+                 SFqcd_met3_val, SFqcd_met3_mean, SFqcd_met3_sigma, SFqcd_met3_pull ) ;
+
+
+
+
+           //--- QCD SF_met4
+
+            sprintf( parName, "SFqcd_met4" ) ;
+            np = (RooAbsReal*) ws->obj( parName ) ;
+            double SFqcd_met4_val = 0. ;
+            if ( np == 0x0 ) {
+               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+            } else {
+               SFqcd_met4_val =  np -> getVal() ;
+            }
+
+            sprintf( parName, "pdf_mean_SFqcd_met4" ) ;
+            np = (RooAbsReal*) ws->obj( parName ) ;
+            double SFqcd_met4_mean = 0. ;
+            if ( np == 0x0 ) {
+               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+            } else {
+               SFqcd_met4_mean =  np -> getVal() ;
+            }
+
+            sprintf( parName, "pdf_sigma_SFqcd_met4" ) ;
+            np = (RooAbsReal*) ws->obj( parName ) ;
+            double SFqcd_met4_sigma = 1. ;
+            if ( np == 0x0 ) {
+               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+            } else {
+               SFqcd_met4_sigma =  np -> getVal() ;
+            }
+            double SFqcd_met4_pull = (SFqcd_met4_val-SFqcd_met4_mean) / SFqcd_met4_sigma ;
+
+            printf("\n SFqcd_met4 : val = %6.3f, mean = %6.3f, sigma = %6.3f, pull = %6.3f\n",
+                 SFqcd_met4_val, SFqcd_met4_mean, SFqcd_met4_sigma, SFqcd_met4_pull ) ;
+
+
+
+
+
+
+           //--- QCD SF_nb3
+
+            sprintf( parName, "SFqcd_nb3" ) ;
+            np = (RooAbsReal*) ws->obj( parName ) ;
+            double SFqcd_nb3_val = 0. ;
+            if ( np == 0x0 ) {
+               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+            } else {
+               SFqcd_nb3_val =  np -> getVal() ;
+            }
+
+            sprintf( parName, "pdf_mean_SFqcd_nb3" ) ;
+            np = (RooAbsReal*) ws->obj( parName ) ;
+            double SFqcd_nb3_mean = 0. ;
+            if ( np == 0x0 ) {
+               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+            } else {
+               SFqcd_nb3_mean =  np -> getVal() ;
+            }
+
+            sprintf( parName, "pdf_sigma_SFqcd_nb3" ) ;
+            np = (RooAbsReal*) ws->obj( parName ) ;
+            double SFqcd_nb3_sigma = 1. ;
+            if ( np == 0x0 ) {
+               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+            } else {
+               SFqcd_nb3_sigma =  np -> getVal() ;
+            }
+            double SFqcd_nb3_pull = (SFqcd_nb3_val-SFqcd_nb3_mean) / SFqcd_nb3_sigma ;
+
+            printf("\n SFqcd_nb3 : val = %6.3f, mean = %6.3f, sigma = %6.3f, pull = %6.3f\n",
+                 SFqcd_nb3_val, SFqcd_nb3_mean, SFqcd_nb3_sigma, SFqcd_nb3_pull ) ;
+
+
+
+
+
+
+
+           //--- VV SF
+
+            sprintf( parName, "rar_vv_sf" ) ;
+            np = (RooAbsReal*) ws->obj( parName ) ;
+            double vv_sf_val = 0. ;
+            if ( np == 0x0 ) {
+               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+            } else {
+               vv_sf_val =  np -> getVal() ;
+            }
+
+            sprintf( parName, "mean_rar_vv_sf" ) ;
+            np = (RooAbsReal*) ws->obj( parName ) ;
+            double vv_sf_mean = 0. ;
+            if ( np == 0x0 ) {
+               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+            } else {
+               vv_sf_mean =  np -> getVal() ;
+            }
+
+            sprintf( parName, "sigma_rar_vv_sf" ) ;
+            np = (RooAbsReal*) ws->obj( parName ) ;
+            double vv_sf_sigma = 1. ;
+            if ( np == 0x0 ) {
+               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+            } else {
+               vv_sf_sigma =  np -> getVal() ;
+            }
+            double vv_sf_pull = (vv_sf_val-vv_sf_mean) / vv_sf_sigma ;
+
+            printf("\n vv_sf : val = %6.3f, mean = %6.3f, sigma = %6.3f, pull = %6.3f\n",
+                 vv_sf_val, vv_sf_mean, vv_sf_sigma, vv_sf_pull ) ;
+
+
+
+
+
+
+
+          //-- SF MC
+
             sprintf( parName, "sf_mc" ) ;
             np = (RooAbsReal*) ws->obj( parName ) ;
             double global_sf_mc = 1. ;
@@ -1411,15 +1571,51 @@
             double sf_mc_pull = (global_sf_mc-1.) / sf_mc_sigma ;
             printf(" Overall MC systematic val = %5.2f, sigma = %5.2f, pull = %6.3f\n", global_sf_mc, sf_mc_sigma, sf_mc_pull ) ;
 
-            printf(" Global efficiency scale factors (both Gaussian with mean 0, sigma 1): eff_sf = %6.3f,  btageff_sf = %6.3f\n", global_eff_sf, global_btageff_sf ) ;
 
-            hnp_prim_eff -> SetBinContent(2, global_eff_sf ) ;
-            hnp_prim_eff -> SetBinContent(4, global_btageff_sf ) ;
-            hnp_prim_eff -> SetBinContent(6, sf_mc_pull ) ;
+
+
+
+            sprintf( parName, "btageff_sf" ) ;
+            np = (RooAbsReal*) ws->obj( parName ) ;
+            double global_btageff_sf = 1. ;
+            if ( np == 0x0 ) {
+               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+            } else {
+               global_btageff_sf = np -> getVal() ;
+            }
+            printf(" Global efficiency scale factors (Gaussian with mean 0, sigma 1): btageff_sf = %6.3f\n", global_btageff_sf ) ;
+
+
+
             TAxis* xaxis = hnp_prim_eff -> GetXaxis() ;
-            xaxis->SetBinLabel(2,"Eff SF") ;
-            xaxis->SetBinLabel(4,"Btag Eff SF") ;
-            xaxis->SetBinLabel(6,"MC SF") ;
+
+            int hbin = 2 ;
+
+
+            hnp_prim_eff -> SetBinContent( hbin, SFqcd_met3_pull ) ;
+            xaxis->SetBinLabel(hbin,"SF QCD, MET3") ;
+            hbin++ ;
+
+            hnp_prim_eff -> SetBinContent( hbin, SFqcd_met4_pull ) ;
+            xaxis->SetBinLabel(hbin,"SF QCD, MET4") ;
+            hbin++ ;
+
+            hnp_prim_eff -> SetBinContent( hbin, SFqcd_nb3_pull ) ;
+            xaxis->SetBinLabel(hbin,"SF QCD, nB>=3") ;
+            hbin++ ;
+
+            hnp_prim_eff -> SetBinContent( hbin, vv_sf_pull ) ;
+            xaxis->SetBinLabel(hbin,"SF VV") ;
+            hbin++ ;
+
+            hnp_prim_eff -> SetBinContent(hbin, global_btageff_sf ) ;
+            xaxis->SetBinLabel(hbin,"Btag Eff SF") ;
+            hbin++ ;
+
+            hnp_prim_eff -> SetBinContent(hbin, sf_mc_pull ) ;
+            xaxis->SetBinLabel(hbin,"MC SF") ;
+            hbin++ ;
+
             hnp_prim_eff -> SetFillColor(kOrange+1 ) ;
 
             hnp_prim_eff -> SetLabelSize(0.075,"x") ;
@@ -1441,8 +1637,11 @@
 
             TAxis* xaxis = hp -> GetXaxis() ;
 
-            int  n_znnNP_gauss_pars(4) ;
-            char znnNP_gauss_par[4][100] = { "knn_1b", "knn_2b", "knn_3b", "sf_ll" } ;
+            int  n_znnNP_gauss_pars(7) ;
+            char znnNP_gauss_par[7][100] = { "knn_1b_M1", "knn_1b_M2", "knn_1b_M3", "knn_1b_M4",
+                                             "knn_2b", "knn_3b",
+                                             "sf_ll"
+                                             } ;
 
 
             for ( int npi=0; npi< n_znnNP_gauss_pars; npi++ ) {
@@ -1490,17 +1689,19 @@
 
             } // npi
 
-            int  n_znnNP_beta_pars = 4 + 2 * nBinsMET ;
             char znnNP_beta_par[20][100] ;
             int zbnpi(0) ;
-            sprintf( znnNP_beta_par[zbnpi++], "eff_Zee" ) ;
-            sprintf( znnNP_beta_par[zbnpi++], "eff_Zmm" ) ;
+            for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+               sprintf( znnNP_beta_par[zbnpi++], "eff_Zee_H%d", hbi+1 ) ;
+               sprintf( znnNP_beta_par[zbnpi++], "eff_Zmm_H%d", hbi+1 ) ;
+            }
+            for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+               sprintf( znnNP_beta_par[zbnpi++], "acc_Zee_M%d", mbi+1 ) ;
+               sprintf( znnNP_beta_par[zbnpi++], "acc_Zmm_M%d", mbi+1 ) ;
+            } // i
             sprintf( znnNP_beta_par[zbnpi++], "pur_Zee" ) ;
             sprintf( znnNP_beta_par[zbnpi++], "pur_Zmm" ) ;
-            for ( int i=0; i<nBinsMET; i++ ) {
-               sprintf( znnNP_beta_par[zbnpi++], "acc_Zee_M%d", i+1 ) ;
-               sprintf( znnNP_beta_par[zbnpi++], "acc_Zmm_M%d", i+1 ) ;
-            } // i
+            int  n_znnNP_beta_pars = zbnpi ;
 
             for ( int npi=0; npi< n_znnNP_beta_pars; npi++ ) {
 
@@ -1538,6 +1739,98 @@
         }
         printf("\n\n") ;
 
+
+
+       //--- Trigger, 0lep
+
+        {
+
+           TH1F* hp = hnp_trig_0lep ;
+
+           hp -> SetFillColor( kOrange-3 ) ;
+
+           TAxis* xaxis = hp -> GetXaxis() ;
+
+           int hbin = 2 ;
+
+           for ( int mbi=0 ; mbi < nBinsMET; mbi ++ ) {
+              for ( int hbi=0 ; hbi < nBinsHT; hbi ++ ) {
+
+                 if ( ignoreBin[mbi][hbi] ) continue ;
+
+                 char parName[1000] ;
+
+                 sprintf( parName, "trigeff_M%d_H%d", mbi+1, hbi+1 ) ;
+                 double mode, rms, alpha, beta ;
+                 getBetaModeRMS( parName, ws, mode, rms, alpha, beta ) ;
+                 RooAbsReal* np = (RooAbsReal*) ws->obj( parName ) ;
+                 if ( np == 0x0 ) {
+                    printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+                 }
+                 double npVal = 1. ;
+                 double pull = 0. ;
+                 if ( np != 0x0 ) {
+                    npVal = np->getVal() ;
+                    pull = (npVal-mode)/rms ;
+                 }
+
+                 hp -> SetBinContent( hbin, pull ) ;
+                 xaxis -> SetBinLabel( hbin, parName ) ;
+
+                 printf("  %s : mode=%7.3f, rms=%7.3f, val=%7.3f, pull=%7.3f\n", parName, mode, rms, npVal, pull ) ;
+
+                 hbin++ ;
+
+              } // hbi.
+           } // mbi.
+
+        }
+
+
+       //--- Trigger, 1lep
+
+        {
+
+           TH1F* hp = hnp_trig_1lep ;
+
+           hp -> SetFillColor( kOrange-3 ) ;
+
+           TAxis* xaxis = hp -> GetXaxis() ;
+
+           int hbin = 2 ;
+
+           for ( int mbi=0 ; mbi < nBinsMET; mbi ++ ) {
+              for ( int hbi=0 ; hbi < nBinsHT; hbi ++ ) {
+
+                 if ( ignoreBin[mbi][hbi] ) continue ;
+
+                 char parName[1000] ;
+
+                 sprintf( parName, "trigeff_sl_M%d_H%d", mbi+1, hbi+1 ) ;
+                 double mode, rms, alpha, beta ;
+                 getBetaModeRMS( parName, ws, mode, rms, alpha, beta ) ;
+                 RooAbsReal* np = (RooAbsReal*) ws->obj( parName ) ;
+                 if ( np == 0x0 ) {
+                    printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+                 }
+                 double npVal = 1. ;
+                 double pull = 0. ;
+                 if ( np != 0x0 ) {
+                    npVal = np->getVal() ;
+                    pull = (npVal-mode)/rms ;
+                 }
+
+                 hp -> SetBinContent( hbin, pull ) ;
+                 xaxis -> SetBinLabel( hbin, parName ) ;
+
+                 printf("  %s : mode=%7.3f, rms=%7.3f, val=%7.3f, pull=%7.3f\n", parName, mode, rms, npVal, pull ) ;
+
+                 hbin++ ;
+
+              } // hbi.
+           } // mbi.
+
+        }
 
 
        //--- bin-by-bin efficiencies
@@ -2060,43 +2353,28 @@
 
 
 
-        //=== Efficiency and Znn nuisance par pulls ============
+        //=== Efficiency par pulls ============
 
 
         TCanvas* cnp2 = (TCanvas*) gDirectory->FindObject("cnp2") ;
         if ( cnp2 == 0x0 ) {
-           cnp2 = new TCanvas("cnp2","RA2b efficiency and Znn nuisance par pull", 850, 1000 ) ;
+           cnp2 = new TCanvas("cnp2","RA2b efficiency par pull", 850, 1000 ) ;
         }
-        cnp2->Divide(3,4) ;
+        cnp2->Divide(3,3) ;
 
         cnp2->cd(1) ;
-        hnp_prim_eff->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_prim_eff ) ;
-        globalChi2 += chi2 ;
-        npChi2 += chi2 ;
-
-
-        cnp2->cd(2) ;
-        hnp_znn->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_znn ) ;
-        globalChi2 += chi2 ;
-        npChi2 += chi2 ;
-
-
-
-        cnp2->cd(4) ;
         hnp_eff_sf_1b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_1b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
-        cnp2->cd(5) ;
+        cnp2->cd(2) ;
         hnp_eff_sf_2b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_2b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
-        cnp2->cd(6) ;
+        cnp2->cd(3) ;
         hnp_eff_sf_3b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_3b_pull ) ;
         globalChi2 += chi2 ;
@@ -2104,19 +2382,19 @@
 
 
 
-        cnp2->cd(7) ;
+        cnp2->cd(4) ;
         hnp_eff_sf_sl_1b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_sl_1b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
-        cnp2->cd(8) ;
+        cnp2->cd(5) ;
         hnp_eff_sf_sl_2b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_sl_2b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
-        cnp2->cd(9) ;
+        cnp2->cd(6) ;
         hnp_eff_sf_sl_3b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_sl_3b_pull ) ;
         globalChi2 += chi2 ;
@@ -2124,23 +2402,25 @@
 
 
 
-        cnp2->cd(10) ;
+        cnp2->cd(7) ;
         hnp_eff_sf_ldp_1b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_1b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
-        cnp2->cd(11) ;
+        cnp2->cd(8) ;
         hnp_eff_sf_ldp_2b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_2b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
-        cnp2->cd(12) ;
+        cnp2->cd(9) ;
         hnp_eff_sf_ldp_3b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_3b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
+
+
 
 
 
@@ -2226,6 +2506,42 @@
 
 
 
+
+      //--- general, Znn, and trigger
+
+        TCanvas* cnp3 = (TCanvas*) gDirectory->FindObject("cnp3") ;
+        if ( cnp3 == 0x0 ) {
+           cnp3 = new TCanvas("cnp3","RA2b efficiency par pull", 850, 1000 ) ;
+        }
+        cnp3->Divide(2,2) ;
+
+
+        cnp3->cd(1) ;
+        hnp_prim_eff->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_prim_eff ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
+
+
+        cnp3->cd(2) ;
+        hnp_znn->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_znn ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
+
+
+        cnp3->cd(3) ;
+        hnp_trig_0lep->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_trig_0lep ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
+
+
+        cnp3->cd(4) ;
+        hnp_trig_1lep->Draw() ;
+        chi2 = addChi2FromPullHist( hnp_trig_1lep ) ;
+        globalChi2 += chi2 ;
+        npChi2 += chi2 ;
 
 
 
