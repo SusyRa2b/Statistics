@@ -1112,22 +1112,22 @@ inFile << "acc_Zmm_M4_err  \t" << 0.018<< endl;
     }
 */
 
-inFile << "Z_ee_eff_H1           \t" << 0.876<< endl;
-inFile << "Z_ee_eff_H1_err      \t" << 0.035<< endl;
-inFile << "Z_ee_eff_H2          \t" << 0.876<< endl;
-inFile << "Z_ee_eff_H2_err      \t" << 0.035<< endl;
-inFile << "Z_ee_eff_H3           \t" << 0.876<< endl;
-inFile << "Z_ee_eff_H3_err      \t" << 0.035<< endl;
-inFile << "Z_ee_eff_H4           \t" << 0.876<< endl;
-inFile << "Z_ee_eff_H4_err      \t" << 0.035<< endl;
-inFile << "Z_mm_eff_H1           \t" << 0.877<< endl;
-inFile << "Z_mm_eff_H1_err      \t" << 0.013<< endl;
-inFile << "Z_mm_eff_H2           \t" << 0.877<< endl;
-inFile << "Z_mm_eff_H2_err      \t" << 0.013<< endl;
-inFile << "Z_mm_eff_H3           \t" << 0.877<< endl;
-inFile << "Z_mm_eff_H3_err      \t" << 0.013<< endl;
-inFile << "Z_mm_eff_H4           \t" << 0.877<< endl;
-inFile << "Z_mm_eff_H4_err     \t" <<  0.013<< endl;
+inFile << "Z_ee_eff_H1           \t" << 0.872<< endl;
+inFile << "Z_ee_eff_H1_err      \t" << 0.049<< endl;
+inFile << "Z_ee_eff_H2          \t" << 0.783<< endl;
+inFile << "Z_ee_eff_H2_err      \t" << 0.046<< endl;
+inFile << "Z_ee_eff_H3           \t" << 0.920<< endl;
+inFile << "Z_ee_eff_H3_err      \t" << 0.045<< endl;
+inFile << "Z_ee_eff_H4           \t" << 0.963<< endl;
+inFile << "Z_ee_eff_H4_err      \t" << 0.097<< endl;
+inFile << "Z_mm_eff_H1           \t" << 0.900<< endl;
+inFile << "Z_mm_eff_H1_err      \t" << 0.016<< endl;
+inFile << "Z_mm_eff_H2           \t" << 0.875<< endl;
+inFile << "Z_mm_eff_H2_err      \t" << 0.021<< endl;
+inFile << "Z_mm_eff_H3           \t" << 0.792<< endl;
+inFile << "Z_mm_eff_H3_err      \t" << 0.045<< endl;
+inFile << "Z_mm_eff_H4           \t" << 0.651<< endl;
+inFile << "Z_mm_eff_H4_err     \t" <<  0.077<< endl;
 
   
     // Z -> ee VL to nominal scale factors
