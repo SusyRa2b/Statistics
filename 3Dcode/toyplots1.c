@@ -53,7 +53,12 @@
 
   //----------------------------
 
-   void toyplots1( const char* infilename = "output-toymc2b-mgl850-mlsp600-100evts-newMC-wsyst-test5a-useE0Ltrue/toy-results.root", bool doDiff=false, bool doFrac=false, float sethmax=0.0 ) {
+   //void toyplots1( const char* infilename = "toy1200300-wSUSY.root", bool doDiff=false, bool doFrac=false, float sethmax=0.0 ) {
+   void toyplots1( const char* infilename = "toy1200300-nSUSY.root", bool doDiff=false, bool doFrac=false, float sethmax=0.0 ) {
+   //void toyplots1( const char* infilename = "toy1100700-wSUSY.root", bool doDiff=false, bool doFrac=false, float sethmax=0.0 ) {
+   //void toyplots1( const char* infilename = "toy1100700-nSUSY.root", bool doDiff=false, bool doFrac=false, float sethmax=0.0 ) {
+   //void toyplots1( const char* infilename = "toy800700-wSUSY.root", bool doDiff=false, bool doFrac=false, float sethmax=0.0 ) {
+   //void toyplots1( const char* infilename = "toy800700-nSUSY.root", bool doDiff=false, bool doFrac=false, float sethmax=0.0 ) {
 
       gStyle->SetOptStat(0) ;
       gStyle->SetLabelSize(0.08,"y") ;
@@ -203,6 +208,20 @@
 
 
       } // cani.
+//save some plots
+      TCanvas* c ;
+      char cname[1000] ;
+      sprintf( cname, "c_nbjet" ) ;
+      c = (TCanvas*) gDirectory->FindObject( cname ) ;
+      c->SaveAs("toyNB_1200300_nSUSY.pdf");
+      
+            sprintf( cname, "c_met" ) ;
+      c = (TCanvas*) gDirectory->FindObject( cname ) ;
+      c->SaveAs("toyMET_1200300_nSUSY.pdf");
+
+       sprintf( cname, "c_ht" ) ;
+      c = (TCanvas*) gDirectory->FindObject( cname ) ;
+      c->SaveAs("toyHT_1200300_nSUSY.pdf");
 
    } // toyplots1
 

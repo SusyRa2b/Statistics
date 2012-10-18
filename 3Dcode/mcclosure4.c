@@ -513,11 +513,26 @@
       line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
       hscalefactor_ttwj_0over1ratio_2b->Draw("same") ;
       cttwj3->cd(6) ;
-      hscalefactor_ttwj_0over1ratio_3b->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Scale Factor") ;
-      hscalefactor_ttwj_0over1ratio_3b_whalfcorr->DrawCopy("e1") ;
-      hscalefactor_ttwj_0over1ratio_3b->DrawCopy("samee1") ;
+//using average here for 3b bin
+//really should set up something to check useAverageTtwjClosure but this is the plot we need for the AN
+      h_ttwj_ave_0over1ratio->SetMarkerStyle(24) ;
+      h_ttwj_ave_0over1ratio->SetLineColor(1) ;
+      h_ttwj_ave_0over1ratio_wrms->SetMarkerStyle(24) ;
+      h_ttwj_ave_0over1ratio_wrms->SetLineColor(4) ;
+      hscalefactor_ttwj_ave_0over1ratio->SetMarkerStyle(24) ;
+      hscalefactor_ttwj_ave_0over1ratio->SetLineColor(1) ;
+      hscalefactor_ttwj_ave_0over1ratio_wrms->SetMarkerStyle(24) ;
+      hscalefactor_ttwj_ave_0over1ratio_wrms->SetLineColor(4) ;
+      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->SetMarkerStyle(24) ;
+      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->SetLineColor(1) ;
+      hscalefactor_ttwj_ave_0over1ratio->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Scale Factor") ;
+      hscalefactor_ttwj_ave_0over1ratio_wrms->SetTitle("0lep, #geq 1 btag") ;
+      hscalefactor_ttwj_ave_0over1ratio_wrms->SetMaximum(2.5);
+      hscalefactor_ttwj_ave_0over1ratio_wrms->Draw("e1") ;
+      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->Draw("samee1") ;
+      hscalefactor_ttwj_ave_0over1ratio->DrawCopy("samee1") ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
-      hscalefactor_ttwj_0over1ratio_3b->Draw("same") ;
+      hscalefactor_ttwj_ave_0over1ratio->Draw("same") ;
 
 
       TString outttwj3( infileStr ) ;
@@ -526,23 +541,13 @@
       cttwj3->SaveAs( outttwj3 ) ;
 
    //----
-
-      h_ttwj_ave_0over1ratio->SetMarkerStyle(24) ;
       h_ttwj_ave_0over1ratio->SetMarkerSize(1.5) ;
-      h_ttwj_ave_0over1ratio->SetLineColor(1) ;
-      h_ttwj_ave_0over1ratio_wrms->SetMarkerStyle(24) ;
       h_ttwj_ave_0over1ratio_wrms->SetMarkerSize(1.5) ;
-      h_ttwj_ave_0over1ratio_wrms->SetLineColor(4) ;
-
-      hscalefactor_ttwj_ave_0over1ratio->SetMarkerStyle(24) ;
       hscalefactor_ttwj_ave_0over1ratio->SetMarkerSize(1.5) ;
-      hscalefactor_ttwj_ave_0over1ratio->SetLineColor(1) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms->SetMarkerStyle(24) ;
       hscalefactor_ttwj_ave_0over1ratio_wrms->SetMarkerSize(1.5) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms->SetLineColor(4) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->SetMarkerStyle(24) ;
       hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->SetMarkerSize(1.5) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->SetLineColor(1) ;
+
+
 
       hmctruth_ttwj_0over1ratio_1b->SetMarkerStyle(20) ;
       hmctruth_ttwj_0over1ratio_2b->SetMarkerStyle(20) ;
