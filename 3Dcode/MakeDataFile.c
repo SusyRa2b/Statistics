@@ -62,20 +62,7 @@
        TH2F* h_ldp[nBinsBjets] ;
        TH2F* h_zl [nBinsBjets] ;
        TH2F* h_sl [nBinsBjets] ; 
-
-       inFile << "Using HT bins:  " ;
-       for (int j = 0 ; j <= nBinsHT ; j++ ) {
-         inFile << Hbins[j] ;
-         if ( j < nBinsHT ) inFile << "-" ;
-       }
-
-       inFile << "\t Using MET bins: " ;
-       for (int i = 0 ; i <= nBinsMET ; i++ ) {
-         inFile << Mbins[i] ;
-         if ( i < nBinsMET ) inFile << "-" ;
-       }
   
-       inFile << endl ;
 
        for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
