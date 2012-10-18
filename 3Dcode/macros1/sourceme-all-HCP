@@ -1,0 +1,14 @@
+
+ # mv datfiles datfiles-old5
+ # mv logfiles logfiles-old5
+ # mv rootfiles rootfiles-old5
+ # mv outputfiles outputfiles-old5
+ # mkdir datfiles
+ # cp datfiles-old5/sig*.txt datfiles/
+
+   source macros1/sourceme-geninput-HCP
+   source macros1/sourceme-makews3b-HCP
+   source macros1/sourceme-fitqual-HCP
+   source macros1/sourceme-toymc3b-HCP
+
+
