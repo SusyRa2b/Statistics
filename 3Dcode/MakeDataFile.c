@@ -5,7 +5,7 @@
 
 
 
-    void MakeDataFile( const char* outputfilename = "datfiles/data-vals.dat" ) {
+    void MakeDataFile( const char* outputfilename = "datfiles/data-vals-unblind.dat" ) {
 
   //-- met4-ht4-v15
        const int nBinsBjets = 3 ;
@@ -24,44 +24,58 @@
        } // mbi.
 
      //--- nB=2, highest met bin
-       binIsBlind[3][0][1] = true ;
-       binIsBlind[3][1][1] = true ;
-       binIsBlind[3][2][1] = true ;
-       binIsBlind[3][3][1] = true ;
+       binIsBlind[3][0][1] = false ;
+       binIsBlind[3][1][1] = false ;
+       binIsBlind[3][2][1] = false ;
+       binIsBlind[3][3][1] = false ;
 
      //--- nB=3, top 3 met bins
-       binIsBlind[1][0][2] = true ;
-       binIsBlind[1][1][2] = true ;
-       binIsBlind[1][2][2] = true ;
-       binIsBlind[1][3][2] = true ;
+       binIsBlind[1][0][2] = false ;
+       binIsBlind[1][1][2] = false ;
+       binIsBlind[1][2][2] = false ;
+       binIsBlind[1][3][2] = false ;
 
-       binIsBlind[2][0][2] = true ;
-       binIsBlind[2][1][2] = true ;
-       binIsBlind[2][2][2] = true ;
-       binIsBlind[2][3][2] = true ;
+       binIsBlind[2][0][2] = false ;
+       binIsBlind[2][1][2] = false ;
+       binIsBlind[2][2][2] = false ;
+       binIsBlind[2][3][2] = false ;
 
-       binIsBlind[3][0][2] = true ;
-       binIsBlind[3][1][2] = true ;
-       binIsBlind[3][2][2] = true ;
-       binIsBlind[3][3][2] = true ;
+       binIsBlind[3][0][2] = false ;
+       binIsBlind[3][1][2] = false ;
+       binIsBlind[3][2][2] = false ;
+       binIsBlind[3][3][2] = false ;
 
        TChain datach("tree") ;
 
-       datach.Add( "filesHCP_53_v4/MET_2012A_BLIND.root" ) ;
-       datach.Add( "filesHCP_53_v4/MET_2012B_BLIND.root" ) ;
-       datach.Add( "filesHCP_53_v4/MET_2012C_pr_BLIND.root" ) ;
-       datach.Add( "filesHCP_53_v4/MET_2012C_rr_BLIND.root" ) ;
-       datach.Add( "filesHCP_53_v4/HT_2012A_BLIND.root" ) ;
-       datach.Add( "filesHCP_53_v4/HTMHT_2012B_BLIND.root" ) ;
-       datach.Add( "filesHCP_53_v4/HTMHT_2012C_pr_BLIND.root" ) ;
-       datach.Add( "filesHCP_53_v4/HTMHT_2012C_rr_BLIND.root" ) ;
-       datach.Add( "filesHCP_53_v4/JetHT_2012B_BLIND.root" ) ;
-       datach.Add( "filesHCP_53_v4/JetHT_2012C_pr_BLIND.root" ) ;
-       datach.Add( "filesHCP_53_v4/JetHT_2012C_rr_BLIND.root" ) ;
+       datach.Add( "filesHCP_53_v4/MET_2012A.root" ) ;
+       datach.Add( "filesHCP_53_v4/MET_2012B.root" ) ;
+       datach.Add( "filesHCP_53_v4/MET_2012C_pr.root" ) ;
+       datach.Add( "filesHCP_53_v4/MET_2012C_rr.root" ) ;
+       datach.Add( "filesHCP_53_v4/HT_2012A.root" ) ;
+       datach.Add( "filesHCP_53_v4/HTMHT_2012B.root" ) ;
+       datach.Add( "filesHCP_53_v4/HTMHT_2012C_pr.root" ) ;
+       datach.Add( "filesHCP_53_v4/HTMHT_2012C_rr.root" ) ;
+       datach.Add( "filesHCP_53_v4/JetHT_2012B.root" ) ;
+       datach.Add( "filesHCP_53_v4/JetHT_2012C_pr.root" ) ;
+       datach.Add( "filesHCP_53_v4/JetHT_2012C_rr.root" ) ;
 
        TH2F* h_ldp[nBinsBjets] ;
        TH2F* h_zl [nBinsBjets] ;
        TH2F* h_sl [nBinsBjets] ; 
+
+       inFile << "Using HT bins:  " ;
+       for (int j = 0 ; j <= nBinsHT ; j++ ) {
+         inFile << Hbins[j] ;
+         if ( j < nBinsHT ) inFile << "-" ;
+       }
+
+       inFile << "\t Using MET bins: " ;
+       for (int i = 0 ; i <= nBinsMET ; i++ ) {
+         inFile << Mbins[i] ;
+         if ( i < nBinsMET ) inFile << "-" ;
+       }
+  
+       inFile << endl ;
 
        for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
