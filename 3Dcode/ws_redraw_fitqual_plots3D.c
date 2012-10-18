@@ -426,6 +426,46 @@
 
 
 
+   //=== General, Znn, and trigger
+
+     TH1F* hnp_prim_eff = (TH1F*) gDirectory->FindObject("hnp_prim_eff") ;
+     TH1F* hnp_znn = (TH1F*) gDirectory->FindObject("hnp_znn") ;
+     TH1F* hnp_trig_0lep = (TH1F*) gDirectory->FindObject("hnp_trig_0lep") ;
+     TH1F* hnp_trig_1lep = (TH1F*) gDirectory->FindObject("hnp_trig_1lep") ;
+
+     TCanvas* cnp3 = (TCanvas*) gDirectory->FindObject("cnp3") ;
+     if ( cnp3 == 0x0 ) {
+        cnp3 = new TCanvas("cnp3","RA2b efficiency par pull", 850, 1000 ) ;
+     }
+     cnp3->Divide(2,2) ;
+
+     cnp3->cd(1) ;
+     hnp_prim_eff->Draw() ;
+     chi2 = addChi2FromPullHist( hnp_prim_eff ) ;
+     globalChi2 += chi2 ;
+     npChi2 += chi2 ;
+
+
+     cnp3->cd(2) ;
+     hnp_znn->Draw() ;
+     chi2 = addChi2FromPullHist( hnp_znn ) ;
+     globalChi2 += chi2 ;
+     npChi2 += chi2 ;
+
+
+     cnp3->cd(3) ;
+     hnp_trig_0lep->Draw() ;
+     chi2 = addChi2FromPullHist( hnp_trig_0lep ) ;
+     globalChi2 += chi2 ;
+     npChi2 += chi2 ;
+
+
+     cnp3->cd(4) ;
+     hnp_trig_1lep->Draw() ;
+     chi2 = addChi2FromPullHist( hnp_trig_1lep ) ;
+     globalChi2 += chi2 ;
+     npChi2 += chi2 ;
+
 
 
 
@@ -442,8 +482,8 @@
      TH1F* hnp_eff_sf_ldp_2b_pull = (TH1F*) gDirectory->FindObject("hnp_eff_sf_ldp_2b_pull") ;
      TH1F* hnp_eff_sf_ldp_3b_pull = (TH1F*) gDirectory->FindObject("hnp_eff_sf_ldp_3b_pull") ;
 
-     TH1F* hnp_prim_eff = (TH1F*) gDirectory->FindObject("hnp_prim_eff") ;
-     TH1F* hnp_znn = (TH1F*) gDirectory->FindObject("hnp_znn") ;
+  // TH1F* hnp_prim_eff = (TH1F*) gDirectory->FindObject("hnp_prim_eff") ;
+  // TH1F* hnp_znn = (TH1F*) gDirectory->FindObject("hnp_znn") ;
 
 
      TCanvas* cnp2 = (TCanvas*) gDirectory->FindObject("cnp2") ;
@@ -453,41 +493,24 @@
      cnp2->Clear() ;
 
 
-        cnp2->Divide(3,4) ;
+        cnp2->Divide(3,3) ;
 
 
         cnp2->cd(1) ;
-        hnp_prim_eff->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_prim_eff ) ;
-        globalChi2 += chi2 ;
-        npChi2 += chi2 ;
-        gPad->SetGridy(1) ;
-
-
-        cnp2->cd(2) ;
-        hnp_znn->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_znn ) ;
-        globalChi2 += chi2 ;
-        npChi2 += chi2 ;
-        gPad->SetGridy(1) ;
-
-
-
-        cnp2->cd(4) ;
         hnp_eff_sf_1b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_1b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
-        cnp2->cd(5) ;
+        cnp2->cd(2) ;
         hnp_eff_sf_2b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_2b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
-        cnp2->cd(6) ;
+        cnp2->cd(3) ;
         hnp_eff_sf_3b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_3b_pull ) ;
         globalChi2 += chi2 ;
@@ -496,21 +519,21 @@
 
 
 
-        cnp2->cd(7) ;
+        cnp2->cd(4) ;
         hnp_eff_sf_sl_1b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_sl_1b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
-        cnp2->cd(8) ;
+        cnp2->cd(5) ;
         hnp_eff_sf_sl_2b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_sl_2b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
-        cnp2->cd(9) ;
+        cnp2->cd(6) ;
         hnp_eff_sf_sl_3b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_sl_3b_pull ) ;
         globalChi2 += chi2 ;
@@ -519,21 +542,21 @@
 
 
 
-        cnp2->cd(10) ;
+        cnp2->cd(7) ;
         hnp_eff_sf_ldp_1b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_1b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
-        cnp2->cd(11) ;
+        cnp2->cd(8) ;
         hnp_eff_sf_ldp_2b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_2b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
-        cnp2->cd(12) ;
+        cnp2->cd(9) ;
         hnp_eff_sf_ldp_3b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_3b_pull ) ;
         globalChi2 += chi2 ;

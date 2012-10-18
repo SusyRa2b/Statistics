@@ -917,6 +917,7 @@
             } else {
                ///// tmp_qcd = N_0lep[0][0][bbi] / trigeff_0L[0][0] - initialval_ttwj[0][0][bbi] - initialval_znn[0][0][bbi] ;
                tmp_qcd = (1./trigeff_0L[0][0])*( N_0lep[0][0][bbi] - trigeff_1L[0][0] * ( initialval_ttwj[0][0][bbi] + initialval_znn[0][0][bbi] )) ;
+               if ( tmp_qcd < 0.) { tmp_qcd = 0.1 ; }
                double tmp_denom = sf_qcd[0][0][bbi] * initialguess_model24_qcd_0lepLDP_ratio[0] * initialval_qcd_ldp[0][0][bbi] ;
                if ( tmp_denom > 0. ) {
                   initialguess_model4_SFqcd_nb[bbi] = tmp_qcd / tmp_denom ;
@@ -1749,6 +1750,8 @@
             RooGaussian* rg_nb3 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_nb[2], *mean_nb3, *sigma_nb3) ;
             allNuisances -> add( *rv_SFqcd_nb[2] ) ;
             allNuisancePdfs -> add( *rg_nb3 ) ;
+            //-- set starting value to constraint mean.
+            rv_SFqcd_nb[2] -> setVal( 0.69 ) ;
 
          } else {
             printf("\n\n *** QCD model 4 : NOT adding constraint PDFs for MET SFs, since I don't know what to do for this binning.\n") ;

@@ -1577,7 +1577,7 @@
 
             sprintf( parName, "btageff_sf" ) ;
             np = (RooAbsReal*) ws->obj( parName ) ;
-            double global_btageff_sf = 1. ;
+            double global_btageff_sf = 0. ;
             if ( np == 0x0 ) {
                printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
             } else {
@@ -1618,7 +1618,7 @@
 
             hnp_prim_eff -> SetFillColor(kOrange+1 ) ;
 
-            hnp_prim_eff -> SetLabelSize(0.075,"x") ;
+            hnp_prim_eff -> SetLabelSize(0.055,"x") ;
             hnp_prim_eff -> GetXaxis() ->LabelsOption("v") ;
 
             hnp_prim_eff->SetMinimum(-2.0) ;
@@ -1784,6 +1784,12 @@
               } // hbi.
            } // mbi.
 
+           hp -> SetLabelSize(0.055,"x") ;
+           hp -> GetXaxis() ->LabelsOption("v") ;
+
+           hp->SetMinimum(-2.0) ;
+           hp->SetMaximum(2.0) ;
+
         }
 
 
@@ -1829,6 +1835,12 @@
 
               } // hbi.
            } // mbi.
+
+           hp -> SetLabelSize(0.055,"x") ;
+           hp -> GetXaxis() ->LabelsOption("v") ;
+
+           hp->SetMinimum(-2.0) ;
+           hp->SetMaximum(2.0) ;
 
         }
 
@@ -2511,7 +2523,7 @@
 
         TCanvas* cnp3 = (TCanvas*) gDirectory->FindObject("cnp3") ;
         if ( cnp3 == 0x0 ) {
-           cnp3 = new TCanvas("cnp3","RA2b efficiency par pull", 850, 1000 ) ;
+           cnp3 = new TCanvas("cnp3","RA2b efficiency par pull", 850, 600 ) ;
         }
         cnp3->Divide(2,2) ;
 
