@@ -575,15 +575,18 @@ void makeGuess(const likelihoodOptions options, RooWorkspace& ws , TString& binN
        -zeroLeptonLowDeltaPhiNSignalYield->getVal() -zeroLeptonLowDeltaPhiNZtoNuNuYield->getVal())*zeroLeptonQCDClosure->getVal()  ) 
     / ( singleLeptonScaling->getVal() * oneLeptonTopWJetsYield->getVal() - 
 	lowDeltaPhiNScaling->getVal()*singleLeptonScaling->getVal() * topWJetsLowDeltaPhiNOverZeroLeptonRatioMC->getVal() * oneLeptonTopWJetsYield->getVal()*zeroLeptonQCDClosure->getVal() )  ;
-  assert( (thisZeroLeptonTopWJetsClosure > zeroLeptonTopWJetsClosure->getMin()) && (thisZeroLeptonTopWJetsClosure < zeroLeptonTopWJetsClosure->getMax()) );
-  zeroLeptonTopWJetsClosure->setVal( thisZeroLeptonTopWJetsClosure );
   
   double thisZeroLeptonLowDeltaPhiNQCDYield =  
     (-zeroLeptonLowDeltaPhiNCount->getVal()+zeroLeptonLowDeltaPhiNSignalYield->getVal() + topWJetsLowDeltaPhiNOverZeroLeptonRatioMC->getVal() *(zeroLeptonCount->getVal() 
      -zeroLeptonSignalYield->getVal() - zeroLeptonZtoNuNuYield->getVal() ) + zeroLeptonLowDeltaPhiNZtoNuNuYield->getVal() )
     /(-1.0 + lowDeltaPhiNScaling->getVal()* topWJetsLowDeltaPhiNOverZeroLeptonRatioMC->getVal()*zeroLeptonQCDClosure->getVal()) ;
-  assert( (thisZeroLeptonLowDeltaPhiNQCDYield > zeroLeptonLowDeltaPhiNQCDYield->getMin()) && (thisZeroLeptonLowDeltaPhiNQCDYield < zeroLeptonLowDeltaPhiNQCDYield->getMax()) );
-  zeroLeptonLowDeltaPhiNQCDYield->setVal( thisZeroLeptonLowDeltaPhiNQCDYield );
+  
+  if ((thisZeroLeptonTopWJetsClosure > zeroLeptonTopWJetsClosure->getMin()) && (thisZeroLeptonTopWJetsClosure < zeroLeptonTopWJetsClosure->getMax())
+      && (thisZeroLeptonLowDeltaPhiNQCDYield > zeroLeptonLowDeltaPhiNQCDYield->getMin()) && (thisZeroLeptonLowDeltaPhiNQCDYield < zeroLeptonLowDeltaPhiNQCDYield->getMax())) 
+    {
+      zeroLeptonTopWJetsClosure->setVal( thisZeroLeptonTopWJetsClosure );
+      zeroLeptonLowDeltaPhiNQCDYield->setVal( thisZeroLeptonLowDeltaPhiNQCDYield );
+    }
 
 }
 
