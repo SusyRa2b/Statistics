@@ -35,10 +35,3 @@
    $ROOTSYS/bin/root -b -q mcclosure4.c+\(\"rootfiles/gi-plots-met4-ht4-v15.root\",\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat\",4,1,1,1\) >&! logfiles/mcclosure4-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.log
 
 
-   echo mcclosure4, qcd model 4, ttwj ave, exp0lep, wtrig
-   cp datfiles/Input-met4-ht4-v15.dat datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat
-   $ROOTSYS/bin/root -b -q mcclosure4.c+\(\"rootfiles/gi-plots-met4-ht4-v15.root\",\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat\",4,0,1,0\) >&! logfiles/mcclosure4-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.log
-
-
-$ROOTSYS/bin/root -b -q mcclosure4.c+\(\"rootfiles/gi-plots-met4-ht4-v15.root\",\"datfiles/data-vals.dat\",4,0,1,0\) > & ! logfiles/mcclosure4-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig-dat.log &
-
