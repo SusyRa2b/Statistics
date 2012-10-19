@@ -6,6 +6,7 @@ my $dir="";
 if($ARGV[0] =~ /(\S*)(.dat)/) {
   $dir = $1;
   mkdir $dir;
+  mkdir "$dir/sig1";
 }
 else{
   die "Error making directory.";
