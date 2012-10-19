@@ -1,12 +1,12 @@
 
 
 
- # cp datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig-blind.dat
- # root -b -q makeblind.c+\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig-blind.dat\"\)
+   cp datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig-blind.dat
+   root -b -q makeblind.c+\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig-blind.dat\"\)
 
- # echo makews: met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave-wtrig-blindtest
- # root -b -q make_ws_rootfile3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig-blind.dat\",\"datfiles/sigcounts.T1bbbb.txt\",1100,300,\"datfiles/dummy_DeffDbtag-met4-ht4.dat\",4,\"ws3b.root\",\"macros1/blind-bins-list.txt\"\) >& logfiles/makews-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave-wtrig-blindtest.log
- # mv ws3b.root rootfiles/ws-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave-wtrig-blindtest.root
+   echo makews: met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave-wtrig-blindtest
+   root -b -q make_ws_rootfile3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig-blind.dat\",\"datfiles/sigcounts.T1bbbb.txt\",1100,300,\"datfiles/dummy_DeffDbtag-met4-ht4.dat\",4,\"ws3b.root\",\"macros1/blind-bins-list.txt\"\) >& logfiles/makews-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave-wtrig-blindtest.log
+   mv ws3b.root rootfiles/ws-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave-wtrig-blindtest.root
 
 
    echo fitqual-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-nosusy-ttwjave-wtrig-blindtest

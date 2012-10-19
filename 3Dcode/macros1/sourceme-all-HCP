@@ -9,6 +9,6 @@
    source macros1/sourceme-geninput-HCP
    source macros1/sourceme-makews3b-HCP
    source macros1/sourceme-fitqual-HCP
-   source macros1/sourceme-toymc3b-HCP
+ # source macros1/sourceme-toymc3b-HCP
 
 
