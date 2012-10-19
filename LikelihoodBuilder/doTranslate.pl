@@ -17,7 +17,8 @@ foreach(@list) {
   
   
   if($file =~ /(\S*)(.dat)/) {
-    system("cp signalModelFile.dat $1/.");
+    #system("cp signalModelFile.dat $1/sig1/setupSignalNominal.dat");
+    system("cp setupSignalNominal.dat $1/sig1/setupSignalNominal.dat");
     print $fout "$1\n";
   }
 }
