@@ -72,6 +72,7 @@ void integratedTotals(TString workspaceFile = "test.root", TString binFilesFile 
   RooWorkspace* ws = (RooWorkspace*)wstf->Get("workspace");
   
   RooRealVar * signalCrossSection = ws->var("signalCrossSection");
+  RooRealVar * luminosity = ws->var("luminosity");
     
 
   ifstream binStream;
@@ -111,19 +112,20 @@ void integratedTotals(TString workspaceFile = "test.root", TString binFilesFile 
     znntot += znn->getVal();
     
   }
-
-
+  
+  
   //for signal, we care about the error, so let's do it the Roo way
-  RooArgSet* signalFractionSet = new RooArgSet("signalFractions");
+  RooArgSet* signalYieldSet = new RooArgSet("signalYields");
   for(unsigned int i =0; i<binNames.size(); i++) {
-    signalFractionSet->add( *(ws->arg("zeroLeptonSignalYieldFraction_"+binNames.at(i)+"_BetaPrimeInverseCDF")) );
+    signalYieldSet->add( *(ws->arg("zeroLepton_"+binNames.at(i)+"_SignalYield")) );
+    cout << "signal yield pointer = " << (ws->arg("zeroLepton_"+binNames.at(i)+"_SignalYield"))  << endl;
   }
-  RooAddition* signalFractionAddition = new RooAddition("signalFractionAddition", "signalFractionAddition", *signalFractionSet);
-  RooProduct*  signalYield = new RooProduct("signalYield","signalYield", RooArgSet(*signalFractionAddition,*signalCrossSection));;;
-
-
+  RooAddition* signalYield = new RooAddition("signalYield", "signalYield", *signalYieldSet);
+  
   RooFitResult *fitResult = (RooFitResult*)wstf->Get("fitresult_likelihood_data");
   
+  cout << "fit result pointer = " << fitResult << endl;
+
   double sig = signalYield->getVal();
   double sigerr = signalYield->getPropagatedError(*fitResult);
   cout << "analyzeFitOutput: " << sig << "+-" << sigerr << " " << ttwjtot << " " << qcdtot << " " << znntot << endl; 
