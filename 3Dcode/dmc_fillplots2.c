@@ -52,34 +52,34 @@
        sprintf( compname[compind], "data" ) ;
        if ( strcmp(dataset_string, "all" ) == 0 ) {
           printf("\n\n Loading all data.\n\n") ;
-          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012A_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012B_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012C_pr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012C_rr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/HT_2012A_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/HTMHT_2012B_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/HTMHT_2012C_pr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/HTMHT_2012C_rr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/JetHT_2012B_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/JetHT_2012C_pr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/JetHT_2012C_rr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012A.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012B.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012C_rr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/HT_2012A.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/HTMHT_2012B.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/HTMHT_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/HTMHT_2012C_rr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/JetHT_2012B.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/JetHT_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/JetHT_2012C_rr.root" ) ;
           complumi[compind] = 12.03 ;
        } else if ( strcmp(dataset_string, "RunsAB" ) == 0 ) {
           printf("\n\n Loading runs A and B.\n\n") ;
-          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012A_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012B_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/HT_2012A_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/HTMHT_2012B_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/JetHT_2012B_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012A.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012B.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/HT_2012A.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/HTMHT_2012B.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/JetHT_2012B.root" ) ;
           complumi[compind] = 5.23 ;
        } else if ( strcmp(dataset_string, "RunC" ) == 0 ) {
           printf("\n\n Loading run C.\n\n") ;
-          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012C_pr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012C_rr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/HTMHT_2012C_pr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/HTMHT_2012C_rr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/JetHT_2012C_pr_BLIND.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v4/JetHT_2012C_rr_BLIND.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/MET_2012C_rr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/HTMHT_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/HTMHT_2012C_rr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/JetHT_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v4/JetHT_2012C_rr.root" ) ;
           complumi[compind] = 6.81 ;
        } else {
           printf("\n\n *** Unknown dataset: %s\n\n", dataset_string ) ;
@@ -480,6 +480,8 @@
        bookSet( "h_met_zl_nomctrigcorr_nb1", htitle, 30, 125., 500. ) ;
        sprintf( htitle, "MET, ZL, no MC trig correction, nB=2, %s", dataset_string ) ;
        bookSet( "h_met_zl_nomctrigcorr_nb2", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, ZL, no MC trig correction, nB>=3, %s", dataset_string ) ;
+       bookSet( "h_met_zl_nomctrigcorr_nb3", htitle, 30, 125., 500. ) ;
 
        sprintf( htitle, "MET, ZL, nB=0, %s", dataset_string ) ;
        bookSet( "h_met_zl_nb0", htitle, 30, 125., 500. ) ;
@@ -487,6 +489,8 @@
        bookSet( "h_met_zl_nb1", htitle, 30, 125., 500. ) ;
        sprintf( htitle, "MET, ZL, nB=2, %s", dataset_string ) ;
        bookSet( "h_met_zl_nb2", htitle, 30, 125., 500. ) ;
+       sprintf( htitle, "MET, ZL, nB>=3, %s", dataset_string ) ;
+       bookSet( "h_met_zl_nb3", htitle, 30, 125., 500. ) ;
 
        sprintf( htitle, "MET, ZL, no MC trig correction, HT[400,500], nB=1, %s", dataset_string ) ;
        bookSet( "h_met_zl_nomctrigcorr_ht1_nb1", htitle, 30, 125., 500. ) ;
@@ -723,13 +727,17 @@
        bookSet( "h_ht_zl_nomctrigcorr_nb1", htitle, 32, 400., 2000. ) ;
        sprintf( htitle, "HT, ZL, no MC trig correction, MET<350, nB=2, %s", dataset_string ) ;
        bookSet( "h_ht_zl_nomctrigcorr_nb2", htitle, 32, 400., 2000. ) ;
+       sprintf( htitle, "HT, ZL, no MC trig correction, MET<350, nB=3, %s", dataset_string ) ;
+       bookSet( "h_ht_zl_nomctrigcorr_nb3", htitle, 32, 400., 2000. ) ;
 
        sprintf( htitle, "HT, ZL, nB=0, %s", dataset_string ) ;
        bookSet( "h_ht_zl_nb0", htitle, 30, 400., 2000. ) ;
        sprintf( htitle, "HT, ZL, nB=1, %s", dataset_string ) ;
        bookSet( "h_ht_zl_nb1", htitle, 30, 400., 2000. ) ;
-       sprintf( htitle, "HT, ZL, MET<350, nB=2, %s", dataset_string ) ;
+       sprintf( htitle, "HT, ZL, nB=2, %s", dataset_string ) ;
        bookSet( "h_ht_zl_nb2", htitle, 30, 400., 2000. ) ;
+       sprintf( htitle, "HT, ZL, nB>=3, %s", dataset_string ) ;
+       bookSet( "h_ht_zl_nb3", htitle, 30, 400., 2000. ) ;
 
        sprintf( htitle, "HT, ZL, nB=1, no MC trig correction, MET[125,150], %s", dataset_string ) ;
        bookSet( "h_ht_zl_nomctrigcorr_met1_nb1", htitle, 32, 400., 2000. ) ;
@@ -820,6 +828,8 @@
        bookSetLHB( "h_lhb_zl_nb1", htitle ) ;
        sprintf( htitle, "HT vs MET, ZL, nB=2, %s", dataset_string ) ;
        bookSetLHB( "h_lhb_zl_nb2", htitle ) ;
+       sprintf( htitle, "HT vs MET, ZL, nB>=3, %s", dataset_string ) ;
+       bookSetLHB( "h_lhb_zl_nb3", htitle ) ;
 
        sprintf( htitle, "HT vs MET, ZL, no MC trig correction, nB=0, %s", dataset_string ) ;
        bookSetLHB( "h_lhb_zl_nomctrigcorr_nb0", htitle ) ;
@@ -827,6 +837,8 @@
        bookSetLHB( "h_lhb_zl_nomctrigcorr_nb1", htitle ) ;
        sprintf( htitle, "HT vs MET, ZL, no MC trig correction, nB=2, %s", dataset_string ) ;
        bookSetLHB( "h_lhb_zl_nomctrigcorr_nb2", htitle ) ;
+       sprintf( htitle, "HT vs MET, ZL, no MC trig correction, nB>=3, %s", dataset_string ) ;
+       bookSetLHB( "h_lhb_zl_nomctrigcorr_nb3", htitle ) ;
 
 
 
@@ -837,6 +849,9 @@
 
        sprintf( htitle, "nbjets, LDP, %s", dataset_string ) ;
        bookSet( "h_nb_ldp_all", htitle, 6, -0.5, 5.5 ) ;
+
+       sprintf( htitle, "nbjets, ZL, %s", dataset_string ) ;
+       bookSet( "h_nb_zl_all", htitle, 6, -0.5, 5.5 ) ;
 
 
 
@@ -1082,6 +1097,9 @@
 
        sprintf( cuts, "%s", basecuts_ldp_nonb ) ;
        fillSet( "h_nb_ldp_all", "nB", cuts ) ;
+
+       sprintf( cuts, "%s", basecuts_0lep_nonb ) ;
+       fillSet( "h_nb_zl_all", "nB", cuts ) ;
 
 
        sprintf( cuts, "%s", basecuts_1lep ) ;
@@ -1471,13 +1489,21 @@
        fillSetLHB( "h_lhb_zl_nb1", cuts ) ;
        fillSetLHB( "h_lhb_zl_nomctrigcorr_nb1", cuts, false ) ;
 
-       sprintf( cuts, "%s&&nB==2&&MET<350", basecuts_0lep ) ;
+       sprintf( cuts, "%s&&nB==2", basecuts_0lep ) ;
        fillSet( "h_met_zl_nb2", "MET", cuts ) ;
        fillSet( "h_ht_zl_nb2", "HT", cuts ) ;
        fillSet( "h_met_zl_nomctrigcorr_nb2", "MET", cuts, false ) ;
        fillSet( "h_ht_zl_nomctrigcorr_nb2", "HT", cuts, false ) ;
        fillSetLHB( "h_lhb_zl_nb2", cuts ) ;
        fillSetLHB( "h_lhb_zl_nomctrigcorr_nb2", cuts, false ) ;
+
+       sprintf( cuts, "%s&&nB>=3", basecuts_0lep ) ;
+       fillSet( "h_met_zl_nb3", "MET", cuts ) ;
+       fillSet( "h_ht_zl_nb3", "HT", cuts ) ;
+       fillSet( "h_met_zl_nomctrigcorr_nb3", "MET", cuts, false ) ;
+       fillSet( "h_ht_zl_nomctrigcorr_nb3", "HT", cuts, false ) ;
+       fillSetLHB( "h_lhb_zl_nb3", cuts ) ;
+       fillSetLHB( "h_lhb_zl_nomctrigcorr_nb3", cuts, false ) ;
 
 
 
