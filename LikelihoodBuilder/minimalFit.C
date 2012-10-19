@@ -53,6 +53,7 @@ int minimalFit(TString workspaceFile = "test.root", double signalCrossSectionGue
   double sigerr = signalCrossSection->getError();
   cout << "signalCrossSection = " << sig << " +- " <<  sigerr << endl;
   cout << "RooFitResult status = " << fitResult->status() << endl;
+  cout << "RooFitResult covQual = " << fitResult->covQual() << endl;
   cout << "RooFitResult minNll = " << fitResult->minNll() << endl;
 
   //if(fitResult->status() != 0) return fitResult->status();
