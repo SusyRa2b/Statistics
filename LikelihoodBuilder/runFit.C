@@ -23,11 +23,11 @@ void runFit(TString inpath, TString outpath, TString outname = "")
 
   likelihoodBuilder(inpath+"setupFile.dat", inpath+"binFilesFile.dat", inpath, inpath+"sig1/", "workspace", outpath+"likelihood_"+outname+".root");
    
-  int status = minimalFit(outpath+"likelihood_"+outname+".root", 5, 0, 500, true, outpath+"dat_"+outname+".dat");
+  int status = minimalFit(outpath+"likelihood_"+outname+".root", 5, 0, 1000, true, outpath+"dat_"+outname+".dat");
   if(status != 0) return;
   
-  profileLikelihoodLimit(outpath+"likelihood_"+outname+".root", "workspace", "S+B_model", "B_model", "data", "modelName", 0.682, 0.0, 100.0, false, outpath+"dat_"+outname+".dat");
-  profileLikelihoodLimit(outpath+"likelihood_"+outname+".root", "workspace", "S+B_model", "B_model", "data", "modelName", 0.95, 0.0, 100.0, false, outpath+"dat_"+outname+".dat");
+  profileLikelihoodLimit(outpath+"likelihood_"+outname+".root", "workspace", "S+B_model", "B_model", "data", "modelName", 0.682, 0.0, 1000.0, false, outpath+"dat_"+outname+".dat");
+  profileLikelihoodLimit(outpath+"likelihood_"+outname+".root", "workspace", "S+B_model", "B_model", "data", "modelName", 0.95, 0.0, 1000.0, false, outpath+"dat_"+outname+".dat");
 
   analyzeFit(outpath+"likelihood_"+outname+".root", inpath+"binFilesFile.dat", outpath+"dat_"+outname+".dat"); 
 
