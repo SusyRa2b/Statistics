@@ -37,7 +37,7 @@
                                    double constraintWidth = 4.,
                                    int verbLevel=0 ) {
 
-
+       bool debugprint(true) ;
 
 
 
@@ -245,21 +245,66 @@
 
        } else {
 
-          char minuit_formula[10000] ;
-          sprintf( minuit_formula, "%s+%s*(%s-%s)*(%s-%s)",
+          //--- check if this is a 0lep small n from a semi-blind fit.
+
+          bool doQCDKludge(false) ;
+          TString strcheck( new_poi_name ) ;
+          strcheck.Resize(3) ;
+          if ( strcmp(strcheck.Data(),"n_M") == 0 ) {
+             //--- this is a small n.  See if the observable pdf exists.
+             TString bignpdf( new_poi_name ) ;
+             bignpdf.ReplaceAll("n_M","pdf_N_0lep_M") ;
+             printf(" %s is a 0lep model total.  Checking for %s in likelihood.\n", new_poi_name, bignpdf.Data() ) ;
+             RooAbsPdf* pdf_check = ws -> pdf( bignpdf.Data() ) ;
+             if ( pdf_check == 0x0 ) {
+                printf("  *** Did not find %s.  Doing pdf_sf_qcd kludge.\n", bignpdf.Data() ) ;
+                doQCDKludge = true ;
+             }
+          }
+
+          RooFormulaVar* new_minuit_var(0x0) ;
+
+          if ( !doQCDKludge ) {
+             char minuit_formula[10000] ;
+             sprintf( minuit_formula, "%s+%s*(%s-%s)*(%s-%s)",
                  nll->GetName(),
                  rrv_constraintWidth->GetName(),
                  new_poi_rar->GetName(), rrv_poiValue->GetName(),
                  new_poi_rar->GetName(), rrv_poiValue->GetName()
                  ) ;
-
-          printf("\n\n Creating new minuit variable with formula: %s\n\n", minuit_formula ) ;
-          RooFormulaVar* new_minuit_var = new RooFormulaVar("new_minuit_var", minuit_formula,
-              RooArgList( *nll,
+             printf("\n\n Creating new minuit variable with formula: %s\n\n", minuit_formula ) ;
+             new_minuit_var = new RooFormulaVar("new_minuit_var", minuit_formula,
+                 RooArgList( *nll,
                           *rrv_constraintWidth,
                           *new_poi_rar, *rrv_poiValue,
                           *new_poi_rar, *rrv_poiValue
                           ) ) ;
+          } else {
+             TString sfqcdpdfname( new_poi_name ) ;
+             sfqcdpdfname.ReplaceAll( "n_M", "pdf_sf_qcd_M" ) ;
+             printf(" Looking for %s\n", sfqcdpdfname.Data() ) ;
+             RooAbsReal* sf_qcd_pdf = (RooAbsReal*) ws->obj( sfqcdpdfname.Data() ) ;
+             if ( sf_qcd_pdf == 0x0 ) {
+                printf("\n\n *** Can't find %s.  I quit.\n\n", sfqcdpdfname.Data() ) ;
+             }
+             char minuit_formula[10000] ;
+             sprintf( minuit_formula, "%s+%s*(%s-%s)*(%s-%s)-log(%s)",
+                 nll->GetName(),
+                 rrv_constraintWidth->GetName(),
+                 new_poi_rar->GetName(), rrv_poiValue->GetName(),
+                 new_poi_rar->GetName(), rrv_poiValue->GetName(),
+                 sf_qcd_pdf->GetName()
+                 ) ;
+             printf("\n\n Creating new minuit variable with formula: %s\n\n", minuit_formula ) ;
+             new_minuit_var = new RooFormulaVar("new_minuit_var", minuit_formula,
+                 RooArgList( *nll,
+                          *rrv_constraintWidth,
+                          *new_poi_rar, *rrv_poiValue,
+                          *new_poi_rar, *rrv_poiValue,
+                          *sf_qcd_pdf
+                          ) ) ;
+          }
+
 
           printf("\n\n Current value is %.2f\n\n",
                new_minuit_var->getVal() ) ;
@@ -348,6 +393,105 @@
           printf(" %02d : poi constraint = %.2f : allvars : MinuitVar, createNLL, PV, POI :    %.5f   %.5f   %.5f   %.5f\n",
                 poivi, rrv_poiValue->getVal(), fit_minuit_var_val, nll->getVal(), plot_var->getVal(), new_poi_rar->getVal() ) ;
           cout << flush ;
+
+          if ( debugprint ) {
+
+             TString binstring( new_poi_name ) ;
+             binstring.ReplaceAll("n_","") ;
+             TString trigbinstring( binstring ) ;
+             trigbinstring.Resize(5) ;
+
+             char pname[1000] ;
+             RooAbsReal* par(0x0) ;
+             double mu_qcd(0.), mu_ttwj(0.), mu_znn(0.), mu_vv(0.), mu_susy(0.), trigeff(0.), trigeff_sl(0.), sf_ttwj(0.), sf_qcd(0.), pdf_sf_qcd(0.) ;
+
+             sprintf( pname, "mu_qcd_%s", binstring.Data() ) ;
+             par = (RooAbsReal*) ws -> obj( pname ) ;
+             if ( par == 0x0 ) {
+                printf( " *** %s missing from workspace.\n", pname ) ;
+             } else {
+                mu_qcd = par -> getVal() ;
+             }
+
+             sprintf( pname, "mu_ttwj_%s", binstring.Data() ) ;
+             par = (RooAbsReal*) ws -> obj( pname ) ;
+             if ( par == 0x0 ) {
+                printf( " *** %s missing from workspace.\n", pname ) ;
+             } else {
+                mu_ttwj = par -> getVal() ;
+             }
+
+             sprintf( pname, "mu_znn_%s", binstring.Data() ) ;
+             par = (RooAbsReal*) ws -> obj( pname ) ;
+             if ( par == 0x0 ) {
+                printf( " *** %s missing from workspace.\n", pname ) ;
+             } else {
+                mu_znn = par -> getVal() ;
+             }
+
+             sprintf( pname, "mu_vv_%s", binstring.Data() ) ;
+             par = (RooAbsReal*) ws -> obj( pname ) ;
+             if ( par == 0x0 ) {
+                printf( " *** %s missing from workspace.\n", pname ) ;
+             } else {
+                mu_vv = par -> getVal() ;
+             }
+
+             sprintf( pname, "mu_susy_%s", binstring.Data() ) ;
+             par = (RooAbsReal*) ws -> obj( pname ) ;
+             if ( par == 0x0 ) {
+                printf( " *** %s missing from workspace.\n", pname ) ;
+             } else {
+                mu_susy = par -> getVal() ;
+             }
+
+             sprintf( pname, "trigeff_%s", trigbinstring.Data() ) ;
+             par = (RooAbsReal*) ws -> obj( pname ) ;
+             if ( par == 0x0 ) {
+                printf( " *** %s missing from workspace.\n", pname ) ;
+             } else {
+                trigeff = par -> getVal() ;
+             }
+
+             sprintf( pname, "trigeff_sl_%s", trigbinstring.Data() ) ;
+             par = (RooAbsReal*) ws -> obj( pname ) ;
+             if ( par == 0x0 ) {
+                printf( " *** %s missing from workspace.\n", pname ) ;
+             } else {
+                trigeff_sl = par -> getVal() ;
+             }
+
+             sprintf( pname, "sf_ttwj_%s", binstring.Data() ) ;
+             par = (RooAbsReal*) ws -> obj( pname ) ;
+             if ( par == 0x0 ) {
+                printf( " *** %s missing from workspace.\n", pname ) ;
+             } else {
+                sf_ttwj = par -> getVal() ;
+             }
+
+             sprintf( pname, "sf_qcd_%s", binstring.Data() ) ;
+             par = (RooAbsReal*) ws -> obj( pname ) ;
+             if ( par == 0x0 ) {
+                printf( " *** %s missing from workspace.\n", pname ) ;
+             } else {
+                sf_qcd = par -> getVal() ;
+             }
+
+             sprintf( pname, "pdf_sf_qcd_%s", binstring.Data() ) ;
+             par = (RooAbsReal*) ws -> obj( pname ) ;
+             if ( par == 0x0 ) {
+                printf( " *** %s missing from workspace.\n", pname ) ;
+             } else {
+                pdf_sf_qcd = par -> getVal() ;
+             }
+
+
+             printf(" *** debug : mu_qcd=%5.1f, mu_ttwj=%5.1f, mu_znn=%5.1f, mu_vv=%5.1f, mu_susy=%5.1f, trigeff=%5.3f, trigeff_sl=%5.3f, sf_ttwj=%5.3f, sf_qcd=%6.3f, pdf_sf_qcd=%12.10f\n",
+                 mu_qcd, mu_ttwj, mu_znn, mu_vv, mu_susy, trigeff, trigeff_sl, sf_ttwj, sf_qcd, pdf_sf_qcd ) ;
+
+             cout << flush ;
+
+          } // debugprint?
 
           poiVals[poivi] = new_poi_rar->getVal() ;
           nllVals[poivi] = plot_var->getVal() ;

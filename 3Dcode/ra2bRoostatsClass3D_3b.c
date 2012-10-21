@@ -1668,13 +1668,12 @@
              //--- QCD
 
              sprintf( NP_name, "sf_qcd_M%d_H%d_%db", i+1, j+1, k+1 ) ;
-             ///// rar_sf_qcd[i][j][k] = makeBetaPrimeConstraint( NP_name, sf_qcd[i][j][k], sf_qcd_err[i][j][k] ) ;
-             if ( ! (blindStudy && blind0lepBin[i][j][k]) ) {
+        //// if ( ! (blindStudy && blind0lepBin[i][j][k]) ) {
                 rar_sf_qcd[i][j][k] = makeGaussianConstraint( NP_name, sf_qcd[i][j][k], sf_qcd_err[i][j][k] ) ;
-             } else {
-                rar_sf_qcd[i][j][k] = makeGaussianConstraint( NP_name, sf_qcd[i][j][k], 0. ) ;
-                workspace.import( *(rar_sf_qcd[i][j][k]) ) ;
-             }
+        //// } else {
+        ////    rar_sf_qcd[i][j][k] = makeGaussianConstraint( NP_name, sf_qcd[i][j][k], 0. ) ;
+        ////    workspace.import( *(rar_sf_qcd[i][j][k]) ) ;
+        //// }
 
 
 
@@ -1682,12 +1681,11 @@
 
 
              sprintf( NP_name, "sf_ttwj_M%d_H%d_%db", i+1, j+1, k+1 ) ;
-             ///// rar_sf_ttwj[i][j][k] = makeBetaPrimeConstraint( NP_name, sf_ttwj[i][j][k], sf_ttwj_err[i][j][k] ) ;
-             if ( ! (blindStudy && blind0lepBin[i][j][k]) ) {
+        //// if ( ! (blindStudy && blind0lepBin[i][j][k]) ) {
                 rar_sf_ttwj[i][j][k] = makeGaussianConstraint( NP_name, sf_ttwj[i][j][k], sf_ttwj_err[i][j][k] ) ;
-             } else {
-                rar_sf_ttwj[i][j][k] = makeGaussianConstraint( NP_name, sf_ttwj[i][j][k], 0. ) ;
-             }
+        //// } else {
+        ////    rar_sf_ttwj[i][j][k] = makeGaussianConstraint( NP_name, sf_ttwj[i][j][k], 0. ) ;
+        //// }
 
 
              printf("--------\n") ;
@@ -2187,6 +2185,7 @@
             if ( blind0lepBin[i][j][k] ) {
                printf(" * Not including 0lep met=%d, ht=%d, nb=%d PDF in the likelihood.\n", i+1, j+1, k+1 ) ;
                pdf_N_0lep[i][j][k] = new RooConstVar( pdfN0lepString, pdfN0lepString, 1.0 ) ;
+               workspace.import( *(rv_n[i][j][k]) ) ; // save the equation for the model total.
             } else {
 	       pdf_N_0lep[i][j][k] = new RooPoisson( pdfN0lepString, pdfN0lepString, *rv_0lep[i][j][k], *rv_n[i][j][k] ) ;
 	       pdflist.add( *pdf_N_0lep[i][j][k] ) ;
