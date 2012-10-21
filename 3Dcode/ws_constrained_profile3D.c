@@ -75,9 +75,9 @@
        ModelConfig* modelConfig = (ModelConfig*) ws->obj( "SbModel" ) ;
        RooAbsPdf* likelihood = modelConfig->GetPdf() ;
 
-       RooRealVar* rrv_mu_susy_M1_H1_1b = ws->var("mu_susy_M1_H1_1b") ;
-       if ( rrv_mu_susy_M1_H1_1b == 0x0 ) {
-          printf("\n\n\n *** can't find mu_susy_M1_H1_1b in workspace.  Quitting.\n\n\n") ;
+       RooRealVar* rrv_mu_susy_all0lep = ws->var("mu_susy_all0lep") ;
+       if ( rrv_mu_susy_all0lep == 0x0 ) {
+          printf("\n\n\n *** can't find mu_susy_all0lep in workspace.  Quitting.\n\n\n") ;
           return ;
        }
 
@@ -86,8 +86,8 @@
 
 
        //-- do BG only for now.
-       rrv_mu_susy_M1_H1_1b->setVal(0.) ;
-       rrv_mu_susy_M1_H1_1b->setConstant( kTRUE ) ;
+       rrv_mu_susy_all0lep->setVal(0.) ;
+       rrv_mu_susy_all0lep->setConstant( kTRUE ) ;
 
 
 

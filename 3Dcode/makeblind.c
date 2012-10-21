@@ -2,7 +2,7 @@
 #include "updateFileValue.c"
 
 
-   void makeblind( const char* datfile, const char* blindBinsList="blind-bins-list.txt" ) {
+   void makeblind( const char* datfile, const char* blindBinsList="macros1/blind-bins-list.txt" ) {
 
       FILE* bbl_file ;
       if ( (bbl_file = fopen( blindBinsList, "r"))==NULL ) {
