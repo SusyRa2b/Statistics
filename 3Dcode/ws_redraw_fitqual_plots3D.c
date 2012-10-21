@@ -44,6 +44,7 @@
 
      TString savestr( histfile ) ;
      savestr.ReplaceAll(".root","") ;
+     savestr.ReplaceAll("rootfiles","outputfiles") ;
 
      if ( doNorm ) { logy = false ; }
 
@@ -467,6 +468,17 @@
      npChi2 += chi2 ;
 
 
+     if ( savePlots && !logy ) {
+        sprintf( savenamebase, "%s-np-gen-trig-znn", savestr.Data() ) ;
+        sprintf( savename, "%s.png", savenamebase ) ;
+        printf("\n\n Will save general, trigger, and Znn NP canvas as %s\n", savename ) ;
+        cnp3->SaveAs( savename ) ;
+        sprintf( savename, "%s.pdf", savenamebase ) ;
+        printf("\n\n Will save general, trigger, and Znn NP canvas as %s\n", savename ) ;
+        cnp3->SaveAs( savename ) ;
+     }
+
+
 
 
 
@@ -566,10 +578,10 @@
 
 
 
-     if ( savePlots ) {
-        sprintf( savenamebase, "%s-np-effznn", savestr.Data() ) ;
+     if ( savePlots && !logy ) {
+        sprintf( savenamebase, "%s-np-eff", savestr.Data() ) ;
         sprintf( savename, "%s.png", savenamebase ) ;
-        printf("\n\n Will save efficiency and Znn NP canvas as %s\n", savename ) ;
+        printf("\n\n Will save efficiency NP canvas as %s\n", savename ) ;
         cnp2->SaveAs( savename ) ;
         sprintf( savename, "%s.pdf", savenamebase ) ;
         printf("\n\n Will save efficiency and Znn NP canvas as %s\n", savename ) ;
@@ -708,7 +720,7 @@
 
      cnp->Update() ;
 
-     if ( savePlots ) {
+     if ( savePlots && !logy ) {
         sprintf( savenamebase, "%s-np-ttwjqcd", savestr.Data() ) ;
         sprintf( savename, "%s.png", savenamebase ) ;
         printf("\n\n Will save ttwj and QCD NP canvas as %s\n", savename ) ;
@@ -745,7 +757,7 @@
            nBinsHT++ ;
         }
 
-        int zoomRefBin = 1 + (nBinsHT+1)*(metgroupzoom-1) + 1 ;
+        int zoomRefBin = 1 + (nBinsHT+1)*(metgroupzoom-1) + 1 + 1 ;
 
         printf("\n\n Number of HT bins=%d, met group ref bin=%d\n\n", nBinsHT, zoomRefBin ) ;
 
@@ -939,6 +951,8 @@
         sprintf( savenamebase, "%s-obs-norm", savestr.Data() ) ;
      } else if ( metgroupzoom>1 ) {
         sprintf( savenamebase, "%s-obs-zoom%d", savestr.Data(), metgroupzoom ) ;
+     } else if ( logy ) {
+        sprintf( savenamebase, "%s-obs-logy", savestr.Data() ) ;
      } else {
         sprintf( savenamebase, "%s-obs", savestr.Data() ) ;
      }

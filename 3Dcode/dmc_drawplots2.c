@@ -530,10 +530,12 @@
        sprintf( histnamelist_lhb[hind_lhb], "h_lhb_zl_nb0" ) ; hind_lhb++ ;
        sprintf( histnamelist_lhb[hind_lhb], "h_lhb_zl_nb1" ) ; hind_lhb++ ;
        sprintf( histnamelist_lhb[hind_lhb], "h_lhb_zl_nb2" ) ; hind_lhb++ ;
+       sprintf( histnamelist_lhb[hind_lhb], "h_lhb_zl_nb3" ) ; hind_lhb++ ;
 
        sprintf( histnamelist_lhb[hind_lhb], "h_lhb_zl_nomctrigcorr_nb0" ) ; hind_lhb++ ;
        sprintf( histnamelist_lhb[hind_lhb], "h_lhb_zl_nomctrigcorr_nb1" ) ; hind_lhb++ ;
        sprintf( histnamelist_lhb[hind_lhb], "h_lhb_zl_nomctrigcorr_nb2" ) ; hind_lhb++ ;
+       sprintf( histnamelist_lhb[hind_lhb], "h_lhb_zl_nomctrigcorr_nb3" ) ; hind_lhb++ ;
 
        int nhistlist_lhb( hind_lhb ) ;
 

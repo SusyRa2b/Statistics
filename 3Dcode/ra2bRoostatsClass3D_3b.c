@@ -2185,7 +2185,7 @@
             if ( blind0lepBin[i][j][k] ) {
                printf(" * Not including 0lep met=%d, ht=%d, nb=%d PDF in the likelihood.\n", i+1, j+1, k+1 ) ;
                pdf_N_0lep[i][j][k] = new RooConstVar( pdfN0lepString, pdfN0lepString, 1.0 ) ;
-               workspace.import( *(rv_n[i][j][k]) ) ; // save the equation for the model total.
+               workspace.import( *rv_n[i][j][k] ) ; //--- save the equation for the number of events.
             } else {
 	       pdf_N_0lep[i][j][k] = new RooPoisson( pdfN0lepString, pdfN0lepString, *rv_0lep[i][j][k], *rv_n[i][j][k] ) ;
 	       pdflist.add( *pdf_N_0lep[i][j][k] ) ;

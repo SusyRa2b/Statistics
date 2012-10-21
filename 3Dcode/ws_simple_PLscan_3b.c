@@ -1,5 +1,7 @@
 
 #include "TFile.h"
+#include "TStyle.h"
+#include "TH1.h"
 #include "TPad.h"
 #include "TCanvas.h"
 #include "RooWorkspace.h"
@@ -22,8 +24,9 @@
 
 // simple minded PL scan (integrating SUSY signal over all the bins)
 
-void ws_simple_PLscan_3b( TString wsfile = "ws.root", double scanHigh = -1., double scanLow = 0., int nScanPoints=20 ) {
+void ws_simple_PLscan_3b( TString wsfile = "ws.root", double scanHigh = -1., double scanLow = 0., double ymax = -1., int nScanPoints=20 ) {
 
+    gStyle->SetOptStat(0) ;
 
     TFile* wstf = new TFile( wsfile ) ;
     RooWorkspace* ws = dynamic_cast<RooWorkspace*>( wstf->Get("ws") );
@@ -230,7 +233,17 @@ void ws_simple_PLscan_3b( TString wsfile = "ws.root", double scanHigh = -1., dou
 
     TCanvas *c0 = new TCanvas("c0","simple PL scan",700,600);
 
-    ScanPlot->Draw("AC");
+    if ( ymax>0 ) {
+       TH1F* hdummy = new TH1F("hdummy","Profile likelihood scan of SUSY 0lep yield",2,poiVals[0], poiVals[nScanPoints-1]) ;
+       hdummy->GetXaxis()->SetTitle("N SUSY 0lep");
+       hdummy->GetYaxis()->SetTitle("test statistic");
+       hdummy->SetMinimum(0.) ;
+       hdummy->SetMaximum(ymax) ;
+       hdummy->Draw() ;
+       ScanPlot->Draw("C") ;
+    } else {
+       ScanPlot->Draw("AC");
+    }
 
     line->DrawLine(scanLow, 1.0, poiPlusOneSigma, 1.0) ;
     line->DrawLine(scanLow, 2.71, poiUL, 2.71) ;
@@ -257,6 +270,7 @@ void ws_simple_PLscan_3b( TString wsfile = "ws.root", double scanHigh = -1., dou
 
     TString savestr( wsfile ) ;
     savestr.ReplaceAll(".root","") ;
+    savestr.ReplaceAll("rootfiles","outputfiles") ;
 
     char savenamebase[1000] ;
     char savename[1000] ;
