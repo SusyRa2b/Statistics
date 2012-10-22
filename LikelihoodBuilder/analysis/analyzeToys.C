@@ -17,15 +17,12 @@ int trueN = 0;
 TString trueXsec_string = "0.0";
 double trueXsec=0;
 
-TString fitter = "OAK";
-//TString fitter = "LB";
-
 
 TTree* treeToys = new TTree("treeToys","treeToys");
 
+bool drawTrue = true;
 
-
-void makeTree(TString inFile) {
+void makeTree(TString inFile, TString fitter = "LB") {
 
   
   TString branchDescriptor; 
@@ -50,16 +47,26 @@ void drawTest() {
 }
 
 
-void makeHists() {
+void makeHists(TString fitter = "LB") {
   
+  
+  /*
+  TH1D* hSignalCrossSection = new TH1D("hSignalCrossSection", "Signal cross section", 50, 0, 200);
+  TH1D* hPull = new TH1D("hPull", "Pull using fit errors", 50, -5, 5);
+  TH1D* hPullPL = new TH1D("hPullPL", "Pull using PL errors", 50, -5, 5);
+  TH1D* hZeroLeptonSignalYieldTotal = new TH1D("hZeroLeptonSignalYieldTotal", "Zero lepton signal yield", 50, 0, 200);
+  TH1D* hZeroLeptonTopWJetsYieldTotal = new TH1D("hZeroLeptonTopWJetsYieldTotal", "Zero lepton top W-jets yield", 50, 1500, 2200);
+  TH1D* hZeroLeptonQCDYieldTotal = new TH1D("hZeroLeptonQCDYieldTotal", "Zero lepton QCD yield", 50, 0, 500);
+  TH1D* hZeroLeptonZtoNuNuYieldTotal = new TH1D("hZeroLeptonZtoNuNuYieldTotal", "Zero lepton Z-invisible yield", 50, 150, 450);
+  */
   TH1D* hSignalCrossSection = new TH1D("hSignalCrossSection", "Signal cross section", 50, 0, 50);
   TH1D* hPull = new TH1D("hPull", "Pull using fit errors", 50, -5, 5);
-  TH1D* hPullPL = new TH1D("hPullPL", "Pull using PL errors", 50, -2, 10);
+  TH1D* hPullPL = new TH1D("hPullPL", "Pull using PL errors", 50, -5, 5);
   TH1D* hZeroLeptonSignalYieldTotal = new TH1D("hZeroLeptonSignalYieldTotal", "Zero lepton signal yield", 50, 0, 500);
   TH1D* hZeroLeptonTopWJetsYieldTotal = new TH1D("hZeroLeptonTopWJetsYieldTotal", "Zero lepton top W-jets yield", 50, 15000, 22000);
   TH1D* hZeroLeptonQCDYieldTotal = new TH1D("hZeroLeptonQCDYieldTotal", "Zero lepton QCD yield", 50, 15000, 22000);
   TH1D* hZeroLeptonZtoNuNuYieldTotal = new TH1D("hZeroLeptonZtoNuNuYieldTotal", "Zero lepton Z-invisible yield", 50, 1000, 2000);
-
+  
   hSignalCrossSection->SetFillColor(6);
   hZeroLeptonSignalYieldTotal->SetFillColor(6);  
   hZeroLeptonTopWJetsYieldTotal->SetFillColor(kBlue-9);
@@ -96,7 +103,7 @@ void makeHists() {
   lttwj->SetLineWidth(3);
   lttwj->SetLineColor(kOrange-3);
   lttwj->SetLineStyle(2);
-  lttwj->Draw();
+  if(drawTrue) lttwj->Draw();
 
   cBackground->cd(2);
   hZeroLeptonQCDYieldTotal->Draw();
@@ -104,7 +111,7 @@ void makeHists() {
   lqcd->SetLineWidth(3);
   lqcd->SetLineColor(kOrange-3);
   lqcd->SetLineStyle(2);
-  lqcd->Draw();
+  if(drawTrue) lqcd->Draw();
 
   cBackground->cd(3);
   hZeroLeptonZtoNuNuYieldTotal->Draw();
@@ -112,7 +119,7 @@ void makeHists() {
   lznn->SetLineWidth(3);
   lznn->SetLineColor(kOrange-3);
   lznn->SetLineStyle(2);
-  lznn->Draw();
+  if(drawTrue) lznn->Draw();
 
   cBackground->Print("cBackground_"+trueN_string+"_"+fitter+".pdf");
 
@@ -124,7 +131,7 @@ void makeHists() {
   lsig->SetLineWidth(3);
   lsig->SetLineColor(kOrange-3);
   lsig->SetLineStyle(2);
-  lsig->Draw();
+  if(drawTrue) lsig->Draw();
 
   cSignalCrossSection->cd(2);
   hPullPL->Draw();
@@ -137,7 +144,7 @@ void makeHists() {
   lsigy->SetLineWidth(3);
   lsigy->SetLineColor(kOrange-3);
   lsigy->SetLineStyle(2);
-  lsigy->Draw();
+  if(drawTrue) lsigy->Draw();
 
   cZeroLeptonSignalYieldTotal->Print("cZeroLeptonSignalYieldTotal_"+trueN_string+"_"+fitter+".pdf");
   
@@ -145,15 +152,16 @@ void makeHists() {
 }
 
 
-void initialize(int trueN_in, TString inFile) {
+void initialize(int trueN_in, TString inFile, TString fitter = "LB") {
 
   trueN = trueN_in;
-  makeTree(inFile);
+  makeTree(inFile, fitter);
 
   double trueN_double = trueN;
 
   //signal point 850 600, lumi = 15/fb
   trueXsec = 1000.0 * trueN_double / 1.5 / 6378.0; 
+  //trueXsec = 52;//3x3 with 5/fb
   trueXsec_string = "";
   trueXsec_string += trueXsec;
 
