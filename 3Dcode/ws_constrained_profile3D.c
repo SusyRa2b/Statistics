@@ -1,12 +1,15 @@
 
 #include "TRandom2.h"
 #include "TFile.h"
+#include "TLine.h"
 #include "TPad.h"
 #include "TCanvas.h"
 #include "TSystem.h"
 #include "TTree.h"
 #include "TF1.h"
 #include "TH1F.h"
+#include "TString.h"
+#include "TStyle.h"
 #include "RooGaussian.h"
 #include "RooProdPdf.h"
 #include "RooAbsPdf.h"
@@ -35,10 +38,22 @@
                                    double poiMinVal = -1.,
                                    double poiMaxVal = -1.,
                                    double constraintWidth = 4.,
+                                   double ymax = 5.,
                                    int verbLevel=0 ) {
 
        bool debugprint(true) ;
 
+     gStyle->SetOptStat(0) ;
+
+     //--- make output directory.
+
+     TString outputdir( wsfile ) ;
+     outputdir.ReplaceAll("rootfiles/","outputfiles/scans-") ;
+     outputdir.ReplaceAll(".root","") ;
+     printf("\n\n Creating output directory: %s\n\n", outputdir.Data() ) ;
+     char command[10000] ;
+     sprintf(command, "mkdir -p %s", outputdir.Data() ) ;
+     gSystem->Exec( command ) ;
 
 
      //--- Tell RooFit to shut up about anything less important than an ERROR.
@@ -506,17 +521,17 @@
        double nllDiffVals[1000] ;
 
        double poiAtMinlnL(-1.) ;
-       double poiAtMinusDelta1(-1.) ;
-       double poiAtPlusDelta1(-1.) ;
+       double poiAtMinusDelta2(-1.) ;
+       double poiAtPlusDelta2(-1.) ;
        for ( int poivi=0; poivi < npoiPoints ; poivi++ ) {
-          nllDiffVals[poivi] = nllVals[poivi] - minNllVal ;
+          nllDiffVals[poivi] = 2.*(nllVals[poivi] - minNllVal) ;
           double poiValue = poiMinVal + poivi*(poiMaxVal-poiMinVal)/(1.*npoiPoints) ;
           if ( nllDiffVals[poivi] < 0.01 ) { poiAtMinlnL = poiValue ; }
-          if ( poiAtMinusDelta1 < 0. && nllDiffVals[poivi] < 1.5 ) { poiAtMinusDelta1 = poiValue ; }
-          if ( poiAtMinlnL > 0. && poiAtPlusDelta1 < 0. && nllDiffVals[poivi] > 1.0 ) { poiAtPlusDelta1 = poiValue ; }
+          if ( poiAtMinusDelta2 < 0. && nllDiffVals[poivi] < 2.5 ) { poiAtMinusDelta2 = poiValue ; }
+          if ( poiAtMinlnL > 0. && poiAtPlusDelta2 < 0. && nllDiffVals[poivi] > 2.0 ) { poiAtPlusDelta2 = poiValue ; }
        } // poivi
 
-       printf("\n\n Estimates for poi at delta ln L = -1, 0, +1:  %g ,   %g ,   %g\n\n", poiAtMinusDelta1, poiAtMinlnL, poiAtPlusDelta1 ) ;
+       printf("\n\n Estimates for poi at delta ln L = -2, 0, +2:  %g ,   %g ,   %g\n\n", poiAtMinusDelta2, poiAtMinlnL, poiAtPlusDelta2 ) ;
 
 
 
@@ -534,18 +549,18 @@
        double poiBest(-1.) ;
        double poiMinus1stdv(-1.) ;
        double poiPlus1stdv(-1.) ;
-       double deltalnLMin(1e9) ;
-       if ( poiAtMinusDelta1 >= 0. && poiAtPlusDelta1 > 0. ) {
-          graph->Fit("pol5","", "", poiAtMinusDelta1, poiAtPlusDelta1 ) ;
+       double twodeltalnLMin(1e9) ;
+       if ( poiAtMinusDelta2 >= 0. && poiAtPlusDelta2 > 0. ) {
+          graph->Fit("pol5","", "", poiAtMinusDelta2, poiAtPlusDelta2 ) ;
           TF1* fitFunc = graph->GetFunction("pol5") ;
           if ( fitFunc != 0 ) {
              int npoints(1000) ;
              for ( int fi=0; fi<npoints; fi++ ) {
-                double poiVal = poiAtMinusDelta1 + (poiAtPlusDelta1-poiAtMinusDelta1)/(1.*npoints)*fi ;
-                double fitdeltalnL = fitFunc->Eval( poiVal ) ;
-                if ( poiMinus1stdv < 0. && fitdeltalnL<0.5 ) { poiMinus1stdv = poiVal ; }
-                if ( fitdeltalnL < deltalnLMin ) { poiBest = poiVal;  deltalnLMin = fitdeltalnL ; }
-                if ( deltalnLMin < 0.3 && poiPlus1stdv < 0. && fitdeltalnL > 0.5 ) { poiPlus1stdv = poiVal ; }
+                double poiVal = poiAtMinusDelta2 + (poiAtPlusDelta2-poiAtMinusDelta2)/(1.*npoints)*fi ;
+                double fit2deltalnL = fitFunc->Eval( poiVal ) ;
+                if ( poiMinus1stdv < 0. && fit2deltalnL<1.0 ) { poiMinus1stdv = poiVal ; }
+                if ( fit2deltalnL < twodeltalnLMin ) { poiBest = poiVal;  twodeltalnLMin = fit2deltalnL ; }
+                if ( twodeltalnLMin < 0.3 && poiPlus1stdv < 0. && fit2deltalnL > 1.0 ) { poiPlus1stdv = poiVal ; }
              } // fi.
           }
           printf("\n\n POI estimate :  %g  +%g  -%g    [%g,%g]\n\n",
@@ -557,12 +572,27 @@
           printf("\n\n *** Scan range insufficient.\n\n\n") ;
        }
 
+       char htitle[1000] ;
+       sprintf(htitle, "%s profile likelihood scan", new_poi_name ) ;
+       TH1F* hscan = new TH1F("hscan", htitle, 10, poiMinVal, poiMaxVal ) ;
+       hscan->SetMinimum(0.) ;
+       hscan->SetMaximum(ymax) ;
+
+
+       hscan->Draw() ;
        graph->SetLineColor(4) ;
        graph->SetLineWidth(3) ;
-       graph->Draw("ACP") ;
+       graph->Draw("CP") ;
        gPad->SetGridx(1) ;
        gPad->SetGridy(1) ;
        cscan->Update() ;
+
+       TLine* line = new TLine() ;
+       line->SetLineColor(2) ;
+       line->DrawLine(poiMinVal, 1., poiPlus1stdv, 1.) ;
+       line->DrawLine(poiMinus1stdv,0., poiMinus1stdv, 1.) ;
+       line->DrawLine(poiPlus1stdv ,0., poiPlus1stdv , 1.) ;
+
 
        char hname[1000] ;
        sprintf( hname, "hscanout_%s", new_poi_name ) ;
@@ -579,17 +609,23 @@
        xaxis->SetBinLabel(3,"Model") ;
        xaxis->SetBinLabel(4,"Model-1sd") ;
 
-       TFile fout("cscan.root","recreate") ;
+       char outrootfile[10000] ;
+       sprintf( outrootfile, "%s/scan-%s.root", outputdir.Data(), new_poi_name ) ;
+
+       char outpdffile[10000] ;
+       sprintf( outpdffile, "%s/scan-%s.pdf", outputdir.Data(), new_poi_name ) ;
+
+       printf("\n Saving %s\n", outpdffile ) ;
+       cscan->SaveAs( outpdffile ) ;
+
+       printf("\n Saving %s\n", outrootfile ) ;
+       TFile fout(outrootfile,"recreate") ;
        graph->Write() ;
        hsout->Write() ;
        fout.Close() ;
 
        delete ws ;
        wstf->Close() ;
-    // delete wstf ;
-    // delete rds ;
-    // delete modelConfig ;
-    // delete likelihood ;
 
    }
 
