@@ -41,7 +41,6 @@
                                    double ymax = 5.,
                                    int verbLevel=0 ) {
 
-       bool debugprint(true) ;
 
      gStyle->SetOptStat(0) ;
 
@@ -379,9 +378,21 @@
 
        double poiVals[1000] ;
        double nllVals[1000] ;
+       double tcmu_qcd_Vals[100] ;
+       double tcmu_ttwj_Vals[100] ;
+       double tcmu_znn_Vals[100] ;
+       double tcmu_vv_Vals[100] ;
+       double tcmu_susy_Vals[100] ;
+       double trigeff_Vals[100] ;
+       double trigeff_sl_Vals[100] ;
+       double sf_ttwj_Vals[100] ;
+       double sf_qcd_Vals[100] ;
+       double pdf_sf_qcd_Vals[100] ;
+       double allsmcomps_Vals[100] ;
        double minNllVal(1.e9) ;
 
 
+       double allsmcomps_max(0.) ;
 
        for ( int poivi=0; poivi < npoiPoints ; poivi++ ) {
 
@@ -409,104 +420,117 @@
                 poivi, rrv_poiValue->getVal(), fit_minuit_var_val, nll->getVal(), plot_var->getVal(), new_poi_rar->getVal() ) ;
           cout << flush ;
 
-          if ( debugprint ) {
-
-             TString binstring( new_poi_name ) ;
-             binstring.ReplaceAll("n_","") ;
-             TString trigbinstring( binstring ) ;
-             trigbinstring.Resize(5) ;
-
-             char pname[1000] ;
-             RooAbsReal* par(0x0) ;
-             double mu_qcd(0.), mu_ttwj(0.), mu_znn(0.), mu_vv(0.), mu_susy(0.), trigeff(0.), trigeff_sl(0.), sf_ttwj(0.), sf_qcd(0.), pdf_sf_qcd(0.) ;
-
-             sprintf( pname, "mu_qcd_%s", binstring.Data() ) ;
-             par = (RooAbsReal*) ws -> obj( pname ) ;
-             if ( par == 0x0 ) {
-                printf( " *** %s missing from workspace.\n", pname ) ;
-             } else {
-                mu_qcd = par -> getVal() ;
-             }
-
-             sprintf( pname, "mu_ttwj_%s", binstring.Data() ) ;
-             par = (RooAbsReal*) ws -> obj( pname ) ;
-             if ( par == 0x0 ) {
-                printf( " *** %s missing from workspace.\n", pname ) ;
-             } else {
-                mu_ttwj = par -> getVal() ;
-             }
-
-             sprintf( pname, "mu_znn_%s", binstring.Data() ) ;
-             par = (RooAbsReal*) ws -> obj( pname ) ;
-             if ( par == 0x0 ) {
-                printf( " *** %s missing from workspace.\n", pname ) ;
-             } else {
-                mu_znn = par -> getVal() ;
-             }
-
-             sprintf( pname, "mu_vv_%s", binstring.Data() ) ;
-             par = (RooAbsReal*) ws -> obj( pname ) ;
-             if ( par == 0x0 ) {
-                printf( " *** %s missing from workspace.\n", pname ) ;
-             } else {
-                mu_vv = par -> getVal() ;
-             }
-
-             sprintf( pname, "mu_susy_%s", binstring.Data() ) ;
-             par = (RooAbsReal*) ws -> obj( pname ) ;
-             if ( par == 0x0 ) {
-                printf( " *** %s missing from workspace.\n", pname ) ;
-             } else {
-                mu_susy = par -> getVal() ;
-             }
-
-             sprintf( pname, "trigeff_%s", trigbinstring.Data() ) ;
-             par = (RooAbsReal*) ws -> obj( pname ) ;
-             if ( par == 0x0 ) {
-                printf( " *** %s missing from workspace.\n", pname ) ;
-             } else {
-                trigeff = par -> getVal() ;
-             }
-
-             sprintf( pname, "trigeff_sl_%s", trigbinstring.Data() ) ;
-             par = (RooAbsReal*) ws -> obj( pname ) ;
-             if ( par == 0x0 ) {
-                printf( " *** %s missing from workspace.\n", pname ) ;
-             } else {
-                trigeff_sl = par -> getVal() ;
-             }
-
-             sprintf( pname, "sf_ttwj_%s", binstring.Data() ) ;
-             par = (RooAbsReal*) ws -> obj( pname ) ;
-             if ( par == 0x0 ) {
-                printf( " *** %s missing from workspace.\n", pname ) ;
-             } else {
-                sf_ttwj = par -> getVal() ;
-             }
-
-             sprintf( pname, "sf_qcd_%s", binstring.Data() ) ;
-             par = (RooAbsReal*) ws -> obj( pname ) ;
-             if ( par == 0x0 ) {
-                printf( " *** %s missing from workspace.\n", pname ) ;
-             } else {
-                sf_qcd = par -> getVal() ;
-             }
-
-             sprintf( pname, "pdf_sf_qcd_%s", binstring.Data() ) ;
-             par = (RooAbsReal*) ws -> obj( pname ) ;
-             if ( par == 0x0 ) {
-                printf( " *** %s missing from workspace.\n", pname ) ;
-             } else {
-                pdf_sf_qcd = par -> getVal() ;
-             }
 
 
-             printf(" *** debug : mu_qcd=%5.1f, mu_ttwj=%5.1f, mu_znn=%5.1f, mu_vv=%5.1f, mu_susy=%5.1f, trigeff=%5.3f, trigeff_sl=%5.3f, sf_ttwj=%5.3f, sf_qcd=%6.3f, pdf_sf_qcd=%12.10f\n",
-                 mu_qcd, mu_ttwj, mu_znn, mu_vv, mu_susy, trigeff, trigeff_sl, sf_ttwj, sf_qcd, pdf_sf_qcd ) ;
+          TString binstring( new_poi_name ) ;
+          binstring.ReplaceAll("n_","") ;
+          TString trigbinstring( binstring ) ;
+          trigbinstring.Resize(5) ;
 
-             cout << flush ;
+          char pname[1000] ;
+          RooAbsReal* par(0x0) ;
+          double mu_qcd(0.), mu_ttwj(0.), mu_znn(0.), mu_vv(0.), mu_susy(0.), trigeff(0.), trigeff_sl(0.), sf_ttwj(0.), sf_qcd(0.), pdf_sf_qcd(0.) ;
 
-          } // debugprint?
+          sprintf( pname, "mu_qcd_%s", binstring.Data() ) ;
+          par = (RooAbsReal*) ws -> obj( pname ) ;
+          if ( par == 0x0 ) {
+             printf( " *** %s missing from workspace.\n", pname ) ;
+          } else {
+             mu_qcd = par -> getVal() ;
+          }
+
+          sprintf( pname, "mu_ttwj_%s", binstring.Data() ) ;
+          par = (RooAbsReal*) ws -> obj( pname ) ;
+          if ( par == 0x0 ) {
+             printf( " *** %s missing from workspace.\n", pname ) ;
+          } else {
+             mu_ttwj = par -> getVal() ;
+          }
+
+          sprintf( pname, "mu_znn_%s", binstring.Data() ) ;
+          par = (RooAbsReal*) ws -> obj( pname ) ;
+          if ( par == 0x0 ) {
+             printf( " *** %s missing from workspace.\n", pname ) ;
+          } else {
+             mu_znn = par -> getVal() ;
+          }
+
+          sprintf( pname, "mu_vv_%s", binstring.Data() ) ;
+          par = (RooAbsReal*) ws -> obj( pname ) ;
+          if ( par == 0x0 ) {
+             printf( " *** %s missing from workspace.\n", pname ) ;
+          } else {
+             mu_vv = par -> getVal() ;
+          }
+
+          sprintf( pname, "mu_susy_%s", binstring.Data() ) ;
+          par = (RooAbsReal*) ws -> obj( pname ) ;
+          if ( par == 0x0 ) {
+             printf( " *** %s missing from workspace.\n", pname ) ;
+          } else {
+             mu_susy = par -> getVal() ;
+          }
+
+          sprintf( pname, "trigeff_%s", trigbinstring.Data() ) ;
+          par = (RooAbsReal*) ws -> obj( pname ) ;
+          if ( par == 0x0 ) {
+             printf( " *** %s missing from workspace.\n", pname ) ;
+          } else {
+             trigeff = par -> getVal() ;
+          }
+
+          sprintf( pname, "trigeff_sl_%s", trigbinstring.Data() ) ;
+          par = (RooAbsReal*) ws -> obj( pname ) ;
+          if ( par == 0x0 ) {
+             printf( " *** %s missing from workspace.\n", pname ) ;
+          } else {
+             trigeff_sl = par -> getVal() ;
+          }
+
+          sprintf( pname, "sf_ttwj_%s", binstring.Data() ) ;
+          par = (RooAbsReal*) ws -> obj( pname ) ;
+          if ( par == 0x0 ) {
+             printf( " *** %s missing from workspace.\n", pname ) ;
+          } else {
+             sf_ttwj = par -> getVal() ;
+          }
+
+          sprintf( pname, "sf_qcd_%s", binstring.Data() ) ;
+          par = (RooAbsReal*) ws -> obj( pname ) ;
+          if ( par == 0x0 ) {
+             printf( " *** %s missing from workspace.\n", pname ) ;
+          } else {
+             sf_qcd = par -> getVal() ;
+          }
+
+          sprintf( pname, "pdf_sf_qcd_%s", binstring.Data() ) ;
+          par = (RooAbsReal*) ws -> obj( pname ) ;
+          if ( par == 0x0 ) {
+             printf( " *** %s missing from workspace.\n", pname ) ;
+          } else {
+             pdf_sf_qcd = par -> getVal() ;
+          }
+
+
+          printf(" *** debug : mu_qcd=%5.1f, mu_ttwj=%5.1f, mu_znn=%5.1f, mu_vv=%5.1f, mu_susy=%5.1f, trigeff=%5.3f, trigeff_sl=%5.3f, sf_ttwj=%5.3f, sf_qcd=%6.3f, pdf_sf_qcd=%12.10f\n",
+              mu_qcd, mu_ttwj, mu_znn, mu_vv, mu_susy, trigeff, trigeff_sl, sf_ttwj, sf_qcd, pdf_sf_qcd ) ;
+          cout << flush ;
+
+          tcmu_qcd_Vals[poivi] = trigeff * mu_qcd ;
+          tcmu_ttwj_Vals[poivi] = trigeff_sl * mu_ttwj ;
+          tcmu_znn_Vals[poivi] = trigeff_sl * mu_znn ;
+          tcmu_vv_Vals[poivi] = trigeff_sl * mu_vv ;
+          tcmu_susy_Vals[poivi] = trigeff_sl * mu_susy ;
+          trigeff_Vals[poivi] = trigeff ;
+          trigeff_sl_Vals[poivi] = trigeff_sl ;
+          sf_ttwj_Vals[poivi] = sf_ttwj ;
+          sf_qcd_Vals[poivi] = sf_qcd ;
+          pdf_sf_qcd_Vals[poivi] = pdf_sf_qcd ;
+
+          allsmcomps_Vals[poivi] = trigeff * mu_qcd + trigeff_sl * ( mu_ttwj + mu_qcd + mu_znn + mu_vv ) ;
+
+          if ( allsmcomps_Vals[poivi] > allsmcomps_max ) { allsmcomps_max = allsmcomps_Vals[poivi] ; }
+
 
           poiVals[poivi] = new_poi_rar->getVal() ;
           nllVals[poivi] = plot_var->getVal() ;
@@ -535,13 +559,19 @@
 
 
 
+
+      //--- Main canvas
+
        TCanvas* cscan = (TCanvas*) gDirectory->FindObject("cscan") ;
        if ( cscan == 0x0 ) {
           printf("\n Creating canvas.\n\n") ;
           cscan = new TCanvas("cscan","Delta nll") ;
        }
-       TGraph* graph = new TGraph( npoiPoints, poiVals, nllDiffVals ) ;
+
+
        char gname[1000] ;
+
+       TGraph* graph = new TGraph( npoiPoints, poiVals, nllDiffVals ) ;
        sprintf( gname, "scan_%s", new_poi_name ) ;
        graph->SetName( gname ) ;
 
@@ -615,12 +645,92 @@
        char outpdffile[10000] ;
        sprintf( outpdffile, "%s/scan-%s.pdf", outputdir.Data(), new_poi_name ) ;
 
+       cscan->Update() ; cscan->Draw() ;
+
        printf("\n Saving %s\n", outpdffile ) ;
        cscan->SaveAs( outpdffile ) ;
+
+
+
+
+      //--- canvas with components.
+
+       TCanvas* ccomps = (TCanvas*) gDirectory->FindObject("ccomps") ;
+       if ( ccomps == 0x0 ) {
+          printf("\n Creating canvas.\n\n") ;
+          ccomps = new TCanvas("ccomps","Components") ;
+       }
+
+       TGraph* gr_tcmu_qcd = new TGraph( npoiPoints, poiVals, tcmu_qcd_Vals ) ;
+       sprintf( gname, "scan_%s_tcmu_qcd", new_poi_name ) ;
+       gr_tcmu_qcd->SetName( gname ) ;
+       gr_tcmu_qcd->SetLineWidth( 2 ) ;
+       gr_tcmu_qcd->SetLineColor( 2 ) ;
+
+       TGraph* gr_tcmu_ttwj = new TGraph( npoiPoints, poiVals, tcmu_ttwj_Vals ) ;
+       sprintf( gname, "scan_%s_tcmu_ttwj", new_poi_name ) ;
+       gr_tcmu_ttwj->SetName( gname ) ;
+       gr_tcmu_ttwj->SetLineWidth( 2 ) ;
+       gr_tcmu_ttwj->SetLineColor( 4 ) ;
+
+       TGraph* gr_tcmu_znn = new TGraph( npoiPoints, poiVals, tcmu_znn_Vals ) ;
+       sprintf( gname, "scan_%s_tcmu_znn", new_poi_name ) ;
+       gr_tcmu_znn->SetName( gname ) ;
+       gr_tcmu_znn->SetLineWidth( 2 ) ;
+       gr_tcmu_znn->SetLineColor( 3 ) ;
+
+       TGraph* gr_tcmu_vv = new TGraph( npoiPoints, poiVals, tcmu_vv_Vals ) ;
+       sprintf( gname, "scan_%s_tcmu_vv", new_poi_name ) ;
+       gr_tcmu_vv->SetName( gname ) ;
+       gr_tcmu_vv->SetLineWidth( 2 ) ;
+       gr_tcmu_vv->SetLineColor( 2 ) ;
+
+       TGraph* gr_allsmcomps = new TGraph( npoiPoints, poiVals, allsmcomps_Vals ) ;
+       sprintf( gname, "scan_%s_allsmcomps", new_poi_name ) ;
+       gr_allsmcomps->SetName( gname ) ;
+       gr_allsmcomps->SetLineWidth( 2 ) ;
+       gr_allsmcomps->SetLineColor( 1 ) ;
+
+
+       sprintf(htitle, "%s SM components (in events)", new_poi_name ) ;
+       TH1F* hcomps = new TH1F("hcomps", htitle, 10, poiMinVal, poiMaxVal ) ;
+       hcomps->SetMinimum(0.) ;
+       hcomps->SetMaximum(1.2 * allsmcomps_max ) ;
+
+       hcomps->Draw() ;
+       gr_tcmu_qcd->Draw("c") ;
+       gr_tcmu_ttwj->Draw("c") ;
+       gr_tcmu_znn->Draw("c") ;
+       gr_tcmu_vv->Draw("c") ;
+       gr_allsmcomps->Draw("c") ;
+
+       gPad->SetGridx(1) ;
+       gPad->SetGridy(1) ;
+
+       sprintf( outrootfile, "%s/scan-%s-smcomps.root", outputdir.Data(), new_poi_name ) ;
+       sprintf( outpdffile, "%s/scan-%s-smcomps.pdf", outputdir.Data(), new_poi_name ) ;
+
+       ccomps->Update() ; ccomps->Draw() ;
+
+       printf("\n Saving %s\n", outpdffile ) ;
+       ccomps->SaveAs( outpdffile ) ;
+
+
+
+
+
+
+
+     //--- save in root file
 
        printf("\n Saving %s\n", outrootfile ) ;
        TFile fout(outrootfile,"recreate") ;
        graph->Write() ;
+       gr_tcmu_qcd->Write() ;
+       gr_tcmu_ttwj->Write() ;
+       gr_tcmu_znn->Write() ;
+       gr_tcmu_vv->Write() ;
+       gr_allsmcomps->Write() ;
        hsout->Write() ;
        fout.Close() ;
 
