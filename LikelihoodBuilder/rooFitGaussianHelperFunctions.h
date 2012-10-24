@@ -28,7 +28,8 @@ RooAbsArg* getGaussianConstraint( RooWorkspace& ws, TString NP_name, const TStri
   NP_name = NP_name + binName;
 
   if ( NP_err <= 0. ) {
-    RooRealVar* rrc = new RooRealVar( NP_name+"_zeroErrorGaussian", NP_name+"_zeroErrorGaussian", NP_val ) ;
+    //RooRealVar* rrc = new RooRealVar( NP_name+"_zeroErrorGaussian", NP_name+"_zeroErrorGaussian", NP_val ) ;
+    RooRealVar* rrc = new RooRealVar( NP_name, NP_name, NP_val ) ;
     rrc->setConstant();
     ws.import(*rrc);
     return ws.var(rrc->GetName());
@@ -39,7 +40,7 @@ RooAbsArg* getGaussianConstraint( RooWorkspace& ws, TString NP_name, const TStri
 
   if ( min < 0. && !allowNegative ) { min = 1e-5 ; }
 
-  RooRealVar* np_rrv = new RooRealVar(NP_name+"_gaussian", NP_name+"_gaussian", min, max ) ;
+  RooRealVar* np_rrv = new RooRealVar(NP_name, NP_name, min, max ) ;
   np_rrv -> setVal( NP_val ) ;
   np_rrv -> setConstant( kFALSE ) ;
 
@@ -68,7 +69,8 @@ RooAbsReal* getCorrelatedGaussianConstraint( RooWorkspace& ws, TString NP_name, 
   NP_name = NP_name + binName;
   
   if ( NP_err <= 0. ) {
-    RooRealVar* rrc = new RooRealVar( NP_name+"_zeroErrorCorrelatedGaussian", NP_name+"_zeroErrorCorrelatedGaussian", NP_val ) ;
+    //RooRealVar* rrc = new RooRealVar( NP_name+"_zeroErrorCorrelatedGaussian", NP_name+"_zeroErrorCorrelatedGaussian", NP_val ) ;
+    RooRealVar* rrc = new RooRealVar( NP_name, NP_name, NP_val ) ;
     rrc->setConstant();
     ws.import(*rrc);
     return ws.var(rrc->GetName());
