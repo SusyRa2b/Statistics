@@ -12,6 +12,7 @@
 #include "RooDataSet.h"
 #include "RooFitResult.h"
 #include "RooArgSet.h"
+#include "RooStats/ModelConfig.h"
 
 
    class ra2bRoostatsClass3D_3b {
@@ -38,6 +39,8 @@
                             ) ;
 
        void mismatchErr(char* label, TString inPar);
+       void SetConstants(RooWorkspace pWs, RooStats::ModelConfig pMc);
+       void SetConstant(const RooArgSet * vars, Bool_t value );
 
      private :
 
@@ -108,7 +111,7 @@
      
        // luminosity
 
-       static const float DataLumi = 9999. ;     // integrated luminosity (in pb-1)
+       /// static const float DataLumi(9999.) ;     // integrated luminosity (in pb-1)
 
        bool ignoreBin[nBinsMET][nBinsHT] ;
 

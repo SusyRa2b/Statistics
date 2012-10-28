@@ -1214,6 +1214,7 @@
 
 	    rv_mu_ttwj_sl[i][j][k] = new RooRealVar( muTtSlString, muTtSlString, 0., 100000. ) ;
 	    rv_mu_ttwj_sl[i][j][k]->setVal( initialval_ttwj_sl[i][j][k] ) ;    // this is a starting value only
+            if ( !(ignoreBin[i][j]) ) { allNuisances -> add( *rv_mu_ttwj_sl[i][j][k] ) ; } //-- is this correct?
 
             //--- try allowing negative values.
 	    ////// rrv_mu_qcd[i][j][k] = new RooRealVar( muQcdString, muQcdString, 0., 100000. ) ;
@@ -1223,6 +1224,7 @@
 
 	    rrv_mu_qcd_ldp[i][j][k] = new RooRealVar( muQcdLdpString, muQcdLdpString, 0., 100000. ) ;
 	    rv_mu_qcd_ldp[i][j][k] = rrv_mu_qcd_ldp[i][j][k];
+            if ( !(ignoreBin[i][j]) ) { allNuisances -> add( *rv_mu_qcd_ldp[i][j][k] ) ; } //-- is this correct?
 	    rrv_mu_qcd_ldp[i][j][k]->setVal( initialval_qcd_ldp[i][j][k] ) ;   // this is a starting value only
 
             //-- owen: sept 23, 2012 : do not create these for >1 btag.
@@ -1230,6 +1232,7 @@
 	       rrv_mu_znn[i][j][k] = new RooRealVar( muZnnString, muZnnString, 0., 100000. ) ;
 	       rv_mu_znn[i][j][k] = rrv_mu_znn[i][j][k];
 	       rrv_mu_znn[i][j][k]->setVal( initialval_znn[i][j][k] ) ;           // this is a starting value only
+               if ( !(ignoreBin[i][j]) ) { allNuisances -> add( *rrv_mu_znn[i][j][k] ) ; } //-- is this correct?
             }
 
 
@@ -1350,6 +1353,7 @@
       rv_ttwj_0lep1lep_ratio -> setVal( initialguess_ttwj_0lep1lep_ratio ) ; // initial guess
       rv_ttwj_0lep1lep_ratio -> setConstant( kFALSE ) ;
 
+      allNuisances -> add( *rv_ttwj_0lep1lep_ratio ) ; //-- is this correct?
 
 
 
@@ -1462,6 +1466,7 @@
             char vname[1000] ;
             sprintf( vname, "qcd_0lepLDP_ratio_H%d", htbi+1 ) ;
             rv_qcd_0lepLDP_ratio[htbi] = new RooRealVar( vname, vname, initialguess_model24_qcd_0lepLDP_ratio[htbi], 0., 10. ) ;
+            allNuisances -> add( *rv_qcd_0lepLDP_ratio[htbi] ) ; //-- is this correct?
          }
 
       } else if ( qcdModelIndex == 3 ) {
@@ -1481,6 +1486,7 @@
             sprintf( vname, "qcd_0lepLDP_ratio_H%d", htbi+1 ) ;
             printf("  HT bin %d : %s\n", htbi+1, vname ) ; cout << flush ;
             rv_qcd_0lepLDP_ratio[htbi] = new RooRealVar( vname, vname, initialguess_model24_qcd_0lepLDP_ratio[htbi], 0., 10. ) ;
+            allNuisances -> add( *rv_qcd_0lepLDP_ratio[htbi] ) ; //-- is this correct?
          }
 
          for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
@@ -1495,6 +1501,7 @@
                   rv_SFqcd_met[mbi] -> setConstant(kTRUE) ;
                } else {
                   rv_SFqcd_met[mbi] -> setConstant(kFALSE) ;
+                  allNuisances -> add( *rv_SFqcd_met[mbi] ) ; //-- is this correct?
                }
             }
          }
@@ -1511,6 +1518,7 @@
                   rv_SFqcd_nb[bbi] -> setConstant(kTRUE) ;
                } else {
                   rv_SFqcd_nb[bbi] -> setConstant(kFALSE) ;
+                  allNuisances -> add( *rv_SFqcd_nb[bbi] ) ; //-- is this correct?
                }
             }
          }
@@ -1536,10 +1544,14 @@
       for (int i = 0 ; i < nBinsMET ; i++) {
 
          sprintf( NP_name, "acc_Zee_M%d", i+1 ) ;
-         rar_acc_Zee[i] = makeBetaConstraint( NP_name, acc_Zee[i], acc_Zee_err[i] ) ;
+	 // use makeGaussianConstraint, in order to test the frequentistCalculator machinery
+         //rar_acc_Zee[i] = makeBetaConstraint( NP_name, acc_Zee[i], acc_Zee_err[i] ) ;
+	 rar_acc_Zee[i] = makeGaussianConstraint( NP_name, acc_Zee[i], acc_Zee_err[i] ) ;
 
          sprintf( NP_name, "acc_Zmm_M%d", i+1 ) ;
-         rar_acc_Zmm[i] = makeBetaConstraint( NP_name, acc_Zmm[i], acc_Zmm_err[i] ) ;
+	 // use makeGaussianConstraint, in order to test the frequentistCalculator machinery
+         //rar_acc_Zmm[i] = makeBetaConstraint( NP_name, acc_Zmm[i], acc_Zmm_err[i] ) ;
+	 rar_acc_Zmm[i] = makeGaussianConstraint( NP_name, acc_Zmm[i], acc_Zmm_err[i] ) ;
 
       }
 
@@ -1563,10 +1575,14 @@
       for (int j = 0 ; j < nBinsHT ; j++) {
 
          sprintf( NP_name, "eff_Zee_H%d", j+1 ) ;
-         rar_eff_Zee[j] = makeBetaConstraint( NP_name, eff_Zee[j], eff_Zee_err[j] ) ;
+	 // use makeGaussianConstraint, in order to test the frequentistCalculator machinery
+         //rar_eff_Zee[j] = makeBetaConstraint( NP_name, eff_Zee[j], eff_Zee_err[j] ) ;
+	 rar_eff_Zee[j] = makeGaussianConstraint( NP_name, eff_Zee[j], eff_Zee_err[j] ) ;
 
          sprintf( NP_name, "eff_Zmm_H%d", j+1 ) ;
-         rar_eff_Zmm[j] = makeBetaConstraint( NP_name, eff_Zmm[j], eff_Zmm_err[j] ) ;
+	 // use makeGaussianConstraint, in order to test the frequentistCalculator machinery
+         //rar_eff_Zmm[j] = makeBetaConstraint( NP_name, eff_Zmm[j], eff_Zmm_err[j] ) ;
+	 rar_eff_Zmm[j] = makeGaussianConstraint( NP_name, eff_Zmm[j], eff_Zmm_err[j] ) ;
 
       }
 
@@ -1578,10 +1594,14 @@
       // Z -> ll purities
 
        sprintf( NP_name, "pur_Zee" ) ;
-       RooAbsReal* rar_pur_Zee = makeBetaConstraint( NP_name, pur_Zee, pur_Zee_err ) ;
+       // use makeGaussianConstraint, in order to test the frequentistCalculator machinery
+       //RooAbsReal* rar_pur_Zee = makeBetaConstraint( NP_name, pur_Zee, pur_Zee_err ) ;
+       RooAbsReal* rar_pur_Zee = makeGaussianConstraint( NP_name, pur_Zee, pur_Zee_err ) ;
 
        sprintf( NP_name, "pur_Zmm" ) ;
-       RooAbsReal* rar_pur_Zmm = makeBetaConstraint( NP_name, pur_Zmm, pur_Zmm_err ) ;
+       // use makeGaussianConstraint, in order to test the frequentistCalculator machinery
+       //RooAbsReal* rar_pur_Zmm = makeBetaConstraint( NP_name, pur_Zmm, pur_Zmm_err ) ;
+       RooAbsReal* rar_pur_Zmm = makeGaussianConstraint( NP_name, pur_Zmm, pur_Zmm_err ) ;
 
 
 
@@ -1720,35 +1740,43 @@
             sprintf( pdfname, "pdf_%s", rv_SFqcd_met[2]->GetName() ) ;
             sprintf( meanname, "pdf_mean_%s", rv_SFqcd_met[2]->GetName() ) ;
             sprintf( signame, "pdf_sigma_%s", rv_SFqcd_met[2]->GetName() ) ;
-            RooConstVar* mean_mb3 = new RooConstVar( meanname, meanname, 1.34 ) ; //-- value hardwired from chi2 fit of MC ratios.
+            RooRealVar* mean_mb3 = new RooRealVar( meanname, meanname, 1.34, 0., 5. ) ; //-- value hardwired from chi2 fit of MC ratios.
+	    mean_mb3->setConstant(kTRUE);
             RooConstVar* sigma_mb3 = new RooConstVar( signame, signame, 0.14 ) ; //-- value is diff between SFmet3 and SFmet2 divided by 2.
             //RooConstVar* sigma_mb3 = new RooConstVar( signame, signame, 0.34 ) ; //-- value is diff between 1-SF
 	    printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_met[2]->GetName(), mean_mb3->getVal(), sigma_mb3->getVal() ) ;
             RooGaussian* rg_mb3 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_met[2], *mean_mb3, *sigma_mb3) ;
             allNuisances -> add( *rv_SFqcd_met[2] ) ;
             allNuisancePdfs -> add( *rg_mb3 ) ;
+	    globalObservables->add( *mean_mb3 ) ;
+
 
             sprintf( pdfname, "pdf_%s", rv_SFqcd_met[3]->GetName() ) ;
             sprintf( meanname, "pdf_mean_%s", rv_SFqcd_met[3]->GetName() ) ;
             sprintf( signame, "pdf_sigma_%s", rv_SFqcd_met[3]->GetName() ) ;
-            RooConstVar* mean_mb4 = new RooConstVar( meanname, meanname, 1.90 ) ; //-- value hardwired from chi2 fit of MC ratios.
+            RooRealVar* mean_mb4 = new RooRealVar( meanname, meanname, 1.90, 0., 5. ) ; //-- value hardwired from chi2 fit of MC ratios.
+	    mean_mb4->setConstant(kTRUE);
             RooConstVar* sigma_mb4 = new RooConstVar( signame, signame, 0.43 ) ; //-- value is diff between SFmet4 and SFmet2 divided by 2.
             //RooConstVar* sigma_mb4 = new RooConstVar( signame, signame, 0.90 ) ; //-- value is 1-SF
 	    printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_met[3]->GetName(), mean_mb4->getVal(), sigma_mb4->getVal() ) ;
             RooGaussian* rg_mb4 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_met[3], *mean_mb4, *sigma_mb4) ;
             allNuisances -> add( *rv_SFqcd_met[3] ) ;
             allNuisancePdfs -> add( *rg_mb4 ) ;
+            globalObservables -> add( *mean_mb4 ) ;
+
 
             sprintf( pdfname, "pdf_%s", rv_SFqcd_nb[2]->GetName() ) ;
             sprintf( meanname, "pdf_mean_%s", rv_SFqcd_nb[2]->GetName() ) ;
             sprintf( signame, "pdf_sigma_%s", rv_SFqcd_nb[2]->GetName() ) ;
-            RooConstVar* mean_nb3 = new RooConstVar( meanname, meanname, 0.69 ) ; //-- value hardwired from chi2 fit of MC ratios.
+            RooRealVar* mean_nb3 = new RooRealVar( meanname, meanname, 0.69, 0., 5. ) ; //-- value hardwired from chi2 fit of MC ratios.
+	    mean_nb3->setConstant(kTRUE);
             RooConstVar* sigma_nb3 = new RooConstVar( signame, signame, 0.16 ) ; //-- guess: 1-SF / 2.  chi2 fit error is 0.07 so this is reasonable in magnitude.
             //RooConstVar* sigma_nb3 = new RooConstVar( signame, signame, 0.31 ) ; //-- guess: 1-SF 
 	    printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_nb[2]->GetName(), mean_nb3->getVal(), sigma_nb3->getVal() ) ;
             RooGaussian* rg_nb3 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_nb[2], *mean_nb3, *sigma_nb3) ;
             allNuisances -> add( *rv_SFqcd_nb[2] ) ;
             allNuisancePdfs -> add( *rg_nb3 ) ;
+            globalObservables -> add( *mean_nb3 ) ;
             //-- set starting value to constraint mean.
             rv_SFqcd_nb[2] -> setVal( 0.69 ) ;
 
@@ -1878,10 +1906,12 @@
           if ( ignoreBin[i][j] ) continue ;
 
           sprintf( NP_name, "trigeff_M%d_H%d", i+1, j+1 ) ;
-          rar_trigeff[i][j] = makeBetaConstraint( NP_name, trigeff_0L[i][j], trigefferr_0L[i][j] ) ;
+          //rar_trigeff[i][j] = makeBetaConstraint( NP_name, trigeff_0L[i][j], trigefferr_0L[i][j] ) ;
+	  rar_trigeff[i][j] = makeGaussianConstraint( NP_name, trigeff_0L[i][j], trigefferr_0L[i][j] ) ;
 
           sprintf( NP_name, "trigeff_sl_M%d_H%d", i+1, j+1 ) ;
-          rar_trigeff_sl[i][j] = makeBetaConstraint( NP_name, trigeff_1L[i][j], trigefferr_1L[i][j] ) ;
+          //rar_trigeff_sl[i][j] = makeBetaConstraint( NP_name, trigeff_1L[i][j], trigefferr_1L[i][j] ) ;
+	  rar_trigeff_sl[i][j] = makeGaussianConstraint( NP_name, trigeff_1L[i][j], trigefferr_1L[i][j] ) ;
         }
       }
 
@@ -2312,7 +2342,13 @@
 
 
 
+      // fix global observables to their default value
 
+      TIterator * goIter = globalObservables->createIterator(); 
+
+      while ( RooRealVar * gObs_rrv = (RooRealVar*)goIter->Next() ) {
+	gObs_rrv->setConstant();
+      }
 
 
       // parameters of interest
@@ -2332,6 +2368,9 @@
       sbModel.SetObservables( *observedParametersList );
       sbModel.SetGlobalObservables( *globalObservables );
 
+      // set all but obs, poi and nuisance to const
+      SetConstants(workspace, sbModel);
+      
       workspace.Print() ;
 
       printf(" --- Doing fit for S+B model.\n" ) ; cout << flush ;
@@ -2909,6 +2948,7 @@
        allNuisances -> add( *rar_np ) ;
        allNuisancePdfs -> add( *rar_pdf ) ;
 
+
        return rar_np ;
 
 
@@ -3264,7 +3304,8 @@
 
        char vname[1000] ;
        sprintf( vname, "mean_%s", NP_name ) ;
-       RooConstVar* g_mean = new RooConstVar( vname, vname, NP_val ) ;
+       RooRealVar* g_mean = new RooRealVar( vname, vname, NP_val, -1000., 1000. ) ;
+       g_mean->setConstant(kTRUE);
        sprintf( vname, "sigma_%s", NP_name ) ;
        RooConstVar* g_sigma = new RooConstVar( vname, vname, NP_err ) ;
 
@@ -3274,6 +3315,7 @@
 
        allNuisances -> add( *np_rrv ) ;
        allNuisancePdfs -> add( *np_pdf ) ;
+       globalObservables -> add( *g_mean ) ;
 
        printf("  makeGaussianConstraint : created nuisance parameter %s : val = %g\n", NP_name, np_rrv -> getVal() ) ;
 
@@ -3307,7 +3349,8 @@
 
           char vname[1000] ;
           sprintf( vname, "mean_%s", NP_base_name ) ;
-          RooConstVar* g_mean = new RooConstVar( vname, vname, 0.0 ) ;
+          RooRealVar* g_mean = new RooRealVar( vname, vname, 0.0,-1000.,1000. ) ;
+	  g_mean->setConstant(kTRUE);
           sprintf( vname, "sigma_%s", NP_base_name ) ;
           RooConstVar* g_sigma = new RooConstVar( vname, vname, 1.0 ) ;
 
@@ -3317,6 +3360,7 @@
           ///// RooGaussian* base_np_pdf = new RooGaussian( pdfname, pdfname, *rrv_np_base_par, RooConst(0.), RooConst(1.) ) ;
           RooGaussian* base_np_pdf = new RooGaussian( pdfname, pdfname, *rrv_np_base_par, *g_mean, *g_sigma ) ;
           allNuisancePdfs -> add( *base_np_pdf ) ;
+          globalObservables -> add( *g_mean ) ;
 
        }
 
@@ -3362,4 +3406,61 @@
 
    //==============================================================================================================
 
+   // copy-pasting here the helper functions from Will Reece
 
+  void ra2bRoostatsClass3D_3b::SetConstants(RooWorkspace pWs, RooStats::ModelConfig pMc){
+    //
+    // Fix all variables in the PDF except observables, POI and
+    // nuisance parameters. Note that global observables are fixed.
+    // If you need global observables floated, you have to set them
+    // to float separately.
+    //
+
+    pMc.SetWorkspace(pWs);
+
+    RooAbsPdf * pPdf = pMc.GetPdf(); // we do not own this
+
+    RooArgSet * pVars = pPdf->getVariables(); // we do own this
+
+    RooArgSet * pFloated = new RooArgSet(*pMc.GetObservables());
+    pFloated->add(*pMc.GetParametersOfInterest());
+    pFloated->add(*pMc.GetNuisanceParameters());
+
+    TIterator * pIter = pVars->createIterator(); // we do own this
+
+    for(TObject * pObj = pIter->Next(); pObj; pObj = pIter->Next() ){
+      std::string _name = pObj->GetName();
+      RooRealVar * pFloatedObj = (RooRealVar *)pFloated->find(_name.c_str());
+      if (pFloatedObj){
+        ((RooRealVar *)pObj)->setConstant(kFALSE);
+      }
+      else{
+        ((RooRealVar *)pObj)->setConstant(kTRUE);
+      }
+    }
+
+    delete pIter;
+    delete pVars;
+    delete pFloated;
+
+    return;
+
+}
+
+
+
+  void ra2bRoostatsClass3D_3b::SetConstant(const RooArgSet * vars, Bool_t value ){
+    //
+    // Set the constant attribute for all vars in the set
+    //
+
+    TIterator * pIter = vars->createIterator(); // we do own this
+
+    for(TObject * pObj = pIter->Next(); pObj; pObj = pIter->Next() ){
+      ((RooRealVar *)pObj)->setConstant(value);
+    }
+
+    delete pIter;
+
+    return;
+  }
