@@ -8,7 +8,6 @@
 #include "RooPoisson.h"
 #include "RooGaussian.h"
 #include "RooProdPdf.h"
-#include "RooWorkspace.h"
 #include "RooDataSet.h"
 #include "RooFitResult.h"
 #include "RooArgSet.h"
@@ -33,9 +32,7 @@
 			const char* systFile1 = "systFile1.txt"
                         ) ;
        bool setSusyScanPoint( const char* inputScanFile,
-                              double m0, double m12, bool isT1bbbb = false, double t1bbbbXsec=0.,
-                              const char* inputSusy_deff_dbtageff_file = "deff_dbtag_file.txt",
-			      const char* systFile1 = "systFile1.txt"
+                              double m0, double m12
                             ) ;
 
        void mismatchErr(char* label, TString inPar);
@@ -43,6 +40,12 @@
        void SetConstant(const RooArgSet * vars, Bool_t value );
 
      private :
+
+       bool setupShapeSyst( const char* infile, const char* systName,
+                            int constraintType, // 1=gaussian, 2=...
+                            double target_mgl, double target_mlsp,
+                            RooWorkspace& workspace
+                             ) ;
 
        RooAbsReal* makeBetaPrimeConstraint( const char* NP_name, double NP_val, double NP_err ) ;
        RooAbsReal* makeBetaConstraint( const char* NP_name, double NP_val, double NP_err ) ;

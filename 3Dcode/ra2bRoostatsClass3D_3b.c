@@ -216,7 +216,7 @@
 
 
       double dummy ;
-      dummy = t1bbbbXsec ;
+      if ( isT1bbbb ) dummy = t1bbbbXsec ;
 
       printf( "\n\n Opening input file : %s\n\n", infile ) ;
 
@@ -678,7 +678,7 @@
       fscanf( infp, "%s %g", label, &sf_mm_err ) ; cout << "sf_mm_err" << " = " << sf_mm_err << endl ;
 
       
-      // btag efficiency error
+      // btag efficiency error *** THIS IS NOT USED FOR ANYTHING ***
 
       fscanf( infp, "%s %g", label, &btageff_err ) ; cout << "btageff_err" << " = " << btageff_err << endl ;
       if ( strcmp( label, "btageff_err") != 0 ) {  mismatchErr(label,"btageff_err") ; return false ; }
@@ -1172,15 +1172,12 @@
 
 	    TString MEffSfString     = "mean_eff_sf";
 	    TString WEffSfString     = "width_eff_sf";
-	    TString dEffdBtString    = "deff_dbtageff";
 
 	    TString MEffSfSlString   = "mean_eff_sf_sl";
 	    TString WEffSfSlString   = "width_eff_sf_sl";
-	    TString dEffdBtSlString  = "deff_dbtageff_sl";
 
 	    TString MEffSfLdpString  = "mean_eff_sf_ldp";
 	    TString WEffSfLdpString  = "width_eff_sf_ldp";
-	    TString dEffdBtLdpString = "deff_dbtageff_ldp";
 
             TString ttwjldp0lepString = "ttwj_ldp0lep_ratio" ;
             TString  znnldp0lepString =  "znn_ldp0lep_ratio" ;
@@ -1206,7 +1203,7 @@
 
 	    MEffSfString   += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    WEffSfString   += sMbins[i]+sHbins[j]+sBbins[k] ;
-	    dEffdBtString  += sMbins[i]+sHbins[j]+sBbins[k] ;
+	    /////// dEffdBtString  += sMbins[i]+sHbins[j]+sBbins[k] ;
 
             ttwjldp0lepString += sMbins[i]+sHbins[j]+sBbins[k] ;
             znnldp0lepString  += sMbins[i]+sHbins[j]+sBbins[k] ;
@@ -1312,19 +1309,6 @@
 	    rv_width_eff_sf_ldp[i][j][k]->setConstant( kTRUE ) ;   
 
 	    
-	    // btag efficiency derivatives
-
-	    rv_deff_dbtageff[i][j][k] = new RooRealVar( dEffdBtString,  dEffdBtString, -10., 10. );
-	    rv_deff_dbtageff[i][j][k]->setVal( 0.1 ) ;
-	    rv_deff_dbtageff[i][j][k]->setConstant( kTRUE ) ;
-
-	    rv_deff_dbtageff_sl[i][j][k] = new RooRealVar( dEffdBtSlString,  dEffdBtSlString, -10., 10. );
-	    rv_deff_dbtageff_sl[i][j][k]->setVal( 0.1 ) ;
-	    rv_deff_dbtageff_sl[i][j][k]->setConstant( kTRUE ) ;
-
-	    rv_deff_dbtageff_ldp[i][j][k] = new RooRealVar( dEffdBtLdpString,  dEffdBtLdpString, -10., 10. );
-	    rv_deff_dbtageff_ldp[i][j][k]->setVal( 0.1 ) ;
-	    rv_deff_dbtageff_ldp[i][j][k]->setConstant( kTRUE ) ;
 
 	  }
 	  
@@ -1374,14 +1358,10 @@
 
 
 
-      RooRealVar* rv_btageff_err = new RooRealVar( "btageff_err", "btageff_err", 0., 10. ) ;
-      rv_btageff_err->setVal( btageff_err ) ;
-      rv_btageff_err->setConstant( kTRUE ) ;
-
 
       //++++++++++
 
-      bool ssspOk = setSusyScanPoint( inputScanFile,  m0,  m12,  isT1bbbb,  t1bbbbXsec, inputSusy_deff_dbtageff_file, systFile1 ) ;
+      bool ssspOk = setSusyScanPoint( inputScanFile,  m0,  m12 ) ;
 
       if ( !ssspOk ) {
          printf("\n\n\n *** setSusyScanPoint failed.  I quit.\n\n\n") ;
@@ -1839,57 +1819,65 @@
 
 
 
+      int nShapeSystematics(0) ;
+      char shapeSystName[20][100] ;
 
+      sprintf( shapeSystName[nShapeSystematics], "btageff_sf" ) ;
+      setupShapeSyst( inputSusy_deff_dbtageff_file, "btageff_sf", 1, m0, m12, workspace ) ;
+      nShapeSystematics++ ;
 
+      sprintf( shapeSystName[nShapeSystematics], "JES_sf" ) ;
+      setupShapeSyst( systFile1                   , "JES_sf"    , 1, m0, m12, workspace ) ;
+      nShapeSystematics++ ;
 
       //-- Using Gaussian here since this is a scale factor, not the actual
       //   efficiency, and the efficiency is far from 1 (much closer to zero).
       //
 
-      RooAbsReal* rar_btageff_sf[nBinsMET][nBinsHT][nBinsBtag] ;
-      RooAbsReal* rar_btageff_sf_sl[nBinsMET][nBinsHT][nBinsBtag] ;
-      RooAbsReal* rar_btageff_sf_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
+  //  RooAbsReal* rar_btageff_sf[nBinsMET][nBinsHT][nBinsBtag] ;
+  //  RooAbsReal* rar_btageff_sf_sl[nBinsMET][nBinsHT][nBinsBtag] ;
+  //  RooAbsReal* rar_btageff_sf_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
 
-      char btageffbpname[1000] ;
-      sprintf( btageffbpname, "btageff_sf" ) ;
+  //  char btageffbpname[1000] ;
+  //  sprintf( btageffbpname, "btageff_sf" ) ;
 
-      for (int i = 0 ; i < nBinsMET ; i++) {
-         for (int j = 0 ; j < nBinsHT ; j++) {
-            if ( ignoreBin[i][j] ) continue ;
-            for (int k = 0 ; k < nBinsBtag ; k++) {
+  //  for (int i = 0 ; i < nBinsMET ; i++) {
+  //     for (int j = 0 ; j < nBinsHT ; j++) {
+  //        if ( ignoreBin[i][j] ) continue ;
+  //        for (int k = 0 ; k < nBinsBtag ; k++) {
 
-               bool changeSign ;
+  //           bool changeSign ;
 
-               sprintf( NP_name, "btageff_sf_M%d_H%d_%db", i+1, j+1, k+1 ) ;
-               changeSign = false ;
-               if ( rv_deff_dbtageff[i][j][k]->getVal() < 0. ) { changeSign = true ; }
-               if ( !blindStudy ) {
-                  rar_btageff_sf[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff[i][j][k]->getVal()), btageffbpname, changeSign ) ;
-               } else {
-                  rar_btageff_sf[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, 0.0, btageffbpname, changeSign ) ;
-               }
+  //           sprintf( NP_name, "btageff_sf_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+  //           changeSign = false ;
+  //           if ( rv_deff_dbtageff[i][j][k]->getVal() < 0. ) { changeSign = true ; }
+  //           if ( !blindStudy ) {
+  //              rar_btageff_sf[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff[i][j][k]->getVal()), btageffbpname, changeSign ) ;
+  //           } else {
+  //              rar_btageff_sf[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, 0.0, btageffbpname, changeSign ) ;
+  //           }
 
-               sprintf( NP_name, "btageff_sf_sl_M%d_H%d_%db", i+1, j+1, k+1 ) ;
-               changeSign = false ;
-               if ( rv_deff_dbtageff_sl[i][j][k]->getVal() < 0. ) { changeSign = true ; }
-               if ( !blindStudy ) {
-                  rar_btageff_sf_sl[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff_sl[i][j][k]->getVal()), btageffbpname, changeSign ) ;
-               } else {
-                  rar_btageff_sf_sl[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, 0.0, btageffbpname, changeSign ) ;
-               }
+  //           sprintf( NP_name, "btageff_sf_sl_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+  //           changeSign = false ;
+  //           if ( rv_deff_dbtageff_sl[i][j][k]->getVal() < 0. ) { changeSign = true ; }
+  //           if ( !blindStudy ) {
+  //              rar_btageff_sf_sl[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff_sl[i][j][k]->getVal()), btageffbpname, changeSign ) ;
+  //           } else {
+  //              rar_btageff_sf_sl[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, 0.0, btageffbpname, changeSign ) ;
+  //           }
 
-               sprintf( NP_name, "btageff_sf_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
-               changeSign = false ;
-               if ( rv_deff_dbtageff_ldp[i][j][k]->getVal() < 0. ) { changeSign = true ; }
-               if ( !blindStudy ) {
-                  rar_btageff_sf_ldp[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff_ldp[i][j][k]->getVal()), btageffbpname, changeSign ) ;
-               } else {
-                  rar_btageff_sf_ldp[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, 0.0, btageffbpname, changeSign ) ;
-               }
+  //           sprintf( NP_name, "btageff_sf_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+  //           changeSign = false ;
+  //           if ( rv_deff_dbtageff_ldp[i][j][k]->getVal() < 0. ) { changeSign = true ; }
+  //           if ( !blindStudy ) {
+  //              rar_btageff_sf_ldp[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff_ldp[i][j][k]->getVal()), btageffbpname, changeSign ) ;
+  //           } else {
+  //              rar_btageff_sf_ldp[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, 0.0, btageffbpname, changeSign ) ;
+  //           }
 
-            } // k
-         } // j
-      } // i
+  //        } // k
+  //     } // j
+  //  } // i
 
       // set the Gaussian constraint on the diboson background scale factor
       RooAbsReal* rar_vv_sf = makeGaussianConstraint( "rar_vv_sf", rv_mean_vv_sf->getVal(), rv_width_vv_sf->getVal() ) ;
@@ -2156,48 +2144,86 @@
 	    nSlString  += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    nLdpString += sMbins[i]+sHbins[j]+sBbins[k] ;
 
-            //// TString rfvNString =  "(@0 + @1 + @2 + @3 + (@4 * @5 * @6)) * @7" ;
+
+            char systparname[100] ;
+            char shapesystprodname[1000] ;
+
+
+            char systprodeqn[1000] ;
+            sprintf( systprodeqn, "@0" ) ;
+            for ( int si=1; si<nShapeSystematics; si++ ) {
+               char tmpstr[1000] ;
+               sprintf( tmpstr, "%s * @%d", systprodeqn, si ) ;
+               sprintf( systprodeqn, "%s", tmpstr ) ;
+            } // si
+
+
+
+
+          //--- Zero lepton : n
+
+            RooArgSet shapeSystProdSet_zl ;
+            for ( int si=0; si<nShapeSystematics; si++ ) {
+               sprintf( systparname, "%s_M%d_H%d_%db", shapeSystName[si], i+1, j+1, k+1 ) ;
+               RooAbsReal* rar_sf = (RooAbsReal*) workspace.obj( systparname ) ;
+               if ( rar_sf == 0x0 ) { printf("\n\n *** initialize: missing nuisance parameter: %s\n\n", systparname ) ; return false ; }
+               shapeSystProdSet_zl.add( *rar_sf ) ;
+            } // si
+            sprintf( shapesystprodname, "shapesyst_prod_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+            RooFormulaVar* rfv_shapeSystProd_zl = new RooFormulaVar( shapesystprodname, systprodeqn, shapeSystProdSet_zl ) ;
+
             TString rfvNString =  "@0 * @1 + (@2 + @3 + @4 + (@5 * @6 * @7)) * @8" ;
 
             rv_n[i][j][k] = new RooFormulaVar( nString, rfvNString,
                                                RooArgSet( *rv_mu_qcd[i][j][k], *rar_trigeff[i][j],
                                                           *rv_mu_ttwj[i][j][k], *rv_mu_znn[i][j][k],  *rv_mu_vv[i][j][k],
-                                                          *rar_btageff_sf[i][j][k], *rar_eff_sf[i][j][k], *rv_mu_susy[i][j][k], *rar_trigeff_sl[i][j] ) ) ;
+                                                          *rfv_shapeSystProd_zl, *rar_eff_sf[i][j][k], *rv_mu_susy[i][j][k], *rar_trigeff_sl[i][j] ) ) ;
 
 
+          //--- Single lepton : n_sl
+
+            RooArgSet shapeSystProdSet_sl ;
+            for ( int si=0; si<nShapeSystematics; si++ ) {
+               sprintf( systparname, "%s_sl_M%d_H%d_%db", shapeSystName[si], i+1, j+1, k+1 ) ;
+               RooAbsReal* rar_sf = (RooAbsReal*) workspace.obj( systparname ) ;
+               if ( rar_sf == 0x0 ) { printf("\n\n *** initialize: missing nuisance parameter: %s\n\n", systparname ) ; return false ; }
+               shapeSystProdSet_sl.add( *rar_sf ) ;
+            } // si
+            sprintf( shapesystprodname, "shapesyst_prod_sl_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+            RooFormulaVar* rfv_shapeSystProd_sl = new RooFormulaVar( shapesystprodname, systprodeqn, shapeSystProdSet_sl ) ;
 
             TString rfvNSlString = "(@0 + @1 + (@2 * @3 * @4)) * @5" ;
 
             rv_n_sl[i][j][k] = new RooFormulaVar( nSlString, rfvNSlString,
-                                                  RooArgSet( *rv_mu_ttwj_sl[i][j][k], *rv_mu_vv_sl[i][j][k], *rar_btageff_sf_sl[i][j][k], 
+                                                  RooArgSet( *rv_mu_ttwj_sl[i][j][k], *rv_mu_vv_sl[i][j][k], *rfv_shapeSystProd_sl,
                                                              *rar_eff_sf_sl[i][j][k], *rv_mu_susy_sl[i][j][k], *rar_trigeff_sl[i][j] ) ) ;
 
-      //////--------------------------------
-      //
-      ////  TString rfvNLdpString = "@0 * @1 + @2 * ( @3 + @4 + @5 + (@6 * @7 * @8 ) ) * @9" ;
-      //
-      //
-      ////  rv_n_ldp[i][j][k] = new RooFormulaVar( nLdpString, rfvNLdpString,
-      ////                                         RooArgSet( *rar_trigeff[i][j], *rv_mu_qcd_ldp[i][j][k],
-      ////                                                    *rar_sf_mc, *rv_mu_vv_ldp[i][j][k], *rv_mu_ttwj_ldp[i][j][k], *rv_mu_znn_ldp[i][j][k],
-      ////                                                    *rar_btageff_sf_ldp[i][j][k], *rar_eff_sf_ldp[i][j][k], *rv_mu_susy_ldp[i][j][k],
-      ////                                                    *rar_trigeff_sl[i][j] ) ) ;
-      //
-      ////  ///---  Above won't work because damn RooArgSet constructor only takes a maximum of 9 terms.  This stupid equation needs 10...
-      //
-      //////--------------------------------
+
+
+
+           //--- LDP : n_ldp
 
             char mu_nonqcdsm_name[1000] ;
             sprintf( mu_nonqcdsm_name, "mu_nonqcdsm_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
             RooFormulaVar* mu_nonqcdsm_ldp = new RooFormulaVar( mu_nonqcdsm_name, "@0 + @1 + @2",
                                                                 RooArgSet( *rv_mu_vv_ldp[i][j][k], *rv_mu_ttwj_ldp[i][j][k], *rv_mu_znn_ldp[i][j][k] ) ) ;
 
+            RooArgSet shapeSystProdSet_ldp ;
+            for ( int si=0; si<nShapeSystematics; si++ ) {
+               sprintf( systparname, "%s_ldp_M%d_H%d_%db", shapeSystName[si], i+1, j+1, k+1 ) ;
+               RooAbsReal* rar_sf = (RooAbsReal*) workspace.obj( systparname ) ;
+               if ( rar_sf == 0x0 ) { printf("\n\n *** initialize: missing nuisance parameter: %s\n\n", systparname ) ; return false ; }
+               shapeSystProdSet_ldp.add( *rar_sf ) ;
+            } // si
+            sprintf( shapesystprodname, "shapesyst_prod_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+            RooFormulaVar* rfv_shapeSystProd_ldp = new RooFormulaVar( shapesystprodname, systprodeqn, shapeSystProdSet_ldp ) ;
+
             TString rfvNLdpString = "@0 * @1 + @2 * ( @3 + (@4 * @5 * @6 ) ) * @7" ;
 
             rv_n_ldp[i][j][k] = new RooFormulaVar( nLdpString, rfvNLdpString,
                                                    RooArgSet( *rar_trigeff[i][j], *rv_mu_qcd_ldp[i][j][k],
                                                               *rar_sf_mc, *mu_nonqcdsm_ldp,
-                                                              *rar_btageff_sf_ldp[i][j][k], *rar_eff_sf_ldp[i][j][k], *rv_mu_susy_ldp[i][j][k],
+                                                              *rfv_shapeSystProd_ldp, *rar_eff_sf_ldp[i][j][k], *rv_mu_susy_ldp[i][j][k],
                                                               *rar_trigeff_sl[i][j] ) ) ;
 
       //////--------------------------------
@@ -2439,15 +2465,12 @@
    //=====================================================================================================================
 
     bool ra2bRoostatsClass3D_3b::setSusyScanPoint( const char* inputScanFile,
-						   double m0, double m12, bool isT1bbbb, double t1bbbbXsec,
-						   const char* inputSusy_deff_dbtageff_file,
-						   const char* systFile1
+						   double m0, double m12
 						   ) {
 
-      double dummy ;
-      dummy = t1bbbbXsec ;
 
       printf("\n\n Opening SUSY scan input file : %s\n", inputScanFile ) ;
+
 
       ifstream infp ;
       infp.open(inputScanFile) ;
@@ -2456,17 +2479,27 @@
 	return false ;
       } 
 
+     //--- check that file has expected format.
+
+      int ArraySize = 3 + 4*(nBinsMET*nBinsHT*nBinsBtag) ;
+
+      char command[10000] ;
+      sprintf(command, "head -1 %s | awk '{print NF}' | grep -q %d", inputScanFile, ArraySize ) ;
+      int returnStat = gSystem->Exec(command ) ;
+      if ( returnStat !=0 ) {
+         printf("\n\n\n *** setSusyScanPoint : expecting %d fields per line in input file %s.  Found ", ArraySize, inputScanFile ) ; cout << flush ;
+         sprintf( command, "head -1 %s | awk '{print NF}'", inputScanFile ) ;
+         gSystem->Exec(command ) ; cout << flush ;
+         printf("\n\n") ;
+         return false ;
+      }
+
       
       double deltaM0(0.) ;
       double deltaM12(0.) ;
       
-      if ( !isT1bbbb ) {
-	deltaM0 = 20 ;
-	deltaM12 = 20 ;
-      } else {
 	deltaM0 = 25 ;
 	deltaM12 = 25 ;
-      }
       
       bool found(false) ;
 
@@ -2515,7 +2548,6 @@
 
 	if ( found ) break ;
 
-	int ArraySize = 3 + 4*(nBinsMET*nBinsHT*nBinsBtag) ;
 	double ArrayContent[ArraySize] ;
 
 	for (int i = 0; infp && i < ArraySize; ++ i) {
@@ -2578,93 +2610,6 @@
 	return false ;
       }
 
-      printf("\n\n Skipping processing %s for now.\n\n", systFile1 ) ;
-
-      // defer treatment of syst uncertainties for later
-      /*
-      // now open the file with the systematic uncertainties
-
-      printf("\n\n Opening signal systematics input file : %s\n", systFile1 ) ;
-
-      ifstream infq ;
-      infq.open(systFile1) ;
-      if ( !infq.good() ) {
-	printf("\n\n *** Problem opening input file: %s.\n\n", systFile1 ) ;
-	return false ;
-      } 
-
-      found = false ;
-	  
-      cout << "Systematic uncertainties (in %):" << endl;
-
-
-      while ( infq.good() ) {
-
-	if ( found ) break ;
-
-	int ArraySize = 2 + 2*(nBinsMET*nBinsHT*nBinsBtag) ;
-	double ArrayContent[ArraySize] ;
-
-	for (int i = 0; infp && i < ArraySize; ++ i) {
-	  infq >> ArrayContent[i];
-	}
-
-	pointM0  = ArrayContent[0] ;
-	pointM12 = ArrayContent[1] ;
-	
-	//nGen = (int)ArrayContent[2] ;
-
-	if (    fabs( pointM0 - m0 ) <= deltaM0/2 && fabs( pointM12 - m12 ) <= deltaM12/2 ) {
-
-	  found = true ;
-
-	  for (int i = 0 ; i < nBinsMET ; i++) {
-	    for (int j = 0 ; j < nBinsHT ; j++) {
-	      for (int k = 0 ; k < nBinsBtag ; k++) {     
-		
-		n_0l_error[i][j][k]  = fabs( ArrayContent[2 + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ) ;
-		n_1l_error[i][j][k]  = 0. ;   // for now we are using only T1bbbb and we assume no contamination in the SL sample
-		n_ldp_error[i][j][k] = fabs( ArrayContent[2 + (nBinsMET*nBinsHT*nBinsBtag) + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ) ;
-		
-	      }
-	    }
-	  }
-
-	  printf("\n\n Found systematics for point m0 = %4.0f,  m1/2 = %4.0f.\n\n", pointM0, pointM12 ) ;
-
-	}  // end check on mass point
-
-      }
-
-      infq.close() ;
-
-
-      if ( !found ) {
-	printf("\n\n *** Point not found in scan.  Check this file %s\n  to see if this point is there: mgl=%4.0f, mlsp=%4.0f\n\n", systFile1, m0, m12 ) ;
-	return false ;
-      }
-
-
-
-
-      // print out input values
-
-      for (int i = 0 ; i < nBinsMET ; i++) {
-	for (int j = 0 ; j < nBinsHT ; j++) {
-	  for (int k = 0 ; k < nBinsBtag ; k++) {     
-	    
-	    TString binString = "";
-	    binString += sMbins[i]+sHbins[j]+sBbins[k] ;
-	    
-	    cout << binString + " - 0 lep  = " << n_0l_error[i][j][k] << endl ; 
-	    cout << binString + " - 1 lep  = " << n_1l_error[i][j][k] << endl ; 
-	    cout << binString + " - ldp    = " << n_ldp_error[i][j][k] << endl ; 
-	    
-	  }
-	}
-      } 
-      */     
-      
 
       double setVal_n_0l[nBinsMET][nBinsHT][nBinsBtag] ;
       double setVal_n_1l[nBinsMET][nBinsHT][nBinsBtag] ;
@@ -2724,93 +2669,9 @@
       printf("\n\n SUSY 0lep total: %7.2f\n\n", total0lep ) ;
 
 
-      //----- Now, read in the deff_dbtageff numbers.
 
-      printf("\n\n Opening SUSY deff_dbtageff input file : %s\n", inputSusy_deff_dbtageff_file ) ;
+      return true ;
 
-      ifstream infb ;
-      infb.open(inputSusy_deff_dbtageff_file) ;
-      if ( !infb.good() ) {
-	printf("\n\n *** Problem opening input file: %s.\n\n", inputSusy_deff_dbtageff_file ) ;
-	return false ;
-      } 
-
-      found = false ;
-
-      while ( infb.good() ) {
-
-	float pointMgl ;
-	float pointMlsp ;
-
-	float deff_dbtageff_0l[nBinsMET][nBinsHT][nBinsBtag] ;
-	float deff_dbtageff_1l[nBinsMET][nBinsHT][nBinsBtag] ;
-	float deff_dbtageff_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
-	
-	int ArraySize = 2 + 3*(nBinsMET*nBinsHT*nBinsBtag) ;
-	double ArrayContent[ArraySize] ;
-
-	for (int i = 0; infb && i < ArraySize; ++ i) {
-	  infb >> ArrayContent[i];
-	}
-
-	pointMgl  = ArrayContent[0] ;
-	pointMlsp = ArrayContent[1] ;
-
-	int nBins = nBinsMET*nBinsHT*nBinsBtag ;
-
-	for (int i = 0 ; i < nBinsMET ; i++) {
-	  for (int j = 0 ; j < nBinsHT ; j++) {
-	    for (int k = 0 ; k < nBinsBtag ; k++) {     
-
-	      deff_dbtageff_0l[i][j][k]  = ArrayContent[2 + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
-	      deff_dbtageff_1l[i][j][k]  = ArrayContent[2 + nBins + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
-	      deff_dbtageff_ldp[i][j][k] = ArrayContent[2 + 2*nBins + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
-
-	    }
-	  }
-	}
-
-	//// printf("  pointMgl = %g , pointMlsp = %g\n", pointMgl, pointMlsp ) ;
-
-	if (    fabs( pointMgl - m0 ) <= deltaM0/2. && fabs( pointMlsp - m12 ) <= deltaM12/2. ) {
-	 
-	  cout << "Setting susy deff_dbtag derivatives: " << endl ;
-
-	  for (int i = 0 ; i < nBinsMET ; i++) {
-	    for (int j = 0 ; j < nBinsHT ; j++) {
-              if ( ignoreBin[i][j] ) continue ;
-	      for (int k = 0 ; k < nBinsBtag ; k++) {     
-		
-		TString binString = "";
-		binString += sMbins[i]+sHbins[j]+sBbins[k] ;	  	  
-
-		cout << binString + " - 0 lep - setting susy deff_dbtag to " << deff_dbtageff_0l[i][j][k] << endl ;
-		cout << binString + " - 1 lep - setting susy deff_dbtag to " << deff_dbtageff_1l[i][j][k] << endl ;
-		cout << binString + " - ldp   - setting susy deff_dbtag to " << deff_dbtageff_ldp[i][j][k] << endl ;
-
-		rv_deff_dbtageff[i][j][k]     -> setVal ( deff_dbtageff_0l[i][j][k] ) ;
-		rv_deff_dbtageff_sl[i][j][k]  -> setVal ( deff_dbtageff_1l[i][j][k] ) ;
-		rv_deff_dbtageff_ldp[i][j][k] -> setVal ( deff_dbtageff_ldp[i][j][k] ) ;
-
-	      }
-	    }
-	  }
-
-	  found = true ;
-
-	  break ;
- 
-	}
-
-      }
-
-
-      if ( found ) {
-	return true ;
-      } else {
-	printf("\n\n *** Point not found in scan.  Check this file %s\n  to see if this point is there: mgl=%4.0f, mlsp=%4.0f\n\n", inputSusy_deff_dbtageff_file, m0, m12 ) ;
-	return false ;
-      }
 
     }  // end of setSusyScanPoint
 
@@ -3392,7 +3253,7 @@
 
           rar = new RooPosDefCorrGauss( NP_name, NP_name, *g_mean, *g_sigma, *rrv_np_base_par, changeSign ) ;
 
-          printf(" makeCorrelatedGaussianConstraint : creating pos-def correlated gaussian NP  :  %s, val = %g\n", NP_name, rar->getVal() ) ;
+          printf(" makeCorrelatedGaussianConstraint : creating pos-def correlated gaussian NP  :  %s, val = %g, err = %g\n", NP_name, rar->getVal(), NP_err ) ;
 
        }
 
@@ -3447,6 +3308,7 @@
 
 }
 
+   //==============================================================================================================
 
 
   void ra2bRoostatsClass3D_3b::SetConstant(const RooArgSet * vars, Bool_t value ){
@@ -3464,3 +3326,184 @@
 
     return;
   }
+
+ //===============================================================================================================
+
+
+  bool ra2bRoostatsClass3D_3b::setupShapeSyst( const char* infile,
+                                               const char* systname,
+                                               int constraintType,
+                                               double target_mgl, double target_mlsp,
+                                               RooWorkspace& workspace
+                                               ) {
+
+      printf("\n\n\n setupShapeSyst :  setting up %s systematic.  Input file %s\n\n", systname, infile ) ;
+
+      if ( constraintType == 1 ) {
+         printf(" setupShapeSyst : Constraint type for %s : Gaussian (1).\n\n", systname ) ;
+      } else {
+         printf("  *** setupShapeSyst : Constraint type %d not implemented.\n\n", constraintType ) ;
+         return false ;
+      }
+
+      char command[1000] ;
+      sprintf( command, "ls %s >& /dev/null", infile ) ;
+      int returnstat = gSystem->Exec( command ) ;
+      if ( returnstat != 0 ) {
+         printf("\n\n *** setupShapeSyst: input file doesn't exist: %s\n\n", infile ) ;
+         return false ;
+      }
+
+      sprintf( command, "head -1 %s | awk '{print NF}'", infile ) ;
+      const char* nfields_str = gSystem->GetFromPipe( command ) ;
+      int nfields ;
+      sscanf( nfields_str, "%d", &nfields ) ;
+      printf(" setupShapeSyst: Nfields in %s is %d\n", infile, nfields ) ;
+
+
+      bool hasSL(false) ;
+
+      int ArraySize ;
+      if ( nfields == 2+2*(nBinsMET*nBinsHT*nBinsBtag) ) {
+         hasSL = false ;
+         printf("\n\n Format is consistent with no SL observables.\n") ;
+         ArraySize = nfields ;
+      } else if ( nfields == 2+3*(nBinsMET*nBinsHT*nBinsBtag) ) {
+         hasSL = true ;
+         printf("\n\n Format is consistent with including SL observables.\n") ;
+         ArraySize = nfields ;
+      } else {
+         printf("\n\n I don't know what to do with nfields = %d\n\n", nfields ) ;
+         return false ;
+      }
+
+
+      ifstream infq ;
+      infq.open(infile) ;
+      if ( !infq.good() ) {
+         printf("\n\n *** setupShapeSyst: Problem opening input file: %s.\n\n", infile ) ;
+         return false ;
+      }
+
+      bool found = false ;
+
+      double syst_zl[10][10][10] ;
+      double syst_sl[10][10][10] ;
+      double syst_ldp[10][10][10] ;
+
+      double minSyst(0.) ;
+      double maxSyst(0.) ;
+
+      while ( infq.good() ) {
+
+         int nBins = nBinsMET*nBinsHT*nBinsBtag ;
+
+         double ArrayContent[ArraySize] ;
+         for ( int i=0; infq && i<ArraySize; ++ i) {
+            infq >> ArrayContent[i] ;
+         }
+
+         double mgl  = ArrayContent[0] ;
+         double mlsp = ArrayContent[1] ;
+
+         if ( !(fabs( mgl-target_mgl ) < 10. && fabs( mlsp - target_mlsp ) < 10 ) ) continue ;
+
+         found = true ;
+
+         printf("\n\n Found mgl=%.0f, mlsp=%.0f\n\n", mgl, mlsp ) ;
+
+         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+            for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+               for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
+
+                  if ( hasSL ) {
+                     syst_zl [mbi][hbi][bbi]  = ArrayContent[2 + mbi*(nBinsHT*nBinsBtag) + hbi*(nBinsBtag) + bbi] ;
+                     syst_sl [mbi][hbi][bbi]  = ArrayContent[2 + nBins + mbi*(nBinsHT*nBinsBtag) + hbi*(nBinsBtag) + bbi] ;
+                     syst_ldp[mbi][hbi][bbi]  = ArrayContent[2 + 2*nBins + mbi*(nBinsHT*nBinsBtag) + hbi*(nBinsBtag) + bbi] ;
+                  } else {
+                     syst_zl [mbi][hbi][bbi]  = ArrayContent[2 + mbi*(nBinsHT*nBinsBtag) + hbi*(nBinsBtag) + bbi] ;
+                     syst_sl [mbi][hbi][bbi]  = 0. ;
+                     syst_ldp[mbi][hbi][bbi]  = ArrayContent[2 + nBins + mbi*(nBinsHT*nBinsBtag) + hbi*(nBinsBtag) + bbi] ;
+                  }
+
+                  if ( syst_zl [mbi][hbi][bbi] > maxSyst ) maxSyst = syst_zl [mbi][hbi][bbi] ;
+                  if ( syst_sl [mbi][hbi][bbi] > maxSyst ) maxSyst = syst_sl [mbi][hbi][bbi] ;
+                  if ( syst_ldp[mbi][hbi][bbi] > maxSyst ) maxSyst = syst_ldp[mbi][hbi][bbi] ;
+
+                  if ( syst_zl [mbi][hbi][bbi] < minSyst ) minSyst = syst_zl [mbi][hbi][bbi] ;
+                  if ( syst_sl [mbi][hbi][bbi] < minSyst ) minSyst = syst_sl [mbi][hbi][bbi] ;
+                  if ( syst_ldp[mbi][hbi][bbi] < minSyst ) minSyst = syst_ldp[mbi][hbi][bbi] ;
+
+               } // bbi.
+            } // hbi.
+         } // mbi.
+
+         break ;
+
+      } // reading file?
+
+      if ( !found ) {
+         printf("\n\n *** setupShapeSyst: Did not find target point: mgl=%.0f, mlsp=%.0f\n\n", target_mgl, target_mlsp ) ;
+         return false ;
+      }
+
+      printf("\n\n setupShapeSyst: %s : Min syst = %6.2f, Max syst = %6.2f\n\n", systname, minSyst, maxSyst ) ;
+
+      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
+
+               char pname[100] ;
+               bool changeSign ;
+               RooAbsReal* rar_par ;
+
+               sprintf( pname, "%s_M%d_H%d_%db", systname, mbi+1, hbi+1, bbi+1 ) ;
+               if ( syst_zl[mbi][hbi][bbi] < 0 ) { changeSign = true ; } else { changeSign = false ; }
+               if ( constraintType == 1 ) {
+                  rar_par = makeCorrelatedGaussianConstraint( pname, 1.0, fabs(syst_zl[mbi][hbi][bbi]), systname, changeSign ) ;
+               }
+               cout << flush ;
+               workspace.import( *rar_par ) ;
+
+               sprintf( pname, "%s_sl_M%d_H%d_%db", systname, mbi+1, hbi+1, bbi+1 ) ;
+               if ( syst_sl[mbi][hbi][bbi] < 0 ) { changeSign = true ; } else { changeSign = false ; }
+               if ( constraintType == 1 ) {
+                  rar_par = makeCorrelatedGaussianConstraint( pname, 1.0, fabs(syst_sl[mbi][hbi][bbi]), systname, changeSign ) ;
+               }
+               cout << flush ;
+               workspace.import( *rar_par ) ;
+
+               sprintf( pname, "%s_ldp_M%d_H%d_%db", systname, mbi+1, hbi+1, bbi+1 ) ;
+               if ( syst_ldp[mbi][hbi][bbi] < 0 ) { changeSign = true ; } else { changeSign = false ; }
+               if ( constraintType == 1 ) {
+                  rar_par = makeCorrelatedGaussianConstraint( pname, 1.0, fabs(syst_ldp[mbi][hbi][bbi]), systname, changeSign ) ;
+               }
+               cout << flush ;
+               workspace.import( *rar_par ) ;
+
+            } // bbi.
+         } // hbi.
+      } // mbi.
+
+
+      return true ;
+
+  } // setupShapeSyst
+
+
+ //===============================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
