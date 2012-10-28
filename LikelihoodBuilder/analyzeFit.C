@@ -201,14 +201,18 @@ struct s3d {
 
 void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binFilesFile.dat", bool logy=false) {
   //This function assumes bin dat files are named like bin_Mx_Hy_zb
+  bool debug = true;
+  if(debug) cout << "Starting owenPlots" << endl;
 
   gStyle->SetOptStat(0);
 
   int maxNM=1, maxNH=1, maxNB=1; 
   
+  if(debug) cout <<  binFilesFile << endl;
   ifstream binStream;
   binStream.open(binFilesFile.Data(),fstream::in);
-  
+  assert(binStream.is_open());
+
   map<TString,s3d> binMap;
   TString index, fileName;
   string fileLine;
@@ -219,6 +223,7 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
     TStringToken nameAndNumber(thisLine," ");
     nameAndNumber.NextToken();
     index = nameAndNumber;
+    if(debug) cout << "index: " << index << endl;
     if(index=="") continue;
     nameAndNumber.NextToken();
     fileName = nameAndNumber;
@@ -334,7 +339,7 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
     int bBin = binInfo.nB;
     
     hZL_data[bBin-1]->SetBinContent( binIndex,(ws->function( "zeroLepton_"+binName+"_Count" ))->getVal() );
-    hSL_data[bBin-1]->SetBinContent( binIndex,(ws->function( "oneMuon_"+binName+"_Count" ))->getVal() );//BEN FIXME -- just muon now!
+    hSL_data[bBin-1]->SetBinContent( binIndex,(ws->function( "oneLepton_"+binName+"_Count" ))->getVal() );
     hLDP_data[bBin-1]->SetBinContent( binIndex,(ws->function( "zeroLeptonLowDeltaPhiN_"+binName+"_Count" ))->getVal() );
 
     hZL_sig[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLepton_"+binName+"_SignalYield" ))->getVal() );
@@ -489,9 +494,10 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
 }
 
 
-void analyzeFit(TString workspaceFile = "test.root", TString binFilesFile = "", TString datFile= "") {
+void analyzeFit(TString workspaceFile, TString binFilesFile, TString datFile) {
   cout << "Starting analyzeFit" << endl;
 
+  
   extractFromWorkspace(workspaceFile, datFile);
 
   integratedTotals(workspaceFile, binFilesFile, datFile);
