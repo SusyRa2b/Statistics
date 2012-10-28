@@ -29,6 +29,7 @@
 #include "TLine.h"
 #include "TText.h"
 #include "TString.h"
+#include "TRegexp.h"
 
 #include <iostream>
 
@@ -61,6 +62,7 @@
    void drawHtBinEdges( TH1F* hp ) ;
 
    void loadHist(const char* filename="in.root", const char* pfx=0, const char* pat="*", Bool_t doAdd=kFALSE, Double_t scaleFactor=-1.0) ;
+   void saveHist(const char* filename, const char* pat) ;
 
   //----------
 
@@ -610,6 +612,11 @@
 
        printf("\n\n Done.\n\n") ;
 
+       TString outputrootfile( infile ) ;
+       outputrootfile.ReplaceAll(".root","-as-drawn.root") ;
+       printf("\n\n Saving drawn histograms in %s\n\n", outputrootfile.Data() ) ;
+       saveHist( outputrootfile, "h*" ) ;
+
 
     } // dmc_drawplots
 
@@ -1130,4 +1137,29 @@ void loadHist(const char* filename, const char* pfx, const char* pat, Bool_t doA
   delete iter ;
 }
 
+//==========================================================================================
+
+void saveHist(const char* filename, const char* pat)
+{
+
+  cout << "\n\n Saving histograms matching " << pat << " in file " << filename << "\n\n" << flush ;
+
+  TList* list = gDirectory->GetList() ;
+  TIterator* iter = list->MakeIterator();
+
+  TRegexp re(pat,kTRUE) ;
+
+  TFile outf(filename,"RECREATE") ;
+  TObject* obj ;
+  while((obj=iter->Next())) {
+    if (TString(obj->GetName()).Index(re)>=0) {
+      obj->Write() ;
+      std::cout << "." ;
+    }
+  }
+  std::cout << std::endl ;
+  outf.Close() ;
+
+  delete iter ;
+}
 //==========================================================================================

@@ -168,7 +168,9 @@
     //-- ttbar
        compind = 6 ;
        sprintf( compname[compind], "ttbar" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v4/TT.root" ) ;
+       ///////compchain[compind] -> Add( "filesHCP_53_v4/TT.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/TT_FullLept.root" ) ;
+       compchain[compind] -> Add( "filesHCP_53_v4/TT_SemiLept.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 600-7 ; // kBlue = 600
        compscale[compind] = complumi[0] / complumi[compind] ;

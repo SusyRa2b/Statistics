@@ -110,8 +110,10 @@
 
      printf("\n\n Binning: nBinsMET = %d, nBinsHT = %d\n\n", nBinsMET, nBinsHT ) ;
 
-     TString sMbins[nBinsMET];
-     TString sHbins[nBinsHT];
+     ////// TString sMbins[nBinsMET];
+     ////// TString sHbins[nBinsHT];
+     TString sMbins[4];
+     TString sHbins[4];
      TString sBbins[3] = {"_1b","_2b","_3b"};
      
      for (int i = 0 ; i < nBinsMET ; i++) {

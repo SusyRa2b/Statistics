@@ -11,7 +11,7 @@
   \begin{document}
 
 
-   Tue Oct 16 16:14:26 PDT 2012 \\
+   Thu Oct 25 13:38:22 CEST 2012 \\
 
    Datasets and selections
    \begin{itemize}
@@ -28,12 +28,11 @@
 
    Other details
    \begin{itemize}
-     \item {\bf A cut of pfMET/caloMET$<$2 has been added.}
-     \item {\bf I'm using these fudge factors: ttwj x 0.90 and QCD x 1.80.}
-     \item Most QCD saples are now 53X with a better pileup distribution.
-     \item Data events failing laser-calibration-problem filter have been removed.
+     %%\item {\bf I'm using these fudge factors: ttwj x 0.90 and QCD x 1.80.}
+     \item {\bf I'm using these fudge factor: QCD x 1.80. These have no ttwj fudge factor.}
+     \item These include the new pfMET/caloMET$<$2 requirement.
      \item MC has been corrected for trigger efficiency, {\it except} where noted otherwise.
-     \item  The trigger efficiency corrections are now divided by real-MET vs fake-MET
+     \item  The trigger efficiency corrections are divided by real-MET vs fake-MET
              instead of 1-lepton vs 0-leptons.  The fake-MET corrections have been
              measured in cfA 66.  The real-MET corrections (from single lepton datasets)
              are still from cfA 65.
@@ -45,12 +44,9 @@
 
   Comments on recent additions
   \begin{itemize}
-    \item The data/MC agreement looks even better than before.  There's only
-           one place where there seems to be a new disagreement, which
-           is LDP, nB=3, the lowest MET bin and the lowest two HT bins.
-           The QCD MC events that are contributing in that neighborhood seem
-           to have very high weight, so it may be that we are just missing a
-           handful of high-weight QCD MC events there.
+     \item All QCD saples are now 53X with a better pileup distribution.
+     \item The ttbar sample is now the combination of the new single-semileptonic
+           and double-semileptonic samples, which have higher statistics.
    \end{itemize}
 
 
@@ -1943,6 +1939,28 @@
      \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_0lep_ht4_nb1_all_logy.pdf}
 
     \clearpage
+
+
+
+  %%===================================================
+
+    \subsection{ MinDeltaPhiN, 1 lepton, nB=1, MET bins }
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_1lep_met1_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_1lep_met2_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_1lep_met3_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_1lep_met4_nb1_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_1lep_met1_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_1lep_met2_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_1lep_met3_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_mindphin_1lep_met4_nb1_all_logy.pdf}
+
+    \clearpage
+
+
 
 
 
