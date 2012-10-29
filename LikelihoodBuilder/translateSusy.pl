@@ -50,13 +50,15 @@ while(<$fin>) {
     
     print $fout "$linea[0] $linea[1] $linea[2] ";
     
-    for(my $i=0;  $i<= $nHTbins*$nMETbins*$nBTAGbins; $i++) {
+    for(my $i=0;  $i< $nHTbins*$nMETbins*$nBTAGbins; $i++) {
       #IN:  sig sl  ldp
       #OUT: sig ldp sl
       
       #my $xsec = 4.41988000000000034e-02;#850 600 7TeV
       my $xsec = 9.66802999999999968e-02; #850 600 8TeV
-      my $weight = 1.0/0.5/$xsec;
+      #my $weight = 1.0/0.5/$xsec; #5/fb
+      my $weight = 1.0/1.5/$xsec; #15/fb
+
 
       my $sig = int($linea[3*$i+3]*$weight+0.5);
       $sigtot += $sig; 
