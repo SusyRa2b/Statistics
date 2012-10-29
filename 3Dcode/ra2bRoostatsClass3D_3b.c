@@ -3347,12 +3347,15 @@
       }
 
       char command[1000] ;
-      sprintf( command, "ls %s >& /dev/null", infile ) ;
-      int returnstat = gSystem->Exec( command ) ;
-      if ( returnstat != 0 ) {
-         printf("\n\n *** setupShapeSyst: input file doesn't exist: %s\n\n", infile ) ;
-         return false ;
-      }
+
+   //-- This is not platform and/or shell independent?
+   //
+   // sprintf( command, "ls %s >& /dev/null", infile ) ;
+   // int returnstat = gSystem->Exec( command ) ;
+   // if ( returnstat != 0 ) {
+   //    printf("\n\n *** setupShapeSyst: input file doesn't exist: %s\n\n", infile ) ;
+   //    return false ;
+   // }
 
       sprintf( command, "head -1 %s | awk '{print NF}'", infile ) ;
       const char* nfields_str = gSystem->GetFromPipe( command ) ;
