@@ -1796,11 +1796,13 @@
       char shapeSystName[20][100] ;
 
       sprintf( shapeSystName[nShapeSystematics], "btageff_sf" ) ;
-      setupShapeSyst( inputSusy_deff_dbtageff_file, "btageff_sf", 1, m0, m12, workspace ) ;
+   // setupShapeSyst( inputSusy_deff_dbtageff_file, "btageff_sf", 1, m0, m12, workspace ) ;
+      setupShapeSyst( inputSusy_deff_dbtageff_file, "btageff_sf", 2, m0, m12, workspace ) ;
       nShapeSystematics++ ;
 
       sprintf( shapeSystName[nShapeSystematics], "JES_sf" ) ;
-      setupShapeSyst( systFile1                   , "JES_sf"    , 1, m0, m12, workspace ) ;
+   // setupShapeSyst( systFile1                   , "JES_sf"    , 1, m0, m12, workspace ) ;
+      setupShapeSyst( systFile1                   , "JES_sf"    , 2, m0, m12, workspace ) ;
       nShapeSystematics++ ;
 
       //-- Using Gaussian here since this is a scale factor, not the actual
@@ -3240,6 +3242,73 @@
 
    //==============================================================================================================
 
+
+
+    RooAbsReal* ra2bRoostatsClass3D_3b::makeCorrelatedLognormalConstraint(
+            const char* NP_name, double NP_val, double NP_err, const char* NP_base_name, bool changeSign ) {
+
+       if ( NP_err <= 0. ) {
+          printf("  makeCorrelatedLognormalConstraint: Uncertainty is zero.  Will return constant scale factor of %g for %s.  Input val = %g, err = %g.\n", NP_val, NP_name, NP_val, NP_err ) ;
+          return new RooConstVar( NP_name, NP_name, NP_val ) ;
+       }
+
+       RooRealVar* rrv_np_base_par = (RooRealVar*) allNuisances -> find( NP_base_name ) ;
+
+       if ( rrv_np_base_par == 0x0 ) {
+
+          printf("\n\n makeCorrelatedLognormalConstraint : creating base nuisance parameter - %s\n\n", NP_base_name ) ;
+          rrv_np_base_par = new RooRealVar( NP_base_name, NP_base_name, -6.0, 6.0 ) ;
+          rrv_np_base_par -> setVal( 0. ) ;
+          rrv_np_base_par -> setConstant( kFALSE ) ;
+          allNuisances -> add( *rrv_np_base_par ) ;
+
+          char vname[1000] ;
+          sprintf( vname, "mean_%s", NP_base_name ) ;
+          RooRealVar* g_mean = new RooRealVar( vname, vname, 0.0,-1000.,1000. ) ;
+          g_mean->setConstant(kTRUE);
+          sprintf( vname, "sigma_%s", NP_base_name ) ;
+          RooConstVar* g_sigma = new RooConstVar( vname, vname, 1.0 ) ;
+
+          char pdfname[100] ;
+          sprintf( pdfname, "pdf_%s", NP_base_name ) ;
+          printf("\n\n makeCorrelatedLognormalConstraint : creating base nuisance parameter pdf - %s\n\n", pdfname ) ;
+          RooGaussian* base_np_pdf = new RooGaussian( pdfname, pdfname, *rrv_np_base_par, *g_mean, *g_sigma ) ;
+          allNuisancePdfs -> add( *base_np_pdf ) ;
+          globalObservables -> add( *g_mean ) ;
+
+       }
+
+       //-- create const variables for mean and sigma so that they can be saved and accessed from workspace later.
+
+       char vname[1000] ;
+       sprintf( vname, "mean_%s", NP_name ) ;
+       RooConstVar* g_mean = new RooConstVar( vname, vname, NP_val ) ;
+       sprintf( vname, "sigma_%s", NP_name ) ;
+       RooConstVar* g_sigma = new RooConstVar( vname, vname, NP_err ) ;
+
+       RooAbsReal* rar(0x0) ;
+
+
+       char formula[1000] ;
+
+       if ( !changeSign ) {
+          sprintf( formula, "@0 * pow( exp( @1/@0 ), @2 )" ) ;
+       } else {
+          sprintf( formula, "@0 * pow( exp( @1/@0 ), -1.0 * @2 )" ) ;
+       }
+
+       rar = new RooFormulaVar( NP_name, formula, RooArgSet( *g_mean, *g_sigma, *rrv_np_base_par ) ) ;
+
+       printf(" makeCorrelatedLognormalConstraint : creating correlated log-normal NP with formula : %s,  %s, val = %g\n", formula, NP_name, rar->getVal() ) ;
+
+
+       return rar ;
+
+    } // makeCorrelatedLognormalConstraint.
+
+
+   //==============================================================================================================
+
    // copy-pasting here the helper functions from Will Reece
 
   void ra2bRoostatsClass3D_3b::SetConstants(RooWorkspace pWs, RooStats::ModelConfig pMc){
@@ -3314,21 +3383,14 @@
 
       if ( constraintType == 1 ) {
          printf(" setupShapeSyst : Constraint type for %s : Gaussian (1).\n\n", systname ) ;
+      } else if ( constraintType == 2 ) {
+         printf(" setupShapeSyst : Constraint type for %s : log-normal (2).\n\n", systname ) ;
       } else {
          printf("  *** setupShapeSyst : Constraint type %d not implemented.\n\n", constraintType ) ;
          return false ;
       }
 
       char command[1000] ;
-
-   //-- This is not platform and/or shell independent?
-   //
-   // sprintf( command, "ls %s >& /dev/null", infile ) ;
-   // int returnstat = gSystem->Exec( command ) ;
-   // if ( returnstat != 0 ) {
-   //    printf("\n\n *** setupShapeSyst: input file doesn't exist: %s\n\n", infile ) ;
-   //    return false ;
-   // }
 
       sprintf( command, "head -1 %s | awk '{print NF}'", infile ) ;
       const char* nfields_str = gSystem->GetFromPipe( command ) ;
@@ -3436,7 +3498,9 @@
                sprintf( pname, "%s_M%d_H%d_%db", systname, mbi+1, hbi+1, bbi+1 ) ;
                if ( syst_zl[mbi][hbi][bbi] < 0 ) { changeSign = true ; } else { changeSign = false ; }
                if ( constraintType == 1 ) {
-                  rar_par = makeCorrelatedGaussianConstraint( pname, 1.0, fabs(syst_zl[mbi][hbi][bbi]), systname, changeSign ) ;
+                  rar_par = makeCorrelatedGaussianConstraint(  pname, 1.0, fabs(syst_zl[mbi][hbi][bbi]), systname, changeSign ) ;
+               } else if ( constraintType == 2 ) {
+                  rar_par = makeCorrelatedLognormalConstraint( pname, 1.0, fabs(syst_zl[mbi][hbi][bbi]), systname, changeSign ) ;
                }
                cout << flush ;
                workspace.import( *rar_par ) ;
@@ -3444,7 +3508,9 @@
                sprintf( pname, "%s_sl_M%d_H%d_%db", systname, mbi+1, hbi+1, bbi+1 ) ;
                if ( syst_sl[mbi][hbi][bbi] < 0 ) { changeSign = true ; } else { changeSign = false ; }
                if ( constraintType == 1 ) {
-                  rar_par = makeCorrelatedGaussianConstraint( pname, 1.0, fabs(syst_sl[mbi][hbi][bbi]), systname, changeSign ) ;
+                  rar_par = makeCorrelatedGaussianConstraint(  pname, 1.0, fabs(syst_sl[mbi][hbi][bbi]), systname, changeSign ) ;
+               } else if ( constraintType == 2 ) {
+                  rar_par = makeCorrelatedLognormalConstraint( pname, 1.0, fabs(syst_sl[mbi][hbi][bbi]), systname, changeSign ) ;
                }
                cout << flush ;
                workspace.import( *rar_par ) ;
@@ -3452,7 +3518,9 @@
                sprintf( pname, "%s_ldp_M%d_H%d_%db", systname, mbi+1, hbi+1, bbi+1 ) ;
                if ( syst_ldp[mbi][hbi][bbi] < 0 ) { changeSign = true ; } else { changeSign = false ; }
                if ( constraintType == 1 ) {
-                  rar_par = makeCorrelatedGaussianConstraint( pname, 1.0, fabs(syst_ldp[mbi][hbi][bbi]), systname, changeSign ) ;
+                  rar_par = makeCorrelatedGaussianConstraint(  pname, 1.0, fabs(syst_ldp[mbi][hbi][bbi]), systname, changeSign ) ;
+               } else if ( constraintType == 2 ) {
+                  rar_par = makeCorrelatedLognormalConstraint( pname, 1.0, fabs(syst_ldp[mbi][hbi][bbi]), systname, changeSign ) ;
                }
                cout << flush ;
                workspace.import( *rar_par ) ;
