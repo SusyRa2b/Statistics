@@ -3116,6 +3116,63 @@
    //==============================================================================================================
 
 
+    RooAbsReal* ra2bRoostatsClass3D_3b::makeLognormalConstraint( const char* NP_name, double NP_val, double NP_err ) {
+
+       if ( NP_err <= 0. ) {
+          printf(" makeLognormalConstraint:  Uncertainty is zero.  Will return constant scale factor of %g for %s.  Input val = %g, err = %g.\n", NP_val, NP_name, NP_val, NP_err ) ;
+          return new RooConstVar( NP_name, NP_name, NP_val ) ;
+       }
+
+
+       char pname[1000] ;
+       sprintf( pname, "prim_%s", NP_name ) ;
+
+       printf(" makeLognormalConstraint : creating primary log-normal variable %s\n", pname ) ;
+       RooRealVar* np_prim_rrv = new RooRealVar( pname, pname, 0., -6., 6. ) ;
+       np_prim_rrv -> setVal( 0. ) ;
+       np_prim_rrv -> setConstant( kFALSE ) ;
+
+       sprintf( pname, "prim_mean_%s", NP_name ) ;
+       RooRealVar* np_prim_mean = new RooRealVar( pname, pname, 0., -6., 6. ) ;
+       np_prim_mean->setConstant(kTRUE) ;
+
+       sprintf( pname, "prim_sigma_%s", NP_name ) ;
+       RooConstVar* np_prim_sigma = new RooConstVar( pname, pname, 1. ) ;
+
+
+       char pdfname[1000] ;
+       sprintf( pdfname, "pdf_prim_%s", NP_name ) ;
+       RooGaussian* np_prim_pdf = new RooGaussian( pdfname, pdfname, *np_prim_rrv, *np_prim_mean, *np_prim_sigma ) ;
+
+       allNuisances -> add( *np_prim_rrv ) ;
+       allNuisancePdfs -> add( *np_prim_pdf ) ;
+       globalObservables -> add( *np_prim_mean ) ;
+
+
+       //-- create const variables for mean and sigma so that they can be saved and accessed from workspace later.
+
+       char vname[1000] ;
+       sprintf( vname, "mean_%s", NP_name ) ;
+       RooConstVar* g_mean  = new RooConstVar( vname, vname, NP_val ) ;
+       sprintf( vname, "sigma_%s", NP_name ) ;
+       RooConstVar* g_sigma = new RooConstVar( vname, vname, NP_err ) ;
+
+       //-- compute the log-normal-distributed parameter from the primary parameter.
+
+       RooFormulaVar* np_rfv = new RooFormulaVar( NP_name, "@0 * pow( exp( @1/@0 ), @2)",
+                 RooArgSet( *g_mean, *g_sigma, *np_prim_rrv ) ) ;
+
+       printf("  makeLognormalConstraint : created log-normal nuisance parameter %s : val = %g\n", NP_name, np_rfv -> getVal() ) ;
+
+       return np_rfv ;
+
+
+    } // makeLognormalConstraint.
+
+
+   //==============================================================================================================
+
+
 
     RooAbsReal* ra2bRoostatsClass3D_3b::makeCorrelatedGaussianConstraint(
             const char* NP_name, double NP_val, double NP_err, const char* NP_base_name, bool changeSign, bool allowNegative ) {
@@ -3216,7 +3273,7 @@
 
           char vname[1000] ;
           sprintf( vname, "mean_%s", NP_base_name ) ;
-          RooRealVar* g_mean = new RooRealVar( vname, vname, 0.0,-1000.,1000. ) ;
+          RooRealVar* g_mean = new RooRealVar( vname, vname, 0.0,-10.,10. ) ;
           g_mean->setConstant(kTRUE);
           sprintf( vname, "sigma_%s", NP_base_name ) ;
           RooConstVar* g_sigma = new RooConstVar( vname, vname, 1.0 ) ;
@@ -3225,6 +3282,7 @@
           sprintf( pdfname, "pdf_%s", NP_base_name ) ;
           printf("\n\n makeCorrelatedLognormalConstraint : creating base nuisance parameter pdf - %s\n\n", pdfname ) ;
           RooGaussian* base_np_pdf = new RooGaussian( pdfname, pdfname, *rrv_np_base_par, *g_mean, *g_sigma ) ;
+
           allNuisancePdfs -> add( *base_np_pdf ) ;
           globalObservables -> add( *g_mean ) ;
 
@@ -3233,10 +3291,13 @@
        //-- create const variables for mean and sigma so that they can be saved and accessed from workspace later.
 
        char vname[1000] ;
+
        sprintf( vname, "mean_%s", NP_name ) ;
-       RooConstVar* g_mean = new RooConstVar( vname, vname, NP_val ) ;
+       RooConstVar* ln_mean  = new RooConstVar( vname, vname, NP_val ) ;
+
        sprintf( vname, "sigma_%s", NP_name ) ;
-       RooConstVar* g_sigma = new RooConstVar( vname, vname, NP_err ) ;
+       RooConstVar* ln_sigma = new RooConstVar( vname, vname, NP_err ) ;
+
 
        RooAbsReal* rar(0x0) ;
 
@@ -3249,7 +3310,7 @@
           sprintf( formula, "@0 * pow( exp( @1/@0 ), -1.0 * @2 )" ) ;
        }
 
-       rar = new RooFormulaVar( NP_name, formula, RooArgSet( *g_mean, *g_sigma, *rrv_np_base_par ) ) ;
+       rar = new RooFormulaVar( NP_name, formula, RooArgSet( *ln_mean, *ln_sigma, *rrv_np_base_par ) ) ;
 
        printf(" makeCorrelatedLognormalConstraint : creating correlated log-normal NP with formula : %s,  %s, val = %g\n", formula, NP_name, rar->getVal() ) ;
 
