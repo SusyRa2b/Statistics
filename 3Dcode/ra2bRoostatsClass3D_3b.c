@@ -1796,63 +1796,15 @@
       char shapeSystName[20][100] ;
 
       sprintf( shapeSystName[nShapeSystematics], "btageff_sf" ) ;
-   // setupShapeSyst( inputSusy_deff_dbtageff_file, "btageff_sf", 1, m0, m12, workspace ) ;
-      setupShapeSyst( inputSusy_deff_dbtageff_file, "btageff_sf", 2, m0, m12, workspace ) ;
+   // setupShapeSyst( inputSusy_deff_dbtageff_file, "btageff_sf", 1, m0, m12, workspace ) ; // 1 = Gaussian
+      setupShapeSyst( inputSusy_deff_dbtageff_file, "btageff_sf", 2, m0, m12, workspace ) ; // 2 = log-normal
       nShapeSystematics++ ;
 
       sprintf( shapeSystName[nShapeSystematics], "JES_sf" ) ;
-   // setupShapeSyst( systFile1                   , "JES_sf"    , 1, m0, m12, workspace ) ;
-      setupShapeSyst( systFile1                   , "JES_sf"    , 2, m0, m12, workspace ) ;
+   // setupShapeSyst( systFile1                   , "JES_sf"    , 1, m0, m12, workspace ) ; // 1 = Gaussian
+      setupShapeSyst( systFile1                   , "JES_sf"    , 2, m0, m12, workspace ) ; // 2 = log-normal
       nShapeSystematics++ ;
 
-      //-- Using Gaussian here since this is a scale factor, not the actual
-      //   efficiency, and the efficiency is far from 1 (much closer to zero).
-      //
-
-  //  RooAbsReal* rar_btageff_sf[nBinsMET][nBinsHT][nBinsBtag] ;
-  //  RooAbsReal* rar_btageff_sf_sl[nBinsMET][nBinsHT][nBinsBtag] ;
-  //  RooAbsReal* rar_btageff_sf_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
-
-  //  char btageffbpname[1000] ;
-  //  sprintf( btageffbpname, "btageff_sf" ) ;
-
-  //  for (int i = 0 ; i < nBinsMET ; i++) {
-  //     for (int j = 0 ; j < nBinsHT ; j++) {
-  //        if ( ignoreBin[i][j] ) continue ;
-  //        for (int k = 0 ; k < nBinsBtag ; k++) {
-
-  //           bool changeSign ;
-
-  //           sprintf( NP_name, "btageff_sf_M%d_H%d_%db", i+1, j+1, k+1 ) ;
-  //           changeSign = false ;
-  //           if ( rv_deff_dbtageff[i][j][k]->getVal() < 0. ) { changeSign = true ; }
-  //           if ( !blindStudy ) {
-  //              rar_btageff_sf[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff[i][j][k]->getVal()), btageffbpname, changeSign ) ;
-  //           } else {
-  //              rar_btageff_sf[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, 0.0, btageffbpname, changeSign ) ;
-  //           }
-
-  //           sprintf( NP_name, "btageff_sf_sl_M%d_H%d_%db", i+1, j+1, k+1 ) ;
-  //           changeSign = false ;
-  //           if ( rv_deff_dbtageff_sl[i][j][k]->getVal() < 0. ) { changeSign = true ; }
-  //           if ( !blindStudy ) {
-  //              rar_btageff_sf_sl[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff_sl[i][j][k]->getVal()), btageffbpname, changeSign ) ;
-  //           } else {
-  //              rar_btageff_sf_sl[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, 0.0, btageffbpname, changeSign ) ;
-  //           }
-
-  //           sprintf( NP_name, "btageff_sf_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
-  //           changeSign = false ;
-  //           if ( rv_deff_dbtageff_ldp[i][j][k]->getVal() < 0. ) { changeSign = true ; }
-  //           if ( !blindStudy ) {
-  //              rar_btageff_sf_ldp[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, fabs(rv_deff_dbtageff_ldp[i][j][k]->getVal()), btageffbpname, changeSign ) ;
-  //           } else {
-  //              rar_btageff_sf_ldp[i][j][k] = makeCorrelatedGaussianConstraint( NP_name, 1.0, 0.0, btageffbpname, changeSign ) ;
-  //           }
-
-  //        } // k
-  //     } // j
-  //  } // i
 
       // set the Gaussian constraint on the diboson background scale factor
       RooAbsReal* rar_vv_sf = makeGaussianConstraint( "rar_vv_sf", rv_mean_vv_sf->getVal(), rv_width_vv_sf->getVal() ) ;
