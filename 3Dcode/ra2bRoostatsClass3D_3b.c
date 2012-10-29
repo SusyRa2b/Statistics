@@ -266,10 +266,10 @@
       float acc_Zmm[nBinsMET] ;
       float acc_Zmm_err[nBinsMET] ;
 
-      float eff_Zee[nBinsHT] ;
-      float eff_Zee_err[nBinsHT] ;
-      float eff_Zmm[nBinsHT] ;
-      float eff_Zmm_err[nBinsHT] ;
+      float eff_Zee ;
+      float eff_Zee_err ;
+      float eff_Zmm ;
+      float eff_Zmm_err ;
       
       float knn_1b[nBinsMET] ;
       float knn_1b_err[nBinsMET] ;
@@ -557,34 +557,11 @@
 
 
       // Z -> ll efficiencies
-      
-      for (int j = 0 ; j < nBinsHT ; j++) {
-	    
-	TString inPar = "Z_ee_eff"+sHbins[j] ;
-	fscanf( infp, "%s %g", label, &eff_Zee[j] ) ;
-	
-	if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
-	cout << inPar << " = " << eff_Zee[j] << endl ;	  
-	
-	inPar += "_err" ;
-	fscanf( infp, "%s %g", label, &eff_Zee_err[j] ) ;
-	cout << inPar << " = " << eff_Zee_err[j] << endl ;	  
 
-      }
-      
-      for (int j = 0 ; j < nBinsHT ; j++) {
-	    
-	TString inPar = "Z_mm_eff"+sHbins[j] ;
-	fscanf( infp, "%s %g", label, &eff_Zmm[j] ) ;
-	
-	if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
-	cout << inPar << " = " << eff_Zmm[j] << endl ;	  
-	
-	inPar += "_err" ;
-	fscanf( infp, "%s %g", label, &eff_Zmm_err[j] ) ;
-	cout << inPar << " = " << eff_Zmm_err[j] << endl ;	  
-
-      }
+      fscanf( infp, "%s %g", label, &eff_Zee ) ; cout << "eff_Zee" << " = " << eff_Zee << endl ;
+      fscanf( infp, "%s %g", label, &eff_Zee_err ) ; cout << "eff_Zee_err" << " = " << eff_Zee_err << endl ;
+      fscanf( infp, "%s %g", label, &eff_Zmm ) ; cout << "eff_Zmm" << " = " << eff_Zmm << endl ;
+      fscanf( infp, "%s %g", label, &eff_Zmm_err ) ; cout << "eff_Zmm_err" << " = " << eff_Zmm_err << endl ;
 
 
       // VL -> nominal scale factors
@@ -853,16 +830,16 @@
             // Z -> invis stuff :
 	    
 	    if ( k == 0 ) {
-	      initialval_znn_ee[i][j][k] = (N_Zee[i][j]) * ( 5.95 * pur_Zee * knn_1b[i] ) / ( acc_Zee[i] * eff_Zee[j] ) ;
-	      initialval_znn_mm[i][j][k] = (N_Zmm[i][j]) * ( 5.95 * pur_Zmm * knn_1b[i] ) / ( acc_Zmm[i] * eff_Zmm[j] ) ;
+	      initialval_znn_ee[i][j][k] = (N_Zee[i][j]) * ( 5.95 * pur_Zee * knn_1b[i] ) / ( acc_Zee[i] * eff_Zee ) ;
+	      initialval_znn_mm[i][j][k] = (N_Zmm[i][j]) * ( 5.95 * pur_Zmm * knn_1b[i] ) / ( acc_Zmm[i] * eff_Zmm ) ;
 	    }
 	    else if ( k == 1 ) {
-	      initialval_znn_ee[i][j][k] = (N_Zee[i][j]) * ( 5.95 * pur_Zee * knn_2b ) / ( acc_Zee[i] * eff_Zee[j] ) ;
-	      initialval_znn_mm[i][j][k] = (N_Zmm[i][j]) * ( 5.95 * pur_Zmm * knn_2b ) / ( acc_Zmm[i] * eff_Zmm[j] ) ;
+	      initialval_znn_ee[i][j][k] = (N_Zee[i][j]) * ( 5.95 * pur_Zee * knn_2b ) / ( acc_Zee[i] * eff_Zee ) ;
+	      initialval_znn_mm[i][j][k] = (N_Zmm[i][j]) * ( 5.95 * pur_Zmm * knn_2b ) / ( acc_Zmm[i] * eff_Zmm ) ;
 	    }
 	    else if ( k == 2 ) { 
-	      initialval_znn_ee[i][j][k] = (N_Zee[i][j]) * ( 5.95 * pur_Zee * knn_3b ) / ( acc_Zee[i] * eff_Zee[j] ) ;
-	      initialval_znn_mm[i][j][k] = (N_Zmm[i][j]) * ( 5.95 * pur_Zmm * knn_3b ) / ( acc_Zmm[i] * eff_Zmm[j] ) ;
+	      initialval_znn_ee[i][j][k] = (N_Zee[i][j]) * ( 5.95 * pur_Zee * knn_3b ) / ( acc_Zee[i] * eff_Zee ) ;
+	      initialval_znn_mm[i][j][k] = (N_Zmm[i][j]) * ( 5.95 * pur_Zmm * knn_3b ) / ( acc_Zmm[i] * eff_Zmm ) ;
 	    }
 	    else {
 	      cout << "\n\n It looks like you are using more than 3 b-jet bins, you need to adjust the Z -> inv stuff! \n" << endl ;
@@ -1549,22 +1526,18 @@
 
       // Z -> ll efficiencies
 
-      RooAbsReal* rar_eff_Zee[nBinsHT] ;
-      RooAbsReal* rar_eff_Zmm[nBinsHT] ;
+      RooAbsReal* rar_eff_Zee ;
+      RooAbsReal* rar_eff_Zmm ;
 
-      for (int j = 0 ; j < nBinsHT ; j++) {
-
-         sprintf( NP_name, "eff_Zee_H%d", j+1 ) ;
-	 // use makeGaussianConstraint, in order to test the frequentistCalculator machinery
-         //rar_eff_Zee[j] = makeBetaConstraint( NP_name, eff_Zee[j], eff_Zee_err[j] ) ;
-	 rar_eff_Zee[j] = makeGaussianConstraint( NP_name, eff_Zee[j], eff_Zee_err[j] ) ;
-
-         sprintf( NP_name, "eff_Zmm_H%d", j+1 ) ;
-	 // use makeGaussianConstraint, in order to test the frequentistCalculator machinery
-         //rar_eff_Zmm[j] = makeBetaConstraint( NP_name, eff_Zmm[j], eff_Zmm_err[j] ) ;
-	 rar_eff_Zmm[j] = makeGaussianConstraint( NP_name, eff_Zmm[j], eff_Zmm_err[j] ) ;
-
-      }
+      sprintf( NP_name, "eff_Zee" ) ;
+      // use makeGaussianConstraint, in order to test the frequentistCalculator machinery
+      //rar_eff_Zee = makeBetaConstraint( NP_name, eff_Zee, eff_Zee_err ) ;
+      rar_eff_Zee = makeGaussianConstraint( NP_name, eff_Zee, eff_Zee_err ) ;
+      
+      sprintf( NP_name, "eff_Zmm" ) ;
+      // use makeGaussianConstraint, in order to test the frequentistCalculator machinery
+      //rar_eff_Zmm = makeBetaConstraint( NP_name, eff_Zmm, eff_Zmm_err ) ;
+      rar_eff_Zmm = makeGaussianConstraint( NP_name, eff_Zmm, eff_Zmm_err ) ;
 
 
 
@@ -2074,14 +2047,14 @@
 
 	      rv_mu_zee[i][j] = new RooFormulaVar( muZeeString, rfvZeeString,
 						   RooArgSet( *rv_mu_znn[i][j][k], *rar_knn_1b[i], *rar_sf_ee, *rar_acc_Zee[i], 
-							      *rar_eff_Zee[j], *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
+							      *rar_eff_Zee, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
 
 
 	      TString rfvZmmString = "( @0 / @1 ) * @2 * ( ( @3 * @4 ) / ( @5 * @6 ) )" ;
 
 	      rv_mu_zmm[i][j] = new RooFormulaVar( muZmmString, rfvZmmString,
 						   RooArgSet( *rv_mu_znn[i][j][k], *rar_knn_1b[i], *rar_sf_mm, *rar_acc_Zmm[i], 
-							      *rar_eff_Zmm[j], *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
+							      *rar_eff_Zmm, *rv_znnoverll_bfratio, *rv_dataoverll_lumiratio ) ) ;
 
 	    }
 	    else if ( k == 1 ) {

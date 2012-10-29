@@ -843,8 +843,8 @@
       float acc_Zee      [nBinsMET] ;
       float acc_Zmm      [nBinsMET] ;
 
-      float Z_ee_eff     [nBinsHT];
-      float Z_mm_eff     [nBinsHT];
+      float Z_ee_eff ;
+      float Z_mm_eff ;
 
       float knn[nBinsMET][nBinsBjets] ;
 
@@ -1089,35 +1089,24 @@
       } // mbi
 
       //--- Z_ee_eff
-      for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-      	 nread = fscanf( infp, "%s %g", pname, &pval ) ;
-	 int htbin ;
-	 int nmatch = sscanf( pname, "Z_ee_eff_H%d", &htbin ) ;
-	 printf("  trying to find Z_ee_eff_H%d  but found %s  ", hbi+1, pname);
-      	 if ( nmatch == 1 ) {
-      	    Z_ee_eff[hbi] = pval ;
-      	    printf(" Set Z_ee_eff for hbi=%d to %g\n", hbi, pval ) ;
-      	 } else {
-	    printf("\n\n *** bad input line.\n\n") ; 
-	    printf("  bad line is %d  %g", hbi, pval);
-	    return false ;
-      	 }
-      	 nread = fscanf( infp, "%s %g", pname, &pval ) ;
+      nread = fscanf( infp, "%s %g", pname, &pval ) ;
+      if ( strcmp( pname, "Z_ee_eff" ) == 0 ) {
+         Z_ee_eff = pval ;
+         printf(" Set Z_ee_eff to %g\n", pval ) ;
+      } else {
+         printf("\n\n *** bad input line.\n\n") ; return false ;
       }
+      nread = fscanf( infp, "%s %g", pname, &pval ) ;
 
       //--- Z_mm_eff
-      for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-      	 nread = fscanf( infp, "%s %g", pname, &pval ) ;
-	 int htbin ;
-	 int nmatch = sscanf( pname, "Z_mm_eff_H%d", &htbin ) ;
-      	 if ( nmatch == 1 ) {
-      	    Z_mm_eff[hbi] = pval ;
-      	    printf(" Set Z_mm_eff for hbi=%d to %g\n", hbi, pval ) ;
-      	 } else {
-      	    printf("\n\n *** bad input line.\n\n") ; return false ;
-      	 }
-      	 nread = fscanf( infp, "%s %g", pname, &pval ) ;
+      nread = fscanf( infp, "%s %g", pname, &pval ) ;
+      if ( strcmp( pname, "Z_mm_eff" ) == 0 ) {
+         Z_mm_eff = pval ;
+         printf(" Set Z_mm_eff to %g\n", pval ) ;
+      } else {
+         printf("\n\n *** bad input line.\n\n") ; return false ;
       }
+      nread = fscanf( infp, "%s %g", pname, &pval ) ;
 
       //--- knn
       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {

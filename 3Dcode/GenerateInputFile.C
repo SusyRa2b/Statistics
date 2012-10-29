@@ -1086,48 +1086,11 @@ inFile << "acc_Zmm_M4_err  \t" << 0.018<< endl;
   
     // Z -> ll efficiencies
 
-/*  
-    for (int j = 0 ; j < nBinsHT ; j++) {
-  
-      TString Zee_eff = "Z_ee_eff";
-      Zee_eff = Zee_eff+sHbins[j];
-  
-      inFile << Zee_eff << "  \t" << 0.6774 << endl;
-  
-      Zee_eff = Zee_eff+"_err";
-      inFile << Zee_eff << "  \t" << 0.0580 << endl;
-  
-    }
+inFile << "Z_ee_eff          \t" << 0.876<< endl;
+inFile << "Z_ee_eff_err      \t" << 0.035<< endl;
+inFile << "Z_mm_eff          \t" << 0.877<< endl;
+inFile << "Z_mm_eff_err      \t" << 0.013<< endl;
 
-    for (int j = 0 ; j < nBinsHT ; j++) {
-  
-      TString Zmm_eff = "Z_mm_eff";
-      Zmm_eff = Zmm_eff+sHbins[j];
-  
-      inFile << Zmm_eff << "  \t" << 0.7217 << endl;
-  
-      Zmm_eff = Zmm_eff+"_err";
-      inFile << Zmm_eff << "  \t" << 0.0506 << endl;
-  
-    }
-*/
-
-inFile << "Z_ee_eff_H1           \t" << 0.872<< endl;
-inFile << "Z_ee_eff_H1_err      \t" << 0.049<< endl;
-inFile << "Z_ee_eff_H2          \t" << 0.783<< endl;
-inFile << "Z_ee_eff_H2_err      \t" << 0.046<< endl;
-inFile << "Z_ee_eff_H3           \t" << 0.920<< endl;
-inFile << "Z_ee_eff_H3_err      \t" << 0.045<< endl;
-inFile << "Z_ee_eff_H4           \t" << 0.963<< endl;
-inFile << "Z_ee_eff_H4_err      \t" << 0.097<< endl;
-inFile << "Z_mm_eff_H1           \t" << 0.900<< endl;
-inFile << "Z_mm_eff_H1_err      \t" << 0.016<< endl;
-inFile << "Z_mm_eff_H2           \t" << 0.875<< endl;
-inFile << "Z_mm_eff_H2_err      \t" << 0.021<< endl;
-inFile << "Z_mm_eff_H3           \t" << 0.792<< endl;
-inFile << "Z_mm_eff_H3_err      \t" << 0.045<< endl;
-inFile << "Z_mm_eff_H4           \t" << 0.651<< endl;
-inFile << "Z_mm_eff_H4_err     \t" <<  0.077<< endl;
 
   
     // Z -> ee VL to nominal scale factors
