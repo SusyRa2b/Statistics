@@ -20,7 +20,7 @@ using namespace RooStats ;
 using namespace std;
 
 
-int minimalFit(TString workspaceFile = "test.root", double signalCrossSectionGuess = 50.0, double signalCrossSectionLow = 0.0, double signalCrossSectionHigh = 1000.0, bool updateWS = false, TString datFile = "") 
+int minimalFit(TString workspaceFile = "test.root", double signalCrossSectionGuess = 50.0, double signalCrossSectionLow = 0.0, double signalCrossSectionHigh = 1000.0, bool updateWS = false, TString datFile = "", bool fixSignal=false) 
 {
   
   TFile* wstf = 0;  
@@ -37,6 +37,7 @@ int minimalFit(TString workspaceFile = "test.root", double signalCrossSectionGue
 
   RooRealVar* signalCrossSection = ws->var( "signalCrossSection" );
   signalCrossSection->setVal( signalCrossSectionGuess );
+  if(fixSignal) signalCrossSection->setConstant();
   signalCrossSection->setRange( signalCrossSectionLow, signalCrossSectionHigh );
   
   /* 
