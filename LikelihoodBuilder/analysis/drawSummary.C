@@ -30,7 +30,7 @@ void drawSummary() {
   std::vector<double> vZtoNuNuRMS;
 
   fstream f;
-  f.open("output_OAK_cat.dat");
+  f.open("output_LB_cat.dat");
   assert(f.is_open());
 
   int n=0;
@@ -60,8 +60,8 @@ void drawSummary() {
   gSignal->SetMarkerStyle(20);
   gSignal->SetMarkerColor(6);
   gSignal->Draw("AP");
-  
   gSignal->SetMinimum(0);
+  gSignal->SetMaximum(250);
 
   TF1 * f1 = new TF1("f1", "x", 0,2e2);
   f1->SetLineColor(kOrange-3);
@@ -79,6 +79,8 @@ void drawSummary() {
   gTopWJets->SetMarkerStyle(20);
   gTopWJets->SetMarkerColor(kBlue-9);
   gTopWJets->Draw("AP");
+  gTopWJets->SetMinimum(17600);
+  gTopWJets->SetMaximum(19300);
   TLine * lttwj = new TLine(0, tZeroLeptonTopWJetsYieldTotal, 110, tZeroLeptonTopWJetsYieldTotal);
   lttwj->SetLineWidth(3);
   lttwj->SetLineColor(kOrange-3);
@@ -91,6 +93,8 @@ void drawSummary() {
   gQCD->SetMarkerStyle(20);
   gQCD->SetMarkerColor(2);
   gQCD->Draw("AP");
+  gQCD->SetMinimum(17700);
+  gQCD->SetMaximum(19200);
   TLine * lqcd = new TLine(0, tZeroLeptonQCDYieldTotal, 110, tZeroLeptonQCDYieldTotal);
   lqcd->SetLineWidth(3);
   lqcd->SetLineColor(kOrange-3);
@@ -104,6 +108,8 @@ void drawSummary() {
   gZtoNuNu->SetMarkerStyle(20);
   gZtoNuNu->SetMarkerColor(kGreen-3);
   gZtoNuNu->Draw("AP");
+  gZtoNuNu->SetMinimum(0);
+  gZtoNuNu->SetMaximum(3200);
   TLine * lznn = new TLine(0, tZeroLeptonZtoNuNuYieldTotal, 110, tZeroLeptonZtoNuNuYieldTotal);
   lznn->SetLineWidth(3);
   lznn->SetLineColor(kOrange-3);
