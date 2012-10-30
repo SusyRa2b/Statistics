@@ -59,7 +59,7 @@ void makeHists(TString fitter = "LB") {
   TH1D* hZeroLeptonQCDYieldTotal = new TH1D("hZeroLeptonQCDYieldTotal", "Zero lepton QCD yield", 50, 0, 500);
   TH1D* hZeroLeptonZtoNuNuYieldTotal = new TH1D("hZeroLeptonZtoNuNuYieldTotal", "Zero lepton Z-invisible yield", 50, 150, 450);
   */
-  TH1D* hSignalCrossSection = new TH1D("hSignalCrossSection", "Signal cross section", 50, 0, 50);
+  TH1D* hSignalCrossSection = new TH1D("hSignalCrossSection", "Signal cross section", 50, 0, 100);
   TH1D* hPull = new TH1D("hPull", "Pull using fit errors", 50, -5, 5);
   TH1D* hPullPL = new TH1D("hPullPL", "Pull using PL errors", 50, -5, 5);
   TH1D* hZeroLeptonSignalYieldTotal = new TH1D("hZeroLeptonSignalYieldTotal", "Zero lepton signal yield", 50, 0, 500);
@@ -160,7 +160,7 @@ void initialize(int trueN_in, TString inFile, TString fitter = "LB") {
   double trueN_double = trueN;
 
   //signal point 850 600, lumi = 15/fb
-  trueXsec = 1000.0 * trueN_double / 1.5 / 6378.0; 
+  trueXsec = 1000.0 * trueN_double / 1.5 / 2119.0 ; 
   //trueXsec = 52;//3x3 with 5/fb
   trueXsec_string = "";
   trueXsec_string += trueXsec;
