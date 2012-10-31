@@ -691,10 +691,10 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
              hmctruth_vv[si][k]    -> SetBinError(   histbin, vverr ) ;
              hmctruth_susy[si][k]  -> SetBinContent( histbin, susyval  ) ;
              hmctruth_susy[si][k]  -> SetBinError(   histbin, susyerr  ) ;
-             hmctruth_allsm[si][k] -> SetBinContent( histbin, ttval+wjetsval+qcdval+znnval ) ;
-             hmctruth_allsm[si][k] -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(wjetserr,2) + pow(qcderr,2) + pow(znnerr,2) ) ) ;
-             hmctruth_all[si][k]   -> SetBinContent( histbin, ttval+wjetsval+qcdval+znnval+susyval ) ;
-             hmctruth_all[si][k]   -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(wjetserr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(susyerr,2) ) ) ;
+             hmctruth_allsm[si][k] -> SetBinContent( histbin, ttval+wjetsval+qcdval+znnval+vvval ) ;
+             hmctruth_allsm[si][k] -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(wjetserr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(vverr,2) ) ) ;
+             hmctruth_all[si][k]   -> SetBinContent( histbin, ttval+wjetsval+qcdval+znnval+vvval+susyval ) ;
+             hmctruth_all[si][k]   -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(wjetserr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(vverr,2) + pow(susyerr,2) ) ) ;
 
 
 	     // compute fractions of SL 2b/1b and 3b/1b
@@ -737,6 +737,40 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
      } // si.
 
+
+     // for systematics evaluation, print out fraction of events in 1L from non-ttwj sources					     
+     float totalttwj = 0.0;													     
+     float totalsm = 0.0;													     
+     for (int i = 0 ; i < nBinsMET ; i++) {											     
+       for (int j = 0 ; j < nBinsHT ; j++) {											     
+     	 for (int k = 0 ; k < nBinsBjets ; k++) {										     
+     	   int histbin = 1 + (nBinsHT+1)*i + j + 1 ;										     
+     	   float ttwjcount = hmctruth_ttwj[1][k] -> GetBinContent( histbin );
+     	   float smcount = hmctruth_allsm[1][k] -> GetBinContent( histbin );							     
+     	   cout << "For bin M" << i+1 << "H" << j+1 << "b" << k+1 << " 1L non-ttwj fraction = " << (1-(ttwjcount/smcount)) << endl;  
+     	   totalttwj += ttwjcount;												     
+     	   totalsm += smcount;
+     	 }
+       }
+     }
+     cout << "Total 1L non-ttwj fraction = " << (1-(totalttwj/totalsm)) << endl;						     
+
+     // for systematics evaluation, print out fraction of events in LDP from non-QCD sources					     
+     float totalqcd = 0.0;													     
+     totalsm = 0.0;														     
+     for (int i = 0 ; i < nBinsMET ; i++) {											     
+       for (int j = 0 ; j < nBinsHT ; j++) {											     
+     	 for (int k = 0 ; k < nBinsBjets ; k++) {										     
+     	   int histbin = 1 + (nBinsHT+1)*i + j + 1 ;										     
+     	   float qcdcount = hmctruth_qcd[2][k] -> GetBinContent( histbin );
+     	   float smcount = hmctruth_allsm[2][k] -> GetBinContent( histbin );							     
+     	   cout << "For bin M" << i+1 << "H" << j+1 << "b" << k+1 << " LDP non-qcd fraction = " << (1-(qcdcount/smcount)) << endl;   
+     	   totalqcd += qcdcount;												     
+     	   totalsm += smcount;
+     	 }
+       }
+     }
+     cout << "Total LDP non-qcd fraction = " << (1-(totalqcd/totalsm)) << endl;						     
 
 
 
@@ -1313,10 +1347,10 @@ inFile << "knn_3b_err       \t" << 0.007<< endl;
     } // si
 
     // next write out measured trigger efficiencies. Values from plotEMuFrac.C from averaging e/mu bin by bin.
-    float trigeff1LVal[nBinsMET][nBinsHT] = {{0.898873,0.985567,1.0,1.0},{0.942407,0.990288,0.998154,1.0},{0.942064,1.0,0.988108,1.0},{0.941061,0.928571,1.0,1.0}};
-    float trigeff1LErr[nBinsMET][nBinsHT] = {{0.0300214,0.0300001,0.03,0.03},{0.0300002,0.0300024,0.03,0.03},{0.03,0.03,0.0300046,0.03},{0.0301012,0.03,0.03,0.03}};
-    float trigeff0LVal[nBinsMET][nBinsHT] = {{0.571429,0.614458,0.958333,1.0},{0.65,0.754098,1.0,1.0},{1.0,1.0,1.0,1.0},{1.0,1.0,1.0,1.0}};
-    float trigeff0LErr[nBinsMET][nBinsHT] = {{0.06613,0.0534248,0.0407894,0.03},{0.106654,0.0551353,0.03,0.03},{0.03,0.03,0.03,0.03},{0.03,0.03,0.03,0.03}};
+    float trigeff1LVal[nBinsMET][nBinsHT] = {{0.906515,0.987776,0.999283,1},{0.955593,0.993455,0.998782,1},{1,1,0.994101,1},{1,1,1,1}};
+    float trigeff1LErr[nBinsMET][nBinsHT] = {{0.1209,0.0343369,0.0100203,0.01},{0.0951017,0.0336462,0.0100273,0.01},{0.01,0.01,0.0115714,0.01},{0.01,0.01,0.01,0.01}};
+    float trigeff0LVal[nBinsMET][nBinsHT] = {{0.611111,0.722222,1.,1.},{0.757576,0.833333,1.,1.},{1.,1.,1.,1.},{1.,1.,1.,1.}};
+    float trigeff0LErr[nBinsMET][nBinsHT] = {{0.0716282,0.105819,0.01,0.01},{0.0554178,0.0513951,0.01,0.01},{0.01,0.01,0.01,0.01},{0.01,0.01,0.01,0.01}};
     for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
       for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
     	char parname[1000] ;

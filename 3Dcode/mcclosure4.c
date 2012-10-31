@@ -226,6 +226,8 @@
 
          val = hscalefactor_ttwj_0over1ratio_1b -> GetBinContent( hbi ) ;
          err = hscalefactor_ttwj_0over1ratio_1b -> GetBinError( hbi ) ;
+	 // also include additional 1% uncertainty from contribution of non-ttwj in 1L sample
+	 err = sqrt( err*err + 0.01*val*0.01*val );
          if ( err <= 0 ) continue ;
          halfdiff = 0.5*(val - 1.) ;
          errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
@@ -715,7 +717,8 @@
             //   err        = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin)  ;
             //   correction = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinContent(hbin)  ;
             //} else {
-               err        = hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinError(hbin)  ;
+	       // include 4% systematic for W fraction variation
+               err        = sqrt( hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
                correction = hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinContent(hbin)  ;
             //}
             if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
@@ -742,7 +745,8 @@
             //   err        = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin)  ;
             //   correction = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinContent(hbin)  ;
             //} else {
-               err        = hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinError(hbin)  ;
+	       // include 4% systematic for W fraction variation
+               err        = sqrt( hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
                correction = hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinContent(hbin)  ;
             //}
             if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
@@ -766,10 +770,12 @@
                   parameterName,
                   hmctruth_ttwj_0lep_3b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
             if ( useAverageTtwjClosure ) {
-               err        = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin)  ;
+	       // include 4% systematic for W fraction variation
+               err        = sqrt( hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
                correction = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinContent(hbin)  ;
             } else {
-               err        = hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinError(hbin)  ;
+	       // include 4% systematic for W fraction variation
+               err        = sqrt( hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
                correction = hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinContent(hbin)  ;
             }
             if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
@@ -1311,9 +1317,14 @@
                   hflat_scale_factor[bbi] -> SetBinContent( histbin, val / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ) ;
                   hflat_scale_factor[bbi] -> SetBinError(   histbin, err / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ) ;
 
-                  hflat_scale_factor_withRMSerror[bbi] -> SetBinContent( histbin, valwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ) ;
-                  hflat_scale_factor_withRMSerror[bbi] -> SetBinError(   histbin, errwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ) ;
-
+                  //make this no correction, but include full lack of closure here, plus 10% for subtraction of non-QCD contributions
+		  //hflat_scale_factor_withRMSerror[bbi] -> SetBinContent( histbin, valwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ) ;
+                  //hflat_scale_factor_withRMSerror[bbi] -> SetBinError(   histbin, errwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ) ;
+                  float closure_error = fabs( 1 - (valwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] )) );
+                  float stat_error = ( errwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) );
+		  float sub_error = 0.10; // 
+		  hflat_scale_factor_withRMSerror[bbi] -> SetBinContent( histbin, 1.0 );
+		  hflat_scale_factor_withRMSerror[bbi] -> SetBinError(   histbin, sqrt( closure_error*closure_error + stat_error*stat_error + sub_error*sub_error ) ) ;
                } else if ( qcdModelIndex == 3 ) {
 
                   //-- QCD Model 3.  SF_i = (0lep/LDP)_i / global_(0lep/LDP)
