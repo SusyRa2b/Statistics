@@ -1693,10 +1693,10 @@
 
             char znnNP_beta_par[20][100] ;
             int zbnpi(0) ;
-            for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-               sprintf( znnNP_beta_par[zbnpi++], "eff_Zee_H%d", hbi+1 ) ;
-               sprintf( znnNP_beta_par[zbnpi++], "eff_Zmm_H%d", hbi+1 ) ;
-            }
+
+	    sprintf( znnNP_beta_par[zbnpi++], "eff_Zee" ) ;
+	    sprintf( znnNP_beta_par[zbnpi++], "eff_Zmm" ) ;
+
             for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
                sprintf( znnNP_beta_par[zbnpi++], "acc_Zee_M%d", mbi+1 ) ;
                sprintf( znnNP_beta_par[zbnpi++], "acc_Zmm_M%d", mbi+1 ) ;
