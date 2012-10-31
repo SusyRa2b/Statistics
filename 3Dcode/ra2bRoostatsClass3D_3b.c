@@ -3484,14 +3484,14 @@
       int ArraySize ;
       if ( nfields == 2+2*(nBinsMET*nBinsHT*nBinsBtag) ) {
          hasSL = false ;
-         printf("\n\n Format is consistent with no SL observables.\n") ;
+         printf("\n\n setupShapeSyst : %s : Format is consistent with no SL observables.\n", systname ) ;
          ArraySize = nfields ;
       } else if ( nfields == 2+3*(nBinsMET*nBinsHT*nBinsBtag) ) {
          hasSL = true ;
-         printf("\n\n Format is consistent with including SL observables.\n") ;
+         printf("\n\n setupShapeSyst : %s : Format is consistent with including SL observables.\n", systname ) ;
          ArraySize = nfields ;
       } else {
-         printf("\n\n I don't know what to do with nfields = %d\n\n", nfields ) ;
+         printf("\n\n setupShapeSyst : %s : I don't know what to do with nfields = %d\n\n", systname, nfields ) ;
          return false ;
       }
 
@@ -3503,7 +3503,6 @@
          return false ;
       }
 
-      bool found = false ;
 
       double syst_zl[10][10][10] ;
       double syst_sl[10][10][10] ;
@@ -3512,58 +3511,82 @@
       double minSyst(0.) ;
       double maxSyst(0.) ;
 
+      double matchArrayContent[ArraySize] ;
+      double nearbyMatchArrayContent[ArraySize] ;
+
+      bool foundMatch = false ;
+      bool foundNearbyMatch = false ;
+
+      int nBins = nBinsMET*nBinsHT*nBinsBtag ;
+
       while ( infq.good() ) {
 
-         int nBins = nBinsMET*nBinsHT*nBinsBtag ;
 
-         double ArrayContent[ArraySize] ;
+         double readArrayContent[ArraySize] ;
          for ( int i=0; infq && i<ArraySize; ++ i) {
-            infq >> ArrayContent[i] ;
+            infq >> readArrayContent[i] ;
          }
 
-         double mgl  = ArrayContent[0] ;
-         double mlsp = ArrayContent[1] ;
+         double mgl  = readArrayContent[0] ;
+         double mlsp = readArrayContent[1] ;
 
-         if ( !(fabs( mgl-target_mgl ) < 10. && fabs( mlsp - target_mlsp ) < 10 ) ) continue ;
+         if ( fabs( mgl-target_mgl ) < 1. && fabs( mlsp - target_mlsp ) < 1. ) {
 
-         found = true ;
+            for ( int i=0; i<ArraySize; i++ ) { matchArrayContent[i] = readArrayContent[i] ; }
+            foundMatch = true ;
+            printf("\n\n setupShapeSyst : %s :Found mgl=%.0f, mlsp=%.0f\n\n", systname, mgl, mlsp ) ;
+            break ;
 
-         printf("\n\n Found mgl=%.0f, mlsp=%.0f\n\n", mgl, mlsp ) ;
+         }
 
-         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-            for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-               for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
+         if ( fabs( mgl-target_mgl ) < 26. && fabs( mlsp - target_mlsp ) < 26. && !foundNearbyMatch ) {
 
-                  if ( hasSL ) {
-                     syst_zl [mbi][hbi][bbi]  = ArrayContent[2 + mbi*(nBinsHT*nBinsBtag) + hbi*(nBinsBtag) + bbi] ;
-                     syst_sl [mbi][hbi][bbi]  = ArrayContent[2 + nBins + mbi*(nBinsHT*nBinsBtag) + hbi*(nBinsBtag) + bbi] ;
-                     syst_ldp[mbi][hbi][bbi]  = ArrayContent[2 + 2*nBins + mbi*(nBinsHT*nBinsBtag) + hbi*(nBinsBtag) + bbi] ;
-                  } else {
-                     syst_zl [mbi][hbi][bbi]  = ArrayContent[2 + mbi*(nBinsHT*nBinsBtag) + hbi*(nBinsBtag) + bbi] ;
-                     syst_sl [mbi][hbi][bbi]  = 0. ;
-                     syst_ldp[mbi][hbi][bbi]  = ArrayContent[2 + nBins + mbi*(nBinsHT*nBinsBtag) + hbi*(nBinsBtag) + bbi] ;
-                  }
+            for ( int i=0; i<ArraySize; i++ ) { nearbyMatchArrayContent[i] = readArrayContent[i] ; }
+            foundNearbyMatch = true ;
+            printf("\n\n setupShapeSyst : %s : Found nearby match mgl=%.0f, mlsp=%.0f  (requested mgl=%.0f, mlsp=%.0f)\n\n", systname, mgl, mlsp, target_mgl, target_mlsp ) ;
 
-                  if ( syst_zl [mbi][hbi][bbi] > maxSyst ) maxSyst = syst_zl [mbi][hbi][bbi] ;
-                  if ( syst_sl [mbi][hbi][bbi] > maxSyst ) maxSyst = syst_sl [mbi][hbi][bbi] ;
-                  if ( syst_ldp[mbi][hbi][bbi] > maxSyst ) maxSyst = syst_ldp[mbi][hbi][bbi] ;
-
-                  if ( syst_zl [mbi][hbi][bbi] < minSyst ) minSyst = syst_zl [mbi][hbi][bbi] ;
-                  if ( syst_sl [mbi][hbi][bbi] < minSyst ) minSyst = syst_sl [mbi][hbi][bbi] ;
-                  if ( syst_ldp[mbi][hbi][bbi] < minSyst ) minSyst = syst_ldp[mbi][hbi][bbi] ;
-
-               } // bbi.
-            } // hbi.
-         } // mbi.
-
-         break ;
+         }
 
       } // reading file?
 
-      if ( !found ) {
-         printf("\n\n *** setupShapeSyst: Did not find target point: mgl=%.0f, mlsp=%.0f\n\n", target_mgl, target_mlsp ) ;
+
+      double ArrayContent[ArraySize] ;
+
+      if ( foundMatch ) {
+         for ( int i=0; i<ArraySize; i++ ) { ArrayContent[i] = matchArrayContent[i] ; }
+      } else if ( foundNearbyMatch ) {
+         for ( int i=0; i<ArraySize; i++ ) { ArrayContent[i] = nearbyMatchArrayContent[i] ; }
+      } else {
+         printf("\n\n *** setupShapeSyst : %s : Did not find match or nearby match for mgl=%.0f, mlsp=%.0f\n\n", systname, target_mgl, target_mlsp ) ;
          return false ;
       }
+
+      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
+
+               if ( hasSL ) {
+                  syst_zl [mbi][hbi][bbi]  = ArrayContent[2 + mbi*(nBinsHT*nBinsBtag) + hbi*(nBinsBtag) + bbi] ;
+                  syst_sl [mbi][hbi][bbi]  = ArrayContent[2 + nBins + mbi*(nBinsHT*nBinsBtag) + hbi*(nBinsBtag) + bbi] ;
+                  syst_ldp[mbi][hbi][bbi]  = ArrayContent[2 + 2*nBins + mbi*(nBinsHT*nBinsBtag) + hbi*(nBinsBtag) + bbi] ;
+               } else {
+                  syst_zl [mbi][hbi][bbi]  = ArrayContent[2 + mbi*(nBinsHT*nBinsBtag) + hbi*(nBinsBtag) + bbi] ;
+                  syst_sl [mbi][hbi][bbi]  = 0. ;
+                  syst_ldp[mbi][hbi][bbi]  = ArrayContent[2 + nBins + mbi*(nBinsHT*nBinsBtag) + hbi*(nBinsBtag) + bbi] ;
+               }
+
+               if ( syst_zl [mbi][hbi][bbi] > maxSyst ) maxSyst = syst_zl [mbi][hbi][bbi] ;
+               if ( syst_sl [mbi][hbi][bbi] > maxSyst ) maxSyst = syst_sl [mbi][hbi][bbi] ;
+               if ( syst_ldp[mbi][hbi][bbi] > maxSyst ) maxSyst = syst_ldp[mbi][hbi][bbi] ;
+
+               if ( syst_zl [mbi][hbi][bbi] < minSyst ) minSyst = syst_zl [mbi][hbi][bbi] ;
+               if ( syst_sl [mbi][hbi][bbi] < minSyst ) minSyst = syst_sl [mbi][hbi][bbi] ;
+               if ( syst_ldp[mbi][hbi][bbi] < minSyst ) minSyst = syst_ldp[mbi][hbi][bbi] ;
+
+            } // bbi.
+         } // hbi.
+      } // mbi.
+
 
       printf("\n\n setupShapeSyst: %s : Min syst = %6.2f, Max syst = %6.2f\n\n", systname, minSyst, maxSyst ) ;
 
