@@ -2777,7 +2777,13 @@
 
 
      TString histfile(wsfile) ;
-     histfile.ReplaceAll(".root","-fitqual.root") ;
+     char newfileend[1000] ;
+     if ( mu_susy_sig_val < 0 ) {
+        sprintf( newfileend, "-susyFloat-fitqual.root" ) ;
+     } else {
+        sprintf( newfileend, "-Nsusy%.0f-fitqual.root", mu_susy_sig_val ) ;
+     }
+     histfile.ReplaceAll(".root", newfileend ) ;
      saveHist( histfile,"h*") ;
 
 

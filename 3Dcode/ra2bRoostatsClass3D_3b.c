@@ -301,6 +301,10 @@
       float trigeff_1L[nBinsMET][nBinsHT];
       float trigefferr_1L[nBinsMET][nBinsHT];
 
+      int   n_global_uncertainties(0) ;
+      float global_uncertainty_val[100] ;
+      char  global_uncertainty_name[100][100] ;
+
 
       //--- read in description lines.
       printf("\n\n") ;
@@ -788,6 +792,30 @@
 
         }
       }
+
+
+
+
+
+      //--- Oct 31, 2012: read in global uncertainties.
+
+      char target_label[100] ;
+
+      sprintf( target_label, "GU_luminosity" ) ;
+      fscanf( infp, "%s %g", label, &global_uncertainty_val[n_global_uncertainties] ) ;
+      if ( strcmp( label, target_label ) != 0 ) { printf("\n\n *** expecting %s, found %s\n\n", target_label, label ) ; return false ; }
+      sprintf( global_uncertainty_name[n_global_uncertainties], "%s", label ) ;
+      n_global_uncertainties++ ;
+
+      sprintf( target_label, "GU_metcleaning" ) ;
+      fscanf( infp, "%s %g", label, &global_uncertainty_val[n_global_uncertainties] ) ;
+      if ( strcmp( label, target_label ) != 0 ) { printf("\n\n *** expecting %s, found %s\n\n", target_label, label ) ; return false ; }
+      sprintf( global_uncertainty_name[n_global_uncertainties], "%s", label ) ;
+      n_global_uncertainties++ ;
+
+
+
+
 
 
       printf("\n Done reading in %s\n\n", infile ) ;
@@ -1644,6 +1672,7 @@
              sprintf( NP_name, "sf_qcd_M%d_H%d_%db", i+1, j+1, k+1 ) ;
         //// if ( ! (blindStudy && blind0lepBin[i][j][k]) ) {
                 rar_sf_qcd[i][j][k] = makeGaussianConstraint( NP_name, sf_qcd[i][j][k], sf_qcd_err[i][j][k] ) ;
+                //// rar_sf_qcd[i][j][k] = makeLognormalConstraint( NP_name, sf_qcd[i][j][k], sf_qcd_err[i][j][k] ) ;
         //// } else {
         ////    rar_sf_qcd[i][j][k] = makeGaussianConstraint( NP_name, sf_qcd[i][j][k], 0. ) ;
         ////    workspace.import( *(rar_sf_qcd[i][j][k]) ) ;
@@ -1657,6 +1686,7 @@
              sprintf( NP_name, "sf_ttwj_M%d_H%d_%db", i+1, j+1, k+1 ) ;
         //// if ( ! (blindStudy && blind0lepBin[i][j][k]) ) {
                 rar_sf_ttwj[i][j][k] = makeGaussianConstraint( NP_name, sf_ttwj[i][j][k], sf_ttwj_err[i][j][k] ) ;
+                //////rar_sf_ttwj[i][j][k] = makeLognormalConstraint( NP_name, sf_ttwj[i][j][k], sf_ttwj_err[i][j][k] ) ;
         //// } else {
         ////    rar_sf_ttwj[i][j][k] = makeGaussianConstraint( NP_name, sf_ttwj[i][j][k], 0. ) ;
         //// }
@@ -1829,6 +1859,36 @@
 	  rar_trigeff_sl[i][j] = makeGaussianConstraint( NP_name, trigeff_1L[i][j], trigefferr_1L[i][j] ) ;
         }
       }
+
+
+
+
+
+
+
+
+
+
+      //--- Oct 31, 2012: added global uncertainties.
+
+      printf("\n\n === Global uncertainties:\n") ;
+      double all_gu2(0.) ;
+      for ( int gui=0; gui < n_global_uncertainties; gui++ ) {
+         printf("  %20s : %5.3f\n", global_uncertainty_name[gui], global_uncertainty_val[gui] ) ;
+         all_gu2 += pow( global_uncertainty_val[gui], 2 ) ;
+      } // gui.
+      double all_gu = sqrt( all_gu2 ) ;
+      printf("  %20s : %5.3f\n\n\n", "Total", all_gu ) ;
+
+
+      RooAbsReal* rar_all_gu = makeGaussianConstraint( "all_gu", 1.0, all_gu ) ;
+
+
+
+
+
+
+
 
 
 
@@ -2089,6 +2149,11 @@
 
           //--- Zero lepton : n
 
+            char mu_nonqcdsm_zl_name[1000] ;
+            sprintf( mu_nonqcdsm_zl_name, "mu_nonqcdsm_zl_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+            RooFormulaVar* mu_nonqcdsm_zl = new RooFormulaVar( mu_nonqcdsm_zl_name, "@0 + @1 + @2",
+                                                                RooArgSet( *rv_mu_vv[i][j][k], *rv_mu_ttwj[i][j][k], *rv_mu_znn[i][j][k] ) ) ;
+
             RooArgSet shapeSystProdSet_zl ;
             for ( int si=0; si<nShapeSystematics; si++ ) {
                sprintf( systparname, "%s_M%d_H%d_%db", shapeSystName[si], i+1, j+1, k+1 ) ;
@@ -2099,12 +2164,13 @@
             sprintf( shapesystprodname, "shapesyst_prod_M%d_H%d_%db", i+1, j+1, k+1 ) ;
             RooFormulaVar* rfv_shapeSystProd_zl = new RooFormulaVar( shapesystprodname, systprodeqn, shapeSystProdSet_zl ) ;
 
-            TString rfvNString =  "@0 * @1 + (@2 + @3 + @4 + (@5 * @6 * @7)) * @8" ;
+            TString rfvNString =  "@0 * @1 + (@2 + (@3 * @4 * @5 * @6)) * @7" ;
 
             rv_n[i][j][k] = new RooFormulaVar( nString, rfvNString,
                                                RooArgSet( *rv_mu_qcd[i][j][k], *rar_trigeff[i][j],
-                                                          *rv_mu_ttwj[i][j][k], *rv_mu_znn[i][j][k],  *rv_mu_vv[i][j][k],
-                                                          *rfv_shapeSystProd_zl, *rar_eff_sf[i][j][k], *rv_mu_susy[i][j][k], *rar_trigeff_sl[i][j] ) ) ;
+                                                          *mu_nonqcdsm_zl,
+                                                          *rar_all_gu, *rfv_shapeSystProd_zl, *rar_eff_sf[i][j][k], *rv_mu_susy[i][j][k],
+                                                          *rar_trigeff_sl[i][j] ) ) ;
 
 
           //--- Single lepton : n_sl
@@ -2119,20 +2185,21 @@
             sprintf( shapesystprodname, "shapesyst_prod_sl_M%d_H%d_%db", i+1, j+1, k+1 ) ;
             RooFormulaVar* rfv_shapeSystProd_sl = new RooFormulaVar( shapesystprodname, systprodeqn, shapeSystProdSet_sl ) ;
 
-            TString rfvNSlString = "(@0 + @1 + (@2 * @3 * @4)) * @5" ;
+            TString rfvNSlString = "(@0 + @1 + (@2 * @3 * @4 * @5)) * @6" ;
 
             rv_n_sl[i][j][k] = new RooFormulaVar( nSlString, rfvNSlString,
-                                                  RooArgSet( *rv_mu_ttwj_sl[i][j][k], *rv_mu_vv_sl[i][j][k], *rfv_shapeSystProd_sl,
-                                                             *rar_eff_sf_sl[i][j][k], *rv_mu_susy_sl[i][j][k], *rar_trigeff_sl[i][j] ) ) ;
+                                                  RooArgSet( *rv_mu_ttwj_sl[i][j][k], *rv_mu_vv_sl[i][j][k],
+                                                             *rar_all_gu, *rfv_shapeSystProd_sl, *rar_eff_sf_sl[i][j][k], *rv_mu_susy_sl[i][j][k],
+                                                             *rar_trigeff_sl[i][j] ) ) ;
 
 
 
 
            //--- LDP : n_ldp
 
-            char mu_nonqcdsm_name[1000] ;
-            sprintf( mu_nonqcdsm_name, "mu_nonqcdsm_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
-            RooFormulaVar* mu_nonqcdsm_ldp = new RooFormulaVar( mu_nonqcdsm_name, "@0 + @1 + @2",
+            char mu_nonqcdsm_ldp_name[1000] ;
+            sprintf( mu_nonqcdsm_ldp_name, "mu_nonqcdsm_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+            RooFormulaVar* mu_nonqcdsm_ldp = new RooFormulaVar( mu_nonqcdsm_ldp_name, "@0 + @1 + @2",
                                                                 RooArgSet( *rv_mu_vv_ldp[i][j][k], *rv_mu_ttwj_ldp[i][j][k], *rv_mu_znn_ldp[i][j][k] ) ) ;
 
             RooArgSet shapeSystProdSet_ldp ;
@@ -2145,12 +2212,12 @@
             sprintf( shapesystprodname, "shapesyst_prod_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
             RooFormulaVar* rfv_shapeSystProd_ldp = new RooFormulaVar( shapesystprodname, systprodeqn, shapeSystProdSet_ldp ) ;
 
-            TString rfvNLdpString = "@0 * @1 + @2 * ( @3 + (@4 * @5 * @6 ) ) * @7" ;
+            TString rfvNLdpString = "@0 * @1 + ( @2 * @3 + (@4 * @5 * @6 * @7) ) * @8" ;
 
             rv_n_ldp[i][j][k] = new RooFormulaVar( nLdpString, rfvNLdpString,
                                                    RooArgSet( *rar_trigeff[i][j], *rv_mu_qcd_ldp[i][j][k],
-                                                              *rar_sf_mc, *mu_nonqcdsm_ldp,
-                                                              *rfv_shapeSystProd_ldp, *rar_eff_sf_ldp[i][j][k], *rv_mu_susy_ldp[i][j][k],
+                                                              *mu_nonqcdsm_ldp, *rar_sf_mc,
+                                                              *rar_all_gu, *rfv_shapeSystProd_ldp, *rar_eff_sf_ldp[i][j][k], *rv_mu_susy_ldp[i][j][k],
                                                               *rar_trigeff_sl[i][j] ) ) ;
 
       //////--------------------------------

@@ -105,6 +105,11 @@
        rrv_mu_susy_all0lep->setConstant( kTRUE ) ;
 
 
+  //// //-- Include floating susy
+  //// rrv_mu_susy_all0lep->setVal(0.) ;
+  //// rrv_mu_susy_all0lep->setConstant( kFALSE ) ;
+
+
 
 
 
@@ -391,6 +396,7 @@
        double sf_ttwj_Vals[100] ;
        double sf_qcd_Vals[100] ;
        double allsmcomps_Vals[100] ;
+       double allcomps_Vals[100] ;
        double pdf_sf_qcd_Vals[100] ;
        double pdf_sf_ttwj_Vals[100] ;
        double pdf_N_ldp_Vals[100] ;
@@ -399,6 +405,7 @@
 
 
        double allsmcomps_max(0.) ;
+       double allcomps_max(0.) ;
        double nptf_max(0.) ;
        double ctrlmu_max(0.) ;
        double pdfs_max(0.) ;
@@ -588,8 +595,10 @@
           pdf_N_sl_Vals[poivi] = -2*log(pdf_N_sl) ;
 
           allsmcomps_Vals[poivi] = trigeff * mu_qcd + trigeff_sl * ( mu_ttwj + mu_qcd + mu_znn + mu_vv ) ;
+          allcomps_Vals[poivi]   = new_poi_rar->getVal() ;
 
           if ( allsmcomps_Vals[poivi] > allsmcomps_max ) { allsmcomps_max = allsmcomps_Vals[poivi] ; }
+          if ( allcomps_Vals[poivi] > allcomps_max ) { allcomps_max = allcomps_Vals[poivi] ; }
 
           if ( sf_ttwj > nptf_max ) { nptf_max = sf_ttwj ; }
           if ( sf_qcd > nptf_max ) { nptf_max = sf_qcd ; }
@@ -762,33 +771,52 @@
        gr_tcmu_vv->SetLineColor( kOrange+1 ) ;
        gr_tcmu_vv->SetFillColor( kWhite ) ;
 
+       TGraph* gr_tcmu_susy = new TGraph( npoiPoints, poiVals, tcmu_susy_Vals ) ;
+       sprintf( gname, "scan_%s_tcmu_susy", new_poi_name ) ;
+       gr_tcmu_susy->SetName( gname ) ;
+       gr_tcmu_susy->SetLineWidth( 2 ) ;
+       gr_tcmu_susy->SetLineColor( 6 ) ;
+       gr_tcmu_susy->SetFillColor( kWhite ) ;
+
        TGraph* gr_allsmcomps = new TGraph( npoiPoints, poiVals, allsmcomps_Vals ) ;
        sprintf( gname, "scan_%s_allsmcomps", new_poi_name ) ;
        gr_allsmcomps->SetName( gname ) ;
        gr_allsmcomps->SetLineWidth( 2 ) ;
+       gr_allsmcomps->SetLineStyle( 2 ) ;
        gr_allsmcomps->SetLineColor( 1 ) ;
        gr_allsmcomps->SetFillColor( kWhite ) ;
 
 
+       TGraph* gr_allcomps = new TGraph( npoiPoints, poiVals, allcomps_Vals ) ;
+       sprintf( gname, "scan_%s_allcomps", new_poi_name ) ;
+       gr_allcomps->SetName( gname ) ;
+       gr_allcomps->SetLineWidth( 2 ) ;
+       gr_allcomps->SetLineColor( 1 ) ;
+       gr_allcomps->SetFillColor( kWhite ) ;
+
+
        TLegend* legend_comps = new TLegend(0.7,0.8, 0.85, 0.95) ;
        legend_comps->SetFillColor(kWhite) ;
+       legend_comps -> AddEntry( gr_allcomps, "All" ) ;
        legend_comps -> AddEntry( gr_allsmcomps, "All SM" ) ;
        legend_comps -> AddEntry( gr_tcmu_qcd, "qcd" ) ;
        legend_comps -> AddEntry( gr_tcmu_ttwj, "ttwj" ) ;
        legend_comps -> AddEntry( gr_tcmu_znn, "Znn" ) ;
        legend_comps -> AddEntry( gr_tcmu_vv, "VV" ) ;
+       legend_comps -> AddEntry( gr_tcmu_susy, "SUSY" ) ;
 
 
        sprintf(htitle, "%s SM components (in events)", new_poi_name ) ;
        TH1F* hcomps = new TH1F("hcomps", htitle, 10, poiMinVal, poiMaxVal ) ;
        hcomps->SetMinimum(0.) ;
-       hcomps->SetMaximum(1.2 * allsmcomps_max ) ;
+       hcomps->SetMaximum(1.2 * allcomps_max ) ;
 
        hcomps->Draw() ;
        gr_tcmu_qcd->Draw("c") ;
        gr_tcmu_ttwj->Draw("c") ;
        gr_tcmu_znn->Draw("c") ;
        gr_tcmu_vv->Draw("c") ;
+       gr_tcmu_susy->Draw("c") ;
        gr_allsmcomps->Draw("c") ;
 
        legend_comps->Draw() ;

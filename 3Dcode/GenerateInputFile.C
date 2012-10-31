@@ -1340,6 +1340,21 @@ inFile << "knn_3b_err       \t" << 0.007<< endl;
       }
     }
 
+
+
+
+
+
+
+   //-- Oct 31, 2012 : add global uncertainties here (e.g. lumi, met cleaning, ...)
+
+    inFile << "GU_luminosity   0.044" << endl ;
+    inFile << "GU_metcleaning  0.031" << endl ;
+
+
+
+
+
     // add here the fractions (bin by bin) of 2b/1b and 3b/1b SL events (just for the MC for now)
 
     for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
@@ -1362,6 +1377,12 @@ inFile << "knn_3b_err       \t" << 0.007<< endl;
 
       }
     }
+
+
+
+
+
+
 
 
     gSystem->Exec("mkdir -p rootfiles") ;
