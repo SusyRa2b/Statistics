@@ -1,7 +1,6 @@
 zeroLeptonCount 10
 zeroLeptonLowDeltaPhiNCount 34
-oneMuonCount 15
-oneElectronCount 12
+oneLeptonCount 12
 diElectronCountName H1M1
 diElectronCount 45
 diMuonCountName H1M1
