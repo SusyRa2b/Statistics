@@ -1186,8 +1186,8 @@
       float Zmm_factor[nBinsBjets] ;
 
       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-         Zee_factor[bbi] = ( 5.94 * Z_ee_pur * knn[0][bbi] ) / ( acc_Zee[0] * Z_ee_eff[0] ) ; // ignoring MET dependence of acceptance, knn and HT dependence of eff
-         Zmm_factor[bbi] = ( 5.94 * Z_mm_pur * knn[0][bbi] ) / ( acc_Zmm[0] * Z_mm_eff[0] ) ; // ignoring MET dependence of acceptance, knn and HT dependence of eff
+         Zee_factor[bbi] = ( 5.94 * Z_ee_pur * knn[0][bbi] ) / ( acc_Zee[0] * Z_ee_eff ) ; // ignoring MET dependence of acceptance, knn and HT dependence of eff
+         Zmm_factor[bbi] = ( 5.94 * Z_mm_pur * knn[0][bbi] ) / ( acc_Zmm[0] * Z_mm_eff ) ; // ignoring MET dependence of acceptance, knn and HT dependence of eff
          printf("  nB=%d Zll scale factors:  ee=%g, mm=%g\n", bbi, Zee_factor[bbi], Zmm_factor[bbi] ) ;
       } // bbi.
 
