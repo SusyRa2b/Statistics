@@ -186,38 +186,40 @@ RooAbsArg* getBetaPrimeConstraint(RooWorkspace& ws,const TString varName,const T
 
   return ws.arg(constrained.GetName());
 
-  RooRealVar passObservable (varName+binName+"_PassObs", varName+binName+"_PassObs", alpha-1,1e-5,1e3);
-  passObservable.setConstant();
-  RooRealVar failObservable (varName+binName+"_FailObs", varName+binName+"_FailObs", beta -1,1e-5,1e3);
-  failObservable.setConstant();
-
-  ws.import(passObservable);
-  ws.import(failObservable);
-  //ws.extendSet(observables,passObservable.GetName());
-  //ws.extendSet(observables,failObservable.GetName());
-
-  RooRealVar passParameter (varName+binName+"_PassPar", varName+binName+"_PassPar", alpha-1,1e-5,1e3);
-  RooRealVar failParameter (varName+binName+"_FailPar", varName+binName+"_FailPar", beta -1,1e-5,1e3);
-
-  ws.import(passParameter);
-  ws.import(failParameter);
-  //ws.extendSet(nuisances,passParameter.GetName());
-  //ws.extendSet(nuisances,failParameter.GetName());
-
-  if(passObs) *passObs = passObservable.GetName();
-  if(failObs) *failObs = failObservable.GetName();
-  if(passPar) *passPar = passParameter.GetName();
-  if(failPar) *failPar = failParameter.GetName();
-
-  RooPoisson passConstraint (varName+binName+"_PassConstraint" , varName+binName+"_PassConstraint", passObservable, passParameter);
-  RooPoisson failConstraint (varName+binName+"_FailConstraint" , varName+binName+"_FailConstraint", failObservable, failParameter);
-
-  ws.import(passConstraint, RecycleConflictNodes());
-  ws.import(failConstraint, RecycleConflictNodes());
-
-  RooRatio ratio(varName+binName+"_Ratio",varName+binName+"_Ratio",passParameter,failParameter);
-  ws.import(ratio, RecycleConflictNodes());
-  return ws.arg(varName+binName+"_Ratio");
+  /*
+    RooRealVar passObservable (varName+binName+"_PassObs", varName+binName+"_PassObs", alpha-1,1e-5,1e3);
+    passObservable.setConstant();
+    RooRealVar failObservable (varName+binName+"_FailObs", varName+binName+"_FailObs", beta -1,1e-5,1e3);
+    failObservable.setConstant();
+    
+    ws.import(passObservable);
+    ws.import(failObservable);
+    //ws.extendSet(observables,passObservable.GetName());
+    //ws.extendSet(observables,failObservable.GetName());
+    
+    RooRealVar passParameter (varName+binName+"_PassPar", varName+binName+"_PassPar", alpha-1,1e-5,1e3);
+    RooRealVar failParameter (varName+binName+"_FailPar", varName+binName+"_FailPar", beta -1,1e-5,1e3);
+    
+    ws.import(passParameter);
+    ws.import(failParameter);
+    //ws.extendSet(nuisances,passParameter.GetName());
+    //ws.extendSet(nuisances,failParameter.GetName());
+    
+    if(passObs) *passObs = passObservable.GetName();
+    if(failObs) *failObs = failObservable.GetName();
+    if(passPar) *passPar = passParameter.GetName();
+    if(failPar) *failPar = failParameter.GetName();
+    
+    RooPoisson passConstraint (varName+binName+"_PassConstraint" , varName+binName+"_PassConstraint", passObservable, passParameter);
+    RooPoisson failConstraint (varName+binName+"_FailConstraint" , varName+binName+"_FailConstraint", failObservable, failParameter);
+    
+    ws.import(passConstraint, RecycleConflictNodes());
+    ws.import(failConstraint, RecycleConflictNodes());
+    
+    RooRatio ratio(varName+binName+"_Ratio",varName+binName+"_Ratio",passParameter,failParameter);
+    ws.import(ratio, RecycleConflictNodes());
+    return ws.arg(varName+binName+"_Ratio");
+  */
 
 }
 
@@ -264,41 +266,42 @@ RooAbsArg* getBetaConstraint(RooWorkspace& ws,const TString varName,const TStrin
 
   return ws.arg(constrained.GetName());
 
-  RooRealVar passObservable (varName+binName+"_PassObs", varName+binName+"_PassObs", alpha-1,1e-5,1e3);
-  passObservable.setConstant();
-  RooRealVar failObservable (varName+binName+"_FailObs", varName+binName+"_FailObs", beta -1,1e-5,1e3);
-  failObservable.setConstant();
-
-  ws.import(passObservable);
-  ws.import(failObservable);
-  //ws.extendSet(observables,passObservable.GetName());
-  //ws.extendSet(observables,failObservable.GetName());
-
-  RooRealVar passParameter (varName+binName+"_PassPar", varName+binName+"_PassPar", alpha-1,1e-5,1e3);
-  RooRealVar failParameter (varName+binName+"_FailPar", varName+binName+"_FailPar", beta -1,1e-5,1e3);
-
-  ws.import(passParameter);
-  ws.import(failParameter);
-  //ws.extendSet(nuisances,passParameter.GetName());
-  //ws.extendSet(nuisances,failParameter.GetName());
-
-  if(passObs) *passObs = passObservable.GetName();
-  if(failObs) *failObs = failObservable.GetName();
-  if(passPar) *passPar = passParameter.GetName();
-  if(failPar) *failPar = failParameter.GetName();
-
-  RooPoisson passConstraint (varName+binName+"_PassConstraint" , varName+binName+"_PassConstraint", passObservable, passParameter);
-  RooPoisson failConstraint (varName+binName+"_FailConstraint" , varName+binName+"_FailConstraint", failObservable, failParameter);
-
-  ws.import(passConstraint, RecycleConflictNodes());
-  ws.import(failConstraint, RecycleConflictNodes());
-
-  RooAddition passPlusFail(varName+binName+"_PassPlusFail",varName+binName+"_PassPlusFail",RooArgSet(passParameter,failParameter));
-
-  RooRatio ratio(varName+binName+"_Ratio",varName+binName+"_Ratio",passParameter,passPlusFail);
-  ws.import(ratio, RecycleConflictNodes());
-  return ws.arg(varName+binName+"_Ratio");
-
+  /*
+    RooRealVar passObservable (varName+binName+"_PassObs", varName+binName+"_PassObs", alpha-1,1e-5,1e3);
+    passObservable.setConstant();
+    RooRealVar failObservable (varName+binName+"_FailObs", varName+binName+"_FailObs", beta -1,1e-5,1e3);
+    failObservable.setConstant();
+    
+    ws.import(passObservable);
+    ws.import(failObservable);
+    //ws.extendSet(observables,passObservable.GetName());
+    //ws.extendSet(observables,failObservable.GetName());
+    
+    RooRealVar passParameter (varName+binName+"_PassPar", varName+binName+"_PassPar", alpha-1,1e-5,1e3);
+    RooRealVar failParameter (varName+binName+"_FailPar", varName+binName+"_FailPar", beta -1,1e-5,1e3);
+    
+    ws.import(passParameter);
+    ws.import(failParameter);
+    //ws.extendSet(nuisances,passParameter.GetName());
+    //ws.extendSet(nuisances,failParameter.GetName());
+    
+    if(passObs) *passObs = passObservable.GetName();
+    if(failObs) *failObs = failObservable.GetName();
+    if(passPar) *passPar = passParameter.GetName();
+    if(failPar) *failPar = failParameter.GetName();
+    
+    RooPoisson passConstraint (varName+binName+"_PassConstraint" , varName+binName+"_PassConstraint", passObservable, passParameter);
+    RooPoisson failConstraint (varName+binName+"_FailConstraint" , varName+binName+"_FailConstraint", failObservable, failParameter);
+    
+    ws.import(passConstraint, RecycleConflictNodes());
+    ws.import(failConstraint, RecycleConflictNodes());
+    
+    RooAddition passPlusFail(varName+binName+"_PassPlusFail",varName+binName+"_PassPlusFail",RooArgSet(passParameter,failParameter));
+    
+    RooRatio ratio(varName+binName+"_Ratio",varName+binName+"_Ratio",passParameter,passPlusFail);
+    ws.import(ratio, RecycleConflictNodes());
+    return ws.arg(varName+binName+"_Ratio");
+  */
 }
 
 RooAbsArg* getInverseBetaConstraint(RooWorkspace& ws,const TString varName,const TString binName,
@@ -348,41 +351,42 @@ RooAbsArg* getInverseBetaConstraint(RooWorkspace& ws,const TString varName,const
 
   return ws.arg(inverse.GetName());
 
-  RooRealVar passObservable (varName+binName+"_PassObs", varName+binName+"_PassObs", alpha-1,1e-5,1e3);
-  passObservable.setConstant();
-  RooRealVar failObservable (varName+binName+"_FailObs", varName+binName+"_FailObs", beta -1,1e-5,1e3);
-  failObservable.setConstant();
-
-  ws.import(passObservable);
-  ws.import(failObservable);
-  //ws.extendSet(observables,passObservable.GetName());
-  //ws.extendSet(observables,failObservable.GetName());
-
-  RooRealVar passParameter (varName+binName+"_PassPar", varName+binName+"_PassPar", alpha-1,1e-5,1e3);
-  RooRealVar failParameter (varName+binName+"_FailPar", varName+binName+"_FailPar", beta -1,1e-5,1e3);
-
-  ws.import(passParameter);
-  ws.import(failParameter);
-  //ws.extendSet(nuisances,passParameter.GetName());
-  //ws.extendSet(nuisances,failParameter.GetName());
-
-  if(passObs) *passObs = passObservable.GetName();
-  if(failObs) *failObs = failObservable.GetName();
-  if(passPar) *passPar = passParameter.GetName();
-  if(failPar) *failPar = failParameter.GetName();
-
-  RooPoisson passConstraint (varName+binName+"_PassConstraint" , varName+binName+"_PassConstraint", passObservable, passParameter);
-  RooPoisson failConstraint (varName+binName+"_FailConstraint" , varName+binName+"_FailConstraint", failObservable, failParameter);
-
-  ws.import(passConstraint, RecycleConflictNodes());
-  ws.import(failConstraint, RecycleConflictNodes());
-
-  RooAddition passPlusFail(varName+binName+"_PassPlusFail",varName+binName+"_PassPlusFail",RooArgSet(passParameter,failParameter));
-
-  RooRatio ratio(varName+binName+"_InverseRatio",varName+binName+"_InverseRatio",passPlusFail,passParameter);
-  ws.import(ratio, RecycleConflictNodes());
-  return ws.arg(varName+binName+"_InverseRatio");
-
+  /*
+    RooRealVar passObservable (varName+binName+"_PassObs", varName+binName+"_PassObs", alpha-1,1e-5,1e3);
+    passObservable.setConstant();
+    RooRealVar failObservable (varName+binName+"_FailObs", varName+binName+"_FailObs", beta -1,1e-5,1e3);
+    failObservable.setConstant();
+    
+    ws.import(passObservable);
+    ws.import(failObservable);
+    //ws.extendSet(observables,passObservable.GetName());
+    //ws.extendSet(observables,failObservable.GetName());
+    
+    RooRealVar passParameter (varName+binName+"_PassPar", varName+binName+"_PassPar", alpha-1,1e-5,1e3);
+    RooRealVar failParameter (varName+binName+"_FailPar", varName+binName+"_FailPar", beta -1,1e-5,1e3);
+    
+    ws.import(passParameter);
+    ws.import(failParameter);
+    //ws.extendSet(nuisances,passParameter.GetName());
+    //ws.extendSet(nuisances,failParameter.GetName());
+    
+    if(passObs) *passObs = passObservable.GetName();
+    if(failObs) *failObs = failObservable.GetName();
+    if(passPar) *passPar = passParameter.GetName();
+    if(failPar) *failPar = failParameter.GetName();
+    
+    RooPoisson passConstraint (varName+binName+"_PassConstraint" , varName+binName+"_PassConstraint", passObservable, passParameter);
+    RooPoisson failConstraint (varName+binName+"_FailConstraint" , varName+binName+"_FailConstraint", failObservable, failParameter);
+    
+    ws.import(passConstraint, RecycleConflictNodes());
+    ws.import(failConstraint, RecycleConflictNodes());
+    
+    RooAddition passPlusFail(varName+binName+"_PassPlusFail",varName+binName+"_PassPlusFail",RooArgSet(passParameter,failParameter));
+    
+    RooRatio ratio(varName+binName+"_InverseRatio",varName+binName+"_InverseRatio",passPlusFail,passParameter);
+    ws.import(ratio, RecycleConflictNodes());
+    return ws.arg(varName+binName+"_InverseRatio");
+  */
 }
 
 
