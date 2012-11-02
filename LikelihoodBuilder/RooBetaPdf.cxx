@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: RooFit                                                           *
  * Package: RooFitModels                                                     *
- * @(#)root/roofit:$Id: RooBetaPdf.cxx,v 1.1 2012/07/20 13:22:18 kreis Exp $
+ * @(#)root/roofit:$Id: RooBetaPdf.cxx,v 1.2 2012/10/12 14:12:41 kreis Exp $
  * Authors:                                                                  *
  *   WV, Wouter Verkerke, UC Santa Barbara, verkerke@slac.stanford.edu       *
  *   DK, David Kirkby,    UC Irvine,         dkirkby@uci.edu                 *
@@ -37,6 +37,8 @@
 #include "Math/DistFunc.h"
 #include "Math/SpecFuncMathCore.h"
 
+#include "betaHelperFunctions.h"
+
 ClassImp(RooBetaPdf)
 
 
@@ -49,6 +51,10 @@ RooBetaPdf::RooBetaPdf(const char *name, const char *title,
   alpha("alpha","Alpha",this,_alpha),
   beta("beta","Width",this,_beta)
 {
+  _alpha0 = alpha;
+  _beta0 = beta;
+  _x0 = -1;
+  _sigma0 = sqrt( alpha * beta / ( pow(alpha + beta,2) * (alpha + beta + 1) ) );
 }
 
 
@@ -58,6 +64,10 @@ RooBetaPdf::RooBetaPdf(const RooBetaPdf& other, const char* name) :
   RooAbsPdf(other,name), x("x",this,other.x), alpha("alpha",this,other.alpha),
   beta("beta",this,other.beta)
 {
+  _alpha0 = alpha;
+  _beta0 = beta;
+  _x0 = other._x0;
+  _sigma0 = other._sigma0;
 }
 
 
@@ -207,25 +217,47 @@ Double_t RooBetaPdf::analyticalIntegral(Int_t code, const char* rangeName) const
 Int_t RooBetaPdf::getGenerator(const RooArgSet& directVars, RooArgSet &generateVars, Bool_t /*staticInitOK*/) const
 {
   if (matchArgs(directVars,generateVars,x)) return 1 ;  
+  if (matchArgs(directVars,generateVars,alpha,beta)) return 2 ;  
   return 0 ;
 }
 
 //_____________________________________________________________________________
 void RooBetaPdf::generateEvent(Int_t code)
 {
-  assert(code==1) ;
-  double xgen,x1,x2;
-  while(true)
-    {
-      x1 = generateGamma(alpha);
-      x2 = generateGamma(beta);
-      xgen = x1/(x1+x2);
-      if (xgen<x.max() && xgen>x.min()) {
-	x = xgen ;
-	break;
+  assert(code==1||code==2) ;
+  if(code==1){
+    double xgen,x1,x2;
+    while(true)
+      {
+	x1 = generateGamma(alpha);
+	x2 = generateGamma(beta);
+	xgen = x1/(x1+x2);
+	if (xgen<x.max() && xgen>x.min()) {
+	  x = xgen ;
+	  break;
+	}
       }
+    return;
+  }
+  if(code==2){
+    if(_x0 != x) {
+      //cout << "_x0 = " << _x0 << ", x = " << x << ", _sigma0 = " << _sigma0 << ", _alpha0 = " << _alpha0 << "_beta0 = " << _beta0 << endl;
+      betaModeTransform(x , _sigma0 , _alpha0 , _beta0 );
+      _x0 = x;
     }
-  return;
+    while(true)
+      {
+       	double alphagen = RooRandom::randomGenerator()->Poisson(_alpha0);
+	double betagen = RooRandom::randomGenerator()->Poisson(_beta0);
+	
+	if( alphagen<alpha.max() && alphagen>alpha.min() && betagen<beta.max() && betagen>beta.min() ) {
+	  alpha = alphagen;
+	  beta = betagen;
+	  break;
+	}
+      }
+    return;
+  }
 }
 
 //_____________________________________________________________________________
