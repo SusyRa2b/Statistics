@@ -6,6 +6,7 @@
 #include "TH1D.h"
 #include "TCanvas.h"
 #include "TLine.h"
+#include "TFile.h"
 
 using namespace std;
 
@@ -22,7 +23,7 @@ TTree* treeToys = new TTree("treeToys","treeToys");
 
 bool drawTrue = true;
 
-void makeTree(TString inFile, TString fitter = "LB") {
+void makeTree(int trueN_in, TString inFile, TString fitter = "LB") {
 
   
   TString branchDescriptor; 
@@ -38,6 +39,11 @@ void makeTree(TString inFile, TString fitter = "LB") {
   }
 
   treeToys->ReadFile(inFile,branchDescriptor);
+
+  TString foutName = ""; foutName += "tree_"; foutName += trueN; foutName += "_"; foutName += fitter; foutName += ".root";
+  TFile fout(foutName, "RECREATE");
+  treeToys->Write();
+  fout.Close();
 
 }
 
@@ -155,7 +161,7 @@ void makeHists(TString fitter = "LB") {
 void initialize(int trueN_in, TString inFile, TString fitter = "LB") {
 
   trueN = trueN_in;
-  makeTree(inFile, fitter);
+  makeTree(trueN, inFile, fitter);
 
   double trueN_double = trueN;
 
