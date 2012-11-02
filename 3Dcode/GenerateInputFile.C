@@ -1123,10 +1123,10 @@ inFile << "acc_Zmm_M4_err  \t" << 0.018<< endl;
   
     // Z -> ll efficiencies
 
-inFile << "Z_ee_eff          \t" << 0.866<< endl;
-inFile << "Z_ee_eff_err      \t" << 0.044<< endl;
-inFile << "Z_mm_eff          \t" << 0.878<< endl;
-inFile << "Z_mm_eff_err      \t" << 0.027<< endl;
+inFile << "Z_ee_eff          \t" << 0.876<< endl;
+inFile << "Z_ee_eff_err      \t" << 0.060<< endl;
+inFile << "Z_mm_eff          \t" << 0.877<< endl;
+inFile << "Z_mm_eff_err      \t" << 0.028<< endl;
 
 
   
