@@ -40,10 +40,10 @@ void makeTree(int trueN_in, TString inFile, TString fitter = "LB") {
 
   treeToys->ReadFile(inFile,branchDescriptor);
 
-  TString foutName = ""; foutName += "tree_"; foutName += trueN; foutName += "_"; foutName += fitter; foutName += ".root";
-  TFile fout(foutName, "RECREATE");
-  treeToys->Write();
-  fout.Close();
+  //TString foutName = ""; foutName += "tree_"; foutName += trueN; foutName += "_"; foutName += fitter; foutName += ".root";
+  //TFile fout(foutName, "RECREATE");
+  //treeToys->Write();
+  //fout.Close();
 
 }
 
