@@ -1182,13 +1182,23 @@
 
 
       //--- Compute the expected values for the 0lep observables, not including susy.
-      float Zee_factor[nBinsBjets] ;
-      float Zmm_factor[nBinsBjets] ;
+      /////// float Zee_factor[nBinsBjets] ;
+      /////// float Zmm_factor[nBinsBjets] ;
+      float Zee_factor[10][10] ;
+      float Zmm_factor[10][10] ;
 
       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-         Zee_factor[bbi] = ( 5.94 * Z_ee_pur * knn[0][bbi] ) / ( acc_Zee[0] * Z_ee_eff ) ; // ignoring MET dependence of acceptance, knn and HT dependence of eff
-         Zmm_factor[bbi] = ( 5.94 * Z_mm_pur * knn[0][bbi] ) / ( acc_Zmm[0] * Z_mm_eff ) ; // ignoring MET dependence of acceptance, knn and HT dependence of eff
-         printf("  nB=%d Zll scale factors:  ee=%g, mm=%g\n", bbi, Zee_factor[bbi], Zmm_factor[bbi] ) ;
+         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+         double this_knn(0.) ;
+         if ( bbi==0 ) {
+            this_knn = knn[mbi][bbi] ;
+         } else {
+            this_knn = knn[0][bbi] ;
+         }
+         Zee_factor[mbi][bbi] = ( 5.94 * Z_ee_pur * this_knn ) / ( acc_Zee[mbi] * Z_ee_eff ) ;
+         Zmm_factor[mbi][bbi] = ( 5.94 * Z_mm_pur * this_knn ) / ( acc_Zmm[mbi] * Z_mm_eff ) ;
+         printf("  nB=%d, MET bin %d:  Zll scale factors:  ee=%g, mm=%g\n", bbi+1, mbi+1,  Zee_factor[mbi][bbi], Zmm_factor[mbi][bbi] ) ;
+         } // mbi.
       } // bbi.
 
 
@@ -1205,7 +1215,7 @@
                   exp_0lep_ttwj = sf_ttwj[mbi][hbi][bbi] * N_1lep[mbi][hbi][bbi] * initFit_R_ttwj_0lep_over_1lep ;
                }
 
-               float exp_0lep_znn = 0.5 * ( N_Zee[mbi][hbi] * Zee_factor[bbi] + N_Zmm[mbi][hbi] * Zmm_factor[bbi] ) ;
+               float exp_0lep_znn = 0.5 * ( N_Zee[mbi][hbi] * Zee_factor[mbi][bbi] + N_Zmm[mbi][hbi] * Zmm_factor[mbi][bbi] ) ;
 
                double qcdratio(0.) ;
                if ( qcdModelIndex == 2 ) {
@@ -1261,7 +1271,7 @@
                      exp_0lep_znn, znn_mc_ldpover0lep_ratio[mbi][hbi][bbi], qcdratio,
                      exp_0lep_qcd ) ;
                printf("   Znn  : 0.5 * (Nee * Fee + Nmm * Fmm)   =   0.5 * (%5.1f * %5.2f + %5.1f * %5.2f)   =   %6.1f\n",
-                    N_Zee[mbi][hbi], Zee_factor[bbi], N_Zmm[mbi][hbi], Zmm_factor[bbi], exp_0lep_znn ) ;
+                    N_Zee[mbi][hbi], Zee_factor[mbi][bbi], N_Zmm[mbi][hbi], Zmm_factor[mbi][bbi], exp_0lep_znn ) ;
 
             } // bbi.
             toy_mean_N_Zee[mbi][hbi] = N_Zee[mbi][hbi] ;
@@ -1959,10 +1969,12 @@
             //-- trigger efficiencies.
 
             sprintf( vname, "trigeff_M%d_H%d", mbi+1, hbi+1 ) ;
-            fit_chi2_np += getChi2BetaNP( vname ) ;
+            ////// fit_chi2_np += getChi2BetaNP( vname ) ;
+            fit_chi2_np += getChi2GausNP( vname ) ;
 
             sprintf( vname, "trigeff_sl_M%d_H%d", mbi+1, hbi+1 ) ;
-            fit_chi2_np += getChi2BetaNP( vname ) ;
+            ////// fit_chi2_np += getChi2BetaNP( vname ) ;
+            fit_chi2_np += getChi2GausNP( vname ) ;
 
 
          } // hbi.
@@ -2008,31 +2020,38 @@
       sprintf( npname, "knn_3b" ) ;
       fit_chi2_np += getChi2GausNP( npname ) ;
 
-      for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
 
-         sprintf( npname, "eff_Zee_H%d", hbi+1 ) ;
-         fit_chi2_np += getChi2BetaNP( npname ) ;
+      sprintf( npname, "eff_Zee" ) ;
+      ////// fit_chi2_np += getChi2BetaNP( npname ) ;
+      fit_chi2_np += getChi2GausNP( npname ) ;
 
-         sprintf( npname, "eff_Zmm_H%d", hbi+1 ) ;
-         fit_chi2_np += getChi2BetaNP( npname ) ;
+      sprintf( npname, "eff_Zmm" ) ;
+      ////// fit_chi2_np += getChi2BetaNP( npname ) ;
+      fit_chi2_np += getChi2GausNP( npname ) ;
 
-      } // hbi
 
       sprintf( npname, "pur_Zee" ) ;
-      fit_chi2_np += getChi2BetaNP( npname ) ;
+      ////// fit_chi2_np += getChi2BetaNP( npname ) ;
+      fit_chi2_np += getChi2GausNP( npname ) ;
 
       sprintf( npname, "pur_Zmm" ) ;
-      fit_chi2_np += getChi2BetaNP( npname ) ;
+      ////// fit_chi2_np += getChi2BetaNP( npname ) ;
+      fit_chi2_np += getChi2GausNP( npname ) ;
 
       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
 
          sprintf( npname, "acc_Zee_M%d", mbi+1 ) ;
-         fit_chi2_np += getChi2BetaNP( npname ) ;
+         ///// fit_chi2_np += getChi2BetaNP( npname ) ;
+         fit_chi2_np += getChi2GausNP( npname ) ;
 
          sprintf( npname, "acc_Zmm_M%d", mbi+1 ) ;
-         fit_chi2_np += getChi2BetaNP( npname ) ;
+         ///// fit_chi2_np += getChi2BetaNP( npname ) ;
+         fit_chi2_np += getChi2GausNP( npname ) ;
 
       } // mbi.
+
+      sprintf( npname, "all_gu" ) ;
+      fit_chi2_np += getChi2GausNP( npname ) ;
 
       fit_chi2_overall = fit_chi2_obs + fit_chi2_np ;
 
@@ -2046,6 +2065,7 @@
 
       fit_chi2_prob = TMath::Prob( fit_chi2_overall, ndof ) ;
       printf(" toy %4d : chi2 / ndof = %8.2f / %d,  prob = %7.4f\n", ti, fit_chi2_overall, ndof, fit_chi2_prob ) ;
+      printf(" toy %4d :    chi2, obs = %8.2f,  NP = %8.2f\n", ti, fit_chi2_obs, fit_chi2_np ) ;
 
       //-- end nuisance parameter chi2 contributions.
 
