@@ -69,7 +69,7 @@ void makeHists(TString fitter = "LB") {
   TH1D* hPull = new TH1D("hPull", "Pull using fit errors", 50, -5, 5);
   TH1D* hPullPL = new TH1D("hPullPL", "Pull using PL errors", 50, -5, 5);
   TH1D* hZeroLeptonSignalYieldTotal = new TH1D("hZeroLeptonSignalYieldTotal", "Zero lepton signal yield", 50, 0, 500);
-  TH1D* hZeroLeptonTopWJetsYieldTotal = new TH1D("hZeroLeptonTopWJetsYieldTotal", "Zero lepton top W-jets yield", 50, 15000, 22000);
+  TH1D* hZeroLeptonTopWJetsYieldTotal = new TH1D("hZeroLeptonTopWJetsYieldTotal", "Zero lepton top W-jets yield", 50, 9000, 16000);
   TH1D* hZeroLeptonQCDYieldTotal = new TH1D("hZeroLeptonQCDYieldTotal", "Zero lepton QCD yield", 50, 15000, 22000);
   TH1D* hZeroLeptonZtoNuNuYieldTotal = new TH1D("hZeroLeptonZtoNuNuYieldTotal", "Zero lepton Z-invisible yield", 50, 1000, 2000);
   

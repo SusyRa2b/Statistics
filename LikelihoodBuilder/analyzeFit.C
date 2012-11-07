@@ -101,6 +101,9 @@ void integratedTotals(TString workspaceFile = "test.root", TString binFilesFile 
   double ttwjtot=0, qcdtot=0, znntot=0;
   for(unsigned int i = 0; i<binNames.size(); i++) {
     
+    //FIXME hardcoded
+    if(binNames.at(i)=="bin37" || binNames.at(i)=="bin38" || binNames.at(i)=="bin39") continue;
+
     RooAbsReal * ttwj = ws->function("zeroLepton_"+binNames.at(i)+"_TopWJetsYield");
     RooAbsReal * qcd = ws->function("zeroLepton_"+binNames.at(i)+"_QCDYield");
     RooAbsReal * znn = ws->function("zeroLepton_"+binNames.at(i)+"_ZtoNuNuYield");

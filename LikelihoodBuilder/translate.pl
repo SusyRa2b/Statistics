@@ -86,6 +86,13 @@ while(<$fin>) {
     if($line =~ /(\S*)(\s*)(\S*)/) {
       my $fullOKAname = $1;
       my $value = $3;
+
+      if($fullOKAname =~ /(N_0lep)(_M)(\d)(_H)(\d)(_)(\d)(b)/) {
+      	my $bin = "M$3_H$5_$7"."b";
+	print {$binFileHandles[$binFileHash{$bin}]} "lowDeltaPhiNScalingName H$5\n";
+	print {$binFileHandles[$binFileHash{$bin}]} "lowDeltaPhiNMETScaleFactorName M$3\n";
+	print {$binFileHandles[$binFileHash{$bin}]} "lowDeltaPhiNBTagScaleFactorName $7"."b\n";
+      }
       
       if($fullOKAname =~ /(N_0lep)(_M)(\d)(_H)(\d)(_)(\d)(b)/) {
       	my $bin = "M$3_H$5_$7"."b";
@@ -94,10 +101,10 @@ while(<$fin>) {
       
       elsif($fullOKAname =~ /(N_1lep)(_M)(\d)(_H)(\d)(_)(\d)(b)/) {
       	my $bin = "M$3_H$5_$7"."b";
-	my $half = $value/2.0;
+	#my $half = $value/2.0;
 	print {$binFileHandles[$binFileHash{$bin}]} "oneLeptonCount $value\n";
-	print {$binFileHandles[$binFileHash{$bin}]} "oneMuonCount $half\n";
-	print {$binFileHandles[$binFileHash{$bin}]} "oneElectronCount $half\n";
+	#print {$binFileHandles[$binFileHash{$bin}]} "oneMuonCount $half\n";
+	#print {$binFileHandles[$binFileHash{$bin}]} "oneElectronCount $half\n";
       }
       
       elsif($fullOKAname =~ /(N_ldp)(_M)(\d)(_H)(\d)(_)(\d)(b)/) {
@@ -105,24 +112,6 @@ while(<$fin>) {
 	print {$binFileHandles[$binFileHash{$bin}]} "zeroLeptonLowDeltaPhiNCount $value\n";
       }
       
-      elsif($fullOKAname =~ /(R_lsb)(_H)(\d)(_)(1b)(_*)(\S*)/) {#Only take 1b since it's independent of b-tagging!
-	my $dim = "H$3";
-	my $err = "$7";
-	foreach(@binFileNames) {
-	  my $binFileName = $_;
-	  if($binFileName =~ /$dim/) {
-	    if($err ne "err") {
-	      print {$binFileHandles[$binFileHash{$binFileName}]} "deltaPhiNRatioName $dim\n";
-	      print {$binFileHandles[$binFileHash{$binFileName}]} "deltaPhiNRatio $value\n";
-	    }
-	    else{
-	      print {$binFileHandles[$binFileHash{$binFileName}]} "deltaPhiNRatioError $value\n";
-	      print {$binFileHandles[$binFileHash{$binFileName}]} "lowDeltaPhiNScalingName $dim\n";
-	    }
-	  }
-	}
-      }
-
       elsif($fullOKAname =~ /(ttwj_mc_ldpover0lep_ratio)(_M)(\d)(_H)(\d)(_)(\d)(b)(_*)(\S*)/) {
 	my $binFileName = "M$3_H$5_$7b";
 	my $err = $10;
@@ -169,6 +158,68 @@ while(<$fin>) {
 	}
       }
       
+
+      
+      elsif($fullOKAname =~ /(trigeff_val_0L)(_M)(\d)(_H)(\d)/) {
+	my $dim = "M$3_H$5";
+	foreach(@binFileNames) {
+	  my $binFileName = $_;
+	  if($binFileName =~ /$dim/) {
+	    print {$binFileHandles[$binFileHash{$binFileName}]} "zeroLeptonTriggerEfficiencyName $dim\n";
+	    print {$binFileHandles[$binFileHash{$binFileName}]} "zeroLeptonTriggerEfficiency $value\n";
+	  }
+	}
+      }
+
+      elsif($fullOKAname =~ /(trigeff_err_0L)(_M)(\d)(_H)(\d)/) {
+	my $dim = "M$3_H$5";
+	foreach(@binFileNames) {
+	  my $binFileName = $_;
+	  if($binFileName =~ /$dim/) {
+	    print {$binFileHandles[$binFileHash{$binFileName}]} "zeroLeptonTriggerEfficiencyError $value\n";
+	  }
+	}
+      }
+
+      elsif($fullOKAname =~ /(trigeff_val_1L)(_M)(\d)(_H)(\d)/) {
+	my $dim = "M$3_H$5";
+	foreach(@binFileNames) {
+	  my $binFileName = $_;
+	  if($binFileName =~ /$dim/) {
+	    print {$binFileHandles[$binFileHash{$binFileName}]} "oneLeptonTriggerEfficiencyName $dim\n";
+	    print {$binFileHandles[$binFileHash{$binFileName}]} "oneLeptonTriggerEfficiency $value\n";
+	  }
+	}
+      }
+
+      elsif($fullOKAname =~ /(trigeff_err_1L)(_M)(\d)(_H)(\d)/) {
+	my $dim = "M$3_H$5";
+	foreach(@binFileNames) {
+	  my $binFileName = $_;
+	  if($binFileName =~ /$dim/) {
+	    print {$binFileHandles[$binFileHash{$binFileName}]} "oneLeptonTriggerEfficiencyError $value\n";
+	  }
+	}
+      }
+      
+
+
+      elsif($fullOKAname =~ /(N_VVmc_0lep_)(\S+)/) {
+	my $binFileName = $2;
+	print {$binFileHandles[$binFileHash{$binFileName}]} "zeroLeptonDibosonMC $value\n";
+      }
+
+      elsif($fullOKAname =~ /(N_VVmc_1lep_)(\S+)/) {
+	my $binFileName = $2;
+	print {$binFileHandles[$binFileHash{$binFileName}]} "oneLeptonDibosonMC $value\n";
+      }
+
+      elsif($fullOKAname =~ /(N_VVmc_ldp_)(\S+)/) {
+	my $binFileName = $2;
+	print {$binFileHandles[$binFileHash{$binFileName}]} "zeroLeptonLowDeltaPhiNDibosonMC $value\n";
+      }
+
+
       elsif($fullOKAname =~ /(N_ttbarsingletopzjetsmc_ldp_)(\S*)/) {
 	my $binFileName = $2;
 	$ldpMCSum[$binFileHash{$binFileName}] += $value;
@@ -215,56 +266,44 @@ while(<$fin>) {
 	  }
 	}
       }
-      
-      elsif($fullOKAname =~ /(Z_ee_eff_err)/) {
-	print $globalout "ZtoeeEfficiencyError $value\n";
-      }
-      elsif($fullOKAname =~ /(Z_ee_eff)/) {#order important
-	print $globalout "ZtoeeEfficiency $value\n";
-      }
-      
-      elsif($fullOKAname =~ /(Z_mm_eff_err)/) {
-	print $globalout "ZtomumuEfficiencyError $value\n";
-      }
-      elsif($fullOKAname =~ /(Z_mm_eff)/) {#order important
-	print $globalout "ZtomumuEfficiency $value\n";
-      }
-      
-      elsif($fullOKAname =~ /(knn_)(\d)(b)(_*)(\S*)/) {
-	my $dim = "$2b";
-	my $err = "$5";
-	foreach(@binFileNames) {
-	  my $binFileName = $_;
-	  if($binFileName =~ /$dim/) {
-	    if($err ne "err") {
-	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoNuNubTagScalingName $dim\n";
-	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoNuNubTagScaling $value\n";
-	    }
-	    else{
-	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoNuNubTagScalingError $value\n";
-	    }
-	  }
+
+
+      elsif($fullOKAname =~ /(knn_1b_M)(\d)(_*)(\S*)/) {
+       	my $dim1 = "1b";
+	my $dim2 = "M$2";
+       	my $err = "$4";
+       	foreach(@binFileNames) {
+       	  my $binFileName = $_;
+       	  if(($binFileName =~ /$dim1/) && ($binFileName =~ /$dim2/)) {
+       	    if($err ne "err") {
+       	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoNuNubTagScalingName $dim2"."_$dim1\n";
+       	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoNuNubTagScaling $value\n";
+       	    }
+       	    else{
+       	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoNuNubTagScalingError $value\n";
+       	    }
+       	  }
+	   }
 	}
+
+      elsif($fullOKAname =~ /(knn_)(\d)(b)(_*)(\S*)/) {#order important
+       	my $dim = "$2b";
+       	my $err = "$5";
+       	foreach(@binFileNames) {
+       	  my $binFileName = $_;
+       	  if($binFileName =~ /$dim/) {
+       	    if($err ne "err") {
+       	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoNuNubTagScalingName $dim\n";
+       	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoNuNubTagScaling $value\n";
+       	    }
+       	    else{
+       	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoNuNubTagScalingError $value\n";
+       	    }
+       	  }
+       	}
       }
       
-      elsif($fullOKAname =~ /(Z_ee_pur_err)/) {
-	print $globalout "ZtoeePurityError $value\n";
-      }
-      elsif($fullOKAname =~ /(Z_ee_pur)/) {#order important
-        print $globalout "ZtoeePurity $value\n";
-      }
-      
-      elsif($fullOKAname =~ /(Z_mm_pur_err)/) {
-        print $globalout "ZtomumuPurityError $value\n";
-      }
-      elsif($fullOKAname =~ /(Z_mm_pur)/) {#order important
-        print $globalout "ZtomumuPurity $value\n";
-      }
-      
-      elsif($fullOKAname =~ /(sf_mc_err)/) {
-	print $globalout "MCUncertainty $value\n";
-      }
-      
+
       elsif($fullOKAname =~ /(sf_qcd)(_M)(\d)(_H)(\d)(_)(\d)(b)(_*)(\S*)/) {
 	my $binFileName = "M$3_H$5_$7b";
 	my $err = $10;
@@ -286,76 +325,68 @@ while(<$fin>) {
 	  print {$binFileHandles[$binFileHash{$binFileName}]} "topWJetsClosureError $value\n";
 	}
       }
-      
-      # elsif($fullOKAname =~ /(sf_ee_)(\d)(b)(_*)(\S*)/) {
-      # 	my $dim = "$2b";
-      # 	my $err = "$5";
-      # 	foreach(@binFileNames) {
-      # 	  my $binFileName = $_;
-      # 	  if($binFileName =~ /$dim/) {
-      # 	    if($err ne "err") {
-      # 	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoeeSystematicName $dim\n";
-      # 	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoeeSystematic $value\n";
-      # 	    }
-      # 	    else{
-      # 	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoeeSystematicError $value\n";
-      # 	    }
-      # 	  }
-      # 	}
-      # }
-      
-      # elsif($fullOKAname =~ /(sf_mm_)(\d)(b)(_*)(\S*)/) {
-      # 	my $dim = "$2b";
-      # 	my $err = "$5";
-      # 	foreach(@binFileNames) {
-      # 	  my $binFileName = $_;
-      # 	  if($binFileName =~ /$dim/) {
-      # 	    if($err ne "err") {
-      # 	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtomumuSystematicName $dim\n";
-      # 	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtomumuSystematic $value\n";
-      # 	    }
-      # 	    else{
-      # 	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtomumuSystematicError $value\n";
-      # 	    }
-      # 	  }
-      # 	}
-      # }
+            
 
-      #BEN FIXME -- temporary until we get the right systematics from OAK
-      elsif($fullOKAname =~ /(sf_ee_)(1)(b)(_*)(\S*)/) {
-	my $dim = "$2b";
-	my $err = "$5";
-	foreach(@binFileNames) {
-	  my $binFileName = $_;
-	  #if($binFileName =~ /$dim/) {
-	    if($err ne "err") {
-	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoeeSystematicName $dim\n";
-	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoeeSystematic $value\n";
-	    }
-	    else{
-	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoeeSystematicError $value\n";
-	    }
-	  #}
-	}
+      elsif($fullOKAname =~ /(Z_ee_eff_err)/) {
+	print $globalout "ZtoeeEfficiencyError $value\n";
+      }
+      elsif($fullOKAname =~ /(Z_ee_eff)/) {#order important
+	print $globalout "ZtoeeEfficiency $value\n";
       }
       
-      elsif($fullOKAname =~ /(sf_mm_)(1)(b)(_*)(\S*)/) {
-	my $dim = "$2b";
-	my $err = "$5";
-	foreach(@binFileNames) {
-	  my $binFileName = $_;
-	  #if($binFileName =~ /$dim/) {
-	    if($err ne "err") {
-	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtomumuSystematicName $dim\n";
-	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtomumuSystematic $value\n";
-	    }
-	    else{
-	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtomumuSystematicError $value\n";
-	    }
-	  #}
-	}
+      elsif($fullOKAname =~ /(Z_mm_eff_err)/) {
+	print $globalout "ZtomumuEfficiencyError $value\n";
+      }
+      elsif($fullOKAname =~ /(Z_mm_eff)/) {#order important
+	print $globalout "ZtomumuEfficiency $value\n";
       }
       
+      elsif($fullOKAname =~ /(Z_ee_pur_err)/) {
+	print $globalout "ZtoeePurityError $value\n";
+      }
+      elsif($fullOKAname =~ /(Z_ee_pur)/) {#order important
+        print $globalout "ZtoeePurity $value\n";
+      }
+      
+      elsif($fullOKAname =~ /(Z_mm_pur_err)/) {
+        print $globalout "ZtomumuPurityError $value\n";
+      }
+      elsif($fullOKAname =~ /(Z_mm_pur)/) {#order important
+        print $globalout "ZtomumuPurity $value\n";
+      }
+      
+      elsif($fullOKAname =~ /(sf_ee_err)/) {
+	print $globalout "ZtoeeSystematicError $value\n";
+      }
+
+      elsif($fullOKAname =~ /(sf_ee)/) {#order important
+	print $globalout "ZtoeeSystematic $value\n";
+      }
+
+      elsif($fullOKAname =~ /(sf_mm_err)/) {
+	print $globalout "ZtomumuSystematicError $value\n";
+      }
+
+      elsif($fullOKAname =~ /(sf_mm)/) {#order important
+	print $globalout "ZtomumuSystematic $value\n";
+      }
+
+      elsif($fullOKAname =~ /(sf_mc_err)/) {
+	print $globalout "MCUncertainty $value\n";
+      }
+
+      elsif($fullOKAname =~ /(sf_mc)/) {#order important
+	print $globalout "MC $value\n";
+      }
+      
+      elsif($fullOKAname =~ /(GU_luminosity)/) {
+	print $globalout "LuminosityError $value\n";
+      }
+
+      elsif($fullOKAname =~ /(GU_metcleaning)/) {
+	print $globalout "metCleaningError $value\n";
+      }
+
       else {
 	print "Doing nothing with line: $line";
       }
@@ -377,20 +408,11 @@ foreach(@binFileNames) {
 }
 
 
-#Efficiencies, not in OKA's code yet
-foreach(@binFileNames) {
-  my $binFileName = $_;
-  print {$binFileHandles[$binFileHash{$binFileName}]} "zeroLeptonTriggerEfficiency 1.0\n";
-  print {$binFileHandles[$binFileHash{$binFileName}]} "zeroLeptonTriggerEfficiencyError 0.01\n";
-  print {$binFileHandles[$binFileHash{$binFileName}]} "zeroLeptonLowDeltaPhiNTriggerEfficiency 1.0\n";
-  print {$binFileHandles[$binFileHash{$binFileName}]} "zeroLeptonLowDeltaPhiNTriggerEfficiencyError 0.01\n";
-  print {$binFileHandles[$binFileHash{$binFileName}]} "oneLeptonTriggerEfficiency 1.0\n";
-  print {$binFileHandles[$binFileHash{$binFileName}]} "oneLeptonTriggerEfficiencyError 0.01\n";
-  print {$binFileHandles[$binFileHash{$binFileName}]} "oneElectronTriggerEfficiency 1.0\n";
-  print {$binFileHandles[$binFileHash{$binFileName}]} "oneElectronTriggerEfficiencyError 0.01\n";
-  print {$binFileHandles[$binFileHash{$binFileName}]} "oneMuonTriggerEfficiency 1.0\n";
-  print {$binFileHandles[$binFileHash{$binFileName}]} "oneMuonTriggerEfficiencyError 0.01\n";
-}
+#For something not in OKA, use this
+#foreach(@binFileNames) {
+#  my $binFileName = $_;
+#  print {$binFileHandles[$binFileHash{$binFileName}]} "test 1.0\n";
+#}
 
 print $globalout "ZtollOverZtoNuNuRatio 0.168067227\n";
 print $globalout "Luminosity 15.0\n";
