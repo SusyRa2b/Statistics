@@ -126,6 +126,7 @@ RooAbsReal* getCorrelatedGaussianConstraint( RooWorkspace& ws, TString NP_name, 
     rar = new RooPosDefCorrGauss( NP_name_char, NP_name_char, *g_mean, *g_sigma, *rrv_np_base_par, changeSign ) ;
   }
 
+  ws.import(*rar, RecycleConflictNodes());
   cout << " returning corr gauss " << endl;
   return rar ;
   
