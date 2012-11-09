@@ -40,7 +40,8 @@
                                    double poiMaxVal = -1.,
                                    double constraintWidth = 4.,
                                    double ymax = 5.,
-                                   int verbLevel=0 ) {
+                                   int verbLevel=0,
+                                   bool floatSusy = false ) {
 
 
      gStyle->SetOptStat(0) ;
@@ -101,13 +102,15 @@
 
 
        //-- do BG only for now.
-       rrv_mu_susy_all0lep->setVal(0.) ;
-       rrv_mu_susy_all0lep->setConstant( kTRUE ) ;
+       if ( floatSusy ) {
+          rrv_mu_susy_all0lep->setVal(0.) ;
+          rrv_mu_susy_all0lep->setConstant( kFALSE ) ;
+       } else {
+          rrv_mu_susy_all0lep->setVal(0.) ;
+          rrv_mu_susy_all0lep->setConstant( kTRUE ) ;
+       }
 
 
-  //// //-- Include floating susy
-  //// rrv_mu_susy_all0lep->setVal(0.) ;
-  //// rrv_mu_susy_all0lep->setConstant( kFALSE ) ;
 
 
 
@@ -721,11 +724,18 @@
        xaxis->SetBinLabel(3,"Model") ;
        xaxis->SetBinLabel(4,"Model-1sd") ;
 
+       char susyfloatstring[100] ;
+       if ( floatSusy ) {
+          sprintf( susyfloatstring, "susyfloat" ) ;
+       } else {
+          sprintf( susyfloatstring, "susyfixed" ) ;
+       }
+
        char outrootfile[10000] ;
-       sprintf( outrootfile, "%s/scan-%s.root", outputdir.Data(), new_poi_name ) ;
+       sprintf( outrootfile, "%s/scan-%s-%s.root", outputdir.Data(), susyfloatstring, new_poi_name ) ;
 
        char outpdffile[10000] ;
-       sprintf( outpdffile, "%s/scan-%s.pdf", outputdir.Data(), new_poi_name ) ;
+       sprintf( outpdffile, "%s/scan-%s-%s.pdf", outputdir.Data(), susyfloatstring, new_poi_name ) ;
 
        cscan->Update() ; cscan->Draw() ;
 
@@ -824,8 +834,8 @@
        gPad->SetGridx(1) ;
        gPad->SetGridy(1) ;
 
-       sprintf( outrootfile, "%s/scan-%s-smcomps.root", outputdir.Data(), new_poi_name ) ;
-       sprintf( outpdffile, "%s/scan-%s-smcomps.pdf", outputdir.Data(), new_poi_name ) ;
+       sprintf( outrootfile, "%s/scan-%s-%s-smcomps.root", outputdir.Data(), susyfloatstring, new_poi_name ) ;
+       sprintf( outpdffile, "%s/scan-%s-%s-smcomps.pdf", outputdir.Data(), susyfloatstring, new_poi_name ) ;
 
        ccomps->Update() ; ccomps->Draw() ;
 
@@ -902,8 +912,8 @@
        gPad->SetGridx(1) ;
        gPad->SetGridy(1) ;
 
-       sprintf( outrootfile, "%s/scan-%s-nptf.root", outputdir.Data(), new_poi_name ) ;
-       sprintf( outpdffile, "%s/scan-%s-nptf.pdf", outputdir.Data(), new_poi_name ) ;
+       sprintf( outrootfile, "%s/scan-%s-%s-nptf.root", outputdir.Data(), susyfloatstring, new_poi_name ) ;
+       sprintf( outpdffile, "%s/scan-%s-%s-nptf.pdf", outputdir.Data(), susyfloatstring, new_poi_name ) ;
 
        cnptf->Update() ; cnptf->Draw() ;
 
@@ -965,8 +975,8 @@
        gPad->SetGridx(1) ;
        gPad->SetGridy(1) ;
 
-       sprintf( outrootfile, "%s/scan-%s-ctrlmu.root", outputdir.Data(), new_poi_name ) ;
-       sprintf( outpdffile, "%s/scan-%s-ctrlmu.pdf", outputdir.Data(), new_poi_name ) ;
+       sprintf( outrootfile, "%s/scan-%s-%s-ctrlmu.root", outputdir.Data(), susyfloatstring, new_poi_name ) ;
+       sprintf( outpdffile, "%s/scan-%s-%s-ctrlmu.pdf", outputdir.Data(), susyfloatstring, new_poi_name ) ;
 
        cctrlmu->Update() ; cctrlmu->Draw() ;
 
@@ -1050,8 +1060,8 @@
        gPad->SetGridx(1) ;
        gPad->SetGridy(1) ;
 
-       sprintf( outrootfile, "%s/scan-%s-pdfs.root", outputdir.Data(), new_poi_name ) ;
-       sprintf( outpdffile, "%s/scan-%s-pdfs.pdf", outputdir.Data(), new_poi_name ) ;
+       sprintf( outrootfile, "%s/scan-%s-%s-pdfs.root", outputdir.Data(), susyfloatstring, new_poi_name ) ;
+       sprintf( outpdffile, "%s/scan-%s-%s-pdfs.pdf", outputdir.Data(), susyfloatstring, new_poi_name ) ;
 
        cpdfs->Update() ; cpdfs->Draw() ;
 
