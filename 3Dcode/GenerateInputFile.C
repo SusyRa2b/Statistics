@@ -43,9 +43,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   sprintf( susycutstring, "&&mgluino==%.0f&&mlsp==%.0f", mgl, mlsp ) ;
   TString susycut( susycutstring ) ;
   if ( mgl>0. && mlsp>0. ) {
-     nAdded = chainT1bbbb.Add("filesHCP_53_v4/T1bbbb.root") ;
+     nAdded = chainT1bbbb.Add("filesHCP_53_v6/T1bbbb.root") ;
      if ( nAdded <= 0 ) {
-        printf("\n\n\n *** No tree in filesHCP_53_v4/T1bbbb.root\n\n\n") ;
+        printf("\n\n\n *** No tree in filesHCP_53_v6/T1bbbb.root\n\n\n") ;
         return ;
      }
      TFile f("referenceXSecs.root") ;
@@ -65,67 +65,67 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 
   TChain chainQCD("tree") ;
-  chainQCD.Add("filesHCP_53_v4/QCD-120to170.root");
-  chainQCD.Add("filesHCP_53_v4/QCD-170to300.root");
-  chainQCD.Add("filesHCP_53_v4/QCD-300to470.root");
-  chainQCD.Add("filesHCP_53_v4/QCD-470to600.root");
-  chainQCD.Add("filesHCP_53_v4/QCD-600to800.root");
-  chainQCD.Add("filesHCP_53_v4/QCD-800to1000.root");
-  chainQCD.Add("filesHCP_53_v4/QCD-1000to1400.root");
-  chainQCD.Add("filesHCP_53_v4/QCD-1400to1800.root");
-  chainQCD.Add("filesHCP_53_v4/QCD-1800.root");
+  chainQCD.Add("filesHCP_53_v6/QCD-120to170.root");
+  chainQCD.Add("filesHCP_53_v6/QCD-170to300.root");
+  chainQCD.Add("filesHCP_53_v6/QCD-300to470.root");
+  chainQCD.Add("filesHCP_53_v6/QCD-470to600.root");
+  chainQCD.Add("filesHCP_53_v6/QCD-600to800.root");
+  chainQCD.Add("filesHCP_53_v6/QCD-800to1000.root");
+  chainQCD.Add("filesHCP_53_v6/QCD-1000to1400.root");
+  chainQCD.Add("filesHCP_53_v6/QCD-1400to1800.root");
+  chainQCD.Add("filesHCP_53_v6/QCD-1800.root");
   double kfactor_qcd = 1.8 ;
   printf("\n\n Rescaling QCD by %5.3f\n\n", kfactor_qcd ) ;
 
   TChain chainZnn("tree") ;
-  chainZnn.Add("filesHCP_53_v4/Zinv-100to200.root") ;
-  chainZnn.Add("filesHCP_53_v4/Zinv-200to400.root") ;
-  chainZnn.Add("filesHCP_53_v4/Zinv-400.root") ;
+  chainZnn.Add("filesHCP_53_v6/Zinv-100to200.root") ;
+  chainZnn.Add("filesHCP_53_v6/Zinv-200to400.root") ;
+  chainZnn.Add("filesHCP_53_v6/Zinv-400.root") ;
 
   TChain chainTT("tree") ;
-  //chainTT.Add("filesHCP_53_v4/TT.root") ;
-  //chainTT.Add("filesHCP_53_v4/TT-powheg.root");
-  chainTT.Add("filesHCP_53_v4/TT_FullLept.root") ;
-  chainTT.Add("filesHCP_53_v4/TT_SemiLept.root") ;
-  chainTT.Add("filesHCP_53_v4/TT_FullHad.root") ;
+  //chainTT.Add("filesHCP_53_v6/TT.root") ;
+  //chainTT.Add("filesHCP_53_v6/TT-powheg.root");
+  chainTT.Add("filesHCP_53_v6/TT_FullLept.root") ;
+  chainTT.Add("filesHCP_53_v6/TT_SemiLept.root") ;
+  chainTT.Add("filesHCP_53_v6/TT_FullHad.root") ;
   double kfactor_tt = 0.90 ;
   printf("\n\n Rescaling ttbar by %5.3f\n\n", kfactor_tt ) ;
 
   TChain chainWJets("tree") ;
-  chainWJets.Add("filesHCP_53_v4/WJets-250to300.root") ;
-  chainWJets.Add("filesHCP_53_v4/WJets-300to400.root") ;
-  chainWJets.Add("filesHCP_53_v4/WJets-400.root") ;
-  chainWJets.Add("filesHCP_53_v4/T-s.root") ;
-  chainWJets.Add("filesHCP_53_v4/T-t.root") ;
-  chainWJets.Add("filesHCP_53_v4/T-tW.root") ;
-  chainWJets.Add("filesHCP_53_v4/Tbar-s.root") ;
-  chainWJets.Add("filesHCP_53_v4/Tbar-t.root") ;
-  chainWJets.Add("filesHCP_53_v4/Tbar-tW.root") ;
+  chainWJets.Add("filesHCP_53_v6/WJets-250to300.root") ;
+  chainWJets.Add("filesHCP_53_v6/WJets-300to400.root") ;
+  chainWJets.Add("filesHCP_53_v6/WJets-400.root") ;
+  chainWJets.Add("filesHCP_53_v6/T-s.root") ;
+  ///////////// chainWJets.Add("filesHCP_53_v6/T-t.root") ;
+  chainWJets.Add("filesHCP_53_v6/T-tW.root") ;
+  chainWJets.Add("filesHCP_53_v6/Tbar-s.root") ;
+  chainWJets.Add("filesHCP_53_v6/Tbar-t.root") ;
+  chainWJets.Add("filesHCP_53_v6/Tbar-tW.root") ;
   double kfactor_wjets = 0.90 ;
   printf("\n\n Rescaling wjets by %5.3f\n\n", kfactor_wjets ) ;
 
 //include Z->ll in VV contribution
   TChain chainVV("tree");
-  chainVV.Add("filesHCP_53_v4/WW.root"); 
-  chainVV.Add("filesHCP_53_v4/WZ.root");
-  chainVV.Add("filesHCP_53_v4/ZZ.root");
-  chainVV.Add("filesHCP_53_v4/DY-200to400.root");
-  chainVV.Add("filesHCP_53_v4/DY-400.root");
+  chainVV.Add("filesHCP_53_v6/WW.root"); 
+  chainVV.Add("filesHCP_53_v6/WZ.root");
+  chainVV.Add("filesHCP_53_v6/ZZ.root");
+  chainVV.Add("filesHCP_53_v6/DY-200to400.root");
+  chainVV.Add("filesHCP_53_v6/DY-400.root");
 
 
 
 
 
       char qcdinputfile[9][1000] = {
-        "filesHCP_53_v4/QCD-120to170.root"
-       ,"filesHCP_53_v4/QCD-170to300.root"
-       ,"filesHCP_53_v4/QCD-300to470.root"
-       ,"filesHCP_53_v4/QCD-470to600.root"
-       ,"filesHCP_53_v4/QCD-600to800.root"
-       ,"filesHCP_53_v4/QCD-800to1000.root"
-       ,"filesHCP_53_v4/QCD-1000to1400.root"
-       ,"filesHCP_53_v4/QCD-1400to1800.root"
-       ,"filesHCP_53_v4/QCD-1800.root"
+        "filesHCP_53_v6/QCD-120to170.root"
+       ,"filesHCP_53_v6/QCD-170to300.root"
+       ,"filesHCP_53_v6/QCD-300to470.root"
+       ,"filesHCP_53_v6/QCD-470to600.root"
+       ,"filesHCP_53_v6/QCD-600to800.root"
+       ,"filesHCP_53_v6/QCD-800to1000.root"
+       ,"filesHCP_53_v6/QCD-1000to1400.root"
+       ,"filesHCP_53_v6/QCD-1400to1800.root"
+       ,"filesHCP_53_v6/QCD-1800.root"
       } ;
 
       char qcdsamplename[9][100] = {
@@ -151,7 +151,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   double minLeadJetPt = 70. ;
   double min3rdJetPt = 50. ;
   
-  bool doPUreweighting = true;
+  /////////// bool doPUreweighting = true;
+  bool doPUreweighting = false ;
 
   //-- met2-ht1-v1
 //const int nBinsMET   = 2 ;
@@ -403,7 +404,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 //float dummyFloat = 9.999;
   float dummyZero = 0.;
   float dummyOne = 1.0;
-  float dummyPoint999 = 0.999 ;
+///  float dummyPoint999 = 0.999 ;
   float dummyErr = 0.1;
 
   float sl_frac2b_val[nBinsMET][nBinsHT];
@@ -446,9 +447,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
    char selname[3][100] = { "0lep", "1lep", "ldp" } ;
 
    char selcuts[3][10000] = {
-        "pfOcaloMET<2.0&&minDelPhiN>4&&nMu==0&&nEl==0&&",
+        "nIsoTrk==0&&pfOcaloMET<2.0&&minDelPhiN>4&&nMu==0&&nEl==0&&",
         "pfOcaloMET<2.0&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&",
-        "pfOcaloMET<2.0&&minDelPhiN<4&&nMu==0&&nEl==0&&" } ;
+        "nIsoTrk==0&&pfOcaloMET<2.0&&minDelPhiN<4&&nMu==0&&nEl==0&&" } ;
 
 
   //--- Output histograms.
@@ -504,8 +505,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 
 
-     TH1F* hmctruth_fit_zee_1b  = bookHist("hmctruth_fit_zee_1b" , "Zee" , "Zee", 1, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_fit_zmm_1b  = bookHist("hmctruth_fit_zmm_1b" , "Zmm" , "Zmm", 1, nBinsMET, nBinsHT ) ;
+     ///// TH1F* hmctruth_fit_zee_1b  = bookHist("hmctruth_fit_zee_1b" , "Zee" , "Zee", 1, nBinsMET, nBinsHT ) ;
+     ///// TH1F* hmctruth_fit_zmm_1b  = bookHist("hmctruth_fit_zmm_1b" , "Zmm" , "Zmm", 1, nBinsMET, nBinsHT ) ;
+
+     bookHist("hmctruth_fit_zee_1b" , "Zee" , "Zee", 1, nBinsMET, nBinsHT ) ;
+     bookHist("hmctruth_fit_zmm_1b" , "Zmm" , "Zmm", 1, nBinsMET, nBinsHT ) ;
 
 
 

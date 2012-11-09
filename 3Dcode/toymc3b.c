@@ -1273,9 +1273,25 @@
                printf("   Znn  : 0.5 * (Nee * Fee + Nmm * Fmm)   =   0.5 * (%5.1f * %5.2f + %5.1f * %5.2f)   =   %6.1f\n",
                     N_Zee[mbi][hbi], Zee_factor[mbi][bbi], N_Zmm[mbi][hbi], Zmm_factor[mbi][bbi], exp_0lep_znn ) ;
 
+               if ( bbi == 0 ) {
+
+            ///--- new way (better?).
+                  toy_mean_N_Zee[mbi][hbi] = exp_0lep_znn / Zee_factor[mbi][bbi] ;
+                  toy_mean_N_Zmm[mbi][hbi] = exp_0lep_znn / Zmm_factor[mbi][bbi] ;
+
+                  printf("  Zll : met%d, ht%d :   toy mean Zee = %5.1f (MC obs %.0f),   toy mean Zmm = %5.1f (MC obs %.0f)\n",
+                       mbi+1, hbi+1,
+                       toy_mean_N_Zee[mbi][hbi], N_Zee[mbi][hbi],
+                       toy_mean_N_Zmm[mbi][hbi], N_Zmm[mbi][hbi] ) ;
+
+               }
+
             } // bbi.
-            toy_mean_N_Zee[mbi][hbi] = N_Zee[mbi][hbi] ;
-            toy_mean_N_Zmm[mbi][hbi] = N_Zmm[mbi][hbi] ;
+
+            ///--- old way (bad).
+            ////// toy_mean_N_Zee[mbi][hbi] = N_Zee[mbi][hbi] ;
+            ////// toy_mean_N_Zmm[mbi][hbi] = N_Zmm[mbi][hbi] ;
+
          } // hbi.
       } // mbi.
 
@@ -2947,8 +2963,11 @@
 
       if ( obsval > 0 ) {
          chi = (obsval - modelval) / sqrt(obsval) ;
-         fit_chi2_obs += chi*chi ;
+         //// fit_chi2_obs += chi*chi ;  // why is this here??? double counting.
       }
+
+      printf(" getChi2Obs: %20s : chi = (%.0f - %.1f)/ %.1f,  chi2 = %.2f,  total = %.2f\n",
+         obsname, obsval, modelval, sqrt(obsval), chi*chi, fit_chi2_obs ) ;
 
       return chi*chi ;
 
