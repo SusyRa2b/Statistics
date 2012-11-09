@@ -54,7 +54,7 @@ RooAbsArg* getGaussianConstraint( RooWorkspace& ws, TString NP_name, const TStri
   //allNuisances -> add( *np_rrv ) ;//BEN FIXME -- add to nuisances?
   //allNuisancePdfs -> add( *np_pdf ) ;//BEN FIXME -- add to nuisances?
   ws.import( *np_rrv );
-  ws.import( *np_pdf );
+  ws.import( *np_pdf, RecycleConflictNodes() );
   
   return np_rrv ;
 
@@ -99,7 +99,7 @@ RooAbsReal* getCorrelatedGaussianConstraint( RooWorkspace& ws, TString NP_name, 
     RooGaussian* base_np_pdf = new RooGaussian( "pdf_"+NP_base_name, "pdf_"+NP_base_name, *rrv_np_base_par, *g_mean, *g_sigma ) ;
     
     //allNuisancePdfs -> add( *base_np_pdf ) ;//BEN FIXME -- add to nuisances 
-    ws.import( *base_np_pdf );
+    ws.import( *base_np_pdf, RecycleConflictNodes() );
 
   }
 

@@ -30,20 +30,25 @@ void makeTree(int trueN_in, TString inFile, TString fitter = "LB") {
   if(fitter == "OAK") {
     branchDescriptor = "zeroLeptonSignalYieldTotal:zeroLeptonTopWJetsYieldTotal:zeroLeptonQCDYieldTotal:zeroLeptonZtoNuNuYieldTotal";
   }
+  else if(fitter == "test") {
+    branchDescriptor = "zeroLeptonCountTotal";
+  }
   else {
     branchDescriptor = "signalCrossSection:signalCrossSectionError";
     branchDescriptor += ":lowerLimit68:upperLimit68:lowerLimit95:upperLimit95";
     branchDescriptor += ":signalUncertainty";
     branchDescriptor += ":zeroLeptonSignalYieldTotal:zeroLeptonSignalYieldTotalError";
-    branchDescriptor += ":zeroLeptonTopWJetsYieldTotal:zeroLeptonQCDYieldTotal:zeroLeptonZtoNuNuYieldTotal";
+    branchDescriptor += ":zeroLeptonTopWJetsYieldTotal:zeroLeptonQCDYieldTotal:zeroLeptonZtoNuNuYieldTotal:zeroLeptonDibosonYieldTotal:zeroLeptonCountTotal";
   }
 
   treeToys->ReadFile(inFile,branchDescriptor);
-
-  //TString foutName = ""; foutName += "tree_"; foutName += trueN; foutName += "_"; foutName += fitter; foutName += ".root";
-  //TFile fout(foutName, "RECREATE");
-  //treeToys->Write();
-  //fout.Close();
+  
+  
+  TString foutName = ""; foutName += "tree_"; foutName += trueN; foutName += "_"; foutName += fitter; foutName += ".root";
+  TFile fout(foutName, "RECREATE");
+  treeToys->Write();
+  fout.Close();
+  
 
 }
 
@@ -72,20 +77,29 @@ void makeHists(TString fitter = "LB") {
   TH1D* hZeroLeptonTopWJetsYieldTotal = new TH1D("hZeroLeptonTopWJetsYieldTotal", "Zero lepton top W-jets yield", 50, 9000, 16000);
   TH1D* hZeroLeptonQCDYieldTotal = new TH1D("hZeroLeptonQCDYieldTotal", "Zero lepton QCD yield", 50, 15000, 22000);
   TH1D* hZeroLeptonZtoNuNuYieldTotal = new TH1D("hZeroLeptonZtoNuNuYieldTotal", "Zero lepton Z-invisible yield", 50, 1000, 2000);
-  
+  TH1D* hZeroLeptonYieldTotal = new TH1D("hZeroLeptonYieldTotal", "Zero lepton yield", 50, 25000, 28000);
+  TH1D* hZeroLeptonCountTotal = new TH1D("hZeroLeptonCountTotal", "Zero lepton count", 50, 25000, 28000);
+
   hSignalCrossSection->SetFillColor(6);
   hZeroLeptonSignalYieldTotal->SetFillColor(6);  
   hZeroLeptonTopWJetsYieldTotal->SetFillColor(kBlue-9);
   hZeroLeptonQCDYieldTotal->SetFillColor(2);
   hZeroLeptonZtoNuNuYieldTotal->SetFillColor(kGreen-3);
+  hZeroLeptonYieldTotal->SetFillColor(kGray+1);
+  hZeroLeptonCountTotal->SetFillColor(kGray+1);
 
   treeToys->Project("hSignalCrossSection","signalCrossSection");
   treeToys->Project("hZeroLeptonSignalYieldTotal", "zeroLeptonSignalYieldTotal");
   treeToys->Project("hZeroLeptonTopWJetsYieldTotal", "zeroLeptonTopWJetsYieldTotal");
   treeToys->Project("hZeroLeptonQCDYieldTotal", "zeroLeptonQCDYieldTotal");
   treeToys->Project("hZeroLeptonZtoNuNuYieldTotal", "zeroLeptonZtoNuNuYieldTotal");
+  treeToys->Project("hZeroLeptonYieldTotal", "zeroLeptonSignalYieldTotal+zeroLeptonTopWJetsYieldTotal+zeroLeptonQCDYieldTotal+zeroLeptonZtoNuNuYieldTotal+zeroLeptonDibosonYieldTotal");
+  treeToys->Project("hZeroLeptonCountTotal", "zeroLeptonCountTotal");
 
   treeToys->Project("hPullPL", "(signalCrossSection-"+trueXsec_string+")/( (upperLimit68-lowerLimit68)/2.0 )");
+
+  cout << "Yield Total = " << hZeroLeptonYieldTotal->GetMean() << " +- " << hZeroLeptonYieldTotal->GetRMS() << endl;
+  cout << "Count Total = " << hZeroLeptonCountTotal->GetMean() << " +- " << hZeroLeptonCountTotal->GetRMS() << endl;
 
   //outfile
   TString foutName = ""; foutName += "output_"; foutName += trueN; foutName += "_"; foutName += fitter; foutName += ".dat";
@@ -154,6 +168,14 @@ void makeHists(TString fitter = "LB") {
 
   cZeroLeptonSignalYieldTotal->Print("cZeroLeptonSignalYieldTotal_"+trueN_string+"_"+fitter+".pdf");
   
+  TCanvas* cZeroLeptonYieldTotal = new TCanvas("cZeroLeptonYieldTotal", "Zero lepton yield", 2*400, 330);
+  cZeroLeptonYieldTotal->Divide(2,1);
+  cZeroLeptonYieldTotal->cd(1);
+  hZeroLeptonYieldTotal->Draw();
+  cZeroLeptonYieldTotal->cd(2);
+  hZeroLeptonCountTotal->Draw();
+  cZeroLeptonYieldTotal->Print("cZeroLeptonYield_"+trueN_string+"_"+fitter+".pdf");
+
   return;
 }
 

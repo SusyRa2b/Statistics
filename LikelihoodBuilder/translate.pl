@@ -20,6 +20,8 @@ my $nHTbins;
 my $nMETbins;
 my $nBTAGbins = 3;
 
+my $tot0lep = 0;
+
 my @binFileNames;
 my @binFileHandles;
 my %binFileHash;
@@ -97,6 +99,10 @@ while(<$fin>) {
       if($fullOKAname =~ /(N_0lep)(_M)(\d)(_H)(\d)(_)(\d)(b)/) {
       	my $bin = "M$3_H$5_$7"."b";
 	print {$binFileHandles[$binFileHash{$bin}]} "zeroLeptonCount $value\n";
+	if($3 eq "4" && $5 eq "1") {}
+	else {
+	  $tot0lep += $value;
+	}
       }
       
       elsif($fullOKAname =~ /(N_1lep)(_M)(\d)(_H)(\d)(_)(\d)(b)/) {
@@ -423,5 +429,7 @@ close $binlistout;
 foreach(@binFileHandles){
   close $_;
 }
+
+print "tot0lep $tot0lep\n";
 
 print "Translated files are in directory $dir.\n";

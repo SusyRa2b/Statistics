@@ -25,6 +25,21 @@ using namespace RooFit ;
 using namespace RooStats ; 
 using namespace std;
 
+bool skipBinInAnalysis(TString binName) {
+  
+  //FIXME hardcoded
+  if(binName=="bin37" || binName=="bin38" || binName=="bin39") return true;
+  //skipBin(binName);//from likelihoodBuilder
+
+  //bool partial = true;
+  bool partial = false;
+  if(partial) {
+    //if(!(binName).Contains("3b")) return true;;
+    if(!(binName).Contains("2b")) return true;
+  }
+  
+  return false;
+}
 
 void extractFromWorkspace(TString workspaceFile = "test.root", TString datFile = "", bool skip = true)
 {
@@ -62,57 +77,70 @@ void extractFromWorkspace(TString workspaceFile = "test.root", TString datFile =
   
 }
 
-void integratedTotals(TString workspaceFile = "test.root", TString binFilesFile = "binFilesFile.dat", TString datFile = "")
+void integratedTotals(TString workspaceFile = "test.root", TString binFilesFile = "binFilesFile.dat", TString datFile = "", bool includeTriggerEfficiency = false)
 {
-  
   cout << "Starting integratedTotals" << endl;
   
+  includeTriggerEfficiency = false;
+  TString addName = "";
+  if(includeTriggerEfficiency) addName = "Data";
+
   TFile* wstf = new TFile ( workspaceFile );
-  
   RooWorkspace* ws = (RooWorkspace*)wstf->Get("workspace");
   
   RooRealVar * signalCrossSection = ws->var("signalCrossSection");
   RooRealVar * luminosity = ws->var("luminosity");
-    
-
+  
   ifstream binStream;
   binStream.open(binFilesFile.Data(),fstream::in);
-
-
+  
   TString index;
   string fileLine;
   std::vector<TString> binNames;
+  std::vector<TString> binFiles;  
   while(!binStream.eof()) {
     getline(binStream,fileLine);
     TString thisLine(fileLine.c_str());
-
+    
     TStringToken nameAndNumber(thisLine," ");
     nameAndNumber.NextToken();
     index = nameAndNumber;
     if(index=="") continue;
     
     binNames.push_back(index);
+    
+    nameAndNumber.NextToken();
+    index = nameAndNumber;
+    binFiles.push_back(index);
   }
   binStream.close();
 
   cout << "nbins: " << binNames.size() << endl;
   
   //Now get ttwj qcd znn -- do it by simply incrementing doubles since we don't care about the error for now
-  double ttwjtot=0, qcdtot=0, znntot=0;
+  double ttwjtot=0, qcdtot=0, znntot=0, vvtot=0;
+  double dattot=0;
   for(unsigned int i = 0; i<binNames.size(); i++) {
     
-    //FIXME hardcoded
-    if(binNames.at(i)=="bin37" || binNames.at(i)=="bin38" || binNames.at(i)=="bin39") continue;
-
-    RooAbsReal * ttwj = ws->function("zeroLepton_"+binNames.at(i)+"_TopWJetsYield");
-    RooAbsReal * qcd = ws->function("zeroLepton_"+binNames.at(i)+"_QCDYield");
-    RooAbsReal * znn = ws->function("zeroLepton_"+binNames.at(i)+"_ZtoNuNuYield");
+    if( skipBinInAnalysis(binNames.at(i)) ) continue;
+    cout << "binName: " << binNames.at(i) << endl;
+    cout << "binFile: " << binFiles.at(i) << endl;
     
-    assert (  (ttwj != NULL) && (qcd != NULL) && (znn !=NULL) );
+
+    RooAbsReal * ttwj = ws->function("zeroLepton_"+binNames.at(i)+"_TopWJets"+addName+"Yield");
+    RooAbsReal * qcd = ws->function("zeroLepton_"+binNames.at(i)+"_QCD"+addName+"Yield");
+    RooAbsReal * znn = ws->function("zeroLepton_"+binNames.at(i)+"_ZtoNuNu"+addName+"Yield");
+    RooAbsReal * vv = ws->function("zeroLepton_"+binNames.at(i)+"_Diboson"+addName+"Yield");
+    
+    RooRealVar * dat = ws->var("zeroLepton_"+binNames.at(i)+"_Count");
+    
+    assert (  (ttwj != NULL) && (qcd != NULL) && (znn !=NULL) && (vv !=NULL) && (dat !=NULL) );
 
     ttwjtot += ttwj->getVal();
     qcdtot += qcd->getVal();
     znntot += znn->getVal();
+    vvtot += vv->getVal();
+    dattot += dat->getVal();
     
   }
   
@@ -120,8 +148,10 @@ void integratedTotals(TString workspaceFile = "test.root", TString binFilesFile 
   //for signal, we care about the error, so let's do it the Roo way
   RooArgSet* signalYieldSet = new RooArgSet("signalYields");
   for(unsigned int i =0; i<binNames.size(); i++) {
-    signalYieldSet->add( *(ws->arg("zeroLepton_"+binNames.at(i)+"_SignalYield")) );
-    cout << "signal yield pointer = " << (ws->arg("zeroLepton_"+binNames.at(i)+"_SignalYield"))  << endl;
+    if( skipBinInAnalysis(binNames.at(i)) ) continue;
+    signalYieldSet->add( *(ws->arg("zeroLepton_"+binNames.at(i)+"_Signal"+addName+"Yield")) );
+    cout << (ws->function("zeroLepton_"+binNames.at(i)+"_Signal"+addName+"Yield"))->getVal() << endl;
+    cout << binNames.at(i) << " signal yield pointer = " << (ws->arg("zeroLepton_"+binNames.at(i)+"_Signal"+addName+"Yield"))  << endl;
   }
   RooAddition* signalYield = new RooAddition("signalYield", "signalYield", *signalYieldSet);
   
@@ -131,14 +161,14 @@ void integratedTotals(TString workspaceFile = "test.root", TString binFilesFile 
 
   double sig = signalYield->getVal();
   double sigerr = signalYield->getPropagatedError(*fitResult);
-  cout << "analyzeFitOutput: " << sig << "+-" << sigerr << " " << ttwjtot << " " << qcdtot << " " << znntot << endl; 
+  cout << "analyzeFitOutput: " << sig << "+-" << sigerr << " " << ttwjtot << " " << qcdtot << " " << znntot << " " << vvtot << " " << dattot << endl; 
   
   if(datFile != "") {
     cout << "DEBUG: printing to file" << endl;
     ofstream myfile;
     myfile.open(datFile.Data(), ios::out | ios::app);
     assert(myfile.is_open());
-    myfile << sig << " " << sigerr << " " << ttwjtot << " " << qcdtot << " " << znntot << " ";
+    myfile << sig << " " << sigerr << " " << ttwjtot << " " << qcdtot << " " << znntot << " " << vvtot << " " << dattot << " ";
     myfile.close();
   }
 

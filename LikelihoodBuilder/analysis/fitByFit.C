@@ -87,10 +87,10 @@ void fitByFit(){
     float differenceZtoNuNu = zeroLeptonZtoNuNuYieldTotal_LB - zeroLeptonZtoNuNuYieldTotal_OAK;
     float percentDifferenceZtoNuNu =  100*(zeroLeptonZtoNuNuYieldTotal_LB - zeroLeptonZtoNuNuYieldTotal_OAK)/( 0.5*(zeroLeptonZtoNuNuYieldTotal_LB + zeroLeptonZtoNuNuYieldTotal_OAK) );
 
-
     //cout << zeroLeptonSignalYieldTotal_LB << " " << zeroLeptonSignalYieldTotal_OAK << " " << difference << " " << percentDifference << endl;
-    cout << zeroLeptonTopWJetsYieldTotal_LB << " " << zeroLeptonTopWJetsYieldTotal_OAK << endl;
-    
+    //cout << zeroLeptonTopWJetsYieldTotal_LB << " " << zeroLeptonTopWJetsYieldTotal_OAK << endl;
+    cout << differenceSignal << " " << differenceTopWJets << " " << differenceQCD << " " << differenceZtoNuNu << " " << differenceSignal+differenceTopWJets+differenceQCD+differenceZtoNuNu << endl;
+
     hZeroLeptonSignalYieldTotalDifference->Fill( differenceSignal );
     hZeroLeptonSignalYieldTotalPercentDifference->Fill( percentDifferenceSignal );
     
