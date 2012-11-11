@@ -69,6 +69,14 @@ struct  likelihoodOptions
   TString TopWJetsMethod;
 };
 
+
+struct mcCount
+{
+  double value;
+  double error;
+};
+
+
 struct channels
 {
   double zeroLepton;
@@ -161,14 +169,6 @@ struct allBins
   double metCleaningError;
 } ;
 
-
-struct sOutsideSignalMR
-{
-  TString oneTightMu_Outside_SignalRawCountName;
-  int oneTightMu_Outside_SignalRawCount;
-  TString twoTightMu_Outside_SignalRawCountName;
-  int twoTightMu_Outside_SignalRawCount;
-} ;
 
 bool skipBin(TString binName) 
 {
@@ -759,8 +759,8 @@ void makeUnderlyingLikelihood(const likelihoodOptions options, RooWorkspace& ws 
 
 
 
-void setupSignalModelMR(const TString binName, const TString binFileNameInsideSignalMR, map<TString,map<TString,int> >& insideSignalMR, 
-			const TString binFileNameOutsideSignalMR, map<TString,map<TString,int> >& outsideSignalMR )
+void setupSignalModelMR(const TString binName, const TString binFileNameInsideSignalMR, map<TString,map<TString,mcCount> >& insideSignalMR, 
+			const TString binFileNameOutsideSignalMR, map<TString,map<TString,mcCount> >& outsideSignalMR )
 {
   
   cout << "Reading in MR signal inputs for " << binName << endl;
@@ -777,7 +777,8 @@ void setupSignalModelMR(const TString binName, const TString binFileNameInsideSi
   TString index;
   int value;
   
-  map<TString,int> thisInsideSignalMR;
+  map<TString,double> thisInsideSignalMRValue;
+  map<TString,double> thisInsideSignalMRError;
 
   while(!insideFile.eof())
     {
@@ -793,24 +794,48 @@ void setupSignalModelMR(const TString binName, const TString binFileNameInsideSi
       value = nameAndNumber.Atoi();
       cout << index << " : " << value << endl;
       
-      if(index == "oneTightMu_Theta1_SignalRawCount"       ) { thisInsideSignalMR.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta1", value) ); }
-      else if(index == "oneLooseLep_Theta1_SignalRawCount" ) { thisInsideSignalMR.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta1", value) ); }
-      else if(index == "oneTightMu_Theta2_SignalRawCount"  ) { thisInsideSignalMR.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta2", value) ); } 
-      else if(index == "oneLooseLep_Theta2_SignalRawCount" ) { thisInsideSignalMR.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta2", value) ); }
-      else if(index == "oneTightMu_Theta3_SignalRawCount"  ) { thisInsideSignalMR.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta3", value) ); }
-      else if(index == "oneLooseLep_Theta3_SignalRawCount" ) { thisInsideSignalMR.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta3", value) ); }
-      else if(index == "oneTightMu_Theta4_SignalRawCount"  ) { thisInsideSignalMR.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta4", value) ); }
-      else if(index == "oneLooseLep_Theta4_SignalRawCount" ) { thisInsideSignalMR.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta4", value) ); }
-      else if(index == "oneTightMu_Theta5_SignalRawCount"  ) { thisInsideSignalMR.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta5", value) ); }
-      else if(index == "oneLooseLep_Theta5_SignalRawCount" ) { thisInsideSignalMR.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta5", value) ); }
-      else if(index == "twoTightMu_SignalRawCount"         ) { thisInsideSignalMR.insert( pair<TString,int>("twoTightMu_"+binName, value) ); }
-      else if(index == "twoLooseLep_SignalRawCount"        ) { thisInsideSignalMR.insert( pair<TString,int>("twoLooseLep_"+binName, value) ); }
+      if(index == "oneTightMu_Theta1_SignalCount"       ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta1", value) ); }
+      else if(index == "oneLooseLep_Theta1_SignalCount" ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta1", value) ); }
+      else if(index == "oneTightMu_Theta2_SignalCount"  ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta2", value) ); } 
+      else if(index == "oneLooseLep_Theta2_SignalCount" ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta2", value) ); }
+      else if(index == "oneTightMu_Theta3_SignalCount"  ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta3", value) ); }
+      else if(index == "oneLooseLep_Theta3_SignalCount" ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta3", value) ); }
+      else if(index == "oneTightMu_Theta4_SignalCount"  ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta4", value) ); }
+      else if(index == "oneLooseLep_Theta4_SignalCount" ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta4", value) ); }
+      else if(index == "oneTightMu_Theta5_SignalCount"  ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta5", value) ); }
+      else if(index == "oneLooseLep_Theta5_SignalCount" ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta5", value) ); }
+      else if(index == "twoTightMu_SignalCount"         ) { thisInsideSignalMRValue.insert( pair<TString,int>("twoTightMu_"+binName, value) ); }
+      else if(index == "twoLooseLep_SignalCount"        ) { thisInsideSignalMRValue.insert( pair<TString,int>("twoLooseLep_"+binName, value) ); }
+
+      else if(index == "oneTightMu_Theta1_SignalCountError"  ) { thisInsideSignalMRError.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta1", value) ); }
+      else if(index == "oneLooseLep_Theta1_SignalCountError" ) { thisInsideSignalMRError.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta1", value) ); }
+      else if(index == "oneTightMu_Theta2_SignalCountError"  ) { thisInsideSignalMRError.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta2", value) ); } 
+      else if(index == "oneLooseLep_Theta2_SignalCountError" ) { thisInsideSignalMRError.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta2", value) ); }
+      else if(index == "oneTightMu_Theta3_SignalCountError"  ) { thisInsideSignalMRError.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta3", value) ); }
+      else if(index == "oneLooseLep_Theta3_SignalCountError" ) { thisInsideSignalMRError.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta3", value) ); }
+      else if(index == "oneTightMu_Theta4_SignalCountError"  ) { thisInsideSignalMRError.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta4", value) ); }
+      else if(index == "oneLooseLep_Theta4_SignalCountError" ) { thisInsideSignalMRError.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta4", value) ); }
+      else if(index == "oneTightMu_Theta5_SignalCountError"  ) { thisInsideSignalMRError.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta5", value) ); }
+      else if(index == "oneLooseLep_Theta5_SignalCountError" ) { thisInsideSignalMRError.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta5", value) ); }
+      else if(index == "twoTightMu_SignalCountError"         ) { thisInsideSignalMRError.insert( pair<TString,int>("twoTightMu_"+binName, value) ); }
+      else if(index == "twoLooseLep_SignalCountError"        ) { thisInsideSignalMRError.insert( pair<TString,int>("twoLooseLep_"+binName, value) ); }
+
       else {assert(0);}
     }
   insideFile.close();
   
-  //for ( map<TString,int>::iterator it=thisInsideSignalMR.begin() ; it != thisInsideSignalMR.end(); it++ ) cout << (*it).first << " => " << (*it).second << endl;
-  insideSignalMR.insert( pair<TString, map<TString,int> >(binName, thisInsideSignalMR) );
+  map<TString,mcCount> thisInsideSignalMR;
+  for( map<TString,double>::iterator it=thisInsideSignalMRValue.begin(); it!=thisInsideSignalMRValue.end(); it++ )
+    {
+      TString name = (*it).first;
+      mcCount thisCount;
+      thisCount.value = (*it).second;
+      thisCount.error = thisInsideSignalMRError[name];
+      thisInsideSignalMR.insert( pair<TString,mcCount>(name, thisCount) );
+    }
+  //for( map<TString,mcCount>::iterator it=thisInsideSignalMR.begin(); it!=thisInsideSignalMR.end(); it++ ) cout << "Map: " << (*it).first << " = " << ((*it).second).value << " +- " << ((*it).second).error << endl;
+  insideSignalMR.insert( pair<TString, map<TString,mcCount> >(binName, thisInsideSignalMR) );
+
 
   //Now the outside values
   
@@ -821,12 +846,11 @@ void setupSignalModelMR(const TString binName, const TString binFileNameInsideSi
   outsideFile.open(binFileNameOutsideSignalMR.Data(),fstream::in);
   assert(outsideFile.is_open());
   
+  TString oneMuName = "", twoMuName = "";
+  mcCount oneMu, twoMu;
+  oneMu.value=0; oneMu.error=0; twoMu.value=0; twoMu.error=0;
+  
   TString svalue;
-
-  sOutsideSignalMR holdOutsideSignalMR;
-
-  map<TString,int> thisOutsideSignalMR;
-
   while(!outsideFile.eof())
     {
 
@@ -853,25 +877,29 @@ void setupSignalModelMR(const TString binName, const TString binFileNameInsideSi
       
       cout << index << " : " << svalue << endl;
       
-      if(index == "oneTightMu_Outside_SignalRawCountName"      ) { holdOutsideSignalMR.oneTightMu_Outside_SignalRawCountName = svalue; }
-      else if(index == "oneTightMu_Outside_SignalRawCount"     ) { holdOutsideSignalMR.oneTightMu_Outside_SignalRawCount = svalue.Atoi(); }
-      else if(index == "twoTightMu_Outside_SignalRawCountName" ) { holdOutsideSignalMR.twoTightMu_Outside_SignalRawCountName = svalue; }
-      else if(index == "twoTightMu_Outside_SignalRawCount"     ) { holdOutsideSignalMR.twoTightMu_Outside_SignalRawCount = svalue.Atoi(); }
+      if(index == "oneTightMu_Outside_SignalCountName"        ) { oneMuName = svalue; }
+      else if(index == "oneTightMu_Outside_SignalCount"       ) { oneMu.value = svalue.Atof(); }
+      else if(index == "oneTightMu_Outside_SignalCountError"  ) { oneMu.error = svalue.Atof(); }
+      else if(index == "twoTightMu_Outside_SignalCountName"   ) { twoMuName = svalue; }
+      else if(index == "twoTightMu_Outside_SignalCount"       ) { twoMu.value = svalue.Atof(); }
+      else if(index == "twoTightMu_Outside_SignalCountError"  ) { twoMu.error = svalue.Atof(); }
       else{ assert(0); }
     }
   outsideFile.close();
 
-  thisOutsideSignalMR.insert( pair<TString,int>("oneTightMu_"+holdOutsideSignalMR.oneTightMu_Outside_SignalRawCountName+"_Outside", holdOutsideSignalMR.oneTightMu_Outside_SignalRawCount) );
-  thisOutsideSignalMR.insert( pair<TString,int>("twoTightMu_"+holdOutsideSignalMR.twoTightMu_Outside_SignalRawCountName+"_Outside", holdOutsideSignalMR.twoTightMu_Outside_SignalRawCount) );
-
-  //for ( map<TString,int>::iterator it=thisOutsideSignalMR.begin() ; it != thisOutsideSignalMR.end(); it++ ) cout << (*it).first << " => " << (*it).second << endl;
-  outsideSignalMR.insert( pair<TString, map<TString,int> >(binName, thisOutsideSignalMR) );
+  map<TString,mcCount> thisOutsideSignalMR;
+  thisOutsideSignalMR.insert( pair<TString,mcCount>("oneTightMu_"+oneMuName+"_Outside",oneMu) );
+  thisOutsideSignalMR.insert( pair<TString,mcCount>("twoTightMu_"+twoMuName+"_Outside",twoMu) );
+  
+  //for( map<TString,mcCount>::iterator it=thisOutsideSignalMR.begin(); it!=thisOutsideSignalMR.end(); it++ ) cout << "Map: " << (*it).first << " = " << ((*it).second).value << " +- " << ((*it).second).error << endl;
+  
+  outsideSignalMR.insert( pair<TString, map<TString,mcCount> >(binName, thisOutsideSignalMR) );
   
 }
 
 
 //To copy OAK's signal modeling 
-void setupSignalModelOAK( vector<TString> binNames, TString signalModelFilesPath, 
+void setupSignalModelOAK( vector<TString> binNames, TString signalModelFilesPath, double &nGenerated,
 			  map<TString,yields> &signalFractionsOAK, map<TString,yields> &signalStatisticalErrorOAK, map<TString,yields> &signalBTagEfficiencyErrorOAK, map<TString,yields> &signalJesErrorOAK)
 {
 
@@ -893,7 +921,7 @@ void setupSignalModelOAK( vector<TString> binNames, TString signalModelFilesPath
 
   cout << "OAK signal model, m0 = " << ArrayContent[0] << ", m12 = " << ArrayContent[1] << ", nGenerated = " << ArrayContent[2] << endl;
   
-  double nGenerated = ArrayContent[2];
+  nGenerated = ArrayContent[2];
 
   double zeroLeptonTotal = 0;
   cout << endl;
@@ -991,8 +1019,9 @@ void setupSignalModelOAK( vector<TString> binNames, TString signalModelFilesPath
 }
 
 
-void makeSignalModelOAK(RooWorkspace& ws , vector<TString> binNames, allBinNames& names,  map<TString,abcdBinParameters> bins, 
-			map<TString,yields> signalFractionsOAK, map<TString,yields> signalStatisticalErrorOAK, map<TString,yields> signalBTagEfficiencyErrorOAK, map<TString,yields> signalJesErrorOAK)
+void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<TString> binNames, allBinNames& names,  map<TString,abcdBinParameters> bins, double nGenerated,
+		     map<TString,yields> signalFractionsOAK, map<TString,yields> signalStatisticalErrorOAK, map<TString,yields> signalBTagEfficiencyErrorOAK, map<TString,yields> signalJesErrorOAK,
+		     map<TString,map<TString,mcCount> > insideSignalMR, map<TString,map<TString,mcCount> > outsideSignalMR )
 {
   RooRealVar* luminosity = ws.var("luminosity");
   RooRealVar* signalCrossSection =  ws.var(names.signalCrossSection);
@@ -1002,374 +1031,186 @@ void makeSignalModelOAK(RooWorkspace& ws , vector<TString> binNames, allBinNames
     {
       TString binName = *thisBin;
       if( skipBin(binName) ) continue;
-
-      abcdBinParameters abcd = bins[*thisBin];
-
-      TString zeroLeptonName("zeroLepton_");
-      zeroLeptonName+=binName;
-      TString zeroLeptonLowDeltaPhiNName("zeroLeptonLowDeltaPhiN_");
-      zeroLeptonLowDeltaPhiNName+=binName;
-      TString oneLeptonNameOAK("oneLepton_");
-      oneLeptonNameOAK+=binName;
-
-      //Fractions
-      yields thisSignalFractionsOAK = signalFractionsOAK[binName];
-      RooRealVar zeroLeptonFraction(zeroLeptonName+"_SignalFractionOAK", zeroLeptonName+"_SignalFractionOAK", thisSignalFractionsOAK.zeroLepton);
-      RooRealVar zeroLeptonLowDeltaPhiNFraction(zeroLeptonLowDeltaPhiNName+"_SignalFractionOAK", zeroLeptonLowDeltaPhiNName+"_SignalFractionOAK", thisSignalFractionsOAK.zeroLeptonLowDeltaPhiN);
-      RooRealVar oneLeptonFraction(oneLeptonNameOAK+"_SignalFractionOAK", oneLeptonNameOAK+"_SignalFractionOAK", thisSignalFractionsOAK.oneLepton);
-      zeroLeptonFraction.setConstant();
-      zeroLeptonLowDeltaPhiNFraction.setConstant();
-      oneLeptonFraction.setConstant();
       
-      //Statistical Error
-      yields thisSignalStatisticalErrorOAK = signalStatisticalErrorOAK[binName];
-      cout << "SignalStatisticalError: " << thisSignalStatisticalErrorOAK.zeroLepton << " " << thisSignalStatisticalErrorOAK.zeroLeptonLowDeltaPhiN << " " << thisSignalStatisticalErrorOAK.oneLepton << endl;
-      
-      RooAbsArg* zeroLeptonError = getGaussianConstraint(ws,"zeroLeptonSignalError_", binName,
-							 1.0, thisSignalStatisticalErrorOAK.zeroLepton,
-							 names.observables,names.nuisances);
-      
-      RooAbsArg* zeroLeptonLowDeltaPhiNError = getGaussianConstraint(ws,"zeroLeptonLowDeltaPhiNSignalError_", binName,
-								     1.0, thisSignalStatisticalErrorOAK.zeroLeptonLowDeltaPhiN,
-								     names.observables,names.nuisances);
-      
-      RooAbsArg* oneLeptonError = getGaussianConstraint(ws,"oneLeptonSignalError_", binName,
-							1.0, thisSignalStatisticalErrorOAK.oneLepton,
-							names.observables,names.nuisances);
-      
-      //B-tag efficiency systematic
-      yields thisSignalBTagEfficiencyErrorOAK = signalBTagEfficiencyErrorOAK[binName];
-      TString signalBTagEfficiencyName = "signalBTagEfficiencyCorrelated";
-      
-      bool changeSign = false;
-      if(thisSignalBTagEfficiencyErrorOAK.zeroLepton < 0.0) changeSign=true;
-      //RooAbsArg* zeroLeptonBTagEfficiencyError = getCorrelatedGaussianConstraint(ws,"zeroLeptonBTagEfficiencyError_", binName,
-      RooAbsArg* zeroLeptonBTagEfficiencyError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonBTagEfficiencyError_", binName,
-										 1.0, fabs(thisSignalBTagEfficiencyErrorOAK.zeroLepton),
-										 names.observables,names.nuisances,
-										 signalBTagEfficiencyName, changeSign);
-      
-      changeSign = false;
-      if(thisSignalBTagEfficiencyErrorOAK.zeroLeptonLowDeltaPhiN < 0.0) changeSign=true;
-      //RooAbsArg* zeroLeptonLowDeltaPhiNBTagEfficiencyError = getCorrelatedGaussianConstraint(ws,"zeroLeptonLowDeltaPhiNBTagEfficiencyError_", binName,
-      RooAbsArg* zeroLeptonLowDeltaPhiNBTagEfficiencyError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonLowDeltaPhiNBTagEfficiencyError_", binName,
-											     1.0, fabs(thisSignalBTagEfficiencyErrorOAK.zeroLeptonLowDeltaPhiN),
-											     names.observables,names.nuisances,
-											     signalBTagEfficiencyName, changeSign);
-      
-      changeSign = false;
-      if(thisSignalBTagEfficiencyErrorOAK.oneLepton < 0.0) changeSign=true;
-      //RooAbsArg* oneLeptonBTagEfficiencyError = getCorrelatedGaussianConstraint(ws,"oneLeptonBTagEfficiencyError_", binName,
-      RooAbsArg* oneLeptonBTagEfficiencyError = getCorrelatedLogNormalConstraint(ws,"oneLeptonBTagEfficiencyError_", binName,
-										1.0, fabs(thisSignalBTagEfficiencyErrorOAK.oneLepton),
-										names.observables,names.nuisances,
-										signalBTagEfficiencyName, changeSign);
-      
-      //JES systematic
-      yields thisSignalJesErrorOAK = signalJesErrorOAK[binName];
-      TString signalJesErrorName = "signalJesErrorCorrelated";
-
-      changeSign = false;
-      if(thisSignalJesErrorOAK.zeroLepton < 0.0) changeSign=true;
-      //RooAbsArg* zeroLeptonJesError = getCorrelatedGaussianConstraint(ws,"zeroLeptonJesError_", binName,
-      RooAbsArg* zeroLeptonJesError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonJesError_", binName,
-										 1.0, fabs(thisSignalJesErrorOAK.zeroLepton),
-										 names.observables,names.nuisances,
-										 signalJesErrorName, changeSign);
-      
-      changeSign = false;
-      if(thisSignalJesErrorOAK.zeroLeptonLowDeltaPhiN < 0.0) changeSign=true;
-      //RooAbsArg* zeroLeptonLowDeltaPhiNJesError = getCorrelatedGaussianConstraint(ws,"zeroLeptonLowDeltaPhiNJesError_", binName,
-      RooAbsArg* zeroLeptonLowDeltaPhiNJesError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonLowDeltaPhiNJesError_", binName,
-											     1.0, fabs(thisSignalJesErrorOAK.zeroLeptonLowDeltaPhiN),
-											     names.observables,names.nuisances,
-											     signalJesErrorName, changeSign);
-      
-      changeSign = false;
-      if(thisSignalJesErrorOAK.oneLepton < 0.0) changeSign=true;
-      //RooAbsArg* oneLeptonJesError = getCorrelatedGaussianConstraint(ws,"oneLeptonJesError_", binName,
-      RooAbsArg* oneLeptonJesError = getCorrelatedLogNormalConstraint(ws,"oneLeptonJesError_", binName,
-										1.0, fabs(thisSignalJesErrorOAK.oneLepton),
-										names.observables,names.nuisances,
-										signalJesErrorName, changeSign);
-      
-
-      //Setup yields
-      RooProduct zeroLeptonSignalYieldOAK(zeroLeptonName+"_SignalYield", zeroLeptonName+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, zeroLeptonFraction, *signalGlobalUncertainty, *zeroLeptonError, *zeroLeptonBTagEfficiencyError, *zeroLeptonJesError) );
-      RooProduct zeroLeptonLowDeltaPhiNSignalYieldOAK(zeroLeptonLowDeltaPhiNName+"_SignalYield", zeroLeptonLowDeltaPhiNName+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, zeroLeptonLowDeltaPhiNFraction, *signalGlobalUncertainty, *zeroLeptonLowDeltaPhiNError, *zeroLeptonLowDeltaPhiNBTagEfficiencyError, *zeroLeptonLowDeltaPhiNJesError) );
-      RooProduct oneLeptonSignalYieldOAK(oneLeptonNameOAK+"_SignalYield", oneLeptonNameOAK+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, oneLeptonFraction, *signalGlobalUncertainty, *oneLeptonError, *oneLeptonBTagEfficiencyError, *oneLeptonJesError) );
-      
-      ws.import(zeroLeptonSignalYieldOAK, RecycleConflictNodes());
-      ws.import(zeroLeptonLowDeltaPhiNSignalYieldOAK, RecycleConflictNodes());
-      ws.import(oneLeptonSignalYieldOAK, RecycleConflictNodes());
-      
-    }
-}
-
-
-void setupSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<TString> binNames, allBinNames& names, TString signalModelFilesPath,
-		      map<TString,map<TString,int> >& insideSignalMR, map<TString,map<TString,int> >& outsideSignalMR)
-{
-  RooRealVar* luminosity = ws.var("luminosity");
-  RooRealVar* signalCrossSection =  ws.var(names.signalCrossSection);
-  
-  int signalModelLineNumber = 0;      
-  
-  TString signalModelFileName = signalModelFilesPath;
-  signalModelFileName += "/setupSignalNominal.dat";
-  
-  cout << "getting the file: " << signalModelFileName << endl;
-  
-  ifstream signalFile;
-  
-  signalFile.open(signalModelFileName.Data(),fstream::in);
-  assert(signalFile.is_open());
-  
-  int thisLineNumber = 0;
-  string fileLine;
-  
-  while( thisLineNumber < signalModelLineNumber && !signalFile.eof() )
-    {
-      thisLineNumber++;
-      getline(signalFile,fileLine);
-    }
-  
-  double m0,m12,susyGenerated;
-  double susyInBin = 0;
-  
-  signalFile>>m0;
-  cout << "m0 : " << m0 << endl;
-  signalFile>>m12;
-  cout << "m12 : " << m12 << endl;
-  signalFile>>susyGenerated;
-  cout << "SUSY Generated : " << susyGenerated << endl;
-  
-  RooArgSet signalRawYields("signalRawYields");
-  
-  //Loop over bins to get raw counts and make raw yields and constraints
-
-  for(vector<TString>::iterator thisBin = binNames.begin() ; thisBin != binNames.end() ; thisBin++)
-    {
-      TString binName = *thisBin;
-      
-      yields thisSignal,thisSignalError;
-      double valueHolder;
-      signalFile>>valueHolder ; thisSignal.zeroLepton = valueHolder ;
-      signalFile>>valueHolder ; thisSignalError.zeroLepton = valueHolder ;
-      signalFile>>valueHolder ; thisSignal.zeroLeptonLowDeltaPhiN = valueHolder ;
-      signalFile>>valueHolder ; thisSignalError.zeroLeptonLowDeltaPhiN = valueHolder ;
-      signalFile>>valueHolder ; thisSignal.oneLepton = valueHolder ;
-      signalFile>>valueHolder ; thisSignalError.oneLepton = valueHolder ;
-      
-      cout << "For selection " << *thisBin << " signal is " << endl;
-      cout << "zero lepton bin               : " << thisSignal.zeroLepton             << endl ;
-      cout << "zero lepton low delta phi bin : " << thisSignal.zeroLeptonLowDeltaPhiN << endl ;
-      cout << "one lepton bin                : " << thisSignal.oneLepton              << endl ;
-      //cout << "For selection " << *thisBin << " signal error is " << endl;
-      //cout << "zero lepton bin               : " << thisSignalError.zeroLepton             << endl ;
-      //cout << "zero lepton low delta phi bin : " << thisSignalError.zeroLeptonLowDeltaPhiN << endl ;
-      //cout << "one lepton bin                : " << thisSignalError.oneLepton              << endl ;
-  
-      TString zeroLeptonName("zeroLepton_");
-      zeroLeptonName+=binName;
-      TString zeroLeptonLowDeltaPhiNName("zeroLeptonLowDeltaPhiN_");
-      zeroLeptonLowDeltaPhiNName+=binName;
-      TString oneLeptonNameOAK("oneLepton_");
-      oneLeptonNameOAK+=binName;
-
-      //Zero lepton and low delta phi n counts used in nominal and met reweighting modes
-      
-      RooRealVar zeroLeptonSignalRawCount(zeroLeptonName+"_SignalRawCount", zeroLeptonName+"_SignalRawCount", thisSignal.zeroLepton); 
-      RooRealVar zeroLeptonLowDeltaPhiNSignalRawCount(zeroLeptonLowDeltaPhiNName+"_SignalRawCount", zeroLeptonLowDeltaPhiNName+"_SignalRawCount", thisSignal.zeroLeptonLowDeltaPhiN); 
-      
-      zeroLeptonSignalRawCount.setConstant();
-      zeroLeptonLowDeltaPhiNSignalRawCount.setConstant();
-      
-      RooRealVar zeroLeptonSignalRawYield(zeroLeptonName+"_SignalRawYield", zeroLeptonName+"_SignalRawYield", thisSignal.zeroLepton+1.0, 0, 1e5); 
-      RooRealVar zeroLeptonLowDeltaPhiNSignalRawYield(zeroLeptonLowDeltaPhiNName+"_SignalRawYield", zeroLeptonLowDeltaPhiNName+"_SignalRawYield", thisSignal.zeroLeptonLowDeltaPhiN+1.0, 0, 1e5); 
-      
-      RooPoissonLogEval zeroLeptonSignalRawConstraint(zeroLeptonName+"_SignalRawConstraint", zeroLeptonName+"_SignalRawConstraint", zeroLeptonSignalRawCount, zeroLeptonSignalRawYield);
-      ws.import(zeroLeptonSignalRawConstraint, RecycleConflictNodes());
-      ws.extendSet(names.observables,zeroLeptonSignalRawCount.GetName());
-      ws.extendSet(names.nuisances,zeroLeptonSignalRawYield.GetName());
-
-      RooPoissonLogEval zeroLeptonLowDeltaPhiNSignalRawConstraint(zeroLeptonLowDeltaPhiNName+"_SignalRawConstraint", zeroLeptonLowDeltaPhiNName+"_SignalRawConstraint", zeroLeptonLowDeltaPhiNSignalRawCount, zeroLeptonLowDeltaPhiNSignalRawYield);
-      ws.import(zeroLeptonLowDeltaPhiNSignalRawConstraint, RecycleConflictNodes());
-      ws.extendSet(names.observables,zeroLeptonLowDeltaPhiNSignalRawCount.GetName());
-      ws.extendSet(names.nuisances,zeroLeptonLowDeltaPhiNSignalRawYield.GetName());      
-
-      signalRawYields.add(*(ws.var(zeroLeptonName+"_SignalRawYield")));
-      signalRawYields.add(*(ws.var(zeroLeptonLowDeltaPhiNName+"_SignalRawYield")));
-
-      susyInBin += thisSignal.zeroLepton;
-      susyInBin += thisSignal.zeroLeptonLowDeltaPhiN;
-  
-      //one lepton counts 
-      
-      if(options.TopWJetsMethod == "ABCD")
+      if(options.TopWJetsMethod == "metReweighting")
 	{
-	  TString oneLeptonName("oneLepton_");
-	  oneLeptonName+=binName;
-
-	  RooRealVar oneLeptonSignalRawCount(oneLeptonName+"_SignalRawCount", oneLeptonName+"_SignalRawCount", thisSignal.oneLepton); 
-	  oneLeptonSignalRawCount.setConstant();
+	  //Zero lepton and zero lepton low deltaPhiN
 	  
-	  RooRealVar oneLeptonSignalRawYield(oneLeptonName+"_SignalRawYield", oneLeptonName+"_SignalRawYield", thisSignal.oneLepton+1.0, 0, 1e5); 
+	  TString zeroLeptonName("zeroLepton_");
+	  zeroLeptonName+=binName;
+	  TString zeroLeptonLowDeltaPhiNName("zeroLeptonLowDeltaPhiN_");
+	  zeroLeptonLowDeltaPhiNName+=binName;
 	  
-	  RooPoissonLogEval oneLeptonSignalRawConstraint(oneLeptonName+"_SignalRawConstraint", oneLeptonName+"_SignalRawConstraint", oneLeptonSignalRawCount, oneLeptonSignalRawYield);
-	  ws.import(oneLeptonSignalRawConstraint, RecycleConflictNodes());
-	  ws.extendSet(names.observables,oneLeptonSignalRawCount.GetName());
-	  ws.extendSet(names.nuisances,oneLeptonSignalRawYield.GetName());
+	  yields thisSignalFractionsOAK = signalFractionsOAK[binName];
+	  RooRealVar zeroLeptonFraction(zeroLeptonName+"_SignalFractionOAK", zeroLeptonName+"_SignalFractionOAK", thisSignalFractionsOAK.zeroLepton);
+	  RooRealVar zeroLeptonLowDeltaPhiNFraction(zeroLeptonLowDeltaPhiNName+"_SignalFractionOAK", zeroLeptonLowDeltaPhiNName+"_SignalFractionOAK", thisSignalFractionsOAK.zeroLeptonLowDeltaPhiN);
+	  zeroLeptonFraction.setConstant();
+	  zeroLeptonLowDeltaPhiNFraction.setConstant();
+	  
+	  //Statistical Error
+	  yields thisSignalStatisticalErrorOAK = signalStatisticalErrorOAK[binName];
+	  
+	  RooAbsArg* zeroLeptonError = getGaussianConstraint(ws,"zeroLeptonSignalError_", binName,
+							     1.0, thisSignalStatisticalErrorOAK.zeroLepton,
+							     names.observables,names.nuisances);
+	  
+	  RooAbsArg* zeroLeptonLowDeltaPhiNError = getGaussianConstraint(ws,"zeroLeptonLowDeltaPhiNSignalError_", binName,
+									 1.0, thisSignalStatisticalErrorOAK.zeroLeptonLowDeltaPhiN,
+									 names.observables,names.nuisances);
+	  
+	  RooProduct zeroLeptonSignalYieldOAK(zeroLeptonName+"_SignalYield", zeroLeptonName+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, zeroLeptonFraction, *signalGlobalUncertainty, *zeroLeptonError) );
+	  RooProduct zeroLeptonLowDeltaPhiNSignalYieldOAK(zeroLeptonLowDeltaPhiNName+"_SignalYield", zeroLeptonLowDeltaPhiNName+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, zeroLeptonLowDeltaPhiNFraction, *signalGlobalUncertainty, *zeroLeptonLowDeltaPhiNError) );
+	  
+	  ws.import(zeroLeptonSignalYieldOAK, RecycleConflictNodes());
+	  ws.import(zeroLeptonLowDeltaPhiNSignalYieldOAK, RecycleConflictNodes());
+	  
+	  //Single lepton
 
-	  signalRawYields.add(*(ws.var(oneLeptonName+"_SignalRawYield")));
-	  susyInBin += thisSignal.oneLepton;
-	}
-      else if(options.TopWJetsMethod == "metReweighting") 
-	{
 	  //inside
-	  map<TString,int> thisInsideSignalMR = insideSignalMR[binName];
-	  for ( map<TString,int>::iterator it=thisInsideSignalMR.begin() ; it != thisInsideSignalMR.end(); it++ ) 
+	  map<TString,mcCount> thisInsideSignalMR = insideSignalMR[binName];
+	  for ( map<TString,mcCount>::iterator it=thisInsideSignalMR.begin() ; it != thisInsideSignalMR.end(); it++ ) 
 	    { 
 	      TString signalName = (*it).first;
-	      int signalRawCount = (*it).second;
+	      double signalValue = ((*it).second).value;
+	      double signalError = ((*it).second).error;
 	      
-	      RooRealVar rooSignalRawCount(signalName+"_SignalRawCount", signalName+"_SignalRawCount", signalRawCount);
-	      rooSignalRawCount.setConstant();
+	      RooRealVar signalFraction(signalName+"_SignalFraction", signalName+"_SignalFraction", signalValue/nGenerated);
+	      signalFraction.setConstant();
 
-	      RooRealVar rooSignalRawYield(signalName+"_SignalRawYield", signalName+"_SignalRawYield", signalRawCount+1.0, 0, 1e5);
+	      RooAbsArg* signalStatisticalError = getGaussianConstraint(ws, signalName+"_SignalError_", binName,
+							     1.0, signalError/signalValue,
+							     names.observables, names.nuisances);
 
-	      RooPoissonLogEval rooSignalRawConstraint(signalName+"_SignalRawConstraint", signalName+"_SignalRawConstraint", rooSignalRawCount, rooSignalRawYield);
-	      ws.import(rooSignalRawConstraint, RecycleConflictNodes());
-	      ws.extendSet(names.observables, rooSignalRawCount.GetName());
-	      ws.extendSet(names.nuisances, rooSignalRawYield.GetName());
-
-	      signalRawYields.add( *( ws.var(rooSignalRawYield.GetName()) ) );
-	      susyInBin += signalRawCount;
+	      RooProduct signalYield(signalName+"_SignalYield", signalName+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, signalFraction, *signalGlobalUncertainty, *signalStatisticalError) );
+	      ws.import(signalYield, RecycleConflictNodes());
 	    }
 	  
 	  //outside
-	  map<TString,int> thisOutsideSignalMR = outsideSignalMR[binName];
-	  for ( map<TString,int>::iterator it=thisOutsideSignalMR.begin() ; it != thisOutsideSignalMR.end(); it++ ) 
+	  map<TString,mcCount> thisOutsideSignalMR = outsideSignalMR[binName];
+	  for ( map<TString,mcCount>::iterator it=thisOutsideSignalMR.begin() ; it != thisOutsideSignalMR.end(); it++ ) 
 	    { 
 	      TString signalName = (*it).first;
-	      int signalRawCount = (*it).second;
-	      
-	      //Continue if already in workspace 
-	      if( ws.var(signalName+"_SignalRawCount") != NULL ) continue; 
-	      
-	      RooRealVar rooSignalRawCount(signalName+"_SignalRawCount", signalName+"_SignalRawCount", signalRawCount);
-	      rooSignalRawCount.setConstant();
-	      
-	      RooRealVar rooSignalRawYield(signalName+"_SignalRawYield", signalName+"_SignalRawYield", signalRawCount+1.0, 0, 1e5);
-	      
-	      RooPoissonLogEval rooSignalRawConstraint(signalName+"_SignalRawConstraint", signalName+"_SignalRawConstraint", rooSignalRawCount, rooSignalRawYield);
-	      ws.import(rooSignalRawConstraint, RecycleConflictNodes());
-	      ws.extendSet(names.observables, rooSignalRawCount.GetName());
-	      ws.extendSet(names.nuisances, rooSignalRawYield.GetName());
+	      double signalValue = ((*it).second).value;
+	      double signalError = ((*it).second).error;
 
-	      signalRawYields.add( *( ws.var(rooSignalRawYield.GetName()) ) );
-	      susyInBin += signalRawCount;
+	      //Continue if already in workspace 
+	      if( ws.var(signalName+"_SignalYield") != NULL ) continue; 
+	      
+	      RooRealVar signalFraction(signalName+"_SignalFraction", signalName+"_SignalFraction", signalValue/nGenerated);
+	      signalFraction.setConstant();
+	      
+	      RooAbsArg* signalStatisticalError = getGaussianConstraint(ws, signalName+"_SignalError_", binName,
+							     1.0, signalError/signalValue,
+							     names.observables, names.nuisances);
+	      
+	      RooProduct signalYield(signalName+"_SignalYield", signalName+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, signalFraction, *signalGlobalUncertainty, *signalStatisticalError) );
+	      ws.import(signalYield, RecycleConflictNodes());
 	    }
+	}
+      else if(options.TopWJetsMethod == "ABCD")
+	{
+	  TString zeroLeptonName("zeroLepton_");
+	  zeroLeptonName+=binName;
+	  TString zeroLeptonLowDeltaPhiNName("zeroLeptonLowDeltaPhiN_");
+	  zeroLeptonLowDeltaPhiNName+=binName;
+	  TString oneLeptonNameOAK("oneLepton_");
+	  oneLeptonNameOAK+=binName;
+	  
+	  //Fractions
+	  yields thisSignalFractionsOAK = signalFractionsOAK[binName];
+	  RooRealVar zeroLeptonFraction(zeroLeptonName+"_SignalFractionOAK", zeroLeptonName+"_SignalFractionOAK", thisSignalFractionsOAK.zeroLepton);
+	  RooRealVar zeroLeptonLowDeltaPhiNFraction(zeroLeptonLowDeltaPhiNName+"_SignalFractionOAK", zeroLeptonLowDeltaPhiNName+"_SignalFractionOAK", thisSignalFractionsOAK.zeroLeptonLowDeltaPhiN);
+	  RooRealVar oneLeptonFraction(oneLeptonNameOAK+"_SignalFractionOAK", oneLeptonNameOAK+"_SignalFractionOAK", thisSignalFractionsOAK.oneLepton);
+	  zeroLeptonFraction.setConstant();
+	  zeroLeptonLowDeltaPhiNFraction.setConstant();
+	  oneLeptonFraction.setConstant();
+	  
+	  //Statistical Error
+	  yields thisSignalStatisticalErrorOAK = signalStatisticalErrorOAK[binName];
+	  
+	  RooAbsArg* zeroLeptonError = getGaussianConstraint(ws,"zeroLeptonSignalError_", binName,
+							     1.0, thisSignalStatisticalErrorOAK.zeroLepton,
+							     names.observables,names.nuisances);
+	  
+	  RooAbsArg* zeroLeptonLowDeltaPhiNError = getGaussianConstraint(ws,"zeroLeptonLowDeltaPhiNSignalError_", binName,
+									 1.0, thisSignalStatisticalErrorOAK.zeroLeptonLowDeltaPhiN,
+									 names.observables,names.nuisances);
+	  
+	  RooAbsArg* oneLeptonError = getGaussianConstraint(ws,"oneLeptonSignalError_", binName,
+							    1.0, thisSignalStatisticalErrorOAK.oneLepton,
+							    names.observables,names.nuisances);
+	  
+	  //B-tag efficiency systematic
+	  yields thisSignalBTagEfficiencyErrorOAK = signalBTagEfficiencyErrorOAK[binName];
+	  TString signalBTagEfficiencyName = "signalBTagEfficiencyCorrelated";
+	  
+	  bool changeSign = false;
+	  if(thisSignalBTagEfficiencyErrorOAK.zeroLepton < 0.0) changeSign=true;
+	  //RooAbsArg* zeroLeptonBTagEfficiencyError = getCorrelatedGaussianConstraint(ws,"zeroLeptonBTagEfficiencyError_", binName,
+	  RooAbsArg* zeroLeptonBTagEfficiencyError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonBTagEfficiencyError_", binName,
+										      1.0, fabs(thisSignalBTagEfficiencyErrorOAK.zeroLepton),
+										      names.observables,names.nuisances,
+										      signalBTagEfficiencyName, changeSign);
+	  
+	  changeSign = false;
+	  if(thisSignalBTagEfficiencyErrorOAK.zeroLeptonLowDeltaPhiN < 0.0) changeSign=true;
+	  //RooAbsArg* zeroLeptonLowDeltaPhiNBTagEfficiencyError = getCorrelatedGaussianConstraint(ws,"zeroLeptonLowDeltaPhiNBTagEfficiencyError_", binName,
+	  RooAbsArg* zeroLeptonLowDeltaPhiNBTagEfficiencyError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonLowDeltaPhiNBTagEfficiencyError_", binName,
+												  1.0, fabs(thisSignalBTagEfficiencyErrorOAK.zeroLeptonLowDeltaPhiN),
+												  names.observables,names.nuisances,
+												  signalBTagEfficiencyName, changeSign);
+	  
+	  changeSign = false;
+	  if(thisSignalBTagEfficiencyErrorOAK.oneLepton < 0.0) changeSign=true;
+	  //RooAbsArg* oneLeptonBTagEfficiencyError = getCorrelatedGaussianConstraint(ws,"oneLeptonBTagEfficiencyError_", binName,
+	  RooAbsArg* oneLeptonBTagEfficiencyError = getCorrelatedLogNormalConstraint(ws,"oneLeptonBTagEfficiencyError_", binName,
+										     1.0, fabs(thisSignalBTagEfficiencyErrorOAK.oneLepton),
+										     names.observables,names.nuisances,
+										     signalBTagEfficiencyName, changeSign);
+	  
+	  //JES systematic
+	  yields thisSignalJesErrorOAK = signalJesErrorOAK[binName];
+	  TString signalJesErrorName = "signalJesErrorCorrelated";
+	  
+	  changeSign = false;
+	  if(thisSignalJesErrorOAK.zeroLepton < 0.0) changeSign=true;
+	  //RooAbsArg* zeroLeptonJesError = getCorrelatedGaussianConstraint(ws,"zeroLeptonJesError_", binName,
+	  RooAbsArg* zeroLeptonJesError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonJesError_", binName,
+									   1.0, fabs(thisSignalJesErrorOAK.zeroLepton),
+									   names.observables,names.nuisances,
+									   signalJesErrorName, changeSign);
+	  
+	  changeSign = false;
+	  if(thisSignalJesErrorOAK.zeroLeptonLowDeltaPhiN < 0.0) changeSign=true;
+	  //RooAbsArg* zeroLeptonLowDeltaPhiNJesError = getCorrelatedGaussianConstraint(ws,"zeroLeptonLowDeltaPhiNJesError_", binName,
+	  RooAbsArg* zeroLeptonLowDeltaPhiNJesError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonLowDeltaPhiNJesError_", binName,
+										       1.0, fabs(thisSignalJesErrorOAK.zeroLeptonLowDeltaPhiN),
+										       names.observables,names.nuisances,
+										       signalJesErrorName, changeSign);
+	  
+	  changeSign = false;
+	  if(thisSignalJesErrorOAK.oneLepton < 0.0) changeSign=true;
+	  //RooAbsArg* oneLeptonJesError = getCorrelatedGaussianConstraint(ws,"oneLeptonJesError_", binName,
+	  RooAbsArg* oneLeptonJesError = getCorrelatedLogNormalConstraint(ws,"oneLeptonJesError_", binName,
+									  1.0, fabs(thisSignalJesErrorOAK.oneLepton),
+									  names.observables,names.nuisances,
+									  signalJesErrorName, changeSign);
+	  
+	  
+	  //Setup yields
+	  RooProduct zeroLeptonSignalYieldOAK(zeroLeptonName+"_SignalYield", zeroLeptonName+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, zeroLeptonFraction, *signalGlobalUncertainty, *zeroLeptonError, *zeroLeptonBTagEfficiencyError, *zeroLeptonJesError) );
+	  RooProduct zeroLeptonLowDeltaPhiNSignalYieldOAK(zeroLeptonLowDeltaPhiNName+"_SignalYield", zeroLeptonLowDeltaPhiNName+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, zeroLeptonLowDeltaPhiNFraction, *signalGlobalUncertainty, *zeroLeptonLowDeltaPhiNError, *zeroLeptonLowDeltaPhiNBTagEfficiencyError, *zeroLeptonLowDeltaPhiNJesError) );
+	  RooProduct oneLeptonSignalYieldOAK(oneLeptonNameOAK+"_SignalYield", oneLeptonNameOAK+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, oneLeptonFraction, *signalGlobalUncertainty, *oneLeptonError, *oneLeptonBTagEfficiencyError, *oneLeptonJesError) );
+	  
+	  ws.import(zeroLeptonSignalYieldOAK, RecycleConflictNodes());
+	  ws.import(zeroLeptonLowDeltaPhiNSignalYieldOAK, RecycleConflictNodes());
+	  ws.import(oneLeptonSignalYieldOAK, RecycleConflictNodes());
+	  
 	}
       else { assert(0); }
       
-    }	  
-  
-  signalFile.close();
-  
-
-  //Make count/yield/constraint for events not in a bin and then define the total yield
-
-  RooRealVar noBinSignalRawCount("noBinSignalRawCount", "noBinSignalRawCount", susyGenerated-susyInBin);
-  noBinSignalRawCount.setConstant();
-  
-  RooRealVar noBinSignalRawYield("noBinSignalRawYield", "noBinSignalRawYield", susyGenerated-susyInBin+1.0, 0, 1e5);
-  signalRawYields.add(noBinSignalRawYield);
-  
-  RooPoissonLogEval noBinSignalRawConstraint("noBinSignalRawConstraint", "noBinSignalRawConstraint", noBinSignalRawCount, noBinSignalRawYield);
-  ws.import(noBinSignalRawConstraint, RecycleConflictNodes());
-  ws.extendSet(names.observables,noBinSignalRawCount.GetName());
-  ws.extendSet(names.nuisances, noBinSignalRawYield.GetName());
-  
-  cout <<"total raw signal yield" << endl;
-  signalRawYields.Print();
-  
-  RooAddition totalSignalRawYield("totalSignalRawYield", "totalSignalRawYield", signalRawYields); 
-    
-  //Loop over bins to make yields (rawYield/total*lumi*xsec)
-
-  for(vector<TString>::iterator thisBin = binNames.begin() ; thisBin != binNames.end() ; thisBin++)
-    {
-      TString binName = *thisBin;
-      
-      //Make zero lepton and low delta phi n yields
-      
-      TString zeroLeptonName("zeroLepton_");
-      zeroLeptonName+=binName;
-      TString zeroLeptonLowDeltaPhiNName("zeroLeptonLowDeltaPhiN_");
-      zeroLeptonLowDeltaPhiNName+=binName;
-        
-      RooRealVar* zeroLeptonSignalRawYield = ws.var(zeroLeptonName+"_SignalRawYield");
-      RooRealVar* zeroLeptonLowDeltaPhiNSignalRawYield = ws.var(zeroLeptonLowDeltaPhiNName+"_SignalRawYield");
-      
-      RooRatio zeroLeptonSignalYieldFraction(zeroLeptonName+"_SignalYieldFraction", zeroLeptonName+"_SignalYieldFraction", *zeroLeptonSignalRawYield, totalSignalRawYield);
-      RooRatio zeroLeptonLowDeltaPhiNSignalYieldFraction(zeroLeptonLowDeltaPhiNName+"_SignalYieldFraction", zeroLeptonLowDeltaPhiNName+"_SignalYieldFraction", *zeroLeptonLowDeltaPhiNSignalRawYield, totalSignalRawYield);
-      
-      RooProduct zeroLeptonSignalYield(zeroLeptonName+"_SignalYield", zeroLeptonName+"_SignalYield", RooArgSet(zeroLeptonSignalYieldFraction, *luminosity, *signalCrossSection) );
-      RooProduct zeroLeptonLowDeltaPhiNSignalYield(zeroLeptonLowDeltaPhiNName+"_SignalYield", zeroLeptonLowDeltaPhiNName+"_SignalYield", RooArgSet(zeroLeptonLowDeltaPhiNSignalYieldFraction, *luminosity, *signalCrossSection) );
-            
-      ws.import(zeroLeptonSignalYield, RecycleConflictNodes());
-      ws.import(zeroLeptonLowDeltaPhiNSignalYield, RecycleConflictNodes());
-
-      //Make one lepton yields
-
-      if(options.TopWJetsMethod == "ABCD")
-	{
-	  TString oneLeptonName("oneLepton_");
-	  oneLeptonName+=binName;
-	  
-	  RooRealVar* oneLeptonSignalRawYield = ws.var(oneLeptonName+"_SignalRawYield");
-	  RooRatio oneLeptonSignalYieldFraction(oneLeptonName+"_SignalYieldFraction", oneLeptonName+"_SignalYieldFraction", *oneLeptonSignalRawYield, totalSignalRawYield);
-	  RooProduct oneLeptonSignalYield(oneLeptonName+"_SignalYield", oneLeptonName+"_SignalYield", RooArgSet(oneLeptonSignalYieldFraction, *luminosity, *signalCrossSection) );
-
-	  ws.import(oneLeptonSignalYield, RecycleConflictNodes());
-	  cout  << "zeroLeptonSignalYield=" << zeroLeptonSignalYield.getVal() << ", zeroLeptonLowDeltaPhiNSignalYield="  << zeroLeptonLowDeltaPhiNSignalYield.getVal() << ", oneLeptonSignalYield=" << oneLeptonSignalYield.getVal() << endl;
-	}
-      else if(options.TopWJetsMethod == "metReweighting")
-	{
-	  //inside
-	  map<TString,int> thisInsideSignalMR = insideSignalMR[binName];
-	  for ( map<TString,int>::iterator it=thisInsideSignalMR.begin() ; it != thisInsideSignalMR.end(); it++ ) 
-	    { 
-	      TString signalName = (*it).first;
-	      RooRealVar* rooSignalRawYield = ws.var(signalName+"SignalRawYield");
-	      RooRatio rooSignalYieldFraction(signalName+"_SignalYieldFraction", signalName+"_SignalYieldFraction", *rooSignalRawYield, totalSignalRawYield);
-	      RooProduct rooSignalYield(signalName+"_SignalYield", signalName+"_SignalYield", RooArgSet(rooSignalYieldFraction, *luminosity, *signalCrossSection) );
-
-	      ws.import(rooSignalYield, RecycleConflictNodes());
-	    }
-	  
-	  //outside
-	  map<TString,int> thisOutsideSignalMR = outsideSignalMR[binName];
-	  for ( map<TString,int>::iterator it=thisOutsideSignalMR.begin() ; it != thisOutsideSignalMR.end(); it++ ) 
-	    { 
-	      TString signalName = (*it).first;
-	      
-	      //Continue if already in workspace 
-	      if(ws.var(signalName+"_SignalYield") != NULL) continue;
-	      
-	      RooRealVar* rooSignalRawYield = ws.var(signalName+"SignalRawYield");
-	      RooRatio rooSignalYieldFraction(signalName+"_SignalYieldFraction", signalName+"_SignalYieldFraction", *rooSignalRawYield, totalSignalRawYield);
-	      RooProduct rooSignalYield(signalName+"_SignalYield", signalName+"_SignalYield", RooArgSet(rooSignalYieldFraction, *luminosity, *signalCrossSection) );
-
-	      ws.import(rooSignalYield, RecycleConflictNodes());
-	    }
-	}
-      else { assert(0); }
-    }
-  
+    }//end loop over bins
 }
-
 
 
 void setupObservations(TString binName, TString binFileName, map<TString,abcdBinParameters>& bins, map<TString,channels>& observations)
@@ -1548,21 +1389,31 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   
   RooWorkspace ws (workspaceName) ;
   ws.autoImportClassCode(true);
+  
   vector<TString> binNames;
   map<TString,TString> binFileNames;
-  map<TString,TString> binFileNamesInsideSignalMR;
-  map<TString,map<TString,int> > insideSignalMR;
-  map<TString,TString> binFileNamesOutsideSignalMR;
-  map<TString,map<TString,int> > outsideSignalMR;
+
   allBinNames names;
   allBins numbers;
   likelihoodOptions options;
   map<TString,abcdBinParameters> bins;
   map<TString,channels> observations;
+
+  //Objets for signal model
+  double nGenerated = 0;
+  map<TString,yields> signalFractionsOAK;
+  map<TString,yields> signalStatisticalErrorOAK;
+  map<TString,yields> signalBTagEfficiencyErrorOAK;
+  map<TString,yields> signalJesErrorOAK;
+  map<TString,TString> binFileNamesInsideSignalMR;
+  map<TString,map<TString,mcCount> > insideSignalMR;
+  map<TString,TString> binFileNamesOutsideSignalMR;
+  map<TString,map<TString,mcCount> > outsideSignalMR;
+  
   double oneLeptonTotal(0.);
   double zeroLeptonTopWJetsGuess(0.);
 
-  
+  //Set options 
   options.skipTriggerEfficiency = false;//option no longer works
   options.qcdMethod = "model4";//others: htDependent, singleScaleWithCorrections
   options.TopWJetsMethod = "ABCD"; //others: metReweighting
@@ -1588,17 +1439,13 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
 	}
     }
   
-  //Signal model OAK-style
-  map<TString,yields> signalFractionsOAK;
-  map<TString,yields> signalStatisticalErrorOAK;
-  map<TString,yields> signalBTagEfficiencyErrorOAK;
-  map<TString,yields> signalJesErrorOAK;
-  setupSignalModelOAK(binNames, signalModelFilesPath, signalFractionsOAK, signalStatisticalErrorOAK, signalBTagEfficiencyErrorOAK, signalJesErrorOAK);
-  makeSignalModelOAK(ws, binNames, names, bins, signalFractionsOAK, signalStatisticalErrorOAK, signalBTagEfficiencyErrorOAK, signalJesErrorOAK);
 
-  //Read in signal and put into workspace
-  //setupSignalModel(options, ws , binNames , names, signalModelFilesPath, insideSignalMR, outsideSignalMR );
-  
+  //Read in nominal signal
+  setupSignalModelOAK(binNames, signalModelFilesPath, nGenerated, signalFractionsOAK, signalStatisticalErrorOAK, signalBTagEfficiencyErrorOAK, signalJesErrorOAK);
+
+  //Put signal into workspace
+  makeSignalModel(options, ws, binNames, names, bins, nGenerated, signalFractionsOAK, signalStatisticalErrorOAK, signalBTagEfficiencyErrorOAK, signalJesErrorOAK, insideSignalMR, outsideSignalMR );
+
   //Do MET-reweighting method
   if(options.TopWJetsMethod == "metReweighting") buildMRLikelihood("","","","","","","",false);
 
@@ -1608,7 +1455,6 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
       if( skipBin(*thisBin) ) continue;
       makeOneBin(options, ws , *thisBin , names , numbers, observations[*thisBin] , bins[*thisBin] , oneLeptonTotal, zeroLeptonTopWJetsGuess );
     }
-
   
   //Make guesses for parameters
   //ws.var(names.singleLeptonScaling)->setVal(zeroLeptonTopWJetsGuess/oneLeptonTotal);
@@ -1616,7 +1462,6 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   //  {
   //    makeGuess(options, ws , *thisBin , observations[*thisBin] , bins[*thisBin] );
   //  }
-  
   
   //Construct likelihood
   RooArgSet allpdfs = ws.allPdfs();
