@@ -177,22 +177,31 @@ bool skipBin(TString binName)
 }
 
 
-bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& binName , allBinNames& names , const allBins& numbers, channels& observed , abcdBinParameters& abcd ,  double& oneLeptonTotal, double& zeroLeptonTopWJetsGuess)
+void makeTriggerEfficiencies(RooWorkspace& ws, allBinNames& names, abcdBinParameters& abcd )
 {
   
-  //Trigger efficiency
   RooAbsArg* zeroLeptonTriggerEfficiency =
     getGaussianConstraint(ws, "zeroLeptonTriggerEfficiency_", abcd.zeroLeptonTriggerEfficiencyName, //FIXME change to beta after synch
 			  abcd.zeroLeptonTriggerEfficiency, abcd.zeroLeptonTriggerEfficiencyError,
 			  names.observables,names.nuisances);
   ws.import(*zeroLeptonTriggerEfficiency, RecycleConflictNodes());
-  
+
   RooAbsArg* oneLeptonTriggerEfficiency =
     getGaussianConstraint(ws, "oneLeptonTriggerEfficiency_", abcd.oneLeptonTriggerEfficiencyName, //FIXME change to beta after synch
 			  abcd.oneLeptonTriggerEfficiency, abcd.oneLeptonTriggerEfficiencyError,
 			  names.observables,names.nuisances);
   ws.import(*oneLeptonTriggerEfficiency, RecycleConflictNodes());
+
+}
+
+bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& binName , allBinNames& names , const allBins& numbers, channels& observed , abcdBinParameters& abcd ,  double& oneLeptonTotal, double& zeroLeptonTopWJetsGuess)
+{
   
+  //Get trigger efficiencies from workspace
+  RooAbsArg* zeroLeptonTriggerEfficiency = ws.arg("zeroLeptonTriggerEfficiency_"+abcd.zeroLeptonTriggerEfficiencyName);
+  RooAbsArg* oneLeptonTriggerEfficiency = ws.arg("oneLeptonTriggerEfficiency_"+abcd.oneLeptonTriggerEfficiencyName);
+  assert(zeroLeptonTriggerEfficiency!=NULL); assert(oneLeptonTriggerEfficiency!=NULL);
+    
   //////////////////////////
   // QCD
   //////////////////////////
@@ -321,25 +330,31 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
   //////////////////////////////
   TString oneLeptonName("oneLepton_");
   oneLeptonName+=binName;
-
-  RooRealVar oneLeptonCount(oneLeptonName+"_Count",oneLeptonName+"_Count",observed.oneLepton);
-
-  oneLeptonCount.setConstant();
-  ws.import(oneLeptonCount);
-  ws.extendSet(names.observables,oneLeptonCount.GetName());
   
-  RooRealVar* singleLeptonScaling = ws.var(names.singleLeptonScaling);
-  RooRealVar  oneLeptonTopWJetsYield(oneLeptonName+"_TopWJetsYield",oneLeptonName+"_TopWJetsYield",observed.oneLepton+1.0,0,1e5);
-  ws.import(oneLeptonTopWJetsYield);
-  ws.extendSet(names.nuisances,oneLeptonTopWJetsYield.GetName());
-  oneLeptonTotal += oneLeptonTopWJetsYield.getVal();
-  RooRealVar*  zeroLeptonTopWJetsClosure = (RooRealVar*)
-    //getBetaPrimeConstraint(ws,"zeroLeptonTopWJetsClosure_", binName,
-    getGaussianConstraint(ws,"zeroLeptonTopWJetsClosure_", binName,
-			   abcd.topWJetsClosure,abcd.topWJetsClosureError,
-			   names.observables,names.nuisances);
-  RooProduct  zeroLeptonTopWJetsYield(zeroLeptonName+"_TopWJetsYield",zeroLeptonName+"_TopWJetsYield",RooArgSet(*singleLeptonScaling,*zeroLeptonTopWJetsClosure,oneLeptonTopWJetsYield));
-  
+  if(options.TopWJetsMethod == "metReweighting") 
+    {
+      //need to get zeroLeptonTopWJetsYield from workspace here
+      assert(0);
+    }
+  else if(options.TopWJetsMethod == "ABCD")
+    {
+      RooRealVar* singleLeptonScaling = ws.var(names.singleLeptonScaling);
+      RooRealVar  oneLeptonTopWJetsYield(oneLeptonName+"_TopWJetsYield",oneLeptonName+"_TopWJetsYield",observed.oneLepton+1.0,0,1e5);
+      ws.import(oneLeptonTopWJetsYield);
+      ws.extendSet(names.nuisances,oneLeptonTopWJetsYield.GetName());
+      oneLeptonTotal += oneLeptonTopWJetsYield.getVal();
+      RooRealVar*  zeroLeptonTopWJetsClosure = (RooRealVar*)
+	//getBetaPrimeConstraint(ws,"zeroLeptonTopWJetsClosure_", binName,
+	getGaussianConstraint(ws,"zeroLeptonTopWJetsClosure_", binName,
+			      abcd.topWJetsClosure,abcd.topWJetsClosureError,
+			      names.observables,names.nuisances);
+      RooProduct  zeroLeptonTopWJetsYield(zeroLeptonName+"_TopWJetsYield",zeroLeptonName+"_TopWJetsYield",RooArgSet(*singleLeptonScaling,*zeroLeptonTopWJetsClosure,oneLeptonTopWJetsYield));
+      ws.import(zeroLeptonTopWJetsYield, RecycleConflictNodes() );
+    }
+  else { assert(0); }
+
+  RooAbsReal* zeroLeptonTopWJetsYield = ws.function(zeroLeptonName+"_TopWJetsYield");
+  assert(zeroLeptonTopWJetsYield != NULL);
 
   /////////////////////////////////
   // Z to invisible
@@ -471,7 +486,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
 						       zeroLeptonLowDeltaPhiNName+"_TopWJetsLowDeltaPhiNOverZeroLeptonRatioMC", 
 						       abcd.topWJetsLowDeltaPhiNOverZeroLeptonRatioMC);
   topWJetsLowDeltaPhiNOverZeroLeptonRatioMC.setConstant();
-  RooProduct zeroLeptonLowDeltaPhiNTopWJetsYield(zeroLeptonLowDeltaPhiNName+"_TopWJetsYield",zeroLeptonLowDeltaPhiNName+"_TopWJetsYield",RooArgSet(topWJetsLowDeltaPhiNOverZeroLeptonRatioMC,zeroLeptonTopWJetsYield));
+  RooProduct zeroLeptonLowDeltaPhiNTopWJetsYield(zeroLeptonLowDeltaPhiNName+"_TopWJetsYield",zeroLeptonLowDeltaPhiNName+"_TopWJetsYield",RooArgSet(topWJetsLowDeltaPhiNOverZeroLeptonRatioMC,*zeroLeptonTopWJetsYield));
   
   RooRealVar ZtoNuNuLowDeltaPhiNOverZeroLeptonRatioMC(zeroLeptonLowDeltaPhiNName+"_ZtoNuNuLowDeltaPhiNOverZeroLeptonRatioMC",
 						      zeroLeptonLowDeltaPhiNName+"_ZtoNuNuLowDeltaPhiNOverZeroLeptonRatioMC", 
@@ -491,40 +506,11 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
   // Get signal yields from workspace
   RooAbsReal* zeroLeptonSignalYield = ws.function(zeroLeptonName+"_SignalYield");
   RooAbsReal* zeroLeptonLowDeltaPhiNSignalYield = ws.function(zeroLeptonLowDeltaPhiNName+"_SignalYield");
-  RooAbsReal* oneLeptonSignalYield = ws.function(oneLeptonName+"_SignalYield");
   assert(zeroLeptonSignalYield);
   assert(zeroLeptonLowDeltaPhiNSignalYield);
-  assert(oneLeptonSignalYield);
   
-  /*
-  //Real and Fake MET Yields
-  RooAddition zeroLeptonRealMETYield(zeroLeptonName+"_RealMETYield", zeroLeptonName+"_RealMETYield", RooArgSet(zeroLeptonTopWJetsYield, zeroLeptonZtoNuNuYield, zeroLeptonDibosonYield, *zeroLeptonSignalYield));
-  RooAddition zeroLeptonFakeMETYield(zeroLeptonName+"_FakeMETYield", zeroLeptonName+"_FakeMETYield", RooArgSet(zeroLeptonQCDYield));
-  
-  RooAddition zeroLeptonLowDeltaPhiNRealMETYield(zeroLeptonLowDeltaPhiNName+"_RealMETYield", zeroLeptonLowDeltaPhiNName+"_RealMETYield", RooArgSet(zeroLeptonLowDeltaPhiNNonQCDYield, *zeroLeptonLowDeltaPhiNSignalYield));
-  RooAddition zeroLeptonLowDeltaPhiNFakeMETYield(zeroLeptonLowDeltaPhiNName+"_FakeMETYield", zeroLeptonLowDeltaPhiNName+"_FakeMETYield", RooArgSet(zeroLeptonLowDeltaPhiNQCDYield));
-  
-  RooAddition oneLeptonRealMETYield(oneLeptonName+"_RealMETYield", oneLeptonName+"_RealMETYield", RooArgSet(oneLeptonTopWJetsYield, oneLeptonDibosonYield, *oneLeptonSignalYield));
-  
-  
-  //Real and Fake MET "Data Yields" -- yields adjusted for trigger efficiency
-  RooProduct zeroLeptonRealMETDataYield(zeroLeptonName+"_RealMETDataYield", zeroLeptonName+"_RealMETDataYield", RooArgSet(zeroLeptonRealMETYield, *oneLeptonTriggerEfficiency));
-  RooProduct zeroLeptonFakeMETDataYield(zeroLeptonName+"_FakeMETDataYield", zeroLeptonName+"_FakeMETDataYield", RooArgSet(zeroLeptonFakeMETYield, *zeroLeptonTriggerEfficiency));
-
-  RooProduct zeroLeptonLowDeltaPhiNRealMETDataYield(zeroLeptonLowDeltaPhiNName+"_RealMETDataYield", zeroLeptonLowDeltaPhiNName+"_RealMETDataYield", RooArgSet(zeroLeptonLowDeltaPhiNRealMETYield, *oneLeptonTriggerEfficiency));
-  RooProduct zeroLeptonLowDeltaPhiNFakeMETDataYield(zeroLeptonLowDeltaPhiNName+"_FakeMETDataYield", zeroLeptonLowDeltaPhiNName+"_FakeMETDataYield", RooArgSet(zeroLeptonLowDeltaPhiNFakeMETYield, *zeroLeptonTriggerEfficiency));
-
-  RooProduct oneLeptonRealMETDataYield(oneLeptonName+"_RealMETDataYield", oneLeptonName+"_RealMETDataYield", RooArgSet(oneLeptonRealMETYield, *oneLeptonTriggerEfficiency));
-
-  // Setup yields in all bins
-  RooAddition zeroLeptonYield(zeroLeptonName+"_Yield",zeroLeptonName+"_Yield",RooArgSet(zeroLeptonRealMETDataYield, zeroLeptonFakeMETDataYield));
-  double topGuess = observed.zeroLepton - zeroLeptonZtoNuNuYield.getVal() - zeroLeptonQCDYield.getVal();
-  if(topGuess > 0 ) zeroLeptonTopWJetsGuess += topGuess;
-  RooAddition zeroLeptonLowDeltaPhiNYield(zeroLeptonLowDeltaPhiNName+"_Yield",zeroLeptonLowDeltaPhiNName+"_Yield",RooArgSet(zeroLeptonLowDeltaPhiNRealMETDataYield, zeroLeptonLowDeltaPhiNFakeMETDataYield));
-  RooAddition oneLeptonYield(oneLeptonName+"_Yield",oneLeptonName+"_Yield",RooArgSet(oneLeptonRealMETDataYield));  
-  */
-  
-  RooProduct zeroLeptonTopWJetsDataYield(zeroLeptonName+"_TopWJetsDataYield", zeroLeptonName+"_TopWJetsDataYield", RooArgSet(zeroLeptonTopWJetsYield, *oneLeptonTriggerEfficiency));
+  //Multiply yields by trigger efficiency to make "data yield"
+  RooProduct zeroLeptonTopWJetsDataYield(zeroLeptonName+"_TopWJetsDataYield", zeroLeptonName+"_TopWJetsDataYield", RooArgSet(*zeroLeptonTopWJetsYield, *oneLeptonTriggerEfficiency));
   RooProduct zeroLeptonQCDDataYield(zeroLeptonName+"_QCDDataYield", zeroLeptonName+"_QCDDataYield", RooArgSet(zeroLeptonQCDYield, *zeroLeptonTriggerEfficiency));
   RooProduct zeroLeptonZtoNuNuDataYield(zeroLeptonName+"_ZtoNuNuDataYield", zeroLeptonName+"_ZtoNuNuDataYield", RooArgSet(zeroLeptonZtoNuNuYield, *oneLeptonTriggerEfficiency));
   RooProduct zeroLeptonDibosonDataYield(zeroLeptonName+"_DibosonDataYield", zeroLeptonName+"_DibosonDataYield", RooArgSet(zeroLeptonDibosonYield, *oneLeptonTriggerEfficiency));
@@ -534,29 +520,42 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
   RooProduct zeroLeptonLowDeltaPhiNNonQCDDataYield(zeroLeptonLowDeltaPhiNName+"_NonQCDDataYield", zeroLeptonLowDeltaPhiNName+"_NonQCDDataYield", RooArgSet(zeroLeptonLowDeltaPhiNNonQCDYield, *oneLeptonTriggerEfficiency));
   RooProduct zeroLeptonLowDeltaPhiNSignalDataYield(zeroLeptonLowDeltaPhiNName+"_SignalDataYield", zeroLeptonLowDeltaPhiNName+"_SignalDataYield", RooArgSet(*zeroLeptonLowDeltaPhiNSignalYield, *oneLeptonTriggerEfficiency));
 
-  RooProduct oneLeptonTopWJetsDataYield(oneLeptonName+"_TopWJetsDataYield", oneLeptonName+"_TopWJetsDataYield", RooArgSet(oneLeptonTopWJetsYield, *oneLeptonTriggerEfficiency));
-  RooProduct oneLeptonDibosonDataYield(oneLeptonName+"_DibosonDataYield", oneLeptonName+"_DibosonDataYield", RooArgSet(oneLeptonDibosonYield, *oneLeptonTriggerEfficiency));
-  RooProduct oneLeptonSignalDataYield(oneLeptonName+"_SignalDataYield", oneLeptonName+"_SignalDataYield", RooArgSet(*oneLeptonSignalYield, *oneLeptonTriggerEfficiency));
-  
-
+  //sum data yields
   RooAddition zeroLeptonYield(zeroLeptonName+"_Yield", zeroLeptonName+"_Yield", RooArgSet(zeroLeptonTopWJetsDataYield, zeroLeptonQCDDataYield, zeroLeptonZtoNuNuDataYield, zeroLeptonDibosonDataYield, zeroLeptonSignalDataYield));
   RooAddition zeroLeptonLowDeltaPhiNYield(zeroLeptonLowDeltaPhiNName+"_Yield", zeroLeptonLowDeltaPhiNName+"_Yield", RooArgSet(zeroLeptonLowDeltaPhiNQCDDataYield, zeroLeptonLowDeltaPhiNNonQCDDataYield, zeroLeptonLowDeltaPhiNSignalDataYield));
-  RooAddition oneLeptonYield(oneLeptonName+"_Yield", oneLeptonName+"_Yield", RooArgSet(oneLeptonTopWJetsDataYield, oneLeptonDibosonDataYield, oneLeptonSignalDataYield));
-  
-  
+      
   // Define poisson constraints
   RooPoissonLogEval zeroLeptonConstraint(zeroLeptonName+"_Constraint",zeroLeptonName+"_Constraint",zeroLeptonCount,zeroLeptonYield);
   RooPoissonLogEval zeroLeptonLowDeltaPhiNConstraint(zeroLeptonLowDeltaPhiNName+"_Constraint",zeroLeptonLowDeltaPhiNName+"_Constraint",zeroLeptonLowDeltaPhiNCount,zeroLeptonLowDeltaPhiNYield);
-  RooPoissonLogEval oneLeptonConstraint(oneLeptonName+"_Constraint",oneLeptonName+"_Constraint",oneLeptonCount,oneLeptonYield);    
-  
-
-  // Cleanup
   ws.import(zeroLeptonConstraint, RecycleConflictNodes());
   ws.import(zeroLeptonLowDeltaPhiNConstraint, RecycleConflictNodes());
-  ws.import(oneLeptonConstraint, RecycleConflictNodes());
+
+  //Same for one lepton sample if using nominal method
+  if(options.TopWJetsMethod == "ABCD")
+    {
+      RooAbsReal* oneLeptonSignalYield = ws.function(oneLeptonName+"_SignalYield");
+      RooRealVar* oneLeptonTopWJetsYield = ws.var(oneLeptonName+"_TopWJetsYield");
+      assert(oneLeptonSignalYield != NULL);
+      assert(oneLeptonTopWJetsYield != NULL);
+
+      RooRealVar oneLeptonCount(oneLeptonName+"_Count",oneLeptonName+"_Count",observed.oneLepton);
+      oneLeptonCount.setConstant();
+      ws.import(oneLeptonCount);
+      ws.extendSet(names.observables,oneLeptonCount.GetName());
+      
+      RooProduct oneLeptonTopWJetsDataYield(oneLeptonName+"_TopWJetsDataYield", oneLeptonName+"_TopWJetsDataYield", RooArgSet(*oneLeptonTopWJetsYield, *oneLeptonTriggerEfficiency));
+      RooProduct oneLeptonDibosonDataYield(oneLeptonName+"_DibosonDataYield", oneLeptonName+"_DibosonDataYield", RooArgSet(oneLeptonDibosonYield, *oneLeptonTriggerEfficiency));
+      RooProduct oneLeptonSignalDataYield(oneLeptonName+"_SignalDataYield", oneLeptonName+"_SignalDataYield", RooArgSet(*oneLeptonSignalYield, *oneLeptonTriggerEfficiency));
+
+      RooAddition oneLeptonYield(oneLeptonName+"_Yield", oneLeptonName+"_Yield", RooArgSet(oneLeptonTopWJetsDataYield, oneLeptonDibosonDataYield, oneLeptonSignalDataYield));  
+      
+      RooPoissonLogEval oneLeptonConstraint(oneLeptonName+"_Constraint",oneLeptonName+"_Constraint",oneLeptonCount,oneLeptonYield);    
+      
+      ws.import(oneLeptonConstraint, RecycleConflictNodes());
+  }
+  
     
   return true;
-  
 }
 
 
@@ -1430,6 +1429,14 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   //Put "global" parameters into workspace
   makeUnderlyingLikelihood(options, ws , names, numbers);
 
+  //Put trigger efficiencies into workspace
+  //To get later, do e.g. RooAbsArg* zeroLeptonTriggerEfficiency = ws.arg("zeroLeptonTriggerEfficiency_"+bins["bin12"].zeroLeptonTriggerEfficiencyName); 
+  for(vector<TString>::iterator thisBin = binNames.begin(); thisBin != binNames.end() ; thisBin++)
+    {
+      if( skipBin(*thisBin) ) continue;
+      makeTriggerEfficiencies(ws, names, bins[*thisBin] );
+    }
+  
   //Read in MR signal
   if(options.TopWJetsMethod == "metReweighting")
     {
@@ -1439,7 +1446,6 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
 	}
     }
   
-
   //Read in nominal signal
   setupSignalModelOAK(binNames, signalModelFilesPath, nGenerated, signalFractionsOAK, signalStatisticalErrorOAK, signalBTagEfficiencyErrorOAK, signalJesErrorOAK);
 
