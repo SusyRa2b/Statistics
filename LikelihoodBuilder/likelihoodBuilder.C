@@ -684,11 +684,13 @@ void makeUnderlyingLikelihood(const likelihoodOptions options, RooWorkspace& ws 
   names.signalGlobalUncertainty = signalGlobalUncertainty->GetName();
 
 
-  RooRealVar singleLeptonScaling("singleLeptonScaling","singleLeptonScaling",0.0,5);
-  ws.import(singleLeptonScaling);
-  ws.extendSet(names.nuisances,singleLeptonScaling.GetName());
-  names.singleLeptonScaling = singleLeptonScaling.GetName();
-
+  if(options.TopWJetsMethod == "ABCD")
+    {
+      RooRealVar singleLeptonScaling("singleLeptonScaling","singleLeptonScaling",0.0,5);
+      ws.import(singleLeptonScaling);
+      ws.extendSet(names.nuisances,singleLeptonScaling.GetName());
+      names.singleLeptonScaling = singleLeptonScaling.GetName();
+    }
 
   //Objects for Z->invisible background:
 
