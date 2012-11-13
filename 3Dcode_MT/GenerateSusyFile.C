@@ -9,7 +9,7 @@
 #include "TString.h"
 #include "TROOT.h"
 
-void GenerateSusyFile( double flatDummyErr = 10. ) {  //-- flat error in %.  If negative, use MC stat err.
+void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %.  If negative, use MC stat err.
 
 //gluino cross sections in pb.
 

@@ -2812,13 +2812,12 @@
 		n_1lSig_correction[i][j][k]  = 1. ;
 		n_1l_correction[i][j][k]     = 1. ;
 		n_ldp_correction[i][j][k]    = 1. ;
-
-		// relative errors (in %)
 		
 		n_0l_error[i][j][k]     = ArrayContent[3 + 4*(nBinsMET*nBinsHT*nBinsBtag) + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
 		n_1lSig_error[i][j][k]  = ArrayContent[3 + 5*(nBinsMET*nBinsHT*nBinsBtag) + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
 		n_1l_error[i][j][k]     = ArrayContent[3 + 6*(nBinsMET*nBinsHT*nBinsBtag) + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
 		n_ldp_error[i][j][k]    = ArrayContent[3 + 7*(nBinsMET*nBinsHT*nBinsBtag) + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
+
 	    
 		if ( n_0l_raw[i][j][k] > 0.00001 ) {
 		  n_0l_error[i][j][k] = 100 * n_0l_error[i][j][k] / n_0l_raw[i][j][k] ;
