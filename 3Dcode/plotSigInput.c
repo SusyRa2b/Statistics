@@ -44,7 +44,7 @@
       double scaleFactor = (dataLumi/10.)*xsec8TeV ;
       printf("\n Will rescale SUSY MC counts by %g\n\n", scaleFactor ) ;
 
-      gStyle->SetPaintTextFormat(".1f") ;
+      gStyle->SetPaintTextFormat(".2f") ;
 
       int nBinsMET(4), nBinsHT(4), nBinsBtag(3) ;
 
@@ -149,8 +149,14 @@
       TH2F* h_sig_sl[10] ;
       TH2F* h_sig_ldp[10] ;
 
+      TH2F* h_staterr_zl[10] ;
+      TH2F* h_staterr_sl[10] ;
+      TH2F* h_staterr_ldp[10] ;
+
 
       for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
+
+         printf("\n\n\n ======= nB = %d,  Event counts :\n\n", bbi+1 ) ;
 
          char hname[100] ;
          char htitle[100] ;
@@ -190,7 +196,12 @@
 
          for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
             for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-               printf("  m,h,b (%d,%d,%d) : %g, %g\n", mbi+1, hbi+1, bbi+1, n_0l_raw [mbi][hbi][bbi], scaleFactor * n_0l_raw [mbi][hbi][bbi] ) ;
+               printf("  m,h,b (%d,%d,%d) : zl_raw =%5.1f, zl_weighted =%6.2f;   sl_raw =%5.1f, sl_weighted =%6.2f;   ldp_raw = %5.1f, ldp_weighted = %6.2f\n",
+                    mbi+1, hbi+1, bbi+1,
+                    n_0l_raw [mbi][hbi][bbi], scaleFactor * n_0l_raw [mbi][hbi][bbi],
+                    n_1l_raw [mbi][hbi][bbi], scaleFactor * n_1l_raw [mbi][hbi][bbi],
+                    n_ldp_raw [mbi][hbi][bbi], scaleFactor * n_ldp_raw [mbi][hbi][bbi]
+                    ) ;
                h_sig_zl [bbi] -> SetBinContent( hbi+1, nBinsMET-mbi, scaleFactor * n_0l_raw [mbi][hbi][bbi] ) ;
                h_sig_sl [bbi] -> SetBinContent( hbi+1, nBinsMET-mbi, scaleFactor * n_1l_raw [mbi][hbi][bbi] ) ;
                h_sig_ldp[bbi] -> SetBinContent( hbi+1, nBinsMET-mbi, scaleFactor * n_ldp_raw[mbi][hbi][bbi] ) ;
@@ -202,6 +213,70 @@
          h_sig_ldp[bbi] -> SetMaximum(binMax) ;
 
 
+      //---------
+
+         printf("\n\n\n ======= nB = %d,  Stat errors :\n\n", bbi+1 ) ;
+
+         sprintf( hname, "h_staterr_zl_%db", bbi+1 ) ;
+         sprintf( htitle, "ZL signal stat err, MET vs HT, nB=%d", bbi+1 ) ;
+         h_staterr_zl[bbi] = new TH2F( hname, htitle, nBinsHT, 0.5, 0.5+nBinsHT,   nBinsMET, 0.5, nBinsMET+0.5 ) ;
+         sprintf( hname, "h_staterr_sl_%db", bbi+1 ) ;
+         sprintf( htitle, "SL signal stat err, MET vs HT, nB=%d", bbi+1 ) ;
+         h_staterr_sl[bbi] = new TH2F( hname, htitle, nBinsHT, 0.5, 0.5+nBinsHT,   nBinsMET, 0.5, nBinsMET+0.5 ) ;
+         sprintf( hname, "h_staterr_ldp_%db", bbi+1 ) ;
+         sprintf( htitle, "LDP signal stat err, MET vs HT, nB=%d", bbi+1 ) ;
+         h_staterr_ldp[bbi] = new TH2F( hname, htitle, nBinsHT, 0.5, 0.5+nBinsHT,   nBinsMET, 0.5, nBinsMET+0.5 ) ;
+
+         h_staterr_zl[bbi]  -> SetFillColor(18) ;
+         h_staterr_sl[bbi]  -> SetFillColor(18) ;
+         h_staterr_ldp[bbi] -> SetFillColor(18) ;
+
+         h_staterr_zl[bbi]  -> SetMarkerSize(2.5) ;
+         h_staterr_sl[bbi]  -> SetMarkerSize(2.5) ;
+         h_staterr_ldp[bbi] -> SetMarkerSize(2.5) ;
+
+         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            sprintf( binlabel, "HT%d", hbi+1 ) ;
+            h_staterr_zl [bbi] -> GetXaxis() -> SetBinLabel( hbi+1, binlabel ) ;
+            h_staterr_sl [bbi] -> GetXaxis() -> SetBinLabel( hbi+1, binlabel ) ;
+            h_staterr_ldp[bbi] -> GetXaxis() -> SetBinLabel( hbi+1, binlabel ) ;
+         } // hbi
+         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+            sprintf( binlabel, "MET%d", mbi+1 ) ;
+            h_staterr_zl [bbi] -> GetYaxis() -> SetBinLabel( nBinsMET-mbi, binlabel ) ;
+            h_staterr_sl [bbi] -> GetYaxis() -> SetBinLabel( nBinsMET-mbi, binlabel ) ;
+            h_staterr_ldp[bbi] -> GetYaxis() -> SetBinLabel( nBinsMET-mbi, binlabel ) ;
+         } // hbi
+
+         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+            for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+
+               double err_0l(0.), err_1l(0.), err_ldp(0.) ;
+
+               if ( n_0l_raw [mbi][hbi][bbi]  > 0. ) { err_0l  = n_0l_err[mbi][hbi][bbi] / n_0l_raw [mbi][hbi][bbi]  ; }
+               if ( n_1l_raw [mbi][hbi][bbi]  > 0. ) { err_1l  = n_1l_err[mbi][hbi][bbi] / n_1l_raw [mbi][hbi][bbi]  ; }
+               if ( n_ldp_raw [mbi][hbi][bbi] > 0. ) { err_ldp = n_ldp_err[mbi][hbi][bbi] / n_ldp_raw [mbi][hbi][bbi]  ; }
+
+               printf("  m,h,b (%d,%d,%d) : zl_raw = %5.1f, zl=%.2f;   sl_raw = %5.1f, sl=%.2f;    ldp_raw = %5.1f  ldp=%.2f\n",
+                   mbi+1, hbi+1, bbi+1,
+                   n_0l_err[mbi][hbi][bbi], err_0l,
+                   n_1l_err[mbi][hbi][bbi], err_1l,
+                   n_ldp_err[mbi][hbi][bbi], err_ldp
+                   ) ;
+
+               h_staterr_zl [bbi] -> SetBinContent( hbi+1, nBinsMET-mbi,  err_0l  ) ;
+               h_staterr_sl [bbi] -> SetBinContent( hbi+1, nBinsMET-mbi,  err_1l  ) ;
+               h_staterr_ldp[bbi] -> SetBinContent( hbi+1, nBinsMET-mbi,  err_ldp ) ;
+            } // hbi.
+         } // mbi.
+
+         h_staterr_zl[bbi]  -> SetMaximum(1.0) ;
+         h_staterr_sl[bbi]  -> SetMaximum(1.0) ;
+         h_staterr_ldp[bbi] -> SetMaximum(1.0) ;
+
+
+         printf("\n\n\n") ;
+
 
       } // bbi.
 
@@ -212,13 +287,22 @@
 
       TCanvas* csig = (TCanvas*) gDirectory->FindObject("csig") ;
       if ( csig==0x0 ) {
-         csig = new TCanvas( "csig", "sigematics", 900, 900 ) ;
+         csig = new TCanvas( "csig", "signal counts", 900, 900 ) ;
+      }
+
+      TCanvas* cstaterr = (TCanvas*) gDirectory->FindObject("cstaterr") ;
+      if ( cstaterr==0x0 ) {
+         cstaterr = new TCanvas( "cstaterr", "signal stat err", 900, 900 ) ;
       }
 
 
       char drawoptions[100] ;
       sprintf( drawoptions, "boxtext" ) ;
   //  sprintf( drawoptions, "colz" ) ;
+
+
+
+    //------
 
       csig->Clear() ;
       csig->Divide(3,3) ;
@@ -255,10 +339,54 @@
 
       csig->Update() ; csig->Draw() ;
 
+
+
+
+    //------
+
+      cstaterr->Clear() ;
+      cstaterr->Divide(3,3) ;
+
+      cstaterr->cd(1) ;
+      h_staterr_zl[0] -> DrawCopy( drawoptions ) ;
+
+      cstaterr->cd(2) ;
+      h_staterr_zl[1] -> DrawCopy( drawoptions ) ;
+
+      cstaterr->cd(3) ;
+      h_staterr_zl[2] -> DrawCopy( drawoptions ) ;
+
+
+      cstaterr->cd(4) ;
+      h_staterr_sl[0] -> DrawCopy( drawoptions ) ;
+
+      cstaterr->cd(5) ;
+      h_staterr_sl[1] -> DrawCopy( drawoptions ) ;
+
+      cstaterr->cd(6) ;
+      h_staterr_sl[2] -> DrawCopy( drawoptions ) ;
+
+
+      cstaterr->cd(7) ;
+      h_staterr_ldp[0] -> DrawCopy( drawoptions ) ;
+
+      cstaterr->cd(8) ;
+      h_staterr_ldp[1] -> DrawCopy( drawoptions ) ;
+
+      cstaterr->cd(9) ;
+      h_staterr_ldp[2] -> DrawCopy( drawoptions ) ;
+
+
+      cstaterr->Update() ; cstaterr->Draw() ;
+
+
+
+
+
       return true ;
 
 
-   } // plotSystInput
+   } // plotstaterrInput
 
 
 

@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: RooFit                                                           *
  * Package: RooFitModels                                                     *
- *    File: $Id: RooBetaPdf.h,v 1.1 2012/07/20 13:22:18 kreis Exp $
+ *    File: $Id: RooBetaPdf.h,v 1.3 2012/11/02 13:31:53 kreis Exp $
  * Authors:                                                                  *
  *   WV, Wouter Verkerke, UC Santa Barbara, verkerke@slac.stanford.edu       *
  *   DK, David Kirkby,    UC Irvine,         dkirkby@uci.edu                 *
@@ -36,6 +36,11 @@ public:
   Int_t getGenerator(const RooArgSet& directVars, RooArgSet &generateVars, Bool_t staticInitOK=kTRUE) const;
   void generateEvent(Int_t code);
 
+  virtual Double_t getValV(const RooArgSet* set=0) const ;
+  virtual Double_t getLogVal(const RooArgSet* set=0) const ;
+
+  void setSigma0(Double_t newValue) { _sigma0 = newValue; _x0 = -1; }
+
 protected:
 
   RooRealProxy x ;
@@ -45,6 +50,13 @@ protected:
   Double_t evaluate() const ;
 
   double generateGamma(const double& a);
+
+  mutable Double_t _logValue ;
+  
+  Double_t _sigma0 ;
+  Double_t _alpha0 ;
+  Double_t _beta0 ;
+  Double_t _x0 ;
 
 private:
 

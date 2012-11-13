@@ -32,10 +32,6 @@
 //                   Float independent MET corrections for each MET bin > 1.
 //                   Float independent nbjet corrections for each MET bin > 1.
 //
-//               5 : Float independent 0lep/LDP ratios for each HT bin.
-//                   Float one MET correction that's common for bins with index > 1.
-//                   Float one nbjet correction that's common for bins with index > 1.
-//
 //
 //
 
@@ -119,6 +115,8 @@
 
 
 
+      bool useBeta(true) ;
+      bool useLognormal(true) ;
 
 
 
@@ -149,8 +147,8 @@
 
 
 
-      if ( qcdModelIndex<2 || qcdModelIndex>5 ) {
-         printf("\n\n *** Unsupported QCD model index: %d.  Try again with 2,3,4,5.\n\n", qcdModelIndex) ;
+      if ( qcdModelIndex<2 || qcdModelIndex>4 ) {
+         printf("\n\n *** Unsupported QCD model index: %d.  Try again with 2,3,4.\n\n", qcdModelIndex) ;
          return false ;
       }
 
@@ -899,7 +897,7 @@
 
       //--- QCD is a bit more complicated for model 4
 
-      if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
+      if ( qcdModelIndex == 4 ) {
 
          double tmp_qcd ;
 
@@ -930,13 +928,8 @@
                } else {
                   initialguess_model4_SFqcd_nb[bbi] = 0.0 ;
                }
-               if ( bbi>1 && qcdModelIndex == 5 ) {
-                  initialguess_model4_SFqcd_nb[bbi] = initialguess_model4_SFqcd_nb[1] ;
-                  printf( "nb  bin %d : QCD SFnb = %6.3f (value from bin 2)\n", bbi+1, initialguess_model4_SFqcd_nb[bbi] ) ;
-               } else {
-                  printf( "nb  bin %d : QCD SFnb = (%7.1f / %7.1f) = %6.3f\n", bbi+1, tmp_qcd, tmp_denom,
-                     initialguess_model4_SFqcd_nb[bbi] ) ;
-               }
+               printf( "nb  bin %d : QCD SFnb = (%7.1f / %7.1f) = %6.3f\n", bbi+1, tmp_qcd, tmp_denom,
+                  initialguess_model4_SFqcd_nb[bbi] ) ;
             }
          } // bbi.
 
@@ -961,17 +954,11 @@
                if ( qcdModelIndex == 4 ) {
                   initialguess_model4_SFqcd_met[mbi] = 1.41 ;
                   printf( "MET bin %d : QCD SFmet = %6.3f (hardwired guess)\n", mbi+1, initialguess_model4_SFqcd_met[mbi] ) ;
-               } else if ( qcdModelIndex == 5 ) {
-                  initialguess_model4_SFqcd_met[mbi] = initialguess_model4_SFqcd_met[1] ;
-                  printf( "MET bin %d : QCD SFmet = %6.3f (value from bin 2)\n", mbi+1, initialguess_model4_SFqcd_met[mbi] ) ;
                }
             } else if ( mbi == 3 ) {
                if ( qcdModelIndex == 4 ) {
                   initialguess_model4_SFqcd_met[mbi] = 1.98 ;
                   printf( "MET bin %d : QCD SFmet = %6.3f (hardwired guess)\n", mbi+1, initialguess_model4_SFqcd_met[mbi] ) ;
-               } else if ( qcdModelIndex == 5 ) {
-                  initialguess_model4_SFqcd_met[mbi] = initialguess_model4_SFqcd_met[1] ;
-                  printf( "MET bin %d : QCD SFmet = %6.3f (value from bin 2)\n", mbi+1, initialguess_model4_SFqcd_met[mbi] ) ;
                }
             }
          } // mbi.
@@ -1410,8 +1397,8 @@
       RooRealVar* rv_qcd_0lepLDP_ratio[20] ;
 
       //--- QCD model 4: like model 2 but includes MET and nbjet corrections.
-      RooRealVar* rv_SFqcd_met[20] ;
-      RooRealVar* rv_SFqcd_nb[20] ;
+      RooAbsReal* rv_SFqcd_met[20] ;
+      RooAbsReal* rv_SFqcd_nb[20] ;
 
       if ( qcdModelIndex == 1 ) {
 
@@ -1462,7 +1449,7 @@
          sprintf( vname, "qcd_0lepLDP_ratio" ) ;
          rv_qcd_0lepLDP_ratio[0] = new RooRealVar( vname, vname, initialguess_model3_qcd_0lepLDP_ratio, 0., 10. ) ;
 
-      } else if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
+      } else if ( qcdModelIndex == 4 ) {
 
          printf("\n\n  QCD Model %d : One floating 0lep/LDP ratio for each HT bin. Includes MET and nbjet corrections.\n\n", qcdModelIndex) ;
 
@@ -1474,37 +1461,29 @@
             allNuisances -> add( *rv_qcd_0lepLDP_ratio[htbi] ) ; //-- is this correct?
          }
 
-         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-            if ( qcdModelIndex == 5 && mbi > 1 ) {
-               rv_SFqcd_met[mbi] = rv_SFqcd_met[1] ;
+         for ( int mbi=0; mbi<2; mbi++ ) {
+            char vname[1000] ;
+            sprintf( vname, "SFqcd_met%d", mbi+1 ) ;
+            printf("  MET bin %d : %s\n", mbi+1, vname ) ; cout << flush ;
+            rv_SFqcd_met[mbi] = new RooRealVar( vname, vname, initialguess_model4_SFqcd_met[mbi], 0., 3. ) ;
+            if ( mbi==0 ) {
+               ((RooRealVar*)rv_SFqcd_met[mbi]) -> setConstant(kTRUE) ;
             } else {
-               char vname[1000] ;
-               sprintf( vname, "SFqcd_met%d", mbi+1 ) ;
-               printf("  MET bin %d : %s\n", mbi+1, vname ) ; cout << flush ;
-               rv_SFqcd_met[mbi] = new RooRealVar( vname, vname, initialguess_model4_SFqcd_met[mbi], 0., 3. ) ;
-               if ( mbi==0 ) {
-                  rv_SFqcd_met[mbi] -> setConstant(kTRUE) ;
-               } else {
-                  rv_SFqcd_met[mbi] -> setConstant(kFALSE) ;
-                  allNuisances -> add( *rv_SFqcd_met[mbi] ) ; //-- is this correct?
-               }
+               ((RooRealVar*)rv_SFqcd_met[mbi]) -> setConstant(kFALSE) ;
+               allNuisances -> add( *rv_SFqcd_met[mbi] ) ; //-- is this correct?
             }
          }
 
-         for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
-            if ( qcdModelIndex == 5 && bbi > 1 ) {
-               rv_SFqcd_nb[bbi] = rv_SFqcd_nb[1] ;
+         for ( int bbi=0; bbi<2; bbi++ ) {
+            char vname[1000] ;
+            sprintf( vname, "SFqcd_nb%d", bbi+1 ) ;
+            printf("  nbjet bin %d : %s\n", bbi+1, vname ) ; cout << flush ;
+            rv_SFqcd_nb[bbi] = new RooRealVar( vname, vname, initialguess_model4_SFqcd_nb[bbi], 0., 3. ) ;
+            if ( bbi==0 ) {
+               ((RooRealVar*)rv_SFqcd_nb[bbi]) -> setConstant(kTRUE) ;
             } else {
-               char vname[1000] ;
-               sprintf( vname, "SFqcd_nb%d", bbi+1 ) ;
-               printf("  nbjet bin %d : %s\n", bbi+1, vname ) ; cout << flush ;
-               rv_SFqcd_nb[bbi] = new RooRealVar( vname, vname, initialguess_model4_SFqcd_nb[bbi], 0., 3. ) ;
-               if ( bbi==0 ) {
-                  rv_SFqcd_nb[bbi] -> setConstant(kTRUE) ;
-               } else {
-                  rv_SFqcd_nb[bbi] -> setConstant(kFALSE) ;
-                  allNuisances -> add( *rv_SFqcd_nb[bbi] ) ; //-- is this correct?
-               }
+               ((RooRealVar*)rv_SFqcd_nb[bbi]) -> setConstant(kFALSE) ;
+               allNuisances -> add( *rv_SFqcd_nb[bbi] ) ; //-- is this correct?
             }
          }
 
@@ -1529,14 +1508,18 @@
       for (int i = 0 ; i < nBinsMET ; i++) {
 
          sprintf( NP_name, "acc_Zee_M%d", i+1 ) ;
-	 // use makeGaussianConstraint, in order to test the frequentistCalculator machinery
-         //rar_acc_Zee[i] = makeBetaConstraint( NP_name, acc_Zee[i], acc_Zee_err[i] ) ;
-	 rar_acc_Zee[i] = makeGaussianConstraint( NP_name, acc_Zee[i], acc_Zee_err[i] ) ;
+         if ( useBeta ) {
+            rar_acc_Zee[i] = makeBetaConstraint( NP_name, acc_Zee[i], acc_Zee_err[i] ) ;
+         } else {
+            rar_acc_Zee[i] = makeGaussianConstraint( NP_name, acc_Zee[i], acc_Zee_err[i] ) ;
+         }
 
          sprintf( NP_name, "acc_Zmm_M%d", i+1 ) ;
-	 // use makeGaussianConstraint, in order to test the frequentistCalculator machinery
-         //rar_acc_Zmm[i] = makeBetaConstraint( NP_name, acc_Zmm[i], acc_Zmm_err[i] ) ;
-	 rar_acc_Zmm[i] = makeGaussianConstraint( NP_name, acc_Zmm[i], acc_Zmm_err[i] ) ;
+         if ( useBeta ) {
+            rar_acc_Zmm[i] = makeBetaConstraint( NP_name, acc_Zmm[i], acc_Zmm_err[i] ) ;
+         } else {
+            rar_acc_Zmm[i] = makeGaussianConstraint( NP_name, acc_Zmm[i], acc_Zmm_err[i] ) ;
+         }
 
       }
 
@@ -1554,18 +1537,22 @@
 
       // Z -> ll efficiencies
 
-      RooAbsReal* rar_eff_Zee ;
-      RooAbsReal* rar_eff_Zmm ;
+      RooAbsReal* rar_eff_Zee(0x0) ;
+      RooAbsReal* rar_eff_Zmm(0x0) ;
 
       sprintf( NP_name, "eff_Zee" ) ;
-      // use makeGaussianConstraint, in order to test the frequentistCalculator machinery
-      //rar_eff_Zee = makeBetaConstraint( NP_name, eff_Zee, eff_Zee_err ) ;
-      rar_eff_Zee = makeGaussianConstraint( NP_name, eff_Zee, eff_Zee_err ) ;
-      
+      if ( useBeta ) {
+         rar_eff_Zee = makeBetaConstraint( NP_name, eff_Zee, eff_Zee_err ) ;
+      } else {
+         rar_eff_Zee = makeGaussianConstraint( NP_name, eff_Zee, eff_Zee_err ) ;
+      }
+
       sprintf( NP_name, "eff_Zmm" ) ;
-      // use makeGaussianConstraint, in order to test the frequentistCalculator machinery
-      //rar_eff_Zmm = makeBetaConstraint( NP_name, eff_Zmm, eff_Zmm_err ) ;
-      rar_eff_Zmm = makeGaussianConstraint( NP_name, eff_Zmm, eff_Zmm_err ) ;
+      if ( useBeta ) {
+         rar_eff_Zmm = makeBetaConstraint( NP_name, eff_Zmm, eff_Zmm_err ) ;
+      } else {
+         rar_eff_Zmm = makeGaussianConstraint( NP_name, eff_Zmm, eff_Zmm_err ) ;
+      }
 
 
 
@@ -1574,15 +1561,22 @@
 
       // Z -> ll purities
 
+       RooAbsReal* rar_pur_Zee(0x0) ;
+       RooAbsReal* rar_pur_Zmm(0x0) ;
+
        sprintf( NP_name, "pur_Zee" ) ;
-       // use makeGaussianConstraint, in order to test the frequentistCalculator machinery
-       //RooAbsReal* rar_pur_Zee = makeBetaConstraint( NP_name, pur_Zee, pur_Zee_err ) ;
-       RooAbsReal* rar_pur_Zee = makeGaussianConstraint( NP_name, pur_Zee, pur_Zee_err ) ;
+       if ( useBeta ) {
+          rar_pur_Zee = makeBetaConstraint( NP_name, pur_Zee, pur_Zee_err ) ;
+       } else {
+          rar_pur_Zee = makeGaussianConstraint( NP_name, pur_Zee, pur_Zee_err ) ;
+       }
 
        sprintf( NP_name, "pur_Zmm" ) ;
-       // use makeGaussianConstraint, in order to test the frequentistCalculator machinery
-       //RooAbsReal* rar_pur_Zmm = makeBetaConstraint( NP_name, pur_Zmm, pur_Zmm_err ) ;
-       RooAbsReal* rar_pur_Zmm = makeGaussianConstraint( NP_name, pur_Zmm, pur_Zmm_err ) ;
+       if ( useBeta ) {
+          rar_pur_Zmm = makeBetaConstraint( NP_name, pur_Zmm, pur_Zmm_err ) ;
+       } else {
+          rar_pur_Zmm = makeGaussianConstraint( NP_name, pur_Zmm, pur_Zmm_err ) ;
+       }
 
 
 
@@ -1603,15 +1597,27 @@
       for (int i = 0 ; i < nBinsMET ; i++) {
 
          sprintf( NP_name, "knn_1b_M%d", i+1 ) ;
-         rar_knn_1b[i] = makeGaussianConstraint( NP_name, knn_1b[i], knn_1b_err[i] ) ;
+         if ( useLognormal ) {
+            rar_knn_1b[i] = makeLognormalConstraint( NP_name, knn_1b[i], knn_1b_err[i] ) ;
+         } else {
+            rar_knn_1b[i] = makeGaussianConstraint( NP_name, knn_1b[i], knn_1b_err[i] ) ;
+         }
 
       }
 
       sprintf( NP_name, "knn_2b" ) ;
-      rar_knn_2b = makeGaussianConstraint( NP_name, knn_2b, knn_2b_err ) ;
+      if ( useLognormal ) {
+         rar_knn_2b = makeLognormalConstraint( NP_name, knn_2b, knn_2b_err ) ;
+      } else {
+         rar_knn_2b = makeGaussianConstraint( NP_name, knn_2b, knn_2b_err ) ;
+      }
 
       sprintf( NP_name, "knn_3b" ) ;
-      rar_knn_3b = makeGaussianConstraint( NP_name, knn_3b, knn_3b_err ) ;
+      if ( useLognormal ) {
+         rar_knn_3b = makeLognormalConstraint( NP_name, knn_3b, knn_3b_err ) ;
+      } else {
+         rar_knn_3b = makeGaussianConstraint( NP_name, knn_3b, knn_3b_err ) ;
+      }
 
 
 
@@ -1627,10 +1633,18 @@
       sprintf( sfllbpname, "sf_ll" ) ;
 
       sprintf( NP_name, "sf_ee" ) ;
-      rar_sf_ee = makeCorrelatedGaussianConstraint( NP_name, sf_ee, sf_ee_err, sfllbpname ) ;
-      
+      if ( useLognormal ) {
+         rar_sf_ee = makeCorrelatedLognormalConstraint( NP_name, sf_ee, sf_ee_err, sfllbpname ) ;
+      } else {
+         rar_sf_ee = makeCorrelatedGaussianConstraint( NP_name, sf_ee, sf_ee_err, sfllbpname ) ;
+      }
+
       sprintf( NP_name, "sf_mm" ) ;
-      rar_sf_mm = makeCorrelatedGaussianConstraint( NP_name, sf_mm, sf_mm_err, sfllbpname ) ;
+      if ( useLognormal ) {
+         rar_sf_mm = makeCorrelatedLognormalConstraint( NP_name, sf_mm, sf_mm_err, sfllbpname ) ;
+      } else {
+         rar_sf_mm = makeCorrelatedGaussianConstraint( NP_name, sf_mm, sf_mm_err, sfllbpname ) ;
+      }
 
 
 
@@ -1645,8 +1659,13 @@
       // MC scale factor
 
       sprintf( NP_name, "sf_mc" ) ;
-      //// RooAbsReal* rar_sf_mc = makeBetaPrimeConstraint( NP_name, sf_mc, sf_mc_err ) ;
-      RooAbsReal* rar_sf_mc = makeGaussianConstraint( NP_name, sf_mc, sf_mc_err ) ;
+      RooAbsReal* rar_sf_mc(0x0) ;
+
+      if ( useLognormal ) {
+         rar_sf_mc = makeLognormalConstraint( NP_name, sf_mc, sf_mc_err ) ;
+      } else {
+         rar_sf_mc = makeGaussianConstraint( NP_name, sf_mc, sf_mc_err ) ;
+      }
 
 
 
@@ -1670,13 +1689,16 @@
              //--- QCD
 
              sprintf( NP_name, "sf_qcd_M%d_H%d_%db", i+1, j+1, k+1 ) ;
-        //// if ( ! (blindStudy && blind0lepBin[i][j][k]) ) {
-                rar_sf_qcd[i][j][k] = makeGaussianConstraint( NP_name, sf_qcd[i][j][k], sf_qcd_err[i][j][k] ) ;
-                //// rar_sf_qcd[i][j][k] = makeLognormalConstraint( NP_name, sf_qcd[i][j][k], sf_qcd_err[i][j][k] ) ;
-        //// } else {
-        ////    rar_sf_qcd[i][j][k] = makeGaussianConstraint( NP_name, sf_qcd[i][j][k], 0. ) ;
-        ////    workspace.import( *(rar_sf_qcd[i][j][k]) ) ;
-        //// }
+             if ( ! (blindStudy && blind0lepBin[i][j][k]) ) {
+                if ( useLognormal ) {
+                   rar_sf_qcd[i][j][k] = makeLognormalConstraint( NP_name, sf_qcd[i][j][k], sf_qcd_err[i][j][k] ) ;
+                } else {
+                   rar_sf_qcd[i][j][k] = makeGaussianConstraint( NP_name, sf_qcd[i][j][k], sf_qcd_err[i][j][k] ) ;
+                }
+             } else {
+                rar_sf_qcd[i][j][k] = makeGaussianConstraint( NP_name, sf_qcd[i][j][k], 0. ) ; //-- this just creates a constant.
+                workspace.import( *(rar_sf_qcd[i][j][k]) ) ;
+             }
 
 
 
@@ -1684,12 +1706,15 @@
 
 
              sprintf( NP_name, "sf_ttwj_M%d_H%d_%db", i+1, j+1, k+1 ) ;
-        //// if ( ! (blindStudy && blind0lepBin[i][j][k]) ) {
-                rar_sf_ttwj[i][j][k] = makeGaussianConstraint( NP_name, sf_ttwj[i][j][k], sf_ttwj_err[i][j][k] ) ;
-                //////rar_sf_ttwj[i][j][k] = makeLognormalConstraint( NP_name, sf_ttwj[i][j][k], sf_ttwj_err[i][j][k] ) ;
-        //// } else {
-        ////    rar_sf_ttwj[i][j][k] = makeGaussianConstraint( NP_name, sf_ttwj[i][j][k], 0. ) ;
-        //// }
+             if ( ! (blindStudy && blind0lepBin[i][j][k]) ) {
+                if ( useLognormal ) {
+                   rar_sf_ttwj[i][j][k] = makeLognormalConstraint( NP_name, sf_ttwj[i][j][k], sf_ttwj_err[i][j][k] ) ;
+                } else {
+                   rar_sf_ttwj[i][j][k] = makeGaussianConstraint( NP_name, sf_ttwj[i][j][k], sf_ttwj_err[i][j][k] ) ;
+                }
+             } else {
+                rar_sf_ttwj[i][j][k] = makeGaussianConstraint( NP_name, sf_ttwj[i][j][k], 0. ) ; //-- this just creates a constant.
+             }
 
 
              printf("--------\n") ;
@@ -1709,63 +1734,74 @@
 
 
       //-- If using QCD model 4, give a few floating parameters some help with a constraint PDF.
+      //
 
       printf("\n\n") ;
       if ( qcdModelIndex == 4 ) {
 
         //-- constrain MET scale factors for >= bin 3 (counting from 1).
-         if ( nBinsMET==4 ) {
-
-            char pdfname[1000] ;
-            char meanname[1000] ;
-            char signame[1000] ;
-
-            sprintf( pdfname, "pdf_%s", rv_SFqcd_met[2]->GetName() ) ;
-            sprintf( meanname, "pdf_mean_%s", rv_SFqcd_met[2]->GetName() ) ;
-            sprintf( signame, "pdf_sigma_%s", rv_SFqcd_met[2]->GetName() ) ;
-            RooRealVar* mean_mb3 = new RooRealVar( meanname, meanname, 1.34, 0., 5. ) ; //-- value hardwired from chi2 fit of MC ratios.
-	    mean_mb3->setConstant(kTRUE);
-            RooConstVar* sigma_mb3 = new RooConstVar( signame, signame, 0.14 ) ; //-- value is diff between SFmet3 and SFmet2 divided by 2.
-            //RooConstVar* sigma_mb3 = new RooConstVar( signame, signame, 0.34 ) ; //-- value is diff between 1-SF
-	    printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_met[2]->GetName(), mean_mb3->getVal(), sigma_mb3->getVal() ) ;
-            RooGaussian* rg_mb3 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_met[2], *mean_mb3, *sigma_mb3) ;
-            allNuisances -> add( *rv_SFqcd_met[2] ) ;
-            allNuisancePdfs -> add( *rg_mb3 ) ;
-	    globalObservables->add( *mean_mb3 ) ;
-
-
-            sprintf( pdfname, "pdf_%s", rv_SFqcd_met[3]->GetName() ) ;
-            sprintf( meanname, "pdf_mean_%s", rv_SFqcd_met[3]->GetName() ) ;
-            sprintf( signame, "pdf_sigma_%s", rv_SFqcd_met[3]->GetName() ) ;
-            RooRealVar* mean_mb4 = new RooRealVar( meanname, meanname, 1.90, 0., 5. ) ; //-- value hardwired from chi2 fit of MC ratios.
-	    mean_mb4->setConstant(kTRUE);
-            RooConstVar* sigma_mb4 = new RooConstVar( signame, signame, 0.43 ) ; //-- value is diff between SFmet4 and SFmet2 divided by 2.
-            //RooConstVar* sigma_mb4 = new RooConstVar( signame, signame, 0.90 ) ; //-- value is 1-SF
-	    printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_met[3]->GetName(), mean_mb4->getVal(), sigma_mb4->getVal() ) ;
-            RooGaussian* rg_mb4 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_met[3], *mean_mb4, *sigma_mb4) ;
-            allNuisances -> add( *rv_SFqcd_met[3] ) ;
-            allNuisancePdfs -> add( *rg_mb4 ) ;
-            globalObservables -> add( *mean_mb4 ) ;
-
-
-            sprintf( pdfname, "pdf_%s", rv_SFqcd_nb[2]->GetName() ) ;
-            sprintf( meanname, "pdf_mean_%s", rv_SFqcd_nb[2]->GetName() ) ;
-            sprintf( signame, "pdf_sigma_%s", rv_SFqcd_nb[2]->GetName() ) ;
-            RooRealVar* mean_nb3 = new RooRealVar( meanname, meanname, 0.69, 0., 5. ) ; //-- value hardwired from chi2 fit of MC ratios.
-	    mean_nb3->setConstant(kTRUE);
-            RooConstVar* sigma_nb3 = new RooConstVar( signame, signame, 0.16 ) ; //-- guess: 1-SF / 2.  chi2 fit error is 0.07 so this is reasonable in magnitude.
-            //RooConstVar* sigma_nb3 = new RooConstVar( signame, signame, 0.31 ) ; //-- guess: 1-SF 
-	    printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_nb[2]->GetName(), mean_nb3->getVal(), sigma_nb3->getVal() ) ;
-            RooGaussian* rg_nb3 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_nb[2], *mean_nb3, *sigma_nb3) ;
-            allNuisances -> add( *rv_SFqcd_nb[2] ) ;
-            allNuisancePdfs -> add( *rg_nb3 ) ;
-            globalObservables -> add( *mean_nb3 ) ;
-            //-- set starting value to constraint mean.
-            rv_SFqcd_nb[2] -> setVal( 0.69 ) ;
-
-         } else {
-            printf("\n\n *** QCD model 4 : NOT adding constraint PDFs for MET SFs, since I don't know what to do for this binning.\n") ;
+         if (  ! (nBinsMET==4 && nBinsBtag==3)  ) {
+            printf("\n\n *** QCD model 4 : I don't know what to do for this binning.  Parameters hardwired for nMET=4, nB=3\n") ;
+            return false ;
          }
+
+         if ( useLognormal ) {
+            rv_SFqcd_met[2] = makeLognormalConstraint( "SFqcd_met3", 1.34, 0.14 ) ;  // !!! hardwired numbers !!!
+            rv_SFqcd_met[3] = makeLognormalConstraint( "SFqcd_met4", 1.90, 0.43 ) ;  // !!! hardwired numbers !!!
+            rv_SFqcd_nb[2]  = makeLognormalConstraint( "SFqcd_nb3",  0.69, 0.16 ) ;  // !!! hardwired numbers !!!
+         } else {
+            rv_SFqcd_met[2] = makeGaussianConstraint(  "SFqcd_met3", 1.34, 0.14 ) ;  // !!! hardwired numbers !!!
+            rv_SFqcd_met[3] = makeGaussianConstraint(  "SFqcd_met4", 1.90, 0.43 ) ;  // !!! hardwired numbers !!!
+            rv_SFqcd_nb[2]  = makeGaussianConstraint(  "SFqcd_nb3",  0.69, 0.16 ) ;  // !!! hardwired numbers !!!
+         }
+
+      // char pdfname[1000] ;
+      // char meanname[1000] ;
+      // char signame[1000] ;
+
+      // sprintf( pdfname, "pdf_%s", rv_SFqcd_met[2]->GetName() ) ;
+      // sprintf( meanname, "pdf_mean_%s", rv_SFqcd_met[2]->GetName() ) ;
+      // sprintf( signame, "pdf_sigma_%s", rv_SFqcd_met[2]->GetName() ) ;
+      // RooRealVar* mean_mb3 = new RooRealVar( meanname, meanname, 1.34, 0., 5. ) ; //-- value hardwired from chi2 fit of MC ratios.
+      // mean_mb3->setConstant(kTRUE);
+      // RooConstVar* sigma_mb3 = new RooConstVar( signame, signame, 0.14 ) ; //-- value is diff between SFmet3 and SFmet2 divided by 2.
+      // //RooConstVar* sigma_mb3 = new RooConstVar( signame, signame, 0.34 ) ; //-- value is diff between 1-SF
+      // printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_met[2]->GetName(), mean_mb3->getVal(), sigma_mb3->getVal() ) ;
+      // RooGaussian* rg_mb3 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_met[2], *mean_mb3, *sigma_mb3) ;
+      // allNuisances -> add( *rv_SFqcd_met[2] ) ;
+      // allNuisancePdfs -> add( *rg_mb3 ) ;
+      // globalObservables->add( *mean_mb3 ) ;
+
+
+      // sprintf( pdfname, "pdf_%s", rv_SFqcd_met[3]->GetName() ) ;
+      // sprintf( meanname, "pdf_mean_%s", rv_SFqcd_met[3]->GetName() ) ;
+      // sprintf( signame, "pdf_sigma_%s", rv_SFqcd_met[3]->GetName() ) ;
+      // RooRealVar* mean_mb4 = new RooRealVar( meanname, meanname, 1.90, 0., 5. ) ; //-- value hardwired from chi2 fit of MC ratios.
+      // mean_mb4->setConstant(kTRUE);
+      // RooConstVar* sigma_mb4 = new RooConstVar( signame, signame, 0.43 ) ; //-- value is diff between SFmet4 and SFmet2 divided by 2.
+      // //RooConstVar* sigma_mb4 = new RooConstVar( signame, signame, 0.90 ) ; //-- value is 1-SF
+      // printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_met[3]->GetName(), mean_mb4->getVal(), sigma_mb4->getVal() ) ;
+      // RooGaussian* rg_mb4 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_met[3], *mean_mb4, *sigma_mb4) ;
+      // allNuisances -> add( *rv_SFqcd_met[3] ) ;
+      // allNuisancePdfs -> add( *rg_mb4 ) ;
+      // globalObservables -> add( *mean_mb4 ) ;
+
+
+      // sprintf( pdfname, "pdf_%s", rv_SFqcd_nb[2]->GetName() ) ;
+      // sprintf( meanname, "pdf_mean_%s", rv_SFqcd_nb[2]->GetName() ) ;
+      // sprintf( signame, "pdf_sigma_%s", rv_SFqcd_nb[2]->GetName() ) ;
+      // RooRealVar* mean_nb3 = new RooRealVar( meanname, meanname, 0.69, 0., 5. ) ; //-- value hardwired from chi2 fit of MC ratios.
+      // mean_nb3->setConstant(kTRUE);
+      // RooConstVar* sigma_nb3 = new RooConstVar( signame, signame, 0.16 ) ; //-- guess: 1-SF / 2.  chi2 fit error is 0.07 so this is reasonable in magnitude.
+      // //RooConstVar* sigma_nb3 = new RooConstVar( signame, signame, 0.31 ) ; //-- guess: 1-SF 
+      // printf(" QCD model 4 : adding constraint PDF for %s with mean %5.3f and sigma %5.3f\n", rv_SFqcd_nb[2]->GetName(), mean_nb3->getVal(), sigma_nb3->getVal() ) ;
+      // RooGaussian* rg_nb3 = new RooGaussian( pdfname, pdfname, *rv_SFqcd_nb[2], *mean_nb3, *sigma_nb3) ;
+      // allNuisances -> add( *rv_SFqcd_nb[2] ) ;
+      // allNuisancePdfs -> add( *rg_nb3 ) ;
+      // globalObservables -> add( *mean_nb3 ) ;
+      // //-- set starting value to constraint mean.
+      // rv_SFqcd_nb[2] -> setVal( 0.69 ) ;
+
       }
       printf("\n\n") ;
 
@@ -1778,9 +1814,6 @@
 
 
 
-      //-- Using Gaussian here since this is a scale factor, not the actual
-      //   efficiency, and the efficiency is far from 1 (much closer to zero).
-      //
 
       RooAbsReal* rar_eff_sf[nBinsMET][nBinsHT][nBinsBtag] ;
       RooAbsReal* rar_eff_sf_sl[nBinsMET][nBinsHT][nBinsBtag] ;
@@ -1796,23 +1829,35 @@
 
                sprintf( NP_name, "eff_sf_M%d_H%d_%db", i+1, j+1, k+1 ) ;
                if ( !blindStudy ) {
-                  rar_eff_sf[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf[i][j][k]->getVal(), rv_width_eff_sf[i][j][k]->getVal() ) ;
+                  if ( useLognormal ) {
+                     rar_eff_sf[i][j][k] = makeLognormalConstraint( NP_name, rv_mean_eff_sf[i][j][k]->getVal(), rv_width_eff_sf[i][j][k]->getVal() ) ;
+                  } else {
+                     rar_eff_sf[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf[i][j][k]->getVal(), rv_width_eff_sf[i][j][k]->getVal() ) ;
+                  }
                } else {
-                  rar_eff_sf[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf[i][j][k]->getVal(), 0.0 ) ;
+                  rar_eff_sf[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf[i][j][k]->getVal(), 0.0 ) ; // this just makes a constant.
                }
 
                sprintf( NP_name, "eff_sf_sl_M%d_H%d_%db", i+1, j+1, k+1 ) ;
                if ( !blindStudy ) {
-                  rar_eff_sf_sl[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf_sl[i][j][k]->getVal(), rv_width_eff_sf_sl[i][j][k]->getVal() ) ;
+                  if ( useLognormal ) {
+                     rar_eff_sf_sl[i][j][k] = makeLognormalConstraint( NP_name, rv_mean_eff_sf_sl[i][j][k]->getVal(), rv_width_eff_sf_sl[i][j][k]->getVal() ) ;
+                  } else {
+                     rar_eff_sf_sl[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf_sl[i][j][k]->getVal(), rv_width_eff_sf_sl[i][j][k]->getVal() ) ;
+                  }
                } else {
-                  rar_eff_sf_sl[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf_sl[i][j][k]->getVal(), 0.0 ) ;
+                  rar_eff_sf_sl[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf_sl[i][j][k]->getVal(), 0.0 ) ; // this just makes a constant.
                }
 
                sprintf( NP_name, "eff_sf_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
                if ( !blindStudy ) {
-                  rar_eff_sf_ldp[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf_ldp[i][j][k]->getVal(), rv_width_eff_sf_ldp[i][j][k]->getVal() ) ;
+                  if ( useLognormal ) {
+                     rar_eff_sf_ldp[i][j][k] = makeLognormalConstraint( NP_name, rv_mean_eff_sf_ldp[i][j][k]->getVal(), rv_width_eff_sf_ldp[i][j][k]->getVal() ) ;
+                  } else {
+                     rar_eff_sf_ldp[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf_ldp[i][j][k]->getVal(), rv_width_eff_sf_ldp[i][j][k]->getVal() ) ;
+                  }
                } else {
-                  rar_eff_sf_ldp[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf_ldp[i][j][k]->getVal(), 0.0 ) ;
+                  rar_eff_sf_ldp[i][j][k] = makeGaussianConstraint( NP_name, rv_mean_eff_sf_ldp[i][j][k]->getVal(), 0.0 ) ; // this just makes a constant.
                }
 
             } // k
@@ -1826,18 +1871,28 @@
       char shapeSystName[20][100] ;
 
       sprintf( shapeSystName[nShapeSystematics], "btageff_sf" ) ;
-   // setupShapeSyst( inputSusy_deff_dbtageff_file, "btageff_sf", 1, m0, m12, workspace ) ; // 1 = Gaussian
-      setupShapeSyst( inputSusy_deff_dbtageff_file, "btageff_sf", 2, m0, m12, workspace ) ; // 2 = log-normal
+      if ( useLognormal ) {
+         setupShapeSyst( inputSusy_deff_dbtageff_file, "btageff_sf", 2, m0, m12, workspace ) ; // 2 = log-normal
+      } else {
+         setupShapeSyst( inputSusy_deff_dbtageff_file, "btageff_sf", 1, m0, m12, workspace ) ; // 1 = Gaussian
+      }
       nShapeSystematics++ ;
 
       sprintf( shapeSystName[nShapeSystematics], "JES_sf" ) ;
-   // setupShapeSyst( systFile1                   , "JES_sf"    , 1, m0, m12, workspace ) ; // 1 = Gaussian
-      setupShapeSyst( systFile1                   , "JES_sf"    , 2, m0, m12, workspace ) ; // 2 = log-normal
+      if ( useLognormal ) {
+         setupShapeSyst( systFile1                   , "JES_sf"    , 2, m0, m12, workspace ) ; // 2 = log-normal
+      } else {
+         setupShapeSyst( systFile1                   , "JES_sf"    , 1, m0, m12, workspace ) ; // 1 = Gaussian
+      }
       nShapeSystematics++ ;
 
 
-      // set the Gaussian constraint on the diboson background scale factor
-      RooAbsReal* rar_vv_sf = makeGaussianConstraint( "rar_vv_sf", rv_mean_vv_sf->getVal(), rv_width_vv_sf->getVal() ) ;
+      RooAbsReal* rar_vv_sf(0x0) ;
+      if ( useLognormal ) {
+         rar_vv_sf = makeLognormalConstraint( "rar_vv_sf", rv_mean_vv_sf->getVal(), rv_width_vv_sf->getVal() ) ;
+      } else {
+         rar_vv_sf = makeGaussianConstraint( "rar_vv_sf", rv_mean_vv_sf->getVal(), rv_width_vv_sf->getVal() ) ;
+      }
 
       // make beta constraints for trigger efficiency corrections
       printf("\n\n trigger efficiencies.\n\n") ; cout << flush ;
@@ -1851,12 +1906,18 @@
           if ( ignoreBin[i][j] ) continue ;
 
           sprintf( NP_name, "trigeff_M%d_H%d", i+1, j+1 ) ;
-          //rar_trigeff[i][j] = makeBetaConstraint( NP_name, trigeff_0L[i][j], trigefferr_0L[i][j] ) ;
-	  rar_trigeff[i][j] = makeGaussianConstraint( NP_name, trigeff_0L[i][j], trigefferr_0L[i][j] ) ;
+          if ( useBeta ) {
+             rar_trigeff[i][j] = makeBetaConstraint( NP_name, trigeff_0L[i][j], trigefferr_0L[i][j] ) ;
+          } else {
+             rar_trigeff[i][j] = makeGaussianConstraint( NP_name, trigeff_0L[i][j], trigefferr_0L[i][j] ) ;
+          }
 
           sprintf( NP_name, "trigeff_sl_M%d_H%d", i+1, j+1 ) ;
-          //rar_trigeff_sl[i][j] = makeBetaConstraint( NP_name, trigeff_1L[i][j], trigefferr_1L[i][j] ) ;
-	  rar_trigeff_sl[i][j] = makeGaussianConstraint( NP_name, trigeff_1L[i][j], trigefferr_1L[i][j] ) ;
+          if ( useBeta ) {
+             rar_trigeff_sl[i][j] = makeBetaConstraint( NP_name, trigeff_1L[i][j], trigefferr_1L[i][j] ) ;
+          } else {
+             rar_trigeff_sl[i][j] = makeGaussianConstraint( NP_name, trigeff_1L[i][j], trigefferr_1L[i][j] ) ;
+          }
         }
       }
 
@@ -1881,7 +1942,13 @@
       printf("  %20s : %5.3f\n\n\n", "Total", all_gu ) ;
 
 
-      RooAbsReal* rar_all_gu = makeGaussianConstraint( "all_gu", 1.0, all_gu ) ;
+      RooAbsReal* rar_all_gu(0x0) ;
+
+      if ( useLognormal ) {
+         rar_all_gu = makeLognormalConstraint( "all_gu", 1.0, all_gu ) ;
+      } else {
+         rar_all_gu = makeGaussianConstraint( "all_gu", 1.0, all_gu ) ;
+      }
 
 
 
@@ -1988,7 +2055,7 @@
                rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
                                                         RooArgSet( *rv_mu_qcd_ldp[i][j][k], *rar_sf_qcd[i][j][k], *rv_qcd_0lepLDP_ratio[0] ) ) ;
 
-            } else if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
+            } else if ( qcdModelIndex == 4 ) {
 
                TString rfvQcdString = "@0 * @1 * @2 * @3 * @4" ;
 
@@ -2790,10 +2857,12 @@
        betaModeTransform( NP_val, NP_err, alpha, beta ) ;
 
        sprintf( varname, "alpha_%s", NP_name ) ;
-       RooAbsReal* rar_alpha = new RooConstVar( varname, varname, alpha ) ;
+       RooAbsReal* rar_alpha = new RooRealVar( varname, varname, alpha, 0., 1e6 ) ;
+       ((RooRealVar*)rar_alpha) -> setConstant(kTRUE) ;
 
        sprintf( varname, "beta_%s", NP_name ) ;
-       RooAbsReal* rar_beta = new RooConstVar( varname, varname, beta ) ;
+       RooAbsReal* rar_beta = new RooRealVar( varname, varname, beta, 0., 1e6 ) ;
+       ((RooRealVar*)rar_beta) -> setConstant(kTRUE) ;
 
        RooAbsReal* rar_np = new RooRealVar( NP_name, NP_name, NP_val, 0., 1. ) ;
 
@@ -2802,80 +2871,13 @@
 
        allNuisances -> add( *rar_np ) ;
        allNuisancePdfs -> add( *rar_pdf ) ;
+       globalObservables -> add( *rar_alpha ) ;
+       globalObservables -> add( *rar_beta ) ;
 
 
        return rar_np ;
 
 
- //  //--- Old way with two pseudo observations below here.
-
- //    RooRealVar *rrv_passObs, *rrv_failObs, *rrv_passPar, *rrv_failPar ;
- //    RooPoisson *passConstraint, *failConstraint ;
-
- //    double parVal, parErr, upperLimit, lowerLimit ;
-
- //    sprintf( varname, "passObs_%s", NP_name ) ;
- //    rrv_passObs = new RooRealVar( varname, varname, alpha-1., 1e-5, 1e5 ) ;
- //    rrv_passObs -> setConstant( kTRUE ) ;
-
- //    sprintf( varname, "failObs_%s", NP_name ) ;
- //    rrv_failObs = new RooRealVar( varname, varname, beta -1., 1e-5, 1e5 ) ;
- //    rrv_failObs -> setConstant( kTRUE ) ;
-
- //    globalObservables -> add( *rrv_passObs ) ;
- //    globalObservables -> add( *rrv_failObs ) ;
-
-
- //    parVal = alpha-1. ;
- //    lowerLimit = parVal - 6*sqrt(parVal) ;
- //    if ( lowerLimit <= 0. ) { lowerLimit = 1e-5 ; }
- //    upperLimit = parVal + 6*sqrt(parVal) ;
- //    if ( parVal > 0. ) { parErr = sqrt( parVal ) ; } else { parErr = 0. ; }
- //    sprintf( varname, "passPar_%s", NP_name ) ;
- //    rrv_passPar = new RooRealVar( varname, varname, parVal, lowerLimit, upperLimit ) ;
- //    rrv_passPar -> setError( parErr ) ;
- //    rrv_passPar->setConstant( kFALSE ) ;
- //    printf(" floating nuisance parameter: %s = %g +/- %g, [%g, %g]\n",
- //        varname, parVal, parErr, lowerLimit, upperLimit ) ;
-
- //    parVal = beta-1. ;
- //    lowerLimit = parVal - 6*sqrt(parVal) ;
- //    if ( lowerLimit <= 0. ) { lowerLimit = 1e-5 ; }
- //    upperLimit = parVal + 6*sqrt(parVal) ;
- //    if ( parVal > 0. ) { parErr = sqrt( parVal ) ; } else { parErr = 0. ; }
- //    sprintf( varname, "failPar_%s", NP_name ) ;
- //    rrv_failPar = new RooRealVar( varname, varname, parVal, lowerLimit, upperLimit ) ;
- //    rrv_failPar -> setError( parErr ) ;
- //    rrv_failPar->setConstant( kFALSE ) ;
- //    printf(" floating nuisance parameter: %s = %g +/- %g, [%g, %g]\n",
- //        varname, parVal, parErr, lowerLimit, upperLimit ) ;
-
- //    allNuisances -> add( *rrv_passPar ) ;
- //    allNuisances -> add( *rrv_failPar ) ;
-
-
- //    sprintf( varname, "passConstraint_%s", NP_name ) ;
- //    passConstraint = new RooPoisson( varname, varname, *rrv_passObs, *rrv_passPar ) ;
- //    printf("  Created constraint PDF : %s, val = %g, logval = %g\n",
- //      varname, passConstraint->getVal(), passConstraint->getLogVal() ) ;
-
- //    sprintf( varname, "failConstraint_%s", NP_name ) ;
- //    failConstraint = new RooPoisson( varname, varname, *rrv_failObs, *rrv_failPar ) ;
- //    printf("  Created constraint PDF : %s, val = %g, logval = %g\n",
- //      varname, failConstraint->getVal(), failConstraint->getLogVal() ) ;
-
- //    allNuisancePdfs -> add( *passConstraint ) ;
- //    allNuisancePdfs -> add( *failConstraint ) ;
-
- //    sprintf( varname, "%s_passPlusFail", NP_name ) ;
- //    RooAddition* passPlusFail = new RooAddition( varname, varname, RooArgSet(*rrv_passPar, *rrv_failPar) ) ;
-
-
- //    sprintf( varname, "%s", NP_name ) ;
- //    RooAbsReal* rar = new RooRatio( varname, varname, *rrv_passPar, *passPlusFail ) ;
- //    printf("  Created nuisance parameter %s : val = %g\n", varname, rar -> getVal() ) ;
-
- //    return rar ;
 
     } // makeBetaConstraint.
 
