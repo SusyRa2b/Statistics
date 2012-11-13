@@ -11,6 +11,7 @@
 #include "TH1F.h"
 #include "TString.h"
 #include "TStyle.h"
+#include "TText.h"
 #include "RooGaussian.h"
 #include "RooProdPdf.h"
 #include "RooAbsPdf.h"
@@ -664,28 +665,24 @@
        double poiBest(-1.) ;
        double poiMinus1stdv(-1.) ;
        double poiPlus1stdv(-1.) ;
-       double twodeltalnLMin(1e9) ;
-       if ( poiAtMinusDelta2 >= 0. && poiAtPlusDelta2 > 0. ) {
-          graph->Fit("pol5","", "", poiAtMinusDelta2, poiAtPlusDelta2 ) ;
-          TF1* fitFunc = graph->GetFunction("pol5") ;
-          if ( fitFunc != 0 ) {
-             int npoints(1000) ;
-             for ( int fi=0; fi<npoints; fi++ ) {
-                double poiVal = poiAtMinusDelta2 + (poiAtPlusDelta2-poiAtMinusDelta2)/(1.*npoints)*fi ;
-                double fit2deltalnL = fitFunc->Eval( poiVal ) ;
-                if ( poiMinus1stdv < 0. && fit2deltalnL<1.0 ) { poiMinus1stdv = poiVal ; }
-                if ( fit2deltalnL < twodeltalnLMin ) { poiBest = poiVal;  twodeltalnLMin = fit2deltalnL ; }
-                if ( twodeltalnLMin < 0.3 && poiPlus1stdv < 0. && fit2deltalnL > 1.0 ) { poiPlus1stdv = poiVal ; }
-             } // fi.
-          }
-          printf("\n\n POI estimate :  %g  +%g  -%g    [%g,%g]\n\n",
-                  poiBest, (poiPlus1stdv-poiBest), (poiBest-poiMinus1stdv), poiMinus1stdv, poiPlus1stdv ) ;
-          if ( rrv_obs != 0 ) {
-             printf(" Observable value : %g\n\n", rrv_obs->getVal() ) ;
-          }
-       } else {
-          printf("\n\n *** Scan range insufficient.\n\n\n") ;
+       double twoDeltalnLMin(1e9) ;
+
+       int nscan(1000) ;
+       for ( int xi=0; xi<nscan; xi++ ) {
+
+          double x = poiVals[0] + xi*(poiVals[npoiPoints-1]-poiVals[0])/(nscan-1) ;
+
+          double twoDeltalnL = graph -> Eval( x ) ;
+
+          if ( poiMinus1stdv < 0. && twoDeltalnL < 1.0 ) { poiMinus1stdv = x ; printf(" set m1 : %d, x=%g, 2dnll=%g\n", xi, x, twoDeltalnL) ;}
+          if ( twoDeltalnL < twoDeltalnLMin ) { poiBest = x ; twoDeltalnLMin = twoDeltalnL ; }
+          if ( twoDeltalnLMin < 0.3 && poiPlus1stdv < 0. && twoDeltalnL > 1.0 ) { poiPlus1stdv = x ; printf(" set p1 : %d, x=%g, 2dnll=%g\n", xi, x, twoDeltalnL) ;}
+
+          if ( xi%100 == 0 ) { printf( " %4d : poi=%6.2f,  2DeltalnL = %6.2f\n", xi, x, twoDeltalnL ) ; }
+
        }
+       printf("\n\n POI estimate :  %g  +%g  -%g    [%g,%g]\n\n",
+               poiBest, (poiPlus1stdv-poiBest), (poiBest-poiMinus1stdv), poiMinus1stdv, poiPlus1stdv ) ;
 
        char htitle[1000] ;
        sprintf(htitle, "%s profile likelihood scan: -2ln(L/Lm)", new_poi_name ) ;
@@ -707,6 +704,16 @@
        line->DrawLine(poiMinVal, 1., poiPlus1stdv, 1.) ;
        line->DrawLine(poiMinus1stdv,0., poiMinus1stdv, 1.) ;
        line->DrawLine(poiPlus1stdv ,0., poiPlus1stdv , 1.) ;
+
+       TText* text = new TText() ;
+       text->SetTextSize(0.04) ;
+       char tstring[1000] ;
+
+       sprintf( tstring, "%s = %.1f +%.1f -%.1f", new_poi_name, poiBest, (poiPlus1stdv-poiBest), (poiBest-poiMinus1stdv) ) ;
+       text -> DrawTextNDC( 0.15, 0.85, tstring ) ;
+
+       sprintf( tstring, "68%% interval [%.1f,  %.1f]", poiMinus1stdv, poiPlus1stdv ) ;
+       text -> DrawTextNDC( 0.15, 0.78, tstring ) ;
 
 
        char hname[1000] ;
