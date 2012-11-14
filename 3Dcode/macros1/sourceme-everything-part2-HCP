@@ -1,0 +1,12 @@
+
+   echo workspace
+   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles/data-unblind.dat\",\"datfiles/sigcounts.T1bbbb.txt\",1200,300,\"datfiles/btagEff_T1bbbb.txt\",4,\"rootfiles/ws-data-unblind-1200-300.root\",\"null\",\"datfiles/sigsystematics.T1bbbb.JES.txt\"\) >&  logfiles/makews-data-unblind-1200-300.log
+   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles/data-unblind.dat\",\"datfiles/sigcounts.T1bbbb.txt\",1200,600,\"datfiles/btagEff_T1bbbb.txt\",4,\"rootfiles/ws-data-unblind-1200-600.root\",\"null\",\"datfiles/sigsystematics.T1bbbb.JES.txt\"\) >&  logfiles/makews-data-unblind-1200-600.log
+   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles/data-unblind.dat\",\"datfiles/sigcounts.T1bbbb.txt\",900,600,\"datfiles/btagEff_T1bbbb.txt\",4,\"rootfiles/ws-data-unblind-900-600.root\",\"null\",\"datfiles/sigsystematics.T1bbbb.JES.txt\"\) >&  logfiles/makews-data-unblind-900-600.log
+
+   echo fitqual
+   $ROOTSYS/bin/root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-data-unblind-1200-300.root\",0\) > &! logfiles/fitqual-data-unblind-sm-only.log
+   $ROOTSYS/bin/root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-data-unblind-1200-300.root\",-1\) > &! logfiles/fitqual-data-unblind-1200-300.log
+   $ROOTSYS/bin/root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-data-unblind-1200-600.root\",-1\) > &! logfiles/fitqual-data-unblind-1200-600.log
+   $ROOTSYS/bin/root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-data-unblind-900-600.root\",-1\) > &! logfiles/fitqual-data-unblind-900-600.log
+

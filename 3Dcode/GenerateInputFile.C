@@ -1380,7 +1380,18 @@ inFile << "knn_3b_err       \t" << 0.007<< endl;
     inFile << "GU_luminosity   0.044" << endl ;
     inFile << "GU_metcleaning  0.031" << endl ;
 
+   //-- Nov 14, 2012 : add QCD model parameters to avoid hardwiring things in ra2bRoostatsClass3D_3b
+   //    see logfile of mcclosure4 for values.
+   //    Uncertainties are (SFmet3-SFmet2)/2
+   //                      (SFmet4-SFmet2)/2
+   //                      (1-SFnb3)/2 added in quad with stat err from chi2 fit.
 
+    inFile << "SFqcd_met3       1.49" << endl ;
+    inFile << "SFqcd_met3_err   0.15" << endl ;
+    inFile << "SFqcd_met4       2.14" << endl ;
+    inFile << "SFqcd_met4_err   0.48" << endl ;
+    inFile << "SFqcd_nb3        0.79" << endl ;
+    inFile << "SFqcd_nb3_err    0.18" << endl ;
 
 
 

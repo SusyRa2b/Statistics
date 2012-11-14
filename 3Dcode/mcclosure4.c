@@ -1205,13 +1205,13 @@
       for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
          char pname[1000] ;
          sprintf( pname, "SFqcd_MET%d", mbi+1 ) ;
-         myMinuit->mnparm( parind, pname, 1.0, 0.10, 0., 2., ierflg ) ;
+         myMinuit->mnparm( parind, pname, 1.0, 0.10, 0., 4., ierflg ) ;
          parind++ ;
       } // mbi.
       for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {
          char pname[1000] ;
          sprintf( pname, "SFqcd_nb%d", bbi+1 ) ;
-         myMinuit->mnparm( parind, pname, 1.0, 0.10, 0., 2., ierflg ) ;
+         myMinuit->mnparm( parind, pname, 1.0, 0.10, 0., 4., ierflg ) ;
          parind++ ;
       } // mbi.
 

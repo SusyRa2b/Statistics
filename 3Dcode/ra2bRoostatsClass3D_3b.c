@@ -814,6 +814,40 @@
 
 
 
+      //--- Nov 14, 2012: add QCD model parameters that need to be constrained so that
+      //                   they are not hardwired here.
+
+      float input_SFqcd_met3(0.) ;
+      float input_SFqcd_met3_err(0.) ;
+      float input_SFqcd_met4(0.) ;
+      float input_SFqcd_met4_err(0.) ;
+      float input_SFqcd_nb3(0.) ;
+      float input_SFqcd_nb3_err(0.) ;
+
+      sprintf( target_label, "SFqcd_met3" ) ;
+      fscanf( infp, "%s %g", label, &input_SFqcd_met3 ) ;
+      if ( strcmp( label, target_label ) != 0 ) { printf("\n\n *** expecting %s, found %s\n\n", target_label, label ) ; return false ; }
+
+      sprintf( target_label, "SFqcd_met3_err" ) ;
+      fscanf( infp, "%s %g", label, &input_SFqcd_met3_err ) ;
+      if ( strcmp( label, target_label ) != 0 ) { printf("\n\n *** expecting %s, found %s\n\n", target_label, label ) ; return false ; }
+
+      sprintf( target_label, "SFqcd_met4" ) ;
+      fscanf( infp, "%s %g", label, &input_SFqcd_met4 ) ;
+      if ( strcmp( label, target_label ) != 0 ) { printf("\n\n *** expecting %s, found %s\n\n", target_label, label ) ; return false ; }
+
+      sprintf( target_label, "SFqcd_met4_err" ) ;
+      fscanf( infp, "%s %g", label, &input_SFqcd_met4_err ) ;
+      if ( strcmp( label, target_label ) != 0 ) { printf("\n\n *** expecting %s, found %s\n\n", target_label, label ) ; return false ; }
+
+      sprintf( target_label, "SFqcd_nb3" ) ;
+      fscanf( infp, "%s %g", label, &input_SFqcd_nb3 ) ;
+      if ( strcmp( label, target_label ) != 0 ) { printf("\n\n *** expecting %s, found %s\n\n", target_label, label ) ; return false ; }
+
+      sprintf( target_label, "SFqcd_nb3_err" ) ;
+      fscanf( infp, "%s %g", label, &input_SFqcd_nb3_err ) ;
+      if ( strcmp( label, target_label ) != 0 ) { printf("\n\n *** expecting %s, found %s\n\n", target_label, label ) ; return false ; }
+
 
 
       printf("\n Done reading in %s\n\n", infile ) ;
@@ -836,7 +870,8 @@
 
 
       //// double initialguess_ttwj_0lep1lep_ratio = 1.59 ;
-      double initialguess_ttwj_0lep1lep_ratio = 1.28 ;
+      //// double initialguess_ttwj_0lep1lep_ratio = 1.28 ;
+      double initialguess_ttwj_0lep1lep_ratio = 1.00 ;
 
       printf("\n\n initial guess for ttwj 0lep/1lep ratio : %5.2f\n\n", initialguess_ttwj_0lep1lep_ratio ) ;
 
@@ -952,13 +987,13 @@
                     initialguess_model4_SFqcd_met[mbi] ) ;
             } else if ( mbi == 2 ) {
                if ( qcdModelIndex == 4 ) {
-                  initialguess_model4_SFqcd_met[mbi] = 1.41 ;
-                  printf( "MET bin %d : QCD SFmet = %6.3f (hardwired guess)\n", mbi+1, initialguess_model4_SFqcd_met[mbi] ) ;
+                  initialguess_model4_SFqcd_met[mbi] = input_SFqcd_met3 ;
+                  printf( "MET bin %d : QCD SFmet = %6.3f\n", mbi+1, initialguess_model4_SFqcd_met[mbi] ) ;
                }
             } else if ( mbi == 3 ) {
                if ( qcdModelIndex == 4 ) {
-                  initialguess_model4_SFqcd_met[mbi] = 1.98 ;
-                  printf( "MET bin %d : QCD SFmet = %6.3f (hardwired guess)\n", mbi+1, initialguess_model4_SFqcd_met[mbi] ) ;
+                  initialguess_model4_SFqcd_met[mbi] = input_SFqcd_met4 ;
+                  printf( "MET bin %d : QCD SFmet = %6.3f\n", mbi+1, initialguess_model4_SFqcd_met[mbi] ) ;
                }
             }
          } // mbi.
@@ -1746,13 +1781,13 @@
          }
 
          if ( useLognormal ) {
-            rv_SFqcd_met[2] = makeLognormalConstraint( "SFqcd_met3", 1.34, 0.14 ) ;  // !!! hardwired numbers !!!
-            rv_SFqcd_met[3] = makeLognormalConstraint( "SFqcd_met4", 1.90, 0.43 ) ;  // !!! hardwired numbers !!!
-            rv_SFqcd_nb[2]  = makeLognormalConstraint( "SFqcd_nb3",  0.69, 0.16 ) ;  // !!! hardwired numbers !!!
+            rv_SFqcd_met[2] = makeLognormalConstraint( "SFqcd_met3", input_SFqcd_met3, input_SFqcd_met3_err ) ;
+            rv_SFqcd_met[3] = makeLognormalConstraint( "SFqcd_met4", input_SFqcd_met4, input_SFqcd_met3_err ) ;
+            rv_SFqcd_nb[2]  = makeLognormalConstraint( "SFqcd_nb3",  input_SFqcd_nb3 , input_SFqcd_nb3_err  ) ;
          } else {
-            rv_SFqcd_met[2] = makeGaussianConstraint(  "SFqcd_met3", 1.34, 0.14 ) ;  // !!! hardwired numbers !!!
-            rv_SFqcd_met[3] = makeGaussianConstraint(  "SFqcd_met4", 1.90, 0.43 ) ;  // !!! hardwired numbers !!!
-            rv_SFqcd_nb[2]  = makeGaussianConstraint(  "SFqcd_nb3",  0.69, 0.16 ) ;  // !!! hardwired numbers !!!
+            rv_SFqcd_met[2] = makeGaussianConstraint(  "SFqcd_met3", input_SFqcd_met3, input_SFqcd_met3_err ) ;
+            rv_SFqcd_met[3] = makeGaussianConstraint(  "SFqcd_met4", input_SFqcd_met4, input_SFqcd_met3_err ) ;
+            rv_SFqcd_nb[2]  = makeGaussianConstraint(  "SFqcd_nb3",  input_SFqcd_nb3 , input_SFqcd_nb3_err  ) ;
          }
 
       // char pdfname[1000] ;
@@ -2394,8 +2429,8 @@
 
          printf("\n\n Initial guess for ttwj 0lep/1lep ratio: %6.3f\n\n", rv_ttwj_0lep1lep_ratio->getVal() ) ;
 
-         double scanLow  = 1.0 ;
-         double scanHigh = 2.0 ;
+         double scanLow  = 0.7 ;
+         double scanHigh = 1.5 ;
          double bestVal = rv_ttwj_0lep1lep_ratio->getVal() ;
          double bestlnL( -1.e99 ) ;
          int nScanPoints(50) ;
