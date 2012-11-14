@@ -253,6 +253,7 @@
 
 
     //--- Try computing an average over the nbjet samples.
+    //    Nov 14: only average nb=2 and nb>=3.
 
       TH1F* h_ttwj_ave_0over1ratio = (TH1F*) hmctruth_ttwj_0over1ratio_1b->Clone("h_ttwj_ave_0over1ratio") ;
       h_ttwj_ave_0over1ratio->Reset() ;
@@ -262,7 +263,7 @@
       double ttwj_wsum[100] ;
       for ( int j=0; j<100; j++ ) { ttwj_wvsum[j] = 0. ; ttwj_wsum[j] = 0. ; }
 
-      for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+      for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {
 
          TH1F* hp(0x0) ;
 
@@ -297,13 +298,13 @@
 
 
 
-     //--- Compute RMS of =1, =2, >=3 values.  Don't use points with big errors.
+     //--- Compute RMS of =2, >=3 values.  Don't use points with big errors.
 
       int ttwj_nsum[100] ;
       double ttwj_sumdiffsq[100] ;
       for ( int j=0; j<100; j++ ) { ttwj_nsum[j] = 0; ttwj_sumdiffsq[j] = 0. ; }
 
-      for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+      for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {
 
          TH1F* hp(0x0) ;
 
@@ -904,7 +905,7 @@
             sprintf( htitle, "QCD 0lep events, nb=%d, %s", bbi+1, samplename[si] ) ;
             hflat_0lep[si][bbi] = bookHist( hname, htitle, si ) ;
             hflat_0lep[si][bbi]->SetFillColor(11) ;
-            hldp[si][bbi]->Print("all") ;
+            ////// hldp[si][bbi]->Print("all") ;
 
             sprintf( hname, "hflat_ldp_%db_%s", bbi+1, samplename[si] ) ;
             sprintf( htitle, "QCD LDP events, nb=%d, %s", bbi+1, samplename[si] ) ;
@@ -941,6 +942,11 @@
 
                   hflat_0lepldp_ratio[si][bbi] -> SetBinContent( histbin, ratio ) ;
                   hflat_0lepldp_ratio[si][bbi] -> SetBinError( histbin, ratio_err ) ;
+
+               // if ( ratio < 0.05 && ratio > 0. ) {
+               //    printf("  QCD warning: %s : nb=%d, met=%d, ht=%d : N0lep=%g, Nldp=%g, ratio=%g +/- %g\n",
+               //       samplename[si], bbi+1, mbi+1, hbi+1, n0lep, nldp, ratio, ratio_err ) ;
+               // }
 
 
                } // hbi.
@@ -1325,6 +1331,9 @@
 		  float sub_error = 0.10; // 
 		  hflat_scale_factor_withRMSerror[bbi] -> SetBinContent( histbin, 1.0 );
 		  hflat_scale_factor_withRMSerror[bbi] -> SetBinError(   histbin, sqrt( closure_error*closure_error + stat_error*stat_error + sub_error*sub_error ) ) ;
+                  printf(" QCD SF: met=%d, ht=%d, nb=%d : closure_error=%5.3f,  stat_error=%5.3f,  sub_error=%5.3f,  total_error=%5.3f\n",
+                        mbi+1, hbi+1, bbi+1,
+                        closure_error, stat_error, sub_error, sqrt( closure_error*closure_error + stat_error*stat_error + sub_error*sub_error ) ) ;
                } else if ( qcdModelIndex == 3 ) {
 
                   //-- QCD Model 3.  SF_i = (0lep/LDP)_i / global_(0lep/LDP)

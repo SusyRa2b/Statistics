@@ -13,7 +13,7 @@
 #include "TSystem.h"
 #include "TH2F.h"
 #include "TCanvas.h"
-#include "SmallTree.C"
+///////#include "SmallTree.C"
 
   using std::stringstream ;
   using std::ofstream ;
@@ -24,7 +24,7 @@
 
   void saveHist(const char* filename, const char* pat) ;
   TH1F* bookHist(const char* hname, const char* htitle, const char* selstring, int nbjet, int nBinsMET, int nBinsHT ) ;
-  void FillHTMET(TChain *chain, TH2F *histo, int si, int k) ;
+  /////// void FillHTMET(TChain *chain, TH2F *histo, int si, int k) ;
   
 // to add in: nMu, nEl, minDelPhi
 
@@ -147,12 +147,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   const int nBinsBjets = 3 ;   // this must always be 3
   const int nJetsCut = 3 ;     // #jets >= nJetsCut
 
-//be careful because this is hard coded now in SmallTree::Loop
   double minLeadJetPt = 70. ;
   double min3rdJetPt = 50. ;
   
-  /////////// bool doPUreweighting = true;
-  bool doPUreweighting = false ;
 
   //-- met2-ht1-v1
 //const int nBinsMET   = 2 ;
@@ -385,21 +382,6 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     cHbins[j] = base;
   }
 
-  TString leadJetPtCutString ;
-  {
-     leadJetPtCutString = "(pt_1st_leadJet>" ;
-     stringstream number ;
-     number << minLeadJetPt ;
-     stringstream number2 ;
-     number2 << min3rdJetPt ;
-     leadJetPtCutString += number.str() ;
-     leadJetPtCutString += "&&pt_2nd_leadJet>" ;
-     leadJetPtCutString += number.str() ;
-     leadJetPtCutString += "&&pt_3rd_leadJet>" ;
-     leadJetPtCutString += number2.str() ;
-     leadJetPtCutString += ")" ;
-  }
-
 //int dummyInt = 99;
 //float dummyFloat = 9.999;
   float dummyZero = 0.;
@@ -442,14 +424,19 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   
   inFile << endl ;
 
+   char bcut[3][100] = { "nB==1", "nB==2", "nB>=3" } ;
+
+   char commoncuts[10000] ;
+   sprintf( commoncuts, "maxChNMultDiff<40&&pfOcaloMET<2.0&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)",
+             nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
 
    int nSel(3) ;
    char selname[3][100] = { "0lep", "1lep", "ldp" } ;
 
-   char selcuts[3][10000] = {
-        "nIsoTrk==0&&pfOcaloMET<2.0&&minDelPhiN>4&&nMu==0&&nEl==0&&",
-        "pfOcaloMET<2.0&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&",
-        "nIsoTrk==0&&pfOcaloMET<2.0&&minDelPhiN<4&&nMu==0&&nEl==0&&" } ;
+   char selcuts[3][10000] ;
+   sprintf( selcuts[0], "minDelPhiN>4&&nMu==0&&nEl==0&&nIsoTrk==0" ) ; //--- 0lep
+   sprintf( selcuts[1], "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )" ) ; //--- 1lep
+   sprintf( selcuts[2], "minDelPhiN<4&&nMu==0&&nEl==0&&nIsoTrk==0" ) ; //--- ldp
 
 
   //--- Output histograms.
@@ -502,11 +489,6 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
       } // bbi.
    } // si.
 
-
-
-
-     ///// TH1F* hmctruth_fit_zee_1b  = bookHist("hmctruth_fit_zee_1b" , "Zee" , "Zee", 1, nBinsMET, nBinsHT ) ;
-     ///// TH1F* hmctruth_fit_zmm_1b  = bookHist("hmctruth_fit_zmm_1b" , "Zmm" , "Zmm", 1, nBinsMET, nBinsHT ) ;
 
      bookHist("hmctruth_fit_zee_1b" , "Zee" , "Zee", 1, nBinsMET, nBinsHT ) ;
      bookHist("hmctruth_fit_zmm_1b" , "Zmm" , "Zmm", 1, nBinsMET, nBinsHT ) ;
@@ -572,52 +554,42 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
         char allcuts[10000] ;
         char allsusycuts[10000] ;
 
-        if ( k < (nBinsBjets-1) ) {
-          sprintf( allcuts, "%snB==%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&pfOcaloMET<2", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
-          sprintf( allsusycuts, "%snB==%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)%s&&pfOcaloMET<2", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt, susycut.Data() ) ;
-        } else {
-          sprintf( allcuts, "%snB>=%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&pfOcaloMET<2", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
-          sprintf( allsusycuts, "%snB>=%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)%s&&pfOcaloMET<2", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt, susycut.Data() ) ;
-        }
+        sprintf( allcuts,     "weightPU*(%s&&%s&&%s)"    , commoncuts, selcuts[si], bcut[k] ) ;
+        sprintf( allsusycuts, "weightPU*(%s&&%s&&%s&&%s)", commoncuts, selcuts[si], bcut[k], susycut.Data() ) ;
 
 
         printf("\n\n N_%s -- nbjet bin (%d): cuts=%s\n\n", selname[si], k, allcuts) ; cout << flush ;
 
         char hname[100] ;
         sprintf( hname, "h_tt_%db", k+1 ) ;
-        if(doPUreweighting) FillHTMET(&chainTT, h_tt[k], si, k);
-	else chainTT.Project (hname,"HT:MET",allcuts);
+        chainTT.Project (hname,"HT:MET",allcuts);
         h_tt[k] -> Scale( kfactor_tt ) ;
-	printf("    %12s %7.1f events\n", hname, h_tt[k]->Integral() ) ; cout << flush ;
+        printf("    %12s %7.1f events\n", hname, h_tt[k]->Integral() ) ; cout << flush ;
 
         sprintf( hname, "h_wjets_%db", k+1 ) ;
-        if(doPUreweighting) FillHTMET(&chainWJets, h_wjets[k], si, k);
-	else chainWJets.Project(hname,"HT:MET",allcuts);
+        chainWJets.Project(hname,"HT:MET",allcuts);
         h_wjets[k] -> Scale( kfactor_wjets ) ;
-	printf("    %12s %7.1f events\n", hname, h_wjets[k]->Integral() ) ; cout << flush ;
+        printf("    %12s %7.1f events\n", hname, h_wjets[k]->Integral() ) ; cout << flush ;
 
         sprintf( hname, "h_qcd_%db", k+1 ) ;
-        if (doPUreweighting) FillHTMET(&chainQCD, h_qcd[k], si, k);
-	else chainQCD.Project(hname,"HT:MET",allcuts);
+        chainQCD.Project(hname,"HT:MET",allcuts);
         h_qcd[k] -> Scale( kfactor_qcd ) ;
-	printf("    %12s %7.1f events\n", hname, h_qcd[k]->Integral() ) ; cout << flush ;
+        printf("    %12s %7.1f events\n", hname, h_qcd[k]->Integral() ) ; cout << flush ;
 
         sprintf( hname, "h_znn_%db", k+1 ) ;
-        if (doPUreweighting) FillHTMET(&chainZnn, h_znn[k], si, k);
-	else chainZnn.Project(hname,"HT:MET",allcuts);
-	printf("    %12s %7.1f events\n", hname, h_znn[k]->Integral() ) ; cout << flush ;
+        chainZnn.Project(hname,"HT:MET",allcuts);
+        printf("    %12s %7.1f events\n", hname, h_znn[k]->Integral() ) ; cout << flush ;
 
         sprintf( hname, "h_vv_%db", k+1 ) ;
-        if (doPUreweighting) FillHTMET(&chainVV, h_vv[k], si, k);
-	else chainVV.Project(hname,"HT:MET",allcuts);
-	printf("    %12s %7.1f events\n", hname, h_vv[k]->Integral() ) ; cout << flush ;
+        chainVV.Project(hname,"HT:MET",allcuts);
+        printf("    %12s %7.1f events\n", hname, h_vv[k]->Integral() ) ; cout << flush ;
 
         if ( mgl > 0. ) {
            sprintf( hname, "h_susy_%db", k+1 ) ;
            chainT1bbbb.Project(hname,"HT:MET",allsusycuts);
            h_susy[k]->Scale( t1bbbbWeight ) ;
            printf("    %12s %7.1f events\n", hname, h_susy[k]->Integral() ) ; cout << flush ;
-	   if (si==0) nSusyTotal += h_susy[k]->Integral();
+           if (si==0) nSusyTotal += h_susy[k]->Integral();
         }
       } // k
       if (si==0) printf("N_Susy_Total = %7.1f events", nSusyTotal); cout << flush;
@@ -701,27 +673,27 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
              hmctruth_all[si][k]   -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(wjetserr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(vverr,2) + pow(susyerr,2) ) ) ;
 
 
-	     // compute fractions of SL 2b/1b and 3b/1b
+             // compute fractions of SL 2b/1b and 3b/1b
 
-	     if ( si == 1 && k > 0 ) {
+             if ( si == 1 && k > 0 ) {
 
-	       double ttval_1b = h_tt[0] -> GetBinContent( i+1, j+1 ) ;
-	       double wjetsval_1b = h_wjets[0] -> GetBinContent( i+1, j+1 ) ;
+               double ttval_1b = h_tt[0] -> GetBinContent( i+1, j+1 ) ;
+               double wjetsval_1b = h_wjets[0] -> GetBinContent( i+1, j+1 ) ;
 
-	       double ttwjval = ttval + wjetsval ;
-	       double ttwjval_1b = ttval_1b + wjetsval_1b ;
+               double ttwjval = ttval + wjetsval ;
+               double ttwjval_1b = ttval_1b + wjetsval_1b ;
 
-	       if ( k == 1 ) {
-		 sl_frac2b_val[i][j] = ( ttwjval ) / ( ttwjval_1b ) ;
-		 sl_frac2b_err[i][j] = 0.01 ;   // start with arbitrary errors, first
-	       }
+               if ( k == 1 ) {
+                 sl_frac2b_val[i][j] = ( ttwjval ) / ( ttwjval_1b ) ;
+                 sl_frac2b_err[i][j] = 0.01 ;   // start with arbitrary errors, first
+               }
 
-	       if ( k == 2 ) {
-		 sl_frac3b_val[i][j] = ( ttwjval ) / ( ttwjval_1b ) ;
-		 sl_frac3b_err[i][j] = 0.01 ;   // start with arbitrary errors, first
-	       }
+               if ( k == 2 ) {
+                 sl_frac3b_val[i][j] = ( ttwjval ) / ( ttwjval_1b ) ;
+                 sl_frac3b_err[i][j] = 0.01 ;   // start with arbitrary errors, first
+               }
 
-	     }
+             }
 
             } // k
           } // j
@@ -735,46 +707,46 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
              h_qcd[k] -> Reset() ;
              h_znn[k] -> Reset() ;
              h_vv[k] -> Reset() ;
-	     h_susy[k] -> Reset() ;
+             h_susy[k] -> Reset() ;
           }
 
 
      } // si.
 
 
-     // for systematics evaluation, print out fraction of events in 1L from non-ttwj sources					     
-     float totalttwj = 0.0;													     
-     float totalsm = 0.0;													     
-     for (int i = 0 ; i < nBinsMET ; i++) {											     
-       for (int j = 0 ; j < nBinsHT ; j++) {											     
-     	 for (int k = 0 ; k < nBinsBjets ; k++) {										     
-     	   int histbin = 1 + (nBinsHT+1)*i + j + 1 ;										     
-     	   float ttwjcount = hmctruth_ttwj[1][k] -> GetBinContent( histbin );
-     	   float smcount = hmctruth_allsm[1][k] -> GetBinContent( histbin );							     
-     	   cout << "For bin M" << i+1 << "H" << j+1 << "b" << k+1 << " 1L non-ttwj fraction = " << (1-(ttwjcount/smcount)) << endl;  
-     	   totalttwj += ttwjcount;												     
-     	   totalsm += smcount;
-     	 }
+     // for systematics evaluation, print out fraction of events in 1L from non-ttwj sources
+     float totalttwj = 0.0;
+     float totalsm = 0.0;
+     for (int i = 0 ; i < nBinsMET ; i++) {
+       for (int j = 0 ; j < nBinsHT ; j++) {
+         for (int k = 0 ; k < nBinsBjets ; k++) {
+           int histbin = 1 + (nBinsHT+1)*i + j + 1 ;
+           float ttwjcount = hmctruth_ttwj[1][k] -> GetBinContent( histbin );
+           float smcount = hmctruth_allsm[1][k] -> GetBinContent( histbin );
+           cout << "For bin M" << i+1 << "H" << j+1 << "b" << k+1 << " 1L non-ttwj fraction = " << (1-(ttwjcount/smcount)) << endl;
+           totalttwj += ttwjcount;
+           totalsm += smcount;
+         }
        }
      }
-     cout << "Total 1L non-ttwj fraction = " << (1-(totalttwj/totalsm)) << endl;						     
+     cout << "Total 1L non-ttwj fraction = " << (1-(totalttwj/totalsm)) << endl;
 
-     // for systematics evaluation, print out fraction of events in LDP from non-QCD sources					     
-     float totalqcd = 0.0;													     
-     totalsm = 0.0;														     
-     for (int i = 0 ; i < nBinsMET ; i++) {											     
-       for (int j = 0 ; j < nBinsHT ; j++) {											     
-     	 for (int k = 0 ; k < nBinsBjets ; k++) {										     
-     	   int histbin = 1 + (nBinsHT+1)*i + j + 1 ;										     
-     	   float qcdcount = hmctruth_qcd[2][k] -> GetBinContent( histbin );
-     	   float smcount = hmctruth_allsm[2][k] -> GetBinContent( histbin );							     
-     	   cout << "For bin M" << i+1 << "H" << j+1 << "b" << k+1 << " LDP non-qcd fraction = " << (1-(qcdcount/smcount)) << endl;   
-     	   totalqcd += qcdcount;												     
-     	   totalsm += smcount;
-     	 }
+     // for systematics evaluation, print out fraction of events in LDP from non-QCD sources
+     float totalqcd = 0.0;
+     totalsm = 0.0;
+     for (int i = 0 ; i < nBinsMET ; i++) {
+       for (int j = 0 ; j < nBinsHT ; j++) {
+         for (int k = 0 ; k < nBinsBjets ; k++) {
+           int histbin = 1 + (nBinsHT+1)*i + j + 1 ;
+           float qcdcount = hmctruth_qcd[2][k] -> GetBinContent( histbin );
+           float smcount = hmctruth_allsm[2][k] -> GetBinContent( histbin );
+           cout << "For bin M" << i+1 << "H" << j+1 << "b" << k+1 << " LDP non-qcd fraction = " << (1-(qcdcount/smcount)) << endl;
+           totalqcd += qcdcount;
+           totalsm += smcount;
+         }
        }
      }
-     cout << "Total LDP non-qcd fraction = " << (1-(totalqcd/totalsm)) << endl;						     
+     cout << "Total LDP non-qcd fraction = " << (1-(totalqcd/totalsm)) << endl;
 
 
 
@@ -839,7 +811,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
          printf("\n\n") ;
 
 
-         char bcut[3][100] = { "nB==1", "nB==2", "nB>=3" } ;
+
+      //--- NOTE: Small PU weights can screw up the ZL/LDP ratio for the same reason
+      //          that the sample weights can, since the number of selected events
+      //          is small in each ratio.
+      //          Turning PU weighting off for QCD closure.
 
          for ( int si=0; si<nQcdSamples; si++ ) {
 
@@ -849,7 +825,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
                char arg1[1000] ;
 
                char cuts0lep[10000] ;
-               sprintf( cuts0lep, "%s(%s)&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&pfOcaloMET<2", selcuts[0], bcut[bbi], nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
+               sprintf( cuts0lep, "(%s&&%s&&%s)"    , commoncuts, selcuts[0], bcut[bbi] ) ;
                printf("     %db, 0lep cuts : %s\n", bbi+1, cuts0lep ) ;
                sprintf( arg1, "HT:MET>>h_0lep_%db_%s", bbi+1, qcdsamplename[si] ) ;
                qcdch[si] -> Draw( arg1, cuts0lep ) ;
@@ -859,7 +835,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 
                char cutsldp[10000] ;
-               sprintf( cutsldp, "%s(%s)&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&pfOcaloMET<2", selcuts[2], bcut[bbi], nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
+               sprintf( cutsldp, "(%s&&%s&&%s)"    , commoncuts, selcuts[2], bcut[bbi] ) ;
                printf("     %db, ldp  cuts : %s\n", bbi+1, cutsldp  ) ;
                sprintf( arg1, "HT:MET>>h_ldp_%db_%s", bbi+1, qcdsamplename[si] ) ;
                qcdch[si] -> Draw( arg1, cutsldp, "colz" ) ;
@@ -886,6 +862,21 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     cutszee += njcut.str();
     cutszee += "&&";
 /*
+  TString leadJetPtCutString ;
+  {
+     leadJetPtCutString = "(pt_1st_leadJet>" ;
+     stringstream number ;
+     number << minLeadJetPt ;
+     stringstream number2 ;
+     number2 << min3rdJetPt ;
+     leadJetPtCutString += number.str() ;
+     leadJetPtCutString += "&&pt_2nd_leadJet>" ;
+     leadJetPtCutString += number.str() ;
+     leadJetPtCutString += "&&pt_3rd_leadJet>" ;
+     leadJetPtCutString += number2.str() ;
+     leadJetPtCutString += ")" ;
+  }
+
     for (int i = 0 ; i < nBinsMET ; i++) {
       for (int j = 0 ; j < nBinsHT ; j++) {
   
@@ -1493,24 +1484,23 @@ inFile << "knn_3b_err       \t" << 0.007<< endl;
   
     }
   
-  //==========================================================================================
-  
-  void FillHTMET(TChain *chain, TH2F *histo, int si, int k) {
+////==========================================================================================
+//
+//void FillHTMET(TChain *chain, TH2F *histo, int si, int k) {
 
-     TObjArray *fileElements=chain->GetListOfFiles();
-     TIter next(fileElements);
-     TChainElement *chEl=0;
-     while (( chEl=(TChainElement*)next() )) {
-        TFile f(chEl->GetTitle());
-        TTree *tree = (TTree*)f.Get("tree");
-	SmallTree *t = new SmallTree(tree);
-	t->Loop(histo, si, k);
-     }
+//   TObjArray *fileElements=chain->GetListOfFiles();
+//   TIter next(fileElements);
+//   TChainElement *chEl=0;
+//   while (( chEl=(TChainElement*)next() )) {
+//      TFile f(chEl->GetTitle());
+//      TTree *tree = (TTree*)f.Get("tree");
+//      SmallTree *t = new SmallTree(tree);
+//      t->Loop(histo, si, k);
+//   }
 
-//     SmallTree *t = new SmallTree(chain);
-//     t->Loop(histo, si, k);
+////     SmallTree *t = new SmallTree(chain);
+////     t->Loop(histo, si, k);
 
-    return;    
-  }
-
-  //==========================================================================================
+//  return;    
+//}
+////==========================================================================================

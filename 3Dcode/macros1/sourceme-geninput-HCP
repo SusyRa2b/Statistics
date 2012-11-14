@@ -3,9 +3,9 @@
    mkdir -p rootfiles
    mkdir -p datfiles
 
-   echo GenerateInputFile
-   $ROOTSYS/bin/root -b -q GenerateInputFile.C+ >&! logfiles/geninput-met4-ht4-v15.log
-   mv Input-met4-ht4-v15.dat datfiles/
+ # echo GenerateInputFile
+ # $ROOTSYS/bin/root -b -q GenerateInputFile.C+ >&! logfiles/geninput-met4-ht4-v15.log
+ # mv Input-met4-ht4-v15.dat datfiles/
 
  # echo GenerateDummyDeffDbtag
  # $ROOTSYS/bin/root -b -q GenerateDummyDeffDbtag.C\(4,4\) >&! logfiles/dummy-deff-met4-ht4.log

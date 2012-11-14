@@ -47,17 +47,17 @@
 
        TChain datach("tree") ;
 
-       datach.Add( "filesHCP_53_v4/MET_2012A.root" ) ;
-       datach.Add( "filesHCP_53_v4/MET_2012B.root" ) ;
-       datach.Add( "filesHCP_53_v4/MET_2012C_pr.root" ) ;
-       datach.Add( "filesHCP_53_v4/MET_2012C_rr.root" ) ;
-       datach.Add( "filesHCP_53_v4/HT_2012A.root" ) ;
-       datach.Add( "filesHCP_53_v4/HTMHT_2012B.root" ) ;
-       datach.Add( "filesHCP_53_v4/HTMHT_2012C_pr.root" ) ;
-       datach.Add( "filesHCP_53_v4/HTMHT_2012C_rr.root" ) ;
-       datach.Add( "filesHCP_53_v4/JetHT_2012B.root" ) ;
-       datach.Add( "filesHCP_53_v4/JetHT_2012C_pr.root" ) ;
-       datach.Add( "filesHCP_53_v4/JetHT_2012C_rr.root" ) ;
+       datach.Add( "filesHCP_53_v6/MET_2012A.root" ) ;
+       datach.Add( "filesHCP_53_v6/MET_2012B.root" ) ;
+       datach.Add( "filesHCP_53_v6/MET_2012C_pr.root" ) ;
+       datach.Add( "filesHCP_53_v6/MET_2012C_rr.root" ) ;
+       datach.Add( "filesHCP_53_v6/HT_2012A.root" ) ;
+       datach.Add( "filesHCP_53_v6/HTMHT_2012B.root" ) ;
+       datach.Add( "filesHCP_53_v6/HTMHT_2012C_pr.root" ) ;
+       datach.Add( "filesHCP_53_v6/HTMHT_2012C_rr.root" ) ;
+       datach.Add( "filesHCP_53_v6/JetHT_2012B.root" ) ;
+       datach.Add( "filesHCP_53_v6/JetHT_2012C_pr.root" ) ;
+       datach.Add( "filesHCP_53_v6/JetHT_2012C_rr.root" ) ;
 
        TH2F* h_ldp[nBinsBjets] ;
        TH2F* h_zl [nBinsBjets] ;
@@ -83,14 +83,25 @@
 
        } // bbi.
 
+       const int nJetsCut = 3 ;     // #jets >= nJetsCut
+       double minLeadJetPt = 70. ;
+       double min3rdJetPt = 50. ;
+
+       char commoncuts[10000] ;
+       sprintf( commoncuts, "maxChNMultDiff<40&&pfOcaloMET<2.0&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&nB>0&&MET>125&&HT>400&&passedTrigger==1",
+             nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
+
        char basecuts_ldp[10000] ;
-       sprintf( basecuts_ldp, "pfOcaloMET<2.0&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_ldp, "%s&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nIsoTrk==0", commoncuts ) ;
+       //// sprintf( basecuts_ldp, "pfOcaloMET<2.0&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_sl[10000] ;
-       sprintf( basecuts_sl, "pfOcaloMET<2.0&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_sl, "%s&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )", commoncuts ) ;
+       //// sprintf( basecuts_sl, "pfOcaloMET<2.0&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_zl[10000] ;
-       sprintf( basecuts_zl, "pfOcaloMET<2.0&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_zl, "%s&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nIsoTrk==0", commoncuts ) ;
+       //// sprintf( basecuts_zl, "pfOcaloMET<2.0&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char bcutstring[3][100] = { "nB==1", "nB==2", "nB>=3" } ;
 
