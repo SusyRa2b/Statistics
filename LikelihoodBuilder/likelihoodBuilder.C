@@ -559,92 +559,6 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
 }
 
 
-void makeGuess(const likelihoodOptions options, RooWorkspace& ws , TString& binName , channels& observed , abcdBinParameters& abcd)
-{
-  assert(0);//function no longer needed
-  TString scaling = "lowDeltaPhiNScaling_";
-  if(options.qcdMethod == "singleScaleWithCorrections") scaling +=  "all";
-  else if (options.qcdMethod == "htDependent") scaling +=  abcd.lowDeltaPhiNScalingName;
-  else assert(0);
-  RooRealVar* lowDeltaPhiNScaling = ws.var(scaling);
-  RooRealVar* zeroLeptonQCDClosure = ws.var("zeroLeptonQCDClosure_"+binName);
-  RooRealVar* zeroLeptonLowDeltaPhiNCount = ws.var("zeroLeptonLowDeltaPhiN_"+binName+"_Count");
-  RooAbsReal* zeroLeptonLowDeltaPhiNSignalYield = ws.function("zeroLeptonLowDeltaPhiN_"+binName+"_SignalYield");
-  RooRealVar* zeroLeptonLowDeltaPhiNQCDYield = ws.var("zeroLeptonLowDeltaPhiN_"+binName+"_QCDYield");
-  RooAbsReal* zeroLeptonLowDeltaPhiNNonQCDYield = ws.function("zeroLeptonLowDeltaPhiN_"+binName+"_NonQCDYield");
-  RooAbsReal* zeroLeptonLowDeltaPhiNZtoNuNuYield = ws.function("zeroLeptonLowDeltaPhiN_"+binName+"_ZtoNuNuYield");
-  RooAbsReal* zeroLeptonLowDeltaPhiNTopWJetsYield = ws.function("zeroLeptonLowDeltaPhiN_"+binName+"_TopWJetsYield");
-  RooAbsReal* zeroLeptonLowDeltaPhiNYield = ws.function("zeroLeptonLowDeltaPhiN_"+binName+"_Yield");
-  RooRealVar* zeroLeptonTopWJetsClosure = ws.var("zeroLeptonTopWJetsClosure_"+binName);
-  RooAbsReal* zeroLeptonTopWJetsYield = ws.function("zeroLepton_"+binName+"_TopWJetsYield");
-  RooRealVar* zeroLeptonCount = ws.var("zeroLepton_"+binName+"_Count");
-  RooAbsReal* zeroLeptonSignalYield = ws.function("zeroLepton_"+binName+"_SignalYield");
-  RooAbsReal* zeroLeptonZtoNuNuYield = ws.function("zeroLepton_"+binName+"_ZtoNuNuYield");
-  RooAbsReal* zeroLeptonQCDYield = ws.function("zeroLepton_"+binName+"_QCDYield");
-  RooRealVar* singleLeptonScaling = ws.var("singleLeptonScaling");
-  RooAbsReal* oneLeptonTopWJetsYield = ws.function("oneLepton_"+binName+"_TopWJetsYield");
-  RooAbsReal* zeroLeptonYield = ws.function("zeroLepton_"+binName+"_Yield");
-  RooRealVar* topWJetsLowDeltaPhiNOverZeroLeptonRatioMC = ws.var("zeroLeptonLowDeltaPhiN_"+binName+"_TopWJetsLowDeltaPhiNOverZeroLeptonRatioMC");
-  assert(lowDeltaPhiNScaling);
-  assert(zeroLeptonQCDClosure);
-  assert(zeroLeptonLowDeltaPhiNCount);
-  assert(zeroLeptonLowDeltaPhiNSignalYield);
-  assert(zeroLeptonLowDeltaPhiNNonQCDYield);
-  assert(zeroLeptonLowDeltaPhiNQCDYield);
-  assert(zeroLeptonLowDeltaPhiNZtoNuNuYield);
-  assert(zeroLeptonLowDeltaPhiNTopWJetsYield);
-  assert(zeroLeptonLowDeltaPhiNYield);
-  assert(zeroLeptonTopWJetsClosure);
-  assert(zeroLeptonTopWJetsYield);
-  assert(zeroLeptonCount);
-  assert(zeroLeptonSignalYield);
-  assert(zeroLeptonZtoNuNuYield);
-  assert(zeroLeptonQCDYield);
-  assert(singleLeptonScaling);
-  assert(oneLeptonTopWJetsYield);
-  assert(zeroLeptonYield);
-  
-  /*
-  //simple guesses
-  //zeroLeptonLowDeltaPhiNQCDYield.setVal(min(1e-5,observed.zeroLeptonLowDeltaPhiN-zeroLeptonLowDeltaPhiNTopWJetsYield.getVal()-zeroLeptonLowDeltaPhiNZtoNuNuYield.getVal()));  // tried putting this in makeOneBin
-  zeroLeptonQCDClosure->setVal( (zeroLeptonQCDYield->getVal()/lowDeltaPhiNScaling->getVal())*1.0/(zeroLeptonLowDeltaPhiNCount->getVal() - zeroLeptonLowDeltaPhiNSignalYield->getVal() - zeroLeptonLowDeltaPhiNNonQCDYield->getVal()) );
-  zeroLeptonTopWJetsClosure->setVal( (zeroLeptonCount->getVal() - zeroLeptonSignalYield->getVal() - zeroLeptonZtoNuNuYield->getVal() - zeroLeptonQCDYield->getVal())/(singleLeptonScaling->getVal() * oneLeptonTopWJetsYield->getVal()) );
-  // Printout
-  cout << "*******************************************************************" << endl;
-  cout << binName << endl;		
-  cout << "zeroLeptonCount = " << zeroLeptonCount->getVal() << ", zeroLeptonYield = " << zeroLeptonYield->getVal() << endl;
-  cout << "zeroLeptonLowDeltaPhiNCount = " << zeroLeptonLowDeltaPhiNCount->getVal() << ", zeroLeptonLowDeltaPhiNYield = " << zeroLeptonLowDeltaPhiNYield->getVal() << endl;
-  cout << "*******************************************************************" << endl;
-  */
-  
-  /*
-  //Solving 2 eqns -- qcd closure and qcd ldp yield
-  zeroLeptonQCDClosure->setVal( (-zeroLeptonCount->getVal()+zeroLeptonSignalYield->getVal()+zeroLeptonZtoNuNuYield->getVal()+zeroLeptonTopWJetsYield->getVal() ) / ( lowDeltaPhiNScaling->getVal() * (-zeroLeptonLowDeltaPhiNCount->getVal() + zeroLeptonLowDeltaPhiNSignalYield->getVal()+zeroLeptonLowDeltaPhiNNonQCDYield->getVal()  ) ) );	 
-  zeroLeptonLowDeltaPhiNQCDYield->setVal( zeroLeptonLowDeltaPhiNCount->getVal() - zeroLeptonLowDeltaPhiNSignalYield->getVal() - zeroLeptonLowDeltaPhiNNonQCDYield->getVal()  );
-  */
-  
-  //Solving 2 eqns -- TopWJets closure and qcd ldp yield
-  double thisZeroLeptonTopWJetsClosure = 
-    -( -zeroLeptonCount->getVal()+zeroLeptonSignalYield->getVal()+zeroLeptonZtoNuNuYield->getVal()+ lowDeltaPhiNScaling->getVal()*(zeroLeptonLowDeltaPhiNCount->getVal()
-       -zeroLeptonLowDeltaPhiNSignalYield->getVal() -zeroLeptonLowDeltaPhiNZtoNuNuYield->getVal())*zeroLeptonQCDClosure->getVal()  ) 
-    / ( singleLeptonScaling->getVal() * oneLeptonTopWJetsYield->getVal() - 
-	lowDeltaPhiNScaling->getVal()*singleLeptonScaling->getVal() * topWJetsLowDeltaPhiNOverZeroLeptonRatioMC->getVal() * oneLeptonTopWJetsYield->getVal()*zeroLeptonQCDClosure->getVal() )  ;
-  
-  double thisZeroLeptonLowDeltaPhiNQCDYield =  
-    (-zeroLeptonLowDeltaPhiNCount->getVal()+zeroLeptonLowDeltaPhiNSignalYield->getVal() + topWJetsLowDeltaPhiNOverZeroLeptonRatioMC->getVal() *(zeroLeptonCount->getVal() 
-     -zeroLeptonSignalYield->getVal() - zeroLeptonZtoNuNuYield->getVal() ) + zeroLeptonLowDeltaPhiNZtoNuNuYield->getVal() )
-    /(-1.0 + lowDeltaPhiNScaling->getVal()* topWJetsLowDeltaPhiNOverZeroLeptonRatioMC->getVal()*zeroLeptonQCDClosure->getVal()) ;
-  
-  if ((thisZeroLeptonTopWJetsClosure > zeroLeptonTopWJetsClosure->getMin()) && (thisZeroLeptonTopWJetsClosure < zeroLeptonTopWJetsClosure->getMax())
-      && (thisZeroLeptonLowDeltaPhiNQCDYield > zeroLeptonLowDeltaPhiNQCDYield->getMin()) && (thisZeroLeptonLowDeltaPhiNQCDYield < zeroLeptonLowDeltaPhiNQCDYield->getMax())) 
-    {
-      zeroLeptonTopWJetsClosure->setVal( thisZeroLeptonTopWJetsClosure );
-      zeroLeptonLowDeltaPhiNQCDYield->setVal( thisZeroLeptonLowDeltaPhiNQCDYield );
-    }
-
-}
-
-
 void makeUnderlyingLikelihood(const likelihoodOptions options, RooWorkspace& ws ,allBinNames& names, allBins& numbers)
 {
   ws.defineSet("observables","");
@@ -1463,13 +1377,6 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
       if( skipBin(*thisBin) ) continue;
       makeOneBin(options, ws , *thisBin , names , numbers, observations[*thisBin] , bins[*thisBin] , oneLeptonTotal, zeroLeptonTopWJetsGuess );
     }
-  
-  //Make guesses for parameters
-  //ws.var(names.singleLeptonScaling)->setVal(zeroLeptonTopWJetsGuess/oneLeptonTotal);
-  //for(vector<TString>::iterator thisBin = binNames.begin(); thisBin != binNames.end() ; thisBin++)
-  //  {
-  //    makeGuess(options, ws , *thisBin , observations[*thisBin] , bins[*thisBin] );
-  //  }
   
   //Construct likelihood
   RooArgSet allpdfs = ws.allPdfs();
