@@ -552,8 +552,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
       RooPoissonLogEval oneLeptonConstraint(oneLeptonName+"_Constraint",oneLeptonName+"_Constraint",oneLeptonCount,oneLeptonYield);    
       
       ws.import(oneLeptonConstraint, RecycleConflictNodes());
-  }
-  
+  }  
     
   return true;
 }
@@ -955,7 +954,8 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	  zeroLeptonName+=binName;
 	  TString zeroLeptonLowDeltaPhiNName("zeroLeptonLowDeltaPhiN_");
 	  zeroLeptonLowDeltaPhiNName+=binName;
-	  
+	  	  
+	  //Fractions
 	  yields thisSignalFractionsOAK = signalFractionsOAK[binName];
 	  RooRealVar zeroLeptonFraction(zeroLeptonName+"_SignalFractionOAK", zeroLeptonName+"_SignalFractionOAK", thisSignalFractionsOAK.zeroLepton);
 	  RooRealVar zeroLeptonLowDeltaPhiNFraction(zeroLeptonLowDeltaPhiNName+"_SignalFractionOAK", zeroLeptonLowDeltaPhiNName+"_SignalFractionOAK", thisSignalFractionsOAK.zeroLeptonLowDeltaPhiN);
@@ -973,11 +973,53 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 									 1.0, thisSignalStatisticalErrorOAK.zeroLeptonLowDeltaPhiN,
 									 names.observables,names.nuisances);
 	  
-	  RooProduct zeroLeptonSignalYieldOAK(zeroLeptonName+"_SignalYield", zeroLeptonName+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, zeroLeptonFraction, *signalGlobalUncertainty, *zeroLeptonError) );
-	  RooProduct zeroLeptonLowDeltaPhiNSignalYieldOAK(zeroLeptonLowDeltaPhiNName+"_SignalYield", zeroLeptonLowDeltaPhiNName+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, zeroLeptonLowDeltaPhiNFraction, *signalGlobalUncertainty, *zeroLeptonLowDeltaPhiNError) );
+	  //B-tag efficiency systematic
+	  yields thisSignalBTagEfficiencyErrorOAK = signalBTagEfficiencyErrorOAK[binName];
+	  TString signalBTagEfficiencyName = "signalBTagEfficiencyCorrelated";
 	  
+	  bool changeSign = false;
+	  if(thisSignalBTagEfficiencyErrorOAK.zeroLepton < 0.0) changeSign=true;
+	  //RooAbsArg* zeroLeptonBTagEfficiencyError = getCorrelatedGaussianConstraint(ws,"zeroLeptonBTagEfficiencyError_", binName,
+	  RooAbsArg* zeroLeptonBTagEfficiencyError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonBTagEfficiencyError_", binName,
+										      1.0, fabs(thisSignalBTagEfficiencyErrorOAK.zeroLepton),
+										      names.observables,names.nuisances,
+										      signalBTagEfficiencyName, changeSign);
+	  
+	  changeSign = false;
+	  if(thisSignalBTagEfficiencyErrorOAK.zeroLeptonLowDeltaPhiN < 0.0) changeSign=true;
+	  //RooAbsArg* zeroLeptonLowDeltaPhiNBTagEfficiencyError = getCorrelatedGaussianConstraint(ws,"zeroLeptonLowDeltaPhiNBTagEfficiencyError_", binName,
+	  RooAbsArg* zeroLeptonLowDeltaPhiNBTagEfficiencyError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonLowDeltaPhiNBTagEfficiencyError_", binName,
+												  1.0, fabs(thisSignalBTagEfficiencyErrorOAK.zeroLeptonLowDeltaPhiN),
+												  names.observables,names.nuisances,
+												  signalBTagEfficiencyName, changeSign);
+	  
+	  //JES systematic
+	  yields thisSignalJesErrorOAK = signalJesErrorOAK[binName];
+	  TString signalJesErrorName = "signalJesErrorCorrelated";
+	  
+	  changeSign = false;
+	  if(thisSignalJesErrorOAK.zeroLepton < 0.0) changeSign=true;
+	  //RooAbsArg* zeroLeptonJesError = getCorrelatedGaussianConstraint(ws,"zeroLeptonJesError_", binName,
+	  RooAbsArg* zeroLeptonJesError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonJesError_", binName,
+									   1.0, fabs(thisSignalJesErrorOAK.zeroLepton),
+									   names.observables,names.nuisances,
+									   signalJesErrorName, changeSign);
+	  
+	  changeSign = false;
+	  if(thisSignalJesErrorOAK.zeroLeptonLowDeltaPhiN < 0.0) changeSign=true;
+	  //RooAbsArg* zeroLeptonLowDeltaPhiNJesError = getCorrelatedGaussianConstraint(ws,"zeroLeptonLowDeltaPhiNJesError_", binName,
+	  RooAbsArg* zeroLeptonLowDeltaPhiNJesError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonLowDeltaPhiNJesError_", binName,
+										       1.0, fabs(thisSignalJesErrorOAK.zeroLeptonLowDeltaPhiN),
+										       names.observables,names.nuisances,
+										       signalJesErrorName, changeSign);	  
+	  	  
+	  //Setup yields
+	  RooProduct zeroLeptonSignalYieldOAK(zeroLeptonName+"_SignalYield", zeroLeptonName+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, zeroLeptonFraction, *signalGlobalUncertainty, *zeroLeptonError, *zeroLeptonBTagEfficiencyError, *zeroLeptonJesError) );
+	  RooProduct zeroLeptonLowDeltaPhiNSignalYieldOAK(zeroLeptonLowDeltaPhiNName+"_SignalYield", zeroLeptonLowDeltaPhiNName+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, zeroLeptonLowDeltaPhiNFraction, *signalGlobalUncertainty, *zeroLeptonLowDeltaPhiNError, *zeroLeptonLowDeltaPhiNBTagEfficiencyError, *zeroLeptonLowDeltaPhiNJesError) );
+	  	  
 	  ws.import(zeroLeptonSignalYieldOAK, RecycleConflictNodes());
 	  ws.import(zeroLeptonLowDeltaPhiNSignalYieldOAK, RecycleConflictNodes());
+	  
 	  
 	  //Single lepton
 
@@ -1332,7 +1374,7 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   options.skipTriggerEfficiency = false;//option no longer works
   options.qcdMethod = "model4";//others: htDependent, singleScaleWithCorrections
   options.TopWJetsMethod = "ABCD"; //others: metReweighting
-  
+    
   //Read in setupFile and binFilesFile
   setupUnderlyingModel(options, binFilesPath, binFileNames, signalModelFilesPath, binFileNamesInsideSignalMR, binFileNamesOutsideSignalMR, binNames, setupFileName , binFilesFileName , numbers);
   
