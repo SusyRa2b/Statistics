@@ -496,6 +496,10 @@
        sprintf( histnamelist[hind], "h_pfOcaloMET_zl_nb0_wide" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_pfOcaloMET_zl_nb1" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_pfOcaloMET_zl_nb1_wide" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_zl_nb2" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_zl_nb2_wide" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_zl_nb3" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_pfOcaloMET_zl_nb3_wide" ) ; sprintf( histxtitlelist[hind], "pfMET/caloMET" ) ; hind++ ;
 
 
        sprintf( histnamelist[hind], "h_nisotrk_zl_nb0" ) ; sprintf( histxtitlelist[hind], "N iso trk." ) ; hind++ ;

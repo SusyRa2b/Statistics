@@ -11,7 +11,8 @@
   \begin{document}
 
 
-   Thu Oct 25 13:38:22 CEST 2012 \\
+  Wed Nov 14 17:05:49 PST 2012 \\
+
 
    Datasets and selections
    \begin{itemize}
@@ -28,14 +29,14 @@
 
    Other details
    \begin{itemize}
-     %%\item {\bf I'm using these fudge factors: ttwj x 0.90 and QCD x 1.80.}
-     \item {\bf I'm using these fudge factor: QCD x 1.80. These have no ttwj fudge factor.}
-     \item These include the new pfMET/caloMET$<$2 requirement.
+     \item {\bf I'm using these fudge factors: ttwj x 0.90 and QCD x 1.80.}
+  %  \item These include the pfMET/caloMET$<$2 requirement.
+  %  \item These include the new isolated track veto.
+  %  \item These include the new TOB/TEC failure cut of max Ncharged - Nneutral $<40$ in $0.9<|\eta|<1.9$ for
+  %          jets with pT$>50$ GeV.
      \item MC has been corrected for trigger efficiency, {\it except} where noted otherwise.
      \item  The trigger efficiency corrections are divided by real-MET vs fake-MET
-             instead of 1-lepton vs 0-leptons.  The fake-MET corrections have been
-             measured in cfA 66.  The real-MET corrections (from single lepton datasets)
-             are still from cfA 65.
+             instead of 1-lepton vs 0-leptons.
      \item Trigger efficiency corrections are in likelihood MET,HT bins.
      \item Trigger efficiency corrections are not run dependent.
    \end{itemize}
@@ -44,9 +45,9 @@
 
   Comments on recent additions
   \begin{itemize}
-     \item All QCD saples are now 53X with a better pileup distribution.
-     \item The ttbar sample is now the combination of the new single-semileptonic
-           and double-semileptonic samples, which have higher statistics.
+     \item These include the new isolated track veto.
+     \item These include the new TOB/TEC failure cut of max Ncharged - Nneutral $<40$ in $0.9<|\eta|<1.9$ for
+             jets with pT$>50$ GeV.
    \end{itemize}
 
 
@@ -2153,11 +2154,15 @@
 
     \noindent
      \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb0_all.pdf}
-     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb1_all.pdf} \\
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb2_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb3_all.pdf}
 
     \noindent
      \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb0_all_logy.pdf}
      \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb2_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb3_all_logy.pdf}
 
     \clearpage
 
@@ -2168,14 +2173,120 @@
 
     \noindent
      \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb0_wide_all.pdf}
-     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb1_wide_all.pdf} \\
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb1_wide_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb2_wide_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb3_wide_all.pdf}
 
     \noindent
      \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb0_wide_all_logy.pdf}
      \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb1_wide_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb2_wide_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_pfOcaloMET_zl_nb3_wide_all_logy.pdf}
 
     \clearpage
 
+
+  \section{ Number of isolated tracks }
+  %%===================================================
+
+    \subsection{ Number of isolated tracks, linear scale}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_sl_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_sl_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_sl_nb2_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_sl_nb3_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_ldp_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_ldp_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_ldp_nb2_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_ldp_nb3_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_zl_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_zl_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_zl_nb2_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_zl_nb3_all.pdf}
+
+    \clearpage
+
+  %%===================================================
+
+    \subsection{ Number of isolated tracks, log scale}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_sl_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_sl_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_sl_nb2_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_sl_nb3_all_logy.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_ldp_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_ldp_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_ldp_nb2_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_ldp_nb3_all_logy.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_zl_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_zl_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_zl_nb2_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_nisotrk_zl_nb3_all_logy.pdf}
+
+
+    \clearpage
+
+
+ \section{ Charged - Neutral difference (rejects TOB/TEC tracking failure)}
+  %%===================================================
+
+    \subsection{ max Ncharged - Nneutral jet in  $0.9 < |\eta|< 1.9$, pT$>$50, linear scale}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_ldp_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_ldp_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_ldp_nb2_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_ldp_nb3_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_sl_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_sl_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_sl_nb2_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_sl_nb3_all.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_zl_nb0_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_zl_nb1_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_zl_nb2_all.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_zl_nb3_all.pdf}
+
+    \clearpage
+
+  %%===================================================
+
+    \subsection{ max Ncharged - Nneutral jet in $0.9 < |\eta|< 1.9$, pT$>$50, log scale}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_ldp_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_ldp_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_ldp_nb2_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_ldp_nb3_all_logy.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_sl_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_sl_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_sl_nb2_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_sl_nb3_all_logy.pdf}
+
+    \noindent
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_zl_nb0_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_zl_nb1_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_zl_nb2_all_logy.pdf}
+     \includegraphics[width=0.24\linewidth]{outputfiles/h_maxchnmultdiff_zl_nb3_all_logy.pdf}
+
+    \clearpage
+
+  %%===================================================
 
 
   \end{document}
