@@ -747,6 +747,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       ifstream signalfracFile;
       signalfracFile.open(signalfracFileName.Data(),fstream::in);
       double count = 0.;
+      double counterror = 0.;
 
       //////
 
@@ -770,22 +771,31 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 
 
       ///////////////////////////////
-      ////// THIS IS A PLACEHOLDER!!!
+      ////// FOR THE LIMITED (tt/W/t ~only) bins being tested, this is ok
 
       TString triggername = "oneLeptonTriggerEfficiency_";
       triggername.Append(trigeffname);
 
       RooRealVar* TriggerEfficiency = (RooRealVar*)
-	getBetaPrimeConstraint(wspace,triggername, "",
-			       0.95,0.05,
+	getGaussianConstraint(wspace,triggername, "",
+			       1.0,0.01,
 			       "trig1","trig2");
 
       ////// 
 
       signalfracFile>>count;
+      signalfracFile>>counterror;
+
+      count = count*12.0; // a cheap way to get around lumi for now
 
       RooRealVar acount0(zeroLeptonName+"_SignalFrac",zeroLeptonName+"_SignalFrac",count); 
-      RooProduct zeroLepton(zeroLeptonName+"_SignalYield",zeroLeptonName+"_SignalYield",RooArgSet(acount0,*signalCrossSection));
+
+      RooAbsArg* zeroLeptonError = getGaussianConstraint(wspace,"zeroLeptonSignalError_", thisBin,
+							 1.0, counterror,
+							 "sigerr1","sigerr2");
+
+
+      RooProduct zeroLepton(zeroLeptonName+"_SignalYield",zeroLeptonName+"_SignalYield",RooArgSet(acount0,*signalCrossSection, *zeroLeptonError));
       wspace.import(zeroLepton,RecycleConflictNodes());
       
       TString outputthis(zeroLeptonName);

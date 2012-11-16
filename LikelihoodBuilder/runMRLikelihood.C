@@ -23,7 +23,7 @@
 
 
   // SETUP SIGNAL CROSS-SECTION
-  RooRealVar signalCrossSection("signalCrossSection","signalCrossSection",0.1,0.,10.);
+  RooRealVar signalCrossSection("signalCrossSection","signalCrossSection",0.01,0.,10.);
   wspace->import(signalCrossSection);
   wspace->defineSet("namesfordata","");
   wspace->defineSet("nuisances","");
@@ -47,7 +47,7 @@
 
     
   //buildMRLikelihood( wspacefile.Data(), "testSimpleSetupFileHT3.txt" );
-  buildMRLikelihood( *wspace, wspacefile.Data(), "testDataMRSetupFile.txt", true );
+  buildMRLikelihood( *wspace, wspacefile.Data(), "testDataMRSetupFileSIMPLE.txt", true );
 
   wspace->writeToFile( outputFile.Data(), true ); 
 
