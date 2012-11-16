@@ -24,5 +24,5 @@
    cp datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat  datfiles/data-unblind.dat
 
 
-   printf "\n\n Now, copy data values from datfiles/data-vals-unblind.dat into datafiles/data-unblind.dat.\n\n Then source macros1/sourceme-everything-part2-HCP\n\n"
+   printf "\n\n Now, copy data values from datfiles/data-vals-unblind.dat into datafiles/data-unblind.dat.\n\n Also, make sure you have all of the necessary files in the datfiles directory (e.g. signal and systematic files)\n\n Then source macros1/sourceme-everything-part2-HCP\n\n"
 

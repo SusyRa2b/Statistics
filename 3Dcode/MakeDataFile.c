@@ -93,15 +93,12 @@
 
        char basecuts_ldp[10000] ;
        sprintf( basecuts_ldp, "%s&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nIsoTrk==0", commoncuts ) ;
-       //// sprintf( basecuts_ldp, "pfOcaloMET<2.0&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_sl[10000] ;
-       sprintf( basecuts_sl, "%s&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )", commoncuts ) ;
-       //// sprintf( basecuts_sl, "pfOcaloMET<2.0&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_sl, "%s&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&MT<100", commoncuts ) ;
 
        char basecuts_zl[10000] ;
        sprintf( basecuts_zl, "%s&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nIsoTrk==0", commoncuts ) ;
-       //// sprintf( basecuts_zl, "pfOcaloMET<2.0&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char bcutstring[3][100] = { "nB==1", "nB==2", "nB>=3" } ;
 

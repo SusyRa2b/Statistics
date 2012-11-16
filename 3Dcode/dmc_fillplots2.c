@@ -182,31 +182,37 @@
     //--- cuts
 
        char basecuts_1lep[10000] ;
-       sprintf( basecuts_1lep, "maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep, "MT<100&&maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_1lep_nometratiocut[10000] ;
-       sprintf( basecuts_1lep_nometratiocut, "maxChNMultDiff<40&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nometratiocut, "MT<100&&maxChNMultDiff<40&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_1lep_nonb_nometratiocut[10000] ;
-       sprintf( basecuts_1lep_nonb_nometratiocut, "maxChNMultDiff<40&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nonb_nometratiocut, "MT<100&&maxChNMultDiff<40&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_1lep_nomindphin[10000] ;
-       sprintf( basecuts_1lep_nomindphin, "maxChNMultDiff<40&&pfOcaloMET<2&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nomindphin, "MT<100&&maxChNMultDiff<40&&pfOcaloMET<2&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_1lep_nonb[10000] ;
-       sprintf( basecuts_1lep_nonb, "maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nonb, "MT<100&&maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_1lep_nonjet[10000] ;
-       sprintf( basecuts_1lep_nonjet, "maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nonjet, "MT<100&&maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_1lep_nonjet_nonb[10000] ;
-       sprintf( basecuts_1lep_nonjet_nonb, "maxChNMultDiff<40&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nonjet_nonb, "MT<100&&maxChNMultDiff<40&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_1lep_nonb_noisotrk[10000] ;
-       sprintf( basecuts_1lep_nonb_noisotrk, "maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nonb_noisotrk, "MT<100&&maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_1lep_nonb_nomaxchmultdiff[10000] ;
-       sprintf( basecuts_1lep_nonb_nomaxchmultdiff, "pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nonb_nomaxchmultdiff, "MT<100&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+
+       char basecuts_1lep_nomt[10000] ;
+       sprintf( basecuts_1lep_nomt, "maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+
+       char basecuts_1lep_nonb_nomt[10000] ;
+       sprintf( basecuts_1lep_nonb_nomt, "maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
 
 
@@ -1627,15 +1633,15 @@
 
      //-- MT
 
-       sprintf( cuts, "%s", basecuts_1lep ) ;
+       sprintf( cuts, "%s", basecuts_1lep_nomt ) ;
        fillSet( "h_mt_sl_all", "MT", cuts ) ;
-       sprintf( cuts, "%s&&nB==0", basecuts_1lep_nonb ) ;
+       sprintf( cuts, "%s&&nB==0", basecuts_1lep_nonb_nomt ) ;
        fillSet( "h_mt_sl_nb0", "MT", cuts ) ;
-       sprintf( cuts, "%s&&nB==1", basecuts_1lep_nonb ) ;
+       sprintf( cuts, "%s&&nB==1", basecuts_1lep_nonb_nomt ) ;
        fillSet( "h_mt_sl_nb1", "MT", cuts ) ;
-       sprintf( cuts, "%s&&nB==2", basecuts_1lep_nonb ) ;
+       sprintf( cuts, "%s&&nB==2", basecuts_1lep_nonb_nomt ) ;
        fillSet( "h_mt_sl_nb2", "MT", cuts ) ;
-       sprintf( cuts, "%s&&nB>=3", basecuts_1lep_nonb ) ;
+       sprintf( cuts, "%s&&nB>=3", basecuts_1lep_nonb_nomt ) ;
        fillSet( "h_mt_sl_nb3", "MT", cuts ) ;
 
 

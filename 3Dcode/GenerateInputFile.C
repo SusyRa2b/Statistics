@@ -435,7 +435,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
    char selcuts[3][10000] ;
    sprintf( selcuts[0], "minDelPhiN>4&&nMu==0&&nEl==0&&nIsoTrk==0" ) ; //--- 0lep
-   sprintf( selcuts[1], "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )" ) ; //--- 1lep
+   sprintf( selcuts[1], "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&MT<100" ) ; //--- 1lep
    sprintf( selcuts[2], "minDelPhiN<4&&nMu==0&&nEl==0&&nIsoTrk==0" ) ; //--- ldp
 
 
