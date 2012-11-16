@@ -98,7 +98,7 @@ using namespace RooStats ;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void makePrediction( RooWorkspace& wspace, TString thisBin, bool standalone ){
+void makePrediction( RooWorkspace& wspace, TString thisBin, bool standalone, TString trigeffname ){
 
 
       ////////////////////////////////////
@@ -111,32 +111,32 @@ void makePrediction( RooWorkspace& wspace, TString thisBin, bool standalone ){
       //cout << " BEFORE GETTING PREDICTION COMPONENTS " << endl;
 
       TString PolarizationName1(zeroLeptonName);
-      PolarizationName1.Append("_Theta1_TopWJetsDataYield");
+      PolarizationName1.Append("_Theta1_TopWJetsYield");
     
       TString PolarizationName2(zeroLeptonName);
-      PolarizationName2.Append("_Theta2_TopWJetsDataYield");
+      PolarizationName2.Append("_Theta2_TopWJetsYield");
         
       TString PolarizationName3(zeroLeptonName);
-      PolarizationName3.Append("_Theta3_TopWJetsDataYield");
+      PolarizationName3.Append("_Theta3_TopWJetsYield");
         
       TString PolarizationName4(zeroLeptonName);
-      PolarizationName4.Append("_Theta4_TopWJetsDataYield");
+      PolarizationName4.Append("_Theta4_TopWJetsYield");
         
       TString PolarizationName5(zeroLeptonName);
-      PolarizationName5.Append("_Theta5_TopWJetsDataYield");
+      PolarizationName5.Append("_Theta5_TopWJetsYield");
     
       //    cout << " GOT POLARIZATION PREDICTIONS" << endl;
       //////
       TString TauHadName1(zeroLeptonName);
-      TauHadName1.Append("_1Tau_TopWJetsDataYield");
+      TauHadName1.Append("_1Tau_TopWJetsYield");
 
       TString TauHadName2(zeroLeptonName);
-      TauHadName2.Append("_2Tau_TopWJetsDataYield");
+      TauHadName2.Append("_2Tau_TopWJetsYield");
       
       //    cout << " GOT TAU->HAD PREDICTIONS" << endl;
       //////
       TString DilepName1(zeroLeptonName);
-      DilepName1.Append("_Dilep_TopWJetsDataYield");
+      DilepName1.Append("_Dilep_TopWJetsYield");
       
       //    cout << " GOT DILEPTON PREDICTIONS" << endl;
       //////
@@ -213,6 +213,13 @@ void makePrediction( RooWorkspace& wspace, TString thisBin, bool standalone ){
 						    *wspace.arg(DilepName1.Data())
 						    ));
 	  
+	  TString triggername = "oneLeptonTriggerEfficiency_";
+	  triggername.Append(trigeffname);
+	  RooAbsArg* triggerefficiency = wspace.arg(triggername.Data());
+
+	  RooProduct zeroLeptonDataYieldSum(zeroLeptonName+"_DataYieldSum",zeroLeptonName+"_DataYieldSum",
+					    RooArgSet( zeroLeptonYieldSum, *triggerefficiency ));
+	  
 	  
 	  cout << " SIGNAL YIELD:  " << zeroLeptonSignalYieldName.Data() << "  " ;
 	  (*wspace.arg(zeroLeptonSignalYieldName.Data())).Print();
@@ -226,12 +233,10 @@ void makePrediction( RooWorkspace& wspace, TString thisBin, bool standalone ){
 	  
 	  /////////////////////////////////////////////////////////////////////////////////////
 	  // SET CONSTRAINTS FOR THIS 0L BIN
-	  /****** SHOULD LEAVE THIS OUT IN COMPLETE LIKELIHOOD!!! ******/
 	  //cout << " SETTING 0L CONSTRAINTS " << endl;
 	  
-	  //      RooPoisson zeroLeptonConstraint(zeroLeptonName+"_Constraint",zeroLeptonName+"_Constraint",
 	  RooPoissonLogEval zeroLeptonConstraint(zeroLeptonName+"_Constraint",zeroLeptonName+"_Constraint",
-						 *wspace.var(zeroLeptonCountName.Data()),zeroLeptonYieldSum);
+						 *wspace.var(zeroLeptonCountName.Data()),zeroLeptonDataYieldSum);
 	  
 	  wspace.import( zeroLeptonConstraint,RecycleConflictNodes() );
 	  
@@ -335,43 +340,45 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
     ////////////////////////////////////////////////////
     // COMBINE SIGNAL AND TTWT COMPONENTS OF THIS DTHETA BIN AND SET CONTROL SAMPLE CONSTRAINTS
     
-    /****** NOTE: INSERT SINGLE LEPTON EFFICIENCIES HERE??? ******/
 
     RooAddition oneTightMuYieldSum(oneTightMuName+"_YieldSum",oneTightMuName+"_YieldSum",
 				   RooArgSet(*wspace.arg(oneTightMuSignalYieldName.Data()),oneTightMuTopWJetsYield));
 
     RooAddition oneLooseLepYieldSum(oneLooseLepName+"_YieldSum",oneLooseLepName+"_YieldSum",
 				  RooArgSet(*wspace.arg(oneLooseLepSignalYieldName.Data()),oneLooseLepTopWJetsYield));
+
+    TString triggername = "oneLeptonTriggerEfficiency_";
+    triggername.Append(trigeffname);
+    RooAbsArg* triggerefficiency = wspace.arg(triggername.Data());
+
+    RooProduct oneTightMuDataYieldSum(oneTightMuName+"_DataYieldSum",oneTightMuName+"_DataYieldSum",
+				      RooArgSet( oneTightMuTopWJetsYieldSum, *triggerefficiency));
+
+    RooProduct oneLooseLepDataYieldSum(oneLooseLepName+"_DataYieldSum",oneLooseLepName+"_DataYieldSum",
+				       RooArgSet( oneLooseLepTopWJetsYieldSum, *triggerefficiency));
    
 
-    RooPoissonLogEval oneTightMuConstraint(oneTightMuName+"_Constraint",oneTightMuName+"_Constraint",oneTightMuCount,oneTightMuYieldSum);
+    RooPoissonLogEval oneTightMuConstraint(oneTightMuName+"_Constraint",oneTightMuName+"_Constraint",oneTightMuCount,oneTightMuDataYieldSum);
     wspace.import( oneTightMuConstraint,RecycleConflictNodes() );
 
-    RooPoissonLogEval oneLooseLepConstraint(oneLooseLepName+"_Constraint",oneLooseLepName+"_Constraint",oneLooseLepCount,oneLooseLepYieldSum);
+    RooPoissonLogEval oneLooseLepConstraint(oneLooseLepName+"_Constraint",oneLooseLepName+"_Constraint",oneLooseLepCount,oneLooseLepDataYieldSum);
     wspace.import( oneLooseLepConstraint,RecycleConflictNodes() );
 
 
     ////////////////////////////////////////////////////
     // CONSTRUCT THE 0L BACKGROUND PREDICTION FROM THIS DTHETA BIN
-    // ****** DONT FORGET ABOUT TRIGGER INEFFICIENCIES! ****** //
- 
+    // 0L TRIGGER EFFICIENCIES ARE NOT APPLIED IF THEY ARE BEING SENT TO BEN
+   
     RooAddition oneLeptonTopWJetsYield(oneLeptonName+"_TopWJetsYield",oneLeptonName+"_TopWJetsYield",
 				       RooArgSet(oneTightMuTopWJetsYield,oneLooseLepTopWJetsYield));
 
     RooProduct  zeroLeptonTopWJetsYield(zeroLeptonName+"_TopWJetsYield",zeroLeptonName+"_TopWJetsYield",
 					RooArgSet(*wspace.arg(oneLeptonScaleFactorName.Data()),oneLeptonTopWJetsYield));
 
-    TString triggername = "oneLeptonTriggerEfficiency_";
-    triggername.Append(trigeffname);
-    RooAbsArg* triggerefficiency = wspace.arg(triggername.Data());
+    wspace.import(zeroLeptonTopWJetsYield,RecycleConflictNodes());
+    wspace.extendSet("nuisances",zeroLeptonTopWJetsYield.GetName());
 
-    RooProduct  zeroLeptonTopWJetsDataYield(zeroLeptonName+"_TopWJetsDataYield",zeroLeptonName+"_TopWJetsDataYield",
-					    RooArgSet(zeroLeptonTopWJetsYield,*triggerefficiency));
-
-    wspace.import(zeroLeptonTopWJetsDataYield,RecycleConflictNodes());
-    wspace.extendSet("nuisances",zeroLeptonTopWJetsDataYield.GetName());
-
-
+      
   }// END OF LOOP OVER DTHETA BINS
   
 }// END OF BIG BIN IN NBS/HT/MET
@@ -464,11 +471,21 @@ void makeDileptonConstraintsPredictions( RooWorkspace& wspace, TString binname, 
   RooAddition twoLooseLepYieldSum(twoLooseLepName+"_YieldSum",twoLooseLepName+"_YieldSum",
 				RooArgSet( *wspace.arg(twoLooseLepSignalYieldName.Data()), twoLooseLepTopWJetsYield ));
   
+  TString triggername = "oneLeptonTriggerEfficiency_";
+  triggername.Append(trigeffname);
+  RooAbsArg* triggerefficiency = wspace.arg(triggername.Data());
 
-  RooPoissonLogEval twoTightMuConstraint(twoTightMuName+"_Constraint",twoTightMuName+"_Constraint",twoTightMuCount,twoTightMuYieldSum);
+  RooProduct twoTightMuDataYieldSum(twoTightMuName+"_DataYieldSum",twoTightMuName+"_DataYieldSum",
+				    RooArgSet( twoTightMuYieldSum, *triggerefficiency ));
+
+  RooProduct twoLooseLepDataYieldSum(twoLooseLepName+"_DataYieldSum",twoLooseLepName+"_DataYieldSum",
+				    RooArgSet( twoLooseLepYieldSum, *triggerefficiency ));
+
+
+  RooPoissonLogEval twoTightMuConstraint(twoTightMuName+"_Constraint",twoTightMuName+"_Constraint",twoTightMuCount,twoTightMuDataYieldSum);
   wspace.import( twoTightMuConstraint,RecycleConflictNodes() );
 
-  RooPoissonLogEval twoLooseLepConstraint(twoLooseLepName+"_Constraint",twoLooseLepName+"_Constraint",twoLooseLepCount,twoLooseLepYieldSum);
+  RooPoissonLogEval twoLooseLepConstraint(twoLooseLepName+"_Constraint",twoLooseLepName+"_Constraint",twoLooseLepCount,twoLooseLepDataYieldSum);
   wspace.import( twoLooseLepConstraint,RecycleConflictNodes() );
 
 
@@ -492,15 +509,8 @@ void makeDileptonConstraintsPredictions( RooWorkspace& wspace, TString binname, 
   RooProduct  zeroLeptonTopWJetsYieldDilep("zeroLepton_"+binname+"_Dilep_TopWJetsYield","zeroLepton_"+binname+"_Dilep_TopWJetsYield",
 					   RooArgSet( *wspace.arg(DilepScaleFactorName.Data()), DilepTopWJetsYield ));
 
-  TString triggername = "oneLeptonTriggerEfficiency_";
-  triggername.Append(trigeffname);
-  RooAbsArg* triggerefficiency = wspace.arg(triggername.Data());
-
-  RooProduct  zeroLeptonTopWJetsDataYieldDilep("zeroLepton_"+binname+"_Dilep_TopWJetsDataYield","zeroLepton_"+binname+"_Dilep_TopWJetsDataYield",
-					       RooArgSet( zeroLeptonTopWJetsYieldDilep, *triggerefficiency ));
-
-  wspace.import(zeroLeptonTopWJetsDataYieldDilep,RecycleConflictNodes());
-  wspace.extendSet("nuisances",zeroLeptonTopWJetsDataYieldDilep.GetName());
+  wspace.import(zeroLeptonTopWJetsYieldDilep,RecycleConflictNodes());
+  wspace.extendSet("nuisances",zeroLeptonTopWJetsYieldDilep.GetName());
 
 
   //cout << " INITIAL GUESS FOR DILEPTON PREDICTION: " << endl;
@@ -519,7 +529,7 @@ void makeDileptonConstraintsPredictions( RooWorkspace& wspace, TString binname, 
 /////////////////////////////////////////////////////////////////////////////////////
 // MAKE TAU->HAD AND DITAU PREDICTIONS FOR THIS NB/MET/HT BIN 
 
-void makeTauHadBinPrediction( RooWorkspace& wspace, TString binname, TString binname_outside, TString trigeffname ){
+void makeTauHadBinPrediction( RooWorkspace& wspace, TString binname, TString binname_outside ){
 
   cout << " IN TAU PREDICTION" << endl;
   
@@ -586,21 +596,11 @@ void makeTauHadBinPrediction( RooWorkspace& wspace, TString binname, TString bin
 
   cout << " APPLYING SCALE FACTORS TO SUMS " << endl;
 
-  TString triggername = "oneLeptonTriggerEfficiency_";
-  triggername.Append(trigeffname);
-  RooAbsArg* triggerefficiency = wspace.arg(triggername.Data());
-
   RooProduct  zeroLeptonTopWJetsYield1Tau("zeroLepton_"+binname+"_1Tau_TopWJetsYield","zeroLepton_"+binname+"_1Tau_TopWJetsYield",
 					  RooArgSet( *wspace.arg(oneTauSFName.Data()), oneTauInput ));
 
-  RooProduct  zeroLeptonTopWJetsDataYield1Tau("zeroLepton_"+binname+"_1Tau_TopWJetsDataYield","zeroLepton_"+binname+"_1Tau_TopWJetsDataYield",
-					  RooArgSet( zeroLeptonTopWJetsYield1Tau, *triggerefficiency ));
-
   RooProduct  zeroLeptonTopWJetsYield2Tau("zeroLepton_"+binname+"_2Tau_TopWJetsYield","zeroLepton_"+binname+"_2Tau_TopWJetsYield",
 					  RooArgSet( *wspace.arg(twoTauSFName.Data()), *wspace.var(twoTightMuTopWJetsYieldName.Data()) ));
-  
-  RooProduct  zeroLeptonTopWJetsDataYield2Tau("zeroLepton_"+binname+"_2Tau_TopWJetsDataYield","zeroLepton_"+binname+"_2Tau_TopWJetsDataYield",
-					      RooArgSet( zeroLeptonTopWJetsYield2Tau, *triggerefficiency ));
   
 
   /////////////////////////////////////////////////////////////////////////////////////
@@ -612,11 +612,11 @@ void makeTauHadBinPrediction( RooWorkspace& wspace, TString binname, TString bin
   zeroLeptonTopWJetsYield2Tau.Print();
   */
 
-  wspace.import(zeroLeptonTopWJetsDataYield1Tau,RecycleConflictNodes());
-  wspace.extendSet("nuisances",zeroLeptonTopWJetsDataYield1Tau.GetName());
+  wspace.import(zeroLeptonTopWJetsYield1Tau,RecycleConflictNodes());
+  wspace.extendSet("nuisances",zeroLeptonTopWJetsYield1Tau.GetName());
 
-  wspace.import(zeroLeptonTopWJetsDataYield2Tau,RecycleConflictNodes());
-  wspace.extendSet("nuisances",zeroLeptonTopWJetsDataYield2Tau.GetName());
+  wspace.import(zeroLeptonTopWJetsYield2Tau,RecycleConflictNodes());
+  wspace.extendSet("nuisances",zeroLeptonTopWJetsYield2Tau.GetName());
 
   
 }// END OF TAU->HAD FUNCTION FOR ONE BIN
@@ -1058,10 +1058,10 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       //cout << " end of polarization constraints " << endl;
       makeDileptonConstraintsPredictions( wspace, thisBin, binnamesoutside[thisBin], binTriggerEfficiencyNames[thisBin] );
       //cout << " end of dilepton constraints " << endl;
-      makeTauHadBinPrediction( wspace, thisBin, binnamesoutside[thisBin], binTriggerEfficiencyNames[thisBin] );
+      makeTauHadBinPrediction( wspace, thisBin, binnamesoutside[thisBin] );
       //cout << " end of tauhad prediction " << endl;
 
-      makePrediction( wspace, thisBin , standalone);
+      makePrediction( wspace, thisBin , standalone, binTriggerEfficiencyNames[thisBin] );
 
 
     }// end of loop over bins
