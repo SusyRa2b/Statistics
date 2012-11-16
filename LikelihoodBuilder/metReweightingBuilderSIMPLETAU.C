@@ -89,6 +89,8 @@ USES STANDARD INPUT FILES
 
 #include "TMath.h"
 
+#include "metReweightingBuilderSIMPLETAU.h"
+
 using namespace RooFit ;
 using namespace RooStats ;
 
@@ -96,7 +98,7 @@ using namespace RooStats ;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void makePrediction( RooWorkspace& wspace, TString thisBin ){
+void makePrediction( RooWorkspace& wspace, TString thisBin, bool standalone ){
 
 
       ////////////////////////////////////
@@ -172,56 +174,74 @@ void makePrediction( RooWorkspace& wspace, TString thisBin ){
       //   << zeroLeptonTopWJetsTauHadYield.getValV() << "  " << zeroLeptonTopWJetsDileptonYield.getValV() << endl;
       //   << endl;
       
+      //zeroLeptonTopWJetsYield for full likelihood 
+      if( !standalone )
+	{
+	  RooAddition zeroLeptonTopWJetsYield(zeroLeptonName+"_TopWJetsYield",zeroLeptonName+"_TopWJetsYield",
+					 RooArgSet( zeroLeptonTopWJetsPolarizationYield,
+						    *wspace.arg(TauHadName1.Data()),
+						    *wspace.arg(TauHadName2.Data()),
+						    *wspace.arg(DilepName1.Data())
+						    ));
+	  wspace.import(zeroLeptonTopWJetsYield, RecycleConflictNodes());
+	  cout << "Put " << zeroLeptonTopWJetsYield.GetName() << " into workspace" << endl;
+	}
+
+
+
       /////////////////////////////////////////////////////////////////////////////////////
       // GET AND APPLY SIGNAL FRACTION FOR THIS 0L BIN, ADD TO ALL PREDICTIONS
       
       //cout << " GET 0L COUNTS AND SIG FRAC " << endl;
 
+      if( standalone )
+	{
 
-      TString zeroLeptonCountName(zeroLeptonName);
-      zeroLeptonCountName.Append("_Count");
+	  TString zeroLeptonCountName(zeroLeptonName);
+	  zeroLeptonCountName.Append("_Count");
+	  
+	  TString zeroLeptonSignalYieldName(zeroLeptonName);
+	  zeroLeptonSignalYieldName.Append("_SignalYield");
+	  
+	  
+	  
+	  RooAddition zeroLeptonYieldSum(zeroLeptonName+"_YieldSum",zeroLeptonName+"_YieldSum",
+					 RooArgSet( *wspace.arg(zeroLeptonSignalYieldName.Data()), 
+						    zeroLeptonTopWJetsPolarizationYield,
+						    *wspace.arg(TauHadName1.Data()),
+						    *wspace.arg(TauHadName2.Data()),
+						    *wspace.arg(DilepName1.Data())
+						    ));
+	  
+	  
+	  cout << " SIGNAL YIELD:  " << zeroLeptonSignalYieldName.Data() << "  " ;
+	  (*wspace.arg(zeroLeptonSignalYieldName.Data())).Print();
+	  
+	  cout << " COUNTS:  " << zeroLeptonCountName.Data() << "  "
+	       << (*wspace.var(zeroLeptonCountName.Data())).getValV() << "  " << endl;
+	  
+	  cout << " TOTAL PREDICTED IN BIN:  ";
+	  zeroLeptonYieldSum.Print();
+	  
+	  
+	  /////////////////////////////////////////////////////////////////////////////////////
+	  // SET CONSTRAINTS FOR THIS 0L BIN
+	  /****** SHOULD LEAVE THIS OUT IN COMPLETE LIKELIHOOD!!! ******/
+	  //cout << " SETTING 0L CONSTRAINTS " << endl;
+	  
+	  //      RooPoisson zeroLeptonConstraint(zeroLeptonName+"_Constraint",zeroLeptonName+"_Constraint",
+	  RooPoissonLogEval zeroLeptonConstraint(zeroLeptonName+"_Constraint",zeroLeptonName+"_Constraint",
+						 *wspace.var(zeroLeptonCountName.Data()),zeroLeptonYieldSum);
+	  
+	  wspace.import( zeroLeptonConstraint,RecycleConflictNodes() );
+	  
+	  
+	  cout << endl << endl;
+	  zeroLeptonConstraint.Print();
+	  cout << endl << endl;
+	  
+	}// END OF ZERO LEPTON STANDALONE PART     
 
-      TString zeroLeptonSignalYieldName(zeroLeptonName);
-      zeroLeptonSignalYieldName.Append("_SignalYield");
-      
-
-
-      RooAddition zeroLeptonYieldSum(zeroLeptonName+"_YieldSum",zeroLeptonName+"_YieldSum",
-				     RooArgSet( *wspace.arg(zeroLeptonSignalYieldName.Data()), 
-						zeroLeptonTopWJetsPolarizationYield,
-						*wspace.arg(TauHadName1.Data()),
-						*wspace.arg(TauHadName2.Data()),
-						*wspace.arg(DilepName1.Data())
-						));
-      
-
-      cout << " SIGNAL YIELD:  " << zeroLeptonSignalYieldName.Data() << "  " ;
-      (*wspace.arg(zeroLeptonSignalYieldName.Data())).Print();
-
-      cout << " COUNTS:  " << zeroLeptonCountName.Data() << "  "
-	   << (*wspace.var(zeroLeptonCountName.Data())).getValV() << "  " << endl;
-
-      cout << " TOTAL PREDICTED IN BIN:  ";
-      zeroLeptonYieldSum.Print();
-
-
-      /////////////////////////////////////////////////////////////////////////////////////
-      // SET CONSTRAINTS FOR THIS 0L BIN
-      /****** SHOULD LEAVE THIS OUT IN COMPLETE LIKELIHOOD!!! ******/
-      //cout << " SETTING 0L CONSTRAINTS " << endl;
-      
-      //      RooPoisson zeroLeptonConstraint(zeroLeptonName+"_Constraint",zeroLeptonName+"_Constraint",
-      RooPoissonLogEval zeroLeptonConstraint(zeroLeptonName+"_Constraint",zeroLeptonName+"_Constraint",
-			*wspace.var(zeroLeptonCountName.Data()),zeroLeptonYieldSum);
-      
-      wspace.import( zeroLeptonConstraint,RecycleConflictNodes() );
-
-
-      cout << endl << endl;
-      zeroLeptonConstraint.Print();
-      cout << endl << endl;
-
-      
 }// END OF PREDICTIONS
 
 
@@ -635,9 +655,13 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   //test.open(outputFile.Data(),ios::app);
 
   
-  TFile *test = new TFile(outputFile.Data(), "UPDATE" );
-  //  RooWorkspace *wspace = (RooWorkspace*) test->Get("wspace"); 
-  wspace.autoImportClassCode(true);
+  TFile *test;
+  if( standalone ) 
+    {
+      test = new TFile(outputFile.Data(), "UPDATE" );
+      //  RooWorkspace *wspace = (RooWorkspace*) test->Get("wspace"); 
+      wspace.autoImportClassCode(true);
+    }
 
   RooRealVar *signalCrossSection = wspace.var( "signalCrossSection" );
 
@@ -1037,7 +1061,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       makeTauHadBinPrediction( wspace, thisBin, binnamesoutside[thisBin], binTriggerEfficiencyNames[thisBin] );
       //cout << " end of tauhad prediction " << endl;
 
-      makePrediction( wspace, thisBin );
+      makePrediction( wspace, thisBin , standalone);
 
 
     }// end of loop over bins
@@ -1217,11 +1241,12 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   cout << wspace.function("twoLooseLep_bin333_SignalYield")->getTitle() << "  " << wspace.function("twoLooseLep_bin333_SignalYield")->getVal() << "  " << wspace.function("twoLooseLep_bin333_SignalYield")->getPropagatedError(*fitResult) << endl;
   cout << wspace.function("twoTightMu_bin333_SignalYield")->getTitle() << "  " << wspace.function("twoTightMu_bin333_SignalYield")->getVal() << "  " << wspace.function("twoTightMu_bin333_SignalYield")->getPropagatedError(*fitResult) << endl;    
 
-  }
 
   //test << wspace.var("signalCrossSection")->getValV() << endl;
   test->Write(); 
   test->Close(); 
+
+  }
 
   //wspace.writeToFile( outputFile.Data(), false ); // DO NOT RECREATE ROOT FILE!!! 
 

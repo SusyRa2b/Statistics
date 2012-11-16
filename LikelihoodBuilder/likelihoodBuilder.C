@@ -53,7 +53,8 @@
 #include "RooProdPdfLogSum.h"
 #include "RooPoissonLogEval.h"
 
-#include "metReweightingBuilder.h"
+//#include "metReweightingBuilder.h"
+#include "metReweightingBuilderSIMPLETAU.h"
 
 #include "RooStats/ModelConfig.h"
 
@@ -172,6 +173,8 @@ struct allBins
 
 bool skipBin(TString binName) 
 {
+  return false; //no skipping right now
+
   if(binName=="bin37" || binName=="bin38" || binName=="bin39") return true;//FIXME  --  hardcoded!
   return false;
 }
@@ -218,8 +221,6 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
   zeroLeptonCount.setConstant();
   zeroLeptonLowDeltaPhiNCount.setConstant();
   
-  cout << "DEBUG zeroLeptonCount " << observed.zeroLepton << endl;
-
   ws.import(zeroLeptonCount);
   ws.import(zeroLeptonLowDeltaPhiNCount);
   ws.extendSet(names.observables,zeroLeptonCount.GetName());
@@ -331,12 +332,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
   TString oneLeptonName("oneLepton_");
   oneLeptonName+=binName;
   
-  if(options.TopWJetsMethod == "metReweighting") 
-    {
-      //need to get zeroLeptonTopWJetsYield from workspace here
-      assert(0);
-    }
-  else if(options.TopWJetsMethod == "ABCD")
+  if(options.TopWJetsMethod == "ABCD")
     {
       RooRealVar* singleLeptonScaling = ws.var(names.singleLeptonScaling);
       RooRealVar  oneLeptonTopWJetsYield(oneLeptonName+"_TopWJetsYield",oneLeptonName+"_TopWJetsYield",observed.oneLepton+1.0,0,1e5);
@@ -351,8 +347,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
       RooProduct  zeroLeptonTopWJetsYield(zeroLeptonName+"_TopWJetsYield",zeroLeptonName+"_TopWJetsYield",RooArgSet(*singleLeptonScaling,*zeroLeptonTopWJetsClosure,oneLeptonTopWJetsYield));
       ws.import(zeroLeptonTopWJetsYield, RecycleConflictNodes() );
     }
-  else { assert(0); }
-
+  
   RooAbsReal* zeroLeptonTopWJetsYield = ws.function(zeroLeptonName+"_TopWJetsYield");
   assert(zeroLeptonTopWJetsYield != NULL);
 
@@ -689,7 +684,7 @@ void setupSignalModelMR(const TString binName, const TString binFileNameInsideSi
   string fileLine;
   
   TString index;
-  int value;
+  double value;
   
   map<TString,double> thisInsideSignalMRValue;
   map<TString,double> thisInsideSignalMRError;
@@ -705,7 +700,7 @@ void setupSignalModelMR(const TString binName, const TString binFileNameInsideSi
       index = nameAndNumber;
       if(index == "") continue;
       nameAndNumber.NextToken();
-      value = nameAndNumber.Atoi();
+      value = nameAndNumber.Atof();
       cout << index << " : " << value << endl;
       
       if(index == "oneTightMu_Theta1_SignalCount"       ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta1", value) ); }
@@ -1030,12 +1025,13 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	      TString signalName = (*it).first;
 	      double signalValue = ((*it).second).value;
 	      double signalError = ((*it).second).error;
-	      
+	      double percentError = (signalValue > 0) ? signalError/signalValue : 0.10;
+
 	      RooRealVar signalFraction(signalName+"_SignalFraction", signalName+"_SignalFraction", signalValue/nGenerated);
 	      signalFraction.setConstant();
-
-	      RooAbsArg* signalStatisticalError = getGaussianConstraint(ws, signalName+"_SignalError_", binName,
-							     1.0, signalError/signalValue,
+	      
+	      RooAbsArg* signalStatisticalError = getGaussianConstraint(ws, signalName+"_SignalError", "",
+							     1.0, percentError,
 							     names.observables, names.nuisances);
 
 	      RooProduct signalYield(signalName+"_SignalYield", signalName+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, signalFraction, *signalGlobalUncertainty, *signalStatisticalError) );
@@ -1049,6 +1045,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	      TString signalName = (*it).first;
 	      double signalValue = ((*it).second).value;
 	      double signalError = ((*it).second).error;
+	      double percentError = (signalValue > 0) ? signalError/signalValue : 0.10;
 
 	      //Continue if already in workspace 
 	      if( ws.var(signalName+"_SignalYield") != NULL ) continue; 
@@ -1056,8 +1053,8 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	      RooRealVar signalFraction(signalName+"_SignalFraction", signalName+"_SignalFraction", signalValue/nGenerated);
 	      signalFraction.setConstant();
 	      
-	      RooAbsArg* signalStatisticalError = getGaussianConstraint(ws, signalName+"_SignalError_", binName,
-							     1.0, signalError/signalValue,
+	      RooAbsArg* signalStatisticalError = getGaussianConstraint(ws, signalName+"_SignalError", "",
+							     1.0, percentError,
 							     names.observables, names.nuisances);
 	      
 	      RooProduct signalYield(signalName+"_SignalYield", signalName+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, signalFraction, *signalGlobalUncertainty, *signalStatisticalError) );
@@ -1373,7 +1370,8 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   //Set options 
   options.skipTriggerEfficiency = false;//option no longer works
   options.qcdMethod = "model4";//others: htDependent, singleScaleWithCorrections
-  options.TopWJetsMethod = "ABCD"; //others: metReweighting
+  //options.TopWJetsMethod = "ABCD"; //others: metReweighting
+  options.TopWJetsMethod = "metReweighting";
     
   //Read in setupFile and binFilesFile
   setupUnderlyingModel(options, binFilesPath, binFileNames, signalModelFilesPath, binFileNamesInsideSignalMR, binFileNamesOutsideSignalMR, binNames, setupFileName , binFilesFileName , numbers);
@@ -1411,7 +1409,7 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   makeSignalModel(options, ws, binNames, names, bins, nGenerated, signalFractionsOAK, signalStatisticalErrorOAK, signalBTagEfficiencyErrorOAK, signalJesErrorOAK, insideSignalMR, outsideSignalMR );
 
   //Do MET-reweighting method
-  if(options.TopWJetsMethod == "metReweighting") buildMRLikelihood("","","","","","","",false);
+  if(options.TopWJetsMethod == "metReweighting") buildMRLikelihood(ws, "", "testDataMRSetupFile.txt", false);
 
   //Do nominal method, QCD, and ZtoNuNu
   for(vector<TString>::iterator thisBin = binNames.begin(); thisBin != binNames.end() ; thisBin++)

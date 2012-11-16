@@ -421,7 +421,7 @@ foreach(@binFileNames) {
 #}
 
 print $globalout "ZtollOverZtoNuNuRatio 0.168067227\n";
-print $globalout "Luminosity 15.0\n";
+print $globalout "Luminosity 12.0\n";
 
 
 close $globalout;
