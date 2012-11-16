@@ -352,10 +352,10 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
     RooAbsArg* triggerefficiency = wspace.arg(triggername.Data());
 
     RooProduct oneTightMuDataYieldSum(oneTightMuName+"_DataYieldSum",oneTightMuName+"_DataYieldSum",
-				      RooArgSet( oneTightMuTopWJetsYieldSum, *triggerefficiency));
+				      RooArgSet( oneTightMuYieldSum, *triggerefficiency));
 
     RooProduct oneLooseLepDataYieldSum(oneLooseLepName+"_DataYieldSum",oneLooseLepName+"_DataYieldSum",
-				       RooArgSet( oneLooseLepTopWJetsYieldSum, *triggerefficiency));
+				       RooArgSet( oneLooseLepYieldSum, *triggerefficiency));
    
 
     RooPoissonLogEval oneTightMuConstraint(oneTightMuName+"_Constraint",oneTightMuName+"_Constraint",oneTightMuCount,oneTightMuDataYieldSum);
