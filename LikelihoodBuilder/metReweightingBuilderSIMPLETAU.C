@@ -68,7 +68,7 @@ USES STANDARD INPUT FILES
 
 #include "RooProdPdfLogSum.h"
 #include "RooPoissonLogEval.h"
-#include "RooPosDefCorrGauss.h"
+//#include "RooPosDefCorrGauss.h"
 
 #include "RooRatio.h"
 #include "RooBetaPdf.h"
@@ -109,32 +109,32 @@ void makePrediction( RooWorkspace& wspace, TString thisBin ){
       //cout << " BEFORE GETTING PREDICTION COMPONENTS " << endl;
 
       TString PolarizationName1(zeroLeptonName);
-      PolarizationName1.Append("_Theta1_TopWJetsYield");
+      PolarizationName1.Append("_Theta1_TopWJetsDataYield");
     
       TString PolarizationName2(zeroLeptonName);
-      PolarizationName2.Append("_Theta2_TopWJetsYield");
+      PolarizationName2.Append("_Theta2_TopWJetsDataYield");
         
       TString PolarizationName3(zeroLeptonName);
-      PolarizationName3.Append("_Theta3_TopWJetsYield");
+      PolarizationName3.Append("_Theta3_TopWJetsDataYield");
         
       TString PolarizationName4(zeroLeptonName);
-      PolarizationName4.Append("_Theta4_TopWJetsYield");
+      PolarizationName4.Append("_Theta4_TopWJetsDataYield");
         
       TString PolarizationName5(zeroLeptonName);
-      PolarizationName5.Append("_Theta5_TopWJetsYield");
+      PolarizationName5.Append("_Theta5_TopWJetsDataYield");
     
       //    cout << " GOT POLARIZATION PREDICTIONS" << endl;
       //////
       TString TauHadName1(zeroLeptonName);
-      TauHadName1.Append("_1Tau_TopWJetsYield");
+      TauHadName1.Append("_1Tau_TopWJetsDataYield");
 
       TString TauHadName2(zeroLeptonName);
-      TauHadName2.Append("_2Tau_TopWJetsYield");
+      TauHadName2.Append("_2Tau_TopWJetsDataYield");
       
       //    cout << " GOT TAU->HAD PREDICTIONS" << endl;
       //////
       TString DilepName1(zeroLeptonName);
-      DilepName1.Append("_Dilep_TopWJetsYield");
+      DilepName1.Append("_Dilep_TopWJetsDataYield");
       
       //    cout << " GOT DILEPTON PREDICTIONS" << endl;
       //////
@@ -230,7 +230,7 @@ void makePrediction( RooWorkspace& wspace, TString thisBin ){
 
 
 
-void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binname ){
+void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binname, TString trigeffname ){
 
   //////////////////////////////////////////////////////////////////
   // LOOP OVER STUFF IN DTHETA BINS!!!
@@ -284,10 +284,7 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
     TString oneLooseLepSignalYieldName(oneLooseLepName);
     oneLooseLepSignalYieldName.Append("_SignalYield");
 
-    //    cout << oneTightMuSignalYieldName << "  " << oneLooseMuSignalYieldName << "  " << oneLooseLepSignalYieldName << endl;
-
-    //    cout << " getting scale factor for pol method " << endl;
-
+ 
     ////////////////////////////////////////////////////
     // GET THE 1L->0L SCALE FACTOR FOR THIS DTHETA BIN 
     
@@ -340,10 +337,19 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
  
     RooAddition oneLeptonTopWJetsYield(oneLeptonName+"_TopWJetsYield",oneLeptonName+"_TopWJetsYield",
 				       RooArgSet(oneTightMuTopWJetsYield,oneLooseLepTopWJetsYield));
+
     RooProduct  zeroLeptonTopWJetsYield(zeroLeptonName+"_TopWJetsYield",zeroLeptonName+"_TopWJetsYield",
 					RooArgSet(*wspace.arg(oneLeptonScaleFactorName.Data()),oneLeptonTopWJetsYield));
-    wspace.import(zeroLeptonTopWJetsYield,RecycleConflictNodes());
-    wspace.extendSet("nuisances",zeroLeptonTopWJetsYield.GetName());
+
+    TString triggername = "oneLeptonTriggerEfficiency_";
+    triggername.Append(trigeffname);
+    RooAbsArg* triggerefficiency = wspace.arg(triggername.Data());
+
+    RooProduct  zeroLeptonTopWJetsDataYield(zeroLeptonName+"_TopWJetsDataYield",zeroLeptonName+"_TopWJetsDataYield",
+					    RooArgSet(zeroLeptonTopWJetsYield,*triggerefficiency));
+
+    wspace.import(zeroLeptonTopWJetsDataYield,RecycleConflictNodes());
+    wspace.extendSet("nuisances",zeroLeptonTopWJetsDataYield.GetName());
 
 
   }// END OF LOOP OVER DTHETA BINS
@@ -360,7 +366,7 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void makeDileptonConstraintsPredictions( RooWorkspace& wspace, TString binname,  TString binname_outside ){
+void makeDileptonConstraintsPredictions( RooWorkspace& wspace, TString binname,  TString binname_outside, TString trigeffname ){
 
 
   TString twoTightMuName("twoTightMu_");
@@ -466,13 +472,20 @@ void makeDileptonConstraintsPredictions( RooWorkspace& wspace, TString binname, 
   RooProduct  zeroLeptonTopWJetsYieldDilep("zeroLepton_"+binname+"_Dilep_TopWJetsYield","zeroLepton_"+binname+"_Dilep_TopWJetsYield",
 					   RooArgSet( *wspace.arg(DilepScaleFactorName.Data()), DilepTopWJetsYield ));
 
-  wspace.import(zeroLeptonTopWJetsYieldDilep,RecycleConflictNodes());
-  wspace.extendSet("nuisances",zeroLeptonTopWJetsYieldDilep.GetName());
+  TString triggername = "oneLeptonTriggerEfficiency_";
+  triggername.Append(trigeffname);
+  RooAbsArg* triggerefficiency = wspace.arg(triggername.Data());
+
+  RooProduct  zeroLeptonTopWJetsDataYieldDilep("zeroLepton_"+binname+"_Dilep_TopWJetsDataYield","zeroLepton_"+binname+"_Dilep_TopWJetsDataYield",
+					       RooArgSet( zeroLeptonTopWJetsYieldDilep, *triggerefficiency ));
+
+  wspace.import(zeroLeptonTopWJetsDataYieldDilep,RecycleConflictNodes());
+  wspace.extendSet("nuisances",zeroLeptonTopWJetsDataYieldDilep.GetName());
 
 
-  cout << " INITIAL GUESS FOR DILEPTON PREDICTION: " << endl;
-  zeroLeptonTopWJetsYieldDilep.Print();
-  cout << endl << endl;
+  //cout << " INITIAL GUESS FOR DILEPTON PREDICTION: " << endl;
+  //zeroLeptonTopWJetsYieldDilep.Print();
+  //cout << endl << endl;
 
 
 
@@ -486,7 +499,7 @@ void makeDileptonConstraintsPredictions( RooWorkspace& wspace, TString binname, 
 /////////////////////////////////////////////////////////////////////////////////////
 // MAKE TAU->HAD AND DITAU PREDICTIONS FOR THIS NB/MET/HT BIN 
 
-void makeTauHadBinPrediction( RooWorkspace& wspace, TString binname, TString binname_outside ){
+void makeTauHadBinPrediction( RooWorkspace& wspace, TString binname, TString binname_outside, TString trigeffname ){
 
   cout << " IN TAU PREDICTION" << endl;
   
@@ -553,11 +566,21 @@ void makeTauHadBinPrediction( RooWorkspace& wspace, TString binname, TString bin
 
   cout << " APPLYING SCALE FACTORS TO SUMS " << endl;
 
+  TString triggername = "oneLeptonTriggerEfficiency_";
+  triggername.Append(trigeffname);
+  RooAbsArg* triggerefficiency = wspace.arg(triggername.Data());
+
   RooProduct  zeroLeptonTopWJetsYield1Tau("zeroLepton_"+binname+"_1Tau_TopWJetsYield","zeroLepton_"+binname+"_1Tau_TopWJetsYield",
 					  RooArgSet( *wspace.arg(oneTauSFName.Data()), oneTauInput ));
 
+  RooProduct  zeroLeptonTopWJetsDataYield1Tau("zeroLepton_"+binname+"_1Tau_TopWJetsDataYield","zeroLepton_"+binname+"_1Tau_TopWJetsDataYield",
+					  RooArgSet( zeroLeptonTopWJetsYield1Tau, *triggerefficiency ));
+
   RooProduct  zeroLeptonTopWJetsYield2Tau("zeroLepton_"+binname+"_2Tau_TopWJetsYield","zeroLepton_"+binname+"_2Tau_TopWJetsYield",
 					  RooArgSet( *wspace.arg(twoTauSFName.Data()), *wspace.var(twoTightMuTopWJetsYieldName.Data()) ));
+  
+  RooProduct  zeroLeptonTopWJetsDataYield2Tau("zeroLepton_"+binname+"_2Tau_TopWJetsDataYield","zeroLepton_"+binname+"_2Tau_TopWJetsDataYield",
+					      RooArgSet( zeroLeptonTopWJetsYield2Tau, *triggerefficiency ));
   
 
   /////////////////////////////////////////////////////////////////////////////////////
@@ -569,11 +592,11 @@ void makeTauHadBinPrediction( RooWorkspace& wspace, TString binname, TString bin
   zeroLeptonTopWJetsYield2Tau.Print();
   */
 
-  wspace.import(zeroLeptonTopWJetsYield1Tau,RecycleConflictNodes());
-  wspace.extendSet("nuisances",zeroLeptonTopWJetsYield1Tau.GetName());
+  wspace.import(zeroLeptonTopWJetsDataYield1Tau,RecycleConflictNodes());
+  wspace.extendSet("nuisances",zeroLeptonTopWJetsDataYield1Tau.GetName());
 
-  wspace.import(zeroLeptonTopWJetsYield2Tau,RecycleConflictNodes());
-  wspace.extendSet("nuisances",zeroLeptonTopWJetsYield2Tau.GetName());
+  wspace.import(zeroLeptonTopWJetsDataYield2Tau,RecycleConflictNodes());
+  wspace.extendSet("nuisances",zeroLeptonTopWJetsDataYield2Tau.GetName());
 
   
 }// END OF TAU->HAD FUNCTION FOR ONE BIN
@@ -601,7 +624,8 @@ void makeTauHadBinPrediction( RooWorkspace& wspace, TString binname, TString bin
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void buildMRLikelihood( TString outputFile, TString setupFileName ) 
+//void buildMRLikelihood( TString outputFile, TString setupFileName ) 
+void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupFileName, bool standalone ) 
 {
 
   ///////////////////////////////////////////////////
@@ -612,12 +636,13 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
 
   
   TFile *test = new TFile(outputFile.Data(), "UPDATE" );
-  RooWorkspace *wspace = (RooWorkspace*) test->Get("wspace"); 
-  wspace->autoImportClassCode(true);
-  RooRealVar *signalCrossSection = wspace->var( "signalCrossSection" );
+  //  RooWorkspace *wspace = (RooWorkspace*) test->Get("wspace"); 
+  wspace.autoImportClassCode(true);
+
+  RooRealVar *signalCrossSection = wspace.var( "signalCrossSection" );
 
   cout << " EVERYTHING IN INITIAL WORKSPACE: " << endl;
-  wspace->Print();
+  wspace.Print();
 
   ///////////////////////////////////////////////////
 
@@ -632,6 +657,7 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
   map<TString,TString> binPolarizationScaleFactorFileNames;
   map<TString,TString> binTauHadScaleFactorFileNames;
   map<TString,TString> binSignalFracFileNames;
+  map<TString,TString> binTriggerEfficiencyNames;
 
 
   ////////////////////////////////////
@@ -641,7 +667,7 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
   ifstream setupFile;
 
   string fileLine;
-  TString index, outsidename, fileName1, fileName2, fileName3, fileName4;
+  TString index, outsidename, fileName1, fileName2, fileName3, fileName4, trigeffname;
 
   setupFile.open(setupFileName.Data(),fstream::in);
 
@@ -664,7 +690,9 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
       fileName3 = listOfFiles;
       listOfFiles.NextToken();
       fileName4 = listOfFiles;
-
+      listOfFiles.NextToken();
+      trigeffname = listOfFiles;
+ 
       //cout << index << " : " << fileName << endl;
       if(index == "") continue;
     
@@ -674,7 +702,7 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
       binPolarizationScaleFactorFileNames[index] = fileName2;
       binTauHadScaleFactorFileNames[index] = fileName3;
       binSignalFracFileNames[index] = fileName4;
-
+      binTriggerEfficiencyNames[index] = trigeffname;
     }
   
   setupFile.close();
@@ -682,7 +710,10 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
 
   ////////////////////////////////////
   ////// READ IN SIGNAL YIELDS FROM OUTSIDE, ADD TO WORKSPACE
-
+  ////// OR, READ FROM WORKSPACE
+  ////// IN STANDALONE MODE
+  if( standalone ){
+    
   for( int i=0; i<binnames.size(); i++ )
     {
 
@@ -698,6 +729,9 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
       TString zeroLeptonName("zeroLepton_");
       zeroLeptonName+=thisBin;
 
+      TString oneLeptonName("oneLepton_");
+      oneLeptonName+=thisBin;
+
       TString oneTightMuName("oneTightMu_");
       oneTightMuName+=thisBin;
 
@@ -710,13 +744,25 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
       TString twoLooseLepName("twoLooseLep_");
       twoLooseLepName+=thisBin;
 
+
+      ///////////////////////////////
+      ////// THIS IS A PLACEHOLDER!!!
+
+      TString triggername = "oneLeptonTriggerEfficiency_";
+      triggername.Append(trigeffname);
+
+      RooRealVar* TriggerEfficiency = (RooRealVar*)
+	getBetaPrimeConstraint(wspace,triggername, "",
+			       0.95,0.05,
+			       "trig1","trig2");
+
       ////// 
 
       signalfracFile>>count;
 
       RooRealVar acount0(zeroLeptonName+"_SignalFrac",zeroLeptonName+"_SignalFrac",count); 
       RooProduct zeroLepton(zeroLeptonName+"_SignalYield",zeroLeptonName+"_SignalYield",RooArgSet(acount0,*signalCrossSection));
-      wspace->import(zeroLepton,RecycleConflictNodes());
+      wspace.import(zeroLepton,RecycleConflictNodes());
       
       TString outputthis(zeroLeptonName);
       outputthis.Append("_SignalYield");
@@ -735,31 +781,31 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
 	signalfracFile>>count;
 	RooRealVar acount1(oneTightMuThetaName+"_SignalFrac",oneTightMuThetaName+"_SignalFrac",count); 
 	RooProduct oneTightMuTheta(oneTightMuThetaName+"_SignalYield",oneTightMuThetaName+"_SignalYield",RooArgSet(acount1,*signalCrossSection));
-	wspace->import(oneTightMuTheta,RecycleConflictNodes());
+	wspace.import(oneTightMuTheta,RecycleConflictNodes());
 
 	// LOOSE MU AND E ALREADY COMBINED 
 
 	signalfracFile>>count;
 	RooRealVar acount3(oneLooseLepThetaName+"_SignalFrac",oneLooseLepThetaName+"_SignalFrac",count); 
 	RooProduct oneLooseLepTheta(oneLooseLepThetaName+"_SignalYield",oneLooseLepThetaName+"_SignalYield",RooArgSet(acount3,*signalCrossSection));
-	wspace->import(oneLooseLepTheta,RecycleConflictNodes());
+	wspace.import(oneLooseLepTheta,RecycleConflictNodes());
 		
       }
 
       signalfracFile>>count;
       RooRealVar acount4(twoTightMuName+"_SignalFrac",twoTightMuName+"_SignalFrac",count); 
       RooProduct twoTightMu(twoTightMuName+"_SignalYield",twoTightMuName+"_SignalYield",RooArgSet(acount4,*signalCrossSection));
-      wspace->import(twoTightMu,RecycleConflictNodes());
+      wspace.import(twoTightMu,RecycleConflictNodes());
 
       signalfracFile>>count;
       RooRealVar acount9(twoLooseLepName+"_SignalFrac",twoLooseLepName+"_SignalFrac",count); 
       RooProduct twoLooseLep(twoLooseLepName+"_SignalYield",twoLooseLepName+"_SignalYield",RooArgSet(acount9,*signalCrossSection));
-      wspace->import(twoLooseLep,RecycleConflictNodes());
+      wspace.import(twoLooseLep,RecycleConflictNodes());
 
           
     }// end of loop over bins setting 
 
-
+  }// end standalone mode
 
   ////////////////////////////////////
   ////// READ IN CONTENT OF ALL BINS, ADD TO WORKSPACE
@@ -793,16 +839,16 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
       twoLooseLepName+=thisBin;
 
       ////// 
-
+      // leaving placeholder in 0L count space
       contentFile>>count;
-      TString name1(zeroLeptonName+"_SignalFrac");
-     
-      RooRealVar zeroLeptonCount(zeroLeptonName+"_Count",zeroLeptonName+"_Count",count);
-      zeroLeptonCount.setConstant();
-      wspace->import(zeroLeptonCount,RecycleConflictNodes());
-      wspace->extendSet("namesfordata",zeroLeptonCount.GetName());
 
-      cout << endl << endl << zeroLeptonCount.getVal() << endl << endl;
+      // ONLY ADD ZERO LEPTON COUNT TO WORKSPACE IN STANDALONE MODE
+      if( standalone ){
+	RooRealVar zeroLeptonCount(zeroLeptonName+"_Count",zeroLeptonName+"_Count",count);
+	zeroLeptonCount.setConstant();
+	wspace.import(zeroLeptonCount,RecycleConflictNodes());
+	wspace.extendSet("namesfordata",zeroLeptonCount.GetName());
+      }
       
       //////
       
@@ -815,47 +861,39 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
 	oneLooseLepThetaName+=j;
 	
 	contentFile>>count;     
-	TString name2(oneTightMuThetaName+"_SignalFrac");
-
  	RooRealVar oneTightMuThetaCount(oneTightMuThetaName+"_Count",oneTightMuThetaName+"_Count",count);
 	oneTightMuThetaCount.setConstant();
-	wspace->import(oneTightMuThetaCount,RecycleConflictNodes());
-	wspace->extendSet("namesfordata",oneTightMuThetaCount.GetName());
+	wspace.import(oneTightMuThetaCount,RecycleConflictNodes());
+	wspace.extendSet("namesfordata",oneTightMuThetaCount.GetName());
 	
-	cout << endl << endl << oneTightMuThetaCount.getVal() << endl << endl;
+	//cout << endl << endl << oneTightMuThetaCount.getVal() << endl << endl;
 
 	contentFile>>count;
-	TString name4(oneLooseLepThetaName+"_SignalFrac");
-
 	RooRealVar oneLooseLepThetaCount(oneLooseLepThetaName+"_Count",oneLooseLepThetaName+"_Count",count);
 	oneLooseLepThetaCount.setConstant();
-	wspace->import(oneLooseLepThetaCount,RecycleConflictNodes());
-	wspace->extendSet("namesfordata",oneLooseLepThetaCount.GetName());
+	wspace.import(oneLooseLepThetaCount,RecycleConflictNodes());
+	wspace.extendSet("namesfordata",oneLooseLepThetaCount.GetName());
 	
-	cout << endl << endl << oneLooseLepThetaCount.getVal() << endl << endl;
+	//cout << endl << endl << oneLooseLepThetaCount.getVal() << endl << endl;
 
       }
       
 
       contentFile>>count;
-      TString name5(twoTightMuName+"_SignalFrac");
-
       RooRealVar twoTightMuCount(twoTightMuName+"_Count",twoTightMuName+"_Count",count);
       twoTightMuCount.setConstant();
-      wspace->import(twoTightMuCount,RecycleConflictNodes());
-      wspace->extendSet("namesfordata",twoTightMuCount.GetName());
+      wspace.import(twoTightMuCount,RecycleConflictNodes());
+      wspace.extendSet("namesfordata",twoTightMuCount.GetName());
 
-      cout << endl << endl << twoTightMuCount.getVal() << endl << endl;
+      //cout << endl << endl << twoTightMuCount.getVal() << endl << endl;
 
       contentFile>>count;
-      TString name0(twoLooseLepName+"_SignalFrac");
-
       RooRealVar twoLooseLepCount(twoLooseLepName+"_Count",twoLooseLepName+"_Count",count);
       twoLooseLepCount.setConstant();
-      wspace->import(twoLooseLepCount,RecycleConflictNodes());
-      wspace->extendSet("namesfordata",twoLooseLepCount.GetName());
+      wspace.import(twoLooseLepCount,RecycleConflictNodes());
+      wspace.extendSet("namesfordata",twoLooseLepCount.GetName());
 
-      cout << endl << endl << twoLooseLepCount.getVal() << endl << endl;
+      //cout << endl << endl << twoLooseLepCount.getVal() << endl << endl;
 
       ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -911,9 +949,13 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
 	name2+=j;
 
 	
-	RooRealVar ScaleFactor(oneLeptonName,oneLeptonName,scalefactor);
-	ScaleFactor.setConstant();
-	wspace->import(ScaleFactor,RecycleConflictNodes());
+	//RooRealVar ScaleFactor(oneLeptonName,oneLeptonName,scalefactor);
+	//ScaleFactor.setConstant();
+	//wspace.import(ScaleFactor,RecycleConflictNodes());
+	RooRealVar* ScaleFactor = (RooRealVar*)
+	  getBetaPrimeConstraint(wspace,oneLeptonName, "",
+				 scalefactor,scalefactorerror,
+				 name1,name2);
 	
       }
 
@@ -928,9 +970,16 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
       dilepName+=binnamesoutside[thisBin];
       dilepName.Append("_ScaleFactor");
 
-      RooRealVar ScaleFactorDilep(dilepName,dilepName,scalefactor);
-      ScaleFactorDilep.setConstant();
-      wspace->import(ScaleFactorDilep,RecycleConflictNodes());
+      TString name1("blah3");
+      TString name2("blah4");
+
+      //RooRealVar ScaleFactorDilep(dilepName,dilepName,scalefactor);
+      //ScaleFactorDilep.setConstant();
+      //wspace.import(ScaleFactorDilep,RecycleConflictNodes());
+      RooRealVar* ScaleFactorDilep = (RooRealVar*)
+	getBetaPrimeConstraint(wspace,dilepName, "",
+			       scalefactor,scalefactorerror,
+			       name1,name2);
 	      
       ////////////////////////////////////
       ////// READ IN TAU/DITAU MC-BASED SCALE FACTORS, ADD TO WORKSPACE
@@ -941,10 +990,17 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
       oneTauName+=binnamesoutside[thisBin];
       oneTauName.Append("_ScaleFactor");
 
-      RooRealVar ScaleFactorTau(oneTauName,oneTauName,scalefactor);
-      ScaleFactorTau.setConstant();
-      wspace->import(ScaleFactorTau,RecycleConflictNodes());
-      
+      TString name3("blah5");
+      TString name4("blah6");
+
+    //RooRealVar ScaleFactorTau(oneTauName,oneTauName,scalefactor);
+      //ScaleFactorTau.setConstant();
+      //wspace.import(ScaleFactorTau,RecycleConflictNodes());
+      RooRealVar* ScaleFactorTau = (RooRealVar*)
+	getBetaPrimeConstraint(wspace,oneTauName, "",
+			       scalefactor,scalefactorerror,
+			       name3,name4);
+
       //////
 
       tauhadScaleFactorFile>>scalefactor>>scalefactorerror;
@@ -953,10 +1009,17 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
       twoTauName+=binnamesoutside[thisBin];
       twoTauName.Append("_ScaleFactor");
 
-      RooRealVar ScaleFactorTauTau(twoTauName,twoTauName,scalefactor);
-      ScaleFactorTauTau.setConstant();
-      wspace->import(ScaleFactorTauTau,RecycleConflictNodes());
-      
+      TString name5("blah7");
+      TString name6("blah8");
+
+     //RooRealVar ScaleFactorTauTau(twoTauName,twoTauName,scalefactor);
+      //ScaleFactorTauTau.setConstant();
+      //wspace.import(ScaleFactorTauTau,RecycleConflictNodes());
+      RooRealVar* ScaleFactorTauTau = (RooRealVar*)
+	getBetaPrimeConstraint(wspace,twoTauName, "",
+			       scalefactor,scalefactorerror,
+			       name5,name6);
+
       //////
 
       scaleFactorFile.close();
@@ -967,39 +1030,42 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
       ////// PUTTING SOME CONSTRAINT-SETTING CODE HERE FOR NOW:
 
 
-      makePolarizationConstraintsPredictions( *wspace, thisBin );
+      makePolarizationConstraintsPredictions( wspace, thisBin, binTriggerEfficiencyNames[thisBin] );
       //cout << " end of polarization constraints " << endl;
-      makeDileptonConstraintsPredictions( *wspace, thisBin, binnamesoutside[thisBin] );
+      makeDileptonConstraintsPredictions( wspace, thisBin, binnamesoutside[thisBin], binTriggerEfficiencyNames[thisBin] );
       //cout << " end of dilepton constraints " << endl;
-      makeTauHadBinPrediction( *wspace, thisBin, binnamesoutside[thisBin] );
+      makeTauHadBinPrediction( wspace, thisBin, binnamesoutside[thisBin], binTriggerEfficiencyNames[thisBin] );
       //cout << " end of tauhad prediction " << endl;
 
-      makePrediction( *wspace, thisBin );
+      makePrediction( wspace, thisBin );
 
 
     }// end of loop over bins
 
 
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+  if( standalone ){
   
-  RooArgSet Constraints(wspace->allPdfs());
+  RooArgSet Constraints(wspace.allPdfs());
 
   //  RooProdPdf model("model","model", Constraints );
     RooProdPdfLogSum model("model","model", Constraints );
-  //  wspace->import(model,RecycleConflictNodes());
-  wspace->import(model);
+  //  wspace.import(model,RecycleConflictNodes());
+  wspace.import(model);
 
   cout << endl << endl << " FINAL SET OF CONSTRAINTS " << endl;
   Constraints.Print("v");
 
-  RooDataSet dataset( "dataset", "dataset", *wspace->set("namesfordata") );
-  dataset.add(*wspace->set("namesfordata"));
-  wspace->import(dataset);
+  RooDataSet dataset( "dataset", "dataset", *wspace.set("namesfordata") );
+  dataset.add(*wspace.set("namesfordata"));
+  wspace.import(dataset);
   
 
   cout << endl << endl << " FINAL SET OF DATA " << endl;
   dataset.Print();
 
-  wspace->defineSet("poi","signalCrossSection");
+  wspace.defineSet("poi","signalCrossSection");
 
 
 
@@ -1010,7 +1076,7 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
   /*
 
   RooAbsReal* nll = model.createNLL(dataset);
-  RooAbsReal* pll = nll->createProfile(*wspace->set("poi")) ;
+  RooAbsReal* pll = nll->createProfile(*wspace.set("poi")) ;
 
   RooPlot* frame1 = signalCrossSection->frame();
   nll->plotOn(frame1) ;
@@ -1030,8 +1096,8 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
   ModelConfig * modelConfig = new ModelConfig("modelConfig");
   modelConfig->SetWorkspace(*wspace);
   modelConfig->SetPdf("model");
-  modelConfig->SetParametersOfInterest(*wspace->set("poi"));
-  modelConfig->SetNuisanceParameters(*wspace->set("nuisances"));
+  modelConfig->SetParametersOfInterest(*wspace.set("poi"));
+  modelConfig->SetNuisanceParameters(*wspace.set("nuisances"));
 
   cout << endl << endl << endl << " before model print " << endl;
   modelConfig->Print();
@@ -1040,8 +1106,8 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
 
 
   // Declare parameter of interest
-  RooArgSet parofinterest(*wspace->set("poi")) ;
-  ProfileLikelihoodCalculator plc(dataset, *wspace->pdf("model"), parofinterest);
+  RooArgSet parofinterest(*wspace.set("poi")) ;
+  ProfileLikelihoodCalculator plc(dataset, *wspace.pdf("model"), parofinterest);
   //plc.SetTestSize(0.05);
   //ProfileLikelihoodCalculator plc(dataset, *modelConfig);
   plc.SetConfidenceLevel(0.95);
@@ -1094,70 +1160,70 @@ void buildMRLikelihood( TString outputFile, TString setupFileName )
   ////////////////////////////////////
 
  
-  cout << " XSEC AFTER FIT " << wspace->var("signalCrossSection")->getValV() << "  " 
-     << wspace->var("signalCrossSection")->getError() << endl;
+  cout << " XSEC AFTER FIT " << wspace.var("signalCrossSection")->getValV() << "  " 
+     << wspace.var("signalCrossSection")->getError() << endl;
 
 
-  cout << wspace->function("zeroLepton_bin301_Theta1_TopWJetsYield")->getTitle() << "  " <<  wspace->function("zeroLepton_bin301_Theta1_TopWJetsYield")->getVal() << "  " <<  wspace->function("zeroLepton_bin301_Theta1_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("zeroLepton_bin301_Theta2_TopWJetsYield")->getTitle() << "  " <<  wspace->function("zeroLepton_bin301_Theta2_TopWJetsYield")->getVal() << "  " <<  wspace->function("zeroLepton_bin301_Theta2_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("zeroLepton_bin301_Theta3_TopWJetsYield")->getTitle() << "  " <<  wspace->function("zeroLepton_bin301_Theta3_TopWJetsYield")->getVal() << "  " <<  wspace->function("zeroLepton_bin301_Theta3_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("zeroLepton_bin301_Theta4_TopWJetsYield")->getTitle() << "  " <<  wspace->function("zeroLepton_bin301_Theta4_TopWJetsYield")->getVal() << "  " <<  wspace->function("zeroLepton_bin301_Theta4_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("zeroLepton_bin301_Theta5_TopWJetsYield")->getTitle() << "  " <<  wspace->function("zeroLepton_bin301_Theta5_TopWJetsYield")->getVal() << "  " <<  wspace->function("zeroLepton_bin301_Theta5_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("zeroLepton_bin301_1Tau_TopWJetsYield")->getTitle() << "  " <<  wspace->function("zeroLepton_bin301_1Tau_TopWJetsYield")->getVal() << "  " <<  wspace->function("zeroLepton_bin301_1Tau_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("zeroLepton_bin301_Dilep_TopWJetsYield")->getTitle() << "  " <<  wspace->function("zeroLepton_bin301_Dilep_TopWJetsYield")->getVal() << "  " <<  wspace->function("zeroLepton_bin301_Dilep_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("zeroLepton_bin301_2Tau_TopWJetsYield")->getTitle() << "  " <<  wspace->function("zeroLepton_bin301_2Tau_TopWJetsYield")->getVal() << "  " <<  wspace->function("zeroLepton_bin301_2Tau_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin301_Theta1_TopWJetsYield")->getTitle() << "  " <<  wspace.function("zeroLepton_bin301_Theta1_TopWJetsYield")->getVal() << "  " <<  wspace.function("zeroLepton_bin301_Theta1_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin301_Theta2_TopWJetsYield")->getTitle() << "  " <<  wspace.function("zeroLepton_bin301_Theta2_TopWJetsYield")->getVal() << "  " <<  wspace.function("zeroLepton_bin301_Theta2_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin301_Theta3_TopWJetsYield")->getTitle() << "  " <<  wspace.function("zeroLepton_bin301_Theta3_TopWJetsYield")->getVal() << "  " <<  wspace.function("zeroLepton_bin301_Theta3_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin301_Theta4_TopWJetsYield")->getTitle() << "  " <<  wspace.function("zeroLepton_bin301_Theta4_TopWJetsYield")->getVal() << "  " <<  wspace.function("zeroLepton_bin301_Theta4_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin301_Theta5_TopWJetsYield")->getTitle() << "  " <<  wspace.function("zeroLepton_bin301_Theta5_TopWJetsYield")->getVal() << "  " <<  wspace.function("zeroLepton_bin301_Theta5_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin301_1Tau_TopWJetsYield")->getTitle() << "  " <<  wspace.function("zeroLepton_bin301_1Tau_TopWJetsYield")->getVal() << "  " <<  wspace.function("zeroLepton_bin301_1Tau_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin301_Dilep_TopWJetsYield")->getTitle() << "  " <<  wspace.function("zeroLepton_bin301_Dilep_TopWJetsYield")->getVal() << "  " <<  wspace.function("zeroLepton_bin301_Dilep_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin301_2Tau_TopWJetsYield")->getTitle() << "  " <<  wspace.function("zeroLepton_bin301_2Tau_TopWJetsYield")->getVal() << "  " <<  wspace.function("zeroLepton_bin301_2Tau_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
 
   cout << endl;
-  cout << wspace->function("zeroLepton_bin333_Theta1_TopWJetsYield")->getTitle() << "  " << wspace->function("zeroLepton_bin333_Theta1_TopWJetsYield")->getVal() << "  " << wspace->function("zeroLepton_bin333_Theta1_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("zeroLepton_bin333_Theta2_TopWJetsYield")->getTitle() << "  " << wspace->function("zeroLepton_bin333_Theta2_TopWJetsYield")->getVal() << "  " << wspace->function("zeroLepton_bin333_Theta2_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("zeroLepton_bin333_Theta3_TopWJetsYield")->getTitle() << "  " << wspace->function("zeroLepton_bin333_Theta3_TopWJetsYield")->getVal() << "  " << wspace->function("zeroLepton_bin333_Theta3_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("zeroLepton_bin333_Theta4_TopWJetsYield")->getTitle() << "  " << wspace->function("zeroLepton_bin333_Theta4_TopWJetsYield")->getVal() << "  " << wspace->function("zeroLepton_bin333_Theta4_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("zeroLepton_bin333_Theta5_TopWJetsYield")->getTitle() << "  " << wspace->function("zeroLepton_bin333_Theta5_TopWJetsYield")->getVal() << "  " << wspace->function("zeroLepton_bin333_Theta5_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("zeroLepton_bin333_1Tau_TopWJetsYield")->getTitle() << "  " << wspace->function("zeroLepton_bin333_1Tau_TopWJetsYield")->getVal() << "  " << wspace->function("zeroLepton_bin333_1Tau_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("zeroLepton_bin333_Dilep_TopWJetsYield")->getTitle() << "  " << wspace->function("zeroLepton_bin333_Dilep_TopWJetsYield")->getVal() << "  " << wspace->function("zeroLepton_bin333_Dilep_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("zeroLepton_bin333_2Tau_TopWJetsYield")->getTitle() << "  " << wspace->function("zeroLepton_bin333_2Tau_TopWJetsYield")->getVal() << "  " << wspace->function("zeroLepton_bin333_2Tau_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin333_Theta1_TopWJetsYield")->getTitle() << "  " << wspace.function("zeroLepton_bin333_Theta1_TopWJetsYield")->getVal() << "  " << wspace.function("zeroLepton_bin333_Theta1_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin333_Theta2_TopWJetsYield")->getTitle() << "  " << wspace.function("zeroLepton_bin333_Theta2_TopWJetsYield")->getVal() << "  " << wspace.function("zeroLepton_bin333_Theta2_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin333_Theta3_TopWJetsYield")->getTitle() << "  " << wspace.function("zeroLepton_bin333_Theta3_TopWJetsYield")->getVal() << "  " << wspace.function("zeroLepton_bin333_Theta3_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin333_Theta4_TopWJetsYield")->getTitle() << "  " << wspace.function("zeroLepton_bin333_Theta4_TopWJetsYield")->getVal() << "  " << wspace.function("zeroLepton_bin333_Theta4_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin333_Theta5_TopWJetsYield")->getTitle() << "  " << wspace.function("zeroLepton_bin333_Theta5_TopWJetsYield")->getVal() << "  " << wspace.function("zeroLepton_bin333_Theta5_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin333_1Tau_TopWJetsYield")->getTitle() << "  " << wspace.function("zeroLepton_bin333_1Tau_TopWJetsYield")->getVal() << "  " << wspace.function("zeroLepton_bin333_1Tau_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin333_Dilep_TopWJetsYield")->getTitle() << "  " << wspace.function("zeroLepton_bin333_Dilep_TopWJetsYield")->getVal() << "  " << wspace.function("zeroLepton_bin333_Dilep_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin333_2Tau_TopWJetsYield")->getTitle() << "  " << wspace.function("zeroLepton_bin333_2Tau_TopWJetsYield")->getVal() << "  " << wspace.function("zeroLepton_bin333_2Tau_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
 
   cout << endl << endl;
 
 
-  cout << wspace->function("zeroLepton_bin301_SignalYield")->getTitle() << "  " << wspace->function("zeroLepton_bin301_SignalYield")->getVal() << "  " << wspace->function("zeroLepton_bin301_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneLooseLep_bin301_Theta1_SignalYield")->getTitle() << "  " << wspace->function("oneLooseLep_bin301_Theta1_SignalYield")->getVal() << "  " << wspace->function("oneLooseLep_bin301_Theta1_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneLooseLep_bin301_Theta2_SignalYield")->getTitle() << "  " << wspace->function("oneLooseLep_bin301_Theta2_SignalYield")->getVal() << "  " << wspace->function("oneLooseLep_bin301_Theta2_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneLooseLep_bin301_Theta3_SignalYield")->getTitle() << "  " << wspace->function("oneLooseLep_bin301_Theta3_SignalYield")->getVal() << "  " << wspace->function("oneLooseLep_bin301_Theta3_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneLooseLep_bin301_Theta4_SignalYield")->getTitle() << "  " << wspace->function("oneLooseLep_bin301_Theta4_SignalYield")->getVal() << "  " << wspace->function("oneLooseLep_bin301_Theta4_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneLooseLep_bin301_Theta5_SignalYield")->getTitle() << "  " <<   wspace->function("oneLooseLep_bin301_Theta5_SignalYield")->getVal() << "  " <<  wspace->function("oneTightMu_bin301_Theta5_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneTightMu_bin301_Theta1_SignalYield")->getTitle() << "  " << wspace->function("oneTightMu_bin301_Theta1_SignalYield")->getVal() << "  " << wspace->function("oneTightMu_bin301_Theta1_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneTightMu_bin301_Theta2_SignalYield")->getTitle() << "  " << wspace->function("oneTightMu_bin301_Theta2_SignalYield")->getVal() << "  " << wspace->function("oneTightMu_bin301_Theta2_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneTightMu_bin301_Theta3_SignalYield")->getTitle() << "  " << wspace->function("oneTightMu_bin301_Theta3_SignalYield")->getVal() << "  " << wspace->function("oneTightMu_bin301_Theta3_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneTightMu_bin301_Theta4_SignalYield")->getTitle() << "  " << wspace->function("oneTightMu_bin301_Theta4_SignalYield")->getVal() << "  " << wspace->function("oneTightMu_bin301_Theta4_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneTightMu_bin301_Theta5_SignalYield")->getTitle() << "  " <<   wspace->function("oneTightMu_bin301_Theta5_SignalYield")->getVal() << "  " <<  wspace->function("oneTightMu_bin301_Theta5_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("twoLooseLep_bin301_SignalYield")->getTitle() << "  " << wspace->function("twoLooseLep_bin301_SignalYield")->getVal() << "  " << wspace->function("twoLooseLep_bin301_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("twoTightMu_bin301_SignalYield")->getTitle() << "  " << wspace->function("twoTightMu_bin301_SignalYield")->getVal() << "  " << wspace->function("twoTightMu_bin301_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin301_SignalYield")->getTitle() << "  " << wspace.function("zeroLepton_bin301_SignalYield")->getVal() << "  " << wspace.function("zeroLepton_bin301_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneLooseLep_bin301_Theta1_SignalYield")->getTitle() << "  " << wspace.function("oneLooseLep_bin301_Theta1_SignalYield")->getVal() << "  " << wspace.function("oneLooseLep_bin301_Theta1_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneLooseLep_bin301_Theta2_SignalYield")->getTitle() << "  " << wspace.function("oneLooseLep_bin301_Theta2_SignalYield")->getVal() << "  " << wspace.function("oneLooseLep_bin301_Theta2_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneLooseLep_bin301_Theta3_SignalYield")->getTitle() << "  " << wspace.function("oneLooseLep_bin301_Theta3_SignalYield")->getVal() << "  " << wspace.function("oneLooseLep_bin301_Theta3_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneLooseLep_bin301_Theta4_SignalYield")->getTitle() << "  " << wspace.function("oneLooseLep_bin301_Theta4_SignalYield")->getVal() << "  " << wspace.function("oneLooseLep_bin301_Theta4_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneLooseLep_bin301_Theta5_SignalYield")->getTitle() << "  " <<   wspace.function("oneLooseLep_bin301_Theta5_SignalYield")->getVal() << "  " <<  wspace.function("oneTightMu_bin301_Theta5_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneTightMu_bin301_Theta1_SignalYield")->getTitle() << "  " << wspace.function("oneTightMu_bin301_Theta1_SignalYield")->getVal() << "  " << wspace.function("oneTightMu_bin301_Theta1_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneTightMu_bin301_Theta2_SignalYield")->getTitle() << "  " << wspace.function("oneTightMu_bin301_Theta2_SignalYield")->getVal() << "  " << wspace.function("oneTightMu_bin301_Theta2_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneTightMu_bin301_Theta3_SignalYield")->getTitle() << "  " << wspace.function("oneTightMu_bin301_Theta3_SignalYield")->getVal() << "  " << wspace.function("oneTightMu_bin301_Theta3_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneTightMu_bin301_Theta4_SignalYield")->getTitle() << "  " << wspace.function("oneTightMu_bin301_Theta4_SignalYield")->getVal() << "  " << wspace.function("oneTightMu_bin301_Theta4_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneTightMu_bin301_Theta5_SignalYield")->getTitle() << "  " <<   wspace.function("oneTightMu_bin301_Theta5_SignalYield")->getVal() << "  " <<  wspace.function("oneTightMu_bin301_Theta5_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("twoLooseLep_bin301_SignalYield")->getTitle() << "  " << wspace.function("twoLooseLep_bin301_SignalYield")->getVal() << "  " << wspace.function("twoLooseLep_bin301_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("twoTightMu_bin301_SignalYield")->getTitle() << "  " << wspace.function("twoTightMu_bin301_SignalYield")->getVal() << "  " << wspace.function("twoTightMu_bin301_SignalYield")->getPropagatedError(*fitResult) << endl;
 
   cout << endl;
 
 
-  cout << wspace->function("zeroLepton_bin333_SignalYield")->getTitle() << "  " << wspace->function("zeroLepton_bin333_SignalYield")->getVal() << "  " << wspace->function("zeroLepton_bin333_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneLooseLep_bin333_Theta1_SignalYield")->getTitle() << "  " << wspace->function("oneLooseLep_bin333_Theta1_SignalYield")->getVal() << "  " << wspace->function("oneLooseLep_bin333_Theta1_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneLooseLep_bin333_Theta2_SignalYield")->getTitle() << "  " << wspace->function("oneLooseLep_bin333_Theta2_SignalYield")->getVal() << "  " << wspace->function("oneLooseLep_bin333_Theta2_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneLooseLep_bin333_Theta3_SignalYield")->getTitle() << "  " << wspace->function("oneLooseLep_bin333_Theta3_SignalYield")->getVal() << "  " << wspace->function("oneLooseLep_bin333_Theta3_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneLooseLep_bin333_Theta4_SignalYield")->getTitle() << "  " << wspace->function("oneLooseLep_bin333_Theta4_SignalYield")->getVal() << "  " << wspace->function("oneLooseLep_bin333_Theta4_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneLooseLep_bin333_Theta5_SignalYield")->getTitle() << "  " << wspace->function("oneLooseLep_bin333_Theta5_SignalYield")->getVal() << "  " << wspace->function("oneLooseLep_bin333_Theta5_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneTightMu_bin333_Theta1_SignalYield")->getTitle() << "  " << wspace->function("oneTightMu_bin333_Theta1_SignalYield")->getVal() << "  " << wspace->function("oneTightMu_bin333_Theta1_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneTightMu_bin333_Theta2_SignalYield")->getTitle() << "  " << wspace->function("oneTightMu_bin333_Theta2_SignalYield")->getVal() << "  " << wspace->function("oneTightMu_bin333_Theta2_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneTightMu_bin333_Theta3_SignalYield")->getTitle() << "  " << wspace->function("oneTightMu_bin333_Theta3_SignalYield")->getVal() << "  " << wspace->function("oneTightMu_bin333_Theta3_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneTightMu_bin333_Theta4_SignalYield")->getTitle() << "  " << wspace->function("oneTightMu_bin333_Theta4_SignalYield")->getVal() << "  " << wspace->function("oneTightMu_bin333_Theta4_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("oneTightMu_bin333_Theta5_SignalYield")->getTitle() << "  " << wspace->function("oneTightMu_bin333_Theta5_SignalYield")->getVal() << "  " << wspace->function("oneTightMu_bin333_Theta5_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("twoLooseLep_bin333_SignalYield")->getTitle() << "  " << wspace->function("twoLooseLep_bin333_SignalYield")->getVal() << "  " << wspace->function("twoLooseLep_bin333_SignalYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace->function("twoTightMu_bin333_SignalYield")->getTitle() << "  " << wspace->function("twoTightMu_bin333_SignalYield")->getVal() << "  " << wspace->function("twoTightMu_bin333_SignalYield")->getPropagatedError(*fitResult) << endl;    
+  cout << wspace.function("zeroLepton_bin333_SignalYield")->getTitle() << "  " << wspace.function("zeroLepton_bin333_SignalYield")->getVal() << "  " << wspace.function("zeroLepton_bin333_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneLooseLep_bin333_Theta1_SignalYield")->getTitle() << "  " << wspace.function("oneLooseLep_bin333_Theta1_SignalYield")->getVal() << "  " << wspace.function("oneLooseLep_bin333_Theta1_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneLooseLep_bin333_Theta2_SignalYield")->getTitle() << "  " << wspace.function("oneLooseLep_bin333_Theta2_SignalYield")->getVal() << "  " << wspace.function("oneLooseLep_bin333_Theta2_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneLooseLep_bin333_Theta3_SignalYield")->getTitle() << "  " << wspace.function("oneLooseLep_bin333_Theta3_SignalYield")->getVal() << "  " << wspace.function("oneLooseLep_bin333_Theta3_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneLooseLep_bin333_Theta4_SignalYield")->getTitle() << "  " << wspace.function("oneLooseLep_bin333_Theta4_SignalYield")->getVal() << "  " << wspace.function("oneLooseLep_bin333_Theta4_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneLooseLep_bin333_Theta5_SignalYield")->getTitle() << "  " << wspace.function("oneLooseLep_bin333_Theta5_SignalYield")->getVal() << "  " << wspace.function("oneLooseLep_bin333_Theta5_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneTightMu_bin333_Theta1_SignalYield")->getTitle() << "  " << wspace.function("oneTightMu_bin333_Theta1_SignalYield")->getVal() << "  " << wspace.function("oneTightMu_bin333_Theta1_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneTightMu_bin333_Theta2_SignalYield")->getTitle() << "  " << wspace.function("oneTightMu_bin333_Theta2_SignalYield")->getVal() << "  " << wspace.function("oneTightMu_bin333_Theta2_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneTightMu_bin333_Theta3_SignalYield")->getTitle() << "  " << wspace.function("oneTightMu_bin333_Theta3_SignalYield")->getVal() << "  " << wspace.function("oneTightMu_bin333_Theta3_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneTightMu_bin333_Theta4_SignalYield")->getTitle() << "  " << wspace.function("oneTightMu_bin333_Theta4_SignalYield")->getVal() << "  " << wspace.function("oneTightMu_bin333_Theta4_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("oneTightMu_bin333_Theta5_SignalYield")->getTitle() << "  " << wspace.function("oneTightMu_bin333_Theta5_SignalYield")->getVal() << "  " << wspace.function("oneTightMu_bin333_Theta5_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("twoLooseLep_bin333_SignalYield")->getTitle() << "  " << wspace.function("twoLooseLep_bin333_SignalYield")->getVal() << "  " << wspace.function("twoLooseLep_bin333_SignalYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("twoTightMu_bin333_SignalYield")->getTitle() << "  " << wspace.function("twoTightMu_bin333_SignalYield")->getVal() << "  " << wspace.function("twoTightMu_bin333_SignalYield")->getPropagatedError(*fitResult) << endl;    
 
+  }
 
-
-  //test << wspace->var("signalCrossSection")->getValV() << endl;
+  //test << wspace.var("signalCrossSection")->getValV() << endl;
   test->Write(); 
   test->Close(); 
 
-  wspace->writeToFile( outputFile.Data(), false ); // DO NOT RECREATE ROOT FILE!!! 
+  //wspace.writeToFile( outputFile.Data(), false ); // DO NOT RECREATE ROOT FILE!!! 
 
   ////////////////////////////////////
 
