@@ -2,6 +2,7 @@
 
 #include "TSystem.h"
 #include "TFile.h"
+#include "TH1F.h"
 #include "TH2F.h"
 #include "TCanvas.h"
 #include "TDirectory.h"
@@ -11,8 +12,8 @@
 
 
 
-    bool plotSigInput( const char* infile,
-                        double target_mgl = 0., double target_mlsp = 0.
+    bool plotSigInput( double target_mgl = 1200., double target_mlsp = 300.,
+                       const char* infile = "datfiles/sigcounts.T1bbbb.txt"
                         ) {
 
 
@@ -145,6 +146,8 @@
       }
 
 
+
+
       TH2F* h_sig_zl[10] ;
       TH2F* h_sig_sl[10] ;
       TH2F* h_sig_ldp[10] ;
@@ -153,13 +156,17 @@
       TH2F* h_staterr_sl[10] ;
       TH2F* h_staterr_ldp[10] ;
 
+      char hname[100] ;
+      char htitle[100] ;
 
       for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
 
+
+
+    //-----
+
          printf("\n\n\n ======= nB = %d,  Event counts :\n\n", bbi+1 ) ;
 
-         char hname[100] ;
-         char htitle[100] ;
          char binlabel[100] ;
 
          sprintf( hname, "h_sig_zl_%db", bbi+1 ) ;
@@ -280,10 +287,12 @@
 
       } // bbi.
 
+   //-------
 
 
 
 
+   //--------
 
       TCanvas* csig = (TCanvas*) gDirectory->FindObject("csig") ;
       if ( csig==0x0 ) {
@@ -294,6 +303,7 @@
       if ( cstaterr==0x0 ) {
          cstaterr = new TCanvas( "cstaterr", "signal stat err", 900, 900 ) ;
       }
+
 
 
       char drawoptions[100] ;
@@ -381,6 +391,236 @@
 
 
 
+     //----
+
+       gStyle->SetOptStat(0) ;
+       gStyle->SetLabelSize(0.12,"x") ;
+       gStyle->SetLabelSize(0.08,"y") ;
+       gStyle->SetTitleW(0.9) ;
+       gStyle->SetTitleH(0.10) ;
+       gStyle->SetTitleAlign(13) ;
+       gStyle->SetPadTopMargin(0.14) ;
+       gStyle->SetPadLeftMargin(0.14) ;
+       gStyle->SetPadRightMargin(0.02) ;
+       gStyle->SetLabelOffset(0.02,"y") ;
+       gStyle->SetNdivisions(404,"y") ;
+
+      double data_max[4] = { 60., 200., 30., 12. } ;
+
+      double susy_over_data_max(0.) ;
+
+
+
+
+
+      //---
+
+      sprintf( htitle, "SUSY mgl=%.0f, mlsp=%.0f, nB=2, MET4", target_mgl, target_mlsp ) ;
+
+      TH1F* h_susy_nb2_m4 = new TH1F( "h_susy_nb2_m4", htitle, 4, 0.5, 4.5 ) ;
+
+      h_susy_nb2_m4 -> GetXaxis() -> SetBinLabel( 1, "HT1" ) ;
+      h_susy_nb2_m4 -> GetXaxis() -> SetBinLabel( 2, "HT2" ) ;
+      h_susy_nb2_m4 -> GetXaxis() -> SetBinLabel( 3, "HT3" ) ;
+      h_susy_nb2_m4 -> GetXaxis() -> SetBinLabel( 4, "HT4" ) ;
+
+      h_susy_nb2_m4 -> SetBinContent( 1, 0 ) ;
+      h_susy_nb2_m4 -> SetBinContent( 2, scaleFactor * n_0l_raw[3][1][1] ) ;
+      h_susy_nb2_m4 -> SetBinContent( 3, scaleFactor * n_0l_raw[3][2][1] ) ;
+      h_susy_nb2_m4 -> SetBinContent( 4, scaleFactor * n_0l_raw[3][3][1] ) ;
+
+      if ( scaleFactor * n_0l_raw[3][1][1] / data_max[0] > susy_over_data_max ) { susy_over_data_max = scaleFactor * n_0l_raw[3][1][1] / data_max[0] ; }
+      if ( scaleFactor * n_0l_raw[3][2][1] / data_max[0] > susy_over_data_max ) { susy_over_data_max = scaleFactor * n_0l_raw[3][2][1] / data_max[0] ; }
+      if ( scaleFactor * n_0l_raw[3][3][1] / data_max[0] > susy_over_data_max ) { susy_over_data_max = scaleFactor * n_0l_raw[3][3][1] / data_max[0] ; }
+
+      h_susy_nb2_m4 -> SetFillColor(6) ;
+
+
+      //---
+
+
+      sprintf( htitle, "SUSY mgl=%.0f, mlsp=%.0f, nB=3, MET2", target_mgl, target_mlsp ) ;
+
+      TH1F* h_susy_nb3_m2 = new TH1F( "h_susy_nb3_m2", htitle, 4, 0.5, 4.5 ) ;
+
+      h_susy_nb3_m2 -> GetXaxis() -> SetBinLabel( 1, "HT1" ) ;
+      h_susy_nb3_m2 -> GetXaxis() -> SetBinLabel( 2, "HT2" ) ;
+      h_susy_nb3_m2 -> GetXaxis() -> SetBinLabel( 3, "HT3" ) ;
+      h_susy_nb3_m2 -> GetXaxis() -> SetBinLabel( 4, "HT4" ) ;
+
+      h_susy_nb3_m2 -> SetBinContent( 1, scaleFactor * n_0l_raw[1][0][2] ) ;
+      h_susy_nb3_m2 -> SetBinContent( 2, scaleFactor * n_0l_raw[1][1][2] ) ;
+      h_susy_nb3_m2 -> SetBinContent( 3, scaleFactor * n_0l_raw[1][2][2] ) ;
+      h_susy_nb3_m2 -> SetBinContent( 4, scaleFactor * n_0l_raw[1][3][2] ) ;
+
+      if ( scaleFactor * n_0l_raw[1][0][2] / data_max[1] > susy_over_data_max ) { susy_over_data_max = scaleFactor * n_0l_raw[1][0][2] / data_max[1] ; }
+      if ( scaleFactor * n_0l_raw[1][1][2] / data_max[1] > susy_over_data_max ) { susy_over_data_max = scaleFactor * n_0l_raw[1][1][2] / data_max[1] ; }
+      if ( scaleFactor * n_0l_raw[1][2][2] / data_max[1] > susy_over_data_max ) { susy_over_data_max = scaleFactor * n_0l_raw[1][2][2] / data_max[1] ; }
+      if ( scaleFactor * n_0l_raw[1][3][2] / data_max[1] > susy_over_data_max ) { susy_over_data_max = scaleFactor * n_0l_raw[1][3][2] / data_max[1] ; }
+
+      h_susy_nb3_m2 -> SetFillColor(6) ;
+
+
+      //---
+
+
+      sprintf( htitle, "SUSY mgl=%.0f, mlsp=%.0f, nB=3, MET3", target_mgl, target_mlsp ) ;
+
+      TH1F* h_susy_nb3_m3 = new TH1F( "h_susy_nb3_m3", htitle, 4, 0.5, 4.5 ) ;
+
+      h_susy_nb3_m3 -> GetXaxis() -> SetBinLabel( 1, "HT1" ) ;
+      h_susy_nb3_m3 -> GetXaxis() -> SetBinLabel( 2, "HT2" ) ;
+      h_susy_nb3_m3 -> GetXaxis() -> SetBinLabel( 3, "HT3" ) ;
+      h_susy_nb3_m3 -> GetXaxis() -> SetBinLabel( 4, "HT4" ) ;
+
+      h_susy_nb3_m3 -> SetBinContent( 1, scaleFactor * n_0l_raw[2][0][2] ) ;
+      h_susy_nb3_m3 -> SetBinContent( 2, scaleFactor * n_0l_raw[2][1][2] ) ;
+      h_susy_nb3_m3 -> SetBinContent( 3, scaleFactor * n_0l_raw[2][2][2] ) ;
+      h_susy_nb3_m3 -> SetBinContent( 4, scaleFactor * n_0l_raw[2][3][2] ) ;
+
+      if ( scaleFactor * n_0l_raw[2][0][2] / data_max[2] > susy_over_data_max ) { susy_over_data_max = scaleFactor * n_0l_raw[2][0][2] / data_max[2] ; }
+      if ( scaleFactor * n_0l_raw[2][1][2] / data_max[2] > susy_over_data_max ) { susy_over_data_max = scaleFactor * n_0l_raw[2][1][2] / data_max[2] ; }
+      if ( scaleFactor * n_0l_raw[2][2][2] / data_max[2] > susy_over_data_max ) { susy_over_data_max = scaleFactor * n_0l_raw[2][2][2] / data_max[2] ; }
+      if ( scaleFactor * n_0l_raw[2][3][2] / data_max[2] > susy_over_data_max ) { susy_over_data_max = scaleFactor * n_0l_raw[2][3][2] / data_max[2] ; }
+
+      h_susy_nb3_m3 -> SetFillColor(6) ;
+
+
+      //---
+
+
+      sprintf( htitle, "SUSY mgl=%.0f, mlsp=%.0f, nB=3, MET4", target_mgl, target_mlsp ) ;
+
+      TH1F* h_susy_nb3_m4 = new TH1F( "h_susy_nb3_m4", htitle, 4, 0.5, 4.5 ) ;
+
+      h_susy_nb3_m4 -> GetXaxis() -> SetBinLabel( 1, "HT1" ) ;
+      h_susy_nb3_m4 -> GetXaxis() -> SetBinLabel( 2, "HT2" ) ;
+      h_susy_nb3_m4 -> GetXaxis() -> SetBinLabel( 3, "HT3" ) ;
+      h_susy_nb3_m4 -> GetXaxis() -> SetBinLabel( 4, "HT4" ) ;
+
+      h_susy_nb3_m4 -> SetBinContent( 1, 0 ) ;
+      h_susy_nb3_m4 -> SetBinContent( 2, scaleFactor * n_0l_raw[3][1][2] ) ;
+      h_susy_nb3_m4 -> SetBinContent( 3, scaleFactor * n_0l_raw[3][2][2] ) ;
+      h_susy_nb3_m4 -> SetBinContent( 4, scaleFactor * n_0l_raw[3][3][2] ) ;
+
+      if ( scaleFactor * n_0l_raw[3][1][2] / data_max[3] > susy_over_data_max ) { susy_over_data_max = scaleFactor * n_0l_raw[3][1][2] / data_max[3] ; }
+      if ( scaleFactor * n_0l_raw[3][2][2] / data_max[3] > susy_over_data_max ) { susy_over_data_max = scaleFactor * n_0l_raw[3][2][2] / data_max[3] ; }
+      if ( scaleFactor * n_0l_raw[3][3][2] / data_max[3] > susy_over_data_max ) { susy_over_data_max = scaleFactor * n_0l_raw[3][3][2] / data_max[3] ; }
+
+      h_susy_nb3_m4 -> SetFillColor(6) ;
+
+
+
+   //---------------
+       TH1F* h_data_nb2_m4 = new TH1F( "h_data_nb2_m4", "Data, nB=2, MET4", 4, 0.5, 4.5 ) ;
+
+       h_data_nb2_m4 -> GetXaxis() -> SetBinLabel( 1, "HT1" ) ;
+       h_data_nb2_m4 -> GetXaxis() -> SetBinLabel( 2, "HT2" ) ;
+       h_data_nb2_m4 -> GetXaxis() -> SetBinLabel( 3, "HT3" ) ;
+       h_data_nb2_m4 -> GetXaxis() -> SetBinLabel( 4, "HT4" ) ;
+
+       h_data_nb2_m4 -> SetBinContent( 1, 0 ) ;
+       h_data_nb2_m4 -> SetBinContent( 2, 43 ) ;
+       h_data_nb2_m4 -> SetBinContent( 3, 12 ) ;
+       h_data_nb2_m4 -> SetBinContent( 4, 12 ) ;
+
+       h_data_nb2_m4 -> SetMarkerStyle(20) ;
+       h_data_nb2_m4 -> SetLineWidth(2) ;
+       h_data_nb2_m4 -> SetMinimum( 0 ) ;
+       h_data_nb2_m4 -> SetMaximum( 60 ) ;
+
+       TH1F* h_data_nb3_m2 = new TH1F( "h_data_nb3_m2", "Data, nB=3, MET2", 4, 0.5, 4.5 ) ;
+
+       h_data_nb3_m2 -> GetXaxis() -> SetBinLabel( 1, "HT1" ) ;
+       h_data_nb3_m2 -> GetXaxis() -> SetBinLabel( 2, "HT2" ) ;
+       h_data_nb3_m2 -> GetXaxis() -> SetBinLabel( 3, "HT3" ) ;
+       h_data_nb3_m2 -> GetXaxis() -> SetBinLabel( 4, "HT4" ) ;
+
+       h_data_nb3_m2 -> SetBinContent( 1, 96 ) ;
+       h_data_nb3_m2 -> SetBinContent( 2, 112 ) ;
+       h_data_nb3_m2 -> SetBinContent( 3, 12 ) ;
+       h_data_nb3_m2 -> SetBinContent( 4, 10 ) ;
+
+       h_data_nb3_m2 -> SetMarkerStyle(20) ;
+       h_data_nb3_m2 -> SetLineWidth(2) ;
+       h_data_nb3_m2 -> SetMaximum( 200 ) ;
+
+       TH1F* h_data_nb3_m3 = new TH1F( "h_data_nb3_m3", "Data, nB=3, MET3", 4, 0.5, 4.5 ) ;
+
+       h_data_nb3_m3 -> GetXaxis() -> SetBinLabel( 1, "HT1" ) ;
+       h_data_nb3_m3 -> GetXaxis() -> SetBinLabel( 2, "HT2" ) ;
+       h_data_nb3_m3 -> GetXaxis() -> SetBinLabel( 3, "HT3" ) ;
+       h_data_nb3_m3 -> GetXaxis() -> SetBinLabel( 4, "HT4" ) ;
+
+       h_data_nb3_m3 -> SetBinContent( 1, 8 ) ;
+       h_data_nb3_m3 -> SetBinContent( 2, 23 ) ;
+       h_data_nb3_m3 -> SetBinContent( 3, 2 ) ;
+       h_data_nb3_m3 -> SetBinContent( 4, 3 ) ;
+
+       h_data_nb3_m3 -> SetMarkerStyle(20) ;
+       h_data_nb3_m3 -> SetLineWidth(2) ;
+       h_data_nb3_m3 -> SetMaximum( 30 ) ;
+
+       TH1F* h_data_nb3_m4 = new TH1F( "h_data_nb3_m4", "Data, nB=3, MET4", 4, 0.5, 4.5 ) ;
+
+       h_data_nb3_m4 -> GetXaxis() -> SetBinLabel( 1, "HT1" ) ;
+       h_data_nb3_m4 -> GetXaxis() -> SetBinLabel( 2, "HT2" ) ;
+       h_data_nb3_m4 -> GetXaxis() -> SetBinLabel( 3, "HT3" ) ;
+       h_data_nb3_m4 -> GetXaxis() -> SetBinLabel( 4, "HT4" ) ;
+
+       h_data_nb3_m4 -> SetBinContent( 1, 0 ) ;
+       h_data_nb3_m4 -> SetBinContent( 2, 6 ) ;
+       h_data_nb3_m4 -> SetBinContent( 3, 1 ) ;
+       h_data_nb3_m4 -> SetBinContent( 4, 3 ) ;
+
+       h_data_nb3_m4 -> SetMarkerStyle(20) ;
+       h_data_nb3_m4 -> SetLineWidth(2) ;
+       h_data_nb3_m4 -> SetMaximum( 12 ) ;
+
+
+      printf("\n\n max susy / data = %6.3f\n\n\n", susy_over_data_max ) ;
+
+
+   // h_susy_nb2_m4 -> SetMaximum( 1.2 * susy_over_data_max * data_max[0] ) ;
+   // h_susy_nb3_m2 -> SetMaximum( 1.2 * susy_over_data_max * data_max[1] ) ;
+   // h_susy_nb3_m3 -> SetMaximum( 1.2 * susy_over_data_max * data_max[2] ) ;
+   // h_susy_nb3_m4 -> SetMaximum( 1.2 * susy_over_data_max * data_max[3] ) ;
+
+      h_susy_nb2_m4 -> SetMaximum(  data_max[0] ) ;
+      h_susy_nb3_m2 -> SetMaximum(  data_max[1] ) ;
+      h_susy_nb3_m3 -> SetMaximum(  data_max[2] ) ;
+      h_susy_nb3_m4 -> SetMaximum(  data_max[3] ) ;
+
+
+      TCanvas* csig2 = (TCanvas*) gDirectory->FindObject("csig2") ;
+      if ( csig2==0x0 ) {
+         csig2 = new TCanvas( "csig2", "signal counts", 800, 200 ) ;
+      }
+
+      csig2->Clear() ;
+      csig2->Divide(4,1) ;
+
+      csig2->cd(1) ;
+      h_susy_nb2_m4->DrawCopy() ;
+      h_data_nb2_m4->DrawCopy("samee") ;
+
+      csig2->cd(2) ;
+      h_susy_nb3_m2->DrawCopy() ;
+      h_data_nb3_m2->DrawCopy("samee") ;
+
+      csig2->cd(3) ;
+      h_susy_nb3_m3->DrawCopy() ;
+      h_data_nb3_m3->DrawCopy("samee") ;
+
+      csig2->cd(4) ;
+      h_susy_nb3_m4->DrawCopy() ;
+      h_data_nb3_m4->DrawCopy("samee") ;
+
+      csig2->Update() ; csig2->Draw() ;
+
+      char savename[1000] ;
+      sprintf( savename, "outputfiles/susycounts-hsbins-mgl-%.0f-mlsp-%.0f.pdf", target_mgl, target_mlsp ) ;
+      csig2->SaveAs( savename ) ;
 
 
       return true ;

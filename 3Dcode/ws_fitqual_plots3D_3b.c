@@ -1281,7 +1281,21 @@
                     sigma = rcv_sigma->getVal() ;
                  }
 
-                 double pull = (npVal-mean)/sigma ;
+
+                 double pull(0.) ;
+                 sprintf( vname, "prim_%s", parName ) ;
+                 RooAbsReal* primVar = (RooAbsReal*) ws->obj( vname ) ;
+                 if ( primVar ) {
+                    printf(" %s is log-normal.  Using prim var for pull.\n", parName ) ;
+                    pull = primVar -> getVal() ;
+                 } else {
+                    printf(" %s is not log-normal.  Using pull = (npVal-mean)/sigma.\n", parName ) ;
+                    pull = (npVal-mean)/sigma ;
+                 }
+
+
+
+
                  printf("  %s : mean=%7.3f, sigma=%7.3f, val=%7.3f, pull=%7.3f\n", parName, mean, sigma, npVal, pull ) ;
                  binIndex = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
                  if ( bbi==0 ) hnp_qcd_1b_val->SetBinContent( binIndex, npVal ) ;
@@ -1347,7 +1361,18 @@
                     sigma = rcv_sigma->getVal() ;
                  }
 
-                 double pull = (npVal-mean)/sigma ;
+                 double pull(0.) ;
+                 sprintf( vname, "prim_%s", parName ) ;
+                 RooAbsReal* primVar = (RooAbsReal*) ws->obj( vname ) ;
+                 if ( primVar ) {
+                    printf(" %s is log-normal.  Using prim var for pull.\n", parName ) ;
+                    pull = primVar -> getVal() ;
+                 } else {
+                    printf(" %s is not log-normal.  Using pull = (npVal-mean)/sigma.\n", parName ) ;
+                    pull = (npVal-mean)/sigma ;
+                 }
+
+
                  printf("  %s : mean=%7.3f, sigma=%7.3f, val=%7.3f, pull=%7.3f\n", parName, mean, sigma, npVal, pull ) ;
                  binIndex = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
                  if ( bbi==0 ) hnp_ttwj_1b_val->SetBinContent( binIndex, npVal ) ;
@@ -1382,20 +1407,7 @@
         {
             char parName[1000] ;
             RooAbsReal* np(0x0) ;
-
-        /////////// obsolete //////////////////////////
-        /// sprintf( parName, "eff_sf" ) ;
-        /// np = (RooAbsReal*) ws->obj( parName ) ;
-        /// double global_eff_sf(0.) ;
-        /// if ( np == 0x0 ) {
-        ///    printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-        ///    /// return ;
-        /// } else {
-        ///    global_eff_sf = np -> getVal() ;
-        /// }
-        /////////// obsolete //////////////////////////
-
-
+            RooAbsReal* primVar(0x0) ;
 
 
 
@@ -1411,27 +1423,39 @@
                SFqcd_met3_val =  np -> getVal() ;
             }
 
-            sprintf( parName, "pdf_mean_SFqcd_met3" ) ;
-            np = (RooAbsReal*) ws->obj( parName ) ;
-            double SFqcd_met3_mean = 0. ;
-            if ( np == 0x0 ) {
-               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+            double SFqcd_met3_pull = 0. ;
+            sprintf( parName, "prim_SFqcd_met3" ) ;
+            primVar = (RooAbsReal*) ws->obj( parName ) ;
+            if ( primVar != 0x0 ) {
+               printf(" %s is log-normal.  Using prim var for pull.\n", parName ) ;
+               SFqcd_met3_pull = primVar -> getVal() ;
+               printf("\n SFqcd_met3 : val = %6.3f, pull = %6.3f\n",
+                 SFqcd_met3_val, SFqcd_met3_pull ) ;
             } else {
-               SFqcd_met3_mean =  np -> getVal() ;
-            }
+               printf(" %s is not log-normal.  Using (val-mean)/sigma for pull.\n", parName ) ;
+               sprintf( parName, "pdf_mean_SFqcd_met3" ) ;
+               np = (RooAbsReal*) ws->obj( parName ) ;
+               double SFqcd_met3_mean = 0. ;
+               if ( np == 0x0 ) {
+                  printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+               } else {
+                  SFqcd_met3_mean =  np -> getVal() ;
+               }
 
-            sprintf( parName, "pdf_sigma_SFqcd_met3" ) ;
-            np = (RooAbsReal*) ws->obj( parName ) ;
-            double SFqcd_met3_sigma = 1. ;
-            if ( np == 0x0 ) {
-               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-            } else {
-               SFqcd_met3_sigma =  np -> getVal() ;
-            }
-            double SFqcd_met3_pull = (SFqcd_met3_val-SFqcd_met3_mean) / SFqcd_met3_sigma ;
+               sprintf( parName, "pdf_sigma_SFqcd_met3" ) ;
+               np = (RooAbsReal*) ws->obj( parName ) ;
+               double SFqcd_met3_sigma = 1. ;
+               if ( np == 0x0 ) {
+                  printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+               } else {
+                  SFqcd_met3_sigma =  np -> getVal() ;
+               }
 
-            printf("\n SFqcd_met3 : val = %6.3f, mean = %6.3f, sigma = %6.3f, pull = %6.3f\n",
+               printf("\n SFqcd_met3 : val = %6.3f, mean = %6.3f, sigma = %6.3f, pull = %6.3f\n",
                  SFqcd_met3_val, SFqcd_met3_mean, SFqcd_met3_sigma, SFqcd_met3_pull ) ;
+               SFqcd_met3_pull = (SFqcd_met3_val-SFqcd_met3_mean) / SFqcd_met3_sigma ;
+            }
+
 
 
 
@@ -1447,27 +1471,39 @@
                SFqcd_met4_val =  np -> getVal() ;
             }
 
-            sprintf( parName, "pdf_mean_SFqcd_met4" ) ;
-            np = (RooAbsReal*) ws->obj( parName ) ;
-            double SFqcd_met4_mean = 0. ;
-            if ( np == 0x0 ) {
-               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+            double SFqcd_met4_pull = 0. ;
+            sprintf( parName, "prim_SFqcd_met4" ) ;
+            primVar = (RooAbsReal*) ws->obj( parName ) ;
+            if ( primVar != 0x0 ) {
+               printf(" %s is log-normal.  Using prim var for pull.\n", parName ) ;
+               SFqcd_met4_pull = primVar -> getVal() ;
+               printf("\n SFqcd_met4 : val = %6.3f, pull = %6.3f\n",
+                 SFqcd_met4_val, SFqcd_met4_pull ) ;
             } else {
-               SFqcd_met4_mean =  np -> getVal() ;
-            }
+               printf(" %s is not log-normal.  Using (val-mean)/sigma for pull.\n", parName ) ;
+               sprintf( parName, "pdf_mean_SFqcd_met4" ) ;
+               np = (RooAbsReal*) ws->obj( parName ) ;
+               double SFqcd_met4_mean = 0. ;
+               if ( np == 0x0 ) {
+                  printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+               } else {
+                  SFqcd_met4_mean =  np -> getVal() ;
+               }
 
-            sprintf( parName, "pdf_sigma_SFqcd_met4" ) ;
-            np = (RooAbsReal*) ws->obj( parName ) ;
-            double SFqcd_met4_sigma = 1. ;
-            if ( np == 0x0 ) {
-               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-            } else {
-               SFqcd_met4_sigma =  np -> getVal() ;
-            }
-            double SFqcd_met4_pull = (SFqcd_met4_val-SFqcd_met4_mean) / SFqcd_met4_sigma ;
+               sprintf( parName, "pdf_sigma_SFqcd_met4" ) ;
+               np = (RooAbsReal*) ws->obj( parName ) ;
+               double SFqcd_met4_sigma = 1. ;
+               if ( np == 0x0 ) {
+                  printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+               } else {
+                  SFqcd_met4_sigma =  np -> getVal() ;
+               }
 
-            printf("\n SFqcd_met4 : val = %6.3f, mean = %6.3f, sigma = %6.3f, pull = %6.3f\n",
+               printf("\n SFqcd_met4 : val = %6.3f, mean = %6.3f, sigma = %6.3f, pull = %6.3f\n",
                  SFqcd_met4_val, SFqcd_met4_mean, SFqcd_met4_sigma, SFqcd_met4_pull ) ;
+               SFqcd_met4_pull = (SFqcd_met4_val-SFqcd_met4_mean) / SFqcd_met4_sigma ;
+            }
+
 
 
 
@@ -1485,27 +1521,41 @@
                SFqcd_nb3_val =  np -> getVal() ;
             }
 
-            sprintf( parName, "pdf_mean_SFqcd_nb3" ) ;
-            np = (RooAbsReal*) ws->obj( parName ) ;
-            double SFqcd_nb3_mean = 0. ;
-            if ( np == 0x0 ) {
-               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+            double SFqcd_nb3_pull = 0. ;
+            sprintf( parName, "prim_SFqcd_nb3" ) ;
+            primVar = (RooAbsReal*) ws->obj( parName ) ;
+            if ( primVar != 0x0 ) {
+               printf(" %s is log-normal.  Using prim var for pull.\n", parName ) ;
+               SFqcd_nb3_pull = primVar -> getVal() ;
+               printf("\n SFqcd_nb3 : val = %6.3f, pull = %6.3f\n",
+                 SFqcd_nb3_val, SFqcd_nb3_pull ) ;
             } else {
-               SFqcd_nb3_mean =  np -> getVal() ;
-            }
+               printf(" %s is not log-normal.  Using (val-mean)/sigma for pull.\n", parName ) ;
+               sprintf( parName, "pdf_mean_SFqcd_nb3" ) ;
+               np = (RooAbsReal*) ws->obj( parName ) ;
+               double SFqcd_nb3_mean = 0. ;
+               if ( np == 0x0 ) {
+                  printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+               } else {
+                  SFqcd_nb3_mean =  np -> getVal() ;
+               }
 
-            sprintf( parName, "pdf_sigma_SFqcd_nb3" ) ;
-            np = (RooAbsReal*) ws->obj( parName ) ;
-            double SFqcd_nb3_sigma = 1. ;
-            if ( np == 0x0 ) {
-               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
-            } else {
-               SFqcd_nb3_sigma =  np -> getVal() ;
-            }
-            double SFqcd_nb3_pull = (SFqcd_nb3_val-SFqcd_nb3_mean) / SFqcd_nb3_sigma ;
+               sprintf( parName, "pdf_sigma_SFqcd_nb3" ) ;
+               np = (RooAbsReal*) ws->obj( parName ) ;
+               double SFqcd_nb3_sigma = 1. ;
+               if ( np == 0x0 ) {
+                  printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+               } else {
+                  SFqcd_nb3_sigma =  np -> getVal() ;
+               }
 
-            printf("\n SFqcd_nb3 : val = %6.3f, mean = %6.3f, sigma = %6.3f, pull = %6.3f\n",
+               printf("\n SFqcd_nb3 : val = %6.3f, mean = %6.3f, sigma = %6.3f, pull = %6.3f\n",
                  SFqcd_nb3_val, SFqcd_nb3_mean, SFqcd_nb3_sigma, SFqcd_nb3_pull ) ;
+               SFqcd_nb3_pull = (SFqcd_nb3_val-SFqcd_nb3_mean) / SFqcd_nb3_sigma ;
+            }
+
+
+
 
 
 
@@ -1773,7 +1823,16 @@
                  double pull = 0. ;
                  if ( np != 0x0 ) {
                     npVal = np->getVal() ;
-                    pull = (npVal-mode)/rms ;
+                    char vname[1000] ;
+                    sprintf( vname, "prim_%s", parName ) ;
+                    RooAbsReal* primVar = (RooAbsReal*) ws->obj( vname ) ;
+                    if ( primVar ) {
+                       printf(" %s is log-normal.  Using prim var for pull.\n", parName ) ;
+                       pull = primVar -> getVal() ;
+                    } else {
+                       printf(" %s is not log-normal.  Using pull = (npVal-mode)/rms.\n", parName ) ;
+                       pull = (npVal-mode)/rms ;
+                    }
                  }
 
                  hp -> SetBinContent( hbin, pull ) ;
@@ -1825,7 +1884,16 @@
                  double pull = 0. ;
                  if ( np != 0x0 ) {
                     npVal = np->getVal() ;
-                    pull = (npVal-mode)/rms ;
+                    char vname[1000] ;
+                    sprintf( vname, "prim_%s", parName ) ;
+                    RooAbsReal* primVar = (RooAbsReal*) ws->obj( vname ) ;
+                    if ( primVar ) {
+                       printf(" %s is log-normal.  Using prim var for pull.\n", parName ) ;
+                       pull = primVar -> getVal() ;
+                    } else {
+                       printf(" %s is not log-normal.  Using pull = (npVal-mode)/rms.\n", parName ) ;
+                       pull = (npVal-mode)/rms ;
+                    }
                  }
 
                  hp -> SetBinContent( hbin, pull ) ;
@@ -1894,7 +1962,15 @@
                        sigma = np_sigma->getVal() ;
                     }
 
-                    bin_eff_sf_pull = (val-mean)/sigma ;
+                    sprintf( vname, "prim_%s", parName ) ;
+                    RooAbsReal* primVar = (RooAbsReal*) ws->obj( vname ) ;
+                    if ( primVar ) {
+                       printf(" %s is log-normal.  Using prim var for pull.\n", parName ) ;
+                       bin_eff_sf_pull = primVar -> getVal() ;
+                    } else {
+                       printf(" %s is not log-normal.  Using pull = (npVal-mean)/sigma.\n", parName ) ;
+                       bin_eff_sf_pull = (val-mean)/sigma ;
+                    }
                  }
 
 
@@ -1929,7 +2005,15 @@
                        sigma = np_sigma->getVal() ;
                     }
 
-                    bin_eff_sf_sl_pull = (val-mean)/sigma ;
+                    sprintf( vname, "prim_%s", parName ) ;
+                    RooAbsReal* primVar = (RooAbsReal*) ws->obj( vname ) ;
+                    if ( primVar ) {
+                       printf(" %s is log-normal.  Using prim var for pull.\n", parName ) ;
+                       bin_eff_sf_sl_pull = primVar -> getVal() ;
+                    } else {
+                       printf(" %s is not log-normal.  Using pull = (npVal-mean)/sigma.\n", parName ) ;
+                       bin_eff_sf_sl_pull = (val-mean)/sigma ;
+                    }
                  }
 
 
@@ -1964,7 +2048,15 @@
                        sigma = np_sigma->getVal() ;
                     }
 
-                    bin_eff_sf_ldp_pull = (val-mean)/sigma ;
+                    sprintf( vname, "prim_%s", parName ) ;
+                    RooAbsReal* primVar = (RooAbsReal*) ws->obj( vname ) ;
+                    if ( primVar ) {
+                       printf(" %s is log-normal.  Using prim var for pull.\n", parName ) ;
+                       bin_eff_sf_ldp_pull = primVar -> getVal() ;
+                    } else {
+                       printf(" %s is not log-normal.  Using pull = (npVal-mean)/sigma.\n", parName ) ;
+                       bin_eff_sf_ldp_pull = (val-mean)/sigma ;
+                    }
                  }
 
 
