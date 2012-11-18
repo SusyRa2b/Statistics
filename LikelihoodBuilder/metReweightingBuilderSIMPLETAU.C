@@ -1,4 +1,3 @@
-
 /**************************************************************
 
 THIS LIKELIHOOD USES THE SIMPLIFIED TAU (MC SFs ONLY) PROCEDURE,
@@ -185,17 +184,12 @@ void makePrediction( RooWorkspace& wspace, TString thisBin, bool standalone, TSt
 						    ));
 	  wspace.import(zeroLeptonTopWJetsYield, RecycleConflictNodes());
 	  cout << "Put " << zeroLeptonTopWJetsYield.GetName() << " into workspace" << endl;
-	}
 
-
-
-      /////////////////////////////////////////////////////////////////////////////////////
-      // GET AND APPLY SIGNAL FRACTION FOR THIS 0L BIN, ADD TO ALL PREDICTIONS
-      
-      //cout << " GET 0L COUNTS AND SIG FRAC " << endl;
-
-      if( standalone )
-	{
+	  /////////////////////////////////////////////////////////////////////////////////////
+	  // GET AND APPLY SIGNAL FRACTION FOR THIS 0L BIN, ADD TO ALL PREDICTIONS
+	  
+	  //cout << " GET 0L COUNTS AND SIG FRAC " << endl;
+	  
 
 	  TString zeroLeptonCountName(zeroLeptonName);
 	  zeroLeptonCountName.Append("_Count");
@@ -323,6 +317,8 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
     double initialvalue = oneTightMuCount.getVal();
     if( initialvalue==0 ) initialvalue = 1.;
 
+    cout << " BEFORE YIELDS " << endl;
+
     RooRealVar oneTightMuTopWJetsYield(oneTightMuName+"_TopWJetsYield",oneTightMuName+"_TopWJetsYield",
 				       initialvalue,0.00001,20000.);
     wspace.import(oneTightMuTopWJetsYield,RecycleConflictNodes());
@@ -339,7 +335,8 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
 
     ////////////////////////////////////////////////////
     // COMBINE SIGNAL AND TTWT COMPONENTS OF THIS DTHETA BIN AND SET CONTROL SAMPLE CONSTRAINTS
-    
+
+    cout << " BEFORE YIELDS AND TRIG EFF " << endl;
 
     RooAddition oneTightMuYieldSum(oneTightMuName+"_YieldSum",oneTightMuName+"_YieldSum",
 				   RooArgSet(*wspace.arg(oneTightMuSignalYieldName.Data()),oneTightMuTopWJetsYield));
@@ -347,9 +344,12 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
     RooAddition oneLooseLepYieldSum(oneLooseLepName+"_YieldSum",oneLooseLepName+"_YieldSum",
 				  RooArgSet(*wspace.arg(oneLooseLepSignalYieldName.Data()),oneLooseLepTopWJetsYield));
 
+
     TString triggername = "oneLeptonTriggerEfficiency_";
     triggername.Append(trigeffname);
+    cout << triggername << endl;
     RooAbsArg* triggerefficiency = wspace.arg(triggername.Data());
+    triggerefficiency->Print();
 
     RooProduct oneTightMuDataYieldSum(oneTightMuName+"_DataYieldSum",oneTightMuName+"_DataYieldSum",
 				      RooArgSet( oneTightMuYieldSum, *triggerefficiency));
@@ -686,6 +686,8 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   ////// READ IN FILE WITH LIST OF BIN NAMES AND THE CORRESPONDING INPUT FILES
   ////// FOR CONTENT AND SCALE FACTORS (repeated scale factors will be specified there)
 
+  cout << " before getting inputs " << setupFileName << endl;
+
   ifstream setupFile;
 
   string fileLine;
@@ -698,6 +700,8 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
     {
       getline(setupFile,fileLine);
       TString thisLine(fileLine.c_str());
+
+      cout << thisLine << endl;
 
       TStringToken listOfFiles(thisLine," ");
       listOfFiles.NextToken();
@@ -729,12 +733,15 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   
   setupFile.close();
   
+  cout << " end of list for input files " << endl;
 
   ////////////////////////////////////
   ////// READ IN SIGNAL YIELDS FROM OUTSIDE, ADD TO WORKSPACE
   ////// OR, READ FROM WORKSPACE
   ////// IN STANDALONE MODE
   if( standalone ){
+
+    cout << " loop over bins " << endl;
     
   for( int i=0; i<binnames.size(); i++ )
     {
@@ -772,12 +779,16 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       ////// FOR THE LIMITED (tt/W/t ~only) bins being tested, this is ok
 
       TString triggername = "oneLeptonTriggerEfficiency_";
-      triggername.Append(trigeffname);
+      TString trigending = binTriggerEfficiencyNames[thisBin];
+      triggername.Append(trigending.Data());
+
+      cout << endl << endl << " TRIGGER NAME " << triggername << endl << endl;
 
       RooRealVar* TriggerEfficiency = (RooRealVar*)
 	getGaussianConstraint(wspace,triggername, "",
 			       1.0,0.01,
 			       "trig1","trig2");
+      wspace.import(*TriggerEfficiency,RecycleConflictNodes());
 
       ////// 
 
@@ -841,6 +852,8 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 
   ////////////////////////////////////
   ////// READ IN CONTENT OF ALL BINS, ADD TO WORKSPACE
+
+  cout << " getting counts " << endl;
 
   //  for(vector<TString>::iterator thisBin = binnames.begin(); thisBin != binnames.end() ; thisBin++)
   for( int i=0; i<binnames.size(); i++ )
@@ -945,6 +958,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   ////////////////////////////////////
   ////// READ IN SCALE FACTORS FOR ALL BINS, ADD TO WORKSPACE
 
+  cout << " looping over scale factors " << endl;
 
   //  for(vector<TString>::iterator thisBin = binnames.begin(); thisBin != binnames.end() ; thisBin++)
   for( int i=0; i<binnames.size(); i++ )
@@ -995,6 +1009,8 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 	
       }
 
+      cout << endl << endl << " end of polarization SFs" << endl << endl;
+
       ////////////////////////////////////
       ////// READ IN DILEPTON METHOD SCALE FACTORS, ADD TO WORKSPACE
 
@@ -1016,6 +1032,8 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 	getBetaPrimeConstraint(wspace,dilepName, "",
 			       scalefactor,scalefactorerror,
 			       name1,name2);
+
+      cout << endl << endl << " end of dilepton SFs" << endl << endl;
 	      
       ////////////////////////////////////
       ////// READ IN TAU/DITAU MC-BASED SCALE FACTORS, ADD TO WORKSPACE
@@ -1037,6 +1055,8 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 			       scalefactor,scalefactorerror,
 			       name3,name4);
 
+      cout << endl << endl << " end of tau SFs" << endl << endl;
+
       //////
 
       tauhadScaleFactorFile>>scalefactor>>scalefactorerror;
@@ -1056,6 +1076,8 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 			       scalefactor,scalefactorerror,
 			       name5,name6);
 
+      cout << endl << endl << " end of ditau SFs" << endl << endl;
+
       //////
 
       scaleFactorFile.close();
@@ -1065,13 +1087,13 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       ////////////////////////////////////
       ////// PUTTING SOME CONSTRAINT-SETTING CODE HERE FOR NOW:
 
-
+      cout << " starting constraints and predictions " << endl;
       makePolarizationConstraintsPredictions( wspace, thisBin, binTriggerEfficiencyNames[thisBin] );
-      //cout << " end of polarization constraints " << endl;
+      cout << " end of polarization constraints " << endl;
       makeDileptonConstraintsPredictions( wspace, thisBin, binnamesoutside[thisBin], binTriggerEfficiencyNames[thisBin] );
-      //cout << " end of dilepton constraints " << endl;
+      cout << " end of dilepton constraints " << endl;
       makeTauHadBinPrediction( wspace, thisBin, binnamesoutside[thisBin] );
-      //cout << " end of tauhad prediction " << endl;
+      cout << " end of tauhad prediction " << endl;
 
       makePrediction( wspace, thisBin , standalone, binTriggerEfficiencyNames[thisBin] );
 
@@ -1083,6 +1105,8 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   /////////////////////////////////////////////////////////////////////////////////////////////////
   if( standalone ){
   
+    cout << " putting together the model " << endl;
+
   RooArgSet Constraints(wspace.allPdfs());
 
   //  RooProdPdf model("model","model", Constraints );
@@ -1104,10 +1128,13 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   wspace.defineSet("poi","signalCrossSection");
 
 
+  TString triggername = "oneLeptonTriggerEfficiency_M3_H2";
+  (*wspace.arg(triggername.Data())).Print();
+    
 
   ////////////////////////////////////
 
-  RooFitResult *fitResult = model.fitTo(dataset, Minos(kTRUE), Save(true),"s");
+  //  RooFitResult *fitResult = model.fitTo(dataset, Minos(kTRUE), Save(true),"s");
   
   /*
 
@@ -1122,6 +1149,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   frame1->Draw();
   c1->SaveAs("nlltest_1.eps");
   
+
 
   ////////////////////////////////////
 
@@ -1191,7 +1219,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   cout << "*********************************************" << endl;
   nll->findServer(1)->Print("V");
 
-  */
+
   
   ////////////////////////////////////
 
@@ -1253,6 +1281,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   cout << wspace.function("twoLooseLep_bin333_SignalYield")->getTitle() << "  " << wspace.function("twoLooseLep_bin333_SignalYield")->getVal() << "  " << wspace.function("twoLooseLep_bin333_SignalYield")->getPropagatedError(*fitResult) << endl;
   cout << wspace.function("twoTightMu_bin333_SignalYield")->getTitle() << "  " << wspace.function("twoTightMu_bin333_SignalYield")->getVal() << "  " << wspace.function("twoTightMu_bin333_SignalYield")->getPropagatedError(*fitResult) << endl;    
 
+  */
 
   //test << wspace.var("signalCrossSection")->getValV() << endl;
   test->Write(); 

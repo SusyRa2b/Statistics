@@ -1,6 +1,6 @@
 {
 
-  //  gROOT->ProcessLine(".x setup.C");
+  gROOT->ProcessLine(".x setup.C");
 
 #include "RooStats/ModelConfig.h"
 #include "RooStats/ProfileLikelihoodCalculator.h"
@@ -45,11 +45,11 @@
   */
 
 
-    
-  //buildMRLikelihood( wspacefile.Data(), "testSimpleSetupFileHT3.txt" );
-  buildMRLikelihood( *wspace, wspacefile.Data(), "testDataMRSetupFileSIMPLE.txt", true );
 
-  wspace->writeToFile( outputFile.Data(), true ); 
+  //buildMRLikelihood( wspacefile.Data(), "testSimpleSetupFileHT3.txt" );
+  buildMRLikelihood( *wspace, wspacefile.Data(), "testDataSimpleMRSetupFile.txt", true );
+
+  wspace->writeToFile( wspacefile.Data(), true ); 
 
 
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
