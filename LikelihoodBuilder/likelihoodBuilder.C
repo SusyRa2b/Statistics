@@ -1039,6 +1039,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	    }
 	  
 	  //outside
+	  /*
 	  map<TString,mcCount> thisOutsideSignalMR = outsideSignalMR[binName];
 	  for ( map<TString,mcCount>::iterator it=thisOutsideSignalMR.begin() ; it != thisOutsideSignalMR.end(); it++ ) 
 	    { 
@@ -1060,6 +1061,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	      RooProduct signalYield(signalName+"_SignalYield", signalName+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, signalFraction, *signalGlobalUncertainty, *signalStatisticalError) );
 	      ws.import(signalYield, RecycleConflictNodes());
 	    }
+	  */
 	}
       else if(options.TopWJetsMethod == "ABCD")
 	{
