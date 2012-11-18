@@ -364,7 +364,6 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
     RooPoissonLogEval oneLooseLepConstraint(oneLooseLepName+"_Constraint",oneLooseLepName+"_Constraint",oneLooseLepCount,oneLooseLepDataYieldSum);
     wspace.import( oneLooseLepConstraint,RecycleConflictNodes() );
 
-
     ////////////////////////////////////////////////////
     // CONSTRUCT THE 0L BACKGROUND PREDICTION FROM THIS DTHETA BIN
     // 0L TRIGGER EFFICIENCIES ARE NOT APPLIED IF THEY ARE BEING SENT TO BEN
@@ -487,7 +486,6 @@ void makeDileptonConstraintsPredictions( RooWorkspace& wspace, TString binname, 
 
   RooPoissonLogEval twoLooseLepConstraint(twoLooseLepName+"_Constraint",twoLooseLepName+"_Constraint",twoLooseLepCount,twoLooseLepDataYieldSum);
   wspace.import( twoLooseLepConstraint,RecycleConflictNodes() );
-
 
   cout << " END OF DILEPTON AND DITAU CONSTRAINTS " << endl;
   twoTightMuConstraint.Print();
@@ -899,6 +897,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 	oneTightMuThetaCount.setConstant();
 	wspace.import(oneTightMuThetaCount,RecycleConflictNodes());
 	wspace.extendSet("namesfordata",oneTightMuThetaCount.GetName());
+	if(!standalone) wspace.extendSet("observables",oneTightMuThetaCount.GetName());//FIXME name hardcoded
 	
 	//cout << endl << endl << oneTightMuThetaCount.getVal() << endl << endl;
 
@@ -907,6 +906,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 	oneLooseLepThetaCount.setConstant();
 	wspace.import(oneLooseLepThetaCount,RecycleConflictNodes());
 	wspace.extendSet("namesfordata",oneLooseLepThetaCount.GetName());
+	if(!standalone) wspace.extendSet("observables",oneLooseLepThetaCount.GetName());//FIXME name hardcoded
 	
 	//cout << endl << endl << oneLooseLepThetaCount.getVal() << endl << endl;
 
@@ -918,6 +918,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       twoTightMuCount.setConstant();
       wspace.import(twoTightMuCount,RecycleConflictNodes());
       wspace.extendSet("namesfordata",twoTightMuCount.GetName());
+      if(!standalone) wspace.extendSet("observables",twoTightMuCount.GetName());//FIXME name hardcoded
 
       //cout << endl << endl << twoTightMuCount.getVal() << endl << endl;
 
@@ -926,6 +927,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       twoLooseLepCount.setConstant();
       wspace.import(twoLooseLepCount,RecycleConflictNodes());
       wspace.extendSet("namesfordata",twoLooseLepCount.GetName());
+      if(!standalone) wspace.extendSet("observables",twoLooseLepCount.GetName());//FIXME name hardcoded
 
       //cout << endl << endl << twoLooseLepCount.getVal() << endl << endl;
 
