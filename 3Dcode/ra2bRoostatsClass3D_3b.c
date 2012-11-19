@@ -2212,11 +2212,11 @@
             vvString0lep += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    rv_mu_vv[i][j][k] = new RooFormulaVar( vvString0lep, rfvVVString, RooArgSet( *rar_vv_sf, *rv_mu_vvmc[i][j][k] ));
 
-            TString vvString1lep = "mu_vv";
+            TString vvString1lep = "mu_vv_sl";
             vvString1lep += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    rv_mu_vv_sl[i][j][k] = new RooFormulaVar( vvString1lep, rfvVVString, RooArgSet( *rar_vv_sf, *rv_mu_vvmc_sl[i][j][k] ));
 
-            TString vvStringldp = "mu_vv";
+            TString vvStringldp = "mu_vv_ldp";
             vvStringldp += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    rv_mu_vv_ldp[i][j][k] = new RooFormulaVar( vvStringldp, rfvVVString, RooArgSet( *rar_vv_sf, *rv_mu_vvmc_ldp[i][j][k] ));
 
