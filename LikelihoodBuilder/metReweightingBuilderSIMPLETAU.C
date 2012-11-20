@@ -1118,11 +1118,12 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   /////////////////////////////////////////////////////////////////////////////////////////////////
   if( standalone ){
 
-    (*wspace.var("oneLooseLep_bin48_Theta5_TopWJetsYield")).Print();
-    (*wspace.arg("zeroLepton_bin48_Theta5_TopWJetsYield")).Print();
-    (*wspace.arg("zeroLepton_bin48_SignalYield")).Print();
-    (*wspace.arg("zeroLepton_bin48_DataYieldSum")).Print();
-
+    
+    (*wspace.var("oneLooseLep_bin47_Theta5_TopWJetsYield")).Print();
+    (*wspace.arg("zeroLepton_bin47_Theta5_TopWJetsYield")).Print();
+    (*wspace.arg("zeroLepton_bin47_SignalYield")).Print();
+    (*wspace.arg("zeroLepton_bin47_DataYieldSum")).Print();
+    
   
     cout << " putting together the model " << endl;
 

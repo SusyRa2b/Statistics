@@ -17,7 +17,7 @@ void setup(){
   gSystem->CompileMacro("rooFitGaussianHelperFunctions.h","kO") ;
   gSystem->CompileMacro("rooFitLogNormalHelperFunctions.h","kO") ;
 
-  gSystem->CompileMacro("metReweightingBuilderSIMPLETAUTEST.C","kO") ;
+  gSystem->CompileMacro("metReweightingBuilderSIMPLETAU.C","kO") ;
   gSystem->CompileMacro("likelihoodBuilder.C","kO") ;
 
   return;
