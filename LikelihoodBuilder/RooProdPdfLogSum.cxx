@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: RooFit                                                           *
  * Package: RooFitCore                                                       *
- * @(#)root/roofitcore:$Id: RooProdPdf.cxx 36845 2010-11-22 15:44:57Z wouter $
+ * @(#)root/roofitcore:$Id: RooProdPdfLogSum.cxx,v 1.1 2012/10/15 08:32:23 kreis Exp $
  * Authors:                                                                  *
  *   WV, Wouter Verkerke, UC Santa Barbara, verkerke@slac.stanford.edu       *
  *   DK, David Kirkby,    UC Irvine,         dkirkby@uci.edu                 *
@@ -67,7 +67,7 @@
 #include <sstream>
 #include "TSystem.h"
 
-ClassImp(RooProdPdf)
+ClassImp(RooProdPdfLogSum)
 ;
 
 
