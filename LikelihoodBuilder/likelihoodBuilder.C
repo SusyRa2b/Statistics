@@ -848,9 +848,9 @@ void setupSignalModelOAK( vector<TString> binNames, TString signalModelFilesPath
       thisSignalFractionsOAK.oneLepton = 0.0;
       thisSignalFractionsOAK.zeroLeptonLowDeltaPhiN = ArrayContent[3 + binNames.size() + i] / nGenerated;
       
-      thisSignalStatisticalErrorOAK.zeroLepton = (ArrayContent[3 + i] > 1e-5) ? ArrayContent[3 + 2*binNames.size() + i]/ArrayContent[3 + i] : 0.10;
-      thisSignalStatisticalErrorOAK.oneLepton = 0.10;
-      thisSignalStatisticalErrorOAK.zeroLeptonLowDeltaPhiN = (ArrayContent[3 + binNames.size() + i] > 1e-5) ? ArrayContent[3 + 3*binNames.size() + i]/ArrayContent[3 + binNames.size() + i] : 0.10;
+      thisSignalStatisticalErrorOAK.zeroLepton = (ArrayContent[3 + i] > 1e-5) ? ArrayContent[3 + 2*binNames.size() + i]/ArrayContent[3 + i] : 0.10/100.0;
+      thisSignalStatisticalErrorOAK.oneLepton = 0.10/100.0;
+      thisSignalStatisticalErrorOAK.zeroLeptonLowDeltaPhiN = (ArrayContent[3 + binNames.size() + i] > 1e-5) ? ArrayContent[3 + 3*binNames.size() + i]/ArrayContent[3 + binNames.size() + i] : 0.10/100.0;
       cout << binName << " " << thisSignalFractionsOAK.zeroLepton << " +- " << thisSignalStatisticalErrorOAK.zeroLepton << ", " 
 	   << thisSignalFractionsOAK.oneLepton << " +- " << thisSignalStatisticalErrorOAK.oneLepton << ", " 
 	   << thisSignalFractionsOAK.zeroLeptonLowDeltaPhiN << " +- " << thisSignalStatisticalErrorOAK.zeroLeptonLowDeltaPhiN << endl;
@@ -1025,7 +1025,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	      TString signalName = (*it).first;
 	      double signalValue = ((*it).second).value;
 	      double signalError = ((*it).second).error;
-	      double percentError = (signalValue > 0) ? signalError/signalValue : 0.10;
+	      double percentError = (signalValue > 0) ? signalError/signalValue : 0.10/100.0;
 
 	      RooRealVar signalFraction(signalName+"_SignalFraction", signalName+"_SignalFraction", signalValue/nGenerated);
 	      signalFraction.setConstant();
@@ -1046,7 +1046,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	      TString signalName = (*it).first;
 	      double signalValue = ((*it).second).value;
 	      double signalError = ((*it).second).error;
-	      double percentError = (signalValue > 0) ? signalError/signalValue : 0.10;
+	      double percentError = (signalValue > 0) ? signalError/signalValue : 0.10/100.0;
 
 	      //Continue if already in workspace 
 	      if( ws.var(signalName+"_SignalYield") != NULL ) continue; 
