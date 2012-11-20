@@ -11,10 +11,11 @@
   
   //////////////////////////////////////////////////////////////////////////
   // THIS GREATLY SIMPLIFIES THE TAU->HAD PORTION
-
+  //  gSystem->CompileMacro("RooProdPdfLogSum.cxx"       ,"k0") ;
+  gROOT->ProcessLine(".L RooProdPdfLogSum.cxx++");
   gROOT->ProcessLine(".L metReweightingBuilderSIMPLETAU.C++");
 
-  TString wspacefile("testoutputMORE_xsec1.root");
+  TString wspacefile("testoutput.root");
 
 
 
@@ -23,11 +24,11 @@
 
 
   // SETUP SIGNAL CROSS-SECTION
-  RooRealVar signalCrossSection("signalCrossSection","signalCrossSection",0.01,0.,10.);
-  wspace->import(signalCrossSection);
+    RooRealVar signalCrossSection("signalCrossSection","signalCrossSection",0.01,0.,10.);
+    wspace->import(signalCrossSection);
   wspace->defineSet("namesfordata","");
   wspace->defineSet("nuisances","");
-  //wspace->writeToFile( wspacefile.Data(), true ); // RECREATE ROOT FILE
+  //  wspace->writeToFile( wspacefile.Data(), true ); // RECREATE ROOT FILE
 
   /*
   // SET UP TRIGGER EFFICIENCIES
@@ -53,6 +54,9 @@
 
 
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+
+
+  /*
 
   gStyle->SetPalette(1);
   gStyle->SetOptStat(0);
@@ -98,7 +102,7 @@
   canvas1->Update();
   canvas1->SaveAs("PLC_xsec2_MORE.eps");
 
-  */
+////////
 
 
 
@@ -143,7 +147,7 @@
   frame4->Draw();
   c4->SaveAs("PLL_xsec2_2lep.eps");
 
-  */
+
 
 
   // crude plotting of all NBs/MET for a slice of HT
@@ -442,7 +446,7 @@
   st1a->Add(truebkg_0L);
   st1a->Add(truesig_0L);
   st1a->Draw("histsame");
-*/
+
   c1->SaveAs("BINS_HT3_xsec1_0L.eps");
 
   //////
@@ -466,11 +470,11 @@
   st2a->Add(truebkg_1L);
   st2a->Add(truesig_1L);
   st2a->Draw("histsame");
-*/
+
   c2->SaveAs("BINS_HT3_xsec1_1L.eps");
 
 
-
+  */
 
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	

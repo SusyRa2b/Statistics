@@ -184,6 +184,9 @@ void makePrediction( RooWorkspace& wspace, TString thisBin, bool standalone, TSt
 						    ));
 	  wspace.import(zeroLeptonTopWJetsYield, RecycleConflictNodes());
 	  cout << "Put " << zeroLeptonTopWJetsYield.GetName() << " into workspace" << endl;
+	}
+
+      if( standalone ){
 
 	  /////////////////////////////////////////////////////////////////////////////////////
 	  // GET AND APPLY SIGNAL FRACTION FOR THIS 0L BIN, ADD TO ALL PREDICTIONS
@@ -213,7 +216,8 @@ void makePrediction( RooWorkspace& wspace, TString thisBin, bool standalone, TSt
 
 	  RooProduct zeroLeptonDataYieldSum(zeroLeptonName+"_DataYieldSum",zeroLeptonName+"_DataYieldSum",
 					    RooArgSet( zeroLeptonYieldSum, *triggerefficiency ));
-	  
+	  wspace.import( zeroLeptonDataYieldSum,RecycleConflictNodes() );
+  
 	  
 	  cout << " SIGNAL YIELD:  " << zeroLeptonSignalYieldName.Data() << "  " ;
 	  (*wspace.arg(zeroLeptonSignalYieldName.Data())).Print();
@@ -315,7 +319,7 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
     // EACH YIELD IS A SEPARATE NUISANCE PARAMETER
 
     double initialvalue = oneTightMuCount.getVal();
-    if( initialvalue==0 ) initialvalue = 1.;
+    if( initialvalue==0 ) initialvalue = 0.01;
 
     cout << " BEFORE YIELDS " << endl;
 
@@ -325,7 +329,7 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
     wspace.extendSet("nuisances",oneTightMuTopWJetsYield.GetName());
 
     initialvalue = oneLooseLepCount.getVal();
-    if( initialvalue==0 ) initialvalue = 1.;
+    if( initialvalue==0 ) initialvalue = 0.01;
 
     RooRealVar oneLooseLepTopWJetsYield(oneLooseLepName+"_TopWJetsYield",oneLooseLepName+"_TopWJetsYield",
 				      initialvalue,0.00001,20000.);
@@ -356,7 +360,8 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
 
     RooProduct oneLooseLepDataYieldSum(oneLooseLepName+"_DataYieldSum",oneLooseLepName+"_DataYieldSum",
 				       RooArgSet( oneLooseLepYieldSum, *triggerefficiency));
-   
+    wspace.import( oneTightMuDataYieldSum,RecycleConflictNodes() );
+    wspace.import( oneLooseLepDataYieldSum,RecycleConflictNodes() );   
 
     RooPoissonLogEval oneTightMuConstraint(oneTightMuName+"_Constraint",oneTightMuName+"_Constraint",oneTightMuCount,oneTightMuDataYieldSum);
     wspace.import( oneTightMuConstraint,RecycleConflictNodes() );
@@ -373,6 +378,11 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
 
     RooProduct  zeroLeptonTopWJetsYield(zeroLeptonName+"_TopWJetsYield",zeroLeptonName+"_TopWJetsYield",
 					RooArgSet(*wspace.arg(oneLeptonScaleFactorName.Data()),oneLeptonTopWJetsYield));
+
+    cout << endl << endl;
+    zeroLeptonTopWJetsYield.Print();
+    cout << endl << endl;
+ 
 
     wspace.import(zeroLeptonTopWJetsYield,RecycleConflictNodes());
     wspace.extendSet("nuisances",zeroLeptonTopWJetsYield.GetName());
@@ -443,7 +453,7 @@ void makeDileptonConstraintsPredictions( RooWorkspace& wspace, TString binname, 
   // ****** TRIGGER INEFFICIENCIES MUST BE PUT IN SOMEWHERE FOR BACKGROUND AND SIGNAL ******//
 
   double initialvalue = twoTightMuCount.getVal();
-  if( initialvalue==0 ) initialvalue = 1.;
+  if( initialvalue==0 ) initialvalue = 0.01;
   
   RooRealVar twoTightMuTopWJetsYield(twoTightMuName+"_TopWJetsYield",twoTightMuName+"_TopWJetsYield",
 				     initialvalue,0.00001,1000.);
@@ -451,7 +461,7 @@ void makeDileptonConstraintsPredictions( RooWorkspace& wspace, TString binname, 
   wspace.extendSet("nuisances",twoTightMuTopWJetsYield.GetName());
 
   initialvalue = twoLooseLepCount.getVal();
-  if( initialvalue==0 ) initialvalue = 1.;
+  if( initialvalue==0 ) initialvalue = 0.01;
 
   RooRealVar twoLooseLepTopWJetsYield(twoLooseLepName+"_TopWJetsYield",twoLooseLepName+"_TopWJetsYield",
 				    initialvalue,0.00001,1000.);
@@ -480,6 +490,8 @@ void makeDileptonConstraintsPredictions( RooWorkspace& wspace, TString binname, 
   RooProduct twoLooseLepDataYieldSum(twoLooseLepName+"_DataYieldSum",twoLooseLepName+"_DataYieldSum",
 				    RooArgSet( twoLooseLepYieldSum, *triggerefficiency ));
 
+  wspace.import( twoTightMuDataYieldSum,RecycleConflictNodes() );
+  wspace.import( twoLooseLepDataYieldSum,RecycleConflictNodes() );
 
   RooPoissonLogEval twoTightMuConstraint(twoTightMuName+"_Constraint",twoTightMuName+"_Constraint",twoTightMuCount,twoTightMuDataYieldSum);
   wspace.import( twoTightMuConstraint,RecycleConflictNodes() );
@@ -657,7 +669,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   if( standalone ) 
     {
       test = new TFile(outputFile.Data(), "UPDATE" );
-      //  RooWorkspace *wspace = (RooWorkspace*) test->Get("wspace"); 
+      //RooWorkspace *wspace = (RooWorkspace*) test->Get("wspace"); 
       wspace.autoImportClassCode(true);
     }
 
@@ -804,12 +816,12 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 							 "sigerr1","sigerr2");
 
 
-      RooProduct zeroLepton(zeroLeptonName+"_SignalYield",zeroLeptonName+"_SignalYield",RooArgSet(acount0,*signalCrossSection, *zeroLeptonError));
+      RooProduct zeroLepton(zeroLeptonName+"_SignalYield",zeroLeptonName+"_SignalYield",RooArgSet(acount0,*wspace.var("signalCrossSection"), *zeroLeptonError));
       wspace.import(zeroLepton,RecycleConflictNodes());
       
       TString outputthis(zeroLeptonName);
       outputthis.Append("_SignalYield");
-      //cout << endl << endl << " ZERO LEPTON SIGNAL YIELD MADE HERE AS " << outputthis.Data() << "  " << zeroLepton.getValV() << endl << endl;
+      cout << endl << endl << " ZERO LEPTON SIGNAL YIELD MADE HERE AS " << outputthis.Data() << "  " << zeroLepton.getValV() << endl << endl;
 
       //////
       
@@ -823,26 +835,26 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 
 	signalfracFile>>count;
 	RooRealVar acount1(oneTightMuThetaName+"_SignalFrac",oneTightMuThetaName+"_SignalFrac",count); 
-	RooProduct oneTightMuTheta(oneTightMuThetaName+"_SignalYield",oneTightMuThetaName+"_SignalYield",RooArgSet(acount1,*signalCrossSection));
+	RooProduct oneTightMuTheta(oneTightMuThetaName+"_SignalYield",oneTightMuThetaName+"_SignalYield",RooArgSet(acount1,*wspace.var("signalCrossSection"), *zeroLeptonError));
 	wspace.import(oneTightMuTheta,RecycleConflictNodes());
 
 	// LOOSE MU AND E ALREADY COMBINED 
 
 	signalfracFile>>count;
 	RooRealVar acount3(oneLooseLepThetaName+"_SignalFrac",oneLooseLepThetaName+"_SignalFrac",count); 
-	RooProduct oneLooseLepTheta(oneLooseLepThetaName+"_SignalYield",oneLooseLepThetaName+"_SignalYield",RooArgSet(acount3,*signalCrossSection));
+	RooProduct oneLooseLepTheta(oneLooseLepThetaName+"_SignalYield",oneLooseLepThetaName+"_SignalYield",RooArgSet(acount3,*wspace.var("signalCrossSection"), *zeroLeptonError));
 	wspace.import(oneLooseLepTheta,RecycleConflictNodes());
 		
       }
 
       signalfracFile>>count;
       RooRealVar acount4(twoTightMuName+"_SignalFrac",twoTightMuName+"_SignalFrac",count); 
-      RooProduct twoTightMu(twoTightMuName+"_SignalYield",twoTightMuName+"_SignalYield",RooArgSet(acount4,*signalCrossSection));
+      RooProduct twoTightMu(twoTightMuName+"_SignalYield",twoTightMuName+"_SignalYield",RooArgSet(acount4,*wspace.var("signalCrossSection"), *zeroLeptonError));
       wspace.import(twoTightMu,RecycleConflictNodes());
 
       signalfracFile>>count;
       RooRealVar acount9(twoLooseLepName+"_SignalFrac",twoLooseLepName+"_SignalFrac",count); 
-      RooProduct twoLooseLep(twoLooseLepName+"_SignalYield",twoLooseLepName+"_SignalYield",RooArgSet(acount9,*signalCrossSection));
+      RooProduct twoLooseLep(twoLooseLepName+"_SignalYield",twoLooseLepName+"_SignalYield",RooArgSet(acount9,*wspace.var("signalCrossSection"), *zeroLeptonError));
       wspace.import(twoLooseLep,RecycleConflictNodes());
 
           
@@ -1006,7 +1018,8 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 	  getBetaPrimeConstraint(wspace,oneLeptonName, "",
 				 scalefactor,scalefactorerror,
 				 name1,name2);
-	
+	wspace.import(*ScaleFactor,RecycleConflictNodes());
+
       }
 
       cout << endl << endl << " end of polarization SFs" << endl << endl;
@@ -1032,7 +1045,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 	getBetaPrimeConstraint(wspace,dilepName, "",
 			       scalefactor,scalefactorerror,
 			       name1,name2);
-
+      wspace.import(*ScaleFactorDilep,RecycleConflictNodes());
       cout << endl << endl << " end of dilepton SFs" << endl << endl;
 	      
       ////////////////////////////////////
@@ -1054,7 +1067,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 	getBetaPrimeConstraint(wspace,oneTauName, "",
 			       scalefactor,scalefactorerror,
 			       name3,name4);
-
+      wspace.import(*ScaleFactorTau,RecycleConflictNodes());
       cout << endl << endl << " end of tau SFs" << endl << endl;
 
       //////
@@ -1075,7 +1088,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 	getBetaPrimeConstraint(wspace,twoTauName, "",
 			       scalefactor,scalefactorerror,
 			       name5,name6);
-
+      wspace.import(*ScaleFactorTauTau,RecycleConflictNodes());
       cout << endl << endl << " end of ditau SFs" << endl << endl;
 
       //////
@@ -1104,6 +1117,12 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   /////////////////////////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////////////////
   if( standalone ){
+
+    (*wspace.var("oneLooseLep_bin48_Theta5_TopWJetsYield")).Print();
+    (*wspace.arg("zeroLepton_bin48_Theta5_TopWJetsYield")).Print();
+    (*wspace.arg("zeroLepton_bin48_SignalYield")).Print();
+    (*wspace.arg("zeroLepton_bin48_DataYieldSum")).Print();
+
   
     cout << " putting together the model " << endl;
 
@@ -1111,8 +1130,8 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 
   //  RooProdPdf model("model","model", Constraints );
     RooProdPdfLogSum model("model","model", Constraints );
-  //  wspace.import(model,RecycleConflictNodes());
-  wspace.import(model);
+  wspace.import(model,RecycleConflictNodes());
+  //  wspace.import(model);
 
   cout << endl << endl << " FINAL SET OF CONSTRAINTS " << endl;
   Constraints.Print("v");
@@ -1130,13 +1149,13 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 
   TString triggername = "oneLeptonTriggerEfficiency_M3_H2";
   (*wspace.arg(triggername.Data())).Print();
-    
+  (*wspace.var("signalCrossSection")).Print();    
 
   ////////////////////////////////////
 
-  //  RooFitResult *fitResult = model.fitTo(dataset, Minos(kTRUE), Save(true),"s");
+
+  RooFitResult *fitResult = model.fitTo(dataset, Minos(kTRUE), Save(true),"s");
   
-  /*
 
   RooAbsReal* nll = model.createNLL(dataset);
   RooAbsReal* pll = nll->createProfile(*wspace.set("poi")) ;
@@ -1149,7 +1168,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   frame1->Draw();
   c1->SaveAs("nlltest_1.eps");
   
-
+  (*wspace.var("signalCrossSection")).Print();    
 
   ////////////////////////////////////
 
@@ -1281,7 +1300,9 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   cout << wspace.function("twoLooseLep_bin333_SignalYield")->getTitle() << "  " << wspace.function("twoLooseLep_bin333_SignalYield")->getVal() << "  " << wspace.function("twoLooseLep_bin333_SignalYield")->getPropagatedError(*fitResult) << endl;
   cout << wspace.function("twoTightMu_bin333_SignalYield")->getTitle() << "  " << wspace.function("twoTightMu_bin333_SignalYield")->getVal() << "  " << wspace.function("twoTightMu_bin333_SignalYield")->getPropagatedError(*fitResult) << endl;    
 
+
   */
+
 
   //test << wspace.var("signalCrossSection")->getValV() << endl;
   test->Write(); 
@@ -1289,7 +1310,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 
   }
 
-  //wspace.writeToFile( outputFile.Data(), false ); // DO NOT RECREATE ROOT FILE!!! 
+  wspace.writeToFile( outputFile.Data(), false ); // DO NOT RECREATE ROOT FILE!!! 
 
   ////////////////////////////////////
 
