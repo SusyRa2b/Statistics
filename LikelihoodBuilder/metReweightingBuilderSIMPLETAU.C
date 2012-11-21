@@ -214,10 +214,42 @@ void makePrediction( RooWorkspace& wspace, TString thisBin, bool standalone, TSt
 	  triggername.Append(trigeffname);
 	  RooAbsArg* triggerefficiency = wspace.arg(triggername.Data());
 
+
+	  //////
+	  // APPLY TRIGGER EFFICIENCY TO PREDICTED PIECES FOR PLOTTING PURPOSES
+
 	  RooProduct zeroLeptonDataYieldSum(zeroLeptonName+"_DataYieldSum",zeroLeptonName+"_DataYieldSum",
 					    RooArgSet( zeroLeptonYieldSum, *triggerefficiency ));
 	  wspace.import( zeroLeptonDataYieldSum,RecycleConflictNodes() );
   
+	  RooProduct zeroLeptonTopWJetsPolarizationDataYield(zeroLeptonName+"_TopWJetsPolarizationDataYield",
+							     zeroLeptonName+"_TopWJetsPolarizationDataYield",
+							     RooArgSet( zeroLeptonTopWJetsPolarizationYield, *triggerefficiency ));
+	  wspace.import( zeroLeptonTopWJetsPolarizationDataYield, RecycleConflictNodes() );
+
+          RooProduct zeroLeptonTopWJets1TauDataYield(zeroLeptonName+"_TopWJets1TauDataYield",
+						     zeroLeptonName+"_TopWJets1TauDataYield",
+						     RooArgSet( *wspace.arg(TauHadName1.Data()), *triggerefficiency ));
+          wspace.import( zeroLeptonTopWJets1TauDataYield, RecycleConflictNodes() );
+
+          RooProduct zeroLeptonTopWJets2TauDataYield(zeroLeptonName+"_TopWJets2TauDataYield",
+						     zeroLeptonName+"_TopWJets2TauDataYield",
+						     RooArgSet( *wspace.arg(TauHadName2.Data()), *triggerefficiency ));
+          wspace.import( zeroLeptonTopWJets2TauDataYield, RecycleConflictNodes() );
+
+          RooProduct zeroLeptonTopWJetsDilepDataYield(zeroLeptonName+"_TopWJetsDilepDataYield",
+						      zeroLeptonName+"_TopWJetsDilepDataYield",
+						      RooArgSet( *wspace.arg(DilepName1.Data()), *triggerefficiency ));
+          wspace.import( zeroLeptonTopWJetsDilepDataYield, RecycleConflictNodes() );
+
+          RooProduct zeroLeptonSignalDataYield(zeroLeptonName+"_SignalDataYield",
+						      zeroLeptonName+"_SignalDataYield",
+						    RooArgSet( *wspace.arg(zeroLeptonSignalYieldName.Data()), *triggerefficiency ));
+          wspace.import( zeroLeptonSignalDataYield, RecycleConflictNodes() );
+
+
+
+
 	  
 	  cout << " SIGNAL YIELD:  " << zeroLeptonSignalYieldName.Data() << "  " ;
 	  (*wspace.arg(zeroLeptonSignalYieldName.Data())).Print();
@@ -369,6 +401,27 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
     RooPoissonLogEval oneLooseLepConstraint(oneLooseLepName+"_Constraint",oneLooseLepName+"_Constraint",oneLooseLepCount,oneLooseLepDataYieldSum);
     wspace.import( oneLooseLepConstraint,RecycleConflictNodes() );
 
+    
+    //////////////////////////////////
+    // APPLY TRIGGER EFFICIENCIES SEPARATELY HERE FOR PLOTTING PURPOSES
+    
+    RooProduct oneTightMuTopWJetsDataYield(oneTightMuName+"_TopWJetsDataYield",oneTightMuName+"_TopWJetsDataYield",
+					   RooArgSet( oneTightMuTopWJetsYield, *triggerefficiency));
+    wspace.import( oneTightMuTopWJetsDataYield,RecycleConflictNodes() );
+    
+    RooProduct oneTightMuSignalDataYield(oneTightMuName+"_SignalDataYield",oneTightMuName+"_SignalDataYield",
+					 RooArgSet( *wspace.arg(oneTightMuSignalYieldName.Data()), *triggerefficiency));
+    wspace.import( oneTightMuSignalDataYield,RecycleConflictNodes() );
+    
+    RooProduct oneLooseLepTopWJetsDataYield(oneLooseLepName+"_TopWJetsDataYield",oneLooseLepName+"_TopWJetsDataYield",
+					    RooArgSet( oneLooseLepTopWJetsYield, *triggerefficiency));
+    wspace.import( oneLooseLepTopWJetsDataYield,RecycleConflictNodes() );
+    
+    RooProduct oneLooseLepSignalDataYield(oneLooseLepName+"_SignalDataYield",oneLooseLepName+"_SignalDataYield",
+					  RooArgSet( *wspace.arg(oneLooseLepSignalYieldName.Data()), *triggerefficiency));
+    wspace.import( oneLooseLepSignalDataYield,RecycleConflictNodes() );
+
+    
     ////////////////////////////////////////////////////
     // CONSTRUCT THE 0L BACKGROUND PREDICTION FROM THIS DTHETA BIN
     // 0L TRIGGER EFFICIENCIES ARE NOT APPLIED IF THEY ARE BEING SENT TO BEN
@@ -499,6 +552,26 @@ void makeDileptonConstraintsPredictions( RooWorkspace& wspace, TString binname, 
   RooPoissonLogEval twoLooseLepConstraint(twoLooseLepName+"_Constraint",twoLooseLepName+"_Constraint",twoLooseLepCount,twoLooseLepDataYieldSum);
   wspace.import( twoLooseLepConstraint,RecycleConflictNodes() );
 
+  //////////////////////////////////////////
+  // FOR PLOTTING PURPOSES
+
+  RooProduct twoTightMuTopWJetsDataYield(twoTightMuName+"_TopWJetsDataYield",twoTightMuName+"_TopWJetsDataYield",
+                                    RooArgSet( twoTightMuTopWJetsYield, *triggerefficiency ));
+  wspace.import( twoTightMuTopWJetsDataYield,RecycleConflictNodes() );
+
+  RooProduct twoTightMuSignalDataYield(twoTightMuName+"_SignalDataYield",twoTightMuName+"_SignalDataYield",
+				       RooArgSet( *wspace.arg(twoTightMuSignalYieldName.Data()), *triggerefficiency ));
+  wspace.import( twoTightMuSignalDataYield,RecycleConflictNodes() );
+
+  RooProduct twoLooseLepTopWJetsDataYield(twoLooseLepName+"_TopWJetsDataYield",twoLooseLepName+"_TopWJetsDataYield",
+                                    RooArgSet( twoLooseLepTopWJetsYield, *triggerefficiency ));
+  wspace.import( twoLooseLepTopWJetsDataYield,RecycleConflictNodes() );
+  
+  RooProduct twoLooseLepSignalDataYield(twoLooseLepName+"_SignalDataYield",twoLooseLepName+"_SignalDataYield",
+					RooArgSet( *wspace.arg(twoLooseLepSignalYieldName.Data()), *triggerefficiency ));
+  wspace.import( twoLooseLepSignalDataYield,RecycleConflictNodes() );
+  
+  
   cout << " END OF DILEPTON AND DITAU CONSTRAINTS " << endl;
   twoTightMuConstraint.Print();
   twoLooseLepConstraint.Print();
@@ -1155,19 +1228,26 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   ////////////////////////////////////
 
 
-  RooFitResult *fitResult = model.fitTo(dataset, Minos(kTRUE), Save(true),"s");
+
+  RooFitResult *fitResult = model.fitTo(dataset );//, Minos(kTRUE), Save(true),"s");
   
+  (*wspace.var("signalCrossSection")).Print();
+  (*wspace.var("oneTightMu_bin47_Theta5_TopWJetsYield")).Print();
+
+  /*
+
+  RooArgSet parofinterest(*wspace.set("oneTightMu_bin47_Theta5_TopWJetsYield"));
 
   RooAbsReal* nll = model.createNLL(dataset);
-  RooAbsReal* pll = nll->createProfile(*wspace.set("poi")) ;
+  RooAbsReal* pll = nll->createProfile(parofinterest) ;
 
-  RooPlot* frame1 = signalCrossSection->frame();
-  nll->plotOn(frame1) ;
+  RooPlot* frame1 = (wspace.var("oneTightMu_bin47_Theta5_TopWJetsYield"))->frame();
+  //  nll->plotOn(frame1) ;
   pll->plotOn(frame1,LineColor(kRed)) ;
 
   TCanvas *c1 =  new TCanvas();
   frame1->Draw();
-  c1->SaveAs("nlltest_1.eps");
+  c1->SaveAs("PLL_TEST2.eps");
   
   (*wspace.var("signalCrossSection")).Print();    
 
