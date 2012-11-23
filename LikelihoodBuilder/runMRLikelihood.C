@@ -7,17 +7,18 @@
 #include "RooStats/LikelihoodInterval.h"
 #include "RooStats/LikelihoodIntervalPlot.h"
   
-
+  using namespace RooFit ;
   
   //////////////////////////////////////////////////////////////////////////
-  // THIS GREATLY SIMPLIFIES THE TAU->HAD PORTION
-  //  gSystem->CompileMacro("RooProdPdfLogSum.cxx"       ,"k0") ;
-  gROOT->ProcessLine(".L RooProdPdfLogSum.cxx++");
-  gROOT->ProcessLine(".L metReweightingBuilderSIMPLETAU.C++");
 
   TString wspacefile("testoutput.root");
 
 
+
+  // THIS GREATLY SIMPLIFIES THE TAU->HAD PORTION
+  //  gSystem->CompileMacro("RooProdPdfLogSum.cxx"       ,"k0") ;
+  gROOT->ProcessLine(".L RooProdPdfLogSum.cxx++");
+  gROOT->ProcessLine(".L metReweightingBuilderSIMPLETAU.C++");
 
   // SETUP WORKSPACE IN FRESH FILE
   RooWorkspace*  wspace = new RooWorkspace("wspace");
@@ -28,14 +29,12 @@
   wspace->import(signalCrossSection);
   wspace->defineSet("namesfordata","");
   wspace->defineSet("nuisances","");
-  //  wspace->writeToFile( wspacefile.Data(), true ); // RECREATE ROOT FILE
 
 
   //buildMRLikelihood( wspacefile.Data(), "testSimpleSetupFileHT3.txt" );
 
   buildMRLikelihood( *wspace, wspacefile.Data(), "testDataSimpleMRSetupFile.txt", true );
-
-  //  wspace->writeToFile( wspacefile.Data(), true ); 
+  wspace->writeToFile( wspacefile.Data(), true ); 
 
 
 
@@ -76,17 +75,33 @@
   (wspace2->obj("zeroLepton_bin44_DataYieldSum")).Print();
   (wspace2->obj("zeroLepton_bin47_DataYieldSum")).Print();
 
+  //////                                                                        
+  /*                                                                  
+  RooArgSet parofinterest(*wspace2->var("oneTightMu_bin47_Theta5_TopWJetsYield"));
+  RooAbsReal* nll = (*wspace2->pdf("model")).createNLL( *wspace2->data("dataset") );
+  RooAbsReal* pll = nll->createProfile(parofinterest) ;
 
+
+  (wspace2->var("oneTightMu_bin47_Theta5_TopWJetsYield"))->setRange(0.01,10);
+  RooPlot* frame1 = (wspace2->var("oneTightMu_bin47_Theta5_TopWJetsYield"))->frame();
+  //  nll->plotOn(frame1) ;         
+  pll->plotOn(frame1,LineColor(kRed)) ;
+
+
+  TCanvas *c1 =  new TCanvas();
+  frame1->Draw();
+  c1->SaveAs("PLL_TEST2.eps");                             
+
+  /*
 
   //  RooArgSet parofinterest(*wspace->set("poi")) ;
-  RooArgSet parofinterest(*wspace2->set("oneTightMu_bin39_Theta5_TopWJetsYield"));
+  RooArgSet parofinterest(*wspace2->var("oneTightMu_bin39_Theta5_TopWJetsYield"));
 
-  (*wspace2->var("oneTightMu_bin333_Theta4_TopWJetsYield")).getVal();
+  (*wspace2->var("oneTightMu_bin47_Theta5_TopWJetsYield")).getVal();
 
-  ProfileLikelihoodCalculator plc(*wspace2->data("dataset"), *wspace2->pdf("model"), 
-				  parofinterest);
-				  //*wspace2->var("oneTightMu_bin333_Theta4_TopWJetsYield"));
-
+  ProfileLikelihoodCalculator plc(*wspace2->data("dataset"), *wspace2->pdf("model"), parofinterest);
+  //*wspace2->var("oneTightMu_bin47_Theta5_TopWJetsYield"));
+  
   plc.SetConfidenceLevel(0.95);
   LikelihoodInterval* interval = plc.GetInterval() ;
   LikelihoodIntervalPlot*  lplot = new LikelihoodIntervalPlot(interval);
@@ -102,50 +117,54 @@
 
 ////////
 
-/*
+  */
   
-RooAbsReal* nll = (wspace2->pdf("model")).createNLL(*wspace2->data("dataset"));
-//RooAbsReal* pll1 = nll->createProfile(*wspace2->var("signalCrossSection"));
-  //RooAbsReal* pll1 = nll->createProfile(*wspace2->var("oneTightMu_bin333_Theta4_TopWJetsYield"));
-  //RooAbsReal* pll2 = nll->createProfile(*wspace2->var("oneLooseLep_bin333_Theta4_TopWJetsYield"));
-  //RooAbsReal* pll3 = nll->createProfile(*wspace2->var("twoTightMu_bin333_TopWJetsYield"));
-  //RooAbsReal* pll4 = nll->createProfile(*wspace2->var("twoLooseLep_bin333_TopWJetsYield"));
+  RooAbsReal* nll = (wspace2->pdf("model")).createNLL(*wspace2->data("dataset"));
+  //RooAbsReal* pll1 = nll->createProfile(*wspace2->var("signalCrossSection"));
+  RooAbsReal* pll1 = nll->createProfile(*wspace2->var("oneTightMu_bin26_Theta5_TopWJetsYield"));
+  RooAbsReal* pll2 = nll->createProfile(*wspace2->var("oneLooseLep_bin26_Theta5_TopWJetsYield"));
+  RooAbsReal* pll3 = nll->createProfile(*wspace2->var("twoTightMu_bin26_TopWJetsYield"));
+  RooAbsReal* pll4 = nll->createProfile(*wspace2->var("twoLooseLep_bin26_TopWJetsYield"));
 
   //  (*wspace2->var("twoTightMu_bin333_TopWJetsYield")).Print();
   //  RooPlot* frame1 = signalCrossSection.frame(0,5);//yield.frame();
   //  RooPlot* frame1 = (*wspace2->var("oneLooseLep_bin301_Theta4_TopWJetsYield")).frame(1,20);//yield.frame();
   
-  RooPlot* frame1 = (*wspace2->var("signalCrossSection")).frame(0,5);//yield.frame();
-  //RooPlot* frame1 = (*wspace2->var("oneTightMu_bin333_Theta4_TopWJetsYield")).frame(0,2);//yield.frame();
-  //RooPlot* frame2 = (*wspace2->var("oneLooseLep_bin333_Theta4_TopWJetsYield")).frame(0,2);//yield.frame();
-  //RooPlot* frame3 = (*wspace2->var("twoTightMu_bin333_TopWJetsYield")).frame(0,2);//yield.frame();
-  //RooPlot* frame4 = (*wspace2->var("twoLooseLep_bin333_TopWJetsYield")).frame(0,2);//yield.frame();
+  //RooPlot* frame1 = (*wspace2->var("signalCrossSection")).frame(0,5);//yield.frame();
+  RooPlot* frame1 = (*wspace2->var("oneTightMu_bin26_Theta5_TopWJetsYield")).frame(0.001,15);//yield.frame();
+  RooPlot* frame2 = (*wspace2->var("oneLooseLep_bin26_Theta5_TopWJetsYield")).frame(0.001,80);//yield.frame();
+  RooPlot* frame3 = (*wspace2->var("twoTightMu_bin26_TopWJetsYield")).frame(0.001,10);//yield.frame();
+  RooPlot* frame4 = (*wspace2->var("twoLooseLep_bin26_TopWJetsYield")).frame(0.001,10);//yield.frame();
   //  nll->plotOn(frame1) ;
 
 
   TCanvas *c1 =  new TCanvas();
   pll1->plotOn(frame1) ;
+  frame1->GetYaxis()->SetRangeUser(0,5);
   frame1->Draw();
-  //  c1->SaveAs("PLL_xsec2_1tmu4.eps");
-  c1->SaveAs("PLL_xsec1_XSEC.eps");
+  c1->SaveAs("PLL_data26_1tmu5.eps");
+  //  c1->SaveAs("PLL_xsec1_XSEC.eps");
 
-  /*
+
   TCanvas *c2 =  new TCanvas();
   pll2->plotOn(frame2) ;
+  frame2->GetYaxis()->SetRangeUser(0,5);
   frame2->Draw();
-  c2->SaveAs("PLL_xsec2_1lep4.eps");
+  c2->SaveAs("PLL_data26_1lep5.eps");
 
   TCanvas *c3 =  new TCanvas();
   pll3->plotOn(frame3) ;
+  frame3->GetYaxis()->SetRangeUser(0,5);
   frame3->Draw();
-  c3->SaveAs("PLL_xsec2_2tmu.eps");
+  c3->SaveAs("PLL_data26_2tmu.eps");
 
   TCanvas *c4 =  new TCanvas();
   pll4->plotOn(frame4) ;
+  frame4->GetYaxis()->SetRangeUser(0,5);
   frame4->Draw();
-  c4->SaveAs("PLL_xsec2_2lep.eps");
+  c4->SaveAs("PLL_data26_2lep.eps");
 
-  */
+  /*
 
 
   // crude plotting of all NBs/MET for a slice of HT
@@ -481,7 +500,7 @@ cout << " MAKING PLOTS " << endl;
   st1a->Add(truebkg_0L);
   st1a->Add(truesig_0L);
   st1a->Draw("histsame");
-*/
+
   c1->SetLogy(1);
   c1->SaveAs("BINS_data_0Llog.eps");
 
@@ -506,11 +525,11 @@ cout << " MAKING PLOTS " << endl;
   st2a->Add(truebkg_1L);
   st2a->Add(truesig_1L);
   st2a->Draw("histsame");
-*/
+
   c2->SetLogy(1);
   c2->SaveAs("BINS_data_1Llog.eps");
 
-
+*/
   
 
 
