@@ -168,6 +168,10 @@
 
 
 
+
+
+   //--- collect everything from workspace.
+
      printf("\n\n\n\n") ; cout << flush ;
 
 
@@ -244,7 +248,7 @@
 
 
 
-
+   //--- print out all observables and fit totals.
 
      printf("\n\n\n\n") ; cout << flush ;
 
@@ -291,25 +295,79 @@
 
 
 
+   //--- compute all relevant integrals for components and save in a file.
 
- //  printf("\n\n\n\n") ; cout << flush ;
+     printf("\n\n\n\n") ; cout << flush ;
 
- //  for ( int si=0; si<nsel; si++ ) {
- //     for ( int ci=0; ci<ncomp; ci++ ) {
+     TString ws_fname( wsfile ) ;
+     ws_fname.ReplaceAll("rootfiles/","") ;
+     ws_fname.ReplaceAll(".root","") ;
 
- //        if ( !comp_included[si][ci] ) continue ;
+     char outfilename[10000] ;
+     if ( mu_susy_sig_val < 0. ) {
+        sprintf( outfilename, "outputfiles/fitresults-%s-susyFloat.txt", ws_fname.Data() ) ;
+     } else {
+        sprintf( outfilename, "outputfiles/fitresults-%s-susyFixed%.1f.txt", ws_fname.Data(), mu_susy_sig_val ) ;
+     }
+     printf(" ws_fname : %s\n", ws_fname.Data() ) ; cout << flush ;
+     printf("\n\n Opening output file : %s\n\n", outfilename ) ; cout << flush ;
+     FILE* outfile = fopen( outfilename, "w" ) ;
 
- //        for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
- //           for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
- //              for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+     for ( int si=0; si<nsel; si++ ) {
+        for ( int ci=0; ci<ncomp; ci++ ) {
 
- //                 if ( ignoreBin[mbi][hbi] ) continue ;
+           if ( !comp_included[si][ci] ) continue ;
 
- //              } // hbi.
- //           } // mbi.
- //        } // bbi.
- //     } // ci.
- //  } // si.
+           double all(0.) ;
+
+           for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
+
+              double this_nb(0.) ;
+
+              for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+
+                 double this_nb_met(0.) ;
+
+                 for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+
+                    if ( ignoreBin[mbi][hbi] ) continue ;
+
+                    this_nb_met += mu_wtrig[mbi][hbi][bbi][si][ci] ;
+                    this_nb     += mu_wtrig[mbi][hbi][bbi][si][ci] ;
+                    all         += mu_wtrig[mbi][hbi][bbi][si][ci] ;
+
+                 } // hbi.
+
+                 fprintf( outfile, "%s_%s_wt_M%d_%db %.2f\n", comp[ci], output_selname[si], mbi+1, bbi+1, this_nb_met ) ;
+
+              } // mbi.
+
+              fprintf( outfile, "%s_%s_wt_%db %.2f\n", comp[ci], output_selname[si], bbi+1, this_nb ) ;
+
+              for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+
+                 double this_nb_ht(0.) ;
+
+                 for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+
+                    if ( ignoreBin[mbi][hbi] ) continue ;
+
+                    this_nb_ht  += mu_wtrig[mbi][hbi][bbi][si][ci] ;
+
+                 } // mbi.
+
+                 fprintf( outfile, "%s_%s_wt_H%d_%db %.2f\n", comp[ci], output_selname[si], hbi+1, bbi+1, this_nb_ht ) ;
+
+              } // hbi.
+
+           } // bbi.
+
+           fprintf( outfile, "%s_%s_wt %.2f\n", comp[ci], output_selname[si], all ) ;
+
+        } // ci.
+     } // si.
+
+     fclose( outfile ) ;
 
 
 
@@ -491,6 +549,7 @@
 
 
 
+     printf("\n\n\n\n") ; cout << flush ;
 
 
 
