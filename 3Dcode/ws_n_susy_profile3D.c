@@ -33,12 +33,12 @@
 
   //==============================================================================================
 
-   void ws_n_susy_profile3D( const char* wsfile = "rootfiles/ws-data-unblind-1200-300.root",
-                                   const char* bintag = "M4_H3_3b",
+   void ws_n_susy_profile3D( const char* wsfile = "rootfiles/ws-data-unblind-1200-600.root",
+                                   const char* bintag = "M4_H4_3b",
                                    const char* ignore_observable_name = "none",
                                    int npoiPoints = 20,
                                    double poiMinVal = 0.,
-                                   double poiMaxVal = 2.,
+                                   double poiMaxVal = 8.,
                                    double constraintWidth = 40.,
                                    double ymax = 5.,
                                    int verbLevel=0
