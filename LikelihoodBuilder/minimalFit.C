@@ -38,6 +38,7 @@ int minimalFit(TString workspaceFile = "test.root", double signalCrossSectionGue
   RooRealVar* signalCrossSection = ws->var( "signalCrossSection" );
   signalCrossSection->setVal( signalCrossSectionGuess );
   if(fixSignal) signalCrossSection->setConstant();
+  else signalCrossSection->setConstant(kFALSE);
   signalCrossSection->setRange( signalCrossSectionLow, signalCrossSectionHigh );
   
   /* 
