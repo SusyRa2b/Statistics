@@ -27,6 +27,8 @@ using namespace std;
 
 bool skipBinInAnalysis(TString binName) {
   
+  return false;
+
   //FIXME hardcoded
   if(binName=="bin37" || binName=="bin38" || binName=="bin39") return true;
   //skipBin(binName);//from likelihoodBuilder
@@ -232,7 +234,7 @@ struct s3d {
 
 
 
-void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binFilesFile.dat", bool logy=false) {
+void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binFilesFile.dat", bool logy=false, bool ABCD = false) {
   //This function assumes bin dat files are named like bin_Mx_Hy_zb
   bool debug = true;
   if(debug) cout << "Starting owenPlots" << endl;
@@ -283,9 +285,9 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
   RooWorkspace* ws = (RooWorkspace*)wstf->Get("workspace");
   
   //each entry will be btag multiplicity
-  std::vector<TH1D*> hZL_sig;  std::vector<TH1D*> hZL_ttwj;  std::vector<TH1D*> hZL_qcd;  std::vector<TH1D*> hZL_znn; std::vector<TH1D*> hZL_data;
-  std::vector<TH1D*> hSL_sig;  std::vector<TH1D*> hSL_ttwj;  std::vector<TH1D*> hSL_qcd;  std::vector<TH1D*> hSL_znn;  std::vector<TH1D*> hSL_data;
-  std::vector<TH1D*> hLDP_sig;  std::vector<TH1D*> hLDP_ttwj;  std::vector<TH1D*> hLDP_qcd;  std::vector<TH1D*> hLDP_znn; std::vector<TH1D*> hLDP_data;
+  std::vector<TH1D*> hZL_sig;  std::vector<TH1D*> hZL_ttwj;  std::vector<TH1D*> hZL_qcd;  std::vector<TH1D*> hZL_znn; std::vector<TH1D*> hZL_vv; std::vector<TH1D*> hZL_data;
+  std::vector<TH1D*> hSL_sig;  std::vector<TH1D*> hSL_ttwj;  std::vector<TH1D*> hSL_qcd;  std::vector<TH1D*> hSL_znn; std::vector<TH1D*> hSL_vv; std::vector<TH1D*> hSL_data;
+  std::vector<TH1D*> hLDP_sig;  std::vector<TH1D*> hLDP_ttwj;  std::vector<TH1D*> hLDP_qcd;  std::vector<TH1D*> hLDP_znn; std::vector<TH1D*> hLDP_vv; std::vector<TH1D*> hLDP_data;
 
   std::vector<THStack*> hsZL;  std::vector<THStack*> hsSL;   std::vector<THStack*> hsLDP; 
 
@@ -339,28 +341,37 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
     hZL_znn[i-1]->SetFillColor(kGreen-3);
     hSL_znn[i-1]->SetFillColor(kGreen-3);
     hLDP_znn[i-1]->SetFillColor(kGreen-3);
+
+    hZL_vv.push_back(new TH1D("ZL_vv_"+b+"b","ZL_vv_"+b+"b",nbins,0.5,nbins+0.5));
+    hSL_vv.push_back(new TH1D("SL_vv_"+b+"b","SL_vv_"+b+"b",nbins,0.5,nbins+0.5));
+    hLDP_vv.push_back(new TH1D("LDP_vv_"+b+"b","LDP_vv_"+b+"b",nbins,0.5,nbins+0.5));
+    hZL_vv[i-1]->SetFillColor(kOrange-3);
+    hSL_vv[i-1]->SetFillColor(kOrange-3);
+    hLDP_vv[i-1]->SetFillColor(kOrange-3);
  
 
     hsZL.push_back(new THStack("ZL_"+b+"b","ZL_"+b+"b"));
+    hsZL[i-1]->Add(hZL_vv[i-1]);   
     hsZL[i-1]->Add(hZL_znn[i-1]);   
     hsZL[i-1]->Add(hZL_qcd[i-1]);   
     hsZL[i-1]->Add(hZL_ttwj[i-1]);
     hsZL[i-1]->Add(hZL_sig[i-1]);
     
     hsSL.push_back(new THStack("SL_"+b+"b","SL_"+b+"b"));
+    hsSL[i-1]->Add(hSL_vv[i-1]);
     hsSL[i-1]->Add(hSL_znn[i-1]);
     hsSL[i-1]->Add(hSL_qcd[i-1]);    
     hsSL[i-1]->Add(hSL_ttwj[i-1]);
     hsSL[i-1]->Add(hSL_sig[i-1]);
     
     hsLDP.push_back(new THStack("LDP_"+b+"b","LDP_"+b+"b"));
+    hsLDP[i-1]->Add(hLDP_vv[i-1]);
     hsLDP[i-1]->Add(hLDP_znn[i-1]);
     hsLDP[i-1]->Add(hLDP_qcd[i-1]);  
     hsLDP[i-1]->Add(hLDP_ttwj[i-1]);
     hsLDP[i-1]->Add(hLDP_sig[i-1]);
     
   }
-
 
   //take data out of workspace and fill histograms
   for(map<TString,s3d>::iterator it = binMap.begin(); it != binMap.end(); it++) {
@@ -372,29 +383,35 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
     int bBin = binInfo.nB;
     
     hZL_data[bBin-1]->SetBinContent( binIndex,(ws->function( "zeroLepton_"+binName+"_Count" ))->getVal() );
-    hSL_data[bBin-1]->SetBinContent( binIndex,(ws->function( "oneLepton_"+binName+"_Count" ))->getVal() );
+    if(ABCD) hSL_data[bBin-1]->SetBinContent( binIndex,(ws->function( "oneLepton_"+binName+"_Count" ))->getVal() );
     hLDP_data[bBin-1]->SetBinContent( binIndex,(ws->function( "zeroLeptonLowDeltaPhiN_"+binName+"_Count" ))->getVal() );
 
-    hZL_sig[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLepton_"+binName+"_SignalYield" ))->getVal() );
-    hSL_sig[bBin-1]->SetBinContent( binIndex, (ws->function( "oneLepton_"+binName+"_SignalYield" ))->getVal() );
-    hLDP_sig[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLeptonLowDeltaPhiN_"+binName+"_SignalYield" ))->getVal() );
+    hZL_sig[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLepton_"+binName+"_SignalDataYield" ))->getVal() );
+    if(ABCD) hSL_sig[bBin-1]->SetBinContent( binIndex, (ws->function( "oneLepton_"+binName+"_SignalDataYield" ))->getVal() );
+    hLDP_sig[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLeptonLowDeltaPhiN_"+binName+"_SignalDataYield" ))->getVal() );
+    cout << (ws->function( "zeroLepton_"+binName+"_SignalDataYield" ))->getVal() << " " << (ws->function( "zeroLeptonLowDeltaPhiN_"+binName+"_SignalDataYield" ))->getVal() << endl;
+
+    hZL_ttwj[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLepton_"+binName+"_TopWJetsDataYield" ))->getVal() );
+    if(ABCD) hSL_ttwj[bBin-1]->SetBinContent( binIndex, (ws->function( "oneLepton_"+binName+"_TopWJetsDataYield" ))->getVal() );
+    hLDP_ttwj[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLeptonLowDeltaPhiN_"+binName+"_TopWJetsDataYield" ))->getVal() );
     
-    hZL_ttwj[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLepton_"+binName+"_TopWJetsYield" ))->getVal() );
-    hSL_ttwj[bBin-1]->SetBinContent( binIndex, (ws->function( "oneLepton_"+binName+"_TopWJetsYield" ))->getVal() );
-    hLDP_ttwj[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLeptonLowDeltaPhiN_"+binName+"_TopWJetsYield" ))->getVal() );
     
-    hZL_qcd[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLepton_"+binName+"_QCDYield" ))->getVal() );
-    hSL_qcd[bBin-1]->SetBinContent( binIndex, 0);
-    hLDP_qcd[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLeptonLowDeltaPhiN_"+binName+"_QCDYield" ))->getVal() );
+    hZL_qcd[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLepton_"+binName+"_QCDDataYield" ))->getVal() );
+    if(ABCD) hSL_qcd[bBin-1]->SetBinContent( binIndex, 0);
+    hLDP_qcd[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLeptonLowDeltaPhiN_"+binName+"_QCDDataYield" ))->getVal() );
     
-    hZL_znn[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLepton_"+binName+"_ZtoNuNuYield" ))->getVal() );
-    hSL_znn[bBin-1]->SetBinContent( binIndex, 0);
-    hLDP_znn[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLeptonLowDeltaPhiN_"+binName+"_ZtoNuNuYield" ))->getVal() );
+    hZL_znn[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLepton_"+binName+"_ZtoNuNuDataYield" ))->getVal() );
+    if(ABCD) hSL_znn[bBin-1]->SetBinContent( binIndex, 0);
+    hLDP_znn[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLeptonLowDeltaPhiN_"+binName+"_ZtoNuNuDataYield" ))->getVal() );
+
+    hZL_vv[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLepton_"+binName+"_DibosonDataYield" ))->getVal() );
+    if(ABCD) hSL_vv[bBin-1]->SetBinContent( binIndex, (ws->function( "oneLepton_"+binName+"_DibosonDataYield" ))->getVal() );
+    hLDP_vv[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLeptonLowDeltaPhiN_"+binName+"_DibosonDataYield" ))->getVal() );
     
   }
    
-
-  for(int i=1; i<=maxNM; i++) {
+  
+  for(int i=1; i<=maxNM; i++) {//hardcoded
     for(int j=1; j<=maxNH; j++) {
       TString binLabel = "M"; binLabel+=i; binLabel+="_H"; binLabel+=j;
       int binIndex = 1 + (maxNH+1)*(i-1) + j;
@@ -409,7 +426,7 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
       
     }
   }
-
+  
 
   double maxS = 1.25;
   hZee_z->SetMaximum(maxS*hZee_d->GetMaximum());
@@ -436,57 +453,57 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
   TCanvas * c = new TCanvas("c", "c", 1000, 1000);
   c->Divide(3,4);
   c->cd(1);
-  gPad->SetLogy(logy);
-  hsZL[0]->Draw();
+  if(hsZL[0]->GetMaximum()>0) gPad->SetLogy(logy);
+  hsZL[0]->Draw();				
   hZL_data[0]->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);
   c->cd(2);
-  gPad->SetLogy(logy);
+  if(hsZL[1]->GetMaximum()>0) gPad->SetLogy(logy);
   hsZL[1]->Draw();
   hZL_data[1]->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);  
   c->cd(3);
-  gPad->SetLogy(logy);
+  if(hsZL[2]->GetMaximum()>0) gPad->SetLogy(logy);
   hsZL[2]->Draw();
   hZL_data[2]->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);
   c->cd(4);
-  gPad->SetLogy(logy);
+  if(hsSL[0]->GetMaximum()>0) gPad->SetLogy(logy);
   hsSL[0]->Draw();
   hSL_data[0]->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);  
   c->cd(5);
-  gPad->SetLogy(logy);
+  if(hsSL[1]->GetMaximum()>0) gPad->SetLogy(logy);
   hsSL[1]->Draw();
   hSL_data[1]->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);
   c->cd(6);
-  gPad->SetLogy(logy);
+  if(hsSL[2]->GetMaximum()>0) gPad->SetLogy(logy);
   hsSL[2]->Draw();
   hSL_data[2]->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);
   c->cd(7);
-  gPad->SetLogy(logy);
+  if(hsLDP[0]->GetMaximum()>0) gPad->SetLogy(logy);
   hsLDP[0]->Draw();
   hLDP_data[0]->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);
   c->cd(8);
-  gPad->SetLogy(logy);
+  if(hsLDP[1]->GetMaximum()>0) gPad->SetLogy(logy);
   hsLDP[1]->Draw();
   hLDP_data[1]->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);
   c->cd(9);
-  gPad->SetLogy(logy);
+  if(hsLDP[2]->GetMaximum()>0) gPad->SetLogy(logy);
   hsLDP[2]->Draw();
   hLDP_data[2]->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);
   c->cd(10);
-  gPad->SetLogy(logy);
+  if(hZee_z->GetMaximum()>0) gPad->SetLogy(logy);
   hZee_z->Draw();
   hZee_d->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);
   c->cd(11);
-  gPad->SetLogy(logy);
+  if(hZmm_z->GetMaximum()>0) gPad->SetLogy(logy);
   hZmm_z->Draw();
   hZmm_d->Draw("HISTPE SAME");
   gPad->SetBottomMargin(0.15);
