@@ -33,13 +33,13 @@
 
   //buildMRLikelihood( wspacefile.Data(), "testSimpleSetupFileHT3.txt" );
 
-  buildMRLikelihood( *wspace, wspacefile.Data(), "testDataSimpleMRSetupFile.txt", true );
+    buildMRLikelihood( *wspace, wspacefile.Data(), "testDataSimpleMRSetupFile.txt", true );
+    //    buildMRLikelihood( *wspace, wspacefile.Data(), "testSMMCSimpleMRSetupFile.txt", true );
   wspace->writeToFile( wspacefile.Data(), true ); 
 
 
 
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-
 
 
 
@@ -62,19 +62,28 @@
   RooWorkspace *wspace2 = (RooWorkspace*) test->Get("wspace");
   wspace2->autoImportClassCode(true);
 
+  /*
+  cout << wspace2->function("zeroLepton_bin26_TopWJetsPolarizationDataYield")->getTitle() << "  " <<  wspace2->function("zeroLepton_bin26_TopWJetsPolarizationDataYield")->getVal() << endl;//"  " <<  wspace2->function("zeroLepton_bin26_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace2->function("zeroLepton_bin26_TopWJets1TauDataYield")->getTitle() << "  " <<  wspace2->function("zeroLepton_bin26_TopWJets1TauDataYield")->getVal() << endl;//"  " <<  wspace2->function("zeroLepton_bin26_TopWJets1TauDataYield")->getPropagatedError(*fitResult) << endl;               
+  cout << wspace2->function("zeroLepton_bin26_TopWJets2TauDataYield")->getTitle() << "  " <<  wspace2->function("zeroLepton_bin26_TopWJets2TauDataYield")->getVal() << endl;//"  " <<  wspace2->function("zeroLepton_bin26_TopWJets2TauDataYield")->getPropagatedError(*fitResult) << endl;               
+  cout << wspace2->function("zeroLepton_bin26_TopWJetsDilepDataYield")->getTitle() << "  " <<  wspace2->function("zeroLepton_bin26_TopWJetsDilepDataYield")->getVal() << endl;//"  " <<  wspace2->function("zeroLepton_bin26_TopWJetsDilepDataYield")->getPropagatedError(*fitResult) << endl;            
+                             
 
   cout << " before plc " << endl;
 
-  (wspace2->obj("oneTightMu_bin47_Theta5_TopWJetsDataYield")).Print();
+  (wspace2->obj("zeroLepton_bin26_TopWJetsPolarizationYield")).Print();
+  (wspace2->obj("zeroLepton_bin26_YieldSum")).Print();
 
 
+  (wspace2->obj("zeroLepton_bin26_DataYieldSum")).Print();
+  (wspace2->obj("zeroLepton_bin27_DataYieldSum")).Print();
   (wspace2->obj("zeroLepton_bin29_DataYieldSum")).Print();
   (wspace2->obj("zeroLepton_bin32_DataYieldSum")).Print();
   (wspace2->obj("zeroLepton_bin35_DataYieldSum")).Print();
   (wspace2->obj("zeroLepton_bin41_DataYieldSum")).Print();
   (wspace2->obj("zeroLepton_bin44_DataYieldSum")).Print();
   (wspace2->obj("zeroLepton_bin47_DataYieldSum")).Print();
-
+  */
   //////                                                                        
   /*                                                                  
   RooArgSet parofinterest(*wspace2->var("oneTightMu_bin47_Theta5_TopWJetsYield"));
@@ -117,7 +126,7 @@
 
 ////////
 
-  */
+
   
   RooAbsReal* nll = (wspace2->pdf("model")).createNLL(*wspace2->data("dataset"));
   //RooAbsReal* pll1 = nll->createProfile(*wspace2->var("signalCrossSection"));
@@ -164,7 +173,7 @@
   frame4->Draw();
   c4->SaveAs("PLL_data26_2lep.eps");
 
-  /*
+  */
 
 
   // crude plotting of all NBs/MET for a slice of HT
@@ -214,6 +223,15 @@
     TString twoLooseLepName("twoLooseLep_bin");
     twoLooseLepName+=bin;
     //twoLooseLepName+=nb;
+
+
+
+
+    TString name00(zeroLeptonName+"_TopWJetsPolarizationDataYield");
+    TString name01(zeroLeptonName+"_TopWJets1TauDataYield");
+    TString name02(zeroLeptonName+"_TopWJets2TauDataYield");
+    TString name03(zeroLeptonName+"_TopWJetsDilepDataYield");
+
 
     cout << " After names: " << zeroLeptonName << "  " << oneTightMuName << "  " << oneLooseLepName << "  " 
 	 << twoTightMuName << "  " << twoLooseLepName << endl;
@@ -500,7 +518,7 @@ cout << " MAKING PLOTS " << endl;
   st1a->Add(truebkg_0L);
   st1a->Add(truesig_0L);
   st1a->Draw("histsame");
-
+*/
   c1->SetLogy(1);
   c1->SaveAs("BINS_data_0Llog.eps");
 
@@ -525,11 +543,10 @@ cout << " MAKING PLOTS " << endl;
   st2a->Add(truebkg_1L);
   st2a->Add(truesig_1L);
   st2a->Draw("histsame");
-
+*/
   c2->SetLogy(1);
   c2->SaveAs("BINS_data_1Llog.eps");
 
-*/
   
 
 

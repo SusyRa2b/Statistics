@@ -1229,10 +1229,61 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 
 
 
-  RooFitResult *fitResult = model.fitTo(dataset );//, Minos(kTRUE), Save(true),"s");
+  RooFitResult *fitResult = model.fitTo(dataset, Save(true) );//, Minos(kTRUE), Save(true),"s");
   
-  (*wspace.var("signalCrossSection")).Print();
-  (*wspace.var("oneTightMu_bin47_Theta5_TopWJetsYield")).Print();
+  /*
+
+  cout << binnames.size() << endl;
+
+  for( int i=0; i<binnames.size(); i++ )
+    {
+
+      TString zeroLeptonName = "zeroLepton_";
+      TString thisBin = binnames.at(i);
+      zeroLeptonName.Append(thisBin);
+
+      TString name00(zeroLeptonName+"_TopWJetsPolarizationDataYield");
+      cout << thisBin << "  " << (wspace.function(name00.Data()))->getVal() << " " << wspace.function(name00.Data())->getPropagatedError(*fitResult) << endl;
+
+    }
+
+  cout << endl;
+  for( int i=0; i<binnames.size(); i++ )
+    {
+
+      TString zeroLeptonName = "zeroLepton_";
+      TString thisBin = binnames.at(i);
+      zeroLeptonName.Append(thisBin);
+
+      TString name00(zeroLeptonName+"_TopWJets1TauDataYield");
+      cout << thisBin << "  " << (wspace.function(name00.Data()))->getVal() << " " << wspace.function(name00.Data())->getPropagatedError(*fitResult) << endl;
+    }
+
+  cout << endl;
+  for( int i=0; i<binnames.size(); i++ )
+    {
+
+      TString zeroLeptonName = "zeroLepton_";
+      TString thisBin = binnames.at(i);
+      zeroLeptonName.Append(thisBin);
+
+      TString name00(zeroLeptonName+"_TopWJets2TauDataYield");
+
+      cout << thisBin << "  " << (wspace.function(name00.Data()))->getVal() << " " << wspace.function(name00.Data())->getPropagatedError(*fitResult) << endl;
+    }
+
+  cout << endl;
+  for( int i=0; i<binnames.size(); i++ )
+    {
+
+      TString zeroLeptonName = "zeroLepton_";
+      TString thisBin = binnames.at(i);
+      zeroLeptonName.Append(thisBin);
+
+      TString name00(zeroLeptonName+"_TopWJetsDilepDataYield");
+      cout << thisBin << "  " << (wspace.function(name00.Data()))->getVal() << " " << wspace.function(name00.Data())->getPropagatedError(*fitResult) << endl;
+    }
+
 
   /*
 
@@ -1323,32 +1374,96 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   
   ////////////////////////////////////
 
+
+
+  wspace.Print();
+
  
   cout << " XSEC AFTER FIT " << wspace.var("signalCrossSection")->getValV() << "  " 
      << wspace.var("signalCrossSection")->getError() << endl;
 
-
-  cout << wspace.function("zeroLepton_bin301_Theta1_TopWJetsYield")->getTitle() << "  " <<  wspace.function("zeroLepton_bin301_Theta1_TopWJetsYield")->getVal() << "  " <<  wspace.function("zeroLepton_bin301_Theta1_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace.function("zeroLepton_bin301_Theta2_TopWJetsYield")->getTitle() << "  " <<  wspace.function("zeroLepton_bin301_Theta2_TopWJetsYield")->getVal() << "  " <<  wspace.function("zeroLepton_bin301_Theta2_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace.function("zeroLepton_bin301_Theta3_TopWJetsYield")->getTitle() << "  " <<  wspace.function("zeroLepton_bin301_Theta3_TopWJetsYield")->getVal() << "  " <<  wspace.function("zeroLepton_bin301_Theta3_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace.function("zeroLepton_bin301_Theta4_TopWJetsYield")->getTitle() << "  " <<  wspace.function("zeroLepton_bin301_Theta4_TopWJetsYield")->getVal() << "  " <<  wspace.function("zeroLepton_bin301_Theta4_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace.function("zeroLepton_bin301_Theta5_TopWJetsYield")->getTitle() << "  " <<  wspace.function("zeroLepton_bin301_Theta5_TopWJetsYield")->getVal() << "  " <<  wspace.function("zeroLepton_bin301_Theta5_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace.function("zeroLepton_bin301_1Tau_TopWJetsYield")->getTitle() << "  " <<  wspace.function("zeroLepton_bin301_1Tau_TopWJetsYield")->getVal() << "  " <<  wspace.function("zeroLepton_bin301_1Tau_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace.function("zeroLepton_bin301_Dilep_TopWJetsYield")->getTitle() << "  " <<  wspace.function("zeroLepton_bin301_Dilep_TopWJetsYield")->getVal() << "  " <<  wspace.function("zeroLepton_bin301_Dilep_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace.function("zeroLepton_bin301_2Tau_TopWJetsYield")->getTitle() << "  " <<  wspace.function("zeroLepton_bin301_2Tau_TopWJetsYield")->getVal() << "  " <<  wspace.function("zeroLepton_bin301_2Tau_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
+     */
 
   cout << endl;
-  cout << wspace.function("zeroLepton_bin333_Theta1_TopWJetsYield")->getTitle() << "  " << wspace.function("zeroLepton_bin333_Theta1_TopWJetsYield")->getVal() << "  " << wspace.function("zeroLepton_bin333_Theta1_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace.function("zeroLepton_bin333_Theta2_TopWJetsYield")->getTitle() << "  " << wspace.function("zeroLepton_bin333_Theta2_TopWJetsYield")->getVal() << "  " << wspace.function("zeroLepton_bin333_Theta2_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace.function("zeroLepton_bin333_Theta3_TopWJetsYield")->getTitle() << "  " << wspace.function("zeroLepton_bin333_Theta3_TopWJetsYield")->getVal() << "  " << wspace.function("zeroLepton_bin333_Theta3_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace.function("zeroLepton_bin333_Theta4_TopWJetsYield")->getTitle() << "  " << wspace.function("zeroLepton_bin333_Theta4_TopWJetsYield")->getVal() << "  " << wspace.function("zeroLepton_bin333_Theta4_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace.function("zeroLepton_bin333_Theta5_TopWJetsYield")->getTitle() << "  " << wspace.function("zeroLepton_bin333_Theta5_TopWJetsYield")->getVal() << "  " << wspace.function("zeroLepton_bin333_Theta5_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace.function("zeroLepton_bin333_1Tau_TopWJetsYield")->getTitle() << "  " << wspace.function("zeroLepton_bin333_1Tau_TopWJetsYield")->getVal() << "  " << wspace.function("zeroLepton_bin333_1Tau_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace.function("zeroLepton_bin333_Dilep_TopWJetsYield")->getTitle() << "  " << wspace.function("zeroLepton_bin333_Dilep_TopWJetsYield")->getVal() << "  " << wspace.function("zeroLepton_bin333_Dilep_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
-  cout << wspace.function("zeroLepton_bin333_2Tau_TopWJetsYield")->getTitle() << "  " << wspace.function("zeroLepton_bin333_2Tau_TopWJetsYield")->getVal() << "  " << wspace.function("zeroLepton_bin333_2Tau_TopWJetsYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin26_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin26_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin27_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin27_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin38_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin38_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin39_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin39_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin29_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin29_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin30_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin30_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin41_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin41_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin42_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin42_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin32_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin32_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin33_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin33_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin44_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin44_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin45_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin45_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin35_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin35_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin36_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin36_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin47_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin47_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin48_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin48_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
+  
+
+  cout << endl;
+  cout << wspace.function("zeroLepton_bin26_TopWJets1TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin26_TopWJets1TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin27_TopWJets1TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin27_TopWJets1TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin38_TopWJets1TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin38_TopWJets1TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin39_TopWJets1TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin39_TopWJets1TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin29_TopWJets1TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin29_TopWJets1TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin30_TopWJets1TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin30_TopWJets1TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin41_TopWJets1TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin41_TopWJets1TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin42_TopWJets1TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin42_TopWJets1TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin32_TopWJets1TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin32_TopWJets1TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin33_TopWJets1TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin33_TopWJets1TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin44_TopWJets1TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin44_TopWJets1TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin45_TopWJets1TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin45_TopWJets1TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin35_TopWJets1TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin35_TopWJets1TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin36_TopWJets1TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin36_TopWJets1TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin47_TopWJets1TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin47_TopWJets1TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin48_TopWJets1TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin48_TopWJets1TauDataYield")->getPropagatedError(*fitResult) << endl;
+  
+
+  cout << endl;
+  cout << wspace.function("zeroLepton_bin26_TopWJets2TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin26_TopWJets2TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin27_TopWJets2TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin27_TopWJets2TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin38_TopWJets2TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin38_TopWJets2TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin39_TopWJets2TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin39_TopWJets2TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin29_TopWJets2TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin29_TopWJets2TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin30_TopWJets2TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin30_TopWJets2TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin41_TopWJets2TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin41_TopWJets2TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin42_TopWJets2TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin42_TopWJets2TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin32_TopWJets2TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin32_TopWJets2TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin33_TopWJets2TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin33_TopWJets2TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin44_TopWJets2TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin44_TopWJets2TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin45_TopWJets2TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin45_TopWJets2TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin35_TopWJets2TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin35_TopWJets2TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin36_TopWJets2TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin36_TopWJets2TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin47_TopWJets2TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin47_TopWJets2TauDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin48_TopWJets2TauDataYield")->getVal() << " " << wspace.function("zeroLepton_bin48_TopWJets2TauDataYield")->getPropagatedError(*fitResult) << endl;
+  
+
+  cout << endl;
+  cout << wspace.function("zeroLepton_bin26_TopWJetsDilepDataYield")->getVal() << " " << wspace.function("zeroLepton_bin26_TopWJetsDilepDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin27_TopWJetsDilepDataYield")->getVal() << " " << wspace.function("zeroLepton_bin27_TopWJetsDilepDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin38_TopWJetsDilepDataYield")->getVal() << " " << wspace.function("zeroLepton_bin38_TopWJetsDilepDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin39_TopWJetsDilepDataYield")->getVal() << " " << wspace.function("zeroLepton_bin39_TopWJetsDilepDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin29_TopWJetsDilepDataYield")->getVal() << " " << wspace.function("zeroLepton_bin29_TopWJetsDilepDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin30_TopWJetsDilepDataYield")->getVal() << " " << wspace.function("zeroLepton_bin30_TopWJetsDilepDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin41_TopWJetsDilepDataYield")->getVal() << " " << wspace.function("zeroLepton_bin41_TopWJetsDilepDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin42_TopWJetsDilepDataYield")->getVal() << " " << wspace.function("zeroLepton_bin42_TopWJetsDilepDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin32_TopWJetsDilepDataYield")->getVal() << " " << wspace.function("zeroLepton_bin32_TopWJetsDilepDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin33_TopWJetsDilepDataYield")->getVal() << " " << wspace.function("zeroLepton_bin33_TopWJetsDilepDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin44_TopWJetsDilepDataYield")->getVal() << " " << wspace.function("zeroLepton_bin44_TopWJetsDilepDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin45_TopWJetsDilepDataYield")->getVal() << " " << wspace.function("zeroLepton_bin45_TopWJetsDilepDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin35_TopWJetsDilepDataYield")->getVal() << " " << wspace.function("zeroLepton_bin35_TopWJetsDilepDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin36_TopWJetsDilepDataYield")->getVal() << " " << wspace.function("zeroLepton_bin36_TopWJetsDilepDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin47_TopWJetsDilepDataYield")->getVal() << " " << wspace.function("zeroLepton_bin47_TopWJetsDilepDataYield")->getPropagatedError(*fitResult) << endl;
+  cout << wspace.function("zeroLepton_bin48_TopWJetsDilepDataYield")->getVal() << " " << wspace.function("zeroLepton_bin48_TopWJetsDilepDataYield")->getPropagatedError(*fitResult) << endl;
+  
+
 
   cout << endl << endl;
 
+  /*
 
   cout << wspace.function("zeroLepton_bin301_SignalYield")->getTitle() << "  " << wspace.function("zeroLepton_bin301_SignalYield")->getVal() << "  " << wspace.function("zeroLepton_bin301_SignalYield")->getPropagatedError(*fitResult) << endl;
   cout << wspace.function("oneLooseLep_bin301_Theta1_SignalYield")->getTitle() << "  " << wspace.function("oneLooseLep_bin301_Theta1_SignalYield")->getVal() << "  " << wspace.function("oneLooseLep_bin301_Theta1_SignalYield")->getPropagatedError(*fitResult) << endl;
