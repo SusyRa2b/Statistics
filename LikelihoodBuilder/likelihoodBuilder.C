@@ -173,6 +173,7 @@ struct allBins
 
 bool skipBin(TString binName) 
 {
+
   return false; //no skipping right now
 
   if(binName=="bin37" || binName=="bin38" || binName=="bin39") return true;//FIXME  --  hardcoded!
@@ -204,28 +205,35 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
   RooAbsArg* zeroLeptonTriggerEfficiency = ws.arg("zeroLeptonTriggerEfficiency_"+abcd.zeroLeptonTriggerEfficiencyName);
   RooAbsArg* oneLeptonTriggerEfficiency = ws.arg("oneLeptonTriggerEfficiency_"+abcd.oneLeptonTriggerEfficiencyName);
   assert(zeroLeptonTriggerEfficiency!=NULL); assert(oneLeptonTriggerEfficiency!=NULL);
-    
+  
+  
+  //zero lepton name and count
+  TString zeroLeptonName("zeroLepton_");
+  zeroLeptonName+=binName;
+
+  RooRealVar zeroLeptonCount(zeroLeptonName+"_Count",zeroLeptonName+"_Count",observed.zeroLepton);
+  zeroLeptonCount.setConstant();
+  
+  ws.import(zeroLeptonCount);
+  ws.extendSet(names.observables,zeroLeptonCount.GetName());
+
+  
+
   //////////////////////////
   // QCD
   //////////////////////////
   
-  //Define unique names
-  TString zeroLeptonName("zeroLepton_");
-  zeroLeptonName+=binName;
+  //LDP name and count
   TString zeroLeptonLowDeltaPhiNName("zeroLeptonLowDeltaPhiN_");
   zeroLeptonLowDeltaPhiNName+=binName;
   
-  //Define unique counts and add them to the workspace
-  RooRealVar zeroLeptonCount(zeroLeptonName+"_Count",zeroLeptonName+"_Count",observed.zeroLepton);
   RooRealVar zeroLeptonLowDeltaPhiNCount(zeroLeptonLowDeltaPhiNName+"_Count",zeroLeptonLowDeltaPhiNName+"_Count",observed.zeroLeptonLowDeltaPhiN);
-  zeroLeptonCount.setConstant();
   zeroLeptonLowDeltaPhiNCount.setConstant();
   
-  ws.import(zeroLeptonCount);
   ws.import(zeroLeptonLowDeltaPhiNCount);
-  ws.extendSet(names.observables,zeroLeptonCount.GetName());
   ws.extendSet(names.observables,zeroLeptonLowDeltaPhiNCount.GetName());
   
+
   //zeroLepton over lowDeltaPhiN ratio
   TString lowDeltaPhiNScalingName = "lowDeltaPhiNScaling_";   //for now, make this in option here. consider moving option to input file "scalingName"
   if(options.qcdMethod == "singleScaleWithCorrections") lowDeltaPhiNScalingName +=  "all";
@@ -326,6 +334,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
   RooProduct zeroLeptonQCDYield(zeroLeptonName+"_QCDYield",zeroLeptonName+"_QCDYield",RooArgSet(*lowDeltaPhiNScaling,*zeroLeptonQCDClosure,*lowDeltaPhiNMETScaleFactor,*lowDeltaPhiNBTagScaleFactor,zeroLeptonLowDeltaPhiNQCDYield));
   
   
+
   //////////////////////////////
   // Top and W+jets 
   //////////////////////////////
@@ -456,7 +465,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
   
   RooProduct zeroLeptonZtoNuNuYield(zeroLeptonName+"_ZtoNuNuYield",zeroLeptonName+"_ZtoNuNuYield",RooArgSet(*zeroLeptonZtoNuNubTagScaling,*ZtoNuNu));
   
-
+  
   //////////////////////
   //  Diboson
   //////////////////////
@@ -515,6 +524,14 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
   RooProduct zeroLeptonLowDeltaPhiNNonQCDDataYield(zeroLeptonLowDeltaPhiNName+"_NonQCDDataYield", zeroLeptonLowDeltaPhiNName+"_NonQCDDataYield", RooArgSet(zeroLeptonLowDeltaPhiNNonQCDYield, *oneLeptonTriggerEfficiency));
   RooProduct zeroLeptonLowDeltaPhiNSignalDataYield(zeroLeptonLowDeltaPhiNName+"_SignalDataYield", zeroLeptonLowDeltaPhiNName+"_SignalDataYield", RooArgSet(*zeroLeptonLowDeltaPhiNSignalYield, *oneLeptonTriggerEfficiency));
 
+  //Some additional parameters that are used to make plots later.  Consider rewriting  LDP components to use these.
+  RooProduct zeroLeptonLowDeltaPhiNTopWJetsDataYield(zeroLeptonLowDeltaPhiNName+"_TopWJetsDataYield", zeroLeptonLowDeltaPhiNName+"_TopWJetsDataYield", RooArgSet(zeroLeptonLowDeltaPhiNTopWJetsYield, *MCUncertainty, *oneLeptonTriggerEfficiency));
+  RooProduct zeroLeptonLowDeltaPhiNZtoNuNuDataYield(zeroLeptonLowDeltaPhiNName+"_ZtoNuNuDataYield", zeroLeptonLowDeltaPhiNName+"_ZtoNuNuDataYield", RooArgSet(zeroLeptonLowDeltaPhiNZtoNuNuYield, *MCUncertainty, *oneLeptonTriggerEfficiency));
+  RooProduct zeroLeptonLowDeltaPhiNDibosonDataYield(zeroLeptonLowDeltaPhiNName+"_DibosonDataYield", zeroLeptonLowDeltaPhiNName+"_DibosonDataYield", RooArgSet(zeroLeptonLowDeltaPhiNDibosonYield, *MCUncertainty, *oneLeptonTriggerEfficiency));
+  ws.import(zeroLeptonLowDeltaPhiNTopWJetsDataYield, RecycleConflictNodes());
+  ws.import(zeroLeptonLowDeltaPhiNZtoNuNuDataYield, RecycleConflictNodes());
+  ws.import(zeroLeptonLowDeltaPhiNDibosonDataYield, RecycleConflictNodes());
+
   //sum data yields
   RooAddition zeroLeptonYield(zeroLeptonName+"_Yield", zeroLeptonName+"_Yield", RooArgSet(zeroLeptonTopWJetsDataYield, zeroLeptonQCDDataYield, zeroLeptonZtoNuNuDataYield, zeroLeptonDibosonDataYield, zeroLeptonSignalDataYield));
   RooAddition zeroLeptonLowDeltaPhiNYield(zeroLeptonLowDeltaPhiNName+"_Yield", zeroLeptonLowDeltaPhiNName+"_Yield", RooArgSet(zeroLeptonLowDeltaPhiNQCDDataYield, zeroLeptonLowDeltaPhiNNonQCDDataYield, zeroLeptonLowDeltaPhiNSignalDataYield));
@@ -548,7 +565,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
       
       ws.import(oneLeptonConstraint, RecycleConflictNodes());
   }  
-    
+  
   return true;
 }
 
@@ -815,7 +832,7 @@ void setupSignalModelOAK( vector<TString> binNames, TString signalModelFilesPath
   //fractions and statistical error
 
   TString signalModelFileName = signalModelFilesPath;
-  signalModelFileName += "/sigcounts.txt";
+  signalModelFileName += "/subset_sigcounts.txt";
   
   ifstream signalFile;
   
@@ -868,7 +885,7 @@ void setupSignalModelOAK( vector<TString> binNames, TString signalModelFilesPath
   cout << endl;
   cout << "bTag Efficiency" << endl; 
   TString bTagEfficiencyFileName = signalModelFilesPath;
-  bTagEfficiencyFileName += "/btagEff.txt";
+  bTagEfficiencyFileName += "/subset_btagEff.txt";
   
   ifstream bTagEfficiencyFile;
 
@@ -900,7 +917,7 @@ void setupSignalModelOAK( vector<TString> binNames, TString signalModelFilesPath
   cout << endl;
   cout << "JES" << endl;
   TString jesFileName = signalModelFilesPath;
-  jesFileName += "/JES.txt";
+  jesFileName += "/subset_JES.txt";
 
   ifstream jesFile;
 
@@ -1412,6 +1429,7 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
 
   //Do MET-reweighting method
   if(options.TopWJetsMethod == "metReweighting") buildMRLikelihood(ws, "", "testDataMRSetupFile.txt", false);
+  //if(options.TopWJetsMethod == "metReweighting") buildMRLikelihood(ws, "", "testDataSimpleMRSetupFile.txt", false);
 
   //Do nominal method, QCD, and ZtoNuNu
   for(vector<TString>::iterator thisBin = binNames.begin(); thisBin != binNames.end() ; thisBin++)
