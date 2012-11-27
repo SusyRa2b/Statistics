@@ -118,7 +118,7 @@ void profileLikelihoodLimit(const char * fileName = "test.root",
 
     TCanvas* c = new TCanvas("c");;    
     LikelihoodIntervalPlot plot(interval);
-    plot.SetNPoints(100);  // do not use too many points, it could become very slow for some models
+    plot.SetNPoints(20);  // do not use too many points, it could become very slow for some models
     plot.SetMaximum(5);
     plot.SetRange(0.8*asymptoticLowerLimit,1.2*asymptoticUpperLimit);
     plot.Draw("");  // use option TF1 if too slow (plot.Draw("tf1")
