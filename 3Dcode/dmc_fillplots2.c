@@ -887,6 +887,16 @@
        bookSet( "h_nb_zl_all", htitle, 6, -0.5, 5.5 ) ;
 
 
+       sprintf( htitle, "nbjets, SL, %s", dataset_string ) ;
+       bookSet( "h_nbgt0_sl_all", htitle, 6, -0.5, 5.5 ) ;
+
+       sprintf( htitle, "nbjets, LDP, %s", dataset_string ) ;
+       bookSet( "h_nbgt0_ldp_all", htitle, 6, -0.5, 5.5 ) ;
+
+       sprintf( htitle, "nbjets, ZL, %s", dataset_string ) ;
+       bookSet( "h_nbgt0_zl_all", htitle, 6, -0.5, 5.5 ) ;
+
+
 
 
      //--- N jets
@@ -1198,6 +1208,16 @@
 
        sprintf( cuts, "%s", basecuts_0lep_nonb ) ;
        fillSet( "h_nb_zl_all", "nB", cuts ) ;
+
+
+       sprintf( cuts, "%s&&nB>0", basecuts_1lep_nonb ) ;
+       fillSet( "h_nbgt0_sl_all", "nB", cuts ) ;
+
+       sprintf( cuts, "%s&&nB>0", basecuts_ldp_nonb ) ;
+       fillSet( "h_nbgt0_ldp_all", "nB", cuts ) ;
+
+       sprintf( cuts, "%s&&nB>0", basecuts_0lep_nonb ) ;
+       fillSet( "h_nbgt0_zl_all", "nB", cuts ) ;
 
 
        sprintf( cuts, "%s", basecuts_1lep ) ;

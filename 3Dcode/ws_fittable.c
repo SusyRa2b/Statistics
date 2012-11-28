@@ -175,29 +175,32 @@
      printf("\n\n\n\n") ; cout << flush ;
 
 
-     int ncomp(3) ;
-     char comp    [3][100] = {       "ttwj",     "qcd",        "znn" } ;
-     char trigtype[3][100] = { "trigeff_sl", "trigeff", "trigeff_sl" } ;
+     int ncomp(4) ;
+     char comp    [4][100] = {       "ttwj",     "qcd",        "znn",          "vv" } ;
+     char trigtype[4][100] = { "trigeff_sl", "trigeff", "trigeff_sl",  "trigeff_sl" } ;
 
      int nsel(3) ;
      char ws_selname    [3][100] = {     "",  "_sl", "_ldp" } ;
      char output_selname[3][100] = {   "zl",   "sl",  "ldp" } ;
      char obs_selname   [3][100] = { "0lep", "1lep",  "ldp" } ;
 
-     double mu_raw  [4][4][3][3][3] ; // [mbi][hbi][bbi][si][ci] : met, ht, nb, sel, comp
-     double mu_wtrig[4][4][3][3][3] ; // [mbi][hbi][bbi][si][ci] : met, ht, nb, sel, comp
+     double mu_raw  [4][4][3][3][4] ; // [mbi][hbi][bbi][si][ci] : met, ht, nb, sel, comp
+     double mu_wtrig[4][4][3][3][4] ; // [mbi][hbi][bbi][si][ci] : met, ht, nb, sel, comp
      int    N_obs   [4][4][3][3]    ; // [mbi][hbi][bbi][si]     : met, ht, nb, sel
 
-     bool comp_included[3][3] ; // [si][ci] : sel, comp
+     bool comp_included[3][4] ; // [si][ci] : sel, comp
      comp_included[0][0] = true ; // zl, ttwj
      comp_included[0][1] = true ; // zl, qcd
      comp_included[0][2] = true ; // zl, znn
+     comp_included[0][3] = true ; // zl, vv
      comp_included[1][0] = true  ; // sl, ttwj
      comp_included[1][1] = false ; // sl, qcd
      comp_included[1][2] = false ; // sl, znn
+     comp_included[1][3] = false ; // sl, vv
      comp_included[2][0] = true ; // ldp, ttwj
      comp_included[2][1] = true ; // ldp, qcd
      comp_included[2][2] = true ; // ldp, znn
+     comp_included[2][3] = false ; // ldp, vv
 
      for ( int si=0; si<nsel; si++ ) {
         for ( int ci=0; ci<ncomp; ci++ ) {
