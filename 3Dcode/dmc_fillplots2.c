@@ -268,6 +268,12 @@
        char basecuts_0lep_nonb_nomaxchmultdiff[10000] ;
        sprintf( basecuts_0lep_nonb_nomaxchmultdiff, "nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
+       char basecuts_0lep_nonjet[10000] ;
+       sprintf( basecuts_0lep, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nB>0&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+
+       char basecuts_0lep_nonjet_nonb[10000] ;
+       sprintf( basecuts_0lep, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+
 
 
        dcan = (TCanvas*) gDirectory->FindObject("dcan") ;
@@ -922,6 +928,17 @@
        bookSet( "h_njets_ldp_nb2", htitle, 11, -0.5, 10.5 ) ;
        sprintf( htitle, "N jets, LDP, nB=3, %s", dataset_string ) ;
        bookSet( "h_njets_ldp_nb3", htitle, 11, -0.5, 10.5 ) ;
+
+       sprintf( htitle, "N jets, ZL, %s", dataset_string ) ;
+       bookSet( "h_njets_zl_all", htitle, 11, -0.5, 10.5 ) ;
+       sprintf( htitle, "N jets, ZL, nB=0, %s", dataset_string ) ;
+       bookSet( "h_njets_zl_nb0", htitle, 11, -0.5, 10.5 ) ;
+       sprintf( htitle, "N jets, ZL, nB=1, %s", dataset_string ) ;
+       bookSet( "h_njets_zl_nb1", htitle, 11, -0.5, 10.5 ) ;
+       sprintf( htitle, "N jets, ZL, nB=2, %s", dataset_string ) ;
+       bookSet( "h_njets_zl_nb2", htitle, 11, -0.5, 10.5 ) ;
+       sprintf( htitle, "N jets, ZL, nB=3, %s", dataset_string ) ;
+       bookSet( "h_njets_zl_nb3", htitle, 11, -0.5, 10.5 ) ;
 
 
       //--- MT
@@ -1649,6 +1666,17 @@
        fillSet( "h_njets_ldp_nb2", "nJets", cuts ) ;
        sprintf( cuts, "%s&&nB==3", basecuts_ldp_nonjet ) ;
        fillSet( "h_njets_ldp_nb3", "nJets", cuts ) ;
+
+       sprintf( cuts, "%s", basecuts_0lep_nonjet ) ;
+       fillSet( "h_njets_zl_all", "nJets", cuts ) ;
+       sprintf( cuts, "%s&&nB==0", basecuts_0lep_nonjet_nonb ) ;
+       fillSet( "h_njets_zl_nb0", "nJets", cuts ) ;
+       sprintf( cuts, "%s&&nB==1", basecuts_0lep_nonjet ) ;
+       fillSet( "h_njets_zl_nb1", "nJets", cuts ) ;
+       sprintf( cuts, "%s&&nB==2", basecuts_0lep_nonjet ) ;
+       fillSet( "h_njets_zl_nb2", "nJets", cuts ) ;
+       sprintf( cuts, "%s&&nB==3", basecuts_0lep_nonjet ) ;
+       fillSet( "h_njets_zl_nb3", "nJets", cuts ) ;
 
 
      //-- MT
