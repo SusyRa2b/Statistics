@@ -292,6 +292,8 @@
       float sf_qcd_err[nBinsMET][nBinsHT][nBinsBtag] ;
       float sf_ttwj[nBinsMET][nBinsHT][nBinsBtag] ;
       float sf_ttwj_err[nBinsMET][nBinsHT][nBinsBtag] ;
+      float sf_ttwj_slSig[nBinsMET][nBinsHT][nBinsBtag] ;
+      float sf_ttwj_slSig_err[nBinsMET][nBinsHT][nBinsBtag] ;
       float sf_ee ;
       float sf_ee_err ;       
       float sf_mm ;
@@ -681,6 +683,27 @@
 	}
       }      
 
+
+      // sf TTWJ slSig
+
+      for (int i = 0 ; i < nBinsMET ; i++) {
+	for (int j = 0 ; j < nBinsHT ; j++) {
+	  for (int k = 0 ; k < nBinsBtag ; k++) {
+
+	    TString inPar = "sf_ttwj_slSig"+sMbins[i]+sHbins[j]+sBbins[k] ;
+	    fscanf( infp, "%s %g", label, &sf_ttwj_slSig[i][j][k] ) ;
+	
+	    if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
+	    cout << inPar << " = " << sf_ttwj_slSig[i][j][k] << endl ;	  
+	    
+	    inPar += "_err" ;
+	    fscanf( infp, "%s %g", label, &sf_ttwj_slSig_err[i][j][k] ) ;
+	    cout << inPar << " = " << sf_ttwj_slSig_err[i][j][k] << endl ;	  
+
+	  }
+	}
+      }      
+
       
       // sf Z -> ll
 
@@ -950,7 +973,7 @@
             initialval_ttwj[i][j][k] = sf_ttwj[i][j][k] * initialguess_ttwj_0lep1lep_ratio* initialval_ttwj_sl[i][j][k] ;
             initialval_ttwj_ldp[i][j][k] = ttwj_ldp0lep_ratio[i][j][k] * initialval_ttwj[i][j][k] ;
 
-	    initialval_ttwj_slSig[i][j][k] = initialval_ttwj_sl[i][j][k] * ratio_slSigsl ;
+	    initialval_ttwj_slSig[i][j][k] = sf_ttwj_slSig[i][j][k] * initialval_ttwj_sl[i][j][k] * ratio_slSigsl ;
 
 
             // Z -> invis stuff :
@@ -1813,6 +1836,8 @@
 
       RooAbsReal* rar_sf_qcd [nBinsMET][nBinsHT][nBinsBtag];
       RooAbsReal* rar_sf_ttwj[nBinsMET][nBinsHT][nBinsBtag];
+      RooAbsReal* rar_sf_ttwj_slSig[nBinsMET][nBinsHT][nBinsBtag];
+
 
       for (int i = 0 ; i < nBinsMET ; i++) {
         for (int j = 0 ; j < nBinsHT ; j++) {
@@ -1843,6 +1868,12 @@
         //// } else {
         ////    rar_sf_ttwj[i][j][k] = makeGaussianConstraint( NP_name, sf_ttwj[i][j][k], 0. ) ;
         //// }
+
+
+             //--- ttwj slSig
+
+             sprintf( NP_name, "sf_ttwj_slSig_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+	     rar_sf_ttwj_slSig[i][j][k] = makeGaussianConstraint( NP_name, sf_ttwj_slSig[i][j][k], sf_ttwj_slSig_err[i][j][k] ) ;
 
 
              printf("--------\n") ;
@@ -2124,9 +2155,9 @@
 	    TString ttwjSlSigString   = "mu_ttwj_slSig";
 	    ttwjSlSigString   += sMbins[i]+sHbins[j]+sBbins[k] ;
 
-            TString ttwjSlSigrfvString = " @0 * @1" ;
+            TString ttwjSlSigrfvString = " @0 * @1 * @2" ;
             rfv_mu_ttwj_slSig[i][j][k] = new RooFormulaVar( ttwjSlSigString, ttwjSlSigrfvString,
-							    RooArgSet( *rv_mu_ttwj_sl[i][j][k], *rv_ttwj_slSigsl_ratio ) ) ;
+							    RooArgSet( *rv_mu_ttwj_sl[i][j][k], *rv_ttwj_slSigsl_ratio, *rar_sf_ttwj_slSig[i][j][k] ) ) ;
 
             rv_mu_ttwj_slSig[i][j][k] = rfv_mu_ttwj_slSig[i][j][k] ;
 

@@ -575,8 +575,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
        for (int j = 0 ; j < nBinsHT ; j++) {											     
      	 for (int k = 0 ; k < nBinsBjets ; k++) {										     
      	   int histbin = 1 + (nBinsHT+1)*i + j + 1 ;										     
-     	   float qcdcount = hmctruth_qcd[2][k] -> GetBinContent( histbin );
-     	   float smcount = hmctruth_allsm[2][k] -> GetBinContent( histbin );							     
+     	   float qcdcount = hmctruth_qcd[3][k] -> GetBinContent( histbin );
+     	   float smcount = hmctruth_allsm[3][k] -> GetBinContent( histbin );							     
      	   cout << "For bin M" << i+1 << "H" << j+1 << "b" << k+1 << " LDP non-qcd fraction = " << (1-(qcdcount/smcount)) << endl;   
      	   totalqcd += qcdcount;												     
      	   totalsm += smcount;
@@ -668,7 +668,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 
                char cutsldp[10000] ;
-               sprintf( cutsldp, "%s(%s)&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&pfOcaloMET<2", selcuts[2], bcut[bbi], nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
+               sprintf( cutsldp, "%s(%s)&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&pfOcaloMET<2", selcuts[3], bcut[bbi], nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
                printf("     %db, ldp  cuts : %s\n", bbi+1, cutsldp  ) ;
                sprintf( arg1, "HT:MET>>h_ldp_%db_%s", bbi+1, qcdsamplename[si] ) ;
                qcdch[si] -> Draw( arg1, cutsldp, "colz" ) ;
@@ -1040,13 +1040,32 @@ inFile << "knn_3b_err       \t" << 0.007<< endl;
       for (int j = 0 ; j < nBinsHT ; j++) {
         for (int k = 0 ; k < nBinsBjets ; k++) {
   
-  	TString sf_ttwj = "sf_ttwj" ;
-  	sf_ttwj = sf_ttwj+sMbins[i]+sHbins[j]+sBbins[k] ;
-  	
-  	inFile << sf_ttwj << "  \t" << dummyOne << endl;	
+	  TString sf_ttwj = "sf_ttwj" ;
+	  sf_ttwj = sf_ttwj+sMbins[i]+sHbins[j]+sBbins[k] ;
+	  
+	  inFile << sf_ttwj << "  \t" << dummyOne << endl;	
+	  
+	  sf_ttwj = sf_ttwj+"_err" ;
+	  inFile << sf_ttwj << "  \t" << dummyErr << endl;	
+	  
+        }
+      }
+    }
   
-  	sf_ttwj = sf_ttwj+"_err" ;
-  	inFile << sf_ttwj << "  \t" << dummyErr << endl;	
+
+    // sf_ttwj_slSig
+  
+    for (int i = 0 ; i < nBinsMET ; i++) {
+      for (int j = 0 ; j < nBinsHT ; j++) {
+        for (int k = 0 ; k < nBinsBjets ; k++) {
+  
+	  TString sf_ttwj_slSig = "sf_ttwj_slSig" ;
+	  sf_ttwj_slSig = sf_ttwj_slSig+sMbins[i]+sHbins[j]+sBbins[k] ;
+	  
+	  inFile << sf_ttwj_slSig << "  \t" << dummyOne << endl;	
+	  
+	  sf_ttwj_slSig = sf_ttwj_slSig+"_err" ;
+	  inFile << sf_ttwj_slSig << "  \t" << dummyErr << endl;	
   
         }
       }
@@ -1079,8 +1098,8 @@ inFile << "knn_3b_err       \t" << 0.007<< endl;
         int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
         for (int bbi = 0 ; bbi < nBinsBjets ; bbi++) {
 
-            float ldpval = hmctruth_ttwj[2][bbi] -> GetBinContent( hbin ) ;
-            float ldperr = hmctruth_ttwj[2][bbi] -> GetBinError(   hbin ) ;
+            float ldpval = hmctruth_ttwj[3][bbi] -> GetBinContent( hbin ) ;
+            float ldperr = hmctruth_ttwj[3][bbi] -> GetBinError(   hbin ) ;
             float zlval  = hmctruth_ttwj[0][bbi] -> GetBinContent( hbin ) ;
             float zlerr  = hmctruth_ttwj[0][bbi] -> GetBinError(   hbin ) ;
 
@@ -1113,8 +1132,8 @@ inFile << "knn_3b_err       \t" << 0.007<< endl;
       for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
         int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
 
-        float ldpval = hmctruth_znn[2][0] -> GetBinContent( hbin ) ;
-        float ldperr = hmctruth_znn[2][0] -> GetBinError(   hbin ) ;
+        float ldpval = hmctruth_znn[3][0] -> GetBinContent( hbin ) ;
+        float ldperr = hmctruth_znn[3][0] -> GetBinError(   hbin ) ;
         float zlval  = hmctruth_znn[0][0] -> GetBinContent( hbin ) ;
         float zlerr  = hmctruth_znn[0][0] -> GetBinError(   hbin ) ;
 
