@@ -228,6 +228,11 @@
        sprintf( histnamelist[hind], "h_njets_ldp_nb2" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; sprintf( selection[hind], "ldp" ) ; sprintf( normkey[hind], "wt_2b" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_njets_ldp_nb3" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; sprintf( selection[hind], "ldp" ) ; sprintf( normkey[hind], "wt_3b" ) ; hind++ ;
 
+       sprintf( histnamelist[hind], "h_njets_zl_all" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; sprintf( selection[hind], "zl" ) ; sprintf( normkey[hind], "wt"    ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_njets_zl_nb1" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; sprintf( selection[hind], "zl" ) ; sprintf( normkey[hind], "wt_1b" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_njets_zl_nb2" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; sprintf( selection[hind], "zl" ) ; sprintf( normkey[hind], "wt_2b" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_njets_zl_nb3" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; sprintf( selection[hind], "zl" ) ; sprintf( normkey[hind], "wt_3b" ) ; hind++ ;
+
 
 
 

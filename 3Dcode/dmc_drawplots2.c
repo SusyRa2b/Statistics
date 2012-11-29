@@ -402,6 +402,12 @@
        sprintf( histnamelist[hind], "h_njets_ldp_nb2" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_njets_ldp_nb3" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
 
+       sprintf( histnamelist[hind], "h_njets_zl_all" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_njets_zl_nb0" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_njets_zl_nb1" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_njets_zl_nb2" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_njets_zl_nb3" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; hind++ ;
+
 
 
 
