@@ -269,10 +269,10 @@
        sprintf( basecuts_0lep_nonb_nomaxchmultdiff, "nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_0lep_nonjet[10000] ;
-       sprintf( basecuts_0lep, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nB>0&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_0lep_nonjet, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nB>0&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
        char basecuts_0lep_nonjet_nonb[10000] ;
-       sprintf( basecuts_0lep, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_0lep_nonjet_nonb, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
 
 
 
