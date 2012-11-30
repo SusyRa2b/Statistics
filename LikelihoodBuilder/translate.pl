@@ -2,6 +2,8 @@
 use strict;
 use warnings;
 
+my $nuisanceOptions = "noWidths";
+
 my $dir="";
 if($ARGV[0] =~ /(\S*)(.dat)/) {
   $dir = $1;
@@ -182,6 +184,7 @@ while(<$fin>) {
 	foreach(@binFileNames) {
 	  my $binFileName = $_;
 	  if($binFileName =~ /$dim/) {
+	    if($nuisanceOptions eq "noWidths") { $value=0; }
 	    print {$binFileHandles[$binFileHash{$binFileName}]} "zeroLeptonTriggerEfficiencyError $value\n";
 	  }
 	}
@@ -203,6 +206,7 @@ while(<$fin>) {
 	foreach(@binFileNames) {
 	  my $binFileName = $_;
 	  if($binFileName =~ /$dim/) {
+	    if($nuisanceOptions eq "noWidths") { $value=0; }
 	    print {$binFileHandles[$binFileHash{$binFileName}]} "oneLeptonTriggerEfficiencyError $value\n";
 	  }
 	}
@@ -250,6 +254,7 @@ while(<$fin>) {
 	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoeeAcceptance $value\n";
 	    }
 	    else{
+	      if($nuisanceOptions eq "noWidths") { $value=0; }
 	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoeeAcceptanceError $value\n";
 	    }
 	  }
@@ -267,6 +272,7 @@ while(<$fin>) {
 	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtomumuAcceptance $value\n";
 	    }
 	    else{
+	      if($nuisanceOptions eq "noWidths") { $value=0; }
 	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtomumuAcceptanceError $value\n";
 	    }
 	  }
@@ -286,6 +292,7 @@ while(<$fin>) {
        	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoNuNubTagScaling $value\n";
        	    }
        	    else{
+	      if($nuisanceOptions eq "noWidths") { $value=0; }
        	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoNuNubTagScalingError $value\n";
        	    }
        	  }
@@ -303,6 +310,7 @@ while(<$fin>) {
        	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoNuNubTagScaling $value\n";
        	    }
        	    else{
+	      if($nuisanceOptions eq "noWidths") { $value=0; }
        	      print {$binFileHandles[$binFileHash{$binFileName}]} "ZtoNuNubTagScalingError $value\n";
        	    }
        	  }
@@ -317,6 +325,7 @@ while(<$fin>) {
 	  print {$binFileHandles[$binFileHash{$binFileName}]} "qcdClosure $value\n";
 	}
 	else {
+	  if($nuisanceOptions eq "noWidths") { $value=0; }
 	  print {$binFileHandles[$binFileHash{$binFileName}]} "qcdClosureError $value\n";
 	}
       }
@@ -328,12 +337,14 @@ while(<$fin>) {
 	  print {$binFileHandles[$binFileHash{$binFileName}]} "topWJetsClosure $value\n";
 	}
 	else {
+	  if($nuisanceOptions eq "noWidths") { $value=0; }
 	  print {$binFileHandles[$binFileHash{$binFileName}]} "topWJetsClosureError $value\n";
 	}
       }
             
 
       elsif($fullOKAname =~ /(Z_ee_eff_err)/) {
+	if($nuisanceOptions eq "noWidths") { $value=0; }
 	print $globalout "ZtoeeEfficiencyError $value\n";
       }
       elsif($fullOKAname =~ /(Z_ee_eff)/) {#order important
@@ -341,6 +352,7 @@ while(<$fin>) {
       }
       
       elsif($fullOKAname =~ /(Z_mm_eff_err)/) {
+	if($nuisanceOptions eq "noWidths") { $value=0; }
 	print $globalout "ZtomumuEfficiencyError $value\n";
       }
       elsif($fullOKAname =~ /(Z_mm_eff)/) {#order important
@@ -348,6 +360,7 @@ while(<$fin>) {
       }
       
       elsif($fullOKAname =~ /(Z_ee_pur_err)/) {
+	if($nuisanceOptions eq "noWidths") { $value=0; }
 	print $globalout "ZtoeePurityError $value\n";
       }
       elsif($fullOKAname =~ /(Z_ee_pur)/) {#order important
@@ -355,13 +368,15 @@ while(<$fin>) {
       }
       
       elsif($fullOKAname =~ /(Z_mm_pur_err)/) {
-        print $globalout "ZtomumuPurityError $value\n";
+	if($nuisanceOptions eq "noWidths") { $value=0; }
+	print $globalout "ZtomumuPurityError $value\n";
       }
       elsif($fullOKAname =~ /(Z_mm_pur)/) {#order important
         print $globalout "ZtomumuPurity $value\n";
       }
       
       elsif($fullOKAname =~ /(sf_ee_err)/) {
+	if($nuisanceOptions eq "noWidths") { $value=0; }
 	print $globalout "ZtoeeSystematicError $value\n";
       }
 
@@ -370,6 +385,7 @@ while(<$fin>) {
       }
 
       elsif($fullOKAname =~ /(sf_mm_err)/) {
+	if($nuisanceOptions eq "noWidths") { $value=0; }
 	print $globalout "ZtomumuSystematicError $value\n";
       }
 
@@ -378,6 +394,7 @@ while(<$fin>) {
       }
 
       elsif($fullOKAname =~ /(sf_mc_err)/) {
+	if($nuisanceOptions eq "noWidths") { $value=0; }
 	print $globalout "MCUncertainty $value\n";
       }
 
@@ -386,13 +403,19 @@ while(<$fin>) {
       }
       
       elsif($fullOKAname =~ /(GU_luminosity)/) {
+	if($nuisanceOptions eq "noWidths") { $value=0; }
 	print $globalout "LuminosityError $value\n";
       }
 
       elsif($fullOKAname =~ /(GU_metcleaning)/) {
+	if($nuisanceOptions eq "noWidths") { $value=0; }
 	print $globalout "metCleaningError $value\n";
       }
 
+      elsif($fullOKAname =~ /(SFqcd_)(\S+)/) {#no skipping widths here
+	print $globalout "$1$2 $value\n";
+      }
+     
       else {
 	print "Doing nothing with line: $line";
       }
@@ -422,6 +445,12 @@ foreach(@binFileNames) {
 
 print $globalout "ZtollOverZtoNuNuRatio 0.168067227\n";
 print $globalout "Luminosity 12.0\n";
+print $globalout "dibosonMC 1.0\n";
+if($nuisanceOptions eq "noWidths") {
+  print $globalout "dibosonMCUncertainty 0.0\n";
+}
+else { print $globalout "dibosonMCUncertainty 1.0\n"; }
+
 
 
 close $globalout;
