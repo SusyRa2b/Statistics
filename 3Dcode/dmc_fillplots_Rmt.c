@@ -11,6 +11,7 @@
 #include <iostream>
 
   //-- met4-ht4-v15
+      const int nBinsBtag  = 3 ;
       const int nBinsMET   = 4 ;
       const int nBinsHT    = 4 ;
       float Mbins[nBinsMET+1] = {125.,150.,250.,350.,99999.};
@@ -157,12 +158,21 @@
        }
 
        char htitle[1000] ;
+       char hname[1000] ;
 
 
 
+   //-- MT plots, binned in MET,HT
 
-
-
+       for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
+          for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+             for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+                sprintf( hname, "h_mt_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                sprintf( htitle, "MT, MET%d, HT%d, nB%d", mbi+1, hbi+1, bbi+1 ) ;
+                bookSet( hname, htitle, 25, 0., 250. ) ;
+             } // hbi.
+          } // mbi.
+       } // bbi.
 
 
 
@@ -200,6 +210,29 @@
 
        char cuts[10000] ;
 
+
+       char bcut[3][100] = { "nB==1", "nB==2", "nB>=3" } ;
+
+     //--- MT plots.
+
+       for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
+          for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+             for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+                sprintf( cuts, "%s&&(MET>%.0f&&MET<=%.0f)&&(HT>%.0f&&HT<=%.0f)&&(%s)",
+                      basecuts_1lep_nomt_nonb,
+                      Mbins[mbi], Mbins[mbi+1],
+                      Hbins[hbi], Hbins[hbi+1],
+                      bcut[bbi] ) ;
+                sprintf( hname, "h_mt_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                printf(" %s : %s\n", hname, cuts ) ;
+                fillSet( hname, "MT", cuts  ) ;
+             } // hbi.
+          } // mbi.
+       } // bbi.
+
+
+
+     //--- likelihood bins.
 
        sprintf( cuts, "%s&&MT<100&&nB==0", basecuts_1lep_nomt_nonb ) ;
        fillSetLHB( "h_lhb_sl_mtl_nb0", cuts ) ;
@@ -364,37 +397,9 @@
 
     } // evenBinLHB
 
-   //==========================================================================================================
-
-
-    TH2F* evenBinLHB( TH2F* h2 ) {
-
-       char hname_eb[1000] ;
-       sprintf( hname_eb, "%s_eb", h2->GetName() ) ;
-
-       TH2F* heb = new TH2F( hname_eb, h2->GetTitle(), nBinsMET, 0.5, 0.5+nBinsMET,  nBinsHT, 0.5, 0.5+nBinsHT ) ;
-
-       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-          char binlabel[100] ;
-          sprintf( binlabel, "MET%d", mbi+1 ) ;
-          heb->GetXaxis()->SetBinLabel( mbi+1, binlabel ) ;
-          for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-             sprintf( binlabel, "HT%d", hbi+1 ) ;
-             heb->GetYaxis()->SetBinLabel( hbi+1, binlabel ) ;
-             heb -> SetBinContent( mbi+1, hbi+1,  h2->GetBinContent( mbi+1, hbi+1 ) ) ;
-             heb -> SetBinError  ( mbi+1, hbi+1,  h2->GetBinError  ( mbi+1, hbi+1 ) ) ;
-          } // hbi
-       } // mbi
-
-       heb->SetLabelSize(0.04,"x") ;
-       heb->SetFillColor( h2->GetFillColor() ) ;
-
-       return heb ;
-
-    } // evenBinLHB
-
 
    //==========================================================================================================
+
     void fillSet( const char* hname_base, const char* varname, const char* cuts, bool doTrigCorr ) {
 
        printf("\n\n") ;
