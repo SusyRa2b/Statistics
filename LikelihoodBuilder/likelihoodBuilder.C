@@ -68,6 +68,7 @@ struct  likelihoodOptions
   bool skipTriggerEfficiency;
   TString qcdMethod;
   TString TopWJetsMethod;
+  TString nuisanceOption;
 };
 
 
@@ -165,9 +166,17 @@ struct allBins
   double ZtomumuSystematicError;
   double MC;
   double MCUncertainty;
+  double dibosonMC;
+  double dibosonMCUncertainty;
   double Luminosity;
   double LuminosityError;
   double metCleaningError;
+  double SFqcd_met3;
+  double SFqcd_met3_err;
+  double SFqcd_met4;
+  double SFqcd_met4_err;
+  double SFqcd_nb3;
+  double SFqcd_nb3_err;
 } ;
 
 
@@ -250,7 +259,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
     }
 
  
-  //Correction scale factors
+  //Correction scale factors (rather hardcoded right now)
 
   //MET
   TString lowDeltaPhiNMETScaleFactorName = "lowDeltaPhiNMETScaleFactor_";
@@ -265,8 +274,8 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
 	  lowDeltaPhiNMETScaleFactor_temp.setConstant(kFALSE);
 	  if(abcd.lowDeltaPhiNMETScaleFactorName == "M3")
 	    {
-	      RooRealVar scaleFactorMean(lowDeltaPhiNMETScaleFactorName+"_Mean", lowDeltaPhiNMETScaleFactorName+"_Mean", 1.34, 0, 3.0);
-	      RooRealVar scaleFactorWidth(lowDeltaPhiNMETScaleFactorName+"_Width", lowDeltaPhiNMETScaleFactorName+"_Width", 0.14, 0, 3.0);
+	      RooRealVar scaleFactorMean(lowDeltaPhiNMETScaleFactorName+"_Mean", lowDeltaPhiNMETScaleFactorName+"_Mean", numbers.SFqcd_met3, 0, 3.0);
+	      RooRealVar scaleFactorWidth(lowDeltaPhiNMETScaleFactorName+"_Width", lowDeltaPhiNMETScaleFactorName+"_Width", numbers.SFqcd_met3_err, 0, 3.0);
 	      scaleFactorMean.setConstant();
 	      scaleFactorWidth.setConstant();
 	      RooGaussian scaleFactorConstraint(lowDeltaPhiNMETScaleFactorName+"_Constraint",lowDeltaPhiNMETScaleFactorName+"_Constraint",
@@ -275,8 +284,8 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
 	    }
 	  else if(abcd.lowDeltaPhiNMETScaleFactorName == "M4")
 	    {
-	      RooRealVar scaleFactorMean(lowDeltaPhiNMETScaleFactorName+"_Mean", lowDeltaPhiNMETScaleFactorName+"_Mean", 1.90, 0, 3.0);
-	      RooRealVar scaleFactorWidth(lowDeltaPhiNMETScaleFactorName+"_Width", lowDeltaPhiNMETScaleFactorName+"_Width", 0.43, 0, 3.0);
+	      RooRealVar scaleFactorMean(lowDeltaPhiNMETScaleFactorName+"_Mean", lowDeltaPhiNMETScaleFactorName+"_Mean", numbers.SFqcd_met4, 0, 3.0);
+	      RooRealVar scaleFactorWidth(lowDeltaPhiNMETScaleFactorName+"_Width", lowDeltaPhiNMETScaleFactorName+"_Width", numbers.SFqcd_met4_err, 0, 3.0);
 	      scaleFactorMean.setConstant();
 	      scaleFactorWidth.setConstant();
 	      RooGaussian scaleFactorConstraint(lowDeltaPhiNMETScaleFactorName+"_Constraint",lowDeltaPhiNMETScaleFactorName+"_Constraint",
@@ -303,8 +312,8 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
 	  lowDeltaPhiNBTagScaleFactor_temp.setConstant(kFALSE);
 	  if(abcd.lowDeltaPhiNBTagScaleFactorName == "3b")
 	    {
-	      RooRealVar scaleFactorMean(lowDeltaPhiNBTagScaleFactorName+"_Mean", lowDeltaPhiNBTagScaleFactorName+"_Mean", 0.69, 0, 3.0);
-	      RooRealVar scaleFactorWidth(lowDeltaPhiNBTagScaleFactorName+"_Width", lowDeltaPhiNBTagScaleFactorName+"_Width", 0.16, 0, 3.0);
+	      RooRealVar scaleFactorMean(lowDeltaPhiNBTagScaleFactorName+"_Mean", lowDeltaPhiNBTagScaleFactorName+"_Mean", numbers.SFqcd_nb3, 0, 3.0);
+	      RooRealVar scaleFactorWidth(lowDeltaPhiNBTagScaleFactorName+"_Width", lowDeltaPhiNBTagScaleFactorName+"_Width", numbers.SFqcd_nb3_err, 0, 3.0);
 	      scaleFactorMean.setConstant();
 	      scaleFactorWidth.setConstant();
 	      RooGaussian scaleFactorConstraint(lowDeltaPhiNBTagScaleFactorName+"_Constraint",lowDeltaPhiNBTagScaleFactorName+"_Constraint",
@@ -582,7 +591,7 @@ void makeUnderlyingLikelihood(const likelihoodOptions options, RooWorkspace& ws 
   
   RooAbsArg* dibosonMCUncertainty = //FIXME - this is hardcoded 
     getGaussianConstraint(ws,"dibosonMCUncertainty","",
-			  1.0, 1.0,
+			  numbers.dibosonMC, numbers.dibosonMCUncertainty,
 			  names.observables,names.nuisances);
   names.dibosonMCUncertainty = dibosonMCUncertainty->GetName();
   
@@ -945,8 +954,10 @@ void setupSignalModelOAK( vector<TString> binNames, TString signalModelFilesPath
 }
 
 
-void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<TString> binNames, allBinNames& names,  map<TString,abcdBinParameters> bins, double nGenerated,
-		     map<TString,yields> signalFractionsOAK, map<TString,yields> signalStatisticalErrorOAK, map<TString,yields> signalBTagEfficiencyErrorOAK, map<TString,yields> signalJesErrorOAK,
+void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<TString> binNames, allBinNames& names,  
+		     map<TString,abcdBinParameters> bins, double nGenerated,
+		     map<TString,yields> signalFractionsOAK, map<TString,yields> signalStatisticalErrorOAK,
+		     map<TString,yields> signalBTagEfficiencyErrorOAK, map<TString,yields> signalJesErrorOAK,
 		     map<TString,map<TString,mcCount> > insideSignalMR, map<TString,map<TString,mcCount> > outsideSignalMR )
 {
   RooRealVar* luminosity = ws.var("luminosity");
@@ -975,8 +986,13 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	  zeroLeptonLowDeltaPhiNFraction.setConstant();
 	  
 	  //Statistical Error
-	  yields thisSignalStatisticalErrorOAK = signalStatisticalErrorOAK[binName];
-	  
+	  yields thisSignalStatisticalErrorOAK = signalStatisticalErrorOAK[binName]; 
+	  if(options.nuisanceOption == "noWidths") 
+	    {
+	      thisSignalStatisticalErrorOAK.zeroLepton = 0; 
+	      thisSignalStatisticalErrorOAK.zeroLeptonLowDeltaPhiN = 0;
+	    }
+
 	  RooAbsArg* zeroLeptonError = getGaussianConstraint(ws,"zeroLeptonSignalError_", binName,
 							     1.0, thisSignalStatisticalErrorOAK.zeroLepton,
 							     names.observables,names.nuisances);
@@ -988,6 +1004,11 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	  //B-tag efficiency systematic
 	  yields thisSignalBTagEfficiencyErrorOAK = signalBTagEfficiencyErrorOAK[binName];
 	  TString signalBTagEfficiencyName = "signalBTagEfficiencyCorrelated";
+	  if(options.nuisanceOption == "noWidths") 
+	    {
+	      thisSignalBTagEfficiencyErrorOAK.zeroLepton = 0; 
+	      thisSignalBTagEfficiencyErrorOAK.zeroLeptonLowDeltaPhiN = 0;
+	    }
 	  
 	  bool changeSign = false;
 	  if(thisSignalBTagEfficiencyErrorOAK.zeroLepton < 0.0) changeSign=true;
@@ -1008,7 +1029,12 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	  //JES systematic
 	  yields thisSignalJesErrorOAK = signalJesErrorOAK[binName];
 	  TString signalJesErrorName = "signalJesErrorCorrelated";
-	  
+	  if(options.nuisanceOption == "noWidths") 
+	    {
+	      thisSignalJesErrorOAK.zeroLepton = 0; 
+	      thisSignalJesErrorOAK.zeroLeptonLowDeltaPhiN = 0;
+	    }
+
 	  changeSign = false;
 	  if(thisSignalJesErrorOAK.zeroLepton < 0.0) changeSign=true;
 	  //RooAbsArg* zeroLeptonJesError = getCorrelatedGaussianConstraint(ws,"zeroLeptonJesError_", binName,
@@ -1043,6 +1069,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	      double signalValue = ((*it).second).value;
 	      double signalError = ((*it).second).error;
 	      double percentError = (signalValue > 0) ? signalError/signalValue : 0.10/100.0;
+	      if(options.nuisanceOption == "noWidths") percentError = 0;
 
 	      RooRealVar signalFraction(signalName+"_SignalFraction", signalName+"_SignalFraction", signalValue/nGenerated);
 	      signalFraction.setConstant();
@@ -1064,6 +1091,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	      double signalValue = ((*it).second).value;
 	      double signalError = ((*it).second).error;
 	      double percentError = (signalValue > 0) ? signalError/signalValue : 0.10/100.0;
+	      if(options.nuisanceOption == "noWidths") percentError = 0;
 
 	      //Continue if already in workspace 
 	      if( ws.var(signalName+"_SignalYield") != NULL ) continue; 
@@ -1100,7 +1128,13 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	  
 	  //Statistical Error
 	  yields thisSignalStatisticalErrorOAK = signalStatisticalErrorOAK[binName];
-	  
+	  if(options.nuisanceOption == "noWidths") 
+	    {
+	      thisSignalStatisticalErrorOAK.zeroLepton = 0; 
+	      thisSignalStatisticalErrorOAK.zeroLeptonLowDeltaPhiN = 0;
+	      thisSignalStatisticalErrorOAK.oneLepton = 0;
+	    }
+
 	  RooAbsArg* zeroLeptonError = getGaussianConstraint(ws,"zeroLeptonSignalError_", binName,
 							     1.0, thisSignalStatisticalErrorOAK.zeroLepton,
 							     names.observables,names.nuisances);
@@ -1116,7 +1150,13 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	  //B-tag efficiency systematic
 	  yields thisSignalBTagEfficiencyErrorOAK = signalBTagEfficiencyErrorOAK[binName];
 	  TString signalBTagEfficiencyName = "signalBTagEfficiencyCorrelated";
-	  
+	  if(options.nuisanceOption == "noWidths") 
+	    {
+	      thisSignalBTagEfficiencyErrorOAK.zeroLepton = 0; 
+	      thisSignalBTagEfficiencyErrorOAK.zeroLeptonLowDeltaPhiN = 0;
+	      thisSignalBTagEfficiencyErrorOAK.oneLepton = 0;
+	    }	  
+
 	  bool changeSign = false;
 	  if(thisSignalBTagEfficiencyErrorOAK.zeroLepton < 0.0) changeSign=true;
 	  //RooAbsArg* zeroLeptonBTagEfficiencyError = getCorrelatedGaussianConstraint(ws,"zeroLeptonBTagEfficiencyError_", binName,
@@ -1144,7 +1184,13 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	  //JES systematic
 	  yields thisSignalJesErrorOAK = signalJesErrorOAK[binName];
 	  TString signalJesErrorName = "signalJesErrorCorrelated";
-	  
+	  if(options.nuisanceOption == "noWidths") 
+	    {
+	      thisSignalJesErrorOAK.zeroLepton = 0; 
+	      thisSignalJesErrorOAK.zeroLeptonLowDeltaPhiN = 0;
+	      thisSignalJesErrorOAK.oneLepton = 0;
+	    }	 
+
 	  changeSign = false;
 	  if(thisSignalJesErrorOAK.zeroLepton < 0.0) changeSign=true;
 	  //RooAbsArg* zeroLeptonJesError = getCorrelatedGaussianConstraint(ws,"zeroLeptonJesError_", binName,
@@ -1312,9 +1358,17 @@ void setupUnderlyingModel(likelihoodOptions options, TString binFilesPath, map<T
       else if(index == "ZtomumuSystematicError" ) numbers.ZtomumuSystematicError = value;                            
       else if(index == "MC" 	                ) numbers.MC = value;	      	   
       else if(index == "MCUncertainty" 	        ) numbers.MCUncertainty = value;	      	   
+      else if(index == "dibosonMC" 	        ) numbers.dibosonMC = value;	      	   
+      else if(index == "dibosonMCUncertainty"   ) numbers.dibosonMCUncertainty = value;	      	   
       else if(index == "Luminosity"   	        ) numbers.Luminosity = value;
       else if(index == "LuminosityError"        ) numbers.LuminosityError = value;
       else if(index == "metCleaningError"       ) numbers.metCleaningError = value;
+      else if(index == "SFqcd_met3"             ) numbers.SFqcd_met3 = value;
+      else if(index == "SFqcd_met3_err"         ) numbers.SFqcd_met3_err = value;
+      else if(index == "SFqcd_met4"             ) numbers.SFqcd_met4 = value;
+      else if(index == "SFqcd_met4_err"         ) numbers.SFqcd_met4_err = value;
+      else if(index == "SFqcd_nb3"              ) numbers.SFqcd_nb3 = value;
+      else if(index == "SFqcd_nb3_err"          ) numbers.SFqcd_nb3_err = value;
       else if(index != "") assert(0);
     }
 
@@ -1388,10 +1442,11 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
 
   //Set options 
   options.skipTriggerEfficiency = false;//option no longer works
-  options.qcdMethod = "model4";//others: htDependent, singleScaleWithCorrections
-  //options.TopWJetsMethod = "ABCD"; //others: metReweighting
+  options.qcdMethod = "model4";//choices: htDependent, singleScaleWithCorrections
+  //options.TopWJetsMethod = "ABCD"; //choices: ABCD, metReweighting
   options.TopWJetsMethod = "metReweighting";
-    
+  options.nuisanceOption = "allWidths"; //choices: allWidths, noWidths
+
   //Read in setupFile and binFilesFile
   setupUnderlyingModel(options, binFilesPath, binFileNames, signalModelFilesPath, binFileNamesInsideSignalMR, binFileNamesOutsideSignalMR, binNames, setupFileName , binFilesFileName , numbers);
   
@@ -1428,8 +1483,7 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   makeSignalModel(options, ws, binNames, names, bins, nGenerated, signalFractionsOAK, signalStatisticalErrorOAK, signalBTagEfficiencyErrorOAK, signalJesErrorOAK, insideSignalMR, outsideSignalMR );
 
   //Do MET-reweighting method
-  if(options.TopWJetsMethod == "metReweighting") buildMRLikelihood(ws, "", "testDataMRSetupFile.txt", false);
-  //if(options.TopWJetsMethod == "metReweighting") buildMRLikelihood(ws, "", "testDataSimpleMRSetupFile.txt", false);
+  if(options.TopWJetsMethod == "metReweighting") buildMRLikelihood(ws, "", "testDataMRSetupFile.txt", false, options.nuisanceOption);
 
   //Do nominal method, QCD, and ZtoNuNu
   for(vector<TString>::iterator thisBin = binNames.begin(); thisBin != binNames.end() ; thisBin++)
