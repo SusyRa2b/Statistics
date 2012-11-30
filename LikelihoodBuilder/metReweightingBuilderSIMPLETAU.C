@@ -18,6 +18,7 @@ USES STANDARD INPUT FILES
 #include <string.h>
 #include <complex>
 #include <map>
+#include <cassert>
 
 #include "TCanvas.h"
 #include "TStyle.h"
@@ -728,7 +729,7 @@ void makeTauHadBinPrediction( RooWorkspace& wspace, TString binname, TString bin
 
 
 //void buildMRLikelihood( TString outputFile, TString setupFileName ) 
-void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupFileName, bool standalone ) 
+void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupFileName, bool standalone, TString nuisanceOption ) 
 {
 
   ///////////////////////////////////////////////////
@@ -1071,6 +1072,9 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       for( int j=1; j<6; j++ ){
 
 	scaleFactorFile >> scalefactor >> scalefactorerror ;
+	if(nuisanceOption == "allWidths") {}
+	else if(nuisanceOption == "noWidths") scalefactorerror = 0;
+	else { assert(0); } 
 
 	TString oneLeptonName("oneLepton_");
 	oneLeptonName+=thisBin;
@@ -1103,7 +1107,10 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       double scalefactor1, scalefactorerror1, scalefactor2, scalefactorerror2, scalefactor3, scalefactorerror3;
 
       scaleFactorFile>>scalefactor>>scalefactorerror;
-    
+      if(nuisanceOption == "allWidths") {}
+      else if(nuisanceOption == "noWidths") scalefactorerror = 0;
+      else {assert(0);}
+
       TString dilepName("Dilep_");
       dilepName+=binnamesoutside[thisBin];
       dilepName.Append("_ScaleFactor");
@@ -1125,7 +1132,10 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       ////// READ IN TAU/DITAU MC-BASED SCALE FACTORS, ADD TO WORKSPACE
 
       tauhadScaleFactorFile>>scalefactor>>scalefactorerror;
-
+      if(nuisanceOption == "allWidths") {}
+      else if(nuisanceOption == "noWidths") scalefactorerror = 0;
+      else {assert(0);}
+      
       TString oneTauName("oneTau_");
       oneTauName+=binnamesoutside[thisBin];
       oneTauName.Append("_ScaleFactor");
@@ -1146,7 +1156,10 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       //////
 
       tauhadScaleFactorFile>>scalefactor>>scalefactorerror;
-      
+      if(nuisanceOption == "allWidths") {}
+      else if(nuisanceOption == "noWidths") scalefactorerror = 0;
+      else {assert(0);}
+
       TString twoTauName("twoTau_");
       twoTauName+=binnamesoutside[thisBin];
       twoTauName.Append("_ScaleFactor");

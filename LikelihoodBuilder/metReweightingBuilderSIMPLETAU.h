@@ -10,7 +10,7 @@ void makeDileptonConstraintsPredictions( RooWorkspace& wspace, TString binname, 
 
 void makeTauHadBinPrediction( RooWorkspace& wspace, TString binname, TString binname_outside );
 
-void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupFileName, bool standalone ); 
+void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupFileName, bool standalone, TString nuisanceOption = "allWidths" ); 
 
 
 #endif
