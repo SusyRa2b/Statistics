@@ -81,6 +81,16 @@
           compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_pr.root" ) ;
           compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_rr.root" ) ;
           complumi[compind] = 6.81 ;
+       } else if ( strcmp(dataset_string, "RunD" ) == 0 ) {
+        //-------
+        //compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012D_pr_BLIND.root" ) ;
+        //compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012D_pr_BLIND.root" ) ;
+        //compchain[compind] -> Add( "filesHCP_53_v6/MET_2012D_pr_BLIND.root" ) ;
+        //-------
+          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012D_pr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012D_pr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012D_pr.root" ) ;
+          complumi[compind] = 5.58 ;
        } else {
           printf("\n\n *** Unknown dataset: %s\n\n", dataset_string ) ;
           return ;
