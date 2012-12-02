@@ -860,7 +860,8 @@
       char hname[1000] ;
       char htitle[1000] ;
 
-      loadHist( "rootfiles/qcd-study1.root" ) ;
+      //-- Owen : this is no longer needed.  Histograms come from infile.
+      ////// loadHist( "rootfiles/qcd-study1.root" ) ;
 
       for ( int si=0; si<nQcdSamples; si++ ) {
          for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
@@ -2219,11 +2220,13 @@
                float Z_mm_pur ;
                getFileValue( datfile, pname, Z_mm_pur ) ;
 
-               sprintf( pname, "Z_ee_eff_H%d", hbi+1 ) ;
+               ///////// sprintf( pname, "Z_ee_eff_H%d", hbi+1 ) ;
+               sprintf( pname, "Z_ee_eff" ) ;
                float Z_ee_eff ;
                getFileValue( datfile, pname, Z_ee_eff ) ;
 
-               sprintf( pname, "Z_mm_eff_H%d", hbi+1 ) ;
+               ///////// sprintf( pname, "Z_mm_eff_H%d", hbi+1 ) ;
+               sprintf( pname, "Z_mm_eff" ) ;
                float Z_mm_eff ;
                getFileValue( datfile, pname, Z_mm_eff ) ;
 

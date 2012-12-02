@@ -59,6 +59,10 @@
        datach.Add( "filesHCP_53_v6/JetHT_2012C_pr.root" ) ;
        datach.Add( "filesHCP_53_v6/JetHT_2012C_rr.root" ) ;
 
+       datach.Add( "filesHCP_53_v6/MET_2012D_pr.root") ;
+       datach.Add( "filesHCP_53_v6/HTMHT_2012D_pr.root") ;
+       datach.Add( "filesHCP_53_v6/JetHT_2012D_pr.root") ;
+
        TH2F* h_ldp[nBinsBjets] ;
        TH2F* h_zl [nBinsBjets] ;
        TH2F* h_sl [nBinsBjets] ; 
