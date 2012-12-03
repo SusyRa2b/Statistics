@@ -1411,7 +1411,7 @@ void setupUnderlyingModel(likelihoodOptions options, TString binFilesPath, map<T
 }
 
 
-void buildLikelihood( TString setupFileName, TString binFilesFileName, TString binFilesPath, TString signalModelFilesPath, TString workspaceName, TString outputFileName ) 
+void buildLikelihood( TString setupFileName, TString binFilesFileName, TString binFilesPath, TString signalModelFilesPath, TString workspaceName, TString outputFileName, TString binFilesFileNameMR ) 
 {
   
   RooWorkspace ws (workspaceName) ;
@@ -1445,7 +1445,7 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   options.qcdMethod = "model4";//choices: htDependent, singleScaleWithCorrections
   //options.TopWJetsMethod = "ABCD"; //choices: ABCD, metReweighting
   options.TopWJetsMethod = "metReweighting";
-  options.nuisanceOption = "allWidths"; //choices: allWidths, noWidths
+  options.nuisanceOption = "noWidths"; //choices: allWidths, noWidths
 
   //Read in setupFile and binFilesFile
   setupUnderlyingModel(options, binFilesPath, binFileNames, signalModelFilesPath, binFileNamesInsideSignalMR, binFileNamesOutsideSignalMR, binNames, setupFileName , binFilesFileName , numbers);
@@ -1483,7 +1483,7 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   makeSignalModel(options, ws, binNames, names, bins, nGenerated, signalFractionsOAK, signalStatisticalErrorOAK, signalBTagEfficiencyErrorOAK, signalJesErrorOAK, insideSignalMR, outsideSignalMR );
 
   //Do MET-reweighting method
-  if(options.TopWJetsMethod == "metReweighting") buildMRLikelihood(ws, "", "testDataMRSetupFile.txt", false, options.nuisanceOption);
+  if(options.TopWJetsMethod == "metReweighting") buildMRLikelihood(ws, "", binFilesFileNameMR, false, options.nuisanceOption);
 
   //Do nominal method, QCD, and ZtoNuNu
   for(vector<TString>::iterator thisBin = binNames.begin(); thisBin != binNames.end() ; thisBin++)
@@ -1545,6 +1545,6 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
 }
 
 
-void likelihoodBuilder( TString setupFileName, TString binFilesFileName, TString binFilesPath, TString signalModelFilesPath, TString workspaceName, TString outputFileName ) {
-  buildLikelihood( setupFileName, binFilesFileName, binFilesPath, signalModelFilesPath, workspaceName, outputFileName);
+void likelihoodBuilder( TString setupFileName, TString binFilesFileName, TString binFilesPath, TString signalModelFilesPath, TString workspaceName, TString outputFileName, TString binFilesFileNameMR ) {
+  buildLikelihood( setupFileName, binFilesFileName, binFilesPath, signalModelFilesPath, workspaceName, outputFileName, binFilesFileNameMR );
 }
