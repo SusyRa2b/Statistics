@@ -84,6 +84,7 @@ void profileLikelihoodLimit(const char * fileName = "test.root",
 
   RooRealVar* firstPOI = (RooRealVar*) mc->GetParametersOfInterest()->first();
   TString firstPOIName = firstPOI->GetName();
+  firstPOI->setConstant(kFALSE);
   firstPOI->setRange(signalCrossSectionLow, signalCrossSectionHigh);
   
   ProfileLikelihoodCalculator pl(*data,*pdf, RooArgSet(*firstPOI));
