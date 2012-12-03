@@ -1286,6 +1286,7 @@
 	       // include 4% systematic for W fraction variation
                err        = sqrt( hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
                correction = hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr->GetBinContent(hbin)  ;
+
             //}
             if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
             if ( doTTWJSyst ) {
@@ -1315,6 +1316,7 @@
                err        = sqrt( hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
                correction = hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr->GetBinContent(hbin)  ;
             //}
+
             if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
             if ( doTTWJSyst ) {
                updateFileValue( datfile, parameterName, systValue ) ;

@@ -13,7 +13,7 @@
 #include "TSystem.h"
 #include "TH2F.h"
 #include "TCanvas.h"
-#include "SmallTree.C"
+//#include "SmallTree.C"
 
   using std::stringstream ;
   using std::ofstream ;
@@ -24,7 +24,7 @@
 
   void saveHist(const char* filename, const char* pat) ;
   TH1F* bookHist(const char* hname, const char* htitle, const char* selstring, int nbjet, int nBinsMET, int nBinsHT ) ;
-  void FillHTMET(TChain *chain, TH2F *histo, int si, int k) ;
+////void FillHTMET(TChain *chain, TH2F *histo, int si, int k) ;
   
 // to add in: nMu, nEl, minDelPhi
 
@@ -65,67 +65,67 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 
   TChain chainQCD("tree") ;
-  chainQCD.Add("filesHCP_53_v4/QCD-120to170.root");
-  chainQCD.Add("filesHCP_53_v4/QCD-170to300.root");
-  chainQCD.Add("filesHCP_53_v4/QCD-300to470.root");
-  chainQCD.Add("filesHCP_53_v4/QCD-470to600.root");
-  chainQCD.Add("filesHCP_53_v4/QCD-600to800.root");
-  chainQCD.Add("filesHCP_53_v4/QCD-800to1000.root");
-  chainQCD.Add("filesHCP_53_v4/QCD-1000to1400.root");
-  chainQCD.Add("filesHCP_53_v4/QCD-1400to1800.root");
-  chainQCD.Add("filesHCP_53_v4/QCD-1800.root");
+  chainQCD.Add("filesHCP_53_v6/QCD-120to170.root");
+  chainQCD.Add("filesHCP_53_v6/QCD-170to300.root");
+  chainQCD.Add("filesHCP_53_v6/QCD-300to470.root");
+  chainQCD.Add("filesHCP_53_v6/QCD-470to600.root");
+  chainQCD.Add("filesHCP_53_v6/QCD-600to800.root");
+  chainQCD.Add("filesHCP_53_v6/QCD-800to1000.root");
+  chainQCD.Add("filesHCP_53_v6/QCD-1000to1400.root");
+  chainQCD.Add("filesHCP_53_v6/QCD-1400to1800.root");
+  chainQCD.Add("filesHCP_53_v6/QCD-1800.root");
   double kfactor_qcd = 1.8 ;
   printf("\n\n Rescaling QCD by %5.3f\n\n", kfactor_qcd ) ;
 
   TChain chainZnn("tree") ;
-  chainZnn.Add("filesHCP_53_v4/Zinv-100to200.root") ;
-  chainZnn.Add("filesHCP_53_v4/Zinv-200to400.root") ;
-  chainZnn.Add("filesHCP_53_v4/Zinv-400.root") ;
+  chainZnn.Add("filesHCP_53_v6/Zinv-100to200.root") ;
+  chainZnn.Add("filesHCP_53_v6/Zinv-200to400.root") ;
+  chainZnn.Add("filesHCP_53_v6/Zinv-400.root") ;
 
   TChain chainTT("tree") ;
-  //chainTT.Add("filesHCP_53_v4/TT.root") ;
-  //chainTT.Add("filesHCP_53_v4/TT-powheg.root");
-  chainTT.Add("filesHCP_53_v4/TT_FullLept.root") ;
-  chainTT.Add("filesHCP_53_v4/TT_SemiLept.root") ;
-  chainTT.Add("filesHCP_53_v4/TT_FullHad.root") ;
+  //chainTT.Add("filesHCP_53_v6/TT.root") ;
+  //chainTT.Add("filesHCP_53_v6/TT-powheg.root");
+  chainTT.Add("filesHCP_53_v6/TT_FullLept.root") ;
+  chainTT.Add("filesHCP_53_v6/TT_SemiLept.root") ;
+  chainTT.Add("filesHCP_53_v6/TT_FullHad.root") ;
   double kfactor_tt = 0.90 ;
   printf("\n\n Rescaling ttbar by %5.3f\n\n", kfactor_tt ) ;
 
   TChain chainWJets("tree") ;
-  chainWJets.Add("filesHCP_53_v4/WJets-250to300.root") ;
-  chainWJets.Add("filesHCP_53_v4/WJets-300to400.root") ;
-  chainWJets.Add("filesHCP_53_v4/WJets-400.root") ;
-  chainWJets.Add("filesHCP_53_v4/T-s.root") ;
-  chainWJets.Add("filesHCP_53_v4/T-t.root") ;
-  chainWJets.Add("filesHCP_53_v4/T-tW.root") ;
-  chainWJets.Add("filesHCP_53_v4/Tbar-s.root") ;
-  chainWJets.Add("filesHCP_53_v4/Tbar-t.root") ;
-  chainWJets.Add("filesHCP_53_v4/Tbar-tW.root") ;
+  chainWJets.Add("filesHCP_53_v6/WJets-250to300.root") ;
+  chainWJets.Add("filesHCP_53_v6/WJets-300to400.root") ;
+  chainWJets.Add("filesHCP_53_v6/WJets-400.root") ;
+  chainWJets.Add("filesHCP_53_v6/T-s.root") ;
+  //chainWJets.Add("filesHCP_53_v6/T-t.root") ;
+  chainWJets.Add("filesHCP_53_v6/T-tW.root") ;
+  chainWJets.Add("filesHCP_53_v6/Tbar-s.root") ;
+  chainWJets.Add("filesHCP_53_v6/Tbar-t.root") ;
+  chainWJets.Add("filesHCP_53_v6/Tbar-tW.root") ;
   double kfactor_wjets = 0.90 ;
   printf("\n\n Rescaling wjets by %5.3f\n\n", kfactor_wjets ) ;
 
 //include Z->ll in VV contribution
   TChain chainVV("tree");
-  chainVV.Add("filesHCP_53_v4/WW.root"); 
-  chainVV.Add("filesHCP_53_v4/WZ.root");
-  chainVV.Add("filesHCP_53_v4/ZZ.root");
-  chainVV.Add("filesHCP_53_v4/DY-200to400.root");
-  chainVV.Add("filesHCP_53_v4/DY-400.root");
+  chainVV.Add("filesHCP_53_v6/WW.root"); 
+  chainVV.Add("filesHCP_53_v6/WZ.root");
+  chainVV.Add("filesHCP_53_v6/ZZ.root");
+  chainVV.Add("filesHCP_53_v6/DY-200to400.root");
+  chainVV.Add("filesHCP_53_v6/DY-400.root");
 
 
 
 
 
       char qcdinputfile[9][1000] = {
-        "filesHCP_53_v4/QCD-120to170.root"
-       ,"filesHCP_53_v4/QCD-170to300.root"
-       ,"filesHCP_53_v4/QCD-300to470.root"
-       ,"filesHCP_53_v4/QCD-470to600.root"
-       ,"filesHCP_53_v4/QCD-600to800.root"
-       ,"filesHCP_53_v4/QCD-800to1000.root"
-       ,"filesHCP_53_v4/QCD-1000to1400.root"
-       ,"filesHCP_53_v4/QCD-1400to1800.root"
-       ,"filesHCP_53_v4/QCD-1800.root"
+        "filesHCP_53_v6/QCD-120to170.root"
+       ,"filesHCP_53_v6/QCD-170to300.root"
+       ,"filesHCP_53_v6/QCD-300to470.root"
+       ,"filesHCP_53_v6/QCD-470to600.root"
+       ,"filesHCP_53_v6/QCD-600to800.root"
+       ,"filesHCP_53_v6/QCD-800to1000.root"
+       ,"filesHCP_53_v6/QCD-1000to1400.root"
+       ,"filesHCP_53_v6/QCD-1400to1800.root"
+       ,"filesHCP_53_v6/QCD-1800.root"
       } ;
 
       char qcdsamplename[9][100] = {
@@ -147,11 +147,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   const int nBinsBjets = 3 ;   // this must always be 3
   const int nJetsCut = 3 ;     // #jets >= nJetsCut
 
-//be careful because this is hard coded now in SmallTree::Loop
   double minLeadJetPt = 70. ;
   double min3rdJetPt = 50. ;
-  
-  bool doPUreweighting = true;
 
 
   //-- met4-ht4-v15
@@ -195,26 +192,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     cHbins[j] = base;
   }
 
-  TString leadJetPtCutString ;
-  {
-     leadJetPtCutString = "(pt_1st_leadJet>" ;
-     stringstream number ;
-     number << minLeadJetPt ;
-     stringstream number2 ;
-     number2 << min3rdJetPt ;
-     leadJetPtCutString += number.str() ;
-     leadJetPtCutString += "&&pt_2nd_leadJet>" ;
-     leadJetPtCutString += number.str() ;
-     leadJetPtCutString += "&&pt_3rd_leadJet>" ;
-     leadJetPtCutString += number2.str() ;
-     leadJetPtCutString += ")" ;
-  }
-
 //int dummyInt = 99;
 //float dummyFloat = 9.999;
   float dummyZero = 0.;
   float dummyOne = 1.0;
-  float dummyPoint999 = 0.999 ;
+  ///  float dummyPoint999 = 0.999 ;
   float dummyErr = 0.1;
 
   float sl_frac2b_val[nBinsMET][nBinsHT];
@@ -253,14 +235,21 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   inFile << endl ;
 
 
+  char bcut[3][100] = { "nB==1", "nB==2", "nB>=3" } ;
+
+  char commoncuts[10000] ;
+  sprintf( commoncuts, "maxChNMultDiff<40&&pfOcaloMET<2.0&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)",
+	   nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
+
    int nSel(4) ;
    char selname[4][100] = { "0lep", "1lepSig", "1lep", "ldp" } ;
 
-   char selcuts[4][10000] = {
-        "pfOcaloMET<2.0&&minDelPhiN>4&&nMu==0&&nEl==0&&",
-        "MT>100&&pfOcaloMET<2.0&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&",
-        "MT<100&&pfOcaloMET<2.0&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&",
-        "pfOcaloMET<2.0&&minDelPhiN<4&&nMu==0&&nEl==0&&" } ;
+   char selcuts[4][10000] ;
+   sprintf( selcuts[0], "minDelPhiN>4&&nMu==0&&nEl==0&&nIsoTrk==0" ) ; //--- 0lep
+   sprintf( selcuts[1], "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&MT>100" ) ; //--- 1lepSig
+   sprintf( selcuts[2], "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&MT<100" ) ; //--- 1lep
+   sprintf( selcuts[3], "minDelPhiN<4&&nMu==0&&nEl==0&&nIsoTrk==0" ) ; //--- ldp
+
 
 
   //--- Output histograms.
@@ -314,12 +303,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
    } // si.
 
 
-
-
-     TH1F* hmctruth_fit_zee_1b  = bookHist("hmctruth_fit_zee_1b" , "Zee" , "Zee", 1, nBinsMET, nBinsHT ) ;
-     TH1F* hmctruth_fit_zmm_1b  = bookHist("hmctruth_fit_zmm_1b" , "Zmm" , "Zmm", 1, nBinsMET, nBinsHT ) ;
-
-
+   bookHist("hmctruth_fit_zee_1b" , "Zee" , "Zee", 1, nBinsMET, nBinsHT ) ;
+   bookHist("hmctruth_fit_zmm_1b" , "Zmm" , "Zmm", 1, nBinsMET, nBinsHT ) ;
 
 
 
@@ -380,44 +365,37 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
         char allcuts[10000] ;
         char allsusycuts[10000] ;
 
-        if ( k < (nBinsBjets-1) ) {
-          sprintf( allcuts, "%snB==%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&pfOcaloMET<2", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
-          sprintf( allsusycuts, "%snB==%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)%s&&pfOcaloMET<2", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt, susycut.Data() ) ;
-        } else {
-          sprintf( allcuts, "%snB>=%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&pfOcaloMET<2", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
-          sprintf( allsusycuts, "%snB>=%d&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)%s&&pfOcaloMET<2", selcuts[si], k+1, nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt, susycut.Data() ) ;
-        }
+	sprintf( allcuts,     "weightPU*(%s&&%s&&%s)"    , commoncuts, selcuts[si], bcut[k] ) ;
+        sprintf( allsusycuts, "weightPU*(%s&&%s&&%s&&%s)", commoncuts, selcuts[si], bcut[k], susycut.Data() ) ;
 
 
         printf("\n\n N_%s -- nbjet bin (%d): cuts=%s\n\n", selname[si], k, allcuts) ; cout << flush ;
 
         char hname[100] ;
         sprintf( hname, "h_tt_%db", k+1 ) ;
-        if(doPUreweighting) FillHTMET(&chainTT, h_tt[k], si, k);
-	else chainTT.Project (hname,"HT:MET",allcuts);
+	chainTT.Project (hname,"HT:MET",allcuts);
+
         h_tt[k] -> Scale( kfactor_tt ) ;
 	printf("    %12s %7.1f events\n", hname, h_tt[k]->Integral() ) ; cout << flush ;
 
         sprintf( hname, "h_wjets_%db", k+1 ) ;
-        if(doPUreweighting) FillHTMET(&chainWJets, h_wjets[k], si, k);
-	else chainWJets.Project(hname,"HT:MET",allcuts);
+	chainWJets.Project(hname,"HT:MET",allcuts);
+
         h_wjets[k] -> Scale( kfactor_wjets ) ;
 	printf("    %12s %7.1f events\n", hname, h_wjets[k]->Integral() ) ; cout << flush ;
 
         sprintf( hname, "h_qcd_%db", k+1 ) ;
-        if (doPUreweighting) FillHTMET(&chainQCD, h_qcd[k], si, k);
-	else chainQCD.Project(hname,"HT:MET",allcuts);
+	chainQCD.Project(hname,"HT:MET",allcuts);
+
         h_qcd[k] -> Scale( kfactor_qcd ) ;
 	printf("    %12s %7.1f events\n", hname, h_qcd[k]->Integral() ) ; cout << flush ;
 
         sprintf( hname, "h_znn_%db", k+1 ) ;
-        if (doPUreweighting) FillHTMET(&chainZnn, h_znn[k], si, k);
-	else chainZnn.Project(hname,"HT:MET",allcuts);
+	chainZnn.Project(hname,"HT:MET",allcuts);
 	printf("    %12s %7.1f events\n", hname, h_znn[k]->Integral() ) ; cout << flush ;
 
         sprintf( hname, "h_vv_%db", k+1 ) ;
-        if (doPUreweighting) FillHTMET(&chainVV, h_vv[k], si, k);
-	else chainVV.Project(hname,"HT:MET",allcuts);
+	chainVV.Project(hname,"HT:MET",allcuts);
 	printf("    %12s %7.1f events\n", hname, h_vv[k]->Integral() ) ; cout << flush ;
 
         if ( mgl > 0. ) {
@@ -648,7 +626,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
          printf("\n\n") ;
 
 
-         char bcut[3][100] = { "nB==1", "nB==2", "nB>=3" } ;
+	 //--- NOTE: Small PU weights can screw up the ZL/LDP ratio for the same reason
+	 //          that the sample weights can, since the number of selected events
+	 //          is small in each ratio.
+	 //          Turning PU weighting off for QCD closure.
+
 
          for ( int si=0; si<nQcdSamples; si++ ) {
 
@@ -658,7 +640,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
                char arg1[1000] ;
 
                char cuts0lep[10000] ;
-               sprintf( cuts0lep, "%s(%s)&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&pfOcaloMET<2", selcuts[0], bcut[bbi], nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
+               sprintf( cuts0lep, "(%s&&%s&&%s)"    , commoncuts, selcuts[0], bcut[bbi] ) ;
                printf("     %db, 0lep cuts : %s\n", bbi+1, cuts0lep ) ;
                sprintf( arg1, "HT:MET>>h_0lep_%db_%s", bbi+1, qcdsamplename[si] ) ;
                qcdch[si] -> Draw( arg1, cuts0lep ) ;
@@ -668,7 +650,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 
                char cutsldp[10000] ;
-               sprintf( cutsldp, "%s(%s)&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&pfOcaloMET<2", selcuts[3], bcut[bbi], nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
+	       sprintf( cutsldp, "(%s&&%s&&%s)"    , commoncuts, selcuts[3], bcut[bbi] ) ;
                printf("     %db, ldp  cuts : %s\n", bbi+1, cutsldp  ) ;
                sprintf( arg1, "HT:MET>>h_ldp_%db_%s", bbi+1, qcdsamplename[si] ) ;
                qcdch[si] -> Draw( arg1, cutsldp, "colz" ) ;
@@ -695,6 +677,24 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     cutszee += njcut.str();
     cutszee += "&&";
 /*
+  TString leadJetPtCutString ;
+  {
+     leadJetPtCutString = "(pt_1st_leadJet>" ;
+     stringstream number ;
+     number << minLeadJetPt ;
+     stringstream number2 ;
+     number2 << min3rdJetPt ;
+     leadJetPtCutString += number.str() ;
+     leadJetPtCutString += "&&pt_2nd_leadJet>" ;
+     leadJetPtCutString += number.str() ;
+     leadJetPtCutString += "&&pt_3rd_leadJet>" ;
+     leadJetPtCutString += number2.str() ;
+     leadJetPtCutString += ")" ;
+  }
+
+
+
+
     for (int i = 0 ; i < nBinsMET ; i++) {
       for (int j = 0 ; j < nBinsHT ; j++) {
   
@@ -1321,24 +1321,24 @@ inFile << "knn_3b_err       \t" << 0.007<< endl;
   
     }
   
-  //==========================================================================================
-  
-  void FillHTMET(TChain *chain, TH2F *histo, int si, int k) {
-
-     TObjArray *fileElements=chain->GetListOfFiles();
-     TIter next(fileElements);
-     TChainElement *chEl=0;
-     while (( chEl=(TChainElement*)next() )) {
-        TFile f(chEl->GetTitle());
-        TTree *tree = (TTree*)f.Get("tree");
-	SmallTree *t = new SmallTree(tree);
-	t->Loop(histo, si, k);
-     }
-
+//  //==========================================================================================
+//
+//  void FillHTMET(TChain *chain, TH2F *histo, int si, int k) {
+//
+//     TObjArray *fileElements=chain->GetListOfFiles();
+//     TIter next(fileElements);
+//     TChainElement *chEl=0;
+//     while (( chEl=(TChainElement*)next() )) {
+//        TFile f(chEl->GetTitle());
+//        TTree *tree = (TTree*)f.Get("tree");
+//	SmallTree *t = new SmallTree(tree);
+//	t->Loop(histo, si, k);
+//     }
+//
 //     SmallTree *t = new SmallTree(chain);
 //     t->Loop(histo, si, k);
-
-    return;    
-  }
-
-  //==========================================================================================
+//
+//    return;    
+//  }
+//
+//  //==========================================================================================

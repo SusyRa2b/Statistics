@@ -15,6 +15,7 @@
        gROOT->LoadMacro("RooRatio.cxx+") ;
        gROOT->LoadMacro("RooBetaPdf.cxx+") ;
        gROOT->LoadMacro("RooPosDefCorrGauss.cxx+") ;
+       gROOT->LoadMacro("RooProdPdfLogSum.cxx+") ;
        gROOT->LoadMacro("ra2bRoostatsClass3D_3b.c+") ;
 
        ra2bRoostatsClass3D_3b ra2b ;

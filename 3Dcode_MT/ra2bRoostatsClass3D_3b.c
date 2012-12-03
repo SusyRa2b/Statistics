@@ -75,6 +75,7 @@
 #include "RooPosDefCorrGauss.h"
 #include "RooBetaPdf.h"
 #include "betaPrimeConstraint.c"
+#include "RooProdPdfLogSum.h"
 
   using namespace RooFit ;
   using namespace RooStats ;
@@ -2563,8 +2564,7 @@
 	    
       pdflist.Print() ;
 
-      likelihood = new RooProdPdf( "likelihood", "ra2b likelihood", pdflist ) ;
-
+      likelihood = new RooProdPdfLogSum( "likelihood", "ra2b likelihood", pdflist ) ;
 
 
       /// likelihood->printMultiline( cout, 1, kTRUE, "" ) ;
