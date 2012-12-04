@@ -40,7 +40,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   double t1bbbbWeight(0.) ;
   TChain chainT1bbbb("tree") ;
   char susycutstring[1000] ;
-  sprintf( susycutstring, "&&mgluino==%.0f&&mlsp==%.0f", mgl, mlsp ) ;
+  sprintf( susycutstring, "mgluino==%.0f&&mlsp==%.0f", mgl, mlsp ) ;
   TString susycut( susycutstring ) ;
   if ( mgl>0. && mlsp>0. ) {
      nAdded = chainT1bbbb.Add("filesHCP_53_v6/T1bbbb.root") ;
@@ -559,6 +559,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 
         printf("\n\n N_%s -- nbjet bin (%d): cuts=%s\n\n", selname[si], k, allcuts) ; cout << flush ;
+        if (mgl > 0 ) printf("\n\n N_%s -- nbjet bin (%d): cuts=%s\n\n", selname[si], k, allsusycuts) ; cout << flush ;
 
         char hname[100] ;
         sprintf( hname, "h_tt_%db", k+1 ) ;
@@ -966,36 +967,36 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 //these are the values from data
   
-inFile << "N_Zee_M1_H1      \t" << 28<< endl;
-inFile << "N_Zee_M1_H2      \t" << 13<< endl;
+inFile << "N_Zee_M1_H1      \t" << 44<< endl;
+inFile << "N_Zee_M1_H2      \t" << 18<< endl;
 inFile << "N_Zee_M1_H3      \t" << 4<< endl;
-inFile << "N_Zee_M1_H4      \t" << 1<< endl;
-inFile << "N_Zee_M2_H1      \t" << 76<< endl;
-inFile << "N_Zee_M2_H2      \t" << 57<< endl;
+inFile << "N_Zee_M1_H4      \t" << 2<< endl;
+inFile << "N_Zee_M2_H1      \t" << 83<< endl;
+inFile << "N_Zee_M2_H2      \t" << 75<< endl;
 inFile << "N_Zee_M2_H3      \t" << 11<< endl;
-inFile << "N_Zee_M2_H4      \t" << 8<< endl;
-inFile << "N_Zee_M3_H1      \t" << 37<< endl;
-inFile << "N_Zee_M3_H2      \t" << 37<< endl;
-inFile << "N_Zee_M3_H3      \t" << 4<< endl;
-inFile << "N_Zee_M3_H4      \t" << 3<< endl;
-inFile << "N_Zee_M4_H1      \t" << 11<< endl;
-inFile << "N_Zee_M4_H2      \t" << 19<< endl;
-inFile << "N_Zee_M4_H3      \t" << 3<< endl;
-inFile << "N_Zee_M4_H4      \t" << 5<< endl;
-inFile << "N_Zmm_M1_H1      \t" << 38<< endl;
-inFile << "N_Zmm_M1_H2      \t" << 30<< endl;
-inFile << "N_Zmm_M1_H3      \t" << 0<< endl;
-inFile << "N_Zmm_M1_H4      \t" << 1<< endl;
-inFile << "N_Zmm_M2_H1      \t" << 99<< endl;
-inFile << "N_Zmm_M2_H2      \t" << 90<< endl;
-inFile << "N_Zmm_M2_H3      \t" << 10<< endl;
+inFile << "N_Zee_M2_H4      \t" << 2<< endl;
+inFile << "N_Zee_M3_H1      \t" << 38<< endl;
+inFile << "N_Zee_M3_H2      \t" << 42<< endl;
+inFile << "N_Zee_M3_H3      \t" << 6<< endl;
+inFile << "N_Zee_M3_H4      \t" << 5<< endl;
+inFile << "N_Zee_M4_H1      \t" << 12<< endl;
+inFile << "N_Zee_M4_H2      \t" << 27<< endl;
+inFile << "N_Zee_M4_H3      \t" << 4<< endl;
+inFile << "N_Zee_M4_H4      \t" << 3<< endl;
+inFile << "N_Zmm_M1_H1      \t" << 51<< endl;
+inFile << "N_Zmm_M1_H2      \t" << 41<< endl;
+inFile << "N_Zmm_M1_H3      \t" << 1<< endl;
+inFile << "N_Zmm_M1_H4      \t" << 0<< endl;
+inFile << "N_Zmm_M2_H1      \t" << 125<< endl;
+inFile << "N_Zmm_M2_H2      \t" << 105<< endl;
+inFile << "N_Zmm_M2_H3      \t" << 12<< endl;
 inFile << "N_Zmm_M2_H4      \t" << 2<< endl;
-inFile << "N_Zmm_M3_H1      \t" << 46<< endl;
-inFile << "N_Zmm_M3_H2      \t" << 38<< endl;
-inFile << "N_Zmm_M3_H3      \t" << 6<< endl;
+inFile << "N_Zmm_M3_H1      \t" << 48<< endl;
+inFile << "N_Zmm_M3_H2      \t" << 49<< endl;
+inFile << "N_Zmm_M3_H3      \t" << 8<< endl;
 inFile << "N_Zmm_M3_H4      \t" << 2<< endl;
 inFile << "N_Zmm_M4_H1      \t" << 15<< endl;
-inFile << "N_Zmm_M4_H2      \t" << 25<< endl;
+inFile << "N_Zmm_M4_H2      \t" << 34<< endl;
 inFile << "N_Zmm_M4_H3      \t" << 6<< endl;
 inFile << "N_Zmm_M4_H4      \t" << 4<< endl;
 
@@ -1116,12 +1117,13 @@ inFile << "acc_Zmm_M4       \t" << 0.857<< endl;
 inFile << "acc_Zmm_M4_err  \t" << 0.018<< endl;
 
   
-    // Z -> ll efficiencies
+    // Z -> ll efficiencies (these are eff_reco**2 * eff_sel**2 * eff_trig
+    //                       or Z_ee_eff*Z_ee_eff*Z_ee_trg*Z_ee_rec*Z_ee_rec from Zinv_inputs.dat)
 
-inFile << "Z_ee_eff          \t" << 0.876<< endl;
-inFile << "Z_ee_eff_err      \t" << 0.060<< endl;
-inFile << "Z_mm_eff          \t" << 0.877<< endl;
-inFile << "Z_mm_eff_err      \t" << 0.028<< endl;
+inFile << "Z_ee_eff          \t" << 0.516 << endl; // 
+inFile << "Z_ee_eff_err      \t" << 0.056 << endl; // 
+inFile << "Z_mm_eff          \t" << 0.557 << endl; // 
+inFile << "Z_mm_eff_err      \t" << 0.036 << endl; // 
 
 
   
@@ -1167,27 +1169,26 @@ inFile << "Z_mm_eff_err      \t" << 0.028<< endl;
     inFile << "knn_3b_err \t" << 0.003  << endl;
 */
 
-inFile << "knn_1b_M1        \t" << 0.426<< endl;
+inFile << "knn_1b_M1        \t" << 0.451<< endl;
 inFile << "knn_1b_M1_err    \t" << 0.077<< endl;
-inFile << "knn_1b_M2        \t" << 0.413<< endl;
+inFile << "knn_1b_M2        \t" << 0.435<< endl;
 inFile << "knn_1b_M2_err    \t" << 0.074<< endl;
-inFile << "knn_1b_M3       \t" <<  0.376<< endl;
+inFile << "knn_1b_M3       \t" <<  0.401<< endl;
 inFile << "knn_1b_M3_err    \t" << 0.069<< endl;
-inFile << "knn_1b_M4        \t" << 0.325<< endl;
+inFile << "knn_1b_M4        \t" << 0.330<< endl;
 inFile << "knn_1b_M4_err    \t" << 0.062<< endl;
-inFile << "knn_2b           \t" << 0.111<< endl;
+inFile << "knn_2b           \t" << 0.103<< endl;
 inFile << "knn_2b_err       \t" << 0.054<< endl;
-inFile << "knn_3b           \t" << 0.012<< endl;
+inFile << "knn_3b           \t" << 0.008<< endl;
 inFile << "knn_3b_err       \t" << 0.007<< endl;
 
 
 
     // Z -> ll purity
   
-    // use 2011 values for now.
-    inFile << "Z_ee_pur  \t" << 0.839 << endl;
+    inFile << "Z_ee_pur  \t" << 0.829 << endl;
     inFile << "Z_ee_pur_err  \t" << 0.112 << endl;
-    inFile << "Z_mm_pur  \t" << 0.803 << endl;
+    inFile << "Z_mm_pur  \t" << 0.801 << endl;
     inFile << "Z_mm_pur_err  \t" << 0.092 << endl;
   
   
