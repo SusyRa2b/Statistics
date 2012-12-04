@@ -49,11 +49,20 @@
 
      //--- make output directory.
 
-     TString outputdir( wsfile ) ;
-     outputdir.ReplaceAll("rootfiles/","outputfiles/scans-") ;
-     outputdir.ReplaceAll(".root","") ;
-     printf("\n\n Creating output directory: %s\n\n", outputdir.Data() ) ;
+     //// TString outputdir( wsfile ) ;
+     //// outputdir.ReplaceAll("rootfiles/","outputfiles/scans-") ;
+     //// outputdir.ReplaceAll(".root","") ;
+     //// TString outputdir( wsfile ) ;
+
      char command[10000] ;
+     sprintf( command, "basename %s", wsfile ) ;
+     TString wsfilenopath = gSystem->GetFromPipe( command ) ;
+     wsfilenopath.ReplaceAll(".root","") ;
+     char outputdirstr[1000] ;
+     sprintf( outputdirstr, "outputfiles/scans-%s", wsfilenopath.Data() ) ;
+     TString outputdir( outputdirstr ) ;
+
+     printf("\n\n Creating output directory: %s\n\n", outputdir.Data() ) ;
      sprintf(command, "mkdir -p %s", outputdir.Data() ) ;
      gSystem->Exec( command ) ;
 

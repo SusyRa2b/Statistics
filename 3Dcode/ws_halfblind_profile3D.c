@@ -47,11 +47,20 @@
 
      //--- make output directory.
 
-     TString outputdir( wsfile ) ;
-     outputdir.ReplaceAll("rootfiles/","outputfiles/scans-") ;
-     outputdir.ReplaceAll(".root","") ;
-     printf("\n\n Creating output directory: %s\n\n", outputdir.Data() ) ;
+     //// TString outputdir( wsfile ) ;
+     //// outputdir.ReplaceAll("rootfiles/","outputfiles/scans-") ;
+     //// outputdir.ReplaceAll(".root","") ;
+
      char command[10000] ;
+     sprintf( command, "basename %s", wsfile ) ;
+     TString wsfilenopath = gSystem->GetFromPipe( command ) ;
+     wsfilenopath.ReplaceAll(".root","") ;
+     char outputdirstr[1000] ;
+     sprintf( outputdirstr, "outputfiles/scans-%s", wsfilenopath.Data() ) ;
+     TString outputdir( outputdirstr ) ;
+
+
+     printf("\n\n Creating output directory: %s\n\n", outputdir.Data() ) ;
      sprintf(command, "mkdir -p %s", outputdir.Data() ) ;
      gSystem->Exec( command ) ;
 
@@ -606,6 +615,8 @@
        double poiBest(-1.) ;
        double poiMinus1stdv(-1.) ;
        double poiPlus1stdv(-1.) ;
+       double poiMinus2stdv(-1.) ;
+       double poiPlus2stdv(-1.) ;
        double twoDeltalnLMin(1e9) ;
 
        int nscan(1000) ;
@@ -616,16 +627,22 @@
           double twoDeltalnL = graph -> Eval( x ) ;
 
           if ( poiMinus1stdv < 0. && twoDeltalnL < 1.0 ) { poiMinus1stdv = x ; printf(" set m1 : %d, x=%g, 2dnll=%g\n", xi, x, twoDeltalnL) ;}
+          if ( poiMinus2stdv < 0. && twoDeltalnL < 4.0 ) { poiMinus2stdv = x ; printf(" set m2 : %d, x=%g, 2dnll=%g\n", xi, x, twoDeltalnL) ;}
           if ( twoDeltalnL < twoDeltalnLMin ) { poiBest = x ; twoDeltalnLMin = twoDeltalnL ; }
           if ( twoDeltalnLMin < 0.3 && poiPlus1stdv < 0. && twoDeltalnL > 1.0 ) { poiPlus1stdv = x ; printf(" set p1 : %d, x=%g, 2dnll=%g\n", xi, x, twoDeltalnL) ;}
+          if ( twoDeltalnLMin < 0.3 && poiPlus2stdv < 0. && twoDeltalnL > 4.0 ) { poiPlus2stdv = x ; printf(" set p2 : %d, x=%g, 2dnll=%g\n", xi, x, twoDeltalnL) ;}
 
           if ( xi%100 == 0 ) { printf( " %4d : poi=%6.2f,  2DeltalnL = %6.2f\n", xi, x, twoDeltalnL ) ; }
 
        }
-       printf("\n\n POI estimate :  %g  +%g  -%g    [%g,%g]\n\n",
-               poiBest, (poiPlus1stdv-poiBest), (poiBest-poiMinus1stdv), poiMinus1stdv, poiPlus1stdv ) ;
-
-
+       printf("\n\n POI estimate :  %g  +%g  -%g    [%g,%g],   two sigma errors: +%g  -%g   [%g,%g]\n\n",
+               poiBest,
+               (poiPlus1stdv-poiBest), (poiBest-poiMinus1stdv), poiMinus1stdv, poiPlus1stdv,
+               (poiPlus2stdv-poiBest), (poiBest-poiMinus2stdv), poiMinus2stdv, poiPlus2stdv
+               ) ;
+       
+       printf(" %s val,pm1sig,pm2sig: %7.2f  %7.2f  %7.2f  %7.2f  %7.2f\n",
+          new_poi_name, poiBest, (poiPlus1stdv-poiBest), (poiBest-poiMinus1stdv), (poiPlus2stdv-poiBest), (poiBest-poiMinus2stdv) ) ;
 
        char htitle[1000] ;
        sprintf(htitle, "%s profile likelihood scan: -2ln(L/Lm)", new_poi_name ) ;
