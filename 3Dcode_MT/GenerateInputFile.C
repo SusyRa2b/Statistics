@@ -96,7 +96,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   chainWJets.Add("filesHCP_53_v6/WJets-300to400.root") ;
   chainWJets.Add("filesHCP_53_v6/WJets-400.root") ;
   chainWJets.Add("filesHCP_53_v6/T-s.root") ;
-  //chainWJets.Add("filesHCP_53_v6/T-t.root") ;
+  chainWJets.Add("filesHCP_53_v6/T-t.root") ;
   chainWJets.Add("filesHCP_53_v6/T-tW.root") ;
   chainWJets.Add("filesHCP_53_v6/Tbar-s.root") ;
   chainWJets.Add("filesHCP_53_v6/Tbar-t.root") ;
@@ -782,40 +782,41 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     }
   */
 
-//these are the values from data
-  
-inFile << "N_Zee_M1_H1      \t" << 28<< endl;
-inFile << "N_Zee_M1_H2      \t" << 13<< endl;
-inFile << "N_Zee_M1_H3      \t" << 4<< endl;
-inFile << "N_Zee_M1_H4      \t" << 1<< endl;
-inFile << "N_Zee_M2_H1      \t" << 76<< endl;
-inFile << "N_Zee_M2_H2      \t" << 57<< endl;
-inFile << "N_Zee_M2_H3      \t" << 11<< endl;
-inFile << "N_Zee_M2_H4      \t" << 8<< endl;
-inFile << "N_Zee_M3_H1      \t" << 37<< endl;
-inFile << "N_Zee_M3_H2      \t" << 37<< endl;
-inFile << "N_Zee_M3_H3      \t" << 4<< endl;
-inFile << "N_Zee_M3_H4      \t" << 3<< endl;
-inFile << "N_Zee_M4_H1      \t" << 11<< endl;
-inFile << "N_Zee_M4_H2      \t" << 19<< endl;
-inFile << "N_Zee_M4_H3      \t" << 3<< endl;
-inFile << "N_Zee_M4_H4      \t" << 5<< endl;
-inFile << "N_Zmm_M1_H1      \t" << 38<< endl;
-inFile << "N_Zmm_M1_H2      \t" << 30<< endl;
-inFile << "N_Zmm_M1_H3      \t" << 0<< endl;
-inFile << "N_Zmm_M1_H4      \t" << 1<< endl;
-inFile << "N_Zmm_M2_H1      \t" << 99<< endl;
-inFile << "N_Zmm_M2_H2      \t" << 90<< endl;
-inFile << "N_Zmm_M2_H3      \t" << 10<< endl;
-inFile << "N_Zmm_M2_H4      \t" << 2<< endl;
-inFile << "N_Zmm_M3_H1      \t" << 46<< endl;
-inFile << "N_Zmm_M3_H2      \t" << 38<< endl;
-inFile << "N_Zmm_M3_H3      \t" << 6<< endl;
-inFile << "N_Zmm_M3_H4      \t" << 2<< endl;
-inFile << "N_Zmm_M4_H1      \t" << 15<< endl;
-inFile << "N_Zmm_M4_H2      \t" << 25<< endl;
-inFile << "N_Zmm_M4_H3      \t" << 6<< endl;
-inFile << "N_Zmm_M4_H4      \t" << 4<< endl;
+    //these are the values from data
+        
+    inFile << "N_Zee_M1_H1      \t" << 44<< endl;
+    inFile << "N_Zee_M1_H2      \t" << 18<< endl;
+    inFile << "N_Zee_M1_H3      \t" << 4<< endl;
+    inFile << "N_Zee_M1_H4      \t" << 2<< endl;
+    inFile << "N_Zee_M2_H1      \t" << 83<< endl;
+    inFile << "N_Zee_M2_H2      \t" << 75<< endl;
+    inFile << "N_Zee_M2_H3      \t" << 11<< endl;
+    inFile << "N_Zee_M2_H4      \t" << 2<< endl;
+    inFile << "N_Zee_M3_H1      \t" << 38<< endl;
+    inFile << "N_Zee_M3_H2      \t" << 42<< endl;
+    inFile << "N_Zee_M3_H3      \t" << 6<< endl;
+    inFile << "N_Zee_M3_H4      \t" << 5<< endl;
+    inFile << "N_Zee_M4_H1      \t" << 12<< endl;
+    inFile << "N_Zee_M4_H2      \t" << 27<< endl;
+    inFile << "N_Zee_M4_H3      \t" << 4<< endl;
+    inFile << "N_Zee_M4_H4      \t" << 3<< endl;
+    inFile << "N_Zmm_M1_H1      \t" << 51<< endl;
+    inFile << "N_Zmm_M1_H2      \t" << 41<< endl;
+    inFile << "N_Zmm_M1_H3      \t" << 1<< endl;
+    inFile << "N_Zmm_M1_H4      \t" << 0<< endl;
+    inFile << "N_Zmm_M2_H1      \t" << 125<< endl;
+    inFile << "N_Zmm_M2_H2      \t" << 105<< endl;
+    inFile << "N_Zmm_M2_H3      \t" << 12<< endl;
+    inFile << "N_Zmm_M2_H4      \t" << 2<< endl;
+    inFile << "N_Zmm_M3_H1      \t" << 48<< endl;
+    inFile << "N_Zmm_M3_H2      \t" << 49<< endl;
+    inFile << "N_Zmm_M3_H3      \t" << 8<< endl;
+    inFile << "N_Zmm_M3_H4      \t" << 2<< endl;
+    inFile << "N_Zmm_M4_H1      \t" << 15<< endl;
+    inFile << "N_Zmm_M4_H2      \t" << 34<< endl;
+    inFile << "N_Zmm_M4_H3      \t" << 6<< endl;
+    inFile << "N_Zmm_M4_H4      \t" << 4<< endl;
+
 
   
     //inFile << "Why are all three of these MC categories separate? I've just put them together (only QCD, Zinv, tt)" << endl;
@@ -912,34 +913,33 @@ inFile << "N_Zmm_M4_H4      \t" << 4<< endl;
   
     }
 */
-      
 
 
-
-inFile << "acc_Zee_M1       \t" << 0.676<< endl;
-inFile << "acc_Zee_M1_err  \t" << 0.014<< endl;
-inFile << "acc_Zee_M2       \t" << 0.700<< endl;
-inFile << "acc_Zee_M2_err  \t" << 0.015<< endl;
-inFile << "acc_Zee_M3       \t" << 0.741<< endl;
-inFile << "acc_Zee_M3_err  \t" << 0.015<< endl;
-inFile << "acc_Zee_M4       \t" << 0.792<< endl;
-inFile << "acc_Zee_M4_err \t" <<  0.016<< endl;
-inFile << "acc_Zmm_M1       \t" << 0.674<< endl;
-inFile << "acc_Zmm_M1_err  \t" << 0.014<< endl;
-inFile << "acc_Zmm_M2       \t" << 0.733<< endl;
-inFile << "acc_Zmm_M2_err  \t" << 0.014<< endl;
-inFile << "acc_Zmm_M3       \t" << 0.810<< endl;
-inFile << "acc_Zmm_M3_err \t" <<  0.015<< endl;
-inFile << "acc_Zmm_M4       \t" << 0.857<< endl;
-inFile << "acc_Zmm_M4_err  \t" << 0.018<< endl;
+    inFile << "acc_Zee_M1       \t" << 0.676<< endl;
+    inFile << "acc_Zee_M1_err  \t" << 0.014<< endl;
+    inFile << "acc_Zee_M2       \t" << 0.700<< endl;
+    inFile << "acc_Zee_M2_err  \t" << 0.015<< endl;
+    inFile << "acc_Zee_M3       \t" << 0.741<< endl;
+    inFile << "acc_Zee_M3_err  \t" << 0.015<< endl;
+    inFile << "acc_Zee_M4       \t" << 0.792<< endl;
+    inFile << "acc_Zee_M4_err \t" <<  0.016<< endl;
+    inFile << "acc_Zmm_M1       \t" << 0.674<< endl;
+    inFile << "acc_Zmm_M1_err  \t" << 0.014<< endl;
+    inFile << "acc_Zmm_M2       \t" << 0.733<< endl;
+    inFile << "acc_Zmm_M2_err  \t" << 0.014<< endl;
+    inFile << "acc_Zmm_M3       \t" << 0.810<< endl;
+    inFile << "acc_Zmm_M3_err \t" <<  0.015<< endl;
+    inFile << "acc_Zmm_M4       \t" << 0.857<< endl;
+    inFile << "acc_Zmm_M4_err  \t" << 0.018<< endl;
 
   
-    // Z -> ll efficiencies
-
-inFile << "Z_ee_eff          \t" << 0.876<< endl;
-inFile << "Z_ee_eff_err      \t" << 0.060<< endl;
-inFile << "Z_mm_eff          \t" << 0.877<< endl;
-inFile << "Z_mm_eff_err      \t" << 0.028<< endl;
+    // Z -> ll efficiencies (these are eff_reco**2 * eff_sel**2 * eff_trig
+    //                       or Z_ee_eff*Z_ee_eff*Z_ee_trg*Z_ee_rec*Z_ee_rec from Zinv_inputs.dat)
+    
+    inFile << "Z_ee_eff          \t" << 0.516 << endl; // 
+    inFile << "Z_ee_eff_err      \t" << 0.056 << endl; // 
+    inFile << "Z_mm_eff          \t" << 0.557 << endl; // 
+    inFile << "Z_mm_eff_err      \t" << 0.036 << endl; // 
 
 
   
@@ -985,27 +985,25 @@ inFile << "Z_mm_eff_err      \t" << 0.028<< endl;
     inFile << "knn_3b_err \t" << 0.003  << endl;
 */
 
-inFile << "knn_1b_M1        \t" << 0.426<< endl;
-inFile << "knn_1b_M1_err    \t" << 0.077<< endl;
-inFile << "knn_1b_M2        \t" << 0.413<< endl;
-inFile << "knn_1b_M2_err    \t" << 0.074<< endl;
-inFile << "knn_1b_M3       \t" <<  0.376<< endl;
-inFile << "knn_1b_M3_err    \t" << 0.069<< endl;
-inFile << "knn_1b_M4        \t" << 0.325<< endl;
-inFile << "knn_1b_M4_err    \t" << 0.062<< endl;
-inFile << "knn_2b           \t" << 0.111<< endl;
-inFile << "knn_2b_err       \t" << 0.054<< endl;
-inFile << "knn_3b           \t" << 0.012<< endl;
-inFile << "knn_3b_err       \t" << 0.007<< endl;
-
+    inFile << "knn_1b_M1        \t" << 0.421<< endl;
+    inFile << "knn_1b_M1_err    \t" << 0.082<< endl;
+    inFile << "knn_1b_M2        \t" << 0.405<< endl;
+    inFile << "knn_1b_M2_err    \t" << 0.079<< endl;
+    inFile << "knn_1b_M3       \t" <<  0.368<< endl;
+    inFile << "knn_1b_M3_err    \t" << 0.072<< endl;
+    inFile << "knn_1b_M4        \t" << 0.313<< endl;
+    inFile << "knn_1b_M4_err    \t" << 0.065<< endl;
+    inFile << "knn_2b           \t" << 0.133<< endl;
+    inFile << "knn_2b_err       \t" << 0.035<< endl;
+    inFile << "knn_3b           \t" << 0.007<< endl;
+    inFile << "knn_3b_err       \t" << 0.004<< endl;
 
 
     // Z -> ll purity
   
-    // use 2011 values for now.
-    inFile << "Z_ee_pur  \t" << 0.839 << endl;
+    inFile << "Z_ee_pur  \t" << 0.829 << endl;
     inFile << "Z_ee_pur_err  \t" << 0.112 << endl;
-    inFile << "Z_mm_pur  \t" << 0.803 << endl;
+    inFile << "Z_mm_pur  \t" << 0.801 << endl;
     inFile << "Z_mm_pur_err  \t" << 0.092 << endl;
   
   
@@ -1217,6 +1215,19 @@ inFile << "knn_3b_err       \t" << 0.007<< endl;
     inFile << "GU_luminosity   0.044" << endl ;
     inFile << "GU_metcleaning  0.031" << endl ;
 
+
+   //-- Nov 14, 2012 : add QCD model parameters to avoid hardwiring things in ra2bRoostatsClass3D_3b
+   //    see logfile of mcclosure4 for values.
+   //    Uncertainties are (SFmet3-SFmet2)/2
+   //                      (SFmet4-SFmet2)/2
+   //                      (1-SFnb3)/2 added in quad with stat err from chi2 fit.
+
+    inFile << "SFqcd_met3       1.49" << endl ;
+    inFile << "SFqcd_met3_err   0.15" << endl ;
+    inFile << "SFqcd_met4       2.14" << endl ;
+    inFile << "SFqcd_met4_err   0.48" << endl ;
+    inFile << "SFqcd_nb3        0.79" << endl ;
+    inFile << "SFqcd_nb3_err    0.18" << endl ;
 
 
 
