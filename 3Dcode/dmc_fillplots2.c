@@ -75,6 +75,19 @@
           compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012B.root" ) ;
           compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012B.root" ) ;
           complumi[compind] = 5.23 ;
+       } else if ( strcmp(dataset_string, "RunsABC" ) == 0 ) {
+          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012A.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012B.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_rr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/HT_2012A.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012B.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_rr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012B.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_rr.root" ) ;
+          complumi[compind] = 12.03 ;
        } else if ( strcmp(dataset_string, "RunC" ) == 0 ) {
           printf("\n\n Loading run C.\n\n") ;
           compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_pr.root" ) ;

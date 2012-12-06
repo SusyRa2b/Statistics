@@ -302,9 +302,15 @@
 
      printf("\n\n\n\n") ; cout << flush ;
 
-     TString ws_fname( wsfile ) ;
-     ws_fname.ReplaceAll("rootfiles/","") ;
+  // TString ws_fname( wsfile ) ;
+  // ws_fname.ReplaceAll("rootfiles/","") ;
+  // ws_fname.ReplaceAll(".root","") ;
+
+     char command[1000] ;
+     sprintf( command, "basename %s", wsfile ) ;
+     TString ws_fname = gSystem->GetFromPipe( command ) ;
      ws_fname.ReplaceAll(".root","") ;
+
 
      char outfilename[10000] ;
      if ( mu_susy_sig_val < 0. ) {

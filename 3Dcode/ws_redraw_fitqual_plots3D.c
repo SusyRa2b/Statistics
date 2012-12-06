@@ -41,10 +41,17 @@
 
      char savenamebase[1000] ;
      char savename[1000] ;
+     char command[1000] ;
 
-     TString savestr( histfile ) ;
-     savestr.ReplaceAll(".root","") ;
-     savestr.ReplaceAll("rootfiles","outputfiles") ;
+  // TString savestr( histfile ) ;
+  // savestr.ReplaceAll(".root","") ;
+  // savestr.ReplaceAll("rootfiles","outputfiles") ;
+
+     sprintf( command, "basename %s", histfile ) ;
+     TString tmpstr = gSystem->GetFromPipe( command ) ;
+     tmpstr.ReplaceAll(".root","") ;
+     TString savestr = TString("outputfiles/") + tmpstr ;
+     printf(" savestr : %s\n", savestr.Data() ) ;
 
      if ( doNorm ) { logy = false ; }
 
