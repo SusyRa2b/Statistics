@@ -3420,9 +3420,11 @@
        char formula[1000] ;
 
        if ( !changeSign ) {
-          sprintf( formula, "@0 * pow( exp( @1/@0 ), @2 )" ) ;
+          ////// sprintf( formula, "@0 * pow( exp( @1/@0 ), @2 )" ) ;
+          sprintf( formula, "@0 * pow( ( @1/@0 + 1.), @2 )" ) ;
        } else {
-          sprintf( formula, "@0 * pow( exp( @1/@0 ), -1.0 * @2 )" ) ;
+          ////// sprintf( formula, "@0 * pow( exp( @1/@0 ), -1.0 * @2 )" ) ;
+          sprintf( formula, "@0 * pow( ( @1/@0 + 1.), -1.0 * @2 )" ) ;
        }
 
        rar = new RooFormulaVar( NP_name, formula, RooArgSet( *ln_mean, *ln_sigma, *rrv_np_base_par ) ) ;
