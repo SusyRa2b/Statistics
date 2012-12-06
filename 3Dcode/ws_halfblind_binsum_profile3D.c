@@ -36,13 +36,13 @@
 
   //==============================================================================================
 
-   void ws_halfblind_binsum_profile3D( const char* wsfile = "rootfiles-12fb/ws-data-unblind.root",
+   void ws_halfblind_binsum_profile3D( const char* wsfile = "rootfiles/ws-data-unblind.root",
                                    const char* new_poi_list = "n_M2_H4_3b;n_M3_H4_3b;n_M4_H4_3b",
                                    const char* new_poi_name = "n_M234_H4_3b",
-                                   int npoiPoints = 40,
+                                   int npoiPoints = 10,
                                    double poiMinVal = 0.,
-                                   double poiMaxVal = 90.,
-                                   double constraintWidth = 1.0,
+                                   double poiMaxVal = 20.,
+                                   double constraintWidth = 0.5,
                                    double ymax = 10.,
                                    int verbLevel=0 ) {
 

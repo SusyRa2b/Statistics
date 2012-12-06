@@ -3227,7 +3227,6 @@
           return new RooConstVar( NP_name, NP_name, NP_val ) ;
        }
 
-
        char pname[1000] ;
        sprintf( pname, "prim_%s", NP_name ) ;
 
@@ -3263,8 +3262,20 @@
 
        //-- compute the log-normal-distributed parameter from the primary parameter.
 
-       RooFormulaVar* np_rfv = new RooFormulaVar( NP_name, "@0 * pow( exp( @1/@0 ), @2)",
-                 RooArgSet( *g_mean, *g_sigma, *np_prim_rrv ) ) ;
+       //--- This is the old (Fedor) way. ---------------------------------------------------------
+       ////// RooFormulaVar* np_rfv = new RooFormulaVar( NP_name, "@0 * pow( exp( @1/@0 ), @2)",
+       //////           RooArgSet( *g_mean, *g_sigma, *np_prim_rrv ) ) ;
+       //------------------------------------------------------------------------------------------
+
+       //--- This is the new way.  RMS of lognormal is much closer to sigma when sigma is
+       //    large, doing it this way.  When sigma/mean is small, they are about the same.
+       //    That is, exp(sigma/mean) is close to (sigma/mean + 1).  This one is better when
+       //    sigma/mean is not small.  The high-side tail is not as strong.
+       //
+        RooFormulaVar* np_rfv = new RooFormulaVar( NP_name, "@0 * pow( ( @1/@0 + 1. ), @2)",
+                  RooArgSet( *g_mean, *g_sigma, *np_prim_rrv ) ) ;
+       //------------------------------------------------------------------------------------------
+
 
        printf("  makeLognormalConstraint : created log-normal nuisance parameter %s : val = %g\n", NP_name, np_rfv -> getVal() ) ;
 
