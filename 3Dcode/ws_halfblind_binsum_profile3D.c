@@ -32,12 +32,12 @@
   using namespace RooStats;
 
   //-- Note: 2nd argument is list of bins to sum, separated by semicolons.
-  //         Here's an example: "n_M2_H4_3b;n_M3_H4_3b;n_M4_H4_3b"
+  //         Here's an example: "n_M2_H4_3b:n_M3_H4_3b:n_M4_H4_3b"
 
   //==============================================================================================
 
    void ws_halfblind_binsum_profile3D( const char* wsfile = "rootfiles/ws-data-unblind.root",
-                                   const char* new_poi_list = "n_M2_H4_3b;n_M3_H4_3b;n_M4_H4_3b",
+                                   const char* new_poi_list = "n_M2_H4_3b:n_M3_H4_3b:n_M4_H4_3b",
                                    const char* new_poi_name = "n_M234_H4_3b",
                                    int npoiPoints = 20,
                                    double poiMinVal = 0.,
@@ -169,7 +169,7 @@
 
 
        TString new_poi_list_ts( new_poi_list ) ;
-       TObjArray* poi_obs_name_list = new_poi_list_ts.Tokenize(";") ;
+       TObjArray* poi_obs_name_list = new_poi_list_ts.Tokenize(":") ;
 
        int n_poi_observables = poi_obs_name_list -> GetEntries() ;
 
