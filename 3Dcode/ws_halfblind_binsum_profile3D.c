@@ -39,7 +39,7 @@
    void ws_halfblind_binsum_profile3D( const char* wsfile = "rootfiles/ws-data-unblind.root",
                                    const char* new_poi_list = "n_M2_H4_3b;n_M3_H4_3b;n_M4_H4_3b",
                                    const char* new_poi_name = "n_M234_H4_3b",
-                                   int npoiPoints = 10,
+                                   int npoiPoints = 20,
                                    double poiMinVal = 0.,
                                    double poiMaxVal = 20.,
                                    double constraintWidth = 0.5,
@@ -485,7 +485,7 @@
 
           double x = poiVals[0] + xi*(poiVals[npoiPoints-1]-poiVals[0])/(nscan-1) ;
 
-          double twoDeltalnL = graph -> Eval( x ) ;
+          double twoDeltalnL = graph -> Eval( x, 0, "S" ) ;
 
           if ( poiMinus1stdv < 0. && twoDeltalnL < 1.0 ) { poiMinus1stdv = x ; printf(" set m1 : %d, x=%g, 2dnll=%g\n", xi, x, twoDeltalnL) ;}
           if ( poiMinus2stdv < 0. && twoDeltalnL < 4.0 ) { poiMinus2stdv = x ; printf(" set m2 : %d, x=%g, 2dnll=%g\n", xi, x, twoDeltalnL) ;}
