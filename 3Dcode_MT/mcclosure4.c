@@ -527,14 +527,14 @@
       }
 
 
-      TH1F* hscalefactor_ttwj_ave_1lSover1ratio_wrms_whalfcorr = (TH1F*) hscalefactor_ttwj_ave_1lSover1ratio_wrms->Clone("hscalefactor_ttwj_ave_1lSover1ratio_wrms_whalfcorr") ;
+      TH1F* hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr = (TH1F*) hscalefactor_ttwj_ave_1lSover1ratio->Clone("hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr") ;
       for ( int hbi=1; hbi<=nBins; hbi++ ) {
-         double val = hscalefactor_ttwj_ave_1lSover1ratio_wrms -> GetBinContent( hbi ) ;
-         double err = hscalefactor_ttwj_ave_1lSover1ratio_wrms -> GetBinError( hbi ) ;
+         double val = hscalefactor_ttwj_ave_1lSover1ratio -> GetBinContent( hbi ) ;
+         double err = hscalefactor_ttwj_ave_1lSover1ratio -> GetBinError( hbi ) ;
          if ( err <= 0 ) continue ;
          double halfdiff = 0.5*(val - 1.) ;
          double errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
-         hscalefactor_ttwj_ave_1lSover1ratio_wrms_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
+         hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
       }
 
 
@@ -732,17 +732,17 @@
 
       gStyle->SetEndErrorSize(3) ;
 
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms_whalfcorr->SetLineColor(1) ;
+      hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->SetLineColor(1) ;
       hscalefactor_ttwj_ave_1lSover1ratio_wrms          ->SetLineColor(1) ;
       hscalefactor_ttwj_ave_1lSover1ratio               ->SetLineColor(1) ;
 
       hdummy1->SetYTitle("ttwj 1 lep SIG / 1 lep Scale factor") ;
       hdummy1->SetMaximum(2.0) ;
       hdummy1->DrawCopy() ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms_whalfcorr -> Draw("samee1") ;
+      hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr -> Draw("samee1") ;
       hscalefactor_ttwj_ave_1lSover1ratio_wrms -> Draw("samee1") ;
       hscalefactor_ttwj_ave_1lSover1ratio -> Draw("samee1") ;
-      line->DrawLine(0.5,1.,hscalefactor_ttwj_ave_1lSover1ratio_wrms_whalfcorr->GetNbinsX()+0.5,1.) ;
+      line->DrawLine(0.5,1.,hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->GetNbinsX()+0.5,1.) ;
 
       TString outttwj_slSigave( infileStr ) ;
       outttwj_slSigave.ReplaceAll("rootfiles","outputfiles") ;
@@ -849,13 +849,13 @@
       hscalefactor_ttwj_ave_1lSover1ratio->SetLineColor(1) ;
       hscalefactor_ttwj_ave_1lSover1ratio_wrms->SetMarkerStyle(24) ;
       hscalefactor_ttwj_ave_1lSover1ratio_wrms->SetLineColor(4) ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms_whalfcorr->SetMarkerStyle(24) ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms_whalfcorr->SetLineColor(1) ;
+      hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->SetMarkerStyle(24) ;
+      hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->SetLineColor(1) ;
       hscalefactor_ttwj_ave_1lSover1ratio->SetTitle("ttwj >=3b: 1 Lepton SIG / 1 Lepton, Scale Factor") ;
       hscalefactor_ttwj_ave_1lSover1ratio_wrms->SetTitle("1 lep Sig, #geq 1 btag") ;
       hscalefactor_ttwj_ave_1lSover1ratio_wrms->SetMaximum(2.5);
       hscalefactor_ttwj_ave_1lSover1ratio_wrms->Draw("e1") ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms_whalfcorr->Draw("samee1") ;
+      hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->Draw("samee1") ;
       hscalefactor_ttwj_ave_1lSover1ratio->DrawCopy("samee1") ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_1lSover1ratio_1b->GetNbinsX()+0.5,1.) ;
       hscalefactor_ttwj_ave_1lSover1ratio->Draw("same") ;
@@ -898,7 +898,7 @@
       h_ttwj_ave_1lSover1ratio_wrms->SetMarkerSize(1.5) ;
       hscalefactor_ttwj_ave_1lSover1ratio->SetMarkerSize(1.5) ;
       hscalefactor_ttwj_ave_1lSover1ratio_wrms->SetMarkerSize(1.5) ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms_whalfcorr->SetMarkerSize(1.5) ;
+      hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->SetMarkerSize(1.5) ;
 
       hmctruth_ttwj_1lSover1ratio_1b->SetMarkerStyle(20) ;
       hmctruth_ttwj_1lSover1ratio_2b->SetMarkerStyle(20) ;
@@ -1004,7 +1004,7 @@
       hscalefactor_ttwj_1lSover1ratio_1b->Draw() ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_1lSover1ratio_1b->GetNbinsX()+0.5,1.) ;
       hscalefactor_ttwj_1lSover1ratio_1b->Draw("same") ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms_whalfcorr->Draw("e1same") ;
+      hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->Draw("e1same") ;
       hscalefactor_ttwj_ave_1lSover1ratio_wrms->Draw("e1same") ;
       hscalefactor_ttwj_ave_1lSover1ratio->Draw("e1same") ;
       cttwj_slSig3ave->cd(5) ;
@@ -1012,7 +1012,7 @@
       hscalefactor_ttwj_1lSover1ratio_2b->Draw() ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_1lSover1ratio_1b->GetNbinsX()+0.5,1.) ;
       hscalefactor_ttwj_1lSover1ratio_2b->Draw("same") ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms_whalfcorr->Draw("e1same") ;
+      hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->Draw("e1same") ;
       hscalefactor_ttwj_ave_1lSover1ratio_wrms->Draw("e1same") ;
       hscalefactor_ttwj_ave_1lSover1ratio->Draw("e1same") ;
       cttwj_slSig3ave->cd(6) ;
@@ -1020,7 +1020,7 @@
       hscalefactor_ttwj_1lSover1ratio_3b->Draw() ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_1lSover1ratio_1b->GetNbinsX()+0.5,1.) ;
       hscalefactor_ttwj_1lSover1ratio_3b->Draw("same") ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms_whalfcorr->Draw("e1same") ;
+      hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->Draw("e1same") ;
       hscalefactor_ttwj_ave_1lSover1ratio_wrms->Draw("e1same") ;
       hscalefactor_ttwj_ave_1lSover1ratio->Draw("e1same") ;
 
@@ -1339,8 +1339,8 @@
                   hmctruth_ttwj_1lepSig_3b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
             if ( useAverageTtwjClosure ) {
 	       // include 4% systematic for W fraction variation
-               err        = sqrt( hscalefactor_ttwj_ave_1lSover1ratio_wrms_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_ave_1lSover1ratio_wrms_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
-               correction = hscalefactor_ttwj_ave_1lSover1ratio_wrms_whalfcorr->GetBinContent(hbin)  ;
+               err        = sqrt( hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
+               correction = hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->GetBinContent(hbin)  ;
             } else {
 	       // include 4% systematic for W fraction variation
                err        = sqrt( hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;

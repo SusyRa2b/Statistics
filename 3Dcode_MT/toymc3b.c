@@ -266,6 +266,7 @@
 		 const char* input_blindBinsList = "null",
 		 bool input_inputObservablesArePostTrigger = true,
 		 bool constrainBjetShape = false,
+		 bool floatSLSigRatios = false,
 		 const char* systfilename = "systFile1.txt"
 		 ) {
      
@@ -404,7 +405,7 @@
        char wsfilename[10000] ;
        sprintf( wsfilename, "%s/ws.root", outputDir ) ;
        ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, qcdModelIndex, wsfilename, 
-			blindBinsList, constrainBjetShape, systfilename ) ;
+			blindBinsList, constrainBjetShape, floatSLSigRatios, systfilename ) ;
        TFile wsfile( wsfilename ) ;
        workspace = (RooWorkspace*) wsfile.Get("ws") ;
        if ( workspace == 0x0 ) {
@@ -477,7 +478,7 @@
           if ( nBinsMET >=2 ) {
              rrv_SFqcd_met2 = workspace -> var( "SFqcd_met2" ) ;
              if ( rrv_SFqcd_met2 == 0x0 ) {
-                printf("\n\n *** can't find SFqcd_met2.\n\n") ; return ;
+	       printf("\n\n *** can't find SFqcd_met2.\n\n") ; return ;
              }
           }
           if ( nBinsBjets >=2 ) {
@@ -490,19 +491,19 @@
              if ( nBinsMET >=3 ) {
                 rrv_SFqcd_met3 = workspace -> var( "SFqcd_met3" ) ;
                 if ( rrv_SFqcd_met3 == 0x0 ) {
-                   printf("\n\n *** can't find SFqcd_met3.\n\n") ; return ;
+		  printf("\n\n *** can't find SFqcd_met3.\n\n") ; //return ;
                 }
              }
              if ( nBinsMET >=4 ) {
                 rrv_SFqcd_met4 = workspace -> var( "SFqcd_met4" ) ;
                 if ( rrv_SFqcd_met4 == 0x0 ) {
-                   printf("\n\n *** can't find SFqcd_met4.\n\n") ; return ;
+		  printf("\n\n *** can't find SFqcd_met4.\n\n") ; //return ;
                 }
              }
              if ( nBinsBjets >=3 ) {
                 rrv_SFqcd_nb3 = workspace -> var( "SFqcd_nb3" ) ;
                 if ( rrv_SFqcd_nb3 == 0x0 ) {
-                   printf("\n\n *** can't find SFqcd_nb3.\n\n") ; return ;
+		  printf("\n\n *** can't find SFqcd_nb3.\n\n") ; //return ;
                 }
              }
              if ( nBinsBjets >=4 ) {
@@ -710,9 +711,9 @@
                 if ( nBinsMET >=2 ) { fit_SFqcd_met2_at0susy     = rrv_SFqcd_met2 -> getVal() ; }
                 if ( nBinsBjets >=2 ) { fit_SFqcd_nb2_at0susy     = rrv_SFqcd_nb2 -> getVal() ; }
                 if ( qcdModelIndex == 4 ) {
-                   if ( nBinsMET >=3 ) { fit_SFqcd_met3_at0susy     = rrv_SFqcd_met3 -> getVal() ; }
-                   if ( nBinsMET >=4 ) { fit_SFqcd_met4_at0susy     = rrv_SFqcd_met4 -> getVal() ; }
-                   if ( nBinsBjets >=3 ) { fit_SFqcd_nb3_at0susy     = rrv_SFqcd_nb3 -> getVal() ; }
+		  //if ( nBinsMET >=3 ) { fit_SFqcd_met3_at0susy     = rrv_SFqcd_met3 -> getVal() ; }
+		  //if ( nBinsMET >=4 ) { fit_SFqcd_met4_at0susy     = rrv_SFqcd_met4 -> getVal() ; }
+		  //if ( nBinsBjets >=3 ) { fit_SFqcd_nb3_at0susy     = rrv_SFqcd_nb3 -> getVal() ; }
                    if ( nBinsBjets >=4 ) { fit_SFqcd_nb4_at0susy     = rrv_SFqcd_nb4 -> getVal() ; }
                 }
              }
@@ -1637,7 +1638,6 @@
       susy_poi_atMinNll = rrv_susy_poi->getVal() ;
       susy_poi_plusErr  = rrv_susy_poi->getErrorHi() ;
 
-
       fit_susy_0lep     =  (rrv_susy_poi->getVal()) ;
       fit_susy_0lep_err =  (rrv_susy_poi->getError()) ;
       fit_susy_0lep_err_low =  (rrv_susy_poi->getErrorLo()) ;
@@ -1682,6 +1682,8 @@
             fit_SFqcd_nb2_err = rrv_SFqcd_nb2 -> getError() ;
          }
       }
+
+      /*
       if ( qcdModelIndex == 4 ) {
          if ( nBinsMET >=3 ) {
             fit_SFqcd_met3     = rrv_SFqcd_met3 -> getVal() ;
@@ -1700,6 +1702,7 @@
             fit_SFqcd_nb4_err = rrv_SFqcd_nb4 -> getError() ;
          }
       }
+      */
 
       fit_ttwj_0lep1lep_ratio     = rrv_ttwj_0lep1lep_ratio -> getVal() ;
       fit_ttwj_0lep1lep_ratio_err = rrv_ttwj_0lep1lep_ratio -> getError() ;
@@ -1873,8 +1876,6 @@
                   if ( bbi==2 ) { fit_ttwj_0lep_3b_hm2_hh2 += nttwj ; }
                }
 
-
-
                double nqcd(0.) ;
                sprintf( vname, "mu_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                rar = workspace -> function( vname ) ;
@@ -1940,8 +1941,6 @@
                   if ( bbi==1 ) { fit_znn__0lep_2b_hm2_hh2 += nznn ; }
                   if ( bbi==2 ) { fit_znn__0lep_3b_hm2_hh2 += nznn ; }
                }
-
-
 
                sprintf( vname, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                rar = (RooAbsReal*) workspace -> obj( vname ) ;
@@ -2010,8 +2009,6 @@
 
 
 
-
-
                if ( !blind0lepBin[mbi][hbi][bbi] ) {
 
 
@@ -2047,6 +2044,7 @@
 
 
             } // bbi.
+
 
             //-- trigger efficiencies.
 
@@ -2801,14 +2799,14 @@
             if ( qcdModelIndex == 5 && mbi>1 ) continue ;
             if ( initFit_SFqcd_met[mbi] == 1 ) {
                printf("\n\n *** Did not find floating parameter SFqcd_met%d.  Can't continue.\n\n", mbi+1 ) ;
-               return false ;
+               //return false ;
             }
          } // mbi.
          for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {
             if ( qcdModelIndex == 5 && bbi>1 ) continue ;
             if ( initFit_SFqcd_nb[bbi] == 1 ) {
                printf("\n\n *** Did not find floating parameter SFqcd_nb%d.  Can't continue.\n\n", bbi+1 ) ;
-               return false ;
+               //return false ;
             }
          } // bbi.
       }

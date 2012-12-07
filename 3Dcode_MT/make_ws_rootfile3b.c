@@ -9,6 +9,7 @@
 			    const char* wsrootfilename = "ws3b.root",
 			    const char* blindBinsList = "null",
 			    bool constrainBjetShape = false,
+			    bool floatSLSigRatios = false,
 			    const char* systfilename = "datfiles/sigsystematics.T1bbbb.JES.txt"
                          ) {
 
@@ -21,7 +22,7 @@
        ra2bRoostatsClass3D_3b ra2b ;
 
        ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, qcdModelIndex, wsrootfilename, 
-			blindBinsList, constrainBjetShape, systfilename ) ;
+			blindBinsList, constrainBjetShape, floatSLSigRatios, systfilename ) ;
 
 
    }

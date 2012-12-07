@@ -110,6 +110,7 @@
 					     const char* wsrootfilename,
 					     const char* blindBinsList,
 					     bool constrainBjetShape,
+					     bool floatSLSigRatios,
 					     const char* systFile1
 					     ) {
 
@@ -139,10 +140,6 @@
          } // hbi
       } // mbi
       printf("\n\n\n") ;
-
-
-
-
 
 
 
@@ -1547,6 +1544,26 @@
       allNuisances -> add( *rv_ttwj_slSigsl_ratio ) ;
 
 
+      RooRealVar* rv_ttwj_slSigDD_ratio[nBinsMET][nBinsHT] ;
+
+      if ( floatSLSigRatios ) {
+	for (int i = 0 ; i < nBinsMET ; i++) {
+	  for (int j = 0 ; j < nBinsHT ; j++) {
+
+	    TString SlSigDD_ratioS = "slSigDD_ratio";
+	    SlSigDD_ratioS += sMbins[i]+sHbins[j];
+
+	    rv_ttwj_slSigDD_ratio[i][j] = new RooRealVar( SlSigDD_ratioS, SlSigDD_ratioS, 0., 5. ) ;
+	    rv_ttwj_slSigDD_ratio[i][j] -> setVal( 1. ) ; // initial guess
+	    rv_ttwj_slSigDD_ratio[i][j] -> setConstant( kFALSE ) ;
+
+	    allNuisances -> add( *rv_ttwj_slSigDD_ratio[i][j] ) ;
+
+	  }
+	}
+      }
+
+
 
       RooDataSet* dsObserved ;
       dsObserved = new RooDataSet("ra2b_observed_rds", "RA2b observed data values",
@@ -2220,9 +2237,17 @@
 	    TString ttwjSlSigString   = "mu_ttwj_slSig";
 	    ttwjSlSigString   += sMbins[i]+sHbins[j]+sBbins[k] ;
 
-            TString ttwjSlSigrfvString = " @0 * @1 * @2" ;
-            rfv_mu_ttwj_slSig[i][j][k] = new RooFormulaVar( ttwjSlSigString, ttwjSlSigrfvString,
-							    RooArgSet( *rv_mu_ttwj_sl[i][j][k], *rv_ttwj_slSigsl_ratio, *rar_sf_ttwj_slSig[i][j][k] ) ) ;
+	    if ( floatSLSigRatios ) { 
+	      TString ttwjSlSigrfvString = " @0 * @1 * @2 * @3" ;
+	      rfv_mu_ttwj_slSig[i][j][k] = new RooFormulaVar( ttwjSlSigString, ttwjSlSigrfvString,
+							      RooArgSet( *rv_mu_ttwj_sl[i][j][k], *rv_ttwj_slSigsl_ratio, 
+									 *rar_sf_ttwj_slSig[i][j][2], *rv_ttwj_slSigDD_ratio[i][j] ) ) ;
+	    }
+	    else {
+	      TString ttwjSlSigrfvString = " @0 * @1 * @2" ;
+	      rfv_mu_ttwj_slSig[i][j][k] = new RooFormulaVar( ttwjSlSigString, ttwjSlSigrfvString,
+							      RooArgSet( *rv_mu_ttwj_sl[i][j][k], *rv_ttwj_slSigsl_ratio, *rar_sf_ttwj_slSig[i][j][k] ) ) ;
+	    }
 
             rv_mu_ttwj_slSig[i][j][k] = rfv_mu_ttwj_slSig[i][j][k] ;
 
@@ -3512,8 +3537,21 @@
 
        //-- compute the log-normal-distributed parameter from the primary parameter.
 
-       RooFormulaVar* np_rfv = new RooFormulaVar( NP_name, "@0 * pow( exp( @1/@0 ), @2)",
-                 RooArgSet( *g_mean, *g_sigma, *np_prim_rrv ) ) ;
+       //--- This is the old (Fedor) way. ---------------------------------------------------------
+       ////// RooFormulaVar* np_rfv = new RooFormulaVar( NP_name, "@0 * pow( exp( @1/@0 ), @2)",
+       //////           RooArgSet( *g_mean, *g_sigma, *np_prim_rrv ) ) ;
+       //------------------------------------------------------------------------------------------
+
+       //--- This is the new way.  RMS of lognormal is much closer to sigma when sigma is
+       //    large, doing it this way.  When sigma/mean is small, they are about the same.
+       //    That is, exp(sigma/mean) is close to (sigma/mean + 1).  This one is better when
+       //    sigma/mean is not small.  The high-side tail is not as strong.
+       //
+        RooFormulaVar* np_rfv = new RooFormulaVar( NP_name, "@0 * pow( ( @1/@0 + 1. ), @2)",
+                  RooArgSet( *g_mean, *g_sigma, *np_prim_rrv ) ) ;
+       //------------------------------------------------------------------------------------------
+
+
 
        printf("  makeLognormalConstraint : created log-normal nuisance parameter %s : val = %g\n", NP_name, np_rfv -> getVal() ) ;
 
@@ -3658,9 +3696,11 @@
        char formula[1000] ;
 
        if ( !changeSign ) {
-          sprintf( formula, "@0 * pow( exp( @1/@0 ), @2 )" ) ;
+	 //sprintf( formula, "@0 * pow( exp( @1/@0 ), @2 )" ) ;
+	 sprintf( formula, "@0 * pow( ( @1/@0 + 1.), @2 )" ) ;
        } else {
-          sprintf( formula, "@0 * pow( exp( @1/@0 ), -1.0 * @2 )" ) ;
+	 //sprintf( formula, "@0 * pow( exp( @1/@0 ), -1.0 * @2 )" ) ;
+	 sprintf( formula, "@0 * pow( ( @1/@0 + 1.), -1.0 * @2 )" ) ;
        }
 
        rar = new RooFormulaVar( NP_name, formula, RooArgSet( *ln_mean, *ln_sigma, *rrv_np_base_par ) ) ;

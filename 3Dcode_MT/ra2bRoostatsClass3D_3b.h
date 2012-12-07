@@ -30,6 +30,7 @@
                         const char* wsrootfilename = "ws.root",
                         const char* blindBinsList = "null",
 			bool constrainBjetShape = false,
+			bool floatSLSigRatios = false,
 			const char* systFile1 = "systFile1.txt"
                         ) ;
        bool setSusyScanPoint( const char* inputScanFile,
