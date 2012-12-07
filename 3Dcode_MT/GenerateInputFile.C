@@ -1214,6 +1214,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
     inFile << "GU_luminosity   0.044" << endl ;
     inFile << "GU_metcleaning  0.031" << endl ;
+    inFile << "GU_JER          0.020" << endl ;
+    inFile << "GU_unclMET      0.010" << endl ;
 
 
    //-- Nov 14, 2012 : add QCD model parameters to avoid hardwiring things in ra2bRoostatsClass3D_3b
