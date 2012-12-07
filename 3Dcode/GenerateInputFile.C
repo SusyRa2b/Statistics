@@ -424,7 +424,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   
   inFile << endl ;
 
+   bool useBtagSF = false;
    char bcut[3][100] = { "nB==1", "nB==2", "nB>=3" } ;
+   char bcutSF[3][100] = { "prob1", "prob2", "probge3" } ;
 
    char commoncuts[10000] ;
    sprintf( commoncuts, "maxChNMultDiff<40&&pfOcaloMET<2.0&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)",
@@ -553,11 +555,16 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
         char allcuts[10000] ;
         char allsusycuts[10000] ;
-
-        sprintf( allcuts,     "weightPU*(%s&&%s&&%s)"    , commoncuts, selcuts[si], bcut[k] ) ;
-        sprintf( allsusycuts, "weightPU*(%s&&%s&&%s&&%s)", commoncuts, selcuts[si], bcut[k], susycut.Data() ) ;
-
-
+	
+	if(useBtagSF) {
+	  sprintf( allcuts,     "%s*weightPU*(%s&&%s)"    , bcutSF[k], commoncuts, selcuts[si] ) ;
+	  sprintf( allsusycuts, "%s*weightPU*(%s&&%s&&%s)", bcutSF[k], commoncuts, selcuts[si], susycut.Data() ) ;
+	}
+	else {
+	  sprintf( allcuts,     "weightPU*(%s&&%s&&%s)"    , commoncuts, selcuts[si], bcut[k] ) ;
+	  sprintf( allsusycuts, "weightPU*(%s&&%s&&%s&&%s)", commoncuts, selcuts[si], bcut[k], susycut.Data() ) ;
+	}
+	
         printf("\n\n N_%s -- nbjet bin (%d): cuts=%s\n\n", selname[si], k, allcuts) ; cout << flush ;
         if (mgl > 0 ) printf("\n\n N_%s -- nbjet bin (%d): cuts=%s\n\n", selname[si], k, allsusycuts) ; cout << flush ;
 
@@ -826,7 +833,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
                char arg1[1000] ;
 
                char cuts0lep[10000] ;
-               sprintf( cuts0lep, "(%s&&%s&&%s)"    , commoncuts, selcuts[0], bcut[bbi] ) ;
+               if(useBtagSF) {
+                 sprintf( cuts0lep, "%s*(%s&&%s)"    , bcutSF[bbi], commoncuts, selcuts[0] ) ;
+               }
+               else {
+                 sprintf( cuts0lep, "(%s&&%s&&%s)"    , commoncuts, selcuts[0], bcut[bbi] ) ;
+	       }
                printf("     %db, 0lep cuts : %s\n", bbi+1, cuts0lep ) ;
                sprintf( arg1, "HT:MET>>h_0lep_%db_%s", bbi+1, qcdsamplename[si] ) ;
                qcdch[si] -> Draw( arg1, cuts0lep ) ;
@@ -835,8 +847,13 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
                cqcd->Update() ; cqcd->Draw() ;
 
 
-               char cutsldp[10000] ;
-               sprintf( cutsldp, "(%s&&%s&&%s)"    , commoncuts, selcuts[2], bcut[bbi] ) ;
+	       char cutsldp[10000] ;
+               if(useBtagSF) {
+                 sprintf( cutsldp, "%s*(%s&&%s)"    , bcutSF[bbi], commoncuts, selcuts[2] ) ;
+               }
+               else {
+                 sprintf( cutsldp, "(%s&&%s&&%s)"    , commoncuts, selcuts[2], bcut[bbi] ) ;
+               }
                printf("     %db, ldp  cuts : %s\n", bbi+1, cutsldp  ) ;
                sprintf( arg1, "HT:MET>>h_ldp_%db_%s", bbi+1, qcdsamplename[si] ) ;
                qcdch[si] -> Draw( arg1, cutsldp, "colz" ) ;
