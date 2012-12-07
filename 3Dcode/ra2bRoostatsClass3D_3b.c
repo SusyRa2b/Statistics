@@ -811,6 +811,18 @@
       sprintf( global_uncertainty_name[n_global_uncertainties], "%s", label ) ;
       n_global_uncertainties++ ;
 
+      sprintf( target_label, "GU_JER" ) ;
+      fscanf( infp, "%s %g", label, &global_uncertainty_val[n_global_uncertainties] ) ;
+      if ( strcmp( label, target_label ) != 0 ) { printf("\n\n *** expecting %s, found %s\n\n", target_label, label ) ; return false ; }
+      sprintf( global_uncertainty_name[n_global_uncertainties], "%s", label ) ;
+      n_global_uncertainties++ ;
+
+      sprintf( target_label, "GU_unclMET" ) ;
+      fscanf( infp, "%s %g", label, &global_uncertainty_val[n_global_uncertainties] ) ;
+      if ( strcmp( label, target_label ) != 0 ) { printf("\n\n *** expecting %s, found %s\n\n", target_label, label ) ; return false ; }
+      sprintf( global_uncertainty_name[n_global_uncertainties], "%s", label ) ;
+      n_global_uncertainties++ ;
+
 
 
 

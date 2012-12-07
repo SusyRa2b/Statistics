@@ -1380,6 +1380,9 @@ inFile << "knn_3b_err       \t" << 0.004<< endl;
 
     inFile << "GU_luminosity   0.044" << endl ;
     inFile << "GU_metcleaning  0.031" << endl ;
+    inFile << "GU_JER          0.020" << endl ;
+    inFile << "GU_unclMET      0.010" << endl ;
+
 
    //-- Nov 14, 2012 : add QCD model parameters to avoid hardwiring things in ra2bRoostatsClass3D_3b
    //    see logfile of mcclosure4 for values.
