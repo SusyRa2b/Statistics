@@ -59,13 +59,13 @@ Z_ee_rec_err    0.001
 Z_mm_rec        0.947
 Z_mm_rec_err    0.005
 knn_1b_M1       0.426
-knn_1b_M1_err   0.060
+knn_1b_M1_err   0.063
 knn_1b_M2       0.410
-knn_1b_M2_err   0.058
+knn_1b_M2_err   0.061
 knn_1b_M3       0.380
-knn_1b_M3_err   0.054
+knn_1b_M3_err   0.057
 knn_1b_M4       0.328
-knn_1b_M4_err   0.049
+knn_1b_M4_err   0.052
 knn_2b          0.118
 knn_2b_err      0.028
 knn_3b          0.006
