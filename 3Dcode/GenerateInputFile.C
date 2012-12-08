@@ -96,7 +96,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   chainWJets.Add("filesHCP_53_v6/WJets-300to400.root") ;
   chainWJets.Add("filesHCP_53_v6/WJets-400.root") ;
   chainWJets.Add("filesHCP_53_v6/T-s.root") ;
-  ///////////// chainWJets.Add("filesHCP_53_v6/T-t.root") ;
+  chainWJets.Add("filesHCP_53_v6/T-t.root") ;
   chainWJets.Add("filesHCP_53_v6/T-tW.root") ;
   chainWJets.Add("filesHCP_53_v6/Tbar-s.root") ;
   chainWJets.Add("filesHCP_53_v6/Tbar-t.root") ;
@@ -1117,30 +1117,34 @@ inFile << "N_Zmm_M4_H4      \t" << 4<< endl;
 
 
 inFile << "acc_Zee_M1       \t" << 0.676<< endl;
-inFile << "acc_Zee_M1_err  \t" << 0.014<< endl;
+inFile << "acc_Zee_M1_err   \t" << 0.014<< endl;
 inFile << "acc_Zee_M2       \t" << 0.700<< endl;
-inFile << "acc_Zee_M2_err  \t" << 0.015<< endl;
+inFile << "acc_Zee_M2_err   \t" << 0.015<< endl;
 inFile << "acc_Zee_M3       \t" << 0.741<< endl;
-inFile << "acc_Zee_M3_err  \t" << 0.015<< endl;
+inFile << "acc_Zee_M3_err   \t" << 0.015<< endl;
 inFile << "acc_Zee_M4       \t" << 0.792<< endl;
-inFile << "acc_Zee_M4_err \t" <<  0.016<< endl;
+inFile << "acc_Zee_M4_err   \t" << 0.016<< endl;
 inFile << "acc_Zmm_M1       \t" << 0.674<< endl;
-inFile << "acc_Zmm_M1_err  \t" << 0.014<< endl;
+inFile << "acc_Zmm_M1_err   \t" << 0.014<< endl;
 inFile << "acc_Zmm_M2       \t" << 0.733<< endl;
-inFile << "acc_Zmm_M2_err  \t" << 0.014<< endl;
+inFile << "acc_Zmm_M2_err   \t" << 0.014<< endl;
 inFile << "acc_Zmm_M3       \t" << 0.810<< endl;
-inFile << "acc_Zmm_M3_err \t" <<  0.015<< endl;
+inFile << "acc_Zmm_M3_err   \t" << 0.015<< endl;
 inFile << "acc_Zmm_M4       \t" << 0.857<< endl;
-inFile << "acc_Zmm_M4_err  \t" << 0.018<< endl;
+inFile << "acc_Zmm_M4_err   \t" << 0.018<< endl;
 
   
     // Z -> ll efficiencies (these are eff_reco**2 * eff_sel**2 * eff_trig
     //                       or Z_ee_eff*Z_ee_eff*Z_ee_trg*Z_ee_rec*Z_ee_rec from Zinv_inputs.dat)
 
-inFile << "Z_ee_eff          \t" << 0.516 << endl; // 
-inFile << "Z_ee_eff_err      \t" << 0.056 << endl; // 
-inFile << "Z_mm_eff          \t" << 0.557 << endl; // 
-inFile << "Z_mm_eff_err      \t" << 0.036 << endl; // 
+///inFile << "Z_ee_eff          \t" << 0.516 << endl; // 
+///inFile << "Z_ee_eff_err      \t" << 0.056 << endl; // 
+///inFile << "Z_mm_eff          \t" << 0.557 << endl; // 
+///inFile << "Z_mm_eff_err      \t" << 0.036 << endl; // 
+inFile << "Z_ee_eff          \t" << 0.510 << endl; // 
+inFile << "Z_ee_eff_err      \t" << 0.074 << endl; // 
+inFile << "Z_mm_eff          \t" << 0.540 << endl; // 
+inFile << "Z_mm_eff_err      \t" << 0.045 << endl; // 
 
 
   

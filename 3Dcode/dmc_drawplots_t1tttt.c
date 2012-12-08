@@ -69,7 +69,10 @@
     bool withData(false) ;
     //bool withData(true) ;
 
-    void dmc_drawplots_t1tttt( const char* infile = "rootfiles/dmc_plots_t1tttt_njetsge5_all.root", bool arg_savePdf = true, bool arg_recycleCanvas=true, const char* histnamepat = "" ) {
+    void dmc_drawplots_t1tttt( const char* infile = "rootfiles/dmc_plots_t1tttt_njetsge5_all.root", 
+                               bool arg_savePdf = true, 
+                               bool arg_recycleCanvas=true, 
+                               const char* histnamepat = "" ) {
 
 
 

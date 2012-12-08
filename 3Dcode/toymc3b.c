@@ -228,7 +228,7 @@
    double getChi2Obs( const char* obsname, const char* modelname ) ;
    double getChi2GausNP( const char* npname ) ;
    double getChi2BetaNP( const char* npname ) ;
-   ///double getChi2LognormNP( const char* npname ) ;
+   double getChi2LognormNP( const char* npname ) ;
    bool getBetaModeRMS( const char* parName, double &mode, double &rms, double &alpha, double &beta ) ;
 
 
@@ -1711,9 +1711,11 @@
       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
          for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
             char vname[1000] ;
+
+            if ( ignoreBin[mbi][hbi] ) continue ;
+
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
-               if ( ignoreBin[mbi][hbi] ) continue ;
 
                RooAbsReal* rar ;
                RooAbsReal* effsf  ;
@@ -1738,27 +1740,6 @@
 
                fit_susy_0lep_3da[mbi][hbi][bbi] = nsusy ;
 
-           //  if ( bbi==0 ) { fit_susy_0lep_1b += nsusy ; }
-           //  if ( bbi==1 ) { fit_susy_0lep_2b += nsusy ; }
-           //  if ( bbi==2 ) { fit_susy_0lep_3b += nsusy ; }
-           //  if ( mbi==(nBinsMET-1) ) {
-           //     fit_susy_0lep_nb_hm1 += nsusy ;
-           //     if ( bbi==0 ) { fit_susy_0lep_1b_hm1 += nsusy ; }
-           //     if ( bbi==1 ) { fit_susy_0lep_2b_hm1 += nsusy ; }
-           //     if ( bbi==2 ) { fit_susy_0lep_3b_hm1 += nsusy ; }
-           //  }
-           //  if ( hbi==(nBinsHT-1) ) {
-           //     fit_susy_0lep_nb_hh1 += nsusy ;
-           //     if ( bbi==0 ) { fit_susy_0lep_1b_hh1 += nsusy ; }
-           //     if ( bbi==1 ) { fit_susy_0lep_2b_hh1 += nsusy ; }
-           //     if ( bbi==2 ) { fit_susy_0lep_3b_hh1 += nsusy ; }
-           //  }
-           //  if ( mbi>=(nBinsMET-2) && hbi>=(nBinsHT-2) ) {
-           //     fit_susy_0lep_nb_hm2_hh2 += nsusy ;
-           //     if ( bbi==0 ) { fit_susy_0lep_1b_hm2_hh2 += nsusy ; }
-           //     if ( bbi==1 ) { fit_susy_0lep_2b_hm2_hh2 += nsusy ; }
-           //     if ( bbi==2 ) { fit_susy_0lep_3b_hm2_hh2 += nsusy ; }
-           //  }
 
 
 
@@ -1771,28 +1752,6 @@
                   nttwj = rar -> getVal() ;
                }
                fit_ttwj_0lep_3da[mbi][hbi][bbi] = nttwj ;
-           //  fit_ttwj_0lep += nttwj  ;
-           //  if ( bbi==0 ) { fit_ttwj_0lep_1b +=  nttwj  ; }
-           //  if ( bbi==1 ) { fit_ttwj_0lep_2b +=  nttwj  ; }
-           //  if ( bbi==2 ) { fit_ttwj_0lep_3b +=  nttwj  ; }
-           //  if ( mbi==(nBinsMET-1) ) {
-           //     fit_ttwj_0lep_nb_hm1 += nttwj ;
-           //     if ( bbi==0 ) { fit_ttwj_0lep_1b_hm1 += nttwj ; }
-           //     if ( bbi==1 ) { fit_ttwj_0lep_2b_hm1 += nttwj ; }
-           //     if ( bbi==2 ) { fit_ttwj_0lep_3b_hm1 += nttwj ; }
-           //  }
-           //  if ( hbi==(nBinsHT-1) ) {
-           //     fit_ttwj_0lep_nb_hh1 += nttwj ;
-           //     if ( bbi==0 ) { fit_ttwj_0lep_1b_hh1 += nttwj ; }
-           //     if ( bbi==1 ) { fit_ttwj_0lep_2b_hh1 += nttwj ; }
-           //     if ( bbi==2 ) { fit_ttwj_0lep_3b_hh1 += nttwj ; }
-           //  }
-           //  if ( mbi>=(nBinsMET-2) && hbi>=(nBinsHT-2) ) {
-           //     fit_ttwj_0lep_nb_hm2_hh2 += nttwj ;
-           //     if ( bbi==0 ) { fit_ttwj_0lep_1b_hm2_hh2 += nttwj ; }
-           //     if ( bbi==1 ) { fit_ttwj_0lep_2b_hm2_hh2 += nttwj ; }
-           //     if ( bbi==2 ) { fit_ttwj_0lep_3b_hm2_hh2 += nttwj ; }
-           //  }
 
 
 
@@ -1805,28 +1764,6 @@
                   nqcd = rar -> getVal() ;
                }
                fit_qcd_0lep_3da[mbi][hbi][bbi] = nqcd ;
-           //  fit_qcd__0lep += nqcd  ;
-           //  if ( bbi==0 ) { fit_qcd__0lep_1b +=  nqcd   ; }
-           //  if ( bbi==1 ) { fit_qcd__0lep_2b +=  nqcd   ; }
-           //  if ( bbi==2 ) { fit_qcd__0lep_3b +=  nqcd   ; }
-           //  if ( mbi==(nBinsMET-1) ) {
-           //     fit_qcd__0lep_nb_hm1 += nqcd ;
-           //     if ( bbi==0 ) { fit_qcd__0lep_1b_hm1 += nqcd ; }
-           //     if ( bbi==1 ) { fit_qcd__0lep_2b_hm1 += nqcd ; }
-           //     if ( bbi==2 ) { fit_qcd__0lep_3b_hm1 += nqcd ; }
-           //  }
-           //  if ( hbi==(nBinsHT-1) ) {
-           //     fit_qcd__0lep_nb_hh1 += nqcd ;
-           //     if ( bbi==0 ) { fit_qcd__0lep_1b_hh1 += nqcd ; }
-           //     if ( bbi==1 ) { fit_qcd__0lep_2b_hh1 += nqcd ; }
-           //     if ( bbi==2 ) { fit_qcd__0lep_3b_hh1 += nqcd ; }
-           //  }
-           //  if ( mbi>=(nBinsMET-2) && hbi>=(nBinsHT-2) ) {
-           //     fit_qcd__0lep_nb_hm2_hh2 += nqcd ;
-           //     if ( bbi==0 ) { fit_qcd__0lep_1b_hm2_hh2 += nqcd ; }
-           //     if ( bbi==1 ) { fit_qcd__0lep_2b_hm2_hh2 += nqcd ; }
-           //     if ( bbi==2 ) { fit_qcd__0lep_3b_hm2_hh2 += nqcd ; }
-           //  }
 
 
 
@@ -1839,28 +1776,6 @@
                   nznn = rar -> getVal() ;
                }
                fit_znn_0lep_3da[mbi][hbi][bbi] = nznn ;
-           //  fit_znn__0lep += nznn  ;
-           //  if ( bbi==0 ) { fit_znn__0lep_1b +=  nznn   ; }
-           //  if ( bbi==1 ) { fit_znn__0lep_2b +=  nznn   ; }
-           //  if ( bbi==2 ) { fit_znn__0lep_3b +=  nznn   ; }
-           //  if ( mbi==(nBinsMET-1) ) {
-           //     fit_znn__0lep_nb_hm1 += nznn ;
-           //     if ( bbi==0 ) { fit_znn__0lep_1b_hm1 += nznn ; }
-           //     if ( bbi==1 ) { fit_znn__0lep_2b_hm1 += nznn ; }
-           //     if ( bbi==2 ) { fit_znn__0lep_3b_hm1 += nznn ; }
-           //  }
-           //  if ( hbi==(nBinsHT-1) ) {
-           //     fit_znn__0lep_nb_hh1 += nznn ;
-           //     if ( bbi==0 ) { fit_znn__0lep_1b_hh1 += nznn ; }
-           //     if ( bbi==1 ) { fit_znn__0lep_2b_hh1 += nznn ; }
-           //     if ( bbi==2 ) { fit_znn__0lep_3b_hh1 += nznn ; }
-           //  }
-           //  if ( mbi>=(nBinsMET-2) && hbi>=(nBinsHT-2) ) {
-           //     fit_znn__0lep_nb_hm2_hh2 += nznn ;
-           //     if ( bbi==0 ) { fit_znn__0lep_1b_hm2_hh2 += nznn ; }
-           //     if ( bbi==1 ) { fit_znn__0lep_2b_hm2_hh2 += nznn ; }
-           //     if ( bbi==2 ) { fit_znn__0lep_3b_hm2_hh2 += nznn ; }
-           //  }
 
 
 
@@ -1884,9 +1799,27 @@
 
 
 
+            } // bbi.
+         } // hbi.
+      } // mbi.
 
 
-               //++++ compute chi2 (below here).
+
+
+
+
+
+     //++++ compute chi2 (below here).
+
+      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+
+            if ( ignoreBin[mbi][hbi] ) continue ;
+
+            for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+
+
+
 
                char obsname[1000] ;
                char modelname[1000] ;
@@ -1924,8 +1857,19 @@
 
                }
 
+            } // bbi.
+         } // hbi.
+      } // mbi.
 
 
+
+      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            char vname[1000] ;
+
+            if ( ignoreBin[mbi][hbi] ) continue ;
+
+            for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
 
                if ( !blind0lepBin[mbi][hbi][bbi] ) {
@@ -1934,46 +1878,46 @@
                  //-- ttwj and QCD SFs
 
                   sprintf( vname, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                  fit_chi2_np += getChi2GausNP( vname ) ;
+                  fit_chi2_np += getChi2LognormNP( vname ) ;
 
                   sprintf( vname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                  fit_chi2_np += getChi2GausNP( vname ) ;
+                  fit_chi2_np += getChi2LognormNP( vname ) ;
 
 
 
                  //-- Signal efficiency uncertainties (bin-by-bin MC stat err).
 
                   sprintf( vname, "eff_sf_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                  fit_chi2_np += getChi2GausNP( vname ) ;
+                  fit_chi2_np += getChi2LognormNP( vname ) ;
 
                   sprintf( vname, "eff_sf_ldp_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                  fit_chi2_np += getChi2GausNP( vname ) ;
+                  fit_chi2_np += getChi2LognormNP( vname ) ;
 
                   sprintf( vname, "eff_sf_sl_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                  fit_chi2_np += getChi2GausNP( vname ) ;
+                  fit_chi2_np += getChi2LognormNP( vname ) ;
 
 
 
                }
-
-
-
 
             } // bbi.
 
             //-- trigger efficiencies.
 
             sprintf( vname, "trigeff_M%d_H%d", mbi+1, hbi+1 ) ;
-            ////// fit_chi2_np += getChi2BetaNP( vname ) ;
-            fit_chi2_np += getChi2GausNP( vname ) ;
+            fit_chi2_np += getChi2BetaNP( vname ) ;
 
             sprintf( vname, "trigeff_sl_M%d_H%d", mbi+1, hbi+1 ) ;
-            ////// fit_chi2_np += getChi2BetaNP( vname ) ;
-            fit_chi2_np += getChi2GausNP( vname ) ;
+            fit_chi2_np += getChi2BetaNP( vname ) ;
 
 
          } // hbi.
       } // mbi.
+
+
+
+
+
 
       //-- more nuisance parameter chi2 contributions.
       char npname[1000] ;
@@ -1982,71 +1926,65 @@
       ////// fit_chi2_np += getChi2GausNP( npname ) ;  /// obsolete
 
       sprintf( npname, "rar_vv_sf" ) ;
-      fit_chi2_np += getChi2GausNP( npname ) ;
+      fit_chi2_np += getChi2LognormNP( npname ) ;
 
 
       sprintf( npname, "SFqcd_met3" ) ;
-      fit_chi2_np += getChi2GausNP( npname ) ;
+      fit_chi2_np += getChi2LognormNP( npname ) ;
 
       sprintf( npname, "SFqcd_met4" ) ;
-      fit_chi2_np += getChi2GausNP( npname ) ;
+      fit_chi2_np += getChi2LognormNP( npname ) ;
 
       sprintf( npname, "SFqcd_nb3" ) ;
-      fit_chi2_np += getChi2GausNP( npname ) ;
+      fit_chi2_np += getChi2LognormNP( npname ) ;
 
 
       sprintf( npname, "btageff_sf" ) ;
-      fit_chi2_np += getChi2GausNP( npname ) ;
+      fit_chi2_np += getChi2LognormNP( npname ) ;
 
       sprintf( npname, "sf_mc" ) ;
-      fit_chi2_np += getChi2GausNP( npname ) ;
+      fit_chi2_np += getChi2LognormNP( npname ) ;
 
       sprintf( npname, "sf_ll" ) ;
-      fit_chi2_np += getChi2GausNP( npname ) ;
+      fit_chi2_np += getChi2LognormNP( npname ) ;
 
       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
          sprintf( npname, "knn_1b_M%d", mbi+1 ) ;
-         fit_chi2_np += getChi2GausNP( npname ) ;
+         fit_chi2_np += getChi2LognormNP( npname ) ;
       } // mbi
 
       sprintf( npname, "knn_2b" ) ;
-      fit_chi2_np += getChi2GausNP( npname ) ;
+      fit_chi2_np += getChi2LognormNP( npname ) ;
 
       sprintf( npname, "knn_3b" ) ;
-      fit_chi2_np += getChi2GausNP( npname ) ;
+      fit_chi2_np += getChi2LognormNP( npname ) ;
 
 
       sprintf( npname, "eff_Zee" ) ;
-      ////// fit_chi2_np += getChi2BetaNP( npname ) ;
-      fit_chi2_np += getChi2GausNP( npname ) ;
+      fit_chi2_np += getChi2BetaNP( npname ) ;
 
       sprintf( npname, "eff_Zmm" ) ;
-      ////// fit_chi2_np += getChi2BetaNP( npname ) ;
-      fit_chi2_np += getChi2GausNP( npname ) ;
+      fit_chi2_np += getChi2BetaNP( npname ) ;
 
 
       sprintf( npname, "pur_Zee" ) ;
-      ////// fit_chi2_np += getChi2BetaNP( npname ) ;
-      fit_chi2_np += getChi2GausNP( npname ) ;
+      fit_chi2_np += getChi2BetaNP( npname ) ;
 
       sprintf( npname, "pur_Zmm" ) ;
-      ////// fit_chi2_np += getChi2BetaNP( npname ) ;
-      fit_chi2_np += getChi2GausNP( npname ) ;
+      fit_chi2_np += getChi2BetaNP( npname ) ;
 
       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
 
          sprintf( npname, "acc_Zee_M%d", mbi+1 ) ;
-         ///// fit_chi2_np += getChi2BetaNP( npname ) ;
-         fit_chi2_np += getChi2GausNP( npname ) ;
+         fit_chi2_np += getChi2BetaNP( npname ) ;
 
          sprintf( npname, "acc_Zmm_M%d", mbi+1 ) ;
-         ///// fit_chi2_np += getChi2BetaNP( npname ) ;
-         fit_chi2_np += getChi2GausNP( npname ) ;
+         fit_chi2_np += getChi2BetaNP( npname ) ;
 
       } // mbi.
 
       sprintf( npname, "all_gu" ) ;
-      fit_chi2_np += getChi2GausNP( npname ) ;
+      fit_chi2_np += getChi2LognormNP( npname ) ;
 
       fit_chi2_overall = fit_chi2_obs + fit_chi2_np ;
 
@@ -2067,104 +2005,6 @@
 
       fit_covqual_susyfloat = rfr -> covQual() ;
 
-   // printf(" toy %4d : Fit total 0lep ttwj : %6.1f\n", ti, fit_ttwj_0lep ) ;
-   // printf(" toy %4d : Fit total 0lep qcd  : %6.1f\n", ti, fit_qcd__0lep ) ;
-   // printf(" toy %4d : Fit total 0lep znn  : %6.1f\n", ti, fit_znn__0lep ) ;
-   // printf(" toy %4d : Fit covariance matrix quality: %d\n", ti, fit_covqual_susyfloat ) ;
-
-   // printf("\n") ;
-   // printf(" toy %4d : Fit 1b 0lep susy : %6.1f  \n", ti, fit_susy_0lep_1b ) ;
-   // printf(" toy %4d : Fit 1b 0lep ttwj : %6.1f  \n", ti, fit_ttwj_0lep_1b ) ;
-   // printf(" toy %4d : Fit 1b 0lep qcd  : %6.1f  \n", ti, fit_qcd__0lep_1b ) ;
-   // printf(" toy %4d : Fit 1b 0lep znn  : %6.1f  \n", ti, fit_znn__0lep_1b ) ;
-
-   // printf("\n") ;
-   // printf(" toy %4d : Fit 2b 0lep susy : %6.1f  \n", ti, fit_susy_0lep_2b ) ;
-   // printf(" toy %4d : Fit 2b 0lep ttwj : %6.1f  \n", ti, fit_ttwj_0lep_2b ) ;
-   // printf(" toy %4d : Fit 2b 0lep qcd  : %6.1f  \n", ti, fit_qcd__0lep_2b ) ;
-   // printf(" toy %4d : Fit 2b 0lep znn  : %6.1f  \n", ti, fit_znn__0lep_2b ) ;
-
-   // printf("\n") ;
-   // printf(" toy %4d : Fit 3b 0lep susy : %6.1f  \n", ti, fit_susy_0lep_3b ) ;
-   // printf(" toy %4d : Fit 3b 0lep ttwj : %6.1f  \n", ti, fit_ttwj_0lep_3b ) ;
-   // printf(" toy %4d : Fit 3b 0lep qcd  : %6.1f  \n", ti, fit_qcd__0lep_3b ) ;
-   // printf(" toy %4d : Fit 3b 0lep znn  : %6.1f  \n", ti, fit_znn__0lep_3b ) ;
-
-
-
-   // printf("\n\n") ;
-   // printf(" toy %4d : Fit nb 0lep susy, highest HT bin  : %6.1f  \n", ti, fit_susy_0lep_nb_hh1 ) ;
-   // printf(" toy %4d : Fit nb 0lep ttwj, highest HT bin  : %6.1f  \n", ti, fit_ttwj_0lep_nb_hh1 ) ;
-   // printf(" toy %4d : Fit nb 0lep qcd,  highest HT bin  : %6.1f  \n", ti, fit_qcd__0lep_nb_hh1 ) ;
-   // printf(" toy %4d : Fit nb 0lep znn,  highest HT bin  : %6.1f  \n", ti, fit_znn__0lep_nb_hh1 ) ;
-
-   // printf("\n") ;
-   // printf(" toy %4d : Fit 1b 0lep susy, highest HT bin  : %6.1f  \n", ti, fit_susy_0lep_1b_hh1 ) ;
-   // printf(" toy %4d : Fit 1b 0lep ttwj, highest HT bin  : %6.1f  \n", ti, fit_ttwj_0lep_1b_hh1 ) ;
-   // printf(" toy %4d : Fit 1b 0lep qcd,  highest HT bin  : %6.1f  \n", ti, fit_qcd__0lep_1b_hh1 ) ;
-   // printf(" toy %4d : Fit 1b 0lep znn,  highest HT bin  : %6.1f  \n", ti, fit_znn__0lep_1b_hh1 ) ;
-
-   // printf("\n") ;
-   // printf(" toy %4d : Fit 2b 0lep susy, highest HT bin  : %6.1f  \n", ti, fit_susy_0lep_2b_hh1 ) ;
-   // printf(" toy %4d : Fit 2b 0lep ttwj, highest HT bin  : %6.1f  \n", ti, fit_ttwj_0lep_2b_hh1 ) ;
-   // printf(" toy %4d : Fit 2b 0lep qcd,  highest HT bin  : %6.1f  \n", ti, fit_qcd__0lep_2b_hh1 ) ;
-   // printf(" toy %4d : Fit 2b 0lep znn,  highest HT bin  : %6.1f  \n", ti, fit_znn__0lep_2b_hh1 ) ;
-
-   // printf("\n") ;
-   // printf(" toy %4d : Fit 3b 0lep susy, highest HT bin  : %6.1f  \n", ti, fit_susy_0lep_3b_hh1 ) ;
-   // printf(" toy %4d : Fit 3b 0lep ttwj, highest HT bin  : %6.1f  \n", ti, fit_ttwj_0lep_3b_hh1 ) ;
-   // printf(" toy %4d : Fit 3b 0lep qcd,  highest HT bin  : %6.1f  \n", ti, fit_qcd__0lep_3b_hh1 ) ;
-   // printf(" toy %4d : Fit 3b 0lep znn,  highest HT bin  : %6.1f  \n", ti, fit_znn__0lep_3b_hh1 ) ;
-
-
-   // printf("\n\n") ;
-   // printf(" toy %4d : Fit nb 0lep susy, highest MET bin : %6.1f  \n", ti, fit_susy_0lep_nb_hm1 ) ;
-   // printf(" toy %4d : Fit nb 0lep ttwj, highest MET bin : %6.1f  \n", ti, fit_ttwj_0lep_nb_hm1 ) ;
-   // printf(" toy %4d : Fit nb 0lep qcd,  highest MET bin : %6.1f  \n", ti, fit_qcd__0lep_nb_hm1 ) ;
-   // printf(" toy %4d : Fit nb 0lep znn,  highest MET bin : %6.1f  \n", ti, fit_znn__0lep_nb_hm1 ) ;
-
-   // printf("\n") ;
-   // printf(" toy %4d : Fit 1b 0lep susy, highest MET bin : %6.1f  \n", ti, fit_susy_0lep_1b_hm1 ) ;
-   // printf(" toy %4d : Fit 1b 0lep ttwj, highest MET bin : %6.1f  \n", ti, fit_ttwj_0lep_1b_hm1 ) ;
-   // printf(" toy %4d : Fit 1b 0lep qcd,  highest MET bin : %6.1f  \n", ti, fit_qcd__0lep_1b_hm1 ) ;
-   // printf(" toy %4d : Fit 1b 0lep znn,  highest MET bin : %6.1f  \n", ti, fit_znn__0lep_1b_hm1 ) ;
-
-   // printf("\n") ;
-   // printf(" toy %4d : Fit 2b 0lep susy, highest MET bin : %6.1f  \n", ti, fit_susy_0lep_2b_hm1 ) ;
-   // printf(" toy %4d : Fit 2b 0lep ttwj, highest MET bin : %6.1f  \n", ti, fit_ttwj_0lep_2b_hm1 ) ;
-   // printf(" toy %4d : Fit 2b 0lep qcd,  highest MET bin : %6.1f  \n", ti, fit_qcd__0lep_2b_hm1 ) ;
-   // printf(" toy %4d : Fit 2b 0lep znn,  highest MET bin : %6.1f  \n", ti, fit_znn__0lep_2b_hm1 ) ;
-
-   // printf("\n") ;
-   // printf(" toy %4d : Fit 3b 0lep susy, highest MET bin : %6.1f  \n", ti, fit_susy_0lep_3b_hm1 ) ;
-   // printf(" toy %4d : Fit 3b 0lep ttwj, highest MET bin : %6.1f  \n", ti, fit_ttwj_0lep_3b_hm1 ) ;
-   // printf(" toy %4d : Fit 3b 0lep qcd,  highest MET bin : %6.1f  \n", ti, fit_qcd__0lep_3b_hm1 ) ;
-   // printf(" toy %4d : Fit 3b 0lep znn,  highest MET bin : %6.1f  \n", ti, fit_znn__0lep_3b_hm1 ) ;
-
-
-   // printf("\n\n") ;
-   // printf(" toy %4d : Fit nb 0lep susy, highest two MET and HT bins : %6.1f  \n", ti, fit_susy_0lep_nb_hm2_hh2 ) ;
-   // printf(" toy %4d : Fit nb 0lep ttwj, highest two MET and HT bins : %6.1f  \n", ti, fit_ttwj_0lep_nb_hm2_hh2 ) ;
-   // printf(" toy %4d : Fit nb 0lep qcd,  highest two MET and HT bins : %6.1f  \n", ti, fit_qcd__0lep_nb_hm2_hh2 ) ;
-   // printf(" toy %4d : Fit nb 0lep znn,  highest two MET and HT bins : %6.1f  \n", ti, fit_znn__0lep_nb_hm2_hh2 ) ;
-
-   // printf("\n") ;
-   // printf(" toy %4d : Fit 1b 0lep susy, highest two MET and HT bins : %6.1f  \n", ti, fit_susy_0lep_1b_hm2_hh2 ) ;
-   // printf(" toy %4d : Fit 1b 0lep ttwj, highest two MET and HT bins : %6.1f  \n", ti, fit_ttwj_0lep_1b_hm2_hh2 ) ;
-   // printf(" toy %4d : Fit 1b 0lep qcd,  highest two MET and HT bins : %6.1f  \n", ti, fit_qcd__0lep_1b_hm2_hh2 ) ;
-   // printf(" toy %4d : Fit 1b 0lep znn,  highest two MET and HT bins : %6.1f  \n", ti, fit_znn__0lep_1b_hm2_hh2 ) ;
-
-   // printf("\n") ;
-   // printf(" toy %4d : Fit 2b 0lep susy, highest two MET and HT bins : %6.1f  \n", ti, fit_susy_0lep_2b_hm2_hh2 ) ;
-   // printf(" toy %4d : Fit 2b 0lep ttwj, highest two MET and HT bins : %6.1f  \n", ti, fit_ttwj_0lep_2b_hm2_hh2 ) ;
-   // printf(" toy %4d : Fit 2b 0lep qcd,  highest two MET and HT bins : %6.1f  \n", ti, fit_qcd__0lep_2b_hm2_hh2 ) ;
-   // printf(" toy %4d : Fit 2b 0lep znn,  highest two MET and HT bins : %6.1f  \n", ti, fit_znn__0lep_2b_hm2_hh2 ) ;
-
-   // printf("\n") ;
-   // printf(" toy %4d : Fit 3b 0lep susy, highest two MET and HT bins : %6.1f  \n", ti, fit_susy_0lep_3b_hm2_hh2 ) ;
-   // printf(" toy %4d : Fit 3b 0lep ttwj, highest two MET and HT bins : %6.1f  \n", ti, fit_ttwj_0lep_3b_hm2_hh2 ) ;
-   // printf(" toy %4d : Fit 3b 0lep qcd,  highest two MET and HT bins : %6.1f  \n", ti, fit_qcd__0lep_3b_hm2_hh2 ) ;
-   // printf(" toy %4d : Fit 3b 0lep znn,  highest two MET and HT bins : %6.1f  \n", ti, fit_znn__0lep_3b_hm2_hh2 ) ;
 
 
       printf("\n") ;
@@ -2958,10 +2798,14 @@
       if ( rar == 0x0 ) { printf("\n\n *** missing var %s\n\n", modelname ) ; return 0. ; }
       modelval = rar -> getVal() ;
 
-      if ( obsval > 0 ) {
-         chi = (obsval - modelval) / sqrt(obsval) ;
-         //// fit_chi2_obs += chi*chi ;  // why is this here??? double counting.
-      }
+   ////-- this does stupid things when obsval < 4.
+   ///if ( obsval > 0 ) {
+   ///   chi = (obsval - modelval) / sqrt(obsval) ;
+   ///}
+
+      double err(1.) ;
+      if ( modelval > 1. ) { err = sqrt(modelval) ; }
+      chi = (obsval - modelval) / err ;
 
       printf(" getChi2Obs: %20s : chi = (%5.0f - %7.1f)/ %6.1f,  chi2 = %6.2f,  total = %6.2f\n",
          obsname, obsval, modelval, sqrt(obsval), chi*chi, fit_chi2_obs ) ;
@@ -3019,9 +2863,13 @@
       double npVal = np->getVal() ;
       chi = (npVal-mode)/rms ;
 
+      printf(" getChi2BetaNP:    %20s : chi = (%5.2f - %7.2f)/ %6.2f,  chi2 = %6.2f,  NP total = %6.2f\n",
+         npname, npVal, mode, rms, chi*chi, fit_chi2_np ) ;
+
+
       return chi*chi ;
 
-   } // getChi2GausNP.
+   } // getChi2BetaNP.
 
 
    //==================================================================================
@@ -3059,7 +2907,30 @@
   } // getNPModeRMS.
 
 
-//==========================================================================================
+  //==========================================================================================
+
+
+   double getChi2LognormNP( const char* npname ) {
+
+      double  chi(0.) ;
+
+      char pname[100] ;
+      sprintf( pname, "prim_%s", npname ) ;
+      RooAbsReal* np = (RooAbsReal*) workspace->obj( pname ) ;
+      if ( np == 0x0 ) {
+         printf("\n\n *** getChi2LognormNP: missing nuisance parameter? %s\n\n", npname ) ;
+         return 0. ;
+      }
+      chi = np->getVal() ;
+
+      printf(" getChi2LognormNP: %20s : chi = %5.2f,                      chi2 = %6.2f,  NP total = %6.2f\n",
+         npname, chi, chi*chi, fit_chi2_np ) ;
+
+      return chi*chi ;
+
+   } // getChi2LognormNP.
+
+  //==================================================================================
 
 
 
