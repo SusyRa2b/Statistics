@@ -92,6 +92,7 @@ cout << "inside loop with doQCD = " << doQCD << endl;
    float trigWeight = -1;
    float pfOcaloMET = -999;
    newtree->Branch("nJets",&njets,"nJets/i");
+   newtree->Branch("nJets30",&njets30,"nJets30/i");
    newtree->Branch("HT",&HT,"HT/f");
    newtree->Branch("MET",&MET,"MET/f");
    newtree->Branch("nB",&nBCSVM50,"nB/i");
