@@ -42,7 +42,7 @@
                                    int npoiPoints = 20,
                                    double poiMinVal = 0.,
                                    double poiMaxVal = 20.,
-                                   double constraintWidth = 0.5,
+                                   double constraintWidth = 1.5,
                                    double ymax = 10.,
                                    int verbLevel=0 ) {
 

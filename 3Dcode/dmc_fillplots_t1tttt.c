@@ -36,7 +36,10 @@
 
    //----------------------------
 
-    void dmc_fillplots2( const char* dataset_string = "all" ) {
+    bool withData( false ) ;
+    //bool withData( true ) ;
+
+    void dmc_fillplots_t1tttt( const char* dataset_string = "all", int minNjets = 5 ) {
 
        gDirectory -> Delete("h*") ;
 
@@ -45,76 +48,76 @@
 
        for ( int ci=0; ci<nComps; ci++ ) { compchain[ci] = new TChain("tree") ; }
 
-       int compind ;
+       int compind(0) ;
 
     //-- Data
-       compind = 0 ;
-       sprintf( compname[compind], "data" ) ;
-       if ( strcmp(dataset_string, "all" ) == 0 || strcmp(dataset_string, "RunsABCD") == 0 ) {
-          printf("\n\n Loading all data.\n\n") ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012A.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_rr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HT_2012A.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_rr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_rr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012D_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012D_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012D_pr.root" ) ;
-          complumi[compind] = 12.03 + 5.58 ;
-       } else if ( strcmp(dataset_string, "RunsAB" ) == 0 ) {
-          printf("\n\n Loading runs A and B.\n\n") ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012A.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HT_2012A.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012B.root" ) ;
-          complumi[compind] = 5.23 ;
-       } else if ( strcmp(dataset_string, "RunsABC" ) == 0 ) {
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012A.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_rr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HT_2012A.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_rr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_rr.root" ) ;
-          complumi[compind] = 12.03 ;
-       } else if ( strcmp(dataset_string, "RunC" ) == 0 ) {
-          printf("\n\n Loading run C.\n\n") ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_rr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_rr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_rr.root" ) ;
-          complumi[compind] = 6.81 ;
-       } else if ( strcmp(dataset_string, "RunD" ) == 0 ) {
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012D_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012D_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012D_pr.root" ) ;
-          complumi[compind] = 5.58 ;
-       } else {
-          printf("\n\n *** Unknown dataset: %s\n\n", dataset_string ) ;
-          return ;
+       if ( withData ) {
+          sprintf( compname[compind], "data" ) ;
+          if ( strcmp(dataset_string, "all" ) == 0 ) {
+             printf("\n\n Loading all data.\n\n") ;
+             compchain[compind] -> Add( "filesHCP_53_v6/MET_2012A.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/MET_2012B.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_pr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_rr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/HT_2012A.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012B.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_pr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_rr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012B.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_pr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_rr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012D_pr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012D_pr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/MET_2012D_pr.root" ) ;
+             complumi[compind] = 12.03 + 5.58 ;
+          } else if ( strcmp(dataset_string, "RunsAB" ) == 0 ) {
+             printf("\n\n Loading runs A and B.\n\n") ;
+             compchain[compind] -> Add( "filesHCP_53_v6/MET_2012A.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/MET_2012B.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/HT_2012A.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012B.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012B.root" ) ;
+             complumi[compind] = 5.23 ;
+          } else if ( strcmp(dataset_string, "RunsABC" ) == 0 ) {
+             compchain[compind] -> Add( "filesHCP_53_v6/MET_2012A.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/MET_2012B.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_pr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_rr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/HT_2012A.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012B.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_pr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_rr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012B.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_pr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_rr.root" ) ;
+             complumi[compind] = 12.03 ;
+          } else if ( strcmp(dataset_string, "RunC" ) == 0 ) {
+             printf("\n\n Loading run C.\n\n") ;
+             compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_pr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_rr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_pr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_rr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_pr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_rr.root" ) ;
+             complumi[compind] = 6.81 ;
+          } else if ( strcmp(dataset_string, "RunD" ) == 0 ) {
+             compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012D_pr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012D_pr.root" ) ;
+             compchain[compind] -> Add( "filesHCP_53_v6/MET_2012D_pr.root" ) ;
+             complumi[compind] = 5.58 ;
+          } else {
+             printf("\n\n *** Unknown dataset: %s\n\n", dataset_string ) ;
+             return ;
+          }
+          compcolor[compind] = 0 ;
+          compscale[compind] = 1. ;
+          compind++ ;
        }
-  //------------
-       compcolor[compind] = 0 ;
-       compscale[compind] = 1. ;
 
 
        double MClumi = 12.03 ;
 
     //-- Diboson.
-       compind = 1 ;
        sprintf( compname[compind], "diboson" ) ;
        compchain[compind] -> Add( "filesHCP_53_v6/WW.root" ) ;
        compchain[compind] -> Add( "filesHCP_53_v6/WZ.root" ) ;
@@ -122,13 +125,13 @@
        complumi[compind] = MClumi ;
        compcolor[compind] = 800+7 ; // kOrange = 800
        compscale[compind] = complumi[0] / complumi[compind] ;
+       compind++ ;
 
 
 
 
 
     //-- Zinvisible
-       compind = 2 ;
        sprintf( compname[compind], "znn" ) ;
        compchain[compind] -> Add( "filesHCP_53_v6/Zinv-100to200.root" ) ;
        compchain[compind] -> Add( "filesHCP_53_v6/Zinv-200to400.root" ) ;
@@ -136,12 +139,12 @@
        complumi[compind] = MClumi ;
        compcolor[compind] = 416-3 ; // kGreen = 416
        compscale[compind] = complumi[0] / complumi[compind] ;
+       compind++ ;
 
 
 
 
     //-- QCD
-       compind = 3 ;
        sprintf( compname[compind], "qcd" ) ;
        compchain[compind] -> Add( "filesHCP_53_v6/QCD-120to170.root" ) ;
        compchain[compind] -> Add( "filesHCP_53_v6/QCD-170to300.root" ) ;
@@ -155,14 +158,14 @@
        complumi[compind] = MClumi ;
        compcolor[compind] = 2 ;
        compscale[compind] = complumi[0] / complumi[compind] ;
+       compind++ ;
 
 
 
 
     //-- single top
-       compind = 4 ;
        sprintf( compname[compind], "singlet" ) ;
-       compchain[compind] -> Add( "filesHCP_53_v6/T-t.root" ) ;
+       ////// compchain[compind] -> Add( "filesHCP_53_v6/T-t.root" ) ;
        compchain[compind] -> Add( "filesHCP_53_v6/Tbar-t.root" ) ;
        compchain[compind] -> Add( "filesHCP_53_v6/T-s.root" ) ;
        compchain[compind] -> Add( "filesHCP_53_v6/Tbar-s.root" ) ;
@@ -171,11 +174,11 @@
        complumi[compind] = MClumi ;
        compcolor[compind] = 600-9 ; // kBlue = 600
        compscale[compind] = complumi[0] / complumi[compind] ;
+       compind++ ;
 
 
 
     //-- W+jets
-       compind = 5 ;
        sprintf( compname[compind], "wjets" ) ;
        compchain[compind] -> Add( "filesHCP_53_v6/WJets-250to300.root" ) ;
        compchain[compind] -> Add( "filesHCP_53_v6/WJets-300to400.root" ) ;
@@ -183,11 +186,11 @@
        complumi[compind] = MClumi ;
        compcolor[compind] = 600-4 ; // kBlue = 600
        compscale[compind] = complumi[0] / complumi[compind] ;
+       compind++ ;
 
 
 
     //-- ttbar
-       compind = 6 ;
        sprintf( compname[compind], "ttbar" ) ;
        ///////compchain[compind] -> Add( "filesHCP_53_v6/TT.root" ) ;
        compchain[compind] -> Add( "filesHCP_53_v6/TT_FullLept.root" ) ;
@@ -196,104 +199,107 @@
        complumi[compind] = MClumi ;
        compcolor[compind] = 600-7 ; // kBlue = 600
        compscale[compind] = complumi[0] / complumi[compind] ;
+       compind++ ;
 
 
+       nComps = compind ;
 
 
     //--- cuts
 
+
        char basecuts_1lep[10000] ;
-       sprintf( basecuts_1lep, "MT<100&&maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep, "MT<100&&maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_1lep_nometratiocut[10000] ;
-       sprintf( basecuts_1lep_nometratiocut, "MT<100&&maxChNMultDiff<40&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nometratiocut, "MT<100&&maxChNMultDiff<40&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_1lep_nonb_nometratiocut[10000] ;
-       sprintf( basecuts_1lep_nonb_nometratiocut, "MT<100&&maxChNMultDiff<40&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nonb_nometratiocut, "MT<100&&maxChNMultDiff<40&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_1lep_nomindphin[10000] ;
-       sprintf( basecuts_1lep_nomindphin, "MT<100&&maxChNMultDiff<40&&pfOcaloMET<2&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nomindphin, "MT<100&&maxChNMultDiff<40&&pfOcaloMET<2&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_1lep_nonb[10000] ;
-       sprintf( basecuts_1lep_nonb, "MT<100&&maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nonb, "MT<100&&maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_1lep_nonjet[10000] ;
-       sprintf( basecuts_1lep_nonjet, "MT<100&&maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nonjet, "MT<100&&maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1" ) ;
 
        char basecuts_1lep_nonjet_nonb[10000] ;
-       sprintf( basecuts_1lep_nonjet_nonb, "MT<100&&maxChNMultDiff<40&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nonjet_nonb, "MT<100&&maxChNMultDiff<40&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1" ) ;
 
        char basecuts_1lep_nonb_noisotrk[10000] ;
-       sprintf( basecuts_1lep_nonb_noisotrk, "MT<100&&maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nonb_noisotrk, "MT<100&&maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_1lep_nonb_nomaxchmultdiff[10000] ;
-       sprintf( basecuts_1lep_nonb_nomaxchmultdiff, "MT<100&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nonb_nomaxchmultdiff, "MT<100&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_1lep_nomt[10000] ;
-       sprintf( basecuts_1lep_nomt, "maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nomt, "maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nB>0&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_1lep_nonb_nomt[10000] ;
-       sprintf( basecuts_1lep_nonb_nomt, "maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_1lep_nonb_nomt, "maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
 
 
 
        char basecuts_ldp[10000] ;
-       sprintf( basecuts_ldp, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_ldp, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_ldp_nometratiocut[10000] ;
-       sprintf( basecuts_ldp_nometratiocut, "maxChNMultDiff<40&&nIsoTrk==0&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_ldp_nometratiocut, "maxChNMultDiff<40&&nIsoTrk==0&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_ldp_nonb_nometratiocut[10000] ;
-       sprintf( basecuts_ldp_nonb_nometratiocut, "maxChNMultDiff<40&&nIsoTrk==0&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_ldp_nonb_nometratiocut, "maxChNMultDiff<40&&nIsoTrk==0&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_ldp_nonb[10000] ;
-       sprintf( basecuts_ldp_nonb, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_ldp_nonb, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_ldp_nonjet[10000] ;
-       sprintf( basecuts_ldp_nonjet, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nB>0&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_ldp_nonjet, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nB>0&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1" ) ;
 
        char basecuts_ldp_nonjet_nonb[10000] ;
-       sprintf( basecuts_ldp_nonjet_nonb, "maxChNMultDiff<40&&nIsoTrk==0&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_ldp_nonjet_nonb, "maxChNMultDiff<40&&nIsoTrk==0&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1" ) ;
 
        char basecuts_ldp_nonb_noisotrk[10000] ;
-       sprintf( basecuts_ldp_nonb_noisotrk, "maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_ldp_nonb_noisotrk, "maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_ldp_nonb_nomaxchmultdiff[10000] ;
-       sprintf( basecuts_ldp_nonb_nomaxchmultdiff, "nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_ldp_nonb_nomaxchmultdiff, "nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN<=4&&(nMu==0&&nEl==0)&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
 
 
 
        char basecuts_0lep_nomindphin[10000] ;
-       sprintf( basecuts_0lep_nomindphin, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_0lep_nomindphin, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&(nMu==0&&nEl==0)&&nB>0&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_0lep_nomindphin_nonb[10000] ;
-       sprintf( basecuts_0lep_nomindphin_nonb, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&(nMu==0&&nEl==0)&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_0lep_nomindphin_nonb, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&(nMu==0&&nEl==0)&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_0lep[10000] ;
-       sprintf( basecuts_0lep, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_0lep, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_0lep_nometratiocut[10000] ;
-       sprintf( basecuts_0lep_nometratiocut, "maxChNMultDiff<40&&nIsoTrk==0&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_0lep_nometratiocut, "maxChNMultDiff<40&&nIsoTrk==0&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nB>0&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_0lep_nonb_nometratiocut[10000] ;
-       sprintf( basecuts_0lep_nonb_nometratiocut, "maxChNMultDiff<40&&nIsoTrk==0&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_0lep_nonb_nometratiocut, "maxChNMultDiff<40&&nIsoTrk==0&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_0lep_nonb[10000] ;
-       sprintf( basecuts_0lep_nonb, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_0lep_nonb, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_0lep_nonb_noisotrk[10000] ;
-       sprintf( basecuts_0lep_nonb_noisotrk, "maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_0lep_nonb_noisotrk, "maxChNMultDiff<40&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_0lep_nonb_nomaxchmultdiff[10000] ;
-       sprintf( basecuts_0lep_nonb_nomaxchmultdiff, "nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nJets>=3&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_0lep_nonb_nomaxchmultdiff, "nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nJets>=%d&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1", minNjets ) ;
 
        char basecuts_0lep_nonjet[10000] ;
-       sprintf( basecuts_0lep_nonjet, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nB>0&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_0lep_nonjet, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&nB>0&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1" ) ;
 
        char basecuts_0lep_nonjet_nonb[10000] ;
-       sprintf( basecuts_0lep_nonjet_nonb, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1") ;
+       sprintf( basecuts_0lep_nonjet_nonb, "maxChNMultDiff<40&&nIsoTrk==0&&pfOcaloMET<2&&minDelPhiN>4&&(nMu==0&&nEl==0)&&(pt_1st_leadJet>70&&pt_2nd_leadJet>70&&pt_3rd_leadJet>50)&&MET>125&&HT>400&&passedTrigger==1" ) ;
 
 
 
@@ -1984,7 +1990,7 @@
 
 
        char outfile[10000] ;
-       sprintf( outfile, "rootfiles/dmc_plots2_%s.root", dataset_string ) ;
+       sprintf( outfile, "rootfiles/dmc_plots_t1tttt_njetsge%d_%s.root", minNjets, dataset_string ) ;
        saveHist( outfile, "h*" ) ;
 
     } // dmc_fillplots.
