@@ -7,13 +7,16 @@
 #include "TCanvas.h"
 #include "TDirectory.h"
 #include "TStyle.h"
+#include "getFileValue.c"
 #include <iostream>
 #include <fstream>
 
 
 
     bool plotSigInput( double target_mgl = 1200., double target_mlsp = 300.,
-                       const char* infile = "datfiles/sigcounts.T1bbbb.txt"
+                       const char* infile = "datfiles/sigcounts.T1bbbb.txt",
+                       const char* datafile = "datfiles/data-unblind.dat",
+                       double dataLumi = 18.0
                         ) {
 
 
@@ -21,7 +24,6 @@
       gStyle->SetLabelSize(0.06,"y") ;
       gStyle->SetPadLeftMargin(0.11) ;
 
-      double dataLumi(12.0) ; // 1/fb.
 
       TFile prospino("referenceXSecs.root");
       TH1F *gluinoxsec8TeV = (TH1F*) prospino.Get("gluino8TeV_NLONLL") ;
@@ -405,7 +407,7 @@
        gStyle->SetLabelOffset(0.02,"y") ;
        gStyle->SetNdivisions(404,"y") ;
 
-      double data_max[4] = { 60., 200., 30., 12. } ;
+      double data_max[4] = { 70., 200., 45., 12. } ;
 
       double susy_over_data_max(0.) ;
 
@@ -519,15 +521,19 @@
        h_data_nb2_m4 -> GetXaxis() -> SetBinLabel( 3, "HT3" ) ;
        h_data_nb2_m4 -> GetXaxis() -> SetBinLabel( 4, "HT4" ) ;
 
+       float dataNobs ;
+
        h_data_nb2_m4 -> SetBinContent( 1, 0 ) ;
-       h_data_nb2_m4 -> SetBinContent( 2, 43 ) ;
-       h_data_nb2_m4 -> SetBinContent( 3, 12 ) ;
-       h_data_nb2_m4 -> SetBinContent( 4, 12 ) ;
+       getFileValue( datafile, "N_0lep_M4_H2_2b", dataNobs ) ;
+       h_data_nb2_m4 -> SetBinContent( 2, dataNobs ) ;
+       getFileValue( datafile, "N_0lep_M4_H3_2b", dataNobs ) ;
+       h_data_nb2_m4 -> SetBinContent( 3, dataNobs ) ;
+       getFileValue( datafile, "N_0lep_M4_H4_2b", dataNobs ) ;
+       h_data_nb2_m4 -> SetBinContent( 4, dataNobs ) ;
 
        h_data_nb2_m4 -> SetMarkerStyle(20) ;
        h_data_nb2_m4 -> SetLineWidth(2) ;
        h_data_nb2_m4 -> SetMinimum( 0 ) ;
-       h_data_nb2_m4 -> SetMaximum( 60 ) ;
 
        TH1F* h_data_nb3_m2 = new TH1F( "h_data_nb3_m2", "Data, nB=3, MET2", 4, 0.5, 4.5 ) ;
 
@@ -536,14 +542,17 @@
        h_data_nb3_m2 -> GetXaxis() -> SetBinLabel( 3, "HT3" ) ;
        h_data_nb3_m2 -> GetXaxis() -> SetBinLabel( 4, "HT4" ) ;
 
-       h_data_nb3_m2 -> SetBinContent( 1, 96 ) ;
-       h_data_nb3_m2 -> SetBinContent( 2, 112 ) ;
-       h_data_nb3_m2 -> SetBinContent( 3, 12 ) ;
-       h_data_nb3_m2 -> SetBinContent( 4, 10 ) ;
+       getFileValue( datafile, "N_0lep_M2_H1_3b", dataNobs ) ;
+       h_data_nb3_m2 -> SetBinContent( 1, dataNobs ) ;
+       getFileValue( datafile, "N_0lep_M2_H2_3b", dataNobs ) ;
+       h_data_nb3_m2 -> SetBinContent( 2, dataNobs ) ;
+       getFileValue( datafile, "N_0lep_M2_H3_3b", dataNobs ) ;
+       h_data_nb3_m2 -> SetBinContent( 3, dataNobs ) ;
+       getFileValue( datafile, "N_0lep_M2_H4_3b", dataNobs ) ;
+       h_data_nb3_m2 -> SetBinContent( 4, dataNobs ) ;
 
        h_data_nb3_m2 -> SetMarkerStyle(20) ;
        h_data_nb3_m2 -> SetLineWidth(2) ;
-       h_data_nb3_m2 -> SetMaximum( 200 ) ;
 
        TH1F* h_data_nb3_m3 = new TH1F( "h_data_nb3_m3", "Data, nB=3, MET3", 4, 0.5, 4.5 ) ;
 
@@ -552,14 +561,17 @@
        h_data_nb3_m3 -> GetXaxis() -> SetBinLabel( 3, "HT3" ) ;
        h_data_nb3_m3 -> GetXaxis() -> SetBinLabel( 4, "HT4" ) ;
 
-       h_data_nb3_m3 -> SetBinContent( 1, 8 ) ;
-       h_data_nb3_m3 -> SetBinContent( 2, 23 ) ;
-       h_data_nb3_m3 -> SetBinContent( 3, 2 ) ;
-       h_data_nb3_m3 -> SetBinContent( 4, 3 ) ;
+       getFileValue( datafile, "N_0lep_M3_H1_3b", dataNobs ) ;
+       h_data_nb3_m3 -> SetBinContent( 1, dataNobs ) ;
+       getFileValue( datafile, "N_0lep_M3_H2_3b", dataNobs ) ;
+       h_data_nb3_m3 -> SetBinContent( 2, dataNobs ) ;
+       getFileValue( datafile, "N_0lep_M3_H3_3b", dataNobs ) ;
+       h_data_nb3_m3 -> SetBinContent( 3, dataNobs ) ;
+       getFileValue( datafile, "N_0lep_M3_H4_3b", dataNobs ) ;
+       h_data_nb3_m3 -> SetBinContent( 4, dataNobs ) ;
 
        h_data_nb3_m3 -> SetMarkerStyle(20) ;
        h_data_nb3_m3 -> SetLineWidth(2) ;
-       h_data_nb3_m3 -> SetMaximum( 30 ) ;
 
        TH1F* h_data_nb3_m4 = new TH1F( "h_data_nb3_m4", "Data, nB=3, MET4", 4, 0.5, 4.5 ) ;
 
@@ -568,23 +580,21 @@
        h_data_nb3_m4 -> GetXaxis() -> SetBinLabel( 3, "HT3" ) ;
        h_data_nb3_m4 -> GetXaxis() -> SetBinLabel( 4, "HT4" ) ;
 
-       h_data_nb3_m4 -> SetBinContent( 1, 0 ) ;
-       h_data_nb3_m4 -> SetBinContent( 2, 6 ) ;
-       h_data_nb3_m4 -> SetBinContent( 3, 1 ) ;
-       h_data_nb3_m4 -> SetBinContent( 4, 3 ) ;
+       getFileValue( datafile, "N_0lep_M4_H1_3b", dataNobs ) ;
+       h_data_nb3_m4 -> SetBinContent( 1, dataNobs ) ;
+       getFileValue( datafile, "N_0lep_M4_H2_3b", dataNobs ) ;
+       h_data_nb3_m4 -> SetBinContent( 2, dataNobs ) ;
+       getFileValue( datafile, "N_0lep_M4_H3_3b", dataNobs ) ;
+       h_data_nb3_m4 -> SetBinContent( 3, dataNobs ) ;
+       getFileValue( datafile, "N_0lep_M4_H4_3b", dataNobs ) ;
+       h_data_nb3_m4 -> SetBinContent( 4, dataNobs ) ;
 
        h_data_nb3_m4 -> SetMarkerStyle(20) ;
        h_data_nb3_m4 -> SetLineWidth(2) ;
-       h_data_nb3_m4 -> SetMaximum( 12 ) ;
 
 
       printf("\n\n max susy / data = %6.3f\n\n\n", susy_over_data_max ) ;
 
-
-   // h_susy_nb2_m4 -> SetMaximum( 1.2 * susy_over_data_max * data_max[0] ) ;
-   // h_susy_nb3_m2 -> SetMaximum( 1.2 * susy_over_data_max * data_max[1] ) ;
-   // h_susy_nb3_m3 -> SetMaximum( 1.2 * susy_over_data_max * data_max[2] ) ;
-   // h_susy_nb3_m4 -> SetMaximum( 1.2 * susy_over_data_max * data_max[3] ) ;
 
       h_susy_nb2_m4 -> SetMaximum(  data_max[0] ) ;
       h_susy_nb3_m2 -> SetMaximum(  data_max[1] ) ;
@@ -622,6 +632,14 @@
       sprintf( savename, "outputfiles/susycounts-hsbins-mgl-%.0f-mlsp-%.0f.pdf", target_mgl, target_mlsp ) ;
       csig2->SaveAs( savename ) ;
 
+
+
+
+    //--- Print stuff.
+
+      double nSusy0lep = h_sig_zl[0] -> Integral()   +   h_sig_zl[1] -> Integral()  +  h_sig_zl[2] -> Integral() ;
+
+      printf("\n\n Total 0lep SUSY events: %6.1f\n\n", nSusy0lep ) ;
 
       return true ;
 

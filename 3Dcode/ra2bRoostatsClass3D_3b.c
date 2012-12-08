@@ -106,10 +106,12 @@
 					     const char* inputScanFile,
 					     double m0, double m12, bool isT1bbbb, double t1bbbbXsec,
 					     const char* inputSusy_deff_dbtageff_file,
+                                             const char* inputSusy_deff_dbtageff_lightflavor_file,
 					     int   qcdModelIndex,
 					     const char* wsrootfilename,
 					     const char* blindBinsList,
-					     const char* systFile1
+					     const char* systFile1,
+                                             const char* pdf_syst_file
 					     ) {
 
 
@@ -1917,21 +1919,48 @@
       int nShapeSystematics(0) ;
       char shapeSystName[20][100] ;
 
+      bool sss_return_status ;
+
       sprintf( shapeSystName[nShapeSystematics], "btageff_sf" ) ;
       if ( useLognormal ) {
-         setupShapeSyst( inputSusy_deff_dbtageff_file, "btageff_sf", 2, m0, m12, workspace ) ; // 2 = log-normal
+         sss_return_status = setupShapeSyst( inputSusy_deff_dbtageff_file, "btageff_sf", 2, m0, m12, workspace ) ; // 2 = log-normal
       } else {
-         setupShapeSyst( inputSusy_deff_dbtageff_file, "btageff_sf", 1, m0, m12, workspace ) ; // 1 = Gaussian
+         sss_return_status = setupShapeSyst( inputSusy_deff_dbtageff_file, "btageff_sf", 1, m0, m12, workspace ) ; // 1 = Gaussian
       }
+      if ( !sss_return_status ) { return false ; }
+      nShapeSystematics++ ;
+
+      sprintf( shapeSystName[nShapeSystematics], "btageff_lf_sf" ) ;
+      if ( useLognormal ) {
+         sss_return_status = setupShapeSyst( inputSusy_deff_dbtageff_lightflavor_file, "btageff_lf_sf", 2, m0, m12, workspace ) ; // 2 = log-normal
+      } else {
+         sss_return_status = setupShapeSyst( inputSusy_deff_dbtageff_lightflavor_file, "btageff_lf_sf", 1, m0, m12, workspace ) ; // 1 = Gaussian
+      }
+      if ( !sss_return_status ) { return false ; }
       nShapeSystematics++ ;
 
       sprintf( shapeSystName[nShapeSystematics], "JES_sf" ) ;
       if ( useLognormal ) {
-         setupShapeSyst( systFile1                   , "JES_sf"    , 2, m0, m12, workspace ) ; // 2 = log-normal
+         sss_return_status = setupShapeSyst( systFile1                   , "JES_sf"    , 2, m0, m12, workspace ) ; // 2 = log-normal
       } else {
-         setupShapeSyst( systFile1                   , "JES_sf"    , 1, m0, m12, workspace ) ; // 1 = Gaussian
+         sss_return_status = setupShapeSyst( systFile1                   , "JES_sf"    , 1, m0, m12, workspace ) ; // 1 = Gaussian
       }
+      if ( !sss_return_status ) { return false ; }
       nShapeSystematics++ ;
+
+      sprintf( shapeSystName[nShapeSystematics], "pdfsyst_sf" ) ;
+      if ( useLognormal ) {
+         sss_return_status = setupShapeSyst( pdf_syst_file               , "pdfsyst_sf"    , 2, m0, m12, workspace ) ; // 2 = log-normal
+      } else {
+         sss_return_status = setupShapeSyst( pdf_syst_file               , "pdfsyst_sf"    , 1, m0, m12, workspace ) ; // 1 = Gaussian
+      }
+      if ( !sss_return_status ) { return false ; }
+      nShapeSystematics++ ;
+
+
+
+
+
 
 
       RooAbsReal* rar_vv_sf(0x0) ;

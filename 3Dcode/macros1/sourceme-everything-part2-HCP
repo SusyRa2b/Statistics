@@ -1,8 +1,8 @@
 
    echo workspace
-   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles/data-unblind.dat\",\"datfiles/sigcounts.T1bbbb.txt\",1200,300,\"datfiles/btagEff_T1bbbb.txt\",4,\"rootfiles/ws-data-unblind-1200-300.root\",\"null\",\"datfiles/sigsystematics.T1bbbb.JES.txt\"\) >&  logfiles/makews-data-unblind-1200-300.log
-   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles/data-unblind.dat\",\"datfiles/sigcounts.T1bbbb.txt\",1200,600,\"datfiles/btagEff_T1bbbb.txt\",4,\"rootfiles/ws-data-unblind-1200-600.root\",\"null\",\"datfiles/sigsystematics.T1bbbb.JES.txt\"\) >&  logfiles/makews-data-unblind-1200-600.log
-   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles/data-unblind.dat\",\"datfiles/sigcounts.T1bbbb.txt\",900,600,\"datfiles/btagEff_T1bbbb.txt\",4,\"rootfiles/ws-data-unblind-900-600.root\",\"null\",\"datfiles/sigsystematics.T1bbbb.JES.txt\"\) >&  logfiles/makews-data-unblind-900-600.log
+   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles_18fb/data-vals-unblind.dat\",\"datfiles_18fb/sigcounts.T1bbbb.txt\",1200,300,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",4,\"rootfiles/ws-data-unblind-1200-300.root\",\"null\",\"datfiles_18fb/sigsystematics.T1bbbb.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbb.PDF.txt\"\) >&  logfiles/makews-data-unblind-1200-300.log
+   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles_18fb/data-vals-unblind.dat\",\"datfiles_18fb/sigcounts.T1bbbb.txt\",1200,600,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",4,\"rootfiles/ws-data-unblind-1200-600.root\",\"null\",\"datfiles_18fb/sigsystematics.T1bbbb.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbb.PDF.txt\"\) >&  logfiles/makews-data-unblind-1200-600.log
+   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles_18fb/data-vals-unblind.dat\",\"datfiles_18fb/sigcounts.T1bbbb.txt\",900,600,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",4,\"rootfiles/ws-data-unblind-900-600.root\",\"null\",\"datfiles_18fb/sigsystematics.T1bbbb.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbb.PDF.txt\"\) >&  logfiles/makews-data-unblind-900-600.log
    cp rootfiles/ws-data-unblind-1200-300.root rootfiles/ws-data-unblind.root
 
    echo fitqual
