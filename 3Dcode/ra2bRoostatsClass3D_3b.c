@@ -1558,14 +1558,14 @@
 
          sprintf( NP_name, "acc_Zee_M%d", i+1 ) ;
          if ( useBeta ) {
-            rar_acc_Zee[i] = makeBetaConstraint( NP_name, acc_Zee[i], acc_Zee_err[i] ) ;
+            rar_acc_Zee[i] = makeBetaConstraint( NP_name, acc_Zee[i], acc_Zee_err[i], workspace ) ;
          } else {
             rar_acc_Zee[i] = makeGaussianConstraint( NP_name, acc_Zee[i], acc_Zee_err[i] ) ;
          }
 
          sprintf( NP_name, "acc_Zmm_M%d", i+1 ) ;
          if ( useBeta ) {
-            rar_acc_Zmm[i] = makeBetaConstraint( NP_name, acc_Zmm[i], acc_Zmm_err[i] ) ;
+            rar_acc_Zmm[i] = makeBetaConstraint( NP_name, acc_Zmm[i], acc_Zmm_err[i], workspace ) ;
          } else {
             rar_acc_Zmm[i] = makeGaussianConstraint( NP_name, acc_Zmm[i], acc_Zmm_err[i] ) ;
          }
@@ -1591,14 +1591,14 @@
 
       sprintf( NP_name, "eff_Zee" ) ;
       if ( useBeta ) {
-         rar_eff_Zee = makeBetaConstraint( NP_name, eff_Zee, eff_Zee_err ) ;
+         rar_eff_Zee = makeBetaConstraint( NP_name, eff_Zee, eff_Zee_err, workspace ) ;
       } else {
          rar_eff_Zee = makeGaussianConstraint( NP_name, eff_Zee, eff_Zee_err ) ;
       }
 
       sprintf( NP_name, "eff_Zmm" ) ;
       if ( useBeta ) {
-         rar_eff_Zmm = makeBetaConstraint( NP_name, eff_Zmm, eff_Zmm_err ) ;
+         rar_eff_Zmm = makeBetaConstraint( NP_name, eff_Zmm, eff_Zmm_err, workspace ) ;
       } else {
          rar_eff_Zmm = makeGaussianConstraint( NP_name, eff_Zmm, eff_Zmm_err ) ;
       }
@@ -1615,14 +1615,14 @@
 
        sprintf( NP_name, "pur_Zee" ) ;
        if ( useBeta ) {
-          rar_pur_Zee = makeBetaConstraint( NP_name, pur_Zee, pur_Zee_err ) ;
+          rar_pur_Zee = makeBetaConstraint( NP_name, pur_Zee, pur_Zee_err, workspace ) ;
        } else {
           rar_pur_Zee = makeGaussianConstraint( NP_name, pur_Zee, pur_Zee_err ) ;
        }
 
        sprintf( NP_name, "pur_Zmm" ) ;
        if ( useBeta ) {
-          rar_pur_Zmm = makeBetaConstraint( NP_name, pur_Zmm, pur_Zmm_err ) ;
+          rar_pur_Zmm = makeBetaConstraint( NP_name, pur_Zmm, pur_Zmm_err, workspace ) ;
        } else {
           rar_pur_Zmm = makeGaussianConstraint( NP_name, pur_Zmm, pur_Zmm_err ) ;
        }
@@ -1983,14 +1983,14 @@
 
           sprintf( NP_name, "trigeff_M%d_H%d", i+1, j+1 ) ;
           if ( useBeta ) {
-             rar_trigeff[i][j] = makeBetaConstraint( NP_name, trigeff_0L[i][j], trigefferr_0L[i][j] ) ;
+             rar_trigeff[i][j] = makeBetaConstraint( NP_name, trigeff_0L[i][j], trigefferr_0L[i][j], workspace ) ;
           } else {
              rar_trigeff[i][j] = makeGaussianConstraint( NP_name, trigeff_0L[i][j], trigefferr_0L[i][j] ) ;
           }
 
           sprintf( NP_name, "trigeff_sl_M%d_H%d", i+1, j+1 ) ;
           if ( useBeta ) {
-             rar_trigeff_sl[i][j] = makeBetaConstraint( NP_name, trigeff_1L[i][j], trigefferr_1L[i][j] ) ;
+             rar_trigeff_sl[i][j] = makeBetaConstraint( NP_name, trigeff_1L[i][j], trigefferr_1L[i][j], workspace ) ;
           } else {
              rar_trigeff_sl[i][j] = makeGaussianConstraint( NP_name, trigeff_1L[i][j], trigefferr_1L[i][j] ) ;
           }
@@ -2914,7 +2914,7 @@
 
 
 
-    RooAbsReal* ra2bRoostatsClass3D_3b::makeBetaConstraint( const char* NP_name, double NP_val, double NP_err ) {
+    RooAbsReal* ra2bRoostatsClass3D_3b::makeBetaConstraint( const char* NP_name, double NP_val, double NP_err, RooWorkspace& workspace ) {
 
        if ( NP_err <= 0. ) {
           printf("  Uncertainty is zero.  Will return constant scale factor of %g.  Input val = %g, err = %g.\n", NP_val, NP_val, NP_err ) ;
@@ -2949,6 +2949,17 @@
        allNuisancePdfs -> add( *rar_pdf ) ;
        globalObservables -> add( *rar_alpha ) ;
        globalObservables -> add( *rar_beta ) ;
+
+       //-- create const variables for mean and sigma so that they can be saved and accessed from workspace later.
+
+       char vname[1000] ;
+       sprintf( vname, "mean_%s", NP_name ) ;
+       RooConstVar* g_mean  = new RooConstVar( vname, vname, NP_val ) ;
+       sprintf( vname, "sigma_%s", NP_name ) ;
+       RooConstVar* g_sigma = new RooConstVar( vname, vname, NP_err ) ;
+       workspace.import( *g_mean  ) ;
+       workspace.import( *g_sigma ) ;
+
 
 
        return rar_np ;

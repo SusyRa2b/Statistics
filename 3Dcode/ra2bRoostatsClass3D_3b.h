@@ -50,7 +50,7 @@
                              ) ;
 
        RooAbsReal* makeBetaPrimeConstraint( const char* NP_name, double NP_val, double NP_err ) ;
-       RooAbsReal* makeBetaConstraint( const char* NP_name, double NP_val, double NP_err ) ;
+       RooAbsReal* makeBetaConstraint( const char* NP_name, double NP_val, double NP_err, RooWorkspace& workspace ) ;
        RooAbsReal* makeCorrelatedBetaPrimeConstraint( const char* NP_name, double NP_val, double NP_err, const char* NP_base_name, bool changeSign=false ) ;
        RooAbsReal* makeCorrelatedBetaConstraint( const char* NP_name, double NP_val, double NP_err, const char* NP_base_name, bool changeSign=false ) ;
 
