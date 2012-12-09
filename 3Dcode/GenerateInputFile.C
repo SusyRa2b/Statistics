@@ -1190,26 +1190,26 @@ inFile << "Z_mm_eff_err      \t" << 0.045 << endl; //
     inFile << "knn_3b_err \t" << 0.003  << endl;
 */
 
-inFile << "knn_1b_M1        \t" << 0.421<< endl;
-inFile << "knn_1b_M1_err    \t" << 0.082<< endl;
-inFile << "knn_1b_M2        \t" << 0.405<< endl;
-inFile << "knn_1b_M2_err    \t" << 0.079<< endl;
-inFile << "knn_1b_M3       \t" <<  0.368<< endl;
-inFile << "knn_1b_M3_err    \t" << 0.072<< endl;
-inFile << "knn_1b_M4        \t" << 0.313<< endl;
-inFile << "knn_1b_M4_err    \t" << 0.065<< endl;
-inFile << "knn_2b           \t" << 0.133<< endl;
-inFile << "knn_2b_err       \t" << 0.035<< endl;
-inFile << "knn_3b           \t" << 0.007<< endl;
-inFile << "knn_3b_err       \t" << 0.004<< endl;
+inFile << "knn_1b_M1        \t" << 0.426<< endl;
+inFile << "knn_1b_M1_err    \t" << 0.063<< endl;
+inFile << "knn_1b_M2        \t" << 0.410<< endl;
+inFile << "knn_1b_M2_err    \t" << 0.061<< endl;
+inFile << "knn_1b_M3       \t" <<  0.380<< endl;
+inFile << "knn_1b_M3_err    \t" << 0.057<< endl;
+inFile << "knn_1b_M4        \t" << 0.328<< endl;
+inFile << "knn_1b_M4_err    \t" << 0.052<< endl;
+inFile << "knn_2b           \t" << 0.118<< endl;
+inFile << "knn_2b_err       \t" << 0.028<< endl;
+inFile << "knn_3b           \t" << 0.006<< endl;
+inFile << "knn_3b_err       \t" << 0.003<< endl;
 
 
 
     // Z -> ll purity
   
-    inFile << "Z_ee_pur  \t" << 0.829 << endl;
+    inFile << "Z_ee_pur  \t" << 0.839 << endl;
     inFile << "Z_ee_pur_err  \t" << 0.112 << endl;
-    inFile << "Z_mm_pur  \t" << 0.801 << endl;
+    inFile << "Z_mm_pur  \t" << 0.786 << endl;
     inFile << "Z_mm_pur_err  \t" << 0.092 << endl;
   
   
