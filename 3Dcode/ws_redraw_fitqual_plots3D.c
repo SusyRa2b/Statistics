@@ -799,9 +799,11 @@
      hfitqual_fit_0lep_1b->Draw("same") ;
      hfitqual_data_0lep_1b->Draw("same") ;
      gPad->SetGridy(1) ;
-     chi2 = addChi2FromObs( hfitqual_data_0lep_1b, hfitqual_model_0lep_1b, doNorm ) ;
-     globalChi2 += chi2 ;
-     obsChi2 += chi2 ;
+     if ( !doNorm ) {
+        chi2 = addChi2FromObs( hfitqual_data_0lep_1b, hfitqual_model_0lep_1b, doNorm ) ;
+        globalChi2 += chi2 ;
+        obsChi2 += chi2 ;
+     }
 
      printf(" pad 2\n") ; cout << flush ;
      cfitqual->cd(2);
@@ -809,9 +811,11 @@
      hfitqual_fit_0lep_2b->Draw("same") ;
      hfitqual_data_0lep_2b->Draw("same") ;
      gPad->SetGridy(1) ;
-     chi2 = addChi2FromObs( hfitqual_data_0lep_2b, hfitqual_model_0lep_2b, doNorm ) ;
-     globalChi2 += chi2 ;
-     obsChi2 += chi2 ;
+     if ( !doNorm ) {
+        chi2 = addChi2FromObs( hfitqual_data_0lep_2b, hfitqual_model_0lep_2b, doNorm ) ;
+        globalChi2 += chi2 ;
+        obsChi2 += chi2 ;
+     }
      
      printf(" pad 3\n") ; cout << flush ;
      cfitqual->cd(3);
@@ -819,9 +823,11 @@
      hfitqual_fit_0lep_3b->Draw("same") ;
      hfitqual_data_0lep_3b->Draw("same") ;
      gPad->SetGridy(1) ;
-     chi2 = addChi2FromObs( hfitqual_data_0lep_3b, hfitqual_model_0lep_3b, doNorm ) ;
-     globalChi2 += chi2 ;
-     obsChi2 += chi2 ;
+     if ( !doNorm ) {
+        chi2 = addChi2FromObs( hfitqual_data_0lep_3b, hfitqual_model_0lep_3b, doNorm ) ;
+        globalChi2 += chi2 ;
+        obsChi2 += chi2 ;
+     }
      
 
 
@@ -831,9 +837,11 @@
      hfitqual_fit_1lep_1b->Draw("same") ;
      hfitqual_data_1lep_1b->Draw("same") ;
      gPad->SetGridy(1) ;
-     chi2 = addChi2FromObs( hfitqual_data_1lep_1b, hfitqual_model_1lep_1b, doNorm ) ;
-     globalChi2 += chi2 ;
-     obsChi2 += chi2 ;
+     if ( !doNorm ) {
+        chi2 = addChi2FromObs( hfitqual_data_1lep_1b, hfitqual_model_1lep_1b, doNorm ) ;
+        globalChi2 += chi2 ;
+        obsChi2 += chi2 ;
+     }
      
      printf(" pad 5\n") ; cout << flush ;
      cfitqual->cd(5);
@@ -841,9 +849,11 @@
      hfitqual_fit_1lep_2b->Draw("same") ;
      hfitqual_data_1lep_2b->Draw("same") ;
      gPad->SetGridy(1) ;
-     chi2 = addChi2FromObs( hfitqual_data_1lep_2b, hfitqual_model_1lep_2b, doNorm ) ;
-     globalChi2 += chi2 ;
-     obsChi2 += chi2 ;
+     if ( !doNorm ) {
+        chi2 = addChi2FromObs( hfitqual_data_1lep_2b, hfitqual_model_1lep_2b, doNorm ) ;
+        globalChi2 += chi2 ;
+        obsChi2 += chi2 ;
+     }
      
      printf(" pad 6\n") ; cout << flush ;
      cfitqual->cd(6);
@@ -851,9 +861,11 @@
      hfitqual_fit_1lep_3b->Draw("same") ;
      hfitqual_data_1lep_3b->Draw("same") ;
      gPad->SetGridy(1) ;
-     chi2 = addChi2FromObs( hfitqual_data_1lep_3b, hfitqual_model_1lep_3b, doNorm ) ;
-     globalChi2 += chi2 ;
-     obsChi2 += chi2 ;
+     if ( !doNorm ) {
+        chi2 = addChi2FromObs( hfitqual_data_1lep_3b, hfitqual_model_1lep_3b, doNorm ) ;
+        globalChi2 += chi2 ;
+        obsChi2 += chi2 ;
+     }
 
 
 
@@ -865,9 +877,11 @@
      hfitqual_fit_ldp_1b->Draw("same") ;
      hfitqual_data_ldp_1b->Draw("same") ;
      gPad->SetGridy(1) ;
-     chi2 = addChi2FromObs( hfitqual_data_ldp_1b, hfitqual_model_ldp_1b, doNorm ) ;
-     globalChi2 += chi2 ;
-     obsChi2 += chi2 ;
+     if ( !doNorm ) {
+        chi2 = addChi2FromObs( hfitqual_data_ldp_1b, hfitqual_model_ldp_1b, doNorm ) ;
+        globalChi2 += chi2 ;
+        obsChi2 += chi2 ;
+     }
 
      printf(" pad 8\n") ; cout << flush ;
      cfitqual->cd(8);
@@ -875,9 +889,11 @@
      hfitqual_fit_ldp_2b->Draw("same") ;
      hfitqual_data_ldp_2b->Draw("same") ;
      gPad->SetGridy(1) ;
-     chi2 = addChi2FromObs( hfitqual_data_ldp_2b, hfitqual_model_ldp_2b, doNorm ) ;
-     globalChi2 += chi2 ;
-     obsChi2 += chi2 ;
+     if ( !doNorm ) {
+        chi2 = addChi2FromObs( hfitqual_data_ldp_2b, hfitqual_model_ldp_2b, doNorm ) ;
+        globalChi2 += chi2 ;
+        obsChi2 += chi2 ;
+     }
 
      printf(" pad 9\n") ; cout << flush ;
      cfitqual->cd(9);
@@ -885,9 +901,11 @@
      hfitqual_fit_ldp_3b->Draw("same") ;
      hfitqual_data_ldp_3b->Draw("same") ;
      gPad->SetGridy(1) ;
-     chi2 = addChi2FromObs( hfitqual_data_ldp_3b, hfitqual_model_ldp_3b, doNorm ) ;
-     globalChi2 += chi2 ;
-     obsChi2 += chi2 ;
+     if ( !doNorm ) {
+        chi2 = addChi2FromObs( hfitqual_data_ldp_3b, hfitqual_model_ldp_3b, doNorm ) ;
+        globalChi2 += chi2 ;
+        obsChi2 += chi2 ;
+     }
 
 
 
@@ -897,18 +915,22 @@
      hfitqual_fit_zee_1b->Draw("same") ;
      hfitqual_data_zee_1b->Draw("same") ;
      gPad->SetGridy(1) ;
-     chi2 = addChi2FromObs( hfitqual_data_zee_1b, hfitqual_fit_zee_1b, doNorm ) ;
-     globalChi2 += chi2 ;
-     obsChi2 += chi2 ;
+     if ( !doNorm ) {
+        chi2 = addChi2FromObs( hfitqual_data_zee_1b, hfitqual_fit_zee_1b, doNorm ) ;
+        globalChi2 += chi2 ;
+        obsChi2 += chi2 ;
+     }
 
      cfitqual->cd(11) ;
      hfitqual_data_zmm_1b->Draw("histpe") ;
      hfitqual_fit_zmm_1b->Draw("same") ;
      hfitqual_data_zmm_1b->Draw("same") ;
      gPad->SetGridy(1) ;
-     chi2 = addChi2FromObs( hfitqual_data_zmm_1b, hfitqual_fit_zmm_1b, doNorm ) ;
-     globalChi2 += chi2 ;
-     obsChi2 += chi2 ;
+     if ( !doNorm ) {
+        chi2 = addChi2FromObs( hfitqual_data_zmm_1b, hfitqual_fit_zmm_1b, doNorm ) ;
+        globalChi2 += chi2 ;
+        obsChi2 += chi2 ;
+     }
 
 
 
@@ -923,12 +945,14 @@
      chi2text->SetTextAlign(32) ;
      char chi2string[1000] ;
 
-     sprintf( chi2string, "Overall Chi2 = %6.2f", globalChi2 ) ;
-     chi2text->DrawTextNDC(0.55, 0.90, chi2string ) ;
-     sprintf( chi2string, "obs Chi2 = %6.2f", obsChi2 ) ;
-     chi2text->DrawTextNDC(0.55, 0.85, chi2string ) ;
-     sprintf( chi2string, "NP Chi2 = %6.2f", npChi2 ) ;
-     chi2text->DrawTextNDC(0.55, 0.80, chi2string ) ;
+     if ( !doNorm ) {
+        sprintf( chi2string, "Overall Chi2 = %6.2f", globalChi2 ) ;
+        chi2text->DrawTextNDC(0.55, 0.90, chi2string ) ;
+        sprintf( chi2string, "obs Chi2 = %6.2f", obsChi2 ) ;
+        chi2text->DrawTextNDC(0.55, 0.85, chi2string ) ;
+        sprintf( chi2string, "NP Chi2 = %6.2f", npChi2 ) ;
+        chi2text->DrawTextNDC(0.55, 0.80, chi2string ) ;
+     }
 
      printf("\n\n Overall Chi2 = %6.2f\n\n", globalChi2 ) ;
      printf("     Obs Chi2 = %6.2f\n", obsChi2 ) ;
@@ -1109,14 +1133,16 @@ void loadHist(const char* filename, const char* pfx, const char* pat, Bool_t doA
      for ( int bi=1; bi<=obshist->GetNbinsX(); bi++ ) {
         double obs = obshist -> GetBinContent( bi ) ;
         double model = modelhist -> GetBinContent( bi ) ;
-        double err ;
+        double err(1.) ;
         if ( !doNorm ) {
-           err = sqrt(obs) ;
+           //--- this does stupid things when obsval < 4.
+           ///err = sqrt(obs) ;
+           if ( model > 1. ) { err = sqrt( model ) ; }
         } else {
            err = obshist -> GetBinError( bi ) ;
            model = 1. ;
         }
-        if ( obs > 0 ) {
+        if ( err>0. ) {
            double chi = (obs-model)/err ;
            chi2val += chi*chi ;
            printf(" %s : obs=%9.1f, model=%9.1f, chi2=%6.2f\n", obshist->GetXaxis()->GetBinLabel( bi ), obs, model, chi*chi ) ;

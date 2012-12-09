@@ -2683,11 +2683,16 @@ void saveHist(const char* filename, const char* pat)
      for ( int bi=1; bi<=obshist->GetNbinsX(); bi++ ) {
         double obs = obshist -> GetBinContent( bi ) ;
         double model = modelhist -> GetBinContent( bi ) ;
-        if ( obs > 0 ) {
-           double chi = (obs-model)/sqrt(obs) ;
-           chi2val += chi*chi ;
-           printf(" %s : obs=%9.1f, model=%9.1f, chi2=%6.2f\n", obshist->GetXaxis()->GetBinLabel( bi ), obs, model, chi*chi ) ;
-        }
+     ///--- this does stupid things when obsval < 4
+     ///if ( obs > 0 ) {
+     ///   double chi = (obs-model)/sqrt(obs) ;
+     ///   chi2val += chi*chi ;
+     ///}
+        double err(1.) ;
+        if ( model > 1. ) { err = sqrt( model ) ; }
+        double chi = (obs-model)/err ;
+        chi2val += chi*chi ;
+        printf(" %s : obs=%9.1f, model=%9.1f, chi2=%6.2f\n", obshist->GetXaxis()->GetBinLabel( bi ), obs, model, chi*chi ) ;
      } // bi.
 
      sprintf( chi2string, "Chi2 = %6.2f", chi2val ) ;
