@@ -14,8 +14,8 @@
 
 
     bool plotSigInput( double target_mgl = 1200., double target_mlsp = 300.,
-                       const char* infile = "datfiles/sigcounts.T1bbbb.txt",
-                       const char* datafile = "datfiles/data-unblind.dat",
+                       const char* infile = "datfiles_18fb/sigcounts.T1bbbb.txt",
+                       const char* datafile = "datfiles_18fb/data-vals-unblind.dat",
                        double dataLumi = 18.0
                         ) {
 

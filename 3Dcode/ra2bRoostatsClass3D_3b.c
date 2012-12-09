@@ -3423,17 +3423,20 @@
     RooAbsReal* ra2bRoostatsClass3D_3b::makeCorrelatedLognormalConstraint(
             const char* NP_name, double NP_val, double NP_err, const char* NP_base_name, bool changeSign ) {
 
+
        if ( NP_err <= 0. ) {
           printf("  makeCorrelatedLognormalConstraint: Uncertainty is zero.  Will return constant scale factor of %g for %s.  Input val = %g, err = %g.\n", NP_val, NP_name, NP_val, NP_err ) ;
           return new RooConstVar( NP_name, NP_name, NP_val ) ;
        }
 
-       RooRealVar* rrv_np_base_par = (RooRealVar*) allNuisances -> find( NP_base_name ) ;
+       char prim_name[1000] ;
+       sprintf( prim_name, "prim_%s", NP_base_name ) ;
+       RooRealVar* rrv_np_base_par = (RooRealVar*) allNuisances -> find( prim_name ) ;
 
        if ( rrv_np_base_par == 0x0 ) {
 
-          printf("\n\n makeCorrelatedLognormalConstraint : creating base nuisance parameter - %s\n\n", NP_base_name ) ;
-          rrv_np_base_par = new RooRealVar( NP_base_name, NP_base_name, -6.0, 6.0 ) ;
+          printf("\n\n makeCorrelatedLognormalConstraint : creating base nuisance parameter - %s\n\n", prim_name ) ;
+          rrv_np_base_par = new RooRealVar( prim_name, prim_name, -6.0, 6.0 ) ;
           rrv_np_base_par -> setVal( 0. ) ;
           rrv_np_base_par -> setConstant( kFALSE ) ;
           allNuisances -> add( *rrv_np_base_par ) ;
@@ -3457,8 +3460,8 @@
 
        //-- create const variables for mean and sigma so that they can be saved and accessed from workspace later.
 
-       char vname[1000] ;
 
+       char vname[1000] ;
        sprintf( vname, "mean_%s", NP_name ) ;
        RooConstVar* ln_mean  = new RooConstVar( vname, vname, NP_val ) ;
 

@@ -247,6 +247,7 @@
                 const char* input_susyfile = "datfiles/Susy-mgl900-mlsp300-met4-ht4.dat",
                 double input_mgl=900, double input_mlsp=300.,
                 const char* input_deffdbtagfile = "datfiles/dummy_DeffDbtag-met4-ht4.dat",
+                const char* input_deffdbtag_lightflavor_file = "datfiles/dummy_DeffDbtag-met4-ht4.dat",
                 double input_nSusy0lep = 60.,
                 const char* input_outputDir = "output-toymc3b",
                 int nToy = 10,
@@ -257,8 +258,10 @@
                 bool input_doUL = false,
                 const char* input_blindBinsList = "null",
                 bool input_inputObservablesArePostTrigger = true,
-                const char* systfilename = "systFile1.txt"
+                const char* jes_syst_file = "systFile1.txt",
+                const char* pdf_syst_file = "foo"
                         ) {
+
 
        char command[10000] ;
 
@@ -394,9 +397,21 @@
 
        ra2bRoostatsClass3D_3b ra2b ;
 
+
        char wsfilename[10000] ;
        sprintf( wsfilename, "%s/ws.root", outputDir ) ;
-       ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, qcdModelIndex, wsfilename, blindBinsList, systfilename ) ;
+       ra2b.initialize( input_datfile,
+                        input_susyfile,
+                        mgl, mlsp,
+                        false,
+                        0.,
+                        input_deffdbtagfile,
+                        input_deffdbtag_lightflavor_file,
+                        qcdModelIndex,
+                        wsfilename,
+                        blindBinsList,
+                        jes_syst_file,
+                        pdf_syst_file ) ;
        TFile wsfile( wsfilename ) ;
        workspace = (RooWorkspace*) wsfile.Get("ws") ;
        if ( workspace == 0x0 ) {
@@ -1940,6 +1955,15 @@
 
 
       sprintf( npname, "btageff_sf" ) ;
+      fit_chi2_np += getChi2LognormNP( npname ) ;
+
+      sprintf( npname, "btageff_lf_sf" ) ;
+      fit_chi2_np += getChi2LognormNP( npname ) ;
+
+      sprintf( npname, "JES_sf" ) ;
+      fit_chi2_np += getChi2LognormNP( npname ) ;
+
+      sprintf( npname, "pdfsyst_sf" ) ;
       fit_chi2_np += getChi2LognormNP( npname ) ;
 
       sprintf( npname, "sf_mc" ) ;
