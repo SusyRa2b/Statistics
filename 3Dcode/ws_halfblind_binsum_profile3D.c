@@ -316,6 +316,41 @@
        rfv_ignorePdfTerm -> Print() ;
 
 
+       char minuit_formula_unbiased_unconstrained[100000] ;
+       sprintf( minuit_formula_unbiased_unconstrained, "%s+%s", nll->GetName(), rfv_ignorePdfTerm->GetName() ) ;
+       RooFormulaVar* rfv_minuitvar_unbiased_unconstrained = new RooFormulaVar( "minuitvar_unbiased_unconstrained",
+         minuit_formula_unbiased_unconstrained,
+         RooArgList( *nll, *rfv_ignorePdfTerm ) ) ;
+
+       RooMinuit* rminuit_ub_uc = new RooMinuit( *rfv_minuitvar_unbiased_unconstrained  ) ;
+
+       rminuit_ub_uc->setPrintLevel(verbLevel-1) ;
+       rminuit_ub_uc->setNoWarn() ;
+
+       // rminuit_ub_uc->migrad() ;
+       // rminuit_ub_uc->hesse() ;
+
+       RooFitResult* rfr_ub_uc = rminuit_ub_uc->fit("mr") ;
+
+       double floatParInitVal[10000] ;
+       char   floatParName[10000][100] ;
+       int nFloatParInitVal(0) ;
+       RooArgList ral_floats = rfr_ub_uc->floatParsFinal() ;
+       TIterator* floatParIter = ral_floats.createIterator() ;
+       while ( RooRealVar* par = (RooRealVar*) floatParIter->Next() ) {
+          sprintf( floatParName[nFloatParInitVal], "%s", par->GetName() ) ;
+          floatParInitVal[nFloatParInitVal] = par->getVal() ;
+          nFloatParInitVal++ ;
+       }
+
+
+       printf("\n\n Unbiased best value for new POI %s is : %7.1f\n\n", new_poi_rar->GetName(), new_poi_rar->getVal() ) ;
+
+       double best_unbiased_poi_val = new_poi_rar->getVal() ;
+
+     //-------
+
+
        char minuit_formula[10000] ;
        sprintf( minuit_formula, "%s+%s*(%s-%s)*(%s-%s)+%s",
          nll->GetName(),
@@ -387,15 +422,19 @@
     //----------------------------------------------------------------------------------------------
 
 
-       double poiVals[1000] ;
-       double nllVals[1000] ;
+       double poiVals_scanDown[1000] ;
+       double nllVals_scanDown[1000] ;
+
+       //-- Do scan down from best value.
+
+       printf("\n\n +++++ Starting scan down from best value.\n\n") ;
+
        double minNllVal(1.e9) ;
 
+       for ( int poivi=0; poivi < npoiPoints/2 ; poivi++ ) {
 
-
-       for ( int poivi=0; poivi < npoiPoints ; poivi++ ) {
-
-          double poiValue = poiMinVal + poivi*(poiMaxVal-poiMinVal)/(1.*(npoiPoints-1)) ;
+          ////double poiValue = poiMinVal + poivi*(poiMaxVal-poiMinVal)/(1.*(npoiPoints-1)) ;
+          double poiValue = best_unbiased_poi_val - poivi*(best_unbiased_poi_val-poiMinVal)/(1.*(npoiPoints/2-1)) ;
 
           rrv_poiValue -> setVal( poiValue ) ;
           rrv_poiValue -> setConstant( kTRUE ) ;
@@ -421,24 +460,119 @@
 
 
 
-          TString binstring( new_poi_name ) ;
-          binstring.ReplaceAll("n_","") ;
-          TString trigbinstring( binstring ) ;
-          trigbinstring.Resize(5) ;
+       // TString binstring( new_poi_name ) ;
+       // binstring.ReplaceAll("n_","") ;
+       // TString trigbinstring( binstring ) ;
+       // trigbinstring.Resize(5) ;
 
           //char pname[1000] ;
           //RooAbsReal* par(0x0) ;
 
 
-          poiVals[poivi] = new_poi_rar->getVal() ;
-          nllVals[poivi] = plot_var->getVal() ;
+          poiVals_scanDown[poivi] = new_poi_rar->getVal() ;
+          nllVals_scanDown[poivi] = plot_var->getVal() ;
 
-          if ( nllVals[poivi] < minNllVal ) { minNllVal = nllVals[poivi] ; }
+          if ( nllVals_scanDown[poivi] < minNllVal ) { minNllVal = nllVals_scanDown[poivi] ; }
 
           delete rfr ;
 
 
        } // poivi
+
+
+      //-- Refit for best unbiased value.
+
+
+       printf("\n\n +++++ Resetting floats to best unbiased fit values.\n\n") ;
+
+       for ( int pi=0; pi<nFloatParInitVal; pi++ ) {
+          RooRealVar* par = ws->var( floatParName[pi] ) ;
+          par->setVal( floatParInitVal[pi] ) ;
+       } // pi.
+
+       printf("\n\n +++++ Starting scan up from best value.\n\n") ;
+
+      //-- Now do scan up.
+
+       double poiVals_scanUp[1000] ;
+       double nllVals_scanUp[1000] ;
+
+       for ( int poivi=0; poivi < npoiPoints/2 ; poivi++ ) {
+
+          double poiValue = best_unbiased_poi_val + poivi*(poiMaxVal-best_unbiased_poi_val)/(1.*(npoiPoints/2-1)) ;
+      //  printf(" best_unbiased_poi_val=%g, poivi=%d, poiMaxVal=%g, npoiPoints=%d, poiValue=%g\n",
+      //      best_unbiased_poi_val, poivi, poiMaxVal, npoiPoints, poiValue ) ;
+
+          rrv_poiValue -> setVal( poiValue ) ;
+          rrv_poiValue -> setConstant( kTRUE ) ;
+
+      //  printf("  debug rrv_poiValue = %g\n", rrv_poiValue->getVal() ) ;
+
+
+       //+++++++++++++++++++++++++++++++++++
+
+          rminuit->migrad() ;
+          rminuit->hesse() ;
+          RooFitResult* rfr = rminuit->save() ;
+
+       //+++++++++++++++++++++++++++++++++++
+
+
+          if ( verbLevel > 0 ) { rfr->Print("v") ; }
+
+
+          float fit_minuit_var_val = rfr->minNll() ;
+
+          printf(" %02d : poi constraint = %.2f : allvars : MinuitVar, createNLL, PV, POI :    %.5f   %.5f   %.5f   %.5f\n",
+                poivi, rrv_poiValue->getVal(), fit_minuit_var_val, nll->getVal(), plot_var->getVal(), new_poi_rar->getVal() ) ;
+          cout << flush ;
+
+
+
+       // TString binstring( new_poi_name ) ;
+       // binstring.ReplaceAll("n_","") ;
+       // TString trigbinstring( binstring ) ;
+       // trigbinstring.Resize(5) ;
+
+          //char pname[1000] ;
+          //RooAbsReal* par(0x0) ;
+
+
+          poiVals_scanUp[poivi] = new_poi_rar->getVal() ;
+          nllVals_scanUp[poivi] = plot_var->getVal() ;
+
+          if ( nllVals_scanUp[poivi] < minNllVal ) { minNllVal = nllVals_scanUp[poivi] ; }
+
+          delete rfr ;
+
+
+       } // poivi
+
+
+
+
+
+       double poiVals[1000] ;
+       double nllVals[1000] ;
+
+       int pointCount(0) ;
+       for ( int pi=0; pi<npoiPoints/2; pi++ ) {
+          poiVals[pi] = poiVals_scanDown[(npoiPoints/2-1)-pi] ;
+          nllVals[pi] = nllVals_scanDown[(npoiPoints/2-1)-pi] ;
+          pointCount++ ;
+       }
+       for ( int pi=1; pi<npoiPoints/2; pi++ ) {
+          poiVals[pointCount] = poiVals_scanUp[pi] ;
+          nllVals[pointCount] = nllVals_scanUp[pi] ;
+          pointCount++ ;
+       }
+       npoiPoints = pointCount ;
+
+       printf("\n\n --- TGraph arrays:\n") ;
+       for ( int i=0; i<npoiPoints; i++ ) {
+          printf("  %2d : poi = %6.1f, nll = %g\n", i, poiVals[i], nllVals[i] ) ;
+       }
+       printf("\n\n") ;
 
        double nllDiffVals[1000] ;
 
