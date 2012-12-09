@@ -26,12 +26,14 @@
                         const char* inputScanFile = "scanFile.txt",
                         double m0 = 1225., double m12 = 225., bool isT1bbbb = false, double t1bbbbXsec=0.,
                         const char* inputSusy_deff_dbtageff_file = "deff_dbtag_file.txt",
+			const char* inputSusy_deff_dbtageff_lightflavor_file = "deff_dbtag_file.txt",
                         int   qcdModelIndex = 4,
                         const char* wsrootfilename = "ws.root",
                         const char* blindBinsList = "null",
 			bool constrainBjetShape = false,
 			bool floatSLSigRatios = false,
-			const char* systFile1 = "systFile1.txt"
+			const char* systFile1 = "systFile1.txt",
+			const char* pdf_syst_file = "foo"
                         ) ;
        bool setSusyScanPoint( const char* inputScanFile,
                               double m0, double m12
@@ -50,7 +52,7 @@
                              ) ;
 
        RooAbsReal* makeBetaPrimeConstraint( const char* NP_name, double NP_val, double NP_err ) ;
-       RooAbsReal* makeBetaConstraint( const char* NP_name, double NP_val, double NP_err ) ;
+       RooAbsReal* makeBetaConstraint( const char* NP_name, double NP_val, double NP_err, RooWorkspace& workspace ) ;
        RooAbsReal* makeCorrelatedBetaPrimeConstraint( const char* NP_name, double NP_val, double NP_err, const char* NP_base_name, bool changeSign=false ) ;
        RooAbsReal* makeCorrelatedBetaConstraint( const char* NP_name, double NP_val, double NP_err, const char* NP_base_name, bool changeSign=false ) ;
 
