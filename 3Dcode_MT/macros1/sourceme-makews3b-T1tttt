@@ -1,8 +1,0 @@
-
-
-
-   echo met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave-wtrig
-   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat\",\"datfiles/T1tttt-met4-ht4-v15.dat\",1225,225,\"datfiles/dummy_DeffDbtag-met4-ht4.dat\",4,\"ws3b.root\",\"null\",false,true,\"datfiles/DummySyst.txt\"\) >& logfiles/makews-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave-wtrig.log
-   mv ws3b.root rootfiles/ws-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave-wtrig.root
-
-
