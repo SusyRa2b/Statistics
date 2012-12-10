@@ -337,10 +337,13 @@
        int nFloatParInitVal(0) ;
        RooArgList ral_floats = rfr_ub_uc->floatParsFinal() ;
        TIterator* floatParIter = ral_floats.createIterator() ;
-       while ( RooRealVar* par = (RooRealVar*) floatParIter->Next() ) {
-          sprintf( floatParName[nFloatParInitVal], "%s", par->GetName() ) ;
-          floatParInitVal[nFloatParInitVal] = par->getVal() ;
-          nFloatParInitVal++ ;
+       {
+          RooRealVar* par ;
+          while ( (par = (RooRealVar*) floatParIter->Next()) ) {
+             sprintf( floatParName[nFloatParInitVal], "%s", par->GetName() ) ;
+             floatParInitVal[nFloatParInitVal] = par->getVal() ;
+             nFloatParInitVal++ ;
+          }
        }
 
 
