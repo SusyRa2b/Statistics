@@ -33,26 +33,19 @@
 
   //==============================================================================================
 
-   void ws_constrained_profile3D( const char* wsfile = "rootfiles/ws-met3-ht3-v2.root",
-                                   const char* new_poi_name = "n_M2_H2_1b",
-                                   const char* ignore_observable_name = "N_0lep_M2_H2_1b",
-                                   int npoiPoints = 10,
-                                   double poiMinVal = -1.,
-                                   double poiMaxVal = -1.,
-                                   double constraintWidth = 4.,
-                                   double ymax = 5.,
-                                   int verbLevel=0,
-                                   bool floatSusy = false ) {
+   void ws_constrained_profile3D( const char* wsfile = "rootfiles/ws-data-unblind.root",
+                                   const char* new_poi_name = "n_M234_H4_3b",
+                                   int npoiPoints = 20,
+                                   double poiMinVal = 0.,
+                                   double poiMaxVal = 20.,
+                                   double constraintWidth = 1.5,
+                                   double ymax = 10.,
+                                   int verbLevel=0 ) {
 
 
      gStyle->SetOptStat(0) ;
 
      //--- make output directory.
-
-     //// TString outputdir( wsfile ) ;
-     //// outputdir.ReplaceAll("rootfiles/","outputfiles/scans-") ;
-     //// outputdir.ReplaceAll(".root","") ;
-     //// TString outputdir( wsfile ) ;
 
      char command[10000] ;
      sprintf( command, "basename %s", wsfile ) ;
@@ -61,6 +54,7 @@
      char outputdirstr[1000] ;
      sprintf( outputdirstr, "outputfiles/scans-%s", wsfilenopath.Data() ) ;
      TString outputdir( outputdirstr ) ;
+
 
      printf("\n\n Creating output directory: %s\n\n", outputdir.Data() ) ;
      sprintf(command, "mkdir -p %s", outputdir.Data() ) ;
@@ -111,14 +105,9 @@
 
 
 
-       //-- do BG only for now.
-       if ( floatSusy ) {
-          rrv_mu_susy_all0lep->setVal(0.) ;
-          rrv_mu_susy_all0lep->setConstant( kFALSE ) ;
-       } else {
-          rrv_mu_susy_all0lep->setVal(0.) ;
-          rrv_mu_susy_all0lep->setConstant( kTRUE ) ;
-       }
+       //-- do BG only.
+       rrv_mu_susy_all0lep->setVal(0.) ;
+       rrv_mu_susy_all0lep->setConstant( kTRUE ) ;
 
 
 
@@ -151,7 +140,7 @@
 
 
 
-       //-- find the new POI parameter.
+       //-- Construct the new POI parameter.
        RooAbsReal* new_poi_rar(0x0) ;
 
        new_poi_rar = ws->var( new_poi_name ) ;
@@ -166,12 +155,21 @@
           printf("\n\n     New POI %s is a variable with current value %.1f.\n\n", new_poi_name, new_poi_rar->getVal() ) ;
        }
 
-       double startPoiVal = new_poi_rar->getVal() ;
+
+
+
+
+
+
 
        if ( npoiPoints <=0 ) {
           printf("\n\n Quitting now.\n\n" ) ;
           return ;
        }
+
+
+       double startPoiVal = new_poi_rar->getVal() ;
+
 
 
       //--- The RooNLLVar is NOT equivalent to what minuit uses.
@@ -208,160 +206,66 @@
 
        RooMinuit* rminuit( 0x0 ) ;
 
-       RooFormulaVar* plot_var( 0x0 ) ;
 
+       RooMinuit* rminuit_uc = new RooMinuit( *nll  ) ;
 
-       RooRealVar* rrv_obs(0x0) ;
+       rminuit_uc->setPrintLevel(verbLevel-1) ;
+       rminuit_uc->setNoWarn() ;
 
-       if ( strcmp( ignore_observable_name, "none" ) != 0 ) {
+       rminuit_uc->migrad() ;
+       rminuit_uc->hesse() ;
 
-          char pdfName[1000] ;
-          sprintf( pdfName, "pdf_%s", ignore_observable_name ) ;
-          RooAbsPdf* pdf_ignore = ws -> pdf( pdfName ) ;
+       RooFitResult* rfr_uc = rminuit_uc->fit("mr") ;
 
-          if ( pdf_ignore == 0x0 ) {
-             printf("\n\n *** Told to ignore %s but can't find pdf %s.\n\n", ignore_observable_name, pdfName ) ;
-             return ;
+       double floatParInitVal[10000] ;
+       char   floatParName[10000][100] ;
+       int nFloatParInitVal(0) ;
+       RooArgList ral_floats = rfr_uc->floatParsFinal() ;
+       TIterator* floatParIter = ral_floats.createIterator() ;
+       {
+          RooRealVar* par ;
+          while ( (par = (RooRealVar*) floatParIter->Next()) ) {
+             sprintf( floatParName[nFloatParInitVal], "%s", par->GetName() ) ;
+             floatParInitVal[nFloatParInitVal] = par->getVal() ;
+             nFloatParInitVal++ ;
           }
-
-          rrv_obs = ws -> var( ignore_observable_name ) ;
-          if ( rrv_obs == 0x0 ) {
-             printf("\n\n *** Can't find RooRealVar for observable %s\n\n", ignore_observable_name ) ;
-             return ;
-          }
-          rrv_obs->setConstant(kTRUE) ;
-
-
-          printf("\n\n Ignoring observable %s by removing pdf %s\n\n", ignore_observable_name, pdfName ) ;
-
-          char minuit_formula[10000] ;
-          sprintf( minuit_formula, "%s+%s*(%s-%s)*(%s-%s)+log(%s)",
-                 nll->GetName(),
-                 rrv_constraintWidth->GetName(),
-                 new_poi_rar->GetName(), rrv_poiValue->GetName(),
-                 new_poi_rar->GetName(), rrv_poiValue->GetName(),
-                 pdf_ignore->GetName()
-                 ) ;
-
-          printf("\n\n Creating new minuit variable with formula: %s\n\n", minuit_formula ) ;
-          RooFormulaVar* new_minuit_var = new RooFormulaVar("new_minuit_var", minuit_formula,
-              RooArgList( *nll,
-                          *rrv_constraintWidth,
-                          *new_poi_rar, *rrv_poiValue,
-                          *new_poi_rar, *rrv_poiValue,
-                          *pdf_ignore
-                          ) ) ;
-
-          printf("\n\n Current value is %.2f\n\n",
-               new_minuit_var->getVal() ) ;
-
-          rminuit = new RooMinuit( *new_minuit_var ) ;
-
-
-
-
-          char plotvar_formula[10000] ;
-          sprintf( plotvar_formula, "%s+log(%s)",
-                 nll->GetName(),
-                 pdf_ignore->GetName()
-                 ) ;
-
-          printf("\n\n Creating new plot variable with formula: %s\n\n", plotvar_formula ) ;
-          plot_var = new RooFormulaVar("plot_var", plotvar_formula,
-              RooArgList( *nll,
-                          *pdf_ignore
-                          ) ) ;
-
-          printf("\n\n Current value is %.2f\n\n",
-               plot_var->getVal() ) ;
-
-
-       } else {
-
-          //--- check if this is a 0lep small n from a semi-blind fit.
-
-          bool doQCDKludge(false) ;
-          TString strcheck( new_poi_name ) ;
-          strcheck.Resize(3) ;
-          if ( strcmp(strcheck.Data(),"n_M") == 0 ) {
-             //--- this is a small n.  See if the observable pdf exists.
-             TString bignpdf( new_poi_name ) ;
-             bignpdf.ReplaceAll("n_M","pdf_N_0lep_M") ;
-             printf(" %s is a 0lep model total.  Checking for %s in likelihood.\n", new_poi_name, bignpdf.Data() ) ;
-             RooAbsPdf* pdf_check = ws -> pdf( bignpdf.Data() ) ;
-             if ( pdf_check == 0x0 ) {
-                printf("  *** Did not find %s.  Doing pdf_sf_qcd kludge.\n", bignpdf.Data() ) ;
-                doQCDKludge = true ;
-             }
-          }
-
-          RooFormulaVar* new_minuit_var(0x0) ;
-
-          if ( !doQCDKludge ) {
-             char minuit_formula[10000] ;
-             sprintf( minuit_formula, "%s+%s*(%s-%s)*(%s-%s)",
-                 nll->GetName(),
-                 rrv_constraintWidth->GetName(),
-                 new_poi_rar->GetName(), rrv_poiValue->GetName(),
-                 new_poi_rar->GetName(), rrv_poiValue->GetName()
-                 ) ;
-             printf("\n\n Creating new minuit variable with formula: %s\n\n", minuit_formula ) ;
-             new_minuit_var = new RooFormulaVar("new_minuit_var", minuit_formula,
-                 RooArgList( *nll,
-                          *rrv_constraintWidth,
-                          *new_poi_rar, *rrv_poiValue,
-                          *new_poi_rar, *rrv_poiValue
-                          ) ) ;
-          } else {
-             TString sfqcdpdfname( new_poi_name ) ;
-             sfqcdpdfname.ReplaceAll( "n_M", "pdf_sf_qcd_M" ) ;
-             printf(" Looking for %s\n", sfqcdpdfname.Data() ) ;
-             RooAbsReal* sf_qcd_pdf = (RooAbsReal*) ws->obj( sfqcdpdfname.Data() ) ;
-             if ( sf_qcd_pdf == 0x0 ) {
-                printf("\n\n *** Can't find %s.  I quit.\n\n", sfqcdpdfname.Data() ) ;
-             }
-             char minuit_formula[10000] ;
-             sprintf( minuit_formula, "%s+%s*(%s-%s)*(%s-%s)-log(%s)",
-                 nll->GetName(),
-                 rrv_constraintWidth->GetName(),
-                 new_poi_rar->GetName(), rrv_poiValue->GetName(),
-                 new_poi_rar->GetName(), rrv_poiValue->GetName(),
-                 sf_qcd_pdf->GetName()
-                 ) ;
-             printf("\n\n Creating new minuit variable with formula: %s\n\n", minuit_formula ) ;
-             new_minuit_var = new RooFormulaVar("new_minuit_var", minuit_formula,
-                 RooArgList( *nll,
-                          *rrv_constraintWidth,
-                          *new_poi_rar, *rrv_poiValue,
-                          *new_poi_rar, *rrv_poiValue,
-                          *sf_qcd_pdf
-                          ) ) ;
-          }
-
-
-          printf("\n\n Current value is %.2f\n\n",
-               new_minuit_var->getVal() ) ;
-
-          rminuit = new RooMinuit( *new_minuit_var ) ;
-
-
-
-
-          char plotvar_formula[10000] ;
-          sprintf( plotvar_formula, "%s",
-                 nll->GetName()
-                 ) ;
-
-          printf("\n\n Creating new plot variable with formula: %s\n\n", plotvar_formula ) ;
-          plot_var = new RooFormulaVar("plot_var", plotvar_formula,
-              RooArgList( *nll
-                          ) ) ;
-
-          printf("\n\n Current value is %.2f\n\n",
-               plot_var->getVal() ) ;
-
-
        }
+
+
+
+     //-------
+
+       printf("\n\n Unbiased best value for new POI %s is : %7.1f\n\n", new_poi_rar->GetName(), new_poi_rar->getVal() ) ;
+       double best_poi_val = new_poi_rar->getVal() ;
+
+       char minuit_formula[10000] ;
+       sprintf( minuit_formula, "%s+%s*(%s-%s)*(%s-%s)",
+         nll->GetName(),
+         rrv_constraintWidth->GetName(),
+         new_poi_rar->GetName(), rrv_poiValue->GetName(),
+         new_poi_rar->GetName(), rrv_poiValue->GetName()
+          ) ;
+
+       printf("\n\n Creating new minuit variable with formula: %s\n\n", minuit_formula ) ;
+       RooFormulaVar* new_minuit_var = new RooFormulaVar("new_minuit_var", minuit_formula,
+           RooArgList( *nll,
+                       *rrv_constraintWidth,
+                       *new_poi_rar, *rrv_poiValue,
+                       *new_poi_rar, *rrv_poiValue
+                       ) ) ;
+
+       printf("\n\n Current value is %.2f\n\n",
+            new_minuit_var->getVal() ) ;
+
+       rminuit = new RooMinuit( *new_minuit_var ) ;
+
+
+       RooAbsReal* plot_var = nll ;
+
+       printf("\n\n Current value is %.2f\n\n",
+            plot_var->getVal() ) ;
+
+
 
 
        rminuit->setPrintLevel(verbLevel-1) ;
@@ -395,37 +299,19 @@
     //----------------------------------------------------------------------------------------------
 
 
-       double poiVals[1000] ;
-       double nllVals[1000] ;
-       double tcmu_qcd_Vals[100] ;
-       double tcmu_ttwj_Vals[100] ;
-       double tcmu_znn_Vals[100] ;
-       double tcmu_vv_Vals[100] ;
-       double tcmu_susy_Vals[100] ;
-       double mu_qcd_ldp_Vals[100] ;
-       double mu_ttwj_sl_Vals[100] ;
-       double trigeff_Vals[100] ;
-       double trigeff_sl_Vals[100] ;
-       double sf_ttwj_Vals[100] ;
-       double sf_qcd_Vals[100] ;
-       double allsmcomps_Vals[100] ;
-       double allcomps_Vals[100] ;
-       double pdf_sf_qcd_Vals[100] ;
-       double pdf_sf_ttwj_Vals[100] ;
-       double pdf_N_ldp_Vals[100] ;
-       double pdf_N_sl_Vals[100] ;
+       double poiVals_scanDown[1000] ;
+       double nllVals_scanDown[1000] ;
+
+       //-- Do scan down from best value.
+
+       printf("\n\n +++++ Starting scan down from best value.\n\n") ;
+
        double minNllVal(1.e9) ;
 
+       for ( int poivi=0; poivi < npoiPoints/2 ; poivi++ ) {
 
-       double allsmcomps_max(0.) ;
-       double allcomps_max(0.) ;
-       double nptf_max(0.) ;
-       double ctrlmu_max(0.) ;
-       double pdfs_max(0.) ;
-
-       for ( int poivi=0; poivi < npoiPoints ; poivi++ ) {
-
-          double poiValue = poiMinVal + poivi*(poiMaxVal-poiMinVal)/(1.*(npoiPoints-1)) ;
+          ////double poiValue = poiMinVal + poivi*(poiMaxVal-poiMinVal)/(1.*(npoiPoints-1)) ;
+          double poiValue = best_poi_val - poivi*(best_poi_val-poiMinVal)/(1.*(npoiPoints/2-1)) ;
 
           rrv_poiValue -> setVal( poiValue ) ;
           rrv_poiValue -> setConstant( kTRUE ) ;
@@ -451,191 +337,92 @@
 
 
 
-          TString binstring( new_poi_name ) ;
-          binstring.ReplaceAll("n_","") ;
-          TString trigbinstring( binstring ) ;
-          trigbinstring.Resize(5) ;
+          poiVals_scanDown[poivi] = new_poi_rar->getVal() ;
+          nllVals_scanDown[poivi] = plot_var->getVal() ;
 
-          char pname[1000] ;
-          RooAbsReal* par(0x0) ;
-          double mu_qcd(0.), mu_ttwj(0.), mu_znn(0.), mu_vv(0.), mu_susy(0.), trigeff(0.), trigeff_sl(0.), sf_ttwj(0.), sf_qcd(0.) ;
-          double mu_qcd_ldp(0.), mu_ttwj_sl(0.) ;
-          double pdf_sf_qcd(0.), pdf_sf_ttwj(0.), pdf_N_ldp(0.), pdf_N_sl(0.) ;
-
-          sprintf( pname, "pdf_N_ldp_%s", binstring.Data() ) ;
-          par = (RooAbsReal*) ws -> obj( pname ) ;
-          if ( par == 0x0 ) {
-             printf( " *** %s missing from workspace.\n", pname ) ;
-          } else {
-             pdf_N_ldp = par -> getVal() ;
-          }
-
-          sprintf( pname, "pdf_N_1lep_%s", binstring.Data() ) ;
-          par = (RooAbsReal*) ws -> obj( pname ) ;
-          if ( par == 0x0 ) {
-             printf( " *** %s missing from workspace.\n", pname ) ;
-          } else {
-             pdf_N_sl = par -> getVal() ;
-          }
-
-          sprintf( pname, "pdf_sf_qcd_%s", binstring.Data() ) ;
-          par = (RooAbsReal*) ws -> obj( pname ) ;
-          if ( par == 0x0 ) {
-             printf( " *** %s missing from workspace.\n", pname ) ;
-          } else {
-             pdf_sf_qcd = par -> getVal() ;
-          }
-
-          sprintf( pname, "pdf_sf_ttwj_%s", binstring.Data() ) ;
-          par = (RooAbsReal*) ws -> obj( pname ) ;
-          if ( par == 0x0 ) {
-             printf( " *** %s missing from workspace.\n", pname ) ;
-          } else {
-             pdf_sf_ttwj = par -> getVal() ;
-          }
-
-          sprintf( pname, "mu_qcd_%s", binstring.Data() ) ;
-          par = (RooAbsReal*) ws -> obj( pname ) ;
-          if ( par == 0x0 ) {
-             printf( " *** %s missing from workspace.\n", pname ) ;
-          } else {
-             mu_qcd = par -> getVal() ;
-          }
-
-          sprintf( pname, "mu_ttwj_%s", binstring.Data() ) ;
-          par = (RooAbsReal*) ws -> obj( pname ) ;
-          if ( par == 0x0 ) {
-             printf( " *** %s missing from workspace.\n", pname ) ;
-          } else {
-             mu_ttwj = par -> getVal() ;
-          }
-
-          sprintf( pname, "mu_znn_%s", binstring.Data() ) ;
-          par = (RooAbsReal*) ws -> obj( pname ) ;
-          if ( par == 0x0 ) {
-             printf( " *** %s missing from workspace.\n", pname ) ;
-          } else {
-             mu_znn = par -> getVal() ;
-          }
-
-          sprintf( pname, "mu_vv_%s", binstring.Data() ) ;
-          par = (RooAbsReal*) ws -> obj( pname ) ;
-          if ( par == 0x0 ) {
-             printf( " *** %s missing from workspace.\n", pname ) ;
-          } else {
-             mu_vv = par -> getVal() ;
-          }
-
-          sprintf( pname, "mu_susy_%s", binstring.Data() ) ;
-          par = (RooAbsReal*) ws -> obj( pname ) ;
-          if ( par == 0x0 ) {
-             printf( " *** %s missing from workspace.\n", pname ) ;
-          } else {
-             mu_susy = par -> getVal() ;
-          }
-
-          sprintf( pname, "trigeff_%s", trigbinstring.Data() ) ;
-          par = (RooAbsReal*) ws -> obj( pname ) ;
-          if ( par == 0x0 ) {
-             printf( " *** %s missing from workspace.\n", pname ) ;
-          } else {
-             trigeff = par -> getVal() ;
-          }
-
-          sprintf( pname, "trigeff_sl_%s", trigbinstring.Data() ) ;
-          par = (RooAbsReal*) ws -> obj( pname ) ;
-          if ( par == 0x0 ) {
-             printf( " *** %s missing from workspace.\n", pname ) ;
-          } else {
-             trigeff_sl = par -> getVal() ;
-          }
-
-          sprintf( pname, "sf_ttwj_%s", binstring.Data() ) ;
-          par = (RooAbsReal*) ws -> obj( pname ) ;
-          if ( par == 0x0 ) {
-             printf( " *** %s missing from workspace.\n", pname ) ;
-          } else {
-             sf_ttwj = par -> getVal() ;
-          }
-
-          sprintf( pname, "sf_qcd_%s", binstring.Data() ) ;
-          par = (RooAbsReal*) ws -> obj( pname ) ;
-          if ( par == 0x0 ) {
-             printf( " *** %s missing from workspace.\n", pname ) ;
-          } else {
-             sf_qcd = par -> getVal() ;
-          }
-
-          sprintf( pname, "mu_qcd_ldp_%s", binstring.Data() ) ;
-          par = (RooAbsReal*) ws -> obj( pname ) ;
-          if ( par == 0x0 ) {
-             printf( " *** %s missing from workspace.\n", pname ) ;
-          } else {
-             mu_qcd_ldp = par -> getVal() ;
-          }
-
-          sprintf( pname, "mu_ttwj_sl_%s", binstring.Data() ) ;
-          par = (RooAbsReal*) ws -> obj( pname ) ;
-          if ( par == 0x0 ) {
-             printf( " *** %s missing from workspace.\n", pname ) ;
-          } else {
-             mu_ttwj_sl = par -> getVal() ;
-          }
-
-
-          printf(" *** debug1 : mu_qcd=%6.2f, mu_ttwj=%6.2f, mu_znn=%6.2f, mu_vv=%6.2f, mu_susy=%6.2f, trigeff=%5.3f, trigeff_sl=%5.3f\n",
-              mu_qcd, mu_ttwj, mu_znn, mu_vv, mu_susy, trigeff, trigeff_sl ) ;
-          printf(" *** debug2 : mu_qcd_ldp=%6.2f, mu_ttwj_sl=%6.2f, sf_ttwj=%5.3f, sf_qcd=%6.3f\n",
-              mu_qcd_ldp, mu_ttwj_sl, sf_ttwj, sf_qcd ) ;
-          printf(" *** debug3 : pdf_sf_qcd=%12.10f, pdf_sf_ttwj=%12.10f, pdf_N_ldp=%12.10f, pdf_N_sl=%12.10f\n",
-              pdf_sf_qcd, pdf_sf_ttwj, pdf_N_ldp, pdf_N_sl ) ;
-          cout << flush ;
-
-          tcmu_qcd_Vals[poivi] = trigeff * mu_qcd ;
-          tcmu_ttwj_Vals[poivi] = trigeff_sl * mu_ttwj ;
-          tcmu_znn_Vals[poivi] = trigeff_sl * mu_znn ;
-          tcmu_vv_Vals[poivi] = trigeff_sl * mu_vv ;
-          tcmu_susy_Vals[poivi] = trigeff_sl * mu_susy ;
-          mu_qcd_ldp_Vals[poivi] = mu_qcd_ldp ;
-          mu_ttwj_sl_Vals[poivi] = mu_ttwj_sl ;
-          trigeff_Vals[poivi] = trigeff ;
-          trigeff_sl_Vals[poivi] = trigeff_sl ;
-          sf_ttwj_Vals[poivi] = sf_ttwj ;
-          sf_qcd_Vals[poivi] = sf_qcd ;
-          pdf_sf_qcd_Vals[poivi] = -2*log(pdf_sf_qcd) ;
-          pdf_sf_ttwj_Vals[poivi] = -2*log(pdf_sf_ttwj) ;
-          pdf_N_ldp_Vals[poivi] = -2*log(pdf_N_ldp) ;
-          pdf_N_sl_Vals[poivi] = -2*log(pdf_N_sl) ;
-
-          allsmcomps_Vals[poivi] = trigeff * mu_qcd + trigeff_sl * ( mu_ttwj + mu_qcd + mu_znn + mu_vv ) ;
-          allcomps_Vals[poivi]   = new_poi_rar->getVal() ;
-
-          if ( allsmcomps_Vals[poivi] > allsmcomps_max ) { allsmcomps_max = allsmcomps_Vals[poivi] ; }
-          if ( allcomps_Vals[poivi] > allcomps_max ) { allcomps_max = allcomps_Vals[poivi] ; }
-
-          if ( sf_ttwj > nptf_max ) { nptf_max = sf_ttwj ; }
-          if ( sf_qcd > nptf_max ) { nptf_max = sf_qcd ; }
-          if ( trigeff > nptf_max ) { nptf_max = trigeff ; }
-          if ( trigeff_sl > nptf_max ) { nptf_max = trigeff_sl ; }
-
-          if ( mu_qcd_ldp > ctrlmu_max ) { ctrlmu_max = mu_qcd_ldp ; }
-          if ( mu_ttwj_sl > ctrlmu_max ) { ctrlmu_max = mu_ttwj_sl ; }
-
-          if ( -2*log(pdf_sf_qcd) > pdfs_max ) { pdfs_max = -2*log(pdf_sf_qcd) ; }
-          if ( -2*log(pdf_sf_ttwj) > pdfs_max ) { pdfs_max = -2*log(pdf_sf_ttwj) ; }
-          if ( -2*log(pdf_N_ldp) > pdfs_max ) { pdfs_max = -2*log(pdf_N_ldp) ; }
-          if ( -2*log(pdf_N_sl) > pdfs_max ) { pdfs_max = -2*log(pdf_N_sl) ; }
-
-
-          poiVals[poivi] = new_poi_rar->getVal() ;
-          nllVals[poivi] = plot_var->getVal() ;
-
-          if ( nllVals[poivi] < minNllVal ) { minNllVal = nllVals[poivi] ; }
+          if ( nllVals_scanDown[poivi] < minNllVal ) { minNllVal = nllVals_scanDown[poivi] ; }
 
           delete rfr ;
 
 
        } // poivi
+
+
+       printf("\n\n +++++ Resetting floats to best fit values.\n\n") ;
+
+       for ( int pi=0; pi<nFloatParInitVal; pi++ ) {
+          RooRealVar* par = ws->var( floatParName[pi] ) ;
+          par->setVal( floatParInitVal[pi] ) ;
+       } // pi.
+
+       printf("\n\n +++++ Starting scan up from best value.\n\n") ;
+
+      //-- Now do scan up.
+
+       double poiVals_scanUp[1000] ;
+       double nllVals_scanUp[1000] ;
+
+       for ( int poivi=0; poivi < npoiPoints/2 ; poivi++ ) {
+
+          double poiValue = best_poi_val + poivi*(poiMaxVal-best_poi_val)/(1.*(npoiPoints/2-1)) ;
+
+          rrv_poiValue -> setVal( poiValue ) ;
+          rrv_poiValue -> setConstant( kTRUE ) ;
+
+
+       //+++++++++++++++++++++++++++++++++++
+
+          rminuit->migrad() ;
+          rminuit->hesse() ;
+          RooFitResult* rfr = rminuit->save() ;
+
+       //+++++++++++++++++++++++++++++++++++
+
+
+          if ( verbLevel > 0 ) { rfr->Print("v") ; }
+
+
+          float fit_minuit_var_val = rfr->minNll() ;
+
+          printf(" %02d : poi constraint = %.2f : allvars : MinuitVar, createNLL, PV, POI :    %.5f   %.5f   %.5f   %.5f\n",
+                poivi, rrv_poiValue->getVal(), fit_minuit_var_val, nll->getVal(), plot_var->getVal(), new_poi_rar->getVal() ) ;
+          cout << flush ;
+
+          poiVals_scanUp[poivi] = new_poi_rar->getVal() ;
+          nllVals_scanUp[poivi] = plot_var->getVal() ;
+
+          if ( nllVals_scanUp[poivi] < minNllVal ) { minNllVal = nllVals_scanUp[poivi] ; }
+
+          delete rfr ;
+
+
+       } // poivi
+
+
+
+
+
+       double poiVals[1000] ;
+       double nllVals[1000] ;
+
+       int pointCount(0) ;
+       for ( int pi=0; pi<npoiPoints/2; pi++ ) {
+          poiVals[pi] = poiVals_scanDown[(npoiPoints/2-1)-pi] ;
+          nllVals[pi] = nllVals_scanDown[(npoiPoints/2-1)-pi] ;
+          pointCount++ ;
+       }
+       for ( int pi=1; pi<npoiPoints/2; pi++ ) {
+          poiVals[pointCount] = poiVals_scanUp[pi] ;
+          nllVals[pointCount] = nllVals_scanUp[pi] ;
+          pointCount++ ;
+       }
+       npoiPoints = pointCount ;
+
+       printf("\n\n --- TGraph arrays:\n") ;
+       for ( int i=0; i<npoiPoints; i++ ) {
+          printf("  %2d : poi = %6.1f, nll = %g\n", i, poiVals[i], nllVals[i] ) ;
+       }
+       printf("\n\n") ;
 
        double nllDiffVals[1000] ;
 
@@ -670,7 +457,6 @@
        sprintf( gname, "scan_%s", new_poi_name ) ;
        graph->SetName( gname ) ;
 
-
        double poiBest(-1.) ;
        double poiMinus1stdv(-1.) ;
        double poiPlus1stdv(-1.) ;
@@ -694,8 +480,11 @@
           if ( xi%100 == 0 ) { printf( " %4d : poi=%6.2f,  2DeltalnL = %6.2f\n", xi, x, twoDeltalnL ) ; }
 
        }
-       printf("\n\n POI estimate :  %g  +%g  -%g    [%g,%g]\n\n",
-               poiBest, (poiPlus1stdv-poiBest), (poiBest-poiMinus1stdv), poiMinus1stdv, poiPlus1stdv ) ;
+       printf("\n\n POI estimate :  %g  +%g  -%g    [%g,%g],   two sigma errors: +%g  -%g   [%g,%g]\n\n",
+               poiBest,
+               (poiPlus1stdv-poiBest), (poiBest-poiMinus1stdv), poiMinus1stdv, poiPlus1stdv,
+               (poiPlus2stdv-poiBest), (poiBest-poiMinus2stdv), poiMinus2stdv, poiPlus2stdv
+               ) ;
 
        printf(" %s val,pm1sig,pm2sig: %7.2f  %7.2f  %7.2f  %7.2f  %7.2f\n",
           new_poi_name, poiBest, (poiPlus1stdv-poiBest), (poiBest-poiMinus1stdv), (poiPlus2stdv-poiBest), (poiBest-poiMinus2stdv) ) ;
@@ -707,7 +496,7 @@
        hscan->SetMaximum(ymax) ;
 
 
-       hscan->Draw() ;
+       hscan->DrawCopy() ;
        graph->SetLineColor(4) ;
        graph->SetLineWidth(3) ;
        graph->Draw("CP") ;
@@ -736,7 +525,6 @@
        sprintf( hname, "hscanout_%s", new_poi_name ) ;
        TH1F* hsout = new TH1F( hname,"scan results",4,0.,4.) ;
        double obsVal(-1.) ;
-       if ( rrv_obs != 0 ) { obsVal = rrv_obs->getVal() ; }
        hsout->SetBinContent(1, obsVal ) ;
        hsout->SetBinContent(2, poiPlus1stdv ) ;
        hsout->SetBinContent(3, poiBest ) ;
@@ -747,18 +535,11 @@
        xaxis->SetBinLabel(3,"Model") ;
        xaxis->SetBinLabel(4,"Model-1sd") ;
 
-       char susyfloatstring[100] ;
-       if ( floatSusy ) {
-          sprintf( susyfloatstring, "susyfloat" ) ;
-       } else {
-          sprintf( susyfloatstring, "susyfixed" ) ;
-       }
-
        char outrootfile[10000] ;
-       sprintf( outrootfile, "%s/scan-%s-%s.root", outputdir.Data(), susyfloatstring, new_poi_name ) ;
+       sprintf( outrootfile, "%s/scan-ff-%s.root", outputdir.Data(), new_poi_name ) ;
 
        char outpdffile[10000] ;
-       sprintf( outpdffile, "%s/scan-%s-%s.pdf", outputdir.Data(), susyfloatstring, new_poi_name ) ;
+       sprintf( outpdffile, "%s/scan-ff-%s.pdf", outputdir.Data(), new_poi_name ) ;
 
        cscan->Update() ; cscan->Draw() ;
 
@@ -767,351 +548,11 @@
 
 
 
-
-      //--- canvas with components.
-
-       TCanvas* ccomps = (TCanvas*) gDirectory->FindObject("ccomps") ;
-       if ( ccomps == 0x0 ) {
-          printf("\n Creating canvas.\n\n") ;
-          ccomps = new TCanvas("ccomps","Components") ;
-       }
-
-       TGraph* gr_tcmu_qcd = new TGraph( npoiPoints, poiVals, tcmu_qcd_Vals ) ;
-       sprintf( gname, "scan_%s_tcmu_qcd", new_poi_name ) ;
-       gr_tcmu_qcd->SetName( gname ) ;
-       gr_tcmu_qcd->SetLineWidth( 2 ) ;
-       gr_tcmu_qcd->SetLineColor( 2 ) ;
-       gr_tcmu_qcd->SetFillColor( kWhite ) ;
-
-       TGraph* gr_tcmu_ttwj = new TGraph( npoiPoints, poiVals, tcmu_ttwj_Vals ) ;
-       sprintf( gname, "scan_%s_tcmu_ttwj", new_poi_name ) ;
-       gr_tcmu_ttwj->SetName( gname ) ;
-       gr_tcmu_ttwj->SetLineWidth( 2 ) ;
-       gr_tcmu_ttwj->SetLineColor( 4 ) ;
-       gr_tcmu_ttwj->SetFillColor( kWhite ) ;
-
-       TGraph* gr_tcmu_znn = new TGraph( npoiPoints, poiVals, tcmu_znn_Vals ) ;
-       sprintf( gname, "scan_%s_tcmu_znn", new_poi_name ) ;
-       gr_tcmu_znn->SetName( gname ) ;
-       gr_tcmu_znn->SetLineWidth( 2 ) ;
-       gr_tcmu_znn->SetLineColor( 3 ) ;
-       gr_tcmu_znn->SetFillColor( kWhite ) ;
-
-       TGraph* gr_tcmu_vv = new TGraph( npoiPoints, poiVals, tcmu_vv_Vals ) ;
-       sprintf( gname, "scan_%s_tcmu_vv", new_poi_name ) ;
-       gr_tcmu_vv->SetName( gname ) ;
-       gr_tcmu_vv->SetLineWidth( 2 ) ;
-       gr_tcmu_vv->SetLineColor( kOrange+1 ) ;
-       gr_tcmu_vv->SetFillColor( kWhite ) ;
-
-       TGraph* gr_tcmu_susy = new TGraph( npoiPoints, poiVals, tcmu_susy_Vals ) ;
-       sprintf( gname, "scan_%s_tcmu_susy", new_poi_name ) ;
-       gr_tcmu_susy->SetName( gname ) ;
-       gr_tcmu_susy->SetLineWidth( 2 ) ;
-       gr_tcmu_susy->SetLineColor( 6 ) ;
-       gr_tcmu_susy->SetFillColor( kWhite ) ;
-
-       TGraph* gr_allsmcomps = new TGraph( npoiPoints, poiVals, allsmcomps_Vals ) ;
-       sprintf( gname, "scan_%s_allsmcomps", new_poi_name ) ;
-       gr_allsmcomps->SetName( gname ) ;
-       gr_allsmcomps->SetLineWidth( 2 ) ;
-       gr_allsmcomps->SetLineStyle( 2 ) ;
-       gr_allsmcomps->SetLineColor( 1 ) ;
-       gr_allsmcomps->SetFillColor( kWhite ) ;
-
-
-       TGraph* gr_allcomps = new TGraph( npoiPoints, poiVals, allcomps_Vals ) ;
-       sprintf( gname, "scan_%s_allcomps", new_poi_name ) ;
-       gr_allcomps->SetName( gname ) ;
-       gr_allcomps->SetLineWidth( 2 ) ;
-       gr_allcomps->SetLineColor( 1 ) ;
-       gr_allcomps->SetFillColor( kWhite ) ;
-
-
-       TLegend* legend_comps = new TLegend(0.7,0.8, 0.85, 0.95) ;
-       legend_comps->SetFillColor(kWhite) ;
-       legend_comps -> AddEntry( gr_allcomps, "All" ) ;
-       legend_comps -> AddEntry( gr_allsmcomps, "All SM" ) ;
-       legend_comps -> AddEntry( gr_tcmu_qcd, "qcd" ) ;
-       legend_comps -> AddEntry( gr_tcmu_ttwj, "ttwj" ) ;
-       legend_comps -> AddEntry( gr_tcmu_znn, "Znn" ) ;
-       legend_comps -> AddEntry( gr_tcmu_vv, "VV" ) ;
-       legend_comps -> AddEntry( gr_tcmu_susy, "SUSY" ) ;
-
-
-       sprintf(htitle, "%s SM components (in events)", new_poi_name ) ;
-       TH1F* hcomps = new TH1F("hcomps", htitle, 10, poiMinVal, poiMaxVal ) ;
-       hcomps->SetMinimum(0.) ;
-       hcomps->SetMaximum(1.2 * allcomps_max ) ;
-
-       hcomps->Draw() ;
-       gr_tcmu_qcd->Draw("c") ;
-       gr_tcmu_ttwj->Draw("c") ;
-       gr_tcmu_znn->Draw("c") ;
-       gr_tcmu_vv->Draw("c") ;
-       gr_tcmu_susy->Draw("c") ;
-       gr_allsmcomps->Draw("c") ;
-
-       legend_comps->Draw() ;
-
-       gPad->SetGridx(1) ;
-       gPad->SetGridy(1) ;
-
-       sprintf( outrootfile, "%s/scan-%s-%s-smcomps.root", outputdir.Data(), susyfloatstring, new_poi_name ) ;
-       sprintf( outpdffile, "%s/scan-%s-%s-smcomps.pdf", outputdir.Data(), susyfloatstring, new_poi_name ) ;
-
-       ccomps->Update() ; ccomps->Draw() ;
-
-       printf("\n Saving %s\n", outpdffile ) ;
-       ccomps->SaveAs( outpdffile ) ;
-
-
-
-
-
-
-
-
-      //--- canvas with NP scale factors and trig eff.
-
-       TCanvas* cnptf = (TCanvas*) gDirectory->FindObject("cnptf") ;
-       if ( cnptf == 0x0 ) {
-          printf("\n Creating canvas.\n\n") ;
-          cnptf = new TCanvas("cnptf","Components") ;
-       }
-
-       TGraph* gr_trigeff = new TGraph( npoiPoints, poiVals, trigeff_Vals ) ;
-       sprintf( gname, "scan_%s_trigeff", new_poi_name ) ;
-       gr_trigeff->SetName( gname ) ;
-       gr_trigeff->SetLineWidth( 2 ) ;
-       gr_trigeff->SetLineColor( 1 ) ;
-       gr_trigeff->SetLineStyle( 2 ) ;
-       gr_trigeff->SetFillColor( kWhite ) ;
-
-       TGraph* gr_trigeff_sl = new TGraph( npoiPoints, poiVals, trigeff_sl_Vals ) ;
-       sprintf( gname, "scan_%s_trigeff_sl", new_poi_name ) ;
-       gr_trigeff_sl->SetName( gname ) ;
-       gr_trigeff_sl->SetLineWidth( 2 ) ;
-       gr_trigeff_sl->SetLineColor( 1 ) ;
-       gr_trigeff_sl->SetLineStyle( 3 ) ;
-       gr_trigeff_sl->SetFillColor( kWhite ) ;
-
-       TGraph* gr_sf_ttwj = new TGraph( npoiPoints, poiVals, sf_ttwj_Vals ) ;
-       sprintf( gname, "scan_%s_sf_ttwj", new_poi_name ) ;
-       gr_sf_ttwj->SetName( gname ) ;
-       gr_sf_ttwj->SetLineWidth( 2 ) ;
-       gr_sf_ttwj->SetLineColor( 4 ) ;
-       gr_sf_ttwj->SetFillColor( kWhite ) ;
-
-       TGraph* gr_sf_qcd = new TGraph( npoiPoints, poiVals, sf_qcd_Vals ) ;
-       sprintf( gname, "scan_%s_sf_qcd", new_poi_name ) ;
-       gr_sf_qcd->SetName( gname ) ;
-       gr_sf_qcd->SetLineWidth( 2 ) ;
-       gr_sf_qcd->SetLineColor( 2 ) ;
-       gr_sf_qcd->SetFillColor( kWhite ) ;
-
-
-       TLegend* legend_nptf = new TLegend(0.7,0.8, 0.85, 0.95) ;
-       legend_nptf->SetFillColor(kWhite) ;
-       legend_nptf -> AddEntry( gr_trigeff, "Trig eff, 0lep" ) ;
-       legend_nptf -> AddEntry( gr_trigeff_sl, "Trig eff, 1lep" ) ;
-       legend_nptf -> AddEntry( gr_sf_ttwj, "SF ttwj" ) ;
-       legend_nptf -> AddEntry( gr_sf_qcd, "SF QCD" ) ;
-
-
-       sprintf(htitle, "%s Closure NPs and trigger eff.", new_poi_name ) ;
-       TH1F* hnptf = new TH1F("hnptf", htitle, 10, poiMinVal, poiMaxVal ) ;
-       hnptf->SetMinimum(0.) ;
-       hnptf->SetMaximum(1.1 * nptf_max ) ;
-
-       hnptf->Draw() ;
-       gr_trigeff->Draw("c") ;
-       gr_trigeff_sl->Draw("c") ;
-       gr_sf_ttwj->Draw("c") ;
-       gr_sf_qcd->Draw("c") ;
-
-       legend_nptf->Draw() ;
-
-       gPad->SetGridx(1) ;
-       gPad->SetGridy(1) ;
-
-       sprintf( outrootfile, "%s/scan-%s-%s-nptf.root", outputdir.Data(), susyfloatstring, new_poi_name ) ;
-       sprintf( outpdffile, "%s/scan-%s-%s-nptf.pdf", outputdir.Data(), susyfloatstring, new_poi_name ) ;
-
-       cnptf->Update() ; cnptf->Draw() ;
-
-       printf("\n Saving %s\n", outpdffile ) ;
-       cnptf->SaveAs( outpdffile ) ;
-
-
-
-
-
-
-
-
-
-      //--- canvas with control sample mus.
-
-       TCanvas* cctrlmu = (TCanvas*) gDirectory->FindObject("cctrlmu") ;
-       if ( cctrlmu == 0x0 ) {
-          printf("\n Creating canvas.\n\n") ;
-          cctrlmu = new TCanvas("cctrlmu","Control sample mus") ;
-       }
-
-       TGraph* gr_mu_qcd_ldp = new TGraph( npoiPoints, poiVals, mu_qcd_ldp_Vals ) ;
-       sprintf( gname, "scan_%s_mu_qcd_ldp", new_poi_name ) ;
-       gr_mu_qcd_ldp->SetName( gname ) ;
-       gr_mu_qcd_ldp->SetLineWidth( 2 ) ;
-       gr_mu_qcd_ldp->SetLineColor( 2 ) ;
-       gr_mu_qcd_ldp->SetLineStyle( 1 ) ;
-       gr_mu_qcd_ldp->SetFillColor( kWhite ) ;
-
-
-       TGraph* gr_mu_ttwj_sl = new TGraph( npoiPoints, poiVals, mu_ttwj_sl_Vals ) ;
-       sprintf( gname, "scan_%s_mu_ttwj_sl", new_poi_name ) ;
-       gr_mu_ttwj_sl->SetName( gname ) ;
-       gr_mu_ttwj_sl->SetLineWidth( 2 ) ;
-       gr_mu_ttwj_sl->SetLineColor( 4 ) ;
-       gr_mu_ttwj_sl->SetLineStyle( 1 ) ;
-       gr_mu_ttwj_sl->SetFillColor( kWhite ) ;
-
-
-       TLegend* legend_ctrlmu = new TLegend(0.7,0.8, 0.85, 0.95) ;
-       legend_ctrlmu->SetFillColor(kWhite) ;
-
-       legend_ctrlmu->AddEntry( gr_mu_qcd_ldp, "mu qcd LDP") ;
-       legend_ctrlmu->AddEntry( gr_mu_ttwj_sl, "mu ttwj SL") ;
-
-
-       sprintf(htitle, "%s Control sample mus", new_poi_name ) ;
-       TH1F* hctrlmu = new TH1F("hctrlmu", htitle, 10, poiMinVal, poiMaxVal ) ;
-       hctrlmu->SetMinimum(0.) ;
-       hctrlmu->SetMaximum(1.1 * ctrlmu_max ) ;
-
-       hctrlmu->Draw() ;
-       gr_mu_qcd_ldp->Draw("c") ;
-       gr_mu_ttwj_sl->Draw("c") ;
-
-       legend_ctrlmu->Draw() ;
-
-       gPad->SetGridx(1) ;
-       gPad->SetGridy(1) ;
-
-       sprintf( outrootfile, "%s/scan-%s-%s-ctrlmu.root", outputdir.Data(), susyfloatstring, new_poi_name ) ;
-       sprintf( outpdffile, "%s/scan-%s-%s-ctrlmu.pdf", outputdir.Data(), susyfloatstring, new_poi_name ) ;
-
-       cctrlmu->Update() ; cctrlmu->Draw() ;
-
-       printf("\n Saving %s\n", outpdffile ) ;
-       cctrlmu->SaveAs( outpdffile ) ;
-
-
-
-
-
-
-
-
-
-      //--- canvas with pdfs.
-
-       TCanvas* cpdfs = (TCanvas*) gDirectory->FindObject("cpdfs") ;
-       if ( cpdfs == 0x0 ) {
-          printf("\n Creating canvas.\n\n") ;
-          cpdfs = new TCanvas("cpdfs","-ln(PDF)") ;
-       }
-
-       TGraph* gr_pdf_sf_qcd = new TGraph( npoiPoints, poiVals, pdf_sf_qcd_Vals ) ;
-       sprintf( gname, "scan_%s_pdf_sf_qcd", new_poi_name ) ;
-       gr_pdf_sf_qcd->SetName( gname ) ;
-       gr_pdf_sf_qcd->SetLineWidth( 2 ) ;
-       gr_pdf_sf_qcd->SetLineColor( 2 ) ;
-       gr_pdf_sf_qcd->SetLineStyle( 1 ) ;
-       gr_pdf_sf_qcd->SetFillColor( kWhite ) ;
-
-
-       TGraph* gr_pdf_sf_ttwj = new TGraph( npoiPoints, poiVals, pdf_sf_ttwj_Vals ) ;
-       sprintf( gname, "scan_%s_pdf_sf_ttwj", new_poi_name ) ;
-       gr_pdf_sf_ttwj->SetName( gname ) ;
-       gr_pdf_sf_ttwj->SetLineWidth( 2 ) ;
-       gr_pdf_sf_ttwj->SetLineColor( 4 ) ;
-       gr_pdf_sf_ttwj->SetLineStyle( 1 ) ;
-       gr_pdf_sf_ttwj->SetFillColor( kWhite ) ;
-
-
-       TGraph* gr_pdf_N_ldp = new TGraph( npoiPoints, poiVals, pdf_N_ldp_Vals ) ;
-       sprintf( gname, "scan_%s_pdf_N_ldp", new_poi_name ) ;
-       gr_pdf_N_ldp->SetName( gname ) ;
-       gr_pdf_N_ldp->SetLineWidth( 2 ) ;
-       gr_pdf_N_ldp->SetLineColor( 2 ) ;
-       gr_pdf_N_ldp->SetLineStyle( 2 ) ;
-       gr_pdf_N_ldp->SetFillColor( kWhite ) ;
-
-
-       TGraph* gr_pdf_N_sl = new TGraph( npoiPoints, poiVals, pdf_N_sl_Vals ) ;
-       sprintf( gname, "scan_%s_pdf_N_sl", new_poi_name ) ;
-       gr_pdf_N_sl->SetName( gname ) ;
-       gr_pdf_N_sl->SetLineWidth( 2 ) ;
-       gr_pdf_N_sl->SetLineColor( 4 ) ;
-       gr_pdf_N_sl->SetLineStyle( 2 ) ;
-       gr_pdf_N_sl->SetFillColor( kWhite ) ;
-
-
-       TLegend* legend_pdfs = new TLegend(0.7,0.8, 0.85, 0.95) ;
-       legend_pdfs->SetFillColor(kWhite) ;
-
-       legend_pdfs->AddEntry( gr_pdf_sf_qcd, "-2ln(pdf_sf_qcd)") ;
-       legend_pdfs->AddEntry( gr_pdf_sf_ttwj, "-2ln(pdf_sf_ttwj)") ;
-       legend_pdfs->AddEntry( gr_pdf_N_ldp, "-2ln(pdf_N_ldp)") ;
-       legend_pdfs->AddEntry( gr_pdf_N_sl, "-2ln(pdf_N_sl)") ;
-
-
-       sprintf(htitle, "%s -2ln(PDF) vals", new_poi_name ) ;
-       TH1F* hpdfs = new TH1F("hpdfs", htitle, 10, poiMinVal, poiMaxVal ) ;
-       hpdfs->SetMinimum(0.) ;
-       hpdfs->SetMaximum(1.1 * pdfs_max ) ;
-
-       hpdfs->Draw() ;
-       gr_pdf_sf_qcd->Draw("c") ;
-       gr_pdf_sf_ttwj->Draw("c") ;
-       gr_pdf_N_ldp->Draw("c") ;
-       gr_pdf_N_sl->Draw("c") ;
-
-       legend_pdfs->Draw() ;
-
-       gPad->SetGridx(1) ;
-       gPad->SetGridy(1) ;
-
-       sprintf( outrootfile, "%s/scan-%s-%s-pdfs.root", outputdir.Data(), susyfloatstring, new_poi_name ) ;
-       sprintf( outpdffile, "%s/scan-%s-%s-pdfs.pdf", outputdir.Data(), susyfloatstring, new_poi_name ) ;
-
-       cpdfs->Update() ; cpdfs->Draw() ;
-
-       printf("\n Saving %s\n", outpdffile ) ;
-       cpdfs->SaveAs( outpdffile ) ;
-
-
-
-
-
-
-
-
-
-
-
-
      //--- save in root file
 
        printf("\n Saving %s\n", outrootfile ) ;
        TFile fout(outrootfile,"recreate") ;
        graph->Write() ;
-       gr_tcmu_qcd->Write() ;
-       gr_tcmu_ttwj->Write() ;
-       gr_tcmu_znn->Write() ;
-       gr_tcmu_vv->Write() ;
-       gr_allsmcomps->Write() ;
        hsout->Write() ;
        fout.Close() ;
 
