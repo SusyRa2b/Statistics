@@ -41,7 +41,8 @@ while(<$flist>) {
 
     close $fsub;
     
-    system("bsub -q 1nh -N -oo $dir/log_files/log_$inputDirectory.txt < $subDirectory/submit_$inputDirectory.sh");
+    #system("bsub -q 1nh -N -oo $dir/log_files/log_$inputDirectory.txt < $subDirectory/submit_$inputDirectory.sh");
+    system("bsub -q 8nh -R \"rusage[mem=2048]\" -M 2000000 -N -oo $dir/log_files/log_$inputDirectory.txt < $subDirectory/submit_$inputDirectory.sh");
         
   }
   
