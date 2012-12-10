@@ -35,7 +35,7 @@ using namespace RooFit ;
 
 RooAbsArg* getCorrelatedBetaPrimeConstraint(RooWorkspace& ws,const TString varName,const TString binName,
 					    const double value ,const double error,
-					    const TString observables, const TString nuisances,
+					    const TString observables, const TString nuisances, const TString globalObservables,
 					    const TString correlatedName,
                                             Bool_t useComplement=false )
 {
@@ -62,17 +62,18 @@ RooAbsArg* getCorrelatedBetaPrimeConstraint(RooWorkspace& ws,const TString varNa
   betaVar.setConstant();
 
   ws.import(alphaVar);
-  //ws.extendSet(observables,alphaVar.GetName());
+  ws.extendSet(globalObservables,alphaVar.GetName());
 
   ws.import(betaVar);
-  //ws.extendSet(observables,betaVar.GetName());
+  ws.extendSet(globalObservables,betaVar.GetName());
 
   RooAbsReal* correlationParameter = ws.function(correlatedName);
   if(correlationParameter == NULL)
     {
       RooRealVar parameter(correlatedName,correlatedName,0.5,0.,1.);
       ws.import(parameter);
-      //ws.extendSet(nuisances,parameter.GetName());
+      ws.extendSet(nuisances,parameter.GetName());
+      
       RooNormalFromFlatPdf constraint(correlatedName+"_Constraint",correlatedName+"_Constraint",parameter);
       ws.import(constraint,RecycleConflictNodes());
       correlationParameter = ws.function(correlatedName);
@@ -91,7 +92,7 @@ RooAbsArg* getCorrelatedBetaPrimeConstraint(RooWorkspace& ws,const TString varNa
 
 RooAbsArg* getCorrelatedBetaConstraint(RooWorkspace& ws,const TString varName,const TString binName,
 				       const double value ,const double error,
-				       const TString observables, const TString nuisances,
+				       const TString observables, const TString nuisances, const TString globalObservables,
 				       const TString correlatedName,
                                        Bool_t useComplement=false )
 {
@@ -118,17 +119,18 @@ RooAbsArg* getCorrelatedBetaConstraint(RooWorkspace& ws,const TString varName,co
   betaVar.setConstant();
 
   ws.import(alphaVar);
-  //ws.extendSet(observables,alphaVar.GetName());
+  ws.extendSet(globalObservables,alphaVar.GetName());
 
   ws.import(betaVar);
-  //ws.extendSet(observables,betaVar.GetName());
+  ws.extendSet(globalObservables,betaVar.GetName());
 
   RooAbsReal* correlationParameter = ws.function(correlatedName);
   if(correlationParameter == NULL)
     {
       RooRealVar parameter(correlatedName,correlatedName,0.5,0.,1.);
       ws.import(parameter);
-      //ws.extendSet(nuisances,parameter.GetName());
+      ws.extendSet(nuisances,parameter.GetName());
+      
       RooNormalFromFlatPdf constraint(correlatedName+"_Constraint",correlatedName+"_Constraint",parameter);
       ws.import(constraint,RecycleConflictNodes());
       correlationParameter = ws.function(correlatedName);
@@ -146,7 +148,7 @@ RooAbsArg* getCorrelatedBetaConstraint(RooWorkspace& ws,const TString varName,co
 
 RooAbsArg* getBetaPrimeConstraint(RooWorkspace& ws,const TString varName,const TString binName,
 				  const double value ,const double error,
-				  const TString observables, const TString nuisances,
+				  const TString observables, const TString nuisances, const TString globalObservables,
 				  TString* passObs = NULL , TString* failObs = NULL,
 				  TString* passPar = NULL , TString* failPar = NULL)
 {
@@ -173,13 +175,14 @@ RooAbsArg* getBetaPrimeConstraint(RooWorkspace& ws,const TString varName,const T
   betaVar.setConstant();
 
   ws.import(alphaVar);
-  //ws.extendSet(observables,alphaVar.GetName());
+  ws.extendSet(globalObservables,alphaVar.GetName());
 
   ws.import(betaVar);
-  //ws.extendSet(observables,betaVar.GetName());
+  ws.extendSet(globalObservables,betaVar.GetName());
 
   RooRealVar constrained (varName+binName , varName+binName , value, 0., 1e5 );
   ws.import(constrained);
+  ws.extendSet(nuisances, constrained.GetName());
 
   RooBetaPrimePdf constraint (varName+binName+"_Constraint" , varName+binName+"_Constraint", constrained , alphaVar , betaVar);
   ws.import(constraint, RecycleConflictNodes());
@@ -225,7 +228,7 @@ RooAbsArg* getBetaPrimeConstraint(RooWorkspace& ws,const TString varName,const T
 
 RooAbsArg* getBetaConstraint(RooWorkspace& ws,const TString varName,const TString binName,
 			     const double value ,const double error,
-			     const TString observables, const TString nuisances,
+			     const TString observables, const TString nuisances, const TString globalObservables,
 			     TString* passObs = NULL , TString* failObs = NULL,
 			     TString* passPar = NULL , TString* failPar = NULL)
 {
@@ -253,17 +256,18 @@ RooAbsArg* getBetaConstraint(RooWorkspace& ws,const TString varName,const TStrin
   betaVar.setConstant();
 
   ws.import(alphaVar);
-  //ws.extendSet(observables,alphaVar.GetName());
+  ws.extendSet(globalObservables,alphaVar.GetName());
 
   ws.import(betaVar);
-  //ws.extendSet(observables,betaVar.GetName());
+  ws.extendSet(globalObservables,betaVar.GetName());
 
   RooRealVar constrained (varName+binName , varName+binName , value, 0. , 1. );
   ws.import(constrained);
-
+  ws.extendSet(nuisances, constrained.GetName());
+  
   RooBetaPdf constraint (varName+binName+"_Constraint" , varName+binName+"_Constraint", constrained , alphaVar , betaVar);
   ws.import(constraint, RecycleConflictNodes());
-
+  
   return ws.arg(constrained.GetName());
 
   /*
@@ -306,7 +310,7 @@ RooAbsArg* getBetaConstraint(RooWorkspace& ws,const TString varName,const TStrin
 
 RooAbsArg* getInverseBetaConstraint(RooWorkspace& ws,const TString varName,const TString binName,
 				    const double value ,const double error,
-				    const TString observables, const TString nuisances,
+				    const TString observables, const TString nuisances, const TString globalObservables,
 				    TString* passObs = NULL , TString* failObs = NULL,
 				    TString* passPar = NULL , TString* failPar = NULL)
 {
@@ -335,13 +339,14 @@ RooAbsArg* getInverseBetaConstraint(RooWorkspace& ws,const TString varName,const
   betaVar.setConstant();
 
   ws.import(alphaVar);
-  //ws.extendSet(observables,alphaVar.GetName());
+  ws.extendSet(globalObservables,alphaVar.GetName());
 
   ws.import(betaVar);
-  //ws.extendSet(observables,betaVar.GetName());
+  ws.extendSet(globalObservables,betaVar.GetName());
 
   RooRealVar constrained (varName+binName , varName+binName , value, 0. , 1. );
   ws.import(constrained);
+  ws.extendSet(nuisances, constrained.GetName());
 
   RooBetaPdf constraint (varName+binName+"_Constraint" , varName+binName+"_Constraint", constrained , alphaVar , betaVar);
   ws.import(constraint, RecycleConflictNodes());

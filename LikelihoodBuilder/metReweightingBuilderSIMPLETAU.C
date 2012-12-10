@@ -873,7 +873,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       RooRealVar* TriggerEfficiency = (RooRealVar*)
 	getGaussianConstraint(wspace,triggername, "",
 			       1.0,0.01,
-			       "trig1","trig2");
+			      "trig1","trig2","globalObservables");
       wspace.import(*TriggerEfficiency,RecycleConflictNodes());
 
       ////// 
@@ -887,7 +887,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 
       RooAbsArg* zeroLeptonError = getGaussianConstraint(wspace,"zeroLeptonSignalError_", thisBin,
 							 1.0, counterror,
-							 "sigerr1","sigerr2");
+							 "sigerr1","sigerr2","globalObservables");
 
 
       RooProduct zeroLepton(zeroLeptonName+"_SignalYield",zeroLeptonName+"_SignalYield",RooArgSet(acount0,*wspace.var("signalCrossSection"), *zeroLeptonError));
@@ -1094,7 +1094,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 	RooRealVar* ScaleFactor = (RooRealVar*)
 	  getBetaPrimeConstraint(wspace,oneLeptonName, "",
 				 scalefactor,scalefactorerror,
-				 name1,name2);
+				 name1,name2,"globalObservables");
 	wspace.import(*ScaleFactor,RecycleConflictNodes());
 
       }
@@ -1124,7 +1124,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       RooRealVar* ScaleFactorDilep = (RooRealVar*)
 	getBetaPrimeConstraint(wspace,dilepName, "",
 			       scalefactor,scalefactorerror,
-			       name1,name2);
+			       name1,name2,"globalObservables");
       wspace.import(*ScaleFactorDilep,RecycleConflictNodes());
       cout << endl << endl << " end of dilepton SFs" << endl << endl;
 	      
@@ -1149,7 +1149,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       RooRealVar* ScaleFactorTau = (RooRealVar*)
 	getBetaPrimeConstraint(wspace,oneTauName, "",
 			       scalefactor,scalefactorerror,
-			       name3,name4);
+			       name3,name4,"globalObservables");
       wspace.import(*ScaleFactorTau,RecycleConflictNodes());
       cout << endl << endl << " end of tau SFs" << endl << endl;
 
@@ -1173,7 +1173,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       RooRealVar* ScaleFactorTauTau = (RooRealVar*)
 	getBetaPrimeConstraint(wspace,twoTauName, "",
 			       scalefactor,scalefactorerror,
-			       name5,name6);
+			       name5,name6,"globalObservables");
       wspace.import(*ScaleFactorTauTau,RecycleConflictNodes());
       cout << endl << endl << " end of ditau SFs" << endl << endl;
 

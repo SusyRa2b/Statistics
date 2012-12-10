@@ -21,9 +21,9 @@ using namespace RooFit ;
 
 
 RooAbsArg* getGaussianConstraint( RooWorkspace& ws, TString NP_name, const TString binName,
-				    const double NP_val, const double NP_err,
-				    const TString observables, const TString nuisances,
-				    bool allowNegative = false ) {
+				  const double NP_val, const double NP_err,
+				  const TString observables, const TString nuisances, const TString globalObservables,
+				  bool allowNegative = false ) {
   
   NP_name = NP_name + binName;
 
@@ -47,27 +47,30 @@ RooAbsArg* getGaussianConstraint( RooWorkspace& ws, TString NP_name, const TStri
   np_rrv -> setVal( NP_val ) ;
   np_rrv -> setConstant( kFALSE ) ;
 
-  RooConstVar* g_mean = new RooConstVar( "mean_"+NP_name, "mean_"+NP_name, NP_val ) ;
+  RooRealVar* g_mean = new RooRealVar( "mean_"+NP_name, "mean_"+NP_name, NP_val ) ;
+  g_mean->setConstant();
+
   RooConstVar* g_sigma = new RooConstVar( "sigma_"+NP_name, "sigma_"+NP_name, NP_err ) ;
   RooGaussian* np_pdf = new RooGaussian( "pdf_"+NP_name, "pdf_"+NP_name, *np_rrv, *g_mean, *g_sigma ) ;
 
-  //allNuisances -> add( *np_rrv ) ;//BEN FIXME -- add to nuisances?
-  //allNuisancePdfs -> add( *np_pdf ) ;//BEN FIXME -- add to nuisances?
   ws.import( *np_rrv );
   ws.import( *np_pdf, RecycleConflictNodes() );
-  
-  return np_rrv ;
 
+  ws.extendSet(nuisances, np_rrv->GetName());
+  //allNuisancePdfs -> add( *np_pdf ) ;//BEN FIXME - do something like this?
+  ws.extendSet(globalObservables, g_mean->GetName());
+
+  return np_rrv ;
 
 }
 
 
 
 RooAbsReal* getCorrelatedGaussianConstraint( RooWorkspace& ws, TString NP_name, const TString binName,
-					      double NP_val, double NP_err, 
-					      const TString observables, const TString nuisances,
-					      const TString NP_base_name, 
-					      bool changeSign = false, bool allowNegative = false) {
+					     double NP_val, double NP_err, 
+					     const TString observables, const TString nuisances, const TString globalObservables,
+					     const TString NP_base_name, 
+					     bool changeSign = false, bool allowNegative = false) {
   
   NP_name = NP_name + binName;
   
@@ -90,16 +93,19 @@ RooAbsReal* getCorrelatedGaussianConstraint( RooWorkspace& ws, TString NP_name, 
     rrv_np_base_par -> setVal( 0. ) ;
     rrv_np_base_par -> setConstant( kFALSE ) ;
     
-    //allNuisances -> add( *rrv_np_base_par ) ;//BEN FIXME -- add to nuisances
     ws.import( *rrv_np_base_par ) ;
+    ws.extendSet(nuisances, rrv_np_base_par->GetName());
 
-    RooConstVar* g_mean = new RooConstVar( "mean_"+NP_base_name, "mean_"+NP_base_name, 0.0 ) ;
+    RooRealVar* g_mean = new RooRealVar( "mean_"+NP_base_name, "mean_"+NP_base_name, 0.0 ) ;
+    g_mean->setConstant();
+
     RooConstVar* g_sigma = new RooConstVar( "sigma_"+NP_base_name, "sigma_"+NP_base_name, 1.0 ) ;
 
     RooGaussian* base_np_pdf = new RooGaussian( "pdf_"+NP_base_name, "pdf_"+NP_base_name, *rrv_np_base_par, *g_mean, *g_sigma ) ;
     
-    //allNuisancePdfs -> add( *base_np_pdf ) ;//BEN FIXME -- add to nuisances 
     ws.import( *base_np_pdf, RecycleConflictNodes() );
+    ws.extendSet(globalObservables, g_mean->GetName());
+    //allNuisancePdfs -> add( *base_np_pdf ) ;//BEN FIXME do something like this?
 
   }
 

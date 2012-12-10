@@ -146,6 +146,7 @@ struct allBinNames
   TString signalGlobalUncertainty;
   TString observables;
   TString nuisances;
+  TString globalObservables;
 } ;
 
 //Values for things used in all bins
@@ -196,13 +197,13 @@ void makeTriggerEfficiencies(RooWorkspace& ws, allBinNames& names, abcdBinParame
   RooAbsArg* zeroLeptonTriggerEfficiency =
     getGaussianConstraint(ws, "zeroLeptonTriggerEfficiency_", abcd.zeroLeptonTriggerEfficiencyName, //FIXME change to beta after synch
 			  abcd.zeroLeptonTriggerEfficiency, abcd.zeroLeptonTriggerEfficiencyError,
-			  names.observables,names.nuisances);
+			  names.observables,names.nuisances, names.globalObservables);
   ws.import(*zeroLeptonTriggerEfficiency, RecycleConflictNodes());
 
   RooAbsArg* oneLeptonTriggerEfficiency =
     getGaussianConstraint(ws, "oneLeptonTriggerEfficiency_", abcd.oneLeptonTriggerEfficiencyName, //FIXME change to beta after synch
 			  abcd.oneLeptonTriggerEfficiency, abcd.oneLeptonTriggerEfficiencyError,
-			  names.observables,names.nuisances);
+			  names.observables,names.nuisances, names.globalObservables);
   ws.import(*oneLeptonTriggerEfficiency, RecycleConflictNodes());
 
 }
@@ -274,23 +275,15 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
 	  lowDeltaPhiNMETScaleFactor_temp.setConstant(kFALSE);
 	  if(abcd.lowDeltaPhiNMETScaleFactorName == "M3")
 	    {
-	      RooRealVar scaleFactorMean(lowDeltaPhiNMETScaleFactorName+"_Mean", lowDeltaPhiNMETScaleFactorName+"_Mean", numbers.SFqcd_met3, 0, 3.0);
-	      RooRealVar scaleFactorWidth(lowDeltaPhiNMETScaleFactorName+"_Width", lowDeltaPhiNMETScaleFactorName+"_Width", numbers.SFqcd_met3_err, 0, 3.0);
-	      scaleFactorMean.setConstant();
-	      scaleFactorWidth.setConstant();
-	      RooGaussian scaleFactorConstraint(lowDeltaPhiNMETScaleFactorName+"_Constraint",lowDeltaPhiNMETScaleFactorName+"_Constraint",
-						lowDeltaPhiNMETScaleFactor_temp, scaleFactorMean, scaleFactorWidth);//FIXME have to add to globalObservables!
-	      ws.import(scaleFactorConstraint, RecycleConflictNodes());
+	      getGaussianConstraint(ws, lowDeltaPhiNMETScaleFactorName, "",
+				    numbers.SFqcd_met3, numbers.SFqcd_met3_err,
+				    names.observables,names.nuisances, names.globalObservables);		
 	    }
 	  else if(abcd.lowDeltaPhiNMETScaleFactorName == "M4")
 	    {
-	      RooRealVar scaleFactorMean(lowDeltaPhiNMETScaleFactorName+"_Mean", lowDeltaPhiNMETScaleFactorName+"_Mean", numbers.SFqcd_met4, 0, 3.0);
-	      RooRealVar scaleFactorWidth(lowDeltaPhiNMETScaleFactorName+"_Width", lowDeltaPhiNMETScaleFactorName+"_Width", numbers.SFqcd_met4_err, 0, 3.0);
-	      scaleFactorMean.setConstant();
-	      scaleFactorWidth.setConstant();
-	      RooGaussian scaleFactorConstraint(lowDeltaPhiNMETScaleFactorName+"_Constraint",lowDeltaPhiNMETScaleFactorName+"_Constraint",
-						lowDeltaPhiNMETScaleFactor_temp, scaleFactorMean, scaleFactorWidth);//FIXME have to add to globalObservables!
-	      ws.import(scaleFactorConstraint, RecycleConflictNodes());
+	      getGaussianConstraint(ws, lowDeltaPhiNMETScaleFactorName, "",
+				    numbers.SFqcd_met4, numbers.SFqcd_met4_err,
+				    names.observables,names.nuisances, names.globalObservables);		
 	    }
 	} 
       ws.import(lowDeltaPhiNMETScaleFactor_temp, RecycleConflictNodes());
@@ -312,13 +305,9 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
 	  lowDeltaPhiNBTagScaleFactor_temp.setConstant(kFALSE);
 	  if(abcd.lowDeltaPhiNBTagScaleFactorName == "3b")
 	    {
-	      RooRealVar scaleFactorMean(lowDeltaPhiNBTagScaleFactorName+"_Mean", lowDeltaPhiNBTagScaleFactorName+"_Mean", numbers.SFqcd_nb3, 0, 3.0);
-	      RooRealVar scaleFactorWidth(lowDeltaPhiNBTagScaleFactorName+"_Width", lowDeltaPhiNBTagScaleFactorName+"_Width", numbers.SFqcd_nb3_err, 0, 3.0);
-	      scaleFactorMean.setConstant();
-	      scaleFactorWidth.setConstant();
-	      RooGaussian scaleFactorConstraint(lowDeltaPhiNBTagScaleFactorName+"_Constraint",lowDeltaPhiNBTagScaleFactorName+"_Constraint",
-						lowDeltaPhiNBTagScaleFactor_temp, scaleFactorMean, scaleFactorWidth);//FIXME have to add to globalObservables!
-	      ws.import(scaleFactorConstraint, RecycleConflictNodes());
+	      getGaussianConstraint(ws, lowDeltaPhiNBTagScaleFactorName, "",
+				    numbers.SFqcd_nb3, numbers.SFqcd_nb3_err,
+				    names.observables,names.nuisances, names.globalObservables);		
 	    }
 	} 
       ws.import(lowDeltaPhiNBTagScaleFactor_temp, RecycleConflictNodes());
@@ -338,7 +327,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
     //getBetaPrimeConstraint(ws,"zeroLeptonQCDClosure_", binName,
     getGaussianConstraint(ws,"zeroLeptonQCDClosure_", binName,
 			   abcd.qcdClosure,abcd.qcdClosureError,
-			   names.observables,names.nuisances);
+			   names.observables,names.nuisances, names.globalObservables);
   
   RooProduct zeroLeptonQCDYield(zeroLeptonName+"_QCDYield",zeroLeptonName+"_QCDYield",RooArgSet(*lowDeltaPhiNScaling,*zeroLeptonQCDClosure,*lowDeltaPhiNMETScaleFactor,*lowDeltaPhiNBTagScaleFactor,zeroLeptonLowDeltaPhiNQCDYield));
   
@@ -361,7 +350,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
 	//getBetaPrimeConstraint(ws,"zeroLeptonTopWJetsClosure_", binName,
 	getGaussianConstraint(ws,"zeroLeptonTopWJetsClosure_", binName,
 			      abcd.topWJetsClosure,abcd.topWJetsClosureError,
-			      names.observables,names.nuisances);
+			      names.observables,names.nuisances, names.globalObservables);
       RooProduct  zeroLeptonTopWJetsYield(zeroLeptonName+"_TopWJetsYield",zeroLeptonName+"_TopWJetsYield",RooArgSet(*singleLeptonScaling,*zeroLeptonTopWJetsClosure,oneLeptonTopWJetsYield));
       ws.import(zeroLeptonTopWJetsYield, RecycleConflictNodes() );
     }
@@ -425,13 +414,13 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
     //getBetaConstraint(ws,"ZtoeeAcceptance_",abcd.ZtoeeAcceptanceName,
     getGaussianConstraint(ws,"ZtoeeAcceptance_",abcd.ZtoeeAcceptanceName,
 		      abcd.ZtoeeAcceptance,abcd.ZtoeeAcceptanceError,
-		      names.observables,names.nuisances);
+		      names.observables,names.nuisances, names.globalObservables);
   
   RooAbsArg* ZtomumuAcceptance = 
     //getBetaConstraint(ws,"ZtomumuAcceptance_",abcd.ZtomumuAcceptanceName,
     getGaussianConstraint(ws,"ZtomumuAcceptance_",abcd.ZtomumuAcceptanceName,
 		      abcd.ZtomumuAcceptance,abcd.ZtomumuAcceptanceError,
-		      names.observables,names.nuisances);
+		      names.observables,names.nuisances, names.globalObservables);
   
   
   RooProduct* diMuonYield = (RooProduct*)ws.arg("diMuon_"+observed.diMuonName+"_Yield");//Assumes acceptance is only binned in zero or more dimensions of the count.
@@ -470,7 +459,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
   //-----Define Z->nunu yield
   RooAbsArg* zeroLeptonZtoNuNubTagScaling = getGaussianConstraint(ws,"zeroLeptonZtoNuNubTagScaling_",abcd.ZtoNuNubTagScalingName,
 							      abcd.ZtoNuNubTagScaling,abcd.ZtoNuNubTagScalingError,
-							      names.observables,names.nuisances);
+							      names.observables,names.nuisances, names.globalObservables);
   
   RooProduct zeroLeptonZtoNuNuYield(zeroLeptonName+"_ZtoNuNuYield",zeroLeptonName+"_ZtoNuNuYield",RooArgSet(*zeroLeptonZtoNuNubTagScaling,*ZtoNuNu));
   
@@ -581,25 +570,30 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
 
 void makeUnderlyingLikelihood(const likelihoodOptions options, RooWorkspace& ws ,allBinNames& names, allBins& numbers)
 {
-  ws.defineSet("observables","");
   names.observables = "observables";
+  ws.defineSet(names.observables,"");
 
-  ws.defineSet("nuisances","");
   names.nuisances = "nuisances";
+  ws.defineSet(names.nuisances,"");
+
+  names.globalObservables = "globalObservables";
+  ws.defineSet(names.globalObservables,"");
+
+
 
   //Universal parameters
   
-  RooAbsArg* dibosonMCUncertainty = //FIXME - this is hardcoded 
+  RooAbsArg* dibosonMCUncertainty = 
     getGaussianConstraint(ws,"dibosonMCUncertainty","",
 			  numbers.dibosonMC, numbers.dibosonMCUncertainty,
-			  names.observables,names.nuisances);
+			  names.observables,names.nuisances, names.globalObservables);
   names.dibosonMCUncertainty = dibosonMCUncertainty->GetName();
   
   RooAbsArg* MCUncertainty = 
     //getBetaPrimeConstraint(ws,"MCUncertainty","",
     getGaussianConstraint(ws,"MCUncertainty","",
 			   numbers.MC,numbers.MCUncertainty,
-			   names.observables,names.nuisances);
+			   names.observables,names.nuisances, names.globalObservables);
   names.MCUncertainty = MCUncertainty->GetName();
     
   RooRealVar luminosity("luminosity","luminosity",numbers.Luminosity,0.0,1e2);
@@ -614,7 +608,7 @@ void makeUnderlyingLikelihood(const likelihoodOptions options, RooWorkspace& ws 
   RooAbsArg* signalGlobalUncertainty = 
     getGaussianConstraint(ws,"signalGlobalUncertainty","",
 			  1.0, globalUncertainty,
-			  names.observables,names.nuisances);
+			  names.observables,names.nuisances, names.globalObservables);
   names.signalGlobalUncertainty = signalGlobalUncertainty->GetName();
 
 
@@ -636,19 +630,19 @@ void makeUnderlyingLikelihood(const likelihoodOptions options, RooWorkspace& ws 
   // RooAbsArg* ZtomumuInvPurity = 
   //   getInverseBetaConstraint(ws,"ZtomumuInvPurity","",
   // 			     numbers.ZtomumuPurity,numbers.ZtomumuPurityError,
-  // 			     names.observables,names.nuisances);
+  // 			     names.observables,names.nuisances, names.globalObservables);
   // names.ZtomumuInvPurity = ZtomumuInvPurity->GetName();
   
   // RooAbsArg* ZtoeeInvPurity = 
   //   getInverseBetaConstraint(ws,"ZtoeeInvPurity","",
   // 			     numbers.ZtoeePurity,numbers.ZtoeePurityError,
-  // 			     names.observables,names.nuisances);
+  // 			     names.observables,names.nuisances, names.globalObservables);
   // names.ZtoeeInvPurity = ZtoeeInvPurity->GetName();
 
   RooRealVar* ZtomumuPurity = (RooRealVar*)
     getGaussianConstraint(ws,"ZtomumuPurity","",
 			  numbers.ZtomumuPurity,numbers.ZtomumuPurityError,
-			  names.observables,names.nuisances);
+			  names.observables,names.nuisances, names.globalObservables);
   RooRatio ZtomumuInvPurity("ZtomumuInvPurity", "ZtomumuInvPurity", RooConst(1.), *ZtomumuPurity);
   ws.import(ZtomumuInvPurity);
   names.ZtomumuInvPurity = ZtomumuInvPurity.GetName();
@@ -656,7 +650,7 @@ void makeUnderlyingLikelihood(const likelihoodOptions options, RooWorkspace& ws 
   RooRealVar* ZtoeePurity = (RooRealVar*)
     getGaussianConstraint(ws,"ZtoeePurity","",
 			  numbers.ZtoeePurity,numbers.ZtoeePurityError,
-			  names.observables,names.nuisances);
+			  names.observables,names.nuisances, names.globalObservables);
   RooRatio ZtoeeInvPurity("ZtoeeInvPurity", "ZtoeeInvPurity", RooConst(1.), *ZtoeePurity);
   ws.import(ZtoeeInvPurity);
   names.ZtoeeInvPurity = ZtoeeInvPurity.GetName();
@@ -666,27 +660,27 @@ void makeUnderlyingLikelihood(const likelihoodOptions options, RooWorkspace& ws 
     //getBetaConstraint(ws,"ZtomumuEfficiency","",
     getGaussianConstraint(ws,"ZtomumuEfficiency","",
 		      numbers.ZtomumuEfficiency,numbers.ZtomumuEfficiencyError,
-		      names.observables,names.nuisances);
+		      names.observables,names.nuisances, names.globalObservables);
   names.ZtomumuEfficiency = ZtomumuEfficiency->GetName();
 
   RooAbsArg* ZtoeeEfficiency = 
     //getBetaConstraint(ws,"ZtoeeEfficiency","",	
     getGaussianConstraint(ws,"ZtoeeEfficiency","",
 		      numbers.ZtoeeEfficiency,numbers.ZtoeeEfficiencyError,
-		      names.observables,names.nuisances);
+		      names.observables,names.nuisances, names.globalObservables);
   names.ZtoeeEfficiency = ZtoeeEfficiency->GetName();
 
   RooAbsArg* ZtoeeSystematic = 
     getCorrelatedGaussianConstraint(ws,"ZtoeeSystematic","",
 				    numbers.ZtoeeSystematic,numbers.ZtoeeSystematicError,
-				    names.observables,names.nuisances,
+				    names.observables,names.nuisances, names.globalObservables,
 				    "ZtollSystematic");
   names.ZtoeeSystematic = ZtoeeSystematic->GetName();
   
   RooAbsArg* ZtomumuSystematic = 
     getCorrelatedGaussianConstraint(ws,"ZtomumuSystematic","",
 				    numbers.ZtomumuSystematic,numbers.ZtomumuSystematicError,
-				    names.observables,names.nuisances,
+				    names.observables,names.nuisances, names.globalObservables,
 				    "ZtollSystematic");
   names.ZtomumuSystematic = ZtomumuSystematic->GetName();
   
@@ -995,11 +989,11 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 
 	  RooAbsArg* zeroLeptonError = getGaussianConstraint(ws,"zeroLeptonSignalError_", binName,
 							     1.0, thisSignalStatisticalErrorOAK.zeroLepton,
-							     names.observables,names.nuisances);
+							     names.observables,names.nuisances, names.globalObservables);
 	  
 	  RooAbsArg* zeroLeptonLowDeltaPhiNError = getGaussianConstraint(ws,"zeroLeptonLowDeltaPhiNSignalError_", binName,
 									 1.0, thisSignalStatisticalErrorOAK.zeroLeptonLowDeltaPhiN,
-									 names.observables,names.nuisances);
+									 names.observables,names.nuisances, names.globalObservables);
 	  
 	  //B-tag efficiency systematic
 	  yields thisSignalBTagEfficiencyErrorOAK = signalBTagEfficiencyErrorOAK[binName];
@@ -1015,7 +1009,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	  //RooAbsArg* zeroLeptonBTagEfficiencyError = getCorrelatedGaussianConstraint(ws,"zeroLeptonBTagEfficiencyError_", binName,
 	  RooAbsArg* zeroLeptonBTagEfficiencyError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonBTagEfficiencyError_", binName,
 										      1.0, fabs(thisSignalBTagEfficiencyErrorOAK.zeroLepton),
-										      names.observables,names.nuisances,
+										      names.observables,names.nuisances, names.globalObservables,
 										      signalBTagEfficiencyName, changeSign);
 	  
 	  changeSign = false;
@@ -1023,7 +1017,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	  //RooAbsArg* zeroLeptonLowDeltaPhiNBTagEfficiencyError = getCorrelatedGaussianConstraint(ws,"zeroLeptonLowDeltaPhiNBTagEfficiencyError_", binName,
 	  RooAbsArg* zeroLeptonLowDeltaPhiNBTagEfficiencyError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonLowDeltaPhiNBTagEfficiencyError_", binName,
 												  1.0, fabs(thisSignalBTagEfficiencyErrorOAK.zeroLeptonLowDeltaPhiN),
-												  names.observables,names.nuisances,
+												  names.observables,names.nuisances, names.globalObservables,
 												  signalBTagEfficiencyName, changeSign);
 	  
 	  //JES systematic
@@ -1040,7 +1034,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	  //RooAbsArg* zeroLeptonJesError = getCorrelatedGaussianConstraint(ws,"zeroLeptonJesError_", binName,
 	  RooAbsArg* zeroLeptonJesError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonJesError_", binName,
 									   1.0, fabs(thisSignalJesErrorOAK.zeroLepton),
-									   names.observables,names.nuisances,
+									   names.observables,names.nuisances, names.globalObservables,
 									   signalJesErrorName, changeSign);
 	  
 	  changeSign = false;
@@ -1048,7 +1042,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	  //RooAbsArg* zeroLeptonLowDeltaPhiNJesError = getCorrelatedGaussianConstraint(ws,"zeroLeptonLowDeltaPhiNJesError_", binName,
 	  RooAbsArg* zeroLeptonLowDeltaPhiNJesError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonLowDeltaPhiNJesError_", binName,
 										       1.0, fabs(thisSignalJesErrorOAK.zeroLeptonLowDeltaPhiN),
-										       names.observables,names.nuisances,
+										       names.observables,names.nuisances, names.globalObservables,
 										       signalJesErrorName, changeSign);	  
 	  	  
 	  //Setup yields
@@ -1076,7 +1070,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	      
 	      RooAbsArg* signalStatisticalError = getGaussianConstraint(ws, signalName+"_SignalError", "",
 							     1.0, percentError,
-							     names.observables, names.nuisances);
+							     names.observables, names.nuisances, names.globalObservables);
 
 	      RooProduct signalYield(signalName+"_SignalYield", signalName+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, signalFraction, *signalGlobalUncertainty, *signalStatisticalError) );
 	      ws.import(signalYield, RecycleConflictNodes());
@@ -1101,7 +1095,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	      
 	      RooAbsArg* signalStatisticalError = getGaussianConstraint(ws, signalName+"_SignalError", "",
 							     1.0, percentError,
-							     names.observables, names.nuisances);
+							     names.observables, names.nuisances, names.globalObservables);
 	      
 	      RooProduct signalYield(signalName+"_SignalYield", signalName+"_SignalYield", RooArgSet(*luminosity, *signalCrossSection, signalFraction, *signalGlobalUncertainty, *signalStatisticalError) );
 	      ws.import(signalYield, RecycleConflictNodes());
@@ -1137,15 +1131,15 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 
 	  RooAbsArg* zeroLeptonError = getGaussianConstraint(ws,"zeroLeptonSignalError_", binName,
 							     1.0, thisSignalStatisticalErrorOAK.zeroLepton,
-							     names.observables,names.nuisances);
+							     names.observables,names.nuisances, names.globalObservables);
 	  
 	  RooAbsArg* zeroLeptonLowDeltaPhiNError = getGaussianConstraint(ws,"zeroLeptonLowDeltaPhiNSignalError_", binName,
 									 1.0, thisSignalStatisticalErrorOAK.zeroLeptonLowDeltaPhiN,
-									 names.observables,names.nuisances);
+									 names.observables,names.nuisances, names.globalObservables);
 	  
 	  RooAbsArg* oneLeptonError = getGaussianConstraint(ws,"oneLeptonSignalError_", binName,
 							    1.0, thisSignalStatisticalErrorOAK.oneLepton,
-							    names.observables,names.nuisances);
+							    names.observables,names.nuisances, names.globalObservables);
 	  
 	  //B-tag efficiency systematic
 	  yields thisSignalBTagEfficiencyErrorOAK = signalBTagEfficiencyErrorOAK[binName];
@@ -1162,7 +1156,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	  //RooAbsArg* zeroLeptonBTagEfficiencyError = getCorrelatedGaussianConstraint(ws,"zeroLeptonBTagEfficiencyError_", binName,
 	  RooAbsArg* zeroLeptonBTagEfficiencyError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonBTagEfficiencyError_", binName,
 										      1.0, fabs(thisSignalBTagEfficiencyErrorOAK.zeroLepton),
-										      names.observables,names.nuisances,
+										      names.observables,names.nuisances, names.globalObservables,
 										      signalBTagEfficiencyName, changeSign);
 	  
 	  changeSign = false;
@@ -1170,7 +1164,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	  //RooAbsArg* zeroLeptonLowDeltaPhiNBTagEfficiencyError = getCorrelatedGaussianConstraint(ws,"zeroLeptonLowDeltaPhiNBTagEfficiencyError_", binName,
 	  RooAbsArg* zeroLeptonLowDeltaPhiNBTagEfficiencyError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonLowDeltaPhiNBTagEfficiencyError_", binName,
 												  1.0, fabs(thisSignalBTagEfficiencyErrorOAK.zeroLeptonLowDeltaPhiN),
-												  names.observables,names.nuisances,
+												  names.observables,names.nuisances, names.globalObservables,
 												  signalBTagEfficiencyName, changeSign);
 	  
 	  changeSign = false;
@@ -1178,7 +1172,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	  //RooAbsArg* oneLeptonBTagEfficiencyError = getCorrelatedGaussianConstraint(ws,"oneLeptonBTagEfficiencyError_", binName,
 	  RooAbsArg* oneLeptonBTagEfficiencyError = getCorrelatedLogNormalConstraint(ws,"oneLeptonBTagEfficiencyError_", binName,
 										     1.0, fabs(thisSignalBTagEfficiencyErrorOAK.oneLepton),
-										     names.observables,names.nuisances,
+										     names.observables,names.nuisances, names.globalObservables,
 										     signalBTagEfficiencyName, changeSign);
 	  
 	  //JES systematic
@@ -1196,7 +1190,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	  //RooAbsArg* zeroLeptonJesError = getCorrelatedGaussianConstraint(ws,"zeroLeptonJesError_", binName,
 	  RooAbsArg* zeroLeptonJesError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonJesError_", binName,
 									   1.0, fabs(thisSignalJesErrorOAK.zeroLepton),
-									   names.observables,names.nuisances,
+									   names.observables,names.nuisances, names.globalObservables,
 									   signalJesErrorName, changeSign);
 	  
 	  changeSign = false;
@@ -1204,7 +1198,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	  //RooAbsArg* zeroLeptonLowDeltaPhiNJesError = getCorrelatedGaussianConstraint(ws,"zeroLeptonLowDeltaPhiNJesError_", binName,
 	  RooAbsArg* zeroLeptonLowDeltaPhiNJesError = getCorrelatedLogNormalConstraint(ws,"zeroLeptonLowDeltaPhiNJesError_", binName,
 										       1.0, fabs(thisSignalJesErrorOAK.zeroLeptonLowDeltaPhiN),
-										       names.observables,names.nuisances,
+										       names.observables,names.nuisances, names.globalObservables,
 										       signalJesErrorName, changeSign);
 	  
 	  changeSign = false;
@@ -1212,7 +1206,7 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	  //RooAbsArg* oneLeptonJesError = getCorrelatedGaussianConstraint(ws,"oneLeptonJesError_", binName,
 	  RooAbsArg* oneLeptonJesError = getCorrelatedLogNormalConstraint(ws,"oneLeptonJesError_", binName,
 									  1.0, fabs(thisSignalJesErrorOAK.oneLepton),
-									  names.observables,names.nuisances,
+									  names.observables,names.nuisances, names.globalObservables,
 									  signalJesErrorName, changeSign);
 	  
 	  
@@ -1513,17 +1507,21 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   (*ws.set(names.observables)).Print("v");
 
   RooDataSet data("data","data",*ws.set(names.observables));
-
   data.add(*ws.set(names.observables));
-
   ws.import(data);
 
+  cout << endl; cout << endl;
+  cout << "globalObservables, size: " <<   (*ws.set(names.globalObservables)).getSize() << endl;
+  (*ws.set(names.globalObservables)).Print("v");
+
+  cout << endl; cout << endl;
   cout << "setting up models" << endl;
 
   ModelConfig sbModel("S+B_model",&ws);
   sbModel.SetPdf(*ws.pdf("likelihood"));
   sbModel.SetObservables(*ws.set(names.observables));
   sbModel.SetNuisanceParameters(*ws.set(names.nuisances));
+  sbModel.SetGlobalObservables(*ws.set(names.globalObservables));
   sbModel.SetParametersOfInterest(*ws.set("poi"));
   sbModel.SetProtoData(*ws.data("data"));
 
@@ -1531,6 +1529,7 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   bModel.SetPdf(*ws.pdf("likelihood"));
   bModel.SetObservables(*ws.set(names.observables));
   bModel.SetNuisanceParameters(*ws.set(names.nuisances));
+  bModel.SetGlobalObservables(*ws.set(names.globalObservables));
   bModel.SetParametersOfInterest(*ws.set("poi"));
   bModel.SetProtoData(*ws.data("data"));
   ws.var(names.signalCrossSection)->setVal(0.0);

@@ -13,8 +13,8 @@
 using namespace RooFit;
 
 RooAbsArg* getLognormalConstraint( RooWorkspace& ws, TString NP_name, const TString binName, 
-				    double NP_val, double NP_err,
-				    const TString observables, const TString nuisances) {
+				   double NP_val, double NP_err,
+				   const TString observables, const TString nuisances, const TString globalObservables) {
   
   NP_name = NP_name + binName;
 
@@ -41,9 +41,10 @@ RooAbsArg* getLognormalConstraint( RooWorkspace& ws, TString NP_name, const TStr
 
   ws.import( *np_prim_rrv );
   ws.import( *np_prim_pdf, RecycleConflictNodes() );
-  //allNuisances -> add( *np_prim_rrv ) ;
-  //allNuisancePdfs -> add( *np_prim_pdf ) ;
-  //globalObservables -> add( *np_prim_mean ) ;
+
+  //allNuisancePdfs -> add( *np_prim_pdf ) ; //BEN FIXME -- do this?
+  ws.extendSet(nuisances, np_prim_rrv->GetName());
+  ws.extendSet(globalObservables, np_prim_mean->GetName());
 
   //-- create const variables for mean and sigma so that they can be saved and accessed from workspace later.
 
@@ -66,10 +67,10 @@ RooAbsArg* getLognormalConstraint( RooWorkspace& ws, TString NP_name, const TStr
 
 
 RooAbsReal* getCorrelatedLogNormalConstraint( RooWorkspace& ws, TString NP_name, TString binName, 
-					       double NP_val, double NP_err, 
-					       const TString observables, const TString nuisances,
-					       const TString NP_base_name, 
-					       bool changeSign ) {
+					      double NP_val, double NP_err, 
+					      const TString observables, const TString nuisances, const TString globalObservables,
+					      const TString NP_base_name, 
+					      bool changeSign ) {
   
   NP_name = NP_name + binName;
   
@@ -92,7 +93,7 @@ RooAbsReal* getCorrelatedLogNormalConstraint( RooWorkspace& ws, TString NP_name,
     rrv_np_base_par -> setConstant( kFALSE ) ;
 
     ws.import( *rrv_np_base_par );
-    //allNuisances -> add( *rrv_np_base_par ) ;
+    ws.extendSet(nuisances, rrv_np_base_par->GetName());
 
     RooRealVar* g_mean = new RooRealVar( "mean_"+NP_base_name, "mean_"+NP_base_name, 0.0,-10.,10. ) ;
     g_mean->setConstant(kTRUE);
@@ -101,8 +102,8 @@ RooAbsReal* getCorrelatedLogNormalConstraint( RooWorkspace& ws, TString NP_name,
     RooGaussian* base_np_pdf = new RooGaussian( "pdf_"+NP_base_name, "pdf_"+NP_base_name, *rrv_np_base_par, *g_mean, *g_sigma ) ;
     
     ws.import( *base_np_pdf, RecycleConflictNodes() );
-    //allNuisancePdfs -> add( *base_np_pdf ) ;
-    //globalObservables -> add( *g_mean ) ;
+    //allNuisancePdfs -> add( *base_np_pdf ) ;//BEN FIXME -- do this?
+    ws.extendSet(globalObservables, g_mean->GetName());
     
   }
   
