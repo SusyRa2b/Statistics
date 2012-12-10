@@ -52,7 +52,7 @@ RooAbsArg* getLognormalConstraint( RooWorkspace& ws, TString NP_name, const TStr
 
   //-- compute the log-normal-distributed parameter from the primary parameter.
 
-  RooFormulaVar* np_rfv = new RooFormulaVar( NP_name, "@0 * pow( exp( @1/@0 ), @2)",
+  RooFormulaVar* np_rfv = new RooFormulaVar( NP_name, "@0 * pow( exp( @1/@0 + 1.0), @2)",
 					     RooArgSet( *g_mean, *g_sigma, *np_prim_rrv ) ) ;
 
   
@@ -117,9 +117,9 @@ RooAbsReal* getCorrelatedLogNormalConstraint( RooWorkspace& ws, TString NP_name,
   char formula[1000] ;
   
   if ( !changeSign ) {
-    sprintf( formula, "@0 * pow( exp( @1/@0 ), @2 )" ) ;
+    sprintf( formula, "@0 * pow( exp( @1/@0 + 1.0), @2 )" ) ;
   } else {
-    sprintf( formula, "@0 * pow( exp( @1/@0 ), -1.0 * @2 )" ) ;
+    sprintf( formula, "@0 * pow( exp( @1/@0 + 1.0), -1.0 * @2 )" ) ;
   }
   
   rar = new RooFormulaVar( NP_name, formula, RooArgSet( *ln_mean, *ln_sigma, *rrv_np_base_par ) ) ;
