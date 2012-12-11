@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: RooFit                                                           *
  * Package: RooFitModels                                                     *
- *    File: $Id: RooBetaPrimePdf.h,v 1.1 2012/07/20 13:22:48 kreis Exp $
+ *    File: $Id: RooBetaPrimePdf.h,v 1.2 2012/10/12 14:12:46 kreis Exp $
  * Authors:                                                                  *
  *   WV, Wouter Verkerke, UC Santa Barbara, verkerke@slac.stanford.edu       *
  *   DK, David Kirkby,    UC Irvine,         dkirkby@uci.edu                 *
@@ -39,6 +39,8 @@ public:
   virtual Double_t getValV(const RooArgSet* set=0) const ;
   virtual Double_t getLogVal(const RooArgSet* set=0) const ;
   
+  void setSigma0(Double_t newValue) { _sigma0 = newValue; _x0 = -1; }
+
 protected:
 
   RooRealProxy x ;
@@ -50,6 +52,11 @@ protected:
   double generateGamma(const double& a);
 
   mutable Double_t _logValue ;
+
+  Double_t _sigma0 ;
+  Double_t _alpha0 ;
+  Double_t _beta0 ;
+  Double_t _x0 ;
 
 private:
 
