@@ -3,57 +3,71 @@ void makeFitTrees(){
 
   gROOT->LoadMacro("reducedTree.C+");
 
-  // now resetting all weights for 12.03 fb-1
-  float lumiForMCweight = 12.03; //in fb-1
+  // Set lumi.  Note: if passing -1, you have to set the lumi in makeTree() instead.
+  float lumiForMCweight = 17.61; //in fb-1
   
 
   //Ben running on v66_7 reducedTrees
-  //TTbar
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.TTbarJetsPowheg.root", "/cu4/kreis/tinyTrees/v66_7_tt7/TT-powheg.root", false, false, -1);
+  
+  //TTbar (3,1,1)
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.TTJets_FullLeptMGDecays_8TeV-madgraph_Summer12_DR53X-PU_S10_START53_V7A-v2_AODSIM_UCSB1596ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/TT_FullLept.root", false, false, -1); 
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.TTJets_SemiLeptMGDecays_8TeV-madgraph_Summer12_DR53X-PU_S10_START53_V7A_ext-v1_AODSIM_UCSB1606ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/TT_SemiLept.root", false, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.TTJets_HadronicMGDecays_8TeV-madgraph_Summer12_DR53X-PU_S10_START53_V7A_ext-v1_AODSIM_UCSB1613ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/TT_FullHad.root", false, false,-1);
+ makeTree("/cu4/ra2b/reducedTrees/v66_7/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.TTbarJetsPowheg.root", "/cu4/kreis/tinyTrees/v66_7_tt8/TT-powheg.root", false, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1489ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt8/TT.root", false, false, -1);
 
   //Single Top (6)
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.Tbar_s-channel_TuneZ2star_8TeV-powheg-tauola_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1533ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/Tbar-s.root", false, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.Tbar_t-channel_TuneZ2star_8TeV-powheg-tauola_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1562ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/Tbar-t.root", false, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.Tbar_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1534ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/Tbar-tW.root", false, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.T_s-channel_TuneZ2star_8TeV-powheg-tauola_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1530ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/T-s.root", false, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.T_t-channel_TuneZ2star_8TeV-powheg-tauola_Summer12_DR53X-PU_S10_START53_V7A-v2_AODSIM_UCSB1531ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/T-t.root", false, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.T_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1532ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/T-tW.root", false, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.Tbar_s-channel_TuneZ2star_8TeV-powheg-tauola_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1533ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/Tbar-s.root", false, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.Tbar_t-channel_TuneZ2star_8TeV-powheg-tauola_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1562ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/Tbar-t.root", false, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.Tbar_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1534ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/Tbar-tW.root", false, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.T_s-channel_TuneZ2star_8TeV-powheg-tauola_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1530ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/T-s.root", false, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.T_t-channel_TuneZ2star_8TeV-powheg-tauola_Summer12_DR53X-PU_S10_START53_V7A-v2_AODSIM_UCSB1531ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/T-t.root", false, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.T_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1532ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/T-tW.root", false, false, -1);
   
   //WJets (3)
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.WJetsToLNu_HT-250To300_8TeV-madgraph_v2_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1611ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/WJets-250to300.root", false, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.WJetsToLNu_HT-300To400_8TeV-madgraph_v2_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1610ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/WJets-300to400.root", false, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.WJetsToLNu_HT-400ToInf_8TeV-madgraph_v2_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1587ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/WJets-400.root", false, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.WJetsToLNu_HT-250To300_8TeV-madgraph_v2_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1611ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/WJets-250to300.root", false, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.WJetsToLNu_HT-300To400_8TeV-madgraph_v2_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1610ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/WJets-300to400.root", false, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.WJetsToLNu_HT-400ToInf_8TeV-madgraph_v2_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1587ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/WJets-400.root", false, false, -1);
 
   //DY (2) -- use extensions
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.DYJetsToLL_HT-200To400_TuneZ2Star_8TeV-madgraph_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1526ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/DY-200to400_orig.root", false, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.DYJetsToLL_HT-200To400_TuneZ2Star_8TeV-madgraph_ext_Summer12_DR53X-PU_S10_START53_V7C-v1_AODSIM_UCSB1608ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/DY-200to400_ext.root", false, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.DYJetsToLL_HT-400ToInf_TuneZ2Star_8TeV-madgraph_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1535ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/DY-400_orig.root", false, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.DYJetsToLL_HT-400ToInf_TuneZ2Star_8TeV-madgraph_ext_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1595ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/DY-400_ext.root", false, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.DYJetsToLL_HT-200To400_TuneZ2Star_8TeV-madgraph_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1526ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/DY-200to400_orig.root", false, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.DYJetsToLL_HT-200To400_TuneZ2Star_8TeV-madgraph_ext_Summer12_DR53X-PU_S10_START53_V7C-v1_AODSIM_UCSB1608ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/DY-200to400_ext.root", false, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.DYJetsToLL_HT-400ToInf_TuneZ2Star_8TeV-madgraph_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1535ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/DY-400_orig.root", false, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.DYJetsToLL_HT-400ToInf_TuneZ2Star_8TeV-madgraph_ext_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1595ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/DY-400_ext.root", false, false, -1);
 
-  //QCD (9)
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-120to170_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v3_AODSIM_UCSB1513ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/QCD-120to170.root", true, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-170to300_TuneZ2star_8TeV_pythia6_v2_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1603ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/QCD-170to300.root", true, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-300to470_TuneZ2star_8TeV_pythia6_v3_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1609ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/QCD-300to470.root", true, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-470to600_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v2_AODSIM_UCSB1515ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/QCD-470to600.root", true, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-600to800_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v2_AODSIM_UCSB1516ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/QCD-600to800.root", true, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-600to800_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v2_AODSIM_UCSB1516ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/QCD-800to1000.root", true, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-1000to1400_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1577ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/QCD-1000to1400.root", true, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-1400to1800_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1578ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/QCD-1400to1800.root", true, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-1800_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1585ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt7/QCD-1800.root", true, false, -1);
+  //QCD Pythia (9)
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-120to170_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v3_AODSIM_UCSB1513ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-120to170.root", true, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-170to300_TuneZ2star_8TeV_pythia6_v2_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1603ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-170to300.root", true, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-300to470_TuneZ2star_8TeV_pythia6_v3_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1609ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-300to470.root", true, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-470to600_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v2_AODSIM_UCSB1515ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-470to600.root", true, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-600to800_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v2_AODSIM_UCSB1516ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-600to800.root", true, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-600to800_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v2_AODSIM_UCSB1516ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-800to1000.root", true, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-1000to1400_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1577ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-1000to1400.root", true, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-1400to1800_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1578ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-1400to1800.root", true, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-1800_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1585ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-1800.root", true, false, -1);
 
   //Zinv (3) - use extensions
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.ZJetsToNuNu_100_HT_200_TuneZ2Star_8TeV_madgraph_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1525ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt7/Zinv-100to200_orig.root", false, false, -1); 
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.ZJetsToNuNu_100_HT_200_TuneZ2Star_8TeV_madgraph_ext_Summer12_DR53X-PU_S10_START53_V7C-v1_AODSIM_UCSB1607ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt7/Zinv-100to200_ext.root", false, false, -1); 
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.ZJetsToNuNu_200_HT_400_TuneZ2Star_8TeV_madgraph_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1524ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt7/Zinv-200to400_orig.root", false, false, -1); 
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.ZJetsToNuNu_200_HT_400_TuneZ2Star_8TeV_madgraph_ext_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1594ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt7/Zinv-200to400_ext.root", false, false, -1); 
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.ZJetsToNuNu_400_HT_inf_TuneZ2Star_8TeV_madgraph_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1523ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt7/Zinv-400_orig.root", false, false, -1); 
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.ZJetsToNuNu_400_HT_inf_TuneZ2Star_8TeV_madgraph_ext_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1602ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt7/Zinv-400_ext.root", false, false, -1); 
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.ZJetsToNuNu_100_HT_200_TuneZ2Star_8TeV_madgraph_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1525ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt8/Zinv-100to200_orig.root", false, false, -1); 
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.ZJetsToNuNu_100_HT_200_TuneZ2Star_8TeV_madgraph_ext_Summer12_DR53X-PU_S10_START53_V7C-v1_AODSIM_UCSB1607ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt8/Zinv-100to200_ext.root", false, false, -1); 
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.ZJetsToNuNu_200_HT_400_TuneZ2Star_8TeV_madgraph_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1524ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt8/Zinv-200to400_orig.root", false, false, -1); 
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.ZJetsToNuNu_200_HT_400_TuneZ2Star_8TeV_madgraph_ext_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1594ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt8/Zinv-200to400_ext.root", false, false, -1); 
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.ZJetsToNuNu_400_HT_inf_TuneZ2Star_8TeV_madgraph_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1523ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt8/Zinv-400_orig.root", false, false, -1); 
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.ZJetsToNuNu_400_HT_inf_TuneZ2Star_8TeV_madgraph_ext_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1602ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt8/Zinv-400_ext.root", false, false, -1); 
 
   //Diboson (3)
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.WZ_TuneZ2star_8TeV_pythia6_tauola_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1552ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt7/WZ.root", false, false, -1); 
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.WW_TuneZ2star_8TeV_pythia6_tauola_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1563ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt7/WW.root", false, false, -1); 
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.ZZ_TuneZ2star_8TeV_pythia6_tauola_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1551ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt7/ZZ.root", false, false, -1); 
- 
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.WZ_TuneZ2star_8TeV_pythia6_tauola_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1552ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt8/WZ.root", false, false, -1); 
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.WW_TuneZ2star_8TeV_pythia6_tauola_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1563ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt8/WW.root", false, false, -1); 
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.ZZ_TuneZ2star_8TeV_pythia6_tauola_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1551ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt8/ZZ.root", false, false, -1); 
+
+  //Rare (2)
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.TTWJets_8TeV-madgraph_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1605ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt8/ttW.root", false, false, -1 );
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.TTZJets_8TeV-madgraph_v2_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1604ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt8/ttZ.root", false, false, -1 );
+
+  //T1bbbb (1) -- pass 1 for weight
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.T1bbbb.root", "/cu4/kreis/tinyTrees/v66_7_tt8/T1bbbb.root", false, false, 1.0);
+  
+  //Not doing data, madgraph QCD, or T1tttt right now.
+
 
   /////////////////////////////////////
   /////////////////////////////////////
@@ -160,7 +174,7 @@ void makeTree(TString inputfile, TString outputfile, bool doQCD, bool blinding, 
   cout << " new output file name = " << output4loop << endl;
   
   if(weight<0) {
-    double lumi = 12030.0; //number of inverse pb.
+    double lumi = 17610.0; //number of inverse pb.
     cout << " weight3 from first entry = " << rt.getWeight3() << " and lumi = " << lumi << "/pb" << endl;
     weight = lumi * rt.getWeight3();
     cout << " weight for sample = " << weight << endl;
