@@ -111,6 +111,7 @@ cout << "inside loop with doQCD = " << doQCD << endl;
    newtree->Branch("mlsp",&mlsp,"mlsp/f");
    newtree->Branch("weightPU",&PUweight,"weightPU/f");
    newtree->Branch("weightPUSystVar",&PUweightSystVar,"weightPUSystVar/f");
+   newtree->Branch("prob0", &prob0, "prob0/f"); 
    newtree->Branch("prob1", &prob1, "prob1/f"); 
    newtree->Branch("prob2", &prob2, "prob2/f"); 
    newtree->Branch("probge3", &probge3, "probge3/f"); 
