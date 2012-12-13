@@ -5,8 +5,7 @@ void makeFitTrees(){
 
   // Set lumi.  Note: if passing -1, you have to set the lumi in makeTree() instead.
   float lumiForMCweight = 17.61; //in fb-1
-  
-
+ 
   //Ben running on v66_7 reducedTrees
   
   //TTbar (3,1,1)
@@ -41,10 +40,14 @@ void makeFitTrees(){
   makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-300to470_TuneZ2star_8TeV_pythia6_v3_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1609ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-300to470.root", true, false, -1);
   makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-470to600_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v2_AODSIM_UCSB1515ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-470to600.root", true, false, -1);
   makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-600to800_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v2_AODSIM_UCSB1516ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-600to800.root", true, false, -1);
-  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-600to800_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v2_AODSIM_UCSB1516ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-800to1000.root", true, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-800to1000_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v2_AODSIM_UCSB1559ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-800to1000.root", true, false, -1);//FIXED
   makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-1000to1400_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1577ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-1000to1400.root", true, false, -1);
   makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-1400to1800_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1578ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-1400to1800.root", true, false, -1);
   makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-1800_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1585ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-1800.root", true, false, -1);
+
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-170to300_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v2_AODSIM_UCSB1561ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-170to300_lowStat.root", true, false, -1);
+  makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.QCD_Pt-300to470_TuneZ2star_8TeV_pythia6_Summer12_DR53X-PU_S10_START53_V7A-v2_AODSIM_UCSB1560ra2b_v66.root","/cu4/kreis/tinyTrees/v66_7_tt8/QCD-300to470_lowStat.root", true, false, -1);
+
 
   //Zinv (3) - use extensions
   makeTree("/cu4/ra2b/reducedTrees/v66_7/ORIGINALS/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff04_HLTEff0.ZJetsToNuNu_100_HT_200_TuneZ2Star_8TeV_madgraph_Summer12_DR53X-PU_S10_START53_V7A-v1_AODSIM_UCSB1525ra2b_v66.root", "/cu4/kreis/tinyTrees/v66_7_tt8/Zinv-100to200_orig.root", false, false, -1); 
