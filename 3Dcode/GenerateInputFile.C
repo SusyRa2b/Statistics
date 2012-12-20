@@ -146,6 +146,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
   const int nBinsBjets = 3 ;   // this must always be 3
   const int nJetsCut = 3 ;     // #jets >= nJetsCut
+  //////// const int nJetsCut = 5 ;     // #jets >= nJetsCut
 
   double minLeadJetPt = 70. ;
   double min3rdJetPt = 50. ;

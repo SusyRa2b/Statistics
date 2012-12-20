@@ -207,10 +207,15 @@
        sprintf( histnamelist[hind], "h_ht_zl_nb2" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( selection[hind], "zl" ) ; sprintf( normkey[hind], "wt_2b" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_ht_zl_nb3" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( selection[hind], "zl" ) ; sprintf( normkey[hind], "wt_3b" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_ht_zl_met1_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( selection[hind], "zl" ) ; sprintf( normkey[hind], "wt_H1_1b" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_met2_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( selection[hind], "zl" ) ; sprintf( normkey[hind], "wt_H2_1b" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_met3_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( selection[hind], "zl" ) ; sprintf( normkey[hind], "wt_H3_1b" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_met4_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( selection[hind], "zl" ) ; sprintf( normkey[hind], "wt_H4_1b" ) ; hind++ ;
+       //sprintf( histnamelist[hind], "h_ht_zl_met1_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( selection[hind], "zl" ) ; sprintf( normkey[hind], "wt_H1_1b" ) ; hind++ ;
+       //sprintf( histnamelist[hind], "h_ht_zl_met2_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( selection[hind], "zl" ) ; sprintf( normkey[hind], "wt_H2_1b" ) ; hind++ ;
+       //sprintf( histnamelist[hind], "h_ht_zl_met3_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( selection[hind], "zl" ) ; sprintf( normkey[hind], "wt_H3_1b" ) ; hind++ ;
+       //sprintf( histnamelist[hind], "h_ht_zl_met4_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( selection[hind], "zl" ) ; sprintf( normkey[hind], "wt_H4_1b" ) ; hind++ ;
+
+       sprintf( histnamelist[hind], "h_ht_zl_met1_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( selection[hind], "zl" ) ; sprintf( normkey[hind], "wt_M1_1b" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_met2_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( selection[hind], "zl" ) ; sprintf( normkey[hind], "wt_M2_1b" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_met3_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( selection[hind], "zl" ) ; sprintf( normkey[hind], "wt_M3_1b" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_met4_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( selection[hind], "zl" ) ; sprintf( normkey[hind], "wt_M4_1b" ) ; hind++ ;
 
 
 
@@ -567,14 +572,14 @@
 
 
       if ( savePdf ) {
-         TString dataset( inrootfile ) ;
-         dataset.ReplaceAll("rootfiles/dmc_plots2_","") ;
-         dataset.ReplaceAll(".root","") ;
+       //TString dataset( inrootfile ) ;
+       //dataset.ReplaceAll("rootfiles/dmc_plots2_","") ;
+       //dataset.ReplaceAll(".root","") ;
          char filename[10000] ;
          if ( islogy ) {
-            sprintf( filename, "outputfiles/%s_%s_fitnorm_logy.pdf", hname_base, dataset.Data() ) ;
+            sprintf( filename, "outputfiles/%s_fitnorm_logy.pdf", hname_base ) ;
          } else {
-            sprintf( filename, "outputfiles/%s_%s_fitnorm.pdf", hname_base, dataset.Data() ) ;
+            sprintf( filename, "outputfiles/%s_fitnorm.pdf", hname_base ) ;
          }
          dmccan->SaveAs( filename ) ;
       }
@@ -778,14 +783,14 @@
 
 
       if ( savePdf ) {
-         TString dataset( inrootfile ) ;
-         dataset.ReplaceAll("rootfiles/dmc_plots2_","") ;
-         dataset.ReplaceAll(".root","") ;
+      // TString dataset( inrootfile ) ;
+      // dataset.ReplaceAll("rootfiles/dmc_plots2_","") ;
+      // dataset.ReplaceAll(".root","") ;
          char filename[10000] ;
          if ( islogy ) {
-            sprintf( filename, "outputfiles/%s_flat_%s_fitnorm_logy.pdf", hname_base, dataset.Data() ) ;
+            sprintf( filename, "outputfiles/%s_flat_fitnorm_logy.pdf", hname_base ) ;
          } else {
-            sprintf( filename, "outputfiles/%s_flat_%s_fitnorm.pdf", hname_base, dataset.Data() ) ;
+            sprintf( filename, "outputfiles/%s_flat_fitnorm.pdf", hname_base ) ;
          }
          dmccan->SaveAs( filename ) ;
       }
