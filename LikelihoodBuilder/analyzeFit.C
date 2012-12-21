@@ -43,6 +43,12 @@ bool skipBinInAnalysis(TString binName) {
   return false;
 }
 
+bool skipMHBin(int met, int ht)
+{
+  if (met==4 && ht==1) return true;
+  return false;
+}
+
 void extractFromWorkspace(TString workspaceFile = "test.root", TString datFile = "", bool skip = true)
 {
 
@@ -415,6 +421,8 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
     for(int j=1; j<=maxNH; j++) {
       TString binLabel = "M"; binLabel+=i; binLabel+="_H"; binLabel+=j;
       int binIndex = 1 + (maxNH+1)*(i-1) + j;
+      
+      if(skipMHBin(i, j)) continue;
       
       hZee_z->SetBinContent( binIndex, (ws->function( "diElectron_"+binLabel+"_Yield" ))->getVal() );
       hZee_z->GetXaxis()->SetBinLabel( binIndex, binLabel);
