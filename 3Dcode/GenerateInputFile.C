@@ -83,11 +83,15 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   chainZnn.Add("filesHCP_53_v6/Zinv-400.root") ;
 
   TChain chainTT("tree") ;
+  //-------
   //chainTT.Add("filesHCP_53_v6/TT.root") ;
+  //-------
   //chainTT.Add("filesHCP_53_v6/TT-powheg.root");
-  chainTT.Add("filesHCP_53_v6/TT_FullLept.root") ;
-  chainTT.Add("filesHCP_53_v6/TT_SemiLept.root") ;
-  chainTT.Add("filesHCP_53_v6/TT_FullHad.root") ;
+  //-------
+    chainTT.Add("filesHCP_53_v6/TT_FullLept.root") ;
+    chainTT.Add("filesHCP_53_v6/TT_SemiLept.root") ;
+    chainTT.Add("filesHCP_53_v6/TT_FullHad.root") ;
+  //-------
   double kfactor_tt = 0.90 ;
   printf("\n\n Rescaling ttbar by %5.3f\n\n", kfactor_tt ) ;
 

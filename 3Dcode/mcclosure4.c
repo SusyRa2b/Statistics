@@ -97,6 +97,8 @@
                     bool applyTriggerEfficiencyToNobs = false
                     ) {
 
+      if ( useAverageTtwjClosure ) printf("I like green eggs and ham.\n") ; //-- to make the compiler not give a warning.
+
       if ( qcdModelIndex < 2 || qcdModelIndex > 4 ) {
          printf("\n\n *** Unsupported qcdModelIndex (%d).  Try 2, 3, or 4.\n\n", qcdModelIndex ) ;
       }
@@ -128,6 +130,20 @@
       gDirectory->Delete("h*") ;
 
       loadHist( infile ) ;
+
+
+
+
+
+     //########################################################################################################
+     //########################################################################################################
+     //########################################################################################################
+     //########################################################################################################
+
+
+      //--- ttwj part
+
+
 
       TH1F* hmctruth_ttwj_0lep_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_0lep_1b") ;
       if ( hmctruth_ttwj_0lep_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_0lep_1b.\n\n") ; return ; }
@@ -181,39 +197,72 @@
       double sumw20lep(0.) ;
       double sumw21lep(0.) ;
 
+      //-- also compute averages for =2b only and >=3b only.
+      double total0lep_2b(0.) ;
+      double total0lep_3b(0.) ;
+      double total1lep_2b(0.) ;
+      double total1lep_3b(0.) ;
+      double sumw20lep_2b(0.) ;
+      double sumw20lep_3b(0.) ;
+      double sumw21lep_2b(0.) ;
+      double sumw21lep_3b(0.) ;
+
       for ( int bi=1; bi<=nBins; bi++ ) {
 
          total0lep += hmctruth_ttwj_0lep_1b->GetBinContent( bi ) ;
          total0lep += hmctruth_ttwj_0lep_2b->GetBinContent( bi ) ;
          total0lep += hmctruth_ttwj_0lep_3b->GetBinContent( bi ) ;
+         total0lep_2b += hmctruth_ttwj_0lep_2b->GetBinContent( bi ) ;
+         total0lep_3b += hmctruth_ttwj_0lep_3b->GetBinContent( bi ) ;
 
          total1lep += hmctruth_ttwj_1lep_1b->GetBinContent( bi ) ;
          total1lep += hmctruth_ttwj_1lep_2b->GetBinContent( bi ) ;
          total1lep += hmctruth_ttwj_1lep_3b->GetBinContent( bi ) ;
+         total1lep_2b += hmctruth_ttwj_1lep_2b->GetBinContent( bi ) ;
+         total1lep_3b += hmctruth_ttwj_1lep_3b->GetBinContent( bi ) ;
 
          sumw20lep += pow( hmctruth_ttwj_0lep_1b->GetBinError( bi ), 2 ) ;
          sumw20lep += pow( hmctruth_ttwj_0lep_2b->GetBinError( bi ), 2 ) ;
          sumw20lep += pow( hmctruth_ttwj_0lep_3b->GetBinError( bi ), 2 ) ;
+         sumw20lep_2b += pow( hmctruth_ttwj_0lep_2b->GetBinError( bi ), 2 ) ;
+         sumw20lep_3b += pow( hmctruth_ttwj_0lep_3b->GetBinError( bi ), 2 ) ;
 
          sumw21lep += pow( hmctruth_ttwj_1lep_1b->GetBinError( bi ), 2 ) ;
          sumw21lep += pow( hmctruth_ttwj_1lep_2b->GetBinError( bi ), 2 ) ;
          sumw21lep += pow( hmctruth_ttwj_1lep_3b->GetBinError( bi ), 2 ) ;
+         sumw21lep_2b += pow( hmctruth_ttwj_1lep_2b->GetBinError( bi ), 2 ) ;
+         sumw21lep_3b += pow( hmctruth_ttwj_1lep_3b->GetBinError( bi ), 2 ) ;
 
       } // bi.
 
       double simpleAveR_0over1 = total0lep / total1lep ;
       double simpleAveR_0over1_err = simpleAveR_0over1 * sqrt( sumw20lep/(total0lep*total0lep) + sumw21lep/(total1lep*total1lep)  ) ;
 
-      printf("\n\n Simple average 0lep/1lep = %5.3f +/- %5.3f\n\n", simpleAveR_0over1, simpleAveR_0over1_err ) ;
+      double simpleAveR_0over1_2b = total0lep_2b / total1lep_2b ;
+      double simpleAveR_0over1_2b_err = simpleAveR_0over1_2b * sqrt( sumw20lep_2b/(total0lep_2b*total0lep_2b) + sumw21lep_2b/(total1lep_2b*total1lep_2b)  ) ;
 
+      double simpleAveR_0over1_3b = total0lep_3b / total1lep_3b ;
+      double simpleAveR_0over1_3b_err = simpleAveR_0over1_3b * sqrt( sumw20lep_3b/(total0lep_3b*total0lep_3b) + sumw21lep_3b/(total1lep_3b*total1lep_3b)  ) ;
+
+      printf("\n\n") ;
+      printf(" Simple average 0lep/1lep,  all      = %5.3f +/- %5.3f\n", simpleAveR_0over1, simpleAveR_0over1_err ) ;
+      printf(" Simple average 0lep/1lep,  =2b only = %5.3f +/- %5.3f\n", simpleAveR_0over1_2b, simpleAveR_0over1_2b_err ) ;
+      printf(" Simple average 0lep/1lep, >=3b only = %5.3f +/- %5.3f\n", simpleAveR_0over1_3b, simpleAveR_0over1_3b_err ) ;
+      printf("\n\n") ;
+
+
+      //-- Dec 21, 2012: new method is to use =2b SF corrected by average >=3b/=2b difference for >=3b.
 
       TH1F* hscalefactor_ttwj_0over1ratio_1b = (TH1F*) hmctruth_ttwj_0over1ratio_1b->Clone("hscalefactor_ttwj_0lep_1b") ;
       TH1F* hscalefactor_ttwj_0over1ratio_2b = (TH1F*) hmctruth_ttwj_0over1ratio_2b->Clone("hscalefactor_ttwj_0lep_2b") ;
-      TH1F* hscalefactor_ttwj_0over1ratio_3b = (TH1F*) hmctruth_ttwj_0over1ratio_3b->Clone("hscalefactor_ttwj_0lep_3b") ;
+      TH1F* hscalefactor_ttwj_0over1ratio_3b = (TH1F*) hmctruth_ttwj_0over1ratio_2b->Clone("hscalefactor_ttwj_0lep_3b") ;
+
+      hscalefactor_ttwj_0over1ratio_3b->SetMarkerStyle(30) ;
+      hscalefactor_ttwj_0over1ratio_3b->SetLineColor(4) ;
 
       hscalefactor_ttwj_0over1ratio_1b->Scale(1./simpleAveR_0over1) ;
       hscalefactor_ttwj_0over1ratio_2b->Scale(1./simpleAveR_0over1) ;
-      hscalefactor_ttwj_0over1ratio_3b->Scale(1./simpleAveR_0over1) ;
+      hscalefactor_ttwj_0over1ratio_3b->Scale((1./simpleAveR_0over1)*(simpleAveR_0over1_3b/simpleAveR_0over1_2b)) ;
 
 
       TH1F* hscalefactor_ttwj_0over1ratio_1b_whalfcorr = (TH1F*) hscalefactor_ttwj_0over1ratio_1b->Clone("hscalefactor_ttwj_0over1ratio_1b_whalfcorr") ;
@@ -226,143 +275,44 @@
 
          val = hscalefactor_ttwj_0over1ratio_1b -> GetBinContent( hbi ) ;
          err = hscalefactor_ttwj_0over1ratio_1b -> GetBinError( hbi ) ;
-	 // also include additional 1% uncertainty from contribution of non-ttwj in 1L sample
-	 err = sqrt( err*err + 0.01*val*0.01*val );
-         if ( err <= 0 ) continue ;
-         halfdiff = 0.5*(val - 1.) ;
-         errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
-         hscalefactor_ttwj_0over1ratio_1b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
+        // also include additional 1% uncertainty from contribution of non-ttwj in 1L sample
+         if ( err> 0 ) {
+            err = sqrt( err*err + 0.01*val*0.01*val );
+            halfdiff = 0.5*(val - 1.) ;
+            errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
+            hscalefactor_ttwj_0over1ratio_1b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
+         }
 
          val = hscalefactor_ttwj_0over1ratio_2b -> GetBinContent( hbi ) ;
          err = hscalefactor_ttwj_0over1ratio_2b -> GetBinError( hbi ) ;
-         if ( err <= 0 ) continue ;
-         halfdiff = 0.5*(val - 1.) ;
-         errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
-         hscalefactor_ttwj_0over1ratio_2b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
+         if ( err > 0 ) {
+            halfdiff = 0.5*(val - 1.) ;
+            errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
+            hscalefactor_ttwj_0over1ratio_2b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
+         }
 
          val = hscalefactor_ttwj_0over1ratio_3b -> GetBinContent( hbi ) ;
          err = hscalefactor_ttwj_0over1ratio_3b -> GetBinError( hbi ) ;
-         if ( err <= 0 ) continue ;
-         halfdiff = 0.5*(val - 1.) ;
-         errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
-         hscalefactor_ttwj_0over1ratio_3b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
-
-      }
-
-
-
-
-    //--- Try computing an average over the nbjet samples.
-    //    Nov 14: only average nb=2 and nb>=3.
-
-      TH1F* h_ttwj_ave_0over1ratio = (TH1F*) hmctruth_ttwj_0over1ratio_1b->Clone("h_ttwj_ave_0over1ratio") ;
-      h_ttwj_ave_0over1ratio->Reset() ;
-      h_ttwj_ave_0over1ratio->Sumw2() ;
-
-      double ttwj_wvsum[100] ;
-      double ttwj_wsum[100] ;
-      for ( int j=0; j<100; j++ ) { ttwj_wvsum[j] = 0. ; ttwj_wsum[j] = 0. ; }
-
-      for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {
-
-         TH1F* hp(0x0) ;
-
-         if ( bbi==0 ) hp = hmctruth_ttwj_0over1ratio_1b ;
-         if ( bbi==1 ) hp = hmctruth_ttwj_0over1ratio_2b ;
-         if ( bbi==2 ) hp = hmctruth_ttwj_0over1ratio_3b ;
-
-         for ( int hbi=1; hbi<=nBins; hbi++ ) {
-
-            double val = hp->GetBinContent( hbi ) ;
-            double err = hp->GetBinError( hbi ) ;
-            if ( err <= 0 ) continue ;
-
-            ttwj_wvsum[hbi] += val / (err*err) ;
-            ttwj_wsum [hbi] += 1.0 / (err*err) ;
-
-            printf(" nb=%d, hb=%d %s: val = %5.3f, err = %5.3f\n", bbi+1, hbi, hp->GetXaxis()->GetBinLabel(hbi), val, err ) ;
-
-         } // hbi.
-         printf("\n\n") ;
-
-      } // bbi.
-
-      for ( int hbi=1; hbi<=nBins; hbi++ ) {
-         if ( ttwj_wsum[hbi] <= 0. ) continue ;
-         double ave = ttwj_wvsum[hbi] / ttwj_wsum[hbi] ;
-         double err = sqrt(1./ttwj_wsum[hbi]) ;
-         printf(" ave hb=%d %s : ave = %5.3f, err = %5.3f\n", hbi, h_ttwj_ave_0over1ratio->GetXaxis()->GetBinLabel(hbi), ave, err ) ;
-         h_ttwj_ave_0over1ratio -> SetBinContent( hbi, ave ) ;
-         h_ttwj_ave_0over1ratio -> SetBinError( hbi, err ) ;
-      } // hbi.
-
-
-
-     //--- Compute RMS of =2, >=3 values.  Don't use points with big errors.
-
-      int ttwj_nsum[100] ;
-      double ttwj_sumdiffsq[100] ;
-      for ( int j=0; j<100; j++ ) { ttwj_nsum[j] = 0; ttwj_sumdiffsq[j] = 0. ; }
-
-      for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {
-
-         TH1F* hp(0x0) ;
-
-         if ( bbi==0 ) hp = hmctruth_ttwj_0over1ratio_1b ;
-         if ( bbi==1 ) hp = hmctruth_ttwj_0over1ratio_2b ;
-         if ( bbi==2 ) hp = hmctruth_ttwj_0over1ratio_3b ;
-
-         for ( int hbi=1; hbi<=nBins; hbi++ ) {
-
-            double val = hp->GetBinContent( hbi ) ;
-            double err = hp->GetBinError( hbi ) ;
-            if ( err <= 0 ) continue ;
-            if ( err > 0.4 ) continue ;
-
-            double ave = h_ttwj_ave_0over1ratio->GetBinContent( hbi ) ;
-
-            double diff = val - ave ;
-
-            ttwj_sumdiffsq[hbi] += diff*diff ;
-            ttwj_nsum[hbi] ++ ;
-
-         } // hbi.
-         printf("\n\n") ;
-
-      } // bbi.
-
-      TH1F* h_ttwj_ave_0over1ratio_wrms           = (TH1F*) h_ttwj_ave_0over1ratio->Clone("h_ttwj_ave_0over1ratio_wrms") ;
-
-      for ( int hbi=1; hbi<=nBins; hbi++ ) {
-         double staterr = h_ttwj_ave_0over1ratio->GetBinError( hbi ) ;
-         if ( staterr <= 0 ) continue ;
-         double rms = 0. ;
-         if ( ttwj_nsum[hbi] > 0 ) {
-            rms = sqrt( ttwj_sumdiffsq[hbi] / ttwj_nsum[hbi] ) ;
+         if ( err > 0 ) {
+            halfdiff = 0.5*(val - 1.) ;
+          //-- Include half the size of the >=3b/=2b correction.
+            double half3bover2b = 0.5*( simpleAveR_0over1_3b/simpleAveR_0over1_2b - 1 ) ;
+            errwhalfcorr = sqrt( err*err + halfdiff*halfdiff + half3bover2b*half3bover2b ) ;
+            hscalefactor_ttwj_0over1ratio_3b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
          }
-         double totalerr = sqrt( staterr*staterr + rms*rms ) ;
-         h_ttwj_ave_0over1ratio_wrms->SetBinError( hbi, totalerr ) ;
-      } // hbi.
 
-      TH1F* hscalefactor_ttwj_ave_0over1ratio      = (TH1F*) h_ttwj_ave_0over1ratio     ->Clone("hscalefactor_ttwj_ave_0over1ratio") ;
-      TH1F* hscalefactor_ttwj_ave_0over1ratio_wrms = (TH1F*) h_ttwj_ave_0over1ratio_wrms->Clone("hscalefactor_ttwj_ave_0over1ratio_wrms") ;
-
-      hscalefactor_ttwj_ave_0over1ratio      -> Scale(1./simpleAveR_0over1) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms -> Scale(1./simpleAveR_0over1) ;
-
-      resetBinLabels( hscalefactor_ttwj_ave_0over1ratio_wrms, true ) ;
-
-
-
-      TH1F* hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr = (TH1F*) hscalefactor_ttwj_ave_0over1ratio_wrms->Clone("hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr") ;
-      for ( int hbi=1; hbi<=nBins; hbi++ ) {
-         double val = hscalefactor_ttwj_ave_0over1ratio_wrms -> GetBinContent( hbi ) ;
-         double err = hscalefactor_ttwj_ave_0over1ratio_wrms -> GetBinError( hbi ) ;
-         if ( err <= 0 ) continue ;
-         double halfdiff = 0.5*(val - 1.) ;
-         double errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
-         hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
       }
+
+
+      printf("\n\n\n hscalefactor_ttwj_0over1ratio_2b_whalfcorr dump:\n\n") ;
+      hscalefactor_ttwj_0over1ratio_2b_whalfcorr->Print("all") ;
+
+      printf("\n\n\n hscalefactor_ttwj_0over1ratio_3b_whalfcorr dump:\n\n") ;
+      hscalefactor_ttwj_0over1ratio_3b_whalfcorr->Print("all") ;
+      printf("\n\n\n") ;
+
+
+
 
 
 
@@ -456,32 +406,6 @@
       cttwj->SaveAs( outttwj ) ;
 
 
-   //----
-
-      TCanvas* cttwjave = (TCanvas*) gDirectory->FindObject("cttwjave") ;
-      if ( cttwjave == 0x0 ) {
-         cttwjave = new TCanvas("cttwjave","ttwj closure", 700, 600) ;
-      }
-      cttwjave->Clear() ;
-
-      gStyle->SetEndErrorSize(3) ;
-
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->SetLineColor(1) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms          ->SetLineColor(1) ;
-      hscalefactor_ttwj_ave_0over1ratio               ->SetLineColor(1) ;
-
-      hdummy1->SetYTitle("ttwj 0 lep / 1 lep Scale factor") ;
-      hdummy1->SetMaximum(2.0) ;
-      hdummy1->DrawCopy() ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr -> Draw("samee1") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms -> Draw("samee1") ;
-      hscalefactor_ttwj_ave_0over1ratio -> Draw("samee1") ;
-      line->DrawLine(0.5,1.,hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetNbinsX()+0.5,1.) ;
-
-      TString outttwjave( infileStr ) ;
-      outttwjave.ReplaceAll("rootfiles","outputfiles") ;
-      outttwjave.ReplaceAll(".root","-mcclosure-ttwj1-ave.pdf") ;
-      cttwjave->SaveAs( outttwjave ) ;
 
    //----
 
@@ -516,26 +440,11 @@
       line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
       hscalefactor_ttwj_0over1ratio_2b->Draw("same") ;
       cttwj3->cd(6) ;
-//using average here for 3b bin
-//really should set up something to check useAverageTtwjClosure but this is the plot we need for the AN
-      h_ttwj_ave_0over1ratio->SetMarkerStyle(24) ;
-      h_ttwj_ave_0over1ratio->SetLineColor(1) ;
-      h_ttwj_ave_0over1ratio_wrms->SetMarkerStyle(24) ;
-      h_ttwj_ave_0over1ratio_wrms->SetLineColor(4) ;
-      hscalefactor_ttwj_ave_0over1ratio->SetMarkerStyle(24) ;
-      hscalefactor_ttwj_ave_0over1ratio->SetLineColor(1) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms->SetMarkerStyle(24) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms->SetLineColor(4) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->SetMarkerStyle(24) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->SetLineColor(1) ;
-      hscalefactor_ttwj_ave_0over1ratio->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Scale Factor") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms->SetTitle("0lep, #geq 1 btag") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms->SetMaximum(2.5);
-      hscalefactor_ttwj_ave_0over1ratio_wrms->Draw("e1") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->Draw("samee1") ;
-      hscalefactor_ttwj_ave_0over1ratio->DrawCopy("samee1") ;
+      hscalefactor_ttwj_0over1ratio_3b->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Scale Factor") ;
+      hscalefactor_ttwj_0over1ratio_3b_whalfcorr->DrawCopy("e1") ;
+      hscalefactor_ttwj_0over1ratio_3b->DrawCopy("samee1") ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
-      hscalefactor_ttwj_ave_0over1ratio->Draw("same") ;
+      hscalefactor_ttwj_0over1ratio_3b->Draw("same") ;
 
 
       TString outttwj3( infileStr ) ;
@@ -543,90 +452,20 @@
       outttwj3.ReplaceAll(".root","-mcclosure-ttwj3.pdf") ;
       cttwj3->SaveAs( outttwj3 ) ;
 
-   //----
-      h_ttwj_ave_0over1ratio->SetMarkerSize(1.5) ;
-      h_ttwj_ave_0over1ratio_wrms->SetMarkerSize(1.5) ;
-      hscalefactor_ttwj_ave_0over1ratio->SetMarkerSize(1.5) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms->SetMarkerSize(1.5) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->SetMarkerSize(1.5) ;
 
 
 
-      hmctruth_ttwj_0over1ratio_1b->SetMarkerStyle(20) ;
-      hmctruth_ttwj_0over1ratio_2b->SetMarkerStyle(20) ;
-      hmctruth_ttwj_0over1ratio_3b->SetMarkerStyle(20) ;
-      hscalefactor_ttwj_0over1ratio_1b->SetMarkerStyle(20) ;
-      hscalefactor_ttwj_0over1ratio_2b->SetMarkerStyle(20) ;
-      hscalefactor_ttwj_0over1ratio_3b->SetMarkerStyle(20) ;
-      hmctruth_ttwj_0over1ratio_1b->SetLineColor(2) ;
-      hmctruth_ttwj_0over1ratio_2b->SetLineColor(2) ;
-      hmctruth_ttwj_0over1ratio_3b->SetLineColor(2) ;
-      hscalefactor_ttwj_0over1ratio_1b->SetLineColor(2) ;
-      hscalefactor_ttwj_0over1ratio_2b->SetLineColor(2) ;
-      hscalefactor_ttwj_0over1ratio_3b->SetLineColor(2) ;
-      hmctruth_ttwj_0over1ratio_1b->SetLineWidth(2) ;
-      hmctruth_ttwj_0over1ratio_2b->SetLineWidth(2) ;
-      hmctruth_ttwj_0over1ratio_3b->SetLineWidth(2) ;
-      hscalefactor_ttwj_0over1ratio_1b->SetLineWidth(2) ;
-      hscalefactor_ttwj_0over1ratio_2b->SetLineWidth(2) ;
-      hscalefactor_ttwj_0over1ratio_3b->SetLineWidth(2) ;
-
-      TCanvas* cttwj3ave = (TCanvas*) gDirectory->FindObject("cttwj3ave") ;
-      if ( cttwj3ave == 0x0 ) {
-         cttwj3ave = new TCanvas("cttwj3ave","ttwj closure", 1200, 950) ;
-      }
-      cttwj3ave->Clear() ;
-      cttwj3ave->Divide(3,2) ;
-
-      cttwj3ave->cd(1) ;
-      hmctruth_ttwj_0over1ratio_1b->SetTitle("ttwj =1b: 0 Lepton / 1 Lepton, Ratio") ;
-      hmctruth_ttwj_0over1ratio_1b->Draw() ;
-      h_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
-      h_ttwj_ave_0over1ratio->Draw("e1same") ;
-      cttwj3ave->cd(2) ;
-      hmctruth_ttwj_0over1ratio_2b->SetTitle("ttwj =2b: 0 Lepton / 1 Lepton, Ratio") ;
-      hmctruth_ttwj_0over1ratio_2b->Draw() ;
-      h_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
-      h_ttwj_ave_0over1ratio->Draw("e1same") ;
-      cttwj3ave->cd(3) ;
-      hmctruth_ttwj_0over1ratio_3b->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Ratio") ;
-      hmctruth_ttwj_0over1ratio_3b->Draw() ;
-      h_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
-      h_ttwj_ave_0over1ratio->Draw("e1same") ;
-
-      cttwj3ave->cd(4) ;
-      hscalefactor_ttwj_0over1ratio_1b->SetTitle("ttwj =1b: 0 Lepton / 1 Lepton, Scale Factor") ;
-      hscalefactor_ttwj_0over1ratio_1b->Draw() ;
-      line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
-      hscalefactor_ttwj_0over1ratio_1b->Draw("same") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->Draw("e1same") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
-      hscalefactor_ttwj_ave_0over1ratio->Draw("e1same") ;
-      cttwj3ave->cd(5) ;
-      hscalefactor_ttwj_0over1ratio_2b->SetTitle("ttwj =2b: 0 Lepton / 1 Lepton, Scale Factor") ;
-      hscalefactor_ttwj_0over1ratio_2b->Draw() ;
-      line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
-      hscalefactor_ttwj_0over1ratio_2b->Draw("same") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->Draw("e1same") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
-      hscalefactor_ttwj_ave_0over1ratio->Draw("e1same") ;
-      cttwj3ave->cd(6) ;
-      hscalefactor_ttwj_0over1ratio_3b->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Scale Factor") ;
-      hscalefactor_ttwj_0over1ratio_3b->Draw() ;
-      line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
-      hscalefactor_ttwj_0over1ratio_3b->Draw("same") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->Draw("e1same") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
-      hscalefactor_ttwj_ave_0over1ratio->Draw("e1same") ;
 
 
-      TString outttwj3ave( infileStr ) ;
-      outttwj3ave.ReplaceAll("rootfiles","outputfiles") ;
-      outttwj3ave.ReplaceAll(".root","-mcclosure-ttwj3-ave.pdf") ;
-      cttwj3ave->SaveAs( outttwj3ave ) ;
 
-   //----
-   
+
+
+
+
+
+
+   //-----------------
+
 
       hmctruth_ttwj_0lep_1b->SetFillColor(kBlue-9) ;
       hmctruth_ttwj_0lep_2b->SetFillColor(kBlue-9) ;
@@ -711,17 +550,10 @@
 
 
             sprintf( parameterName, "sf_ttwj_M%d_H%d_1b_err", mbi+1, hbi+1 ) ;
-            printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1,
-                  parameterName,
-                  hmctruth_ttwj_0lep_1b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
-            //if ( useAverageTtwjClosure ) {
-            //   err        = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin)  ;
-            //   correction = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinContent(hbin)  ;
-            //} else {
-	       // include 4% systematic for W fraction variation
-               err        = sqrt( hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
-               correction = hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinContent(hbin)  ;
-            //}
+            printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_0lep_1b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+          //--- include 4% systematic for W fraction variation
+            err        = sqrt( hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
+            correction = hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinContent(hbin)  ;
             if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
             if ( doTTWJSyst ) {
                updateFileValue( datfile, parameterName, systValue ) ;
@@ -739,17 +571,10 @@
 
 
             sprintf( parameterName, "sf_ttwj_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
-            printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1,
-                  parameterName,
-                  hmctruth_ttwj_0lep_2b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
-            //if ( useAverageTtwjClosure ) {
-            //   err        = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin)  ;
-            //   correction = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinContent(hbin)  ;
-            //} else {
-	       // include 4% systematic for W fraction variation
-               err        = sqrt( hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
-               correction = hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinContent(hbin)  ;
-            //}
+            printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_0lep_2b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+         //-- include 4% systematic for W fraction variation
+            err        = sqrt( hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
+            correction = hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinContent(hbin)  ;
             if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
             if ( doTTWJSyst ) {
                updateFileValue( datfile, parameterName, systValue ) ;
@@ -765,20 +590,11 @@
 
 
 
-
             sprintf( parameterName, "sf_ttwj_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
-            printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1,
-                  parameterName,
-                  hmctruth_ttwj_0lep_3b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
-            if ( useAverageTtwjClosure ) {
-	       // include 4% systematic for W fraction variation
-               err        = sqrt( hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
-               correction = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinContent(hbin)  ;
-            } else {
-	       // include 4% systematic for W fraction variation
-               err        = sqrt( hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
-               correction = hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinContent(hbin)  ;
-            }
+            printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_0lep_3b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+         //-- include 4% systematic for W fraction variation
+            err        = sqrt( hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
+            correction = hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinContent(hbin)  ;
             if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
             if ( doTTWJSyst ) {
                updateFileValue( datfile, parameterName, systValue ) ;
@@ -791,6 +607,10 @@
             } else {
                updateFileValue( datfile, parameterName, 1.0 ) ;
             }
+
+
+
+
 
 
 
@@ -809,7 +629,10 @@
 
 
 
-
+     //########################################################################################################
+     //########################################################################################################
+     //########################################################################################################
+     //########################################################################################################
 
 
 
@@ -860,8 +683,6 @@
       char hname[1000] ;
       char htitle[1000] ;
 
-      //-- Owen : this is no longer needed.  Histograms come from infile.
-      ////// loadHist( "rootfiles/qcd-study1.root" ) ;
 
       for ( int si=0; si<nQcdSamples; si++ ) {
          for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {

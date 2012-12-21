@@ -6,6 +6,7 @@
 #include "TSystem.h"
 #include "TTree.h"
 #include "TH1F.h"
+#include "TH2.h"
 #include "TAxis.h"
 #include "THStack.h"
 #include "TLegend.h"
@@ -182,6 +183,16 @@
        testStatVal = 2.*(logLikelihoodSusyFixed - logLikelihoodSusyFloat) ;
        printf("\n\n\n ======= test statistic : -2 * ln (L_fixed / ln L_max) = %8.3f\n\n\n", testStatVal ) ;
      }
+
+
+     TCanvas* corcan = new TCanvas("corcan","correlations",1000,1000) ;
+     TH2* hcorr = fitResult->correlationHist("hcorr") ;
+     hcorr->Draw("colz") ;
+     corcan->Update() ;
+     corcan->Draw() ;
+     corcan->SaveAs("correlations.pdf") ;
+     corcan->SaveAs("correlations.png") ;
+
 
 
      printf("\n ==== Final floating parameter values\n\n") ;
