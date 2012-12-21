@@ -143,6 +143,7 @@
    float fit_chi2_obs ;
    float fit_chi2_np ;
    float fit_chi2_prob ;
+   float fit_chi2_14hsobs ;
 
    float fit_qcd_0lepLDP_ratio ;
    float fit_qcd_0lepLDP_ratio_H1 ;
@@ -382,9 +383,8 @@
        useExpected0lep = input_useExpected0lep ;
 
 
-       tran = new TRandom(12345) ;
-       //tran = new TRandom() ;
-       //tran->SetSeed(0);
+       ///tran = new TRandom(12345) ;
+       tran = new TRandom(592815) ;
 
 
        qcdModelIndex = input_qcdModelIndex ;
@@ -1594,6 +1594,7 @@
       fit_chi2_obs = 0. ;
       fit_chi2_np = 0. ;
       fit_chi2_prob = 0. ;
+      fit_chi2_14hsobs = 0. ;
 
       printf("\n\n") ;
       printf(" toy %4d : Fit nSusy 0lep : %4.1f +/- %4.1f (%4.1f, %4.1f)\n", ti,
@@ -1844,6 +1845,9 @@
                   sprintf( obsname,   "N_0lep_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                   sprintf( modelname, "n_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                   fit_chi2_obs += getChi2Obs( obsname, modelname ) ;
+                  if ( (bbi==1 && mbi==3) || (bbi==2 && mbi>0) ) {
+                     fit_chi2_14hsobs += getChi2Obs( obsname, modelname ) ;
+                  }
                }
 
                //-- 1lep observable
@@ -2023,6 +2027,7 @@
       fit_chi2_prob = TMath::Prob( fit_chi2_overall, ndof ) ;
       printf(" toy %4d : chi2 / ndof = %8.2f / %d,  prob = %7.4f\n", ti, fit_chi2_overall, ndof, fit_chi2_prob ) ;
       printf(" toy %4d :    chi2, obs = %8.2f,  NP = %8.2f\n", ti, fit_chi2_obs, fit_chi2_np ) ;
+      printf(" toy %4d :    chi2, 14 high-sensitivity obs = %8.2f\n", ti, fit_chi2_14hsobs ) ;
 
       //-- end nuisance parameter chi2 contributions.
 
@@ -2293,6 +2298,7 @@
       toytt -> Branch( "fit_chi2_obs"    , &fit_chi2_obs    , "fit_chi2_obs/F"     ) ;
       toytt -> Branch( "fit_chi2_np"     , &fit_chi2_np     , "fit_chi2_np/F"      ) ;
       toytt -> Branch( "fit_chi2_prob"   , &fit_chi2_prob   , "fit_chi2_prob/F"    ) ;
+      toytt -> Branch( "fit_chi2_14hsobs"    , &fit_chi2_14hsobs    , "fit_chi2_14hsobs/F"     ) ;
 
 
 

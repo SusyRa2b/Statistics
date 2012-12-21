@@ -45,11 +45,11 @@
       for ( int ti=0; ti<nToy; ti++ ) {
 
      //------------------
-      // double mu_sl_gen = rangen.Gaus(mu_sl_true, mu_smear) ;
-      // if ( mu_sl_gen < 0. ) continue ;
+         double mu_sl_gen = rangen.Gaus(mu_sl_true, mu_smear) ;
+         if ( mu_sl_gen < 0. ) continue ;
      //------------------
-         /////// double mu_sl_gen = rangen.Exp( 0.467 ) ;  // 1./(1+1.14) = 0.467
-         double mu_sl_gen = rangen.Exp( 0.546 ) ;  // 1./(1+0.83) = 0.546
+      // /////// double mu_sl_gen = rangen.Exp( 0.467 ) ;  // 1./(1+1.14) = 0.467
+      // double mu_sl_gen = rangen.Exp( 0.546 ) ;  // 1./(1+0.83) = 0.546
      //------------------
 
          h_gen_mu -> Fill( mu_sl_gen ) ;

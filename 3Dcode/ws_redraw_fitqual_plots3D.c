@@ -934,6 +934,36 @@
 
 
 
+    //--- Calculate the chi2 just from the 14 high-sensitivity observables ------
+
+     double hs14obsChi2(0.) ;
+
+     TH1F* chi2hist_0lep_2b = (TH1F*) gDirectory->FindObject( "hfitqual_data_0lep_2b_chi2" ) ;
+     if ( chi2hist_0lep_2b == 0x0 ) { printf("\n\n *** can't find hfitqual_data_0lep_2b_chi2.\n\n") ; return ; }
+
+     TH1F* chi2hist_0lep_3b = (TH1F*) gDirectory->FindObject( "hfitqual_data_0lep_3b_chi2" ) ;
+     if ( chi2hist_0lep_3b == 0x0 ) { printf("\n\n *** can't find hfitqual_data_0lep_3b_chi2.\n\n") ; return ; }
+
+     hs14obsChi2 += chi2hist_0lep_2b -> GetBinContent( 18 ) ;
+     hs14obsChi2 += chi2hist_0lep_2b -> GetBinContent( 19 ) ;
+     hs14obsChi2 += chi2hist_0lep_2b -> GetBinContent( 20 ) ;
+
+     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent(  7 ) ;
+     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent(  8 ) ;
+     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent(  9 ) ;
+     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 10 ) ;
+
+     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 12 ) ;
+     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 13 ) ;
+     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 14 ) ;
+     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 15 ) ;
+
+     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 18 ) ;
+     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 19 ) ;
+     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 20 ) ;
+
+
+    //---------------------------------------------------------------------------
 
      cfitqual->cd(12);
      legend->Draw() ;
@@ -952,11 +982,14 @@
         chi2text->DrawTextNDC(0.55, 0.85, chi2string ) ;
         sprintf( chi2string, "NP Chi2 = %6.2f", npChi2 ) ;
         chi2text->DrawTextNDC(0.55, 0.80, chi2string ) ;
+        sprintf( chi2string, "14 HS bins Chi2 = %6.2f", hs14obsChi2 ) ;
+        chi2text->DrawTextNDC(0.55, 0.75, chi2string ) ;
      }
 
      printf("\n\n Overall Chi2 = %6.2f\n\n", globalChi2 ) ;
      printf("     Obs Chi2 = %6.2f\n", obsChi2 ) ;
      printf("      NP Chi2 = %6.2f\n", npChi2 ) ;
+     printf("\n\n chi2 from 14 high-sensitivity bins: %6.2f\n\n", hs14obsChi2 ) ;
 
 
      TH1F* hfit_results = (TH1F*) gDirectory->FindObject("hfit_results") ;
@@ -1130,6 +1163,11 @@ void loadHist(const char* filename, const char* pfx, const char* pat, Bool_t doA
      TText* chi2text = new TText() ;
      chi2text -> SetTextSize( size ) ;
 
+     char chi2histname[1000] ;
+     sprintf( chi2histname, "%s_chi2", obshist->GetName() ) ;
+     TH1F* chi2hist = (TH1F*) obshist->Clone( chi2histname ) ;
+     chi2hist->Reset() ;
+
      for ( int bi=1; bi<=obshist->GetNbinsX(); bi++ ) {
         double obs = obshist -> GetBinContent( bi ) ;
         double model = modelhist -> GetBinContent( bi ) ;
@@ -1142,10 +1180,11 @@ void loadHist(const char* filename, const char* pfx, const char* pat, Bool_t doA
            err = obshist -> GetBinError( bi ) ;
            model = 1. ;
         }
-        if ( err>0. ) {
+        if ( err>0. && model>0. ) {
            double chi = (obs-model)/err ;
            chi2val += chi*chi ;
            printf(" %s : obs=%9.1f, model=%9.1f, chi2=%6.2f\n", obshist->GetXaxis()->GetBinLabel( bi ), obs, model, chi*chi ) ;
+           chi2hist->SetBinContent( bi, chi*chi ) ;
         }
      } // bi.
 
