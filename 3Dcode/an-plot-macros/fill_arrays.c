@@ -7,6 +7,8 @@
 #include "TFile.h"
 #include "TH1.h"
 
+#include <math.h>
+
 
    void fill_arrays( const char* scan_results_file = "scan-results.txt",
                      const char* datfile = "../datfiles_18fb/data-vals-unblind.dat",
@@ -422,7 +424,7 @@
 
      //-- >=3b, MC
 
-      printf("\n\n =2b, MC.\n\n") ;
+      printf("\n\n >=3b, MC.\n\n") ;
 
       mc_3b_val[0][0] = h3b->GetBinContent(  7 ) ;
       mc_3b_val[0][1] = h3b->GetBinContent(  8 ) ;
