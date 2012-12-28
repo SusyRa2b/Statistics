@@ -63,7 +63,7 @@ void readAdjusted(map<TString,float> &genMap)
       float value;
       fin >> dummy >> sname >> value;
       TString name = sname;
-      cout << name << " " << value << endl;
+      //cout << name << " " << value << endl;
 
       genMap.insert( pair<TString,float>(name,value) );
     }
@@ -163,11 +163,8 @@ void wstest(TString fileName)
 {
   cout << "wstest " << fileName << endl;
   //TFile fws(fileName, "READ");
- 
-
-  //TFile *fws = new TFile(fileName, "READ");
-
-
+   //TFile *fws = new TFile(fileName, "READ");
+  
   TFile fws(fileName, "READ");
   RooWorkspace *ws;
   fws.GetObject("workspace", ws);
@@ -184,7 +181,6 @@ void fillMaps(map<TString,float> genMap, map<TString,float> adjustedMap, TString
   
   TFile fws(fileName, "READ");
   RooWorkspace* ws = (RooWorkspace*)fws.Get("workspace");
-  //RooWorkspace ws = *((RooWorkspace*)fws.Get("workspace"));
 
   RooFitResult* fitResult = (RooFitResult*)fws.Get("fitresult_likelihood_data");
   
@@ -290,14 +286,34 @@ void fillMaps(map<TString,float> genMap, map<TString,float> adjustedMap, TString
 		      mapName+=translateContribution(subContribution[m]) ;
 		      mapName+="_";
 		      mapName+=translateBin(binName);
-		      cout << "map " << mapName << " " << genMap[mapName] << endl;
+		      //cout << "map " << mapName << " " << genMap[mapName] << endl;
 		      
 		      double thisMapValue = genMap[mapName];
 		      mapValue+= thisMapValue;
 		      
 		    }//subContribution loop
-		  cout << varName << " " << mapValue << endl;
+		  //cout << varName << " " << mapValue << endl;
 
+		  if(useAdjusted)
+		    {
+		      TString mapName = "N_";
+		      mapName+=translateRegion(region[j]);
+		      mapName+="_";
+		      mapName+=theta[l];
+		      mapName+= (contribution[k]=="TopWJets" && region[j].Contains("zeroLepton")) ? "ttwj" : translateContribution(contribution[k]) ;
+		      mapName+="_";
+		      mapName+=translateBin(binName);
+		      
+		      if( adjustedMap.find(mapName.Data()) == adjustedMap.end()) {
+			// not found
+		      }
+		      else {
+			mapValue = adjustedMap[mapName];
+			//cout << "adjusted " << mapName << " " << mapValue << endl;
+		      }
+
+		    }
+		  
 		  trueValues.insert( pair<TString,float>(varName,mapValue) );
 		  
 		}//theta loop
@@ -376,7 +392,8 @@ void pull1(TString fileName)
       float toyError = toyErrors[thisValueName];
       
       float pull = (toyValue - trueValue)/toyError;
-      
+      if(fabs(pull)>4 && toyError>0) cout << thisValueName << ", toyValue " << toyValue << ", trueValue " << trueValue << ", toyError " << toyError << ", pull " << pull << endl;
+
       //Fill Histograms
       if(thisValueName.Contains("zeroLeptonLowDeltaPhiN") && thisValueName.Contains("TopWJets")) hPull_LDP_TopWJets->Fill(pull);
       if(thisValueName.Contains("zeroLeptonLowDeltaPhiN") && thisValueName.Contains("QCD")) hPull_LDP_QCD->Fill(pull);
@@ -468,8 +485,8 @@ void pull2(TString fileList="toylist.dat")
       map<TString,float> toyErrors;
       if(i != 0) skipTrue=true;
       fillMaps(genMap, adjustedMap, fileNames[i], toyValues, toyErrors, trueValues, skipTrue);
-      //allToyValues.push_back(toyValues);
-      //allToyErrors.push_back(toyErrors);
+      allToyValues.push_back(toyValues);
+      allToyErrors.push_back(toyErrors);
     }
 
   
@@ -488,7 +505,7 @@ void pull2(TString fileList="toylist.dat")
   // -- draw true value
   // -- save histogram in root file
 
-  TFile fpull2("pull2Histograms.root", "RECREATE");
+  TFile fpull2("pull2Histograms_"+fileList+".root", "RECREATE");
   fpull2.cd();
 
   //loop over all variables
