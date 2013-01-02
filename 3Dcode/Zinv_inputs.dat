@@ -68,8 +68,8 @@ knn_1b_M4       0.349
 knn_1b_M4_err   0.054
 knn_2b          0.112
 knn_2b_err      0.027
-knn_3b          0.005
-knn_3b_err      0.003
+knn_3b          0.0052
+knn_3b_err      0.0027
 Z_ee_pur  	0.848
 Z_ee_pur_err  	0.109
 Z_mm_pur  	0.802
