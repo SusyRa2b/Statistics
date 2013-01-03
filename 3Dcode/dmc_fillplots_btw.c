@@ -50,8 +50,31 @@
     //-- Data
        compind = 0 ;
        sprintf( compname[compind], "data" ) ;
-       if ( strcmp(dataset_string, "all" ) == 0 || strcmp(dataset_string, "RunsABCD") == 0 ) {
+       if ( strcmp(dataset_string, "all" ) == 0 || strcmp(dataset_string, "RunsABCDT") == 0 ) {
           printf("\n\n Loading all data.\n\n") ;
+          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012A.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012B.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_rr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/HT_2012A.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012B.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_rr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012B.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_rr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012D_pr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012D_pr.root" ) ;
+          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012D_pr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v1/HTMHT_2012D2.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v1/JetHT_2012D2.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v1/MET_2012D2.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v1/HTMHT_2012D3.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v1/JetHT_2012D3.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v1/MET_2012D3.root" ) ;
+          complumi[compind] = 12.03 + 5.58 + 1.78 ;
+       } else if ( strcmp(dataset_string, "RunsABCD") == 0 ) {
+          printf("\n\n Loading Runs ABCD without topoff data.\n\n") ;
           compchain[compind] -> Add( "filesHCP_53_v6/MET_2012A.root" ) ;
           compchain[compind] -> Add( "filesHCP_53_v6/MET_2012B.root" ) ;
           compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_pr.root" ) ;
@@ -102,6 +125,14 @@
           compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012D_pr.root" ) ;
           compchain[compind] -> Add( "filesHCP_53_v6/MET_2012D_pr.root" ) ;
           complumi[compind] = 5.58 ;
+       } else if ( strcmp(dataset_string, "RunT" ) == 0 ) {
+          compchain[compind] -> Add( "filesMoriond_v1/HTMHT_2012D2.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v1/JetHT_2012D2.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v1/MET_2012D2.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v1/HTMHT_2012D3.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v1/JetHT_2012D3.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v1/MET_2012D3.root" ) ;
+          complumi[compind] = 1.78 ;
        } else {
           printf("\n\n *** Unknown dataset: %s\n\n", dataset_string ) ;
           return ;

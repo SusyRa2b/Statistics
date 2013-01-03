@@ -63,10 +63,17 @@
        datach.Add( "filesHCP_53_v6/HTMHT_2012D_pr.root") ;
        datach.Add( "filesHCP_53_v6/JetHT_2012D_pr.root") ;
 
+       datach.Add( "filesMoriond_v1/HTMHT_2012D2.root" ) ;
+       datach.Add( "filesMoriond_v1/JetHT_2012D2.root" ) ;
+       datach.Add( "filesMoriond_v1/MET_2012D2.root" ) ;
+       datach.Add( "filesMoriond_v1/HTMHT_2012D3.root" ) ;
+       datach.Add( "filesMoriond_v1/JetHT_2012D3.root" ) ;
+       datach.Add( "filesMoriond_v1/MET_2012D3.root" ) ;
+
        TH2F* h_ldp[nBinsBjets] ;
        TH2F* h_zl [nBinsBjets] ;
        TH2F* h_sl [nBinsBjets] ; 
-  
+
 
        for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 

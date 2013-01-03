@@ -897,7 +897,6 @@
          if ( hmc == 0x0 ) { printf("\n\n *** drawSet: missing MC hist %s\n", hname ) ; return ; }
          hmcsum -> Add( hmc ) ;
          hmcstack -> Add( hmc ) ;
-         legend -> AddEntry( hmc, compname[ci] ) ;
 
       }
 
