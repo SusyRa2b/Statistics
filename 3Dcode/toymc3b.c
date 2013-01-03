@@ -385,6 +385,8 @@
 
        ///tran = new TRandom(12345) ;
        tran = new TRandom(592815) ;
+       //tran = new TRandom() ;
+       //tran->SetSeed(0);
 
 
        qcdModelIndex = input_qcdModelIndex ;

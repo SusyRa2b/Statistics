@@ -990,36 +990,36 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 //these are the values from data
   
 inFile << "N_Zee_M1_H1      \t" << 44<< endl;
-inFile << "N_Zee_M1_H2      \t" << 18<< endl;
-inFile << "N_Zee_M1_H3      \t" << 4<< endl;
-inFile << "N_Zee_M1_H4      \t" << 2<< endl;
-inFile << "N_Zee_M2_H1      \t" << 83<< endl;
-inFile << "N_Zee_M2_H2      \t" << 75<< endl;
-inFile << "N_Zee_M2_H3      \t" << 11<< endl;
+inFile << "N_Zee_M1_H2      \t" << 19<< endl;
+inFile << "N_Zee_M1_H3      \t" << 5<< endl;
+inFile << "N_Zee_M1_H4      \t" << 3<< endl;
+inFile << "N_Zee_M2_H1      \t" << 92<< endl;
+inFile << "N_Zee_M2_H2      \t" << 80<< endl;
+inFile << "N_Zee_M2_H3      \t" << 12<< endl;
 inFile << "N_Zee_M2_H4      \t" << 2<< endl;
-inFile << "N_Zee_M3_H1      \t" << 38<< endl;
-inFile << "N_Zee_M3_H2      \t" << 42<< endl;
-inFile << "N_Zee_M3_H3      \t" << 6<< endl;
+inFile << "N_Zee_M3_H1      \t" << 40<< endl;
+inFile << "N_Zee_M3_H2      \t" << 43<< endl;
+inFile << "N_Zee_M3_H3      \t" << 7<< endl;
 inFile << "N_Zee_M3_H4      \t" << 5<< endl;
-inFile << "N_Zee_M4_H1      \t" << 12<< endl;
-inFile << "N_Zee_M4_H2      \t" << 27<< endl;
+inFile << "N_Zee_M4_H1      \t" << 16<< endl;
+inFile << "N_Zee_M4_H2      \t" << 28<< endl;
 inFile << "N_Zee_M4_H3      \t" << 4<< endl;
 inFile << "N_Zee_M4_H4      \t" << 3<< endl;
-inFile << "N_Zmm_M1_H1      \t" << 51<< endl;
-inFile << "N_Zmm_M1_H2      \t" << 41<< endl;
+inFile << "N_Zmm_M1_H1      \t" << 55<< endl;
+inFile << "N_Zmm_M1_H2      \t" << 47<< endl;
 inFile << "N_Zmm_M1_H3      \t" << 1<< endl;
 inFile << "N_Zmm_M1_H4      \t" << 0<< endl;
-inFile << "N_Zmm_M2_H1      \t" << 125<< endl;
-inFile << "N_Zmm_M2_H2      \t" << 105<< endl;
+inFile << "N_Zmm_M2_H1      \t" << 134<< endl;
+inFile << "N_Zmm_M2_H2      \t" << 124<< endl;
 inFile << "N_Zmm_M2_H3      \t" << 12<< endl;
-inFile << "N_Zmm_M2_H4      \t" << 2<< endl;
-inFile << "N_Zmm_M3_H1      \t" << 48<< endl;
-inFile << "N_Zmm_M3_H2      \t" << 49<< endl;
+inFile << "N_Zmm_M2_H4      \t" << 3<< endl;
+inFile << "N_Zmm_M3_H1      \t" << 49<< endl;
+inFile << "N_Zmm_M3_H2      \t" << 51<< endl;
 inFile << "N_Zmm_M3_H3      \t" << 8<< endl;
-inFile << "N_Zmm_M3_H4      \t" << 2<< endl;
+inFile << "N_Zmm_M3_H4      \t" << 3<< endl;
 inFile << "N_Zmm_M4_H1      \t" << 15<< endl;
-inFile << "N_Zmm_M4_H2      \t" << 34<< endl;
-inFile << "N_Zmm_M4_H3      \t" << 6<< endl;
+inFile << "N_Zmm_M4_H2      \t" << 37<< endl;
+inFile << "N_Zmm_M4_H3      \t" << 7<< endl;
 inFile << "N_Zmm_M4_H4      \t" << 4<< endl;
 
   
@@ -1121,14 +1121,14 @@ inFile << "N_Zmm_M4_H4      \t" << 4<< endl;
 
 
 
-inFile << "acc_Zee_M1       \t" << 0.676<< endl;
-inFile << "acc_Zee_M1_err   \t" << 0.014<< endl;
-inFile << "acc_Zee_M2       \t" << 0.700<< endl;
-inFile << "acc_Zee_M2_err   \t" << 0.015<< endl;
-inFile << "acc_Zee_M3       \t" << 0.741<< endl;
-inFile << "acc_Zee_M3_err   \t" << 0.015<< endl;
-inFile << "acc_Zee_M4       \t" << 0.792<< endl;
-inFile << "acc_Zee_M4_err   \t" << 0.016<< endl;
+inFile << "acc_Zee_M1       \t" << 0.762<< endl;
+inFile << "acc_Zee_M1_err   \t" << 0.016<< endl;
+inFile << "acc_Zee_M2       \t" << 0.803<< endl;
+inFile << "acc_Zee_M2_err   \t" << 0.016<< endl;
+inFile << "acc_Zee_M3       \t" << 0.850<< endl;
+inFile << "acc_Zee_M3_err   \t" << 0.017<< endl;
+inFile << "acc_Zee_M4       \t" << 0.876<< endl;
+inFile << "acc_Zee_M4_err   \t" << 0.018<< endl;
 inFile << "acc_Zmm_M1       \t" << 0.674<< endl;
 inFile << "acc_Zmm_M1_err   \t" << 0.014<< endl;
 inFile << "acc_Zmm_M2       \t" << 0.733<< endl;
@@ -1146,9 +1146,9 @@ inFile << "acc_Zmm_M4_err   \t" << 0.018<< endl;
 ///inFile << "Z_ee_eff_err      \t" << 0.056 << endl; // 
 ///inFile << "Z_mm_eff          \t" << 0.557 << endl; // 
 ///inFile << "Z_mm_eff_err      \t" << 0.036 << endl; // 
-inFile << "Z_ee_eff          \t" << 0.510 << endl; // 
-inFile << "Z_ee_eff_err      \t" << 0.074 << endl; // 
-inFile << "Z_mm_eff          \t" << 0.540 << endl; // 
+inFile << "Z_ee_eff          \t" << 0.500 << endl; // 
+inFile << "Z_ee_eff_err      \t" << 0.069 << endl; // 
+inFile << "Z_mm_eff          \t" << 0.542 << endl; // 
 inFile << "Z_mm_eff_err      \t" << 0.045 << endl; // 
 
 
@@ -1195,27 +1195,27 @@ inFile << "Z_mm_eff_err      \t" << 0.045 << endl; //
     inFile << "knn_3b_err \t" << 0.003  << endl;
 */
 
-inFile << "knn_1b_M1        \t" << 0.426<< endl;
-inFile << "knn_1b_M1_err    \t" << 0.063<< endl;
-inFile << "knn_1b_M2        \t" << 0.410<< endl;
-inFile << "knn_1b_M2_err    \t" << 0.061<< endl;
-inFile << "knn_1b_M3       \t" <<  0.380<< endl;
-inFile << "knn_1b_M3_err    \t" << 0.057<< endl;
-inFile << "knn_1b_M4        \t" << 0.328<< endl;
-inFile << "knn_1b_M4_err    \t" << 0.052<< endl;
-inFile << "knn_2b           \t" << 0.118<< endl;
-inFile << "knn_2b_err       \t" << 0.028<< endl;
-inFile << "knn_3b           \t" << 0.006<< endl;
-inFile << "knn_3b_err       \t" << 0.003<< endl;
+inFile << "knn_1b_M1        \t" << 0.454<< endl;
+inFile << "knn_1b_M1_err    \t" << 0.067<< endl;
+inFile << "knn_1b_M2        \t" << 0.438<< endl;
+inFile << "knn_1b_M2_err    \t" << 0.064<< endl;
+inFile << "knn_1b_M3       \t" <<  0.404<< endl;
+inFile << "knn_1b_M3_err    \t" << 0.060<< endl;
+inFile << "knn_1b_M4        \t" << 0.349<< endl;
+inFile << "knn_1b_M4_err    \t" << 0.054<< endl;
+inFile << "knn_2b           \t" << 0.112<< endl;
+inFile << "knn_2b_err       \t" << 0.027<< endl;
+inFile << "knn_3b           \t" << 0.0052<< endl;
+inFile << "knn_3b_err       \t" << 0.0027<< endl;
 
 
 
     // Z -> ll purity
   
-    inFile << "Z_ee_pur  \t" << 0.839 << endl;
-    inFile << "Z_ee_pur_err  \t" << 0.112 << endl;
-    inFile << "Z_mm_pur  \t" << 0.786 << endl;
-    inFile << "Z_mm_pur_err  \t" << 0.092 << endl;
+    inFile << "Z_ee_pur  \t" << 0.848 << endl;
+    inFile << "Z_ee_pur_err  \t" << 0.109 << endl;
+    inFile << "Z_mm_pur  \t" << 0.802 << endl;
+    inFile << "Z_mm_pur_err  \t" << 0.088 << endl;
   
   
     // scale factors:
@@ -1369,10 +1369,10 @@ inFile << "knn_3b_err       \t" << 0.003<< endl;
     } // si
 
     // next write out measured trigger efficiencies. Values from plotEMuFrac.C from averaging e/mu bin by bin.
-    float trigeff1LVal[nBinsMET][nBinsHT] = {{0.906515,0.987776,0.999283,1},{0.955593,0.993455,0.998782,1},{1,1,0.994101,1},{1,1,1,1}};
-    float trigeff1LErr[nBinsMET][nBinsHT] = {{0.1209,0.0343369,0.0100203,0.01},{0.0951017,0.0336462,0.0100273,0.01},{0.01,0.01,0.0115714,0.01},{0.01,0.01,0.01,0.01}};
-    float trigeff0LVal[nBinsMET][nBinsHT] = {{0.611111,0.722222,1.,1.},{0.757576,0.833333,1.,1.},{1.,1.,1.,1.},{1.,1.,1.,1.}};
-    float trigeff0LErr[nBinsMET][nBinsHT] = {{0.0716282,0.105819,0.01,0.01},{0.0554178,0.0513951,0.01,0.01},{0.01,0.01,0.01,0.01},{0.01,0.01,0.01,0.01}};
+    float trigeff1LVal[nBinsMET][nBinsHT] = {{0.916547,0.987935,0.999278,0.999781},{0.952359,0.993993,0.998778,0.999788},{1,1,1,1},{1,1,1,1}};
+    float trigeff1LErr[nBinsMET][nBinsHT] = {{0.0216782,0.0101562,0.0101094,0.0110318},{0.101613,0.0101077,0.0101169,0.0102007},{0.0151531,0.0110547,0.013888,0.014495},{0.0108621,0.0108621,0.0108621,0.0108621}};
+    float trigeff0LVal[nBinsMET][nBinsHT] = {{0.859365,0.901058,1,1},{0.739399,1,1,1},{1,1,1,1},{1,1,1,1}};
+    float trigeff0LErr[nBinsMET][nBinsHT] = {{0.107915,0.110075,0.0582974,0.0582974},{0.0871261,0.0829576,0.0582974,0.0582974},{0.0212098,0.0212098,0.0212098,0.0212098},{0.0212098,0.0212098,0.0212098,0.0212098}};
     for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
       for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
     	char parname[1000] ;
