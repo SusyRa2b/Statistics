@@ -15,8 +15,8 @@
 
     bool plotSigInput( double target_mgl = 1200., double target_mlsp = 300.,
                        const char* infile = "datfiles_18fb/sigcounts.T1bbbb.txt",
-                       const char* datafile = "datfiles_18fb/data-vals-unblind.dat",
-                       double dataLumi = 18.0
+                       const char* datafile = "datfiles_19fb/data-vals-unblind.dat",
+                       double dataLumi = 19.39
                         ) {
 
 
@@ -407,7 +407,7 @@
        gStyle->SetLabelOffset(0.02,"y") ;
        gStyle->SetNdivisions(404,"y") ;
 
-      double data_max[4] = { 70., 200., 45., 12. } ;
+      double data_max[4] = { 85., 220., 50., 15. } ;
 
       double susy_over_data_max(0.) ;
 

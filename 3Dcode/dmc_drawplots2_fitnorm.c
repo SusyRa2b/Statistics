@@ -474,9 +474,20 @@
 
          hmcsum -> Add( hmc ) ;
          hmcstack -> Add( hmc ) ;
+
+      }
+
+      for ( int ci=nComps-1; ci>=1; ci-- ) {
+
+         sprintf( hname, "%s_%s", hname_base, compname[ci] ) ;
+         TH1F* hmc = (TH1F*) gDirectory->FindObject( hname ) ;
+         if ( hmc == 0x0 ) { printf("\n\n *** drawSet: missing MC hist %s\n", hname ) ; return ; }
+
          legend -> AddEntry( hmc, compname[ci] ) ;
 
       }
+
+
 
       sprintf( hname, "%s_diff", hname_base ) ;
       TH1F* hratio = (TH1F*) hdata->Clone( hname ) ;
@@ -691,9 +702,19 @@
 
          hmcsum -> Add( hmc ) ;
          hmcstack -> Add( hmc ) ;
+         //legend -> AddEntry( hmc, compname[ci] ) ;
+
+      }
+
+      for ( int ci=nComps-1; ci>=1; ci-- ) {
+
+         sprintf( hname, "%s_%s_flat", hname_base, compname[ci] ) ;
+         TH1F* hmc = (TH1F*) gDirectory->FindObject( hname ) ;
+         if ( hmc == 0x0 ) { printf("\n\n *** drawSet: missing MC hist %s\n", hname ) ; return ; }
          legend -> AddEntry( hmc, compname[ci] ) ;
 
       }
+
 
       sprintf( hname, "%s_ratio_flat", hname_base ) ;
       TH1F* hratio = (TH1F*) hdata->Clone( hname ) ;

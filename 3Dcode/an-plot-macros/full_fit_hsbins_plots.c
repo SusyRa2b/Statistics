@@ -71,7 +71,7 @@
        h_data_nb2_m4 -> SetMarkerSize(1.2) ;
        h_data_nb2_m4 -> SetLineWidth(2) ;
        if ( doLogy) h_data_nb2_m4 -> SetMinimum( 10 ) ;
-       h_data_nb2_m4 -> SetMaximum( 100 ) ;
+       h_data_nb2_m4 -> SetMaximum( 110 ) ;
 
 
        h_data_nb2_m4 -> Draw("e") ;
@@ -130,7 +130,7 @@
        h_data_nb3_m2 -> SetMarkerSize(1.2) ;
        h_data_nb3_m2 -> SetLineWidth(2) ;
        if ( doLogy) h_data_nb3_m2 -> SetMinimum( 4 ) ;
-       h_data_nb3_m2 -> SetMaximum( 370 ) ;
+       h_data_nb3_m2 -> SetMaximum( 400 ) ;
 
 
        h_data_nb3_m2 -> Draw("e") ;
@@ -192,7 +192,7 @@
        h_data_nb3_m3 -> SetMarkerSize(1.2) ;
        h_data_nb3_m3 -> SetLineWidth(2) ;
        if ( doLogy) h_data_nb3_m3 -> SetMinimum( 0.3 ) ;
-       h_data_nb3_m3 -> SetMaximum( 45 ) ;
+       h_data_nb3_m3 -> SetMaximum( 50 ) ;
 
 
        h_data_nb3_m3 -> Draw("e") ;
@@ -252,7 +252,7 @@
        h_data_nb3_m4 -> SetMarkerSize(1.2) ;
        h_data_nb3_m4 -> SetLineWidth(2) ;
        if ( doLogy) h_data_nb3_m4 -> SetMinimum( 0.1 ) ;
-       h_data_nb3_m4 -> SetMaximum( 16 ) ;
+       h_data_nb3_m4 -> SetMaximum( 20 ) ;
 
 
        h_data_nb3_m4 -> Draw("e") ;

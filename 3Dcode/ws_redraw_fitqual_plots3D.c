@@ -938,29 +938,33 @@
 
      double hs14obsChi2(0.) ;
 
-     TH1F* chi2hist_0lep_2b = (TH1F*) gDirectory->FindObject( "hfitqual_data_0lep_2b_chi2" ) ;
-     if ( chi2hist_0lep_2b == 0x0 ) { printf("\n\n *** can't find hfitqual_data_0lep_2b_chi2.\n\n") ; return ; }
+     TH1F* chi2hist_0lep_2b(0x0) ;
+     TH1F* chi2hist_0lep_3b(0x0) ;
+     if ( !doNorm ) {
+        chi2hist_0lep_2b = (TH1F*) gDirectory->FindObject( "hfitqual_data_0lep_2b_chi2" ) ;
+        if ( chi2hist_0lep_2b == 0x0 ) { printf("\n\n *** can't find hfitqual_data_0lep_2b_chi2.\n\n") ; return ; }
 
-     TH1F* chi2hist_0lep_3b = (TH1F*) gDirectory->FindObject( "hfitqual_data_0lep_3b_chi2" ) ;
-     if ( chi2hist_0lep_3b == 0x0 ) { printf("\n\n *** can't find hfitqual_data_0lep_3b_chi2.\n\n") ; return ; }
+        chi2hist_0lep_3b = (TH1F*) gDirectory->FindObject( "hfitqual_data_0lep_3b_chi2" ) ;
+        if ( chi2hist_0lep_3b == 0x0 ) { printf("\n\n *** can't find hfitqual_data_0lep_3b_chi2.\n\n") ; return ; }
 
-     hs14obsChi2 += chi2hist_0lep_2b -> GetBinContent( 18 ) ;
-     hs14obsChi2 += chi2hist_0lep_2b -> GetBinContent( 19 ) ;
-     hs14obsChi2 += chi2hist_0lep_2b -> GetBinContent( 20 ) ;
+        hs14obsChi2 += chi2hist_0lep_2b -> GetBinContent( 18 ) ;
+        hs14obsChi2 += chi2hist_0lep_2b -> GetBinContent( 19 ) ;
+        hs14obsChi2 += chi2hist_0lep_2b -> GetBinContent( 20 ) ;
 
-     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent(  7 ) ;
-     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent(  8 ) ;
-     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent(  9 ) ;
-     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 10 ) ;
+        hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent(  7 ) ;
+        hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent(  8 ) ;
+        hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent(  9 ) ;
+        hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 10 ) ;
 
-     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 12 ) ;
-     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 13 ) ;
-     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 14 ) ;
-     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 15 ) ;
+        hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 12 ) ;
+        hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 13 ) ;
+        hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 14 ) ;
+        hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 15 ) ;
 
-     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 18 ) ;
-     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 19 ) ;
-     hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 20 ) ;
+        hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 18 ) ;
+        hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 19 ) ;
+        hs14obsChi2 += chi2hist_0lep_3b -> GetBinContent( 20 ) ;
+     }
 
 
     //---------------------------------------------------------------------------

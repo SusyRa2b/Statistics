@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 
-   void generate_table1( const char* scan_results_file = "scan-results.txt" ) {
+   void generate_table1( const char* scan_results_file = "scan-results-19fb.txt" ) {
 
 
       fill_arrays( scan_results_file ) ;

@@ -10,9 +10,9 @@
 #include <math.h>
 
 
-   void fill_arrays( const char* scan_results_file = "scan-results.txt",
-                     const char* datfile = "../datfiles_18fb/data-vals-unblind.dat",
-                     const char* dmc_rootfile = "dmc-root-files/dmc_plots2_RunsABCD-as-drawn.root" ) {
+   void fill_arrays( const char* scan_results_file = "scan-results-19fb.txt",
+                     const char* datfile = "../datfiles_19fb/data-vals-unblind.dat",
+                     const char* dmc_rootfile = "dmc-root-files/dmc_plots2_RunsABCDT-as-drawn.root" ) {
 
       char tagstring[1000] ;
       int trow, tcol ;
