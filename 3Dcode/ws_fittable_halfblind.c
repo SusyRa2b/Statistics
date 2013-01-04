@@ -21,6 +21,7 @@
 #include "RooPlot.h"
 #include "RooFitResult.h"
 #include "RooConstVar.h"
+#include "RooMinuit.h"
 #include "RooStats/ModelConfig.h"
 #include "TRegexp.h"
 
@@ -39,8 +40,9 @@
   //
   //------
 
-   void ws_fittable( const char* wsfile = "rootfiles/ws-data-unblind.root",
-                            double mu_susy_sig_val = 0. ) {
+   void ws_fittable_halfblind( const char* wsfile = "rootfiles/ws-data-unblind.root",
+                            double mu_susy_sig_val = 0.
+                             ) {
 
 
 
@@ -126,6 +128,115 @@
      }
 
 
+
+
+
+    //----------------------------------------------------------------------------------------------
+
+       //RooMinuit* rminuit( 0x0 ) ;
+
+       //RooFormulaVar* plot_var( 0x0 ) ;
+
+       char ignore_observable_name[50][100] ;
+
+       sprintf( ignore_observable_name[0], "N_0lep_M4_H2_2b" ) ;
+       sprintf( ignore_observable_name[1], "N_0lep_M4_H3_2b" ) ;
+       sprintf( ignore_observable_name[2], "N_0lep_M4_H4_2b" ) ;
+
+       sprintf( ignore_observable_name[3], "N_0lep_M2_H1_3b" ) ;
+       sprintf( ignore_observable_name[4], "N_0lep_M2_H2_3b" ) ;
+       sprintf( ignore_observable_name[5], "N_0lep_M2_H3_3b" ) ;
+       sprintf( ignore_observable_name[6], "N_0lep_M2_H4_3b" ) ;
+
+       sprintf( ignore_observable_name[7], "N_0lep_M3_H1_3b" ) ;
+       sprintf( ignore_observable_name[8], "N_0lep_M3_H2_3b" ) ;
+       sprintf( ignore_observable_name[9], "N_0lep_M3_H3_3b" ) ;
+       sprintf( ignore_observable_name[10],"N_0lep_M3_H4_3b" ) ;
+
+       sprintf( ignore_observable_name[11],"N_0lep_M4_H2_3b" ) ;
+       sprintf( ignore_observable_name[12],"N_0lep_M4_H3_3b" ) ;
+       sprintf( ignore_observable_name[13],"N_0lep_M4_H4_3b" ) ;
+
+       int n_ignore_observable(14) ;
+
+       RooAbsReal* rar_ignore_pdf[100] ;
+       RooAbsReal* rar_ignore_obs[100] ;
+
+       char ignoreTermFormula[10000] ;
+       RooArgSet  ignorePdfList ;
+
+       for ( int ii=0; ii < n_ignore_observable; ii++ ) {
+
+          char name[100] ;
+
+          sprintf( name, "pdf_%s", ignore_observable_name[ii] ) ;
+          rar_ignore_pdf[ii] = ws -> pdf( name ) ;
+          if ( rar_ignore_pdf[ii] == 0x0 ) {
+             printf("\n\n\n *** Told to ignore %s but can't find %s\n\n", ignore_observable_name[ii], name ) ;
+             return ;
+          }
+
+          rar_ignore_obs[ii] = ws -> var( ignore_observable_name[ii] ) ;
+          ( (RooRealVar*) rar_ignore_obs[ii] ) -> setConstant(kTRUE) ; // probably not necessary, but can't hurt.
+
+          if ( ii==0 ) {
+             sprintf( ignoreTermFormula, "log(@%d)", ii ) ;
+          } else {
+             char buffer[10000] ;
+             sprintf( buffer, "%s+log(@%d)", ignoreTermFormula, ii ) ;
+             sprintf( ignoreTermFormula, "%s", buffer ) ;
+          }
+
+          ignorePdfList.add( *rar_ignore_pdf[ii] ) ;
+
+       } // ii
+
+       printf("\n\n Creating ignore formula var with : %s\n", ignoreTermFormula ) ;
+
+       RooFormulaVar* rfv_ignorePdfTerm = new RooFormulaVar("ignorePdfTerm", ignoreTermFormula, ignorePdfList ) ;
+       rfv_ignorePdfTerm -> Print() ;
+
+
+       RooAbsReal* nll = likelihood -> createNLL( *rds, Verbose(true) ) ;
+
+       char minuit_formula_unbiased_unconstrained[100000] ;
+       sprintf( minuit_formula_unbiased_unconstrained, "%s+%s", nll->GetName(), rfv_ignorePdfTerm->GetName() ) ;
+       RooFormulaVar* rfv_minuitvar_unbiased_unconstrained = new RooFormulaVar( "minuitvar_unbiased_unconstrained",
+         minuit_formula_unbiased_unconstrained,
+         RooArgList( *nll, *rfv_ignorePdfTerm ) ) ;
+
+       RooMinuit* rminuit_ub_uc = new RooMinuit( *rfv_minuitvar_unbiased_unconstrained  ) ;
+
+       int verbLevel = 0 ;
+
+       rminuit_ub_uc->setPrintLevel(verbLevel-1) ;
+       rminuit_ub_uc->setNoWarn() ;
+
+       // rminuit_ub_uc->migrad() ;
+       // rminuit_ub_uc->hesse() ;
+
+       RooFitResult* rfr_ub_uc = rminuit_ub_uc->fit("mr") ;
+
+       double floatParInitVal[10000] ;
+       char   floatParName[10000][100] ;
+       int nFloatParInitVal(0) ;
+       RooArgList ral_floats = rfr_ub_uc->floatParsFinal() ;
+       TIterator* floatParIter = ral_floats.createIterator() ;
+       {
+          RooRealVar* par ;
+          while ( (par = (RooRealVar*) floatParIter->Next()) ) {
+             sprintf( floatParName[nFloatParInitVal], "%s", par->GetName() ) ;
+             floatParInitVal[nFloatParInitVal] = par->getVal() ;
+             nFloatParInitVal++ ;
+          }
+       }
+
+
+       //printf("\n\n Unbiased best value for new POI %s is : %7.1f\n\n", new_poi_rar->GetName(), new_poi_rar->getVal() ) ;
+
+       //double best_unbiased_poi_val = new_poi_rar->getVal() ;
+
+    //----------------------------------------------------------------------------------------------
 
 
 
@@ -320,9 +431,9 @@
 
      char outfilename[10000] ;
      if ( mu_susy_sig_val < 0. ) {
-        sprintf( outfilename, "outputfiles/fitresults-%s-susyFloat.txt", ws_fname.Data() ) ;
+        sprintf( outfilename, "outputfiles/fitresults-halfblind-%s-susyFloat.txt", ws_fname.Data() ) ;
      } else {
-        sprintf( outfilename, "outputfiles/fitresults-%s-susyFixed%.1f.txt", ws_fname.Data(), mu_susy_sig_val ) ;
+        sprintf( outfilename, "outputfiles/fitresults-halfblind-%s-susyFixed%.1f.txt", ws_fname.Data(), mu_susy_sig_val ) ;
      }
      printf(" ws_fname : %s\n", ws_fname.Data() ) ; cout << flush ;
      printf("\n\n Opening output file : %s\n\n", outfilename ) ; cout << flush ;
