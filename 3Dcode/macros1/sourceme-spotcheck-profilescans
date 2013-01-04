@@ -1,0 +1,83 @@
+
+
+
+  echo 1250,200
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-1250-200.root\",80.,0.,6.\) >& logfiles/scan-1250-200.log
+
+  echo 1250,400
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-1250-400.root\",80.,0.,6.\) >& logfiles/scan-1250-400.log
+
+  echo 1250,600
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-1250-600.root\",80.,0.,6.\) >& logfiles/scan-1250-600.log
+
+  echo 1250,800
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-1250-800.root\",80.,0.,6.\) >& logfiles/scan-1250-800.log
+
+
+
+  echo 1150,200
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-1150-200.root\",80.,0.,6.\) >& logfiles/scan-1150-200.log
+
+  echo 1150,400
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-1150-400.root\",80.,0.,6.\) >& logfiles/scan-1150-400.log
+
+  echo 1150,600
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-1150-600.root\",80.,0.,6.\) >& logfiles/scan-1150-600.log
+
+  echo 1150,800
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-1150-800.root\",80.,0.,6.\) >& logfiles/scan-1150-800.log
+
+
+
+  echo 1050,200
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-1050-200.root\",80.,0.,6.\) >& logfiles/scan-1050-200.log
+
+  echo 1050,400
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-1050-400.root\",80.,0.,6.\) >& logfiles/scan-1050-400.log
+
+  echo 1050,600
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-1050-600.root\",80.,0.,6.\) >& logfiles/scan-1050-600.log
+
+  echo 1050,800
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-1050-800.root\",80.,0.,6.\) >& logfiles/scan-1050-800.log
+
+
+
+  echo 950,200
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-950-200.root\",80.,0.,6.\) >& logfiles/scan-950-200.log
+
+  echo 950,400
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-950-400.root\",80.,0.,6.\) >& logfiles/scan-950-400.log
+
+  echo 950,600
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-950-600.root\",80.,0.,6.\) >& logfiles/scan-950-600.log
+
+  echo 950,800
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-950-800.root\",80.,0.,6.\) >& logfiles/scan-950-800.log
+
+
+
+  echo 850,200
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-850-200.root\",80.,0.,6.\) >& logfiles/scan-850-200.log
+
+  echo 850,400
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-850-400.root\",80.,0.,6.\) >& logfiles/scan-850-400.log
+
+  echo 850,600
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-850-600.root\",80.,0.,6.\) >& logfiles/scan-850-600.log
+
+
+
+
+  echo 750,200
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-750-200.root\",80.,0.,6.\) >& logfiles/scan-750-200.log
+
+  echo 750,400
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-750-400.root\",80.,0.,6.\) >& logfiles/scan-750-400.log
+
+  echo 750,600
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-750-600.root\",80.,0.,6.\) >& logfiles/scan-750-600.log
+
+
+
+
