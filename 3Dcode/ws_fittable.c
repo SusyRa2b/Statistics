@@ -21,6 +21,7 @@
 #include "RooPlot.h"
 #include "RooFitResult.h"
 #include "RooConstVar.h"
+#include "RooMinuit.h"
 #include "RooStats/ModelConfig.h"
 #include "TRegexp.h"
 
@@ -40,9 +41,33 @@
   //------
 
    void ws_fittable( const char* wsfile = "rootfiles/ws-data-unblind.root",
-                            double mu_susy_sig_val = 0. ) {
+                            double mu_susy_sig_val = 0.,
+                            bool halfBlind = false ) {
 
 
+
+     char command[1000] ;
+     sprintf( command, "basename %s", wsfile ) ;
+     TString ws_fname = gSystem->GetFromPipe( command ) ;
+     ws_fname.ReplaceAll(".root","") ;
+
+     char outfilename[10000] ;
+     if ( halfBlind ) {
+        if ( mu_susy_sig_val < 0. ) {
+           sprintf( outfilename, "outputfiles/fitresults-halfblind-%s-susyFloat.txt", ws_fname.Data() ) ;
+        } else {
+           sprintf( outfilename, "outputfiles/fitresults-halfblind-%s-susyFixed%.1f.txt", ws_fname.Data(), mu_susy_sig_val ) ;
+        }
+     } else {
+        if ( mu_susy_sig_val < 0. ) {
+           sprintf( outfilename, "outputfiles/fitresults-%s-susyFloat.txt", ws_fname.Data() ) ;
+        } else {
+           sprintf( outfilename, "outputfiles/fitresults-%s-susyFixed%.1f.txt", ws_fname.Data(), mu_susy_sig_val ) ;
+        }
+     }
+     printf(" ws_fname : %s\n", ws_fname.Data() ) ; cout << flush ;
+     printf("\n\n Opening output file : %s\n\n", outfilename ) ; cout << flush ;
+     FILE* outfile = fopen( outfilename, "w" ) ;
 
 
 
@@ -128,38 +153,110 @@
 
 
 
+    //----------------------------------------------------------------------------------------------
+
+     if ( halfBlind ) {
+
+       printf("\n\n === Doing half-blind fit.\n\n") ;
+
+       char ignore_observable_name[50][100] ;
+
+       sprintf( ignore_observable_name[0], "N_0lep_M4_H2_2b" ) ;
+       sprintf( ignore_observable_name[1], "N_0lep_M4_H3_2b" ) ;
+       sprintf( ignore_observable_name[2], "N_0lep_M4_H4_2b" ) ;
+
+       sprintf( ignore_observable_name[3], "N_0lep_M2_H1_3b" ) ;
+       sprintf( ignore_observable_name[4], "N_0lep_M2_H2_3b" ) ;
+       sprintf( ignore_observable_name[5], "N_0lep_M2_H3_3b" ) ;
+       sprintf( ignore_observable_name[6], "N_0lep_M2_H4_3b" ) ;
+
+       sprintf( ignore_observable_name[7], "N_0lep_M3_H1_3b" ) ;
+       sprintf( ignore_observable_name[8], "N_0lep_M3_H2_3b" ) ;
+       sprintf( ignore_observable_name[9], "N_0lep_M3_H3_3b" ) ;
+       sprintf( ignore_observable_name[10],"N_0lep_M3_H4_3b" ) ;
+
+       sprintf( ignore_observable_name[11],"N_0lep_M4_H2_3b" ) ;
+       sprintf( ignore_observable_name[12],"N_0lep_M4_H3_3b" ) ;
+       sprintf( ignore_observable_name[13],"N_0lep_M4_H4_3b" ) ;
+
+       int n_ignore_observable(14) ;
+
+       RooAbsReal* rar_ignore_pdf[100] ;
+       RooAbsReal* rar_ignore_obs[100] ;
+
+       char ignoreTermFormula[10000] ;
+       RooArgSet  ignorePdfList ;
+
+       for ( int ii=0; ii < n_ignore_observable; ii++ ) {
+
+          char name[100] ;
+
+          sprintf( name, "pdf_%s", ignore_observable_name[ii] ) ;
+          rar_ignore_pdf[ii] = ws -> pdf( name ) ;
+          if ( rar_ignore_pdf[ii] == 0x0 ) {
+             printf("\n\n\n *** Told to ignore %s but can't find %s\n\n", ignore_observable_name[ii], name ) ;
+             return ;
+          }
+
+          rar_ignore_obs[ii] = ws -> var( ignore_observable_name[ii] ) ;
+          ( (RooRealVar*) rar_ignore_obs[ii] ) -> setConstant(kTRUE) ; // probably not necessary, but can't hurt.
+
+          if ( ii==0 ) {
+             sprintf( ignoreTermFormula, "log(@%d)", ii ) ;
+          } else {
+             char buffer[10000] ;
+             sprintf( buffer, "%s+log(@%d)", ignoreTermFormula, ii ) ;
+             sprintf( ignoreTermFormula, "%s", buffer ) ;
+          }
+
+          ignorePdfList.add( *rar_ignore_pdf[ii] ) ;
+
+       } // ii
+
+       printf("\n\n Creating ignore formula var with : %s\n", ignoreTermFormula ) ;
+
+       RooFormulaVar* rfv_ignorePdfTerm = new RooFormulaVar("ignorePdfTerm", ignoreTermFormula, ignorePdfList ) ;
+       rfv_ignorePdfTerm -> Print() ;
+
+
+       RooAbsReal* nll = likelihood -> createNLL( *rds, Verbose(true) ) ;
+
+       char minuit_formula_unbiased_unconstrained[100000] ;
+       sprintf( minuit_formula_unbiased_unconstrained, "%s+%s", nll->GetName(), rfv_ignorePdfTerm->GetName() ) ;
+       RooFormulaVar* rfv_minuitvar_unbiased_unconstrained = new RooFormulaVar( "minuitvar_unbiased_unconstrained",
+         minuit_formula_unbiased_unconstrained,
+         RooArgList( *nll, *rfv_ignorePdfTerm ) ) ;
+
+       RooMinuit* rminuit_ub_uc = new RooMinuit( *rfv_minuitvar_unbiased_unconstrained  ) ;
+
+       int verbLevel = 0 ;
+
+       rminuit_ub_uc->setPrintLevel(verbLevel-1) ;
+       rminuit_ub_uc->setNoWarn() ;
+
+       fitResult = rminuit_ub_uc->fit("mr") ;
+
+       double floatParInitVal[10000] ;
+       char   floatParName[10000][100] ;
+       int nFloatParInitVal(0) ;
+       RooArgList ral_floats = fitResult->floatParsFinal() ;
+       TIterator* floatParIter = ral_floats.createIterator() ;
+       {
+          RooRealVar* par ;
+          while ( (par = (RooRealVar*) floatParIter->Next()) ) {
+             sprintf( floatParName[nFloatParInitVal], "%s", par->GetName() ) ;
+             floatParInitVal[nFloatParInitVal] = par->getVal() ;
+             nFloatParInitVal++ ;
+          }
+       }
+
+     } // halfBlind?
+
+    //----------------------------------------------------------------------------------------------
 
 
 
 
-
- //  printf("\n ==== Final floating parameter values\n\n") ;
- //  const RooArgList fitFloatVals = fitResult->floatParsFinal() ;
- //  {
- //    TIterator* parIter = fitFloatVals.createIterator() ;
- //    while ( RooRealVar* par = (RooRealVar*) parIter->Next() ) {
- //        printf(" %20s : %8.2f\n", par->GetName(), par->getVal() ) ;
- //    }
- //  }
-
-
- //  printf("\n ==== Constant parameter values\n\n") ;
- //  const RooArgList fitConstVals = fitResult->constPars() ;
- //  {
- //    TIterator* parIter = fitConstVals.createIterator() ;
- //    while ( RooRealVar* par = (RooRealVar*) parIter->Next() ) {
- //        printf(" %20s : %8.2f\n", par->GetName(), par->getVal() ) ;
- //    }
- //  }
-
- //  printf("\n ==== Function values\n\n") ;
- //  RooArgSet funcs = ws->allFunctions() ;
- //  TIterator* funcIter = funcs.createIterator() ;
- //  while ( RooFormulaVar* func = (RooFormulaVar*) funcIter->Next() ) {
- //    printf(" %20s : %8.2f\n", func->GetName(), func->getVal() ) ;
- //  }
-
- //  printf("\n\n") ; cout << flush ;
 
 
 
@@ -196,11 +293,11 @@
      comp_included[1][0] = true  ; // sl, ttwj
      comp_included[1][1] = false ; // sl, qcd
      comp_included[1][2] = false ; // sl, znn
-     comp_included[1][3] = false ; // sl, vv
+     comp_included[1][3] = true ; // sl, vv
      comp_included[2][0] = true ; // ldp, ttwj
      comp_included[2][1] = true ; // ldp, qcd
      comp_included[2][2] = true ; // ldp, znn
-     comp_included[2][3] = false ; // ldp, vv
+     comp_included[2][3] = true ; // ldp, vv
 
      for ( int si=0; si<nsel; si++ ) {
         for ( int ci=0; ci<ncomp; ci++ ) {
@@ -255,6 +352,111 @@
      } // si.
 
 
+    //--- print table of BG totals with estimated errors using getPropagatedError.
+
+     printf("\n\n\n") ;
+
+     for ( int si=0; si<nsel; si++ ) {
+
+        for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
+           for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+              for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+
+                 if ( ignoreBin[mbi][hbi] ) continue ;
+
+                 char pname[1000] ;
+                 RooAbsReal* rar(0x0) ;
+
+
+                 if ( si==0 ) {
+                    sprintf( pname, "n_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                 } else if ( si==1 ) {
+                    sprintf( pname, "n_sl_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                 } else if ( si==2 ) {
+                    sprintf( pname, "n_ldp_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                 }
+                 rar = (RooAbsReal*) ws->obj(pname) ;
+                 if ( rar == 0x0 ) { printf("\n\n *** %s missing from ws.\n\n", pname ) ; continue ; }
+
+                 double fit_val = rar -> getVal() ;
+                 double fit_err = rar -> getPropagatedError( *fitResult ) ;
+
+                 printf(" %s :  fit = %7.1f +/- %7.1f\n", pname, fit_val, fit_err ) ;
+
+
+              } // hbi.
+              printf("\n") ;
+           } // mbi.
+           printf("\n\n") ;
+        } // bbi.
+        printf("\n ============================== \n") ;
+     } // si.
+
+     printf("\n\n\n") ;
+
+
+    //--- print table of BG fractions with estimated errors using getPropagatedError.
+    //    Also, save results in a file for later (external) use.
+
+     printf("\n\n\n") ;
+
+     for ( int si=0; si<nsel; si++ ) {
+        for ( int bbi=0; bbi<nBinsBtag; bbi++ ) {
+           for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+              for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+
+                 for ( int ci=0; ci<ncomp; ci++ ) {
+
+                    if ( !comp_included[si][ci] ) continue ;
+
+                    if ( ignoreBin[mbi][hbi] ) continue ;
+
+                    char pname[1000] ;
+
+                    sprintf( pname, "%s_M%d_H%d", trigtype[ci], mbi+1, hbi+1 ) ;
+                    RooAbsReal* rarTrig = (RooAbsReal*) ws->obj(pname) ;
+                    if ( rarTrig == 0x0 ) { printf("\n\n *** %s missing from ws.\n\n", pname ) ; continue ; }
+
+                    sprintf( pname, "mu_%s%s_M%d_H%d_%db", comp[ci], ws_selname[si], mbi+1, hbi+1, bbi+1 ) ;
+                    RooAbsReal* rarMu = (RooAbsReal*) ws->obj(pname) ;
+                    if ( rarMu == 0x0 ) { printf("\n\n *** %s missing from ws.\n\n", pname ) ; continue ; }
+
+                    if ( si==0 ) {
+                       sprintf( pname, "n_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                    } else if ( si==1 ) {
+                       sprintf( pname, "n_sl_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                    } else if ( si==2 ) {
+                       sprintf( pname, "n_ldp_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                    }
+                    RooAbsReal* rar_n = (RooAbsReal*) ws->obj(pname) ;
+                    if ( rar_n == 0x0 ) { printf("\n\n *** %s missing from ws.\n\n", pname ) ; continue ; }
+
+                    sprintf( pname, "frac_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                    char fracFormula[1000] ;
+                    sprintf( fracFormula, "@0 * @1 / @2" ) ;
+                    RooFormulaVar rfvFrac( pname, fracFormula, RooArgList( *rarMu, *rarTrig, *rar_n ) ) ;
+
+                    double frac_val = rfvFrac.getVal() ;
+                    double frac_err = rfvFrac.getPropagatedError( *fitResult ) ;
+
+                    printf(" %4s %5s %20s :  %7.3f +/- %7.3f\n", output_selname[si], comp[ci], pname, frac_val, frac_err ) ;
+
+                    fprintf( outfile, "frac_%s_%s_M%d_H%d_%db  %7.3f  %7.3f\n", output_selname[si], comp[ci], mbi+1, hbi+1, bbi+1, frac_val, frac_err ) ;
+
+
+                 } // ci.
+                 printf("\n") ;
+              } // hbi.
+              printf("\n") ;
+           } // mbi.
+           printf("\n\n") ;
+        } // bbi.
+        printf("\n ---------------- \n") ;
+        printf("\n ============================== \n") ;
+     } // si.
+
+     printf("\n\n\n") ;
+
 
 
    //--- print out all observables and fit totals.
@@ -308,25 +510,6 @@
 
      printf("\n\n\n\n") ; cout << flush ;
 
-  // TString ws_fname( wsfile ) ;
-  // ws_fname.ReplaceAll("rootfiles/","") ;
-  // ws_fname.ReplaceAll(".root","") ;
-
-     char command[1000] ;
-     sprintf( command, "basename %s", wsfile ) ;
-     TString ws_fname = gSystem->GetFromPipe( command ) ;
-     ws_fname.ReplaceAll(".root","") ;
-
-
-     char outfilename[10000] ;
-     if ( mu_susy_sig_val < 0. ) {
-        sprintf( outfilename, "outputfiles/fitresults-%s-susyFloat.txt", ws_fname.Data() ) ;
-     } else {
-        sprintf( outfilename, "outputfiles/fitresults-%s-susyFixed%.1f.txt", ws_fname.Data(), mu_susy_sig_val ) ;
-     }
-     printf(" ws_fname : %s\n", ws_fname.Data() ) ; cout << flush ;
-     printf("\n\n Opening output file : %s\n\n", outfilename ) ; cout << flush ;
-     FILE* outfile = fopen( outfilename, "w" ) ;
 
      for ( int si=0; si<nsel; si++ ) {
         for ( int ci=0; ci<ncomp; ci++ ) {
@@ -385,177 +568,6 @@
      fclose( outfile ) ;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- //  //--- Extract model and observed values for backgrounds in key bins
-
-
- //  double n_0lep_2b_model[4] ;
- //  double n_0lep_2b_obs[4] ;
-
- //  for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
- //     char pname[1000] ;
- //     sprintf( pname, "n_M4_H%d_2b", hbi+1 ) ;
- //     RooAbsReal* par = (RooAbsReal*) ws->obj( pname ) ;
- //     if ( par == 0x0 ) {
- //        printf(" %s missing.\n", pname) ;
- //        n_0lep_2b_model[hbi] = 0. ;
- //     } else {
- //        printf(" %s found\n", pname ) ;
- //        printf(" %s = %g\n", pname, par->getVal() ) ;
- //        n_0lep_2b_model[hbi] = par->getVal() ;
- //     }
- //     sprintf( pname, "N_0lep_M4_H%d_2b", hbi+1 ) ;
- //     par = (RooAbsReal*) ws->obj( pname ) ;
- //     if ( par == 0x0 ) {
- //        printf(" %s missing.\n", pname) ;
- //        n_0lep_2b_obs[hbi] = 0. ;
- //     } else {
- //        printf(" %s found\n", pname ) ;
- //        printf(" %s = %g\n", pname, par->getVal() ) ;
- //        n_0lep_2b_obs[hbi] = par->getVal() ;
- //     }
- //  } // hbi.
-
-
- //  double n_0lep_3b_model[4][4] ;
- //  double n_0lep_3b_obs[4][4] ;
-
- //  for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
- //     for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
- //        char pname[1000] ;
- //        sprintf( pname, "n_M%d_H%d_3b", mbi+1, hbi+1 ) ;
- //        RooAbsReal* par = (RooAbsReal*) ws->obj( pname ) ;
- //        if ( par == 0x0 ) {
- //           printf(" %s missing.\n", pname) ;
- //           n_0lep_3b_model[mbi][hbi] = 0. ;
- //        } else {
- //           printf(" %s found\n", pname ) ;
- //           printf(" %s = %g\n", pname, par->getVal() ) ;
- //           n_0lep_3b_model[mbi][hbi] = par->getVal() ;
- //        }
- //        sprintf( pname, "N_0lep_M%d_H%d_3b", mbi+1, hbi+1 ) ;
- //        par = (RooAbsReal*) ws->obj( pname ) ;
- //        if ( par == 0x0 ) {
- //           printf(" %s missing.\n", pname) ;
- //           n_0lep_2b_obs[hbi] = 0. ;
- //        } else {
- //           printf(" %s found\n", pname ) ;
- //           printf(" %s = %g\n", pname, par->getVal() ) ;
- //           n_0lep_3b_obs[mbi][hbi] = par->getVal() ;
- //        }
- //     } // hbi.
- //  } // mbi
-
-
-
-
-
- ////--- print pretty tables
-
- // {
-
- //  printf("\n\n ===== nB == 2 =====================\n\n") ;
-
- //  printf("\n\n\n") ;
- //  printf("   Model values\n") ;
- //  printf("             H1      H2      H3      H4       H1-4\n") ;
- //  printf("---------------------------------------------------------\n") ;
- //  printf("  M4   | " ) ;
- //  double model_hsum(0.) ;
- //  for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
- //     printf(" %6.1f ", n_0lep_2b_model[hbi] ) ;
- //     model_hsum += n_0lep_2b_model[hbi] ;
- //  } // hbi.
- //  printf(" | %6.1f\n", model_hsum ) ;
-
-
- //  printf("\n\n\n") ;
- //  printf("   Observed values\n") ;
- //  printf("             H1      H2      H3      H4       H1-4\n") ;
- //  printf("---------------------------------------------------------\n") ;
- //  printf("  M4   | " ) ;
- //  double obs_hsum(0.) ;
- //  for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
- //     printf(" %6.1f ", n_0lep_2b_obs[hbi] ) ;
- //     obs_hsum += n_0lep_2b_obs[hbi] ;
- //  } // hbi.
- //  printf(" | %6.1f\n", obs_hsum ) ;
-
-
-
- // }
-
-
-
- // {
-
- //  printf("\n\n ===== nB >= 3 =====================\n\n") ;
-
- //  double model_metsum[4] = {0., 0., 0., 0.} ;
- //  printf("\n\n\n") ;
- //  printf("   Model values\n") ;
- //  printf("             H1      H2      H3      H4       H1-4\n") ;
- //  printf("---------------------------------------------------------\n") ;
- //  for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
- //     printf("  M%d   | ", mbi+1 ) ;
- //     double hsum(0.) ;
- //     for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
- //        printf(" %6.1f ", n_0lep_3b_model[mbi][hbi] ) ;
- //        hsum += n_0lep_3b_model[mbi][hbi] ;
- //        model_metsum[hbi] += n_0lep_3b_model[mbi][hbi] ;
- //     } // hbi.
- //     printf(" | %6.1f\n", hsum ) ;
- //  } // mbi
- //  printf("---------------------------------------------------------\n") ;
- //  printf("  M2-4 | ") ;
- //  double model_allsum(0.) ;
- //  for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
- //     printf(" %6.1f ", model_metsum[hbi] ) ;
- //     model_allsum += model_metsum[hbi] ;
- //  } // hbi.
- //  printf(" | %6.1f\n", model_allsum ) ;
-
-
- //  double obs_metsum[4] = {0., 0., 0., 0.} ;
- //  printf("\n\n\n") ;
- //  printf("   Observed values\n") ;
- //  printf("             H1      H2      H3      H4       H1-4\n") ;
- //  printf("---------------------------------------------------------\n") ;
- //  for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
- //     printf("  M%d   | ", mbi+1 ) ;
- //     double hsum(0.) ;
- //     for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
- //        printf(" %4.0f   ", n_0lep_3b_obs[mbi][hbi] ) ;
- //        hsum += n_0lep_3b_obs[mbi][hbi] ;
- //        obs_metsum[hbi] += n_0lep_3b_obs[mbi][hbi] ;
- //     } // hbi.
- //     printf(" | %4.0f\n", hsum ) ;
- //  } // mbi
- //  printf("---------------------------------------------------------\n") ;
- //  printf("  M2-4 | ") ;
- //  double obs_allsum(0.) ;
- //  for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
- //     printf(" %4.0f   ", obs_metsum[hbi] ) ;
- //     obs_allsum += obs_metsum[hbi] ;
- //  } // hbi.
- //  printf(" | %4.0f\n", obs_allsum ) ;
-
- // }
 
 
 
