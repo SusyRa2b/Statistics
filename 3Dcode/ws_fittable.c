@@ -42,7 +42,7 @@
 
    void ws_fittable( const char* wsfile = "rootfiles/ws-data-unblind.root",
                             double mu_susy_sig_val = 0.,
-                            bool halfBlind = false ) {
+                            bool halfBlind = true ) {
 
 
 
@@ -456,6 +456,281 @@
      } // si.
 
      printf("\n\n\n") ;
+
+
+
+
+   //--- Do the sums over HT.
+     { // scoping bracket.
+     int nhtsum(4) ;
+     int htsum_metbin[4] = { 3, 1, 2, 3 } ; // these are like mbi, so counting from 0, not 1.
+     int htsum_nbbin[4]  = { 1, 2, 2, 2 } ; // these are like bbi, so counting from 0, not 1.
+
+     for ( int htsi=0; htsi<nhtsum; htsi++ ) {
+
+        int si = 0 ; // zl = 0.
+
+        int mbi = htsum_metbin[htsi] ;
+        int bbi = htsum_nbbin[htsi] ;
+
+        RooFormulaVar* rfv_frac_denom(0x0) ;
+
+        for ( int ci=0; ci<ncomp; ci++ ) {
+
+           if ( !comp_included[si][ci] ) continue ;
+
+           printf("\n\n Doing sum over HT bins for MET%d, nb%d, comp %s\n\n", mbi+1, bbi+1, comp[ci] ) ;
+
+           char numerFormula[10000] ;
+           char denomFormula[10000] ;
+           RooArgSet  numerList ;
+           RooArgSet  denomList ;
+           int numerParInd(0) ;
+           int denomParInd(0) ;
+
+           for ( int hbi=0; hbi<4; hbi++ ) {
+
+              if ( ignoreBin[mbi][hbi] ) continue ;
+
+              char pname[1000] ;
+
+              sprintf( pname, "%s_M%d_H%d", trigtype[ci], mbi+1, hbi+1 ) ;
+              RooAbsReal* rarTrig = (RooAbsReal*) ws->obj(pname) ;
+              if ( rarTrig == 0x0 ) { printf("\n\n *** %s missing from ws.\n\n", pname ) ; continue ; }
+
+              sprintf( pname, "mu_%s%s_M%d_H%d_%db", comp[ci], ws_selname[si], mbi+1, hbi+1, bbi+1 ) ;
+              RooAbsReal* rarMu = (RooAbsReal*) ws->obj(pname) ;
+              if ( rarMu == 0x0 ) { printf("\n\n *** %s missing from ws.\n\n", pname ) ; continue ; }
+
+              sprintf( pname, "n_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+              RooAbsReal* rar_n = (RooAbsReal*) ws->obj(pname) ;
+              if ( rar_n == 0x0 ) { printf("\n\n *** %s missing from ws.\n\n", pname ) ; continue ; }
+
+              numerList.add( *rarTrig ) ;
+              numerList.add( *rarMu ) ;
+              denomList.add( *rar_n ) ;
+
+              if ( numerParInd == 0 ) {
+                 sprintf( numerFormula, "@%d * @%d", numerParInd++, numerParInd++ ) ;
+                 sprintf( denomFormula, "@%d", denomParInd++ ) ;
+              } else {
+                 char buffer[10000] ;
+                 sprintf( buffer, "%s + @%d * @%d", numerFormula, numerParInd++, numerParInd++ ) ;
+                 sprintf( numerFormula, "%s", buffer ) ;
+                 sprintf( buffer, "%s + @%d", denomFormula, denomParInd++ ) ;
+                 sprintf( denomFormula, "%s", buffer ) ;
+              }
+
+           } // hbi.
+
+           char fname[1000] ;
+
+           if ( rfv_frac_denom == 0x0 ) {
+              sprintf( fname, "htsum_zl_all_M%d_%db", mbi+1, bbi+1 ) ;
+              rfv_frac_denom = new RooFormulaVar( fname, denomFormula, denomList ) ;
+              rfv_frac_denom->Print() ;
+              fprintf( outfile, "%s %7.1f %7.1f\n", fname, rfv_frac_denom->getVal(), rfv_frac_denom->getPropagatedError( *fitResult ) ) ;
+           }
+
+           sprintf( fname, "htsum_zl_%s_M%d_%db", comp[ci], mbi+1, bbi+1 ) ;
+           RooFormulaVar* rfv_frac_numer = new RooFormulaVar( fname, numerFormula, numerList ) ;
+           rfv_frac_numer->Print() ;
+
+           sprintf( fname, "htsum_zl_frac_%s_M%d_%db", comp[ci], mbi+1, bbi+1 ) ;
+           RooFormulaVar rfv_frac( fname, "@0 / @1", RooArgSet( *rfv_frac_numer, *rfv_frac_denom ) ) ;
+           rfv_frac.Print() ;
+
+           double frac_val = rfv_frac.getVal() ;
+           double frac_err = rfv_frac.getPropagatedError( *fitResult ) ;
+
+           printf( "%s : %7.3f +/- %7.3f\n", fname, frac_val, frac_err ) ;
+           fprintf( outfile, "%s %7.3f %7.3f\n", fname, frac_val, frac_err ) ;
+
+        } // ci
+
+     } // htsi.
+     } // scoping bracket.
+   //--- End sums over HT.
+
+
+
+
+
+
+   //--- Do the sums over MET.
+     { // scoping bracket.
+     int nmetsum(4) ;
+     int metsum_htbin[4] = { 0, 1, 2, 3 } ; // these are like hbi, so counting from 0, not 1.
+     int metsum_nbbin[4]  = { 2, 2, 2, 2 } ; // these are like bbi, so counting from 0, not 1.
+
+     for ( int metsi=0; metsi<nmetsum; metsi++ ) {
+
+        int si = 0 ; // zl = 0.
+
+        int hbi = metsum_htbin[metsi] ;
+        int bbi = metsum_nbbin[metsi] ;
+
+        RooFormulaVar* rfv_frac_denom(0x0) ;
+
+        for ( int ci=0; ci<ncomp; ci++ ) {
+
+           if ( !comp_included[si][ci] ) continue ;
+
+           printf("\n\n Doing sum over MET bins for HT%d, nb%d, comp %s\n\n", hbi+1, bbi+1, comp[ci] ) ;
+
+           char numerFormula[10000] ;
+           char denomFormula[10000] ;
+           RooArgSet  numerList ;
+           RooArgSet  denomList ;
+           int numerParInd(0) ;
+           int denomParInd(0) ;
+
+           for ( int mbi=1; mbi<4; mbi++ ) {
+
+              if ( ignoreBin[mbi][hbi] ) continue ;
+
+              char pname[1000] ;
+
+              sprintf( pname, "%s_M%d_H%d", trigtype[ci], mbi+1, hbi+1 ) ;
+              RooAbsReal* rarTrig = (RooAbsReal*) ws->obj(pname) ;
+              if ( rarTrig == 0x0 ) { printf("\n\n *** %s missing from ws.\n\n", pname ) ; continue ; }
+
+              sprintf( pname, "mu_%s%s_M%d_H%d_%db", comp[ci], ws_selname[si], mbi+1, hbi+1, bbi+1 ) ;
+              RooAbsReal* rarMu = (RooAbsReal*) ws->obj(pname) ;
+              if ( rarMu == 0x0 ) { printf("\n\n *** %s missing from ws.\n\n", pname ) ; continue ; }
+
+              sprintf( pname, "n_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+              RooAbsReal* rar_n = (RooAbsReal*) ws->obj(pname) ;
+              if ( rar_n == 0x0 ) { printf("\n\n *** %s missing from ws.\n\n", pname ) ; continue ; }
+
+              numerList.add( *rarTrig ) ;
+              numerList.add( *rarMu ) ;
+              denomList.add( *rar_n ) ;
+
+              if ( numerParInd == 0 ) {
+                 sprintf( numerFormula, "@%d * @%d", numerParInd++, numerParInd++ ) ;
+                 sprintf( denomFormula, "@%d", denomParInd++ ) ;
+              } else {
+                 char buffer[10000] ;
+                 sprintf( buffer, "%s + @%d * @%d", numerFormula, numerParInd++, numerParInd++ ) ;
+                 sprintf( numerFormula, "%s", buffer ) ;
+                 sprintf( buffer, "%s + @%d", denomFormula, denomParInd++ ) ;
+                 sprintf( denomFormula, "%s", buffer ) ;
+              }
+
+           } // mbi.
+
+           char fname[1000] ;
+
+           if ( rfv_frac_denom == 0x0 ) {
+              sprintf( fname, "metsum_zl_all_H%d_%db", hbi+1, bbi+1 ) ;
+              rfv_frac_denom = new RooFormulaVar( fname, denomFormula, denomList ) ;
+              rfv_frac_denom->Print() ;
+              fprintf( outfile, "%s %7.1f %7.1f\n", fname, rfv_frac_denom->getVal(), rfv_frac_denom->getPropagatedError( *fitResult ) ) ;
+              ws->import( *rfv_frac_denom ) ;
+           }
+
+           sprintf( fname, "metsum_zl_%s_H%d_%db", comp[ci], hbi+1, bbi+1 ) ;
+           RooFormulaVar* rfv_frac_numer = new RooFormulaVar( fname, numerFormula, numerList ) ;
+           rfv_frac_numer->Print() ;
+           ws->import( *rfv_frac_numer ) ;
+
+           sprintf( fname, "metsum_zl_frac_%s_H%d_%db", comp[ci], hbi+1, bbi+1 ) ;
+           RooFormulaVar rfv_frac( fname, "@0 / @1", RooArgSet( *rfv_frac_numer, *rfv_frac_denom ) ) ;
+           rfv_frac.Print() ;
+
+           double frac_val = rfv_frac.getVal() ;
+           double frac_err = rfv_frac.getPropagatedError( *fitResult ) ;
+
+           printf( "%s : %7.3f +/- %7.3f\n", fname, frac_val, frac_err ) ;
+           fprintf( outfile, "%s %7.3f %7.3f\n", fname, frac_val, frac_err ) ;
+
+        } // ci
+
+     } // htsi.
+     } // scoping bracket.
+   //--- End sums over MET.
+
+
+
+
+   //--- Do the sum over MET and HT.
+     { // scoping bracket.
+
+        int si = 0 ; // zl = 0.
+
+        int bbi = 2 ; // counting from zero, so this is nb=3.
+
+        RooFormulaVar* rfv_frac_denom(0x0) ;
+
+        for ( int ci=0; ci<ncomp; ci++ ) {
+
+           if ( !comp_included[si][ci] ) continue ;
+
+           printf("\n\n Doing sum over MET sum bins for nb%d, comp %s\n\n", bbi+1, comp[ci] ) ;
+
+           char numerFormula[10000] ;
+           char denomFormula[10000] ;
+           RooArgSet  numerList ;
+           RooArgSet  denomList ;
+           int numerParInd(0) ;
+           int denomParInd(0) ;
+
+           for ( int hbi=0; hbi<4; hbi++ ) {
+
+              char pname[1000] ;
+
+              sprintf( pname, "metsum_zl_%s_H%d_%db", comp[ci], hbi+1, bbi+1 ) ;
+              RooAbsReal* rarNumer = (RooAbsReal*) ws->obj(pname) ;
+              if ( rarNumer == 0x0 ) { printf("\n\n *** %s missing from ws.\n\n", pname ) ; continue ; }
+
+              sprintf( pname, "metsum_zl_all_H%d_%db", hbi+1, bbi+1 ) ;
+              RooAbsReal* rarDenom = (RooAbsReal*) ws->obj(pname) ;
+              if ( rarDenom == 0x0 ) { printf("\n\n *** %s missing from ws.\n\n", pname ) ; continue ; }
+
+              numerList.add( *rarNumer ) ;
+              denomList.add( *rarDenom ) ;
+
+              if ( numerParInd == 0 ) {
+                 sprintf( numerFormula, "@%d", numerParInd++ ) ;
+                 sprintf( denomFormula, "@%d", denomParInd++ ) ;
+              } else {
+                 char buffer[10000] ;
+                 sprintf( buffer, "%s + @%d", numerFormula, numerParInd++ ) ;
+                 sprintf( numerFormula, "%s", buffer ) ;
+                 sprintf( buffer, "%s + @%d", denomFormula, denomParInd++ ) ;
+                 sprintf( denomFormula, "%s", buffer ) ;
+              }
+
+           } // hbi.
+
+           char fname[1000] ;
+
+           if ( rfv_frac_denom == 0x0 ) {
+              sprintf( fname, "methtsum_zl_all_%db", bbi+1 ) ;
+              rfv_frac_denom = new RooFormulaVar( fname, denomFormula, denomList ) ;
+              rfv_frac_denom->Print() ;
+              fprintf( outfile, "%s %7.1f %7.1f\n", fname, rfv_frac_denom->getVal(), rfv_frac_denom->getPropagatedError( *fitResult ) ) ;
+           }
+
+           sprintf( fname, "methtsum_zl_%s_%db", comp[ci], bbi+1 ) ;
+           RooFormulaVar* rfv_frac_numer = new RooFormulaVar( fname, numerFormula, numerList ) ;
+           rfv_frac_numer->Print() ;
+
+           sprintf( fname, "methtsum_zl_frac_%s_%db", comp[ci], bbi+1 ) ;
+           RooFormulaVar rfv_frac( fname, "@0 / @1", RooArgSet( *rfv_frac_numer, *rfv_frac_denom ) ) ;
+           rfv_frac.Print() ;
+
+           double frac_val = rfv_frac.getVal() ;
+           double frac_err = rfv_frac.getPropagatedError( *fitResult ) ;
+
+           printf( "%s : %7.3f +/- %7.3f\n", fname, frac_val, frac_err ) ;
+           fprintf( outfile, "%s %7.3f %7.3f\n", fname, frac_val, frac_err ) ;
+
+        } // ci
+
+     } // scoping bracket.
+   //--- End sums over MET and HT.
 
 
 

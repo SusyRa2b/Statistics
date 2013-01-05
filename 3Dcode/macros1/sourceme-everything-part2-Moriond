@@ -18,3 +18,8 @@
    $ROOTSYS/bin/root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-data-unblind-1200-600.root\",-1\) > &! logfiles/fitqual-data-unblind-1200-600.log
    $ROOTSYS/bin/root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-data-unblind-900-600.root\",-1\) > &! logfiles/fitqual-data-unblind-900-600.log
 
+   echo fittables
+   $ROOTSYS/bin/root -b -q ws_fittable.c+\(\"rootfiles/ws-data-unblind.root\",0.,false\) > &! logfiles/fittables-unblind.log
+   $ROOTSYS/bin/root -b -q ws_fittable.c+\(\"rootfiles/ws-data-unblind.root\",0.,true\) > &! logfiles/fittables-halfblind.log
+
+
