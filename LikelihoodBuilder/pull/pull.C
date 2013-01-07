@@ -139,6 +139,7 @@ TString translateRegion(TString region)
 
 TString translateContribution(TString contribution)
 {
+  if(contribution=="Signal") return "susy";
   if(contribution=="QCD") return "qcd";
   if(contribution=="ZtoNuNu") return "znn";
   if(contribution=="Diboson") return "vv";
@@ -193,7 +194,7 @@ void fillMaps(map<TString,float> genMap, map<TString,float> adjustedMap, TString
   region.push_back("oneTightMu");  
   
   std::vector<TString> contribution;
-  //contribution.push_back("Signal");
+  contribution.push_back("Signal");
   contribution.push_back("TopWJets");
   contribution.push_back("QCD");
   contribution.push_back("ZtoNuNu");
@@ -309,7 +310,7 @@ void fillMaps(map<TString,float> genMap, map<TString,float> adjustedMap, TString
 		      }
 		      else {
 			mapValue = adjustedMap[mapName];
-			//cout << "adjusted " << mapName << " " << mapValue << endl;
+			if(mapName.Contains("susy")) cout << "adjusted " << mapName << " " << mapValue << ", fit " << value << " +- " << error << endl;
 		      }
 
 		    }
@@ -355,6 +356,7 @@ void pull1(TString fileName)
   TFile fsave("pull1Histograms.root", "RECREATE");
   fsave.cd();
 
+  //PULL
   float pullmin = -10;
   float pullmax = 10;
 
@@ -370,8 +372,11 @@ void pull1(TString fileName)
   TH1D* hPull_ZL_ZtoNuNu = new TH1D("hPull_ZL_ZtoNuNu", "hPull_ZL_ZtoNuNu", 50, pullmin, pullmax);
   TH1D* hPull_ZL_Diboson = new TH1D("hPull_ZL_Diboson", "hPull_ZL_Diboson", 50, pullmin, pullmax);
   
+  TH1D* hPull_SL_Signal = new TH1D("hPull_SL_Signal", "hPull_SL_Signal", 50, pullmin, pullmax);
   TH1D* hPull_SL_TopWJets = new TH1D("hPull_SL_TopWJets", "hPull_SL_TopWJets", 50, pullmin, pullmax);
-  TH1D* hPull_MRDL_TopWJets = new TH1D("hPull_MRDL_TopWJets", "hPull_MRDL_TopWJets", 50, pullmin, pullmax);
+
+  TH1D* hPull_MRDL_Signal = new TH1D("hPull_MRDL_Signal", "hPull_MRDL_Signal", 50, pullmin, pullmax);
+  TH1D* hPull_MRDL_TopWJets = new TH1D("hPull_MRDL_TopWJets", "hPull_MRDL_TopWJets", 50, pullmin, pullmax);  
   
   //create vector of number names
   std::vector<TString> valueNames;
@@ -392,20 +397,28 @@ void pull1(TString fileName)
       float toyError = toyErrors[thisValueName];
       
       float pull = (toyValue - trueValue)/toyError;
-      if(fabs(pull)>4 && toyError>0) cout << thisValueName << ", toyValue " << toyValue << ", trueValue " << trueValue << ", toyError " << toyError << ", pull " << pull << endl;
+      //if(fabs(pull)>4 && toyError>0) cout << thisValueName << ", toyValue " << toyValue << ", trueValue " << trueValue << ", toyError " << toyError << ", pull " << pull << endl;
+      if(fabs(pull)>4 && toyError>0) cout << thisValueName << ", true value = " << trueValue << ", fitted value = " << toyValue << " +/- " << toyError << ", pull = " << pull << endl; 
+
+      if(thisValueName.Contains("oneLooseLep_bin20_Theta1_TopWJetsYield")) cout << "handpicked " << thisValueName << ", toyValue " << toyValue << ", trueValue " << trueValue << ", toyError " << toyError << ", pull " << pull << endl;
 
       //Fill Histograms
+      if(thisValueName.Contains("zeroLeptonLowDeltaPhiN") && thisValueName.Contains("Signal")) hPull_LDP_Signal->Fill(pull);
       if(thisValueName.Contains("zeroLeptonLowDeltaPhiN") && thisValueName.Contains("TopWJets")) hPull_LDP_TopWJets->Fill(pull);
       if(thisValueName.Contains("zeroLeptonLowDeltaPhiN") && thisValueName.Contains("QCD")) hPull_LDP_QCD->Fill(pull);
       if(thisValueName.Contains("zeroLeptonLowDeltaPhiN") && thisValueName.Contains("ZtoNuNu")) hPull_LDP_ZtoNuNu->Fill(pull);
       if(thisValueName.Contains("zeroLeptonLowDeltaPhiN") && thisValueName.Contains("Diboson")) hPull_LDP_Diboson->Fill(pull);
       
+      if(thisValueName.Contains("zeroLepton_") && thisValueName.Contains("Signal")) hPull_ZL_Signal->Fill(pull);
       if(thisValueName.Contains("zeroLepton_") && thisValueName.Contains("TopWJets")) hPull_ZL_TopWJets->Fill(pull);
       if(thisValueName.Contains("zeroLepton_") && thisValueName.Contains("QCD")) hPull_ZL_QCD->Fill(pull);
       if(thisValueName.Contains("zeroLepton_") && thisValueName.Contains("ZtoNuNu")) hPull_ZL_ZtoNuNu->Fill(pull);
       if(thisValueName.Contains("zeroLepton_") && thisValueName.Contains("Diboson")) hPull_ZL_Diboson->Fill(pull);
       
+      if((thisValueName.Contains("oneLooseLep") || thisValueName.Contains("oneTightMu")) && thisValueName.Contains("Signal")) hPull_SL_Signal->Fill(pull);
       if((thisValueName.Contains("oneLooseLep") || thisValueName.Contains("oneTightMu")) && thisValueName.Contains("TopWJets")) hPull_SL_TopWJets->Fill(pull);
+
+      if(thisValueName.Contains("two") && thisValueName.Contains("Signal")) hPull_MRDL_Signal->Fill(pull);
       if(thisValueName.Contains("two") && thisValueName.Contains("TopWJets")) hPull_MRDL_TopWJets->Fill(pull);
       
     }//loop over variables
@@ -423,6 +436,8 @@ void pull1(TString fileName)
   styleHistAndPrint(hPull_ZL_Diboson);
   styleHistAndPrint(hPull_SL_TopWJets);
   styleHistAndPrint(hPull_MRDL_TopWJets);
+  styleHistAndPrint(hPull_SL_Signal);
+  styleHistAndPrint(hPull_MRDL_Signal);
 
   //Save Histograms
   hPull_LDP_TopWJets->Write();
@@ -436,7 +451,10 @@ void pull1(TString fileName)
   hPull_ZL_Diboson->Write();
 
   hPull_SL_TopWJets->Write();
+  hPull_SL_Signal->Write();
+
   hPull_MRDL_TopWJets->Write();
+  hPull_MRDL_Signal->Write();
 
 
   fsave.Close();
@@ -517,8 +535,10 @@ void pull2(TString fileList="toylist.dat")
 
       float pullmin = -10;
       float pullmax = 10;
-      TH1D hPull("hPull_"+thisValueName, "hPull_"+thisValueName, 50, pullmin, pullmax);
-      
+      //TH1D hPull("hPull_"+thisValueName, "hPull_"+thisValueName, 50, pullmin, pullmax);
+      TH1D hPull("h_"+thisValueName+"_Pull", "h_"+thisValueName+"_Pull", 50, pullmin, pullmax);
+      TH1D hDiff("h_"+thisValueName+"_Diff", "h_"+thisValueName+"_Diff", 200, -100, 100);
+
       //loop over all toys
       for(int j=0; j<allToyValues.size(); j++)
 	{
@@ -529,12 +549,15 @@ void pull2(TString fileList="toylist.dat")
 	  float toyError = toyErrors[thisValueName];
 	  
 	  float pull = (toyValue - trueValue)/toyError;
+	  float diff = toyValue - trueValue;
 
 	  hPull.Fill(pull);
+	  hDiff.Fill(diff);
 	  
 	}//loop over toys
       
       hPull.Write();
+      hDiff.Write();
 
     }//loop over variables
 
