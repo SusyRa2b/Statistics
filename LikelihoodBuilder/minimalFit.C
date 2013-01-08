@@ -59,7 +59,7 @@ int minimalFit(TString workspaceFile = "test.root", double signalCrossSectionGue
   cout << "RooFitResult minNll = " << fitResult->minNll() << endl;
 
   //if(fitResult->status() != 0) return fitResult->status();
-  if(fabs((sig-signalCrossSectionGuess)/signalCrossSectionGuess)<1e-5) return 1;
+  if(fixSignal==false && fabs((sig-signalCrossSectionGuess)/signalCrossSectionGuess)<1e-5) return 1;
 
   if(datFile != "") {
     ofstream myfile;
