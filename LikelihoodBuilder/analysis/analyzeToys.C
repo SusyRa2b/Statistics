@@ -31,10 +31,11 @@ void makeTree(int trueN_in, TString inFile, TString fitter = "LB") {
     branchDescriptor = "zeroLeptonSignalYieldTotal:zeroLeptonTopWJetsYieldTotal:zeroLeptonQCDYieldTotal:zeroLeptonZtoNuNuYieldTotal";
   }
   else if(fitter == "test") {
-    branchDescriptor = "zeroLeptonCountTotal";
+    //branchDescriptor = "zeroLeptonCountTotal";
+    branchDescriptor = "XXsignalCrossSection:signalCrossSectionError:signalCrossSection";
   }
   else {
-    branchDescriptor = "signalCrossSection:signalCrossSectionError";
+    branchDescriptor = "signalCrossSection/D:signalCrossSectionError";
     branchDescriptor += ":lowerLimit68:upperLimit68:lowerLimit95:upperLimit95";
     branchDescriptor += ":signalUncertainty";
     branchDescriptor += ":zeroLeptonSignalYieldTotal:zeroLeptonSignalYieldTotalError";
@@ -44,10 +45,10 @@ void makeTree(int trueN_in, TString inFile, TString fitter = "LB") {
   treeToys->ReadFile(inFile,branchDescriptor);
   
   
-  TString foutName = ""; foutName += "tree_"; foutName += trueN; foutName += "_"; foutName += fitter; foutName += ".root";
-  TFile fout(foutName, "RECREATE");
-  treeToys->Write();
-  fout.Close();
+  //TString foutName = ""; foutName += "tree_"; foutName += trueN; foutName += "_"; foutName += fitter; foutName += ".root";
+  //TFile fout(foutName, "RECREATE");
+  //treeToys->Write();
+  //fout.Close();
   
 
 }
@@ -70,7 +71,7 @@ void makeHists(TString fitter = "LB") {
   TH1D* hZeroLeptonQCDYieldTotal = new TH1D("hZeroLeptonQCDYieldTotal", "Zero lepton QCD yield", 50, 0, 500);
   TH1D* hZeroLeptonZtoNuNuYieldTotal = new TH1D("hZeroLeptonZtoNuNuYieldTotal", "Zero lepton Z-invisible yield", 50, 150, 450);
   */
-  TH1D* hSignalCrossSection = new TH1D("hSignalCrossSection", "Signal cross section", 50, 0, 100);
+  TH1D* hSignalCrossSection = new TH1D("hSignalCrossSection", "Signal cross section", 50, 0, 200);
   TH1D* hPull = new TH1D("hPull", "Pull using fit errors", 50, -5, 5);
   TH1D* hPullPL = new TH1D("hPullPL", "Pull using PL errors", 50, -5, 5);
   TH1D* hZeroLeptonSignalYieldTotal = new TH1D("hZeroLeptonSignalYieldTotal", "Zero lepton signal yield", 50, 0, 500);
@@ -97,7 +98,9 @@ void makeHists(TString fitter = "LB") {
   treeToys->Project("hZeroLeptonCountTotal", "zeroLeptonCountTotal");
 
   treeToys->Project("hPullPL", "(signalCrossSection-"+trueXsec_string+")/( (upperLimit68-lowerLimit68)/2.0 )");
+  treeToys->Project("hPull", "(signalCrossSection-"+trueXsec_string+")/( signalCrossSectionError )");
 
+  cout << "CrossSection = " << hSignalCrossSection->GetMean() << " +- " << hSignalCrossSection->GetRMS() << endl;
   cout << "Yield Total = " << hZeroLeptonYieldTotal->GetMean() << " +- " << hZeroLeptonYieldTotal->GetRMS() << endl;
   cout << "Count Total = " << hZeroLeptonCountTotal->GetMean() << " +- " << hZeroLeptonCountTotal->GetRMS() << endl;
 
@@ -154,7 +157,8 @@ void makeHists(TString fitter = "LB") {
   if(drawTrue) lsig->Draw();
 
   cSignalCrossSection->cd(2);
-  hPullPL->Draw();
+  //hPullPL->Draw();
+  hPull->Draw();
   cSignalCrossSection->Print("cSignalCrossSection_"+trueN_string+"_"+fitter+".pdf");
 
   TCanvas * cZeroLeptonSignalYieldTotal = new TCanvas("cZeroLeptonSignalYieldTotal", "Zero lepton signal yield", 400, 330);
@@ -187,8 +191,12 @@ void initialize(int trueN_in, TString inFile, TString fitter = "LB") {
 
   double trueN_double = trueN;
 
+  //signal point 850 600, lumi = 12/fb
+  trueXsec = 1000.0 * trueN_double / 1.2 / 2943.16 ;
+  cout << "true xsec = " << trueXsec << endl;
+
   //signal point 850 600, lumi = 15/fb
-  trueXsec = 1000.0 * trueN_double / 1.5 / 2119.0 ; 
+  //trueXsec = 1000.0 * trueN_double / 1.5 / 2119.0 ; 
   //trueXsec = 52;//3x3 with 5/fb
   trueXsec_string = "";
   trueXsec_string += trueXsec;
