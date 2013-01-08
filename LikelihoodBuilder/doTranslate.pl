@@ -17,9 +17,9 @@ foreach(@list) {
   
   
   if($file =~ /(\S*)(.dat)/) {
-    system("cp sigcounts.txt $1/sig1/.");
-    system("cp JES.txt $1/sig1/.");
-    system("cp btagEff.txt $1/sig1/.");
+    #    system("cp sigcounts.txt $1/sig1/.");
+    #    system("cp JES.txt $1/sig1/.");
+    #    system("cp btagEff.txt $1/sig1/.");
     print $fout "$1\n";
   }
 }
