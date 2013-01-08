@@ -352,7 +352,7 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
     // EACH YIELD IS A SEPARATE NUISANCE PARAMETER
 
     double initialvalue = oneTightMuCount.getVal();
-    if( initialvalue==0 ) initialvalue = 0.01;
+    if( initialvalue<=0.00001 ) initialvalue = 0.01;
 
     cout << " BEFORE YIELDS " << endl;
 
@@ -362,7 +362,7 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
     wspace.extendSet("nuisances",oneTightMuTopWJetsYield.GetName());
 
     initialvalue = oneLooseLepCount.getVal();
-    if( initialvalue==0 ) initialvalue = 0.01;
+    if( initialvalue<=0.00001 ) initialvalue = 0.01;
 
     RooRealVar oneLooseLepTopWJetsYield(oneLooseLepName+"_TopWJetsYield",oneLooseLepName+"_TopWJetsYield",
 				      initialvalue,0.00001,20000.);
@@ -507,7 +507,7 @@ void makeDileptonConstraintsPredictions( RooWorkspace& wspace, TString binname, 
   // ****** TRIGGER INEFFICIENCIES MUST BE PUT IN SOMEWHERE FOR BACKGROUND AND SIGNAL ******//
 
   double initialvalue = twoTightMuCount.getVal();
-  if( initialvalue==0 ) initialvalue = 0.01;
+  if( initialvalue<=0.00001 ) initialvalue = 0.01;
   
   RooRealVar twoTightMuTopWJetsYield(twoTightMuName+"_TopWJetsYield",twoTightMuName+"_TopWJetsYield",
 				     initialvalue,0.00001,1000.);
@@ -515,7 +515,7 @@ void makeDileptonConstraintsPredictions( RooWorkspace& wspace, TString binname, 
   wspace.extendSet("nuisances",twoTightMuTopWJetsYield.GetName());
 
   initialvalue = twoLooseLepCount.getVal();
-  if( initialvalue==0 ) initialvalue = 0.01;
+  if( initialvalue<=0.00001 ) initialvalue = 0.01;
 
   RooRealVar twoLooseLepTopWJetsYield(twoLooseLepName+"_TopWJetsYield",twoLooseLepName+"_TopWJetsYield",
 				    initialvalue,0.00001,1000.);
@@ -729,7 +729,7 @@ void makeTauHadBinPrediction( RooWorkspace& wspace, TString binname, TString bin
 
 
 //void buildMRLikelihood( TString outputFile, TString setupFileName ) 
-void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupFileName, bool standalone, TString nuisanceOption ) 
+void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupFileName, bool standalone, TString nuisanceOption, TString countsPath ) 
 {
 
   ///////////////////////////////////////////////////
@@ -809,7 +809,8 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       if(index == "") continue;
     
       binnames.push_back(index);
-      binContentFileNames[index] = fileName1;
+      binContentFileNames[index] = countsPath;
+      binContentFileNames[index] += fileName1;
       binnamesoutside[index] = outsidename;
       binPolarizationScaleFactorFileNames[index] = fileName2;
       binTauHadScaleFactorFileNames[index] = fileName3;
@@ -948,8 +949,10 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       TString thisBin = binnames.at(i);
 
       TString contentFileName = binContentFileNames[thisBin];
+      cout << "Opening " << contentFileName << endl;
       ifstream contentFile;
       contentFile.open(contentFileName.Data(),fstream::in);
+      assert(contentFile.is_open());
       double count = 0.;
 
       //////

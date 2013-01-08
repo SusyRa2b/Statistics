@@ -319,7 +319,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
   double qcdGuess = observed.zeroLeptonLowDeltaPhiN - abcd.zeroLeptonLowDeltaPhiNMC;
   if(qcdGuess < 1e-5) qcdGuess = 1e-5;
   
-  RooRealVar zeroLeptonLowDeltaPhiNQCDYield(zeroLeptonLowDeltaPhiNName+"_QCDYield",zeroLeptonLowDeltaPhiNName+"_QCDYield",qcdGuess,0,1e5);
+  RooRealVar zeroLeptonLowDeltaPhiNQCDYield(zeroLeptonLowDeltaPhiNName+"_QCDYield",zeroLeptonLowDeltaPhiNName+"_QCDYield",qcdGuess,0,1e6);
   ws.import(zeroLeptonLowDeltaPhiNQCDYield);
   ws.extendSet(names.nuisances,zeroLeptonLowDeltaPhiNQCDYield.GetName());
   
@@ -596,7 +596,7 @@ void makeUnderlyingLikelihood(const likelihoodOptions options, RooWorkspace& ws 
 			   names.observables,names.nuisances, names.globalObservables);
   names.MCUncertainty = MCUncertainty->GetName();
     
-  RooRealVar luminosity("luminosity","luminosity",numbers.Luminosity,0.0,1e2);
+  RooRealVar luminosity("luminosity","luminosity",numbers.Luminosity,0.0,1e3);
   luminosity.setConstant();//should eventually have error
   ws.import(luminosity);
   
@@ -1405,7 +1405,7 @@ void setupUnderlyingModel(likelihoodOptions options, TString binFilesPath, map<T
 }
 
 
-void buildLikelihood( TString setupFileName, TString binFilesFileName, TString binFilesPath, TString signalModelFilesPath, TString workspaceName, TString outputFileName, TString binFilesFileNameMR ) 
+void buildLikelihood( TString setupFileName, TString binFilesFileName, TString binFilesPath, TString signalModelFilesPath, TString workspaceName, TString outputFileName, TString binFilesFileNameMR, TString countsMRPath ) 
 {
   
   RooWorkspace ws (workspaceName) ;
@@ -1477,7 +1477,7 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   makeSignalModel(options, ws, binNames, names, bins, nGenerated, signalFractionsOAK, signalStatisticalErrorOAK, signalBTagEfficiencyErrorOAK, signalJesErrorOAK, insideSignalMR, outsideSignalMR );
 
   //Do MET-reweighting method
-  if(options.TopWJetsMethod == "metReweighting") buildMRLikelihood(ws, "", binFilesFileNameMR, false, options.nuisanceOption);
+  if(options.TopWJetsMethod == "metReweighting") buildMRLikelihood(ws, "", binFilesFileNameMR, false, options.nuisanceOption, countsMRPath );
 
   //Do nominal method, QCD, and ZtoNuNu
   for(vector<TString>::iterator thisBin = binNames.begin(); thisBin != binNames.end() ; thisBin++)
@@ -1544,6 +1544,6 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
 }
 
 
-void likelihoodBuilder( TString setupFileName, TString binFilesFileName, TString binFilesPath, TString signalModelFilesPath, TString workspaceName, TString outputFileName, TString binFilesFileNameMR ) {
-  buildLikelihood( setupFileName, binFilesFileName, binFilesPath, signalModelFilesPath, workspaceName, outputFileName, binFilesFileNameMR );
+void likelihoodBuilder( TString setupFileName, TString binFilesFileName, TString binFilesPath, TString signalModelFilesPath, TString workspaceName, TString outputFileName, TString binFilesFileNameMR, TString countsMRPath ) {
+  buildLikelihood( setupFileName, binFilesFileName, binFilesPath, signalModelFilesPath, workspaceName, outputFileName, binFilesFileNameMR, countsMRPath );
 }
