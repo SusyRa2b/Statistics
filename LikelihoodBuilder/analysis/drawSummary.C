@@ -31,12 +31,14 @@ void drawSummary() {
 
   fstream f;
   f.open("output_LB_cat.dat");
+  //f.open("dec21_linearity.dat");
   assert(f.is_open());
 
   int n=0;
 
   double nSignalInjected, nSignal, nSignalRMS, nTopWJets, nTopWJetsRMS, nQCD, nQCDRMS, nZtoNuNu, nZtoNuNuRMS;
   while(f>>nSignalInjected>>nSignal>>nSignalRMS>>nTopWJets>>nTopWJetsRMS>>nQCD>>nQCDRMS>>nZtoNuNu>>nZtoNuNuRMS) {
+  //while(f>>nSignalInjected>>nSignal>>nSignalRMS) {
     n++;
     vSignalInjectedError.push_back(0);
 

@@ -12,6 +12,7 @@
 #include "RooWorkspace.h"
 #include "RooDataSet.h"
 #include "RooAbsPdf.h"
+#include "RooAbsReal.h"
 #include "RooRealVar.h"
 #include "RooFitResult.h"
 #include "TPRegexp.h"
@@ -49,7 +50,7 @@ bool skipMHBin(int met, int ht)
   return false;
 }
 
-void extractFromWorkspace(TString workspaceFile = "test.root", TString datFile = "", bool skip = true)
+void extractFromWorkspace(TString workspaceFile = "test.root", TString datFile = "", bool skip = false)
 {
 
   if(skip) {
@@ -1102,7 +1103,7 @@ void analyzeFit(TString workspaceFile, TString binFilesFile, TString datFile) {
   cout << "Starting analyzeFit" << endl;
 
   
-  extractFromWorkspace(workspaceFile, datFile);
+  extractFromWorkspace(workspaceFile, datFile, true);
 
   integratedTotals(workspaceFile, binFilesFile, datFile);
   //integratedTotals(workspaceFile);
