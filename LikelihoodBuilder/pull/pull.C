@@ -18,7 +18,7 @@ using namespace std;
 
 bool useAdjusted = true;
 
-void styleHistAndPrint(TH1D* hist)
+void styleHistAndPrint(TH1D* hist, TString extra = "")
 {
   hist->SetFillColor(kGray+1);
   hist->GetXaxis()->SetTitle("pull");
@@ -27,6 +27,7 @@ void styleHistAndPrint(TH1D* hist)
   TCanvas canvas("c_"+name, "c_"+name, 640, 480);
   canvas.cd();
   hist->Draw();
+  if(extra != "") { name += "_"; name += extra; }
   name += ".pdf";
   canvas.SaveAs(name);
 }
@@ -184,7 +185,8 @@ void fillMaps(map<TString,float> genMap, map<TString,float> adjustedMap, TString
   RooWorkspace* ws = (RooWorkspace*)fws.Get("workspace");
 
   RooFitResult* fitResult = (RooFitResult*)fws.Get("fitresult_likelihood_data");
-  
+  cout << "fitResult " << fitResult << endl;
+
   std::vector<TString> region;
   region.push_back("zeroLepton");
   region.push_back("zeroLeptonLowDeltaPhiN");
@@ -194,7 +196,7 @@ void fillMaps(map<TString,float> genMap, map<TString,float> adjustedMap, TString
   region.push_back("oneTightMu");  
   
   std::vector<TString> contribution;
-  contribution.push_back("Signal");
+  //contribution.push_back("Signal");
   contribution.push_back("TopWJets");
   contribution.push_back("QCD");
   contribution.push_back("ZtoNuNu");
@@ -209,10 +211,10 @@ void fillMaps(map<TString,float> genMap, map<TString,float> adjustedMap, TString
       binName+=i;
       //cout << binName << endl;
       
-      for(int j=0; j<region.size(); j++)
+      for(unsigned int j=0; j<region.size(); j++)
 	{
 
-	  for(int k=0; k<contribution.size(); k++)
+	  for(unsigned int k=0; k<contribution.size(); k++)
 	    {
 	      
 	      //In MR SL/DL, only Signal and TopWJets
@@ -229,7 +231,7 @@ void fillMaps(map<TString,float> genMap, map<TString,float> adjustedMap, TString
 		}
 	      else { theta.push_back(""); }
 
-	      for(int l=0; l<theta.size(); l++)
+	      for(unsigned int l=0; l<theta.size(); l++)
 		{
 	 
 		  // WORKSPACE
@@ -251,7 +253,7 @@ void fillMaps(map<TString,float> genMap, map<TString,float> adjustedMap, TString
 		  //toyErrors.insert(  pair<TString,float>(varName,error1) );
 		  //trueValues.insert( pair<TString,float>(varName,mapValue1) );
 		  //continue;
-
+		  
 		  RooAbsReal* myRar = ws->function(varName);
 		  float value = myRar->getVal();
 		  float error = myRar->getPropagatedError(*fitResult);
@@ -278,7 +280,7 @@ void fillMaps(map<TString,float> genMap, map<TString,float> adjustedMap, TString
 		  else{ subContribution.push_back(contribution[k]); }
 		  
 		  float mapValue=0;
-		  for(int m=0; m<subContribution.size(); m++)
+		  for(unsigned int m=0; m<subContribution.size(); m++)
 		    {
 		      TString mapName = "N_";
 		      mapName+=translateRegion(region[j]);
@@ -334,7 +336,7 @@ void fillMaps(map<TString,float> genMap, map<TString,float> adjustedMap, TString
 
 
 //creates histograms of pulls of various categories from the parameters of one fit. the parameters this considers are defined in fillMaps.
-void pull1(TString fileName)
+void pull1(TString fileName, TString plotName = "")
 {
   gStyle->SetStatY(0.98);
   gStyle->SetStatX(0.98);
@@ -388,7 +390,7 @@ void pull1(TString fileName)
   
   
   //loop over all variables
-  for(int i=0; i<valueNames.size(); i++)
+  for(unsigned int i=0; i<valueNames.size(); i++)
     {
       TString thisValueName = valueNames[i];
 
@@ -424,20 +426,20 @@ void pull1(TString fileName)
     }//loop over variables
   
   //Style and print to pdf
-  styleHistAndPrint(hPull_LDP_Signal);
-  styleHistAndPrint(hPull_LDP_TopWJets);
-  styleHistAndPrint(hPull_LDP_QCD);
-  styleHistAndPrint(hPull_LDP_ZtoNuNu);
-  styleHistAndPrint(hPull_LDP_Diboson);
-  styleHistAndPrint(hPull_ZL_Signal);
-  styleHistAndPrint(hPull_ZL_TopWJets);
-  styleHistAndPrint(hPull_ZL_QCD);
-  styleHistAndPrint(hPull_ZL_ZtoNuNu);
-  styleHistAndPrint(hPull_ZL_Diboson);
-  styleHistAndPrint(hPull_SL_TopWJets);
-  styleHistAndPrint(hPull_MRDL_TopWJets);
-  styleHistAndPrint(hPull_SL_Signal);
-  styleHistAndPrint(hPull_MRDL_Signal);
+  styleHistAndPrint(hPull_LDP_Signal, plotName);
+  styleHistAndPrint(hPull_LDP_TopWJets, plotName);
+  styleHistAndPrint(hPull_LDP_QCD, plotName);
+  styleHistAndPrint(hPull_LDP_ZtoNuNu, plotName);
+  styleHistAndPrint(hPull_LDP_Diboson, plotName);
+  styleHistAndPrint(hPull_ZL_Signal, plotName);
+  styleHistAndPrint(hPull_ZL_TopWJets, plotName);
+  styleHistAndPrint(hPull_ZL_QCD, plotName);
+  styleHistAndPrint(hPull_ZL_ZtoNuNu, plotName);
+  styleHistAndPrint(hPull_ZL_Diboson, plotName);
+  styleHistAndPrint(hPull_SL_TopWJets, plotName);
+  styleHistAndPrint(hPull_MRDL_TopWJets, plotName);
+  styleHistAndPrint(hPull_SL_Signal, plotName);
+  styleHistAndPrint(hPull_MRDL_Signal, plotName);
 
   //Save Histograms
   hPull_LDP_TopWJets->Write();
@@ -527,7 +529,7 @@ void pull2(TString fileList="toylist.dat")
   fpull2.cd();
 
   //loop over all variables
-  for(int i=0; i<valueNames.size(); i++)
+  for(unsigned int i=0; i<valueNames.size(); i++)
     {
       TString thisValueName = valueNames[i];
 
@@ -540,7 +542,7 @@ void pull2(TString fileList="toylist.dat")
       TH1D hDiff("h_"+thisValueName+"_Diff", "h_"+thisValueName+"_Diff", 200, -100, 100);
 
       //loop over all toys
-      for(int j=0; j<allToyValues.size(); j++)
+      for(unsigned int j=0; j<allToyValues.size(); j++)
 	{
 	  map<TString,float> toyValues = allToyValues[j];
 	  map<TString,float> toyErrors = allToyErrors[j];
