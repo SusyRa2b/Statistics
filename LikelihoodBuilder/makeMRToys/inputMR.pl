@@ -23,6 +23,20 @@ while(<$fin>)
 	    $ht+=1;
 	    $met+=1;
 
+
+	    #get trigger efficiency
+	    my $trigeff = 0;
+	    open (my $ft, "<", "$ARGV[0]/bin_M$met"."_H$ht"."_$btag"."b.dat") or die "can't open bin file.";
+	    while(<$ft>)
+	      {
+		if(/(oneLeptonTriggerEfficiency)(\s+)(\S+)/)
+		  {
+		    $trigeff = $3;
+		  }
+	      }
+	    close $ft;
+	    print "$trigeff\n";
+
 	    open (my $fc, "<", "$fileName");
 	    
 	    my $line = 0;
@@ -30,7 +44,7 @@ while(<$fin>)
 	      {
 		if(/(\S+)/)
 		  {
-		    my $value = $1;
+		    my $value = $1/$trigeff;
 
 		    my $binName = "M$met"."_H$ht"."_$btag"."b";
 
