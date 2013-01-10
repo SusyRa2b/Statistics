@@ -71,6 +71,64 @@ void readAdjusted(map<TString,float> &genMap)
 
 }
 
+
+void combineTrue()
+{
+
+  map<TString,float> genMap;
+  
+  fstream fin("generate.dat", ios::in);
+  assert(fin.is_open());
+  
+  while(fin.good())
+    {
+      string sname;
+      float value;
+      fin >> sname >> value;
+      TString name = sname;
+      if(name=="") continue;
+      cout << "name = " << name << endl;
+      genMap.insert( pair<TString,float>(name,value) );
+    }
+
+
+  fstream fin2("adjusted17_susy200.dat", ios::in);
+  assert(fin2.is_open());
+  
+  while(fin2.good())
+    {
+      string dummy;
+      string sname;
+      float value;
+      fin2 >> dummy >> sname >> value;
+      TString name = sname;
+      if(name=="") continue;
+
+      if( genMap.find(name) == genMap.end()) { //not found
+	//cout << "Adding " << name << endl;
+	cout << "name = " << name << endl;
+	genMap.insert( pair<TString,float>(name,value) ); //simply add to map
+      }
+      else { //found
+	//cout << "Replacing " << name << endl;
+	genMap[name] = value; //replace existing value
+      }
+      
+    }
+  
+  fstream fout("combinedTrue.dat", ios::out | ios::trunc);
+  assert(fout.is_open());
+
+  for(map<TString,float>::const_iterator i = genMap.begin(); i != genMap.end(); ++i)
+    {
+      TString k = i->first;
+      float v = i->second;
+      fout << k << " " << v << endl;
+    }
+  
+}
+
+
 TString translateBin(TString binName)
 {
   //LB->OAK
