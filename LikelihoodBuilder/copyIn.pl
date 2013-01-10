@@ -27,7 +27,7 @@ while(<$flist>) {
     system("cp -r copyIn/sig1/ $copyto/.");
     
     #copy in toy counts
-    system("cp -r makeToys/toyMR_$num/ $copyto/countsMR/");
+    system("cp -r $ARGV[0]/toyMR_$num/ $copyto/countsMR/");
     
   }
 
