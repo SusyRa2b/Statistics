@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use File::Path;
 
-my $dir = $ARGV[0];
+my $dir = $ARGV[1];
 
 open( my $flist, "<", "$dir/$dir.dat") or die "Can't open input file!";
 
