@@ -25,6 +25,8 @@
 #include "RooStats/ModelConfig.h"
 #include "TRegexp.h"
 
+#include "fixAllNPs.c"
+
 #include <string.h>
 #include <sstream>
 
@@ -52,7 +54,7 @@
 
    void ws_fitqual_plots3D_3b( const char* wsfile = "ws2.root",
                             double mu_susy_sig_val = 0.,
-                            bool doNorm = false  ) {
+                            bool fixNPs = false  ) {
 
      double globalChi2(0.0) ;
      double obsChi2(0.0) ;
@@ -223,6 +225,21 @@
 
      printf("\n\n") ; cout << flush ;
 
+
+     if ( fixNPs ) {
+
+        fixAllNPs( fitResult->floatParsFinal(), ws, "unconstrained-pars.txt" ) ;
+
+        if ( mu_susy_sig_val >= 0. ) {
+           rrv_mu_susy_sig->setVal( mu_susy_sig_val ) ;
+           rrv_mu_susy_sig->setConstant(kTRUE) ;
+        } else {
+           rrv_mu_susy_sig->setConstant(kFALSE) ;
+        }
+
+        fitResult = likelihood->fitTo( *rds, Save(true), PrintLevel(0) ) ;
+
+     }
 
      double AttwjVal[nBinsMET][nBinsHT][nBinsBtag] ;
      double AqcdVal[nBinsMET][nBinsHT][nBinsBtag] ;
@@ -676,14 +693,6 @@
            cout << binLabel << "       data : " << dataVal << endl ;
            cout << flush ;
 
-           if ( doNorm && dataVal > 0. ) {
-             dataErr = dataErr / dataVal ;
-             susyVal = susyVal / dataVal ;
-             ttwjVal = ttwjVal / dataVal ;
-             qcdVal  = qcdVal / dataVal ;
-             znnVal  = znnVal / dataVal ;
-             dataVal = 1. ;
-           }
 
            if ( k == 0 ) {
               xaxis_0lep_1b->SetBinLabel(binIndex, binLabel ) ;
@@ -777,14 +786,6 @@
            cout << binLabel << "   LH total : " << lhtotalVal << endl ;
            cout << binLabel << "       data : " << dataVal << endl ;
 
-           if ( doNorm && dataVal > 0. ) {
-             dataErr = dataErr / dataVal ;
-             susyVal = susyVal / dataVal ;
-             ttwjVal = ttwjVal / dataVal ;
-             qcdVal  = qcdVal / dataVal ;
-             znnVal  = znnVal / dataVal ;
-             dataVal = 1. ;
-           }
 
            if ( k == 0 ) {
               xaxis_1lep_1b->SetBinLabel(binIndex, binLabel ) ;
@@ -910,14 +911,6 @@
 
            printf(" here 1\n") ; cout << flush ;
 
-           if ( doNorm && dataVal > 0. ) {
-             dataErr = dataErr / dataVal ;
-             susyVal = susyVal / dataVal ;
-             ttwjVal = ttwjVal / dataVal ;
-             qcdVal  = qcdVal / dataVal ;
-             znnVal  = znnVal / dataVal ;
-             dataVal = 1. ;
-           }
 
            printf(" here 2\n") ; cout << flush ;
            if ( k == 0 ) {
@@ -986,11 +979,6 @@
               cout << binLabel << "      model : " << lhtotalVal << endl ;
               cout << binLabel << "       data : " << dataVal << endl ;
              
-              if ( doNorm && dataVal > 0. ) {
-                dataErr = dataErr / dataVal ;
-        	lhtotalVal = lhtotalVal / dataVal ;
-                dataVal = 1. ;
-              }
              
               xaxis_zee_1b->SetBinLabel(binIndex, binLabel ) ;
               hfitqual_data_zee_1b -> SetBinContent( binIndex, dataVal ) ;
@@ -1029,11 +1017,6 @@
 	      cout << binLabel << "      model : " << lhtotalVal << endl ;
 	      cout << binLabel << "       data : " << dataVal << endl ;
              
-	      if ( doNorm && dataVal > 0. ) {
-	        dataErr = dataErr / dataVal ;
-		lhtotalVal = lhtotalVal / dataVal ;
-	        dataVal = 1. ;
-	      }
              
 	      xaxis_zmm_1b->SetBinLabel(binIndex, binLabel ) ;
 	      hfitqual_data_zmm_1b -> SetBinContent( binIndex, dataVal ) ;
@@ -1131,17 +1114,6 @@
      //legend->AddEntry( hfitqual_np,           "Eff PG" ) ;
 
 
-     if ( doNorm ) {
-       hfitqual_data_0lep_1b->SetMaximum( hmax ) ;
-       hfitqual_data_1lep_1b->SetMaximum( hmax ) ;
-       hfitqual_data_ldp_1b->SetMaximum( hmax ) ;
-       hfitqual_data_0lep_2b->SetMaximum( hmax ) ;
-       hfitqual_data_1lep_2b->SetMaximum( hmax ) ;
-       hfitqual_data_ldp_2b->SetMaximum( hmax ) ;
-       hfitqual_data_0lep_3b->SetMaximum( hmax ) ;
-       hfitqual_data_1lep_3b->SetMaximum( hmax ) ;
-       hfitqual_data_ldp_3b->SetMaximum( hmax ) ;
-     } else {
        hfitqual_data_0lep_1b->SetMaximum( hmax*(hfitqual_data_0lep_1b->GetMaximum()) ) ;
        hfitqual_data_1lep_1b->SetMaximum( hmax*(hfitqual_data_1lep_1b->GetMaximum()) ) ;
        hfitqual_data_ldp_1b->SetMaximum( hmax*(hfitqual_data_ldp_1b->GetMaximum()) ) ;
@@ -1151,7 +1123,6 @@
        hfitqual_data_0lep_3b->SetMaximum( hmax*(hfitqual_data_0lep_3b->GetMaximum()) ) ;
        hfitqual_data_1lep_3b->SetMaximum( hmax*(hfitqual_data_1lep_3b->GetMaximum()) ) ;
        hfitqual_data_ldp_3b->SetMaximum( hmax*(hfitqual_data_ldp_3b->GetMaximum()) ) ;
-     }
 
 
 
