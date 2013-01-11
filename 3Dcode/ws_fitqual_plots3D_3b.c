@@ -1565,6 +1565,12 @@
             xaxis->SetBinLabel(hbin,"Pur, Zmm") ;
             hbin++ ;
 
+            hnp_znn -> SetLabelSize(0.055,"x") ;
+            hnp_znn -> GetXaxis() ->LabelsOption("v") ;
+
+            hnp_znn->SetMinimum(-2.0) ;
+            hnp_znn->SetMaximum(2.0) ;
+
         }
         printf("\n\n") ;
 
