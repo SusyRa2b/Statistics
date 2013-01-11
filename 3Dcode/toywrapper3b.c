@@ -15,7 +15,8 @@
                 const char* blindBinsList = "null",
                 bool input_inputObservablesArePostTrigger = true,
                 const char* jes_syst_file = "foo",
-                const char* pdf_syst_file = "foo"
+                const char* pdf_syst_file = "foo",
+                bool input_fixNPs = false
       ) {
      gROOT->LoadMacro("RooRatio.cxx+") ;
      gROOT->LoadMacro("RooBetaPdf.cxx+") ;
@@ -38,6 +39,7 @@
               blindBinsList,
               input_inputObservablesArePostTrigger,
               jes_syst_file,
-              pdf_syst_file ) ;
+              pdf_syst_file,
+              input_fixNPs ) ;
   }
 

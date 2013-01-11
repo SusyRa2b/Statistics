@@ -3442,14 +3442,17 @@
           allNuisances -> add( *rrv_np_base_par ) ;
 
           char vname[1000] ;
-          sprintf( vname, "mean_%s", NP_base_name ) ;
+          // sprintf( vname, "mean_%s", NP_base_name ) ;
+          sprintf( vname, "prim_mean_%s", NP_base_name ) ;
           RooRealVar* g_mean = new RooRealVar( vname, vname, 0.0,-10.,10. ) ;
           g_mean->setConstant(kTRUE);
-          sprintf( vname, "sigma_%s", NP_base_name ) ;
+          // sprintf( vname, "sigma_%s", NP_base_name ) ;
+          sprintf( vname, "prim_sigma_%s", NP_base_name ) ;
           RooConstVar* g_sigma = new RooConstVar( vname, vname, 1.0 ) ;
 
           char pdfname[100] ;
-          sprintf( pdfname, "pdf_%s", NP_base_name ) ;
+          // sprintf( pdfname, "pdf_%s", NP_base_name ) ;
+          sprintf( pdfname, "pdf_prim_%s", NP_base_name ) ;
           printf("\n\n makeCorrelatedLognormalConstraint : creating base nuisance parameter pdf - %s\n\n", pdfname ) ;
           RooGaussian* base_np_pdf = new RooGaussian( pdfname, pdfname, *rrv_np_base_par, *g_mean, *g_sigma ) ;
 

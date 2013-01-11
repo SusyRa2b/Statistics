@@ -197,25 +197,15 @@
 
 
 
-     printf("\n ==== Final floating parameter values\n\n") ;
-     const RooArgList fitFloatVals = fitResult->floatParsFinal() ;
-     {
-       TIterator* parIter = fitFloatVals.createIterator() ;
-       while ( RooRealVar* par = (RooRealVar*) parIter->Next() ) {
-	 printf(" %20s : %8.2f\n", par->GetName(), par->getVal() ) ;
-       }
-     }
-
-
      printf("\n ==== Constant parameter values\n\n") ;
      const RooArgList fitConstVals = fitResult->constPars() ;
      {
        TIterator* parIter = fitConstVals.createIterator() ;
        while ( RooRealVar* par = (RooRealVar*) parIter->Next() ) {
-	 printf(" %20s : %8.2f\n", par->GetName(), par->getVal() ) ;
+          printf(" %20s : %8.2f\n", par->GetName(), par->getVal() ) ;
        }
      }
-     
+
      printf("\n ==== Function values\n\n") ;
      RooArgSet funcs = ws->allFunctions() ;
      TIterator* funcIter = funcs.createIterator() ;
@@ -223,12 +213,26 @@
        printf(" %20s : %8.2f\n", func->GetName(), func->getVal() ) ;
      }
 
-     printf("\n\n") ; cout << flush ;
+
+     printf("\n ==== Final floating parameter values\n\n") ;
+     const RooArgList fitFloatVals = fitResult->floatParsFinal() ;
+     {
+       TIterator* parIter = fitFloatVals.createIterator() ;
+       while ( RooRealVar* par = (RooRealVar*) parIter->Next() ) {
+          printf(" %20s : %8.2f\n", par->GetName(), par->getVal() ) ;
+       }
+     }
+
 
 
      if ( fixNPs ) {
 
-        fixAllNPs( fitResult->floatParsFinal(), ws, "unconstrained-pars.txt" ) ;
+        /// bool isok = fixAllNPs( fitFloatVals, ws, "unconstrained-pars.txt" ) ;
+        bool isok = fixAllNPs( fitResult->floatParsFinal(), ws, "unconstrained-pars.txt" ) ;
+        if ( !isok ) {
+           printf("\n\n *** problem fixing NPs.\n\n") ;
+           return ;
+        }
 
         if ( mu_susy_sig_val >= 0. ) {
            rrv_mu_susy_sig->setVal( mu_susy_sig_val ) ;
@@ -240,9 +244,13 @@
         fitResult = likelihood->fitTo( *rds, Save(true), PrintLevel(0) ) ;
 
      }
+     printf("\n\n") ; cout << flush ;
 
      double AttwjVal[nBinsMET][nBinsHT][nBinsBtag] ;
      double AqcdVal[nBinsMET][nBinsHT][nBinsBtag] ;
+
+
+
 
      for ( int i = 0 ; i < nBinsMET ; i++ ) {
        for ( int j = 0 ; j < nBinsHT ; j++ ) {
@@ -2674,7 +2682,7 @@ void saveHist(const char* filename, const char* pat)
         if ( model > 1. ) { err = sqrt( model ) ; }
         double chi = (obs-model)/err ;
         chi2val += chi*chi ;
-        printf(" %s : obs=%9.1f, model=%9.1f, chi2=%6.2f\n", obshist->GetXaxis()->GetBinLabel( bi ), obs, model, chi*chi ) ;
+        if ( model > 0. ) printf(" %s : obs=%9.1f, model=%9.1f, chi2=%6.2f\n", obshist->GetXaxis()->GetBinLabel( bi ), obs, model, chi*chi ) ;
      } // bi.
 
      sprintf( chi2string, "Chi2 = %6.2f", chi2val ) ;

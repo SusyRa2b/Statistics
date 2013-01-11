@@ -4,6 +4,7 @@
 #include "ra2bRoostatsClass3D_3b.c"
 #include "updateFileValue.c"
 #include "getFileValue.c"
+#include "fixAllNPs.c"
 
    static const int nBinsMET  = 4 ;
    static const int nBinsHT   = 4 ;
@@ -260,7 +261,8 @@
                 const char* input_blindBinsList = "null",
                 bool input_inputObservablesArePostTrigger = true,
                 const char* jes_syst_file = "systFile1.txt",
-                const char* pdf_syst_file = "foo"
+                const char* pdf_syst_file = "foo",
+                bool fixNPs = false
                         ) {
 
 
@@ -383,8 +385,8 @@
        useExpected0lep = input_useExpected0lep ;
 
 
-       ///tran = new TRandom(12345) ;
-       tran = new TRandom(592815) ;
+       tran = new TRandom(12345) ;
+       //tran = new TRandom(592815) ;
        //tran = new TRandom() ;
        //tran->SetSeed(0);
 
@@ -560,6 +562,16 @@
        rrv_susy_poi -> setConstant( kTRUE ) ;
 
        RooFitResult* mcfitResult = likelihood->fitTo( *rdsMCvals, Save(true), PrintLevel(0) ) ;
+
+       if ( fixNPs ) {
+          bool isok = fixAllNPs( mcfitResult->floatParsFinal(), workspace, "unconstrained-pars.txt" ) ;
+          if ( !isok ) {
+             printf("\n\n *** Problem fixing NPs.\n\n" ) ;
+             return ;
+          }
+          printf("\n\n === Refitting with NPs fixed.\n\n") ;
+          mcfitResult = likelihood->fitTo( *rdsMCvals, Save(true), PrintLevel(0) ) ;
+       }
 
        if ( ! setReinitValues( mcfitResult ) ) {
           printf("\n\n *** Problem in collecting inital vals for floating parameters from MC fit.\n\n") ; return ;
@@ -1277,9 +1289,15 @@
 
                if ( useExpected0lep ) {
                   toy_mean_N_0lep[mbi][hbi][bbi] = exp_0lep ;
-                  mcval_ttwj_0lep_3da[mbi][hbi][bbi] = exp_0lep_ttwj ;
-                  mcval_qcd_0lep_3da [mbi][hbi][bbi] = exp_0lep_qcd ;
-                  mcval_znn_0lep_3da [mbi][hbi][bbi] = exp_0lep_znn ;
+                  if ( !ignoreBin[mbi][hbi] ) {
+                     mcval_ttwj_0lep_3da[mbi][hbi][bbi] = exp_0lep_ttwj ;
+                     mcval_qcd_0lep_3da [mbi][hbi][bbi] = exp_0lep_qcd ;
+                     mcval_znn_0lep_3da [mbi][hbi][bbi] = exp_0lep_znn ;
+                  } else {
+                     mcval_ttwj_0lep_3da[mbi][hbi][bbi] = 0. ;
+                     mcval_qcd_0lep_3da [mbi][hbi][bbi] = 0. ;
+                     mcval_znn_0lep_3da [mbi][hbi][bbi] = 0. ;
+                  }
                } else {
                   toy_mean_N_0lep[mbi][hbi][bbi] = N_0lep_input[mbi][hbi][bbi] ;
                }
@@ -2732,9 +2750,15 @@
 
                int hbin = 1 + hbi + mbi*(nBinsHT+1) + 1 ;
 
-               mcval_ttwj_0lep_3da[mbi][hbi][bbi] = httwj[bbi] -> GetBinContent( hbin ) ;
-               mcval_qcd_0lep_3da [mbi][hbi][bbi] = hqcd[bbi]  -> GetBinContent( hbin ) ;
-               mcval_znn_0lep_3da [mbi][hbi][bbi] = hznn[bbi]  -> GetBinContent( hbin ) ;
+               if ( !ignoreBin[mbi][hbi] ) {
+                  mcval_ttwj_0lep_3da[mbi][hbi][bbi] = httwj[bbi] -> GetBinContent( hbin ) ;
+                  mcval_qcd_0lep_3da [mbi][hbi][bbi] = hqcd[bbi]  -> GetBinContent( hbin ) ;
+                  mcval_znn_0lep_3da [mbi][hbi][bbi] = hznn[bbi]  -> GetBinContent( hbin ) ;
+               } else {
+                  mcval_ttwj_0lep_3da[mbi][hbi][bbi] = 0. ;
+                  mcval_qcd_0lep_3da [mbi][hbi][bbi] = 0. ;
+                  mcval_znn_0lep_3da [mbi][hbi][bbi] = 0. ;
+               }
 
 
             } // bbi.
