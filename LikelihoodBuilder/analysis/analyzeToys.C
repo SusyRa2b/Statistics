@@ -191,13 +191,10 @@ void initialize(int trueN_in, TString inFile, TString fitter = "LB") {
 
   double trueN_double = trueN;
 
-  //signal point 850 600, lumi = 12/fb
-  trueXsec = 1000.0 * trueN_double / 1.2 / 2943.16 ;
+  //signal point 850 600, lumi = 17.61/fb
+  trueXsec = 1000.0 * trueN_double / 1.761 / 2943.16 ;
   cout << "true xsec = " << trueXsec << endl;
 
-  //signal point 850 600, lumi = 15/fb
-  //trueXsec = 1000.0 * trueN_double / 1.5 / 2119.0 ; 
-  //trueXsec = 52;//3x3 with 5/fb
   trueXsec_string = "";
   trueXsec_string += trueXsec;
 
