@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-my $nuisanceOptions = "noWidths";
+my $nuisanceOptions = "allWidths";
 
 my $dir="";
 if($ARGV[0] =~ /(\S*)(.dat)/) {
@@ -444,7 +444,7 @@ foreach(@binFileNames) {
 #}
 
 print $globalout "ZtollOverZtoNuNuRatio 0.168067227\n";
-print $globalout "Luminosity 12.0\n";
+print $globalout "Luminosity 17.61.0\n";
 print $globalout "dibosonMC 1.0\n";
 if($nuisanceOptions eq "noWidths") {
   print $globalout "dibosonMCUncertainty 0.0\n";
