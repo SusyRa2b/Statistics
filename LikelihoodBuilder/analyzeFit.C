@@ -633,19 +633,21 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
     hLDP_data[bBin-1]->SetBinContent( binIndex,(ws->function( "zeroLeptonLowDeltaPhiN_"+binName+"_Count" ))->getVal() );
 
     //MR - data
-    hLL1_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta1_Count" ))->getVal());
-    hLL2_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta2_Count" ))->getVal());
-    hLL3_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta3_Count" ))->getVal());
-    hLL4_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta4_Count" ))->getVal());
-    hLL5_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta5_Count" ))->getVal());
-    hTM1_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta1_Count" ))->getVal());
-    hTM2_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta2_Count" ))->getVal());
-    hTM3_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta3_Count" ))->getVal());
-    hTM4_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta4_Count" ))->getVal());
-    hTM5_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta5_Count" ))->getVal());
-    h2LL_data[bBin-1]->SetBinContent(binIndex,(ws->function( "twoLooseLep_"+binName+"_Count" ))->getVal());
-    h2TM_data[bBin-1]->SetBinContent(binIndex,(ws->function( "twoTightMu_"+binName+"_Count" ))->getVal());
-    
+    if(!ABCD)
+      {
+	hLL1_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta1_Count" ))->getVal());
+	hLL2_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta2_Count" ))->getVal());
+	hLL3_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta3_Count" ))->getVal());
+	hLL4_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta4_Count" ))->getVal());
+	hLL5_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta5_Count" ))->getVal());
+	hTM1_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta1_Count" ))->getVal());
+	hTM2_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta2_Count" ))->getVal());
+	hTM3_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta3_Count" ))->getVal());
+	hTM4_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta4_Count" ))->getVal());
+	hTM5_data[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta5_Count" ))->getVal());
+	h2LL_data[bBin-1]->SetBinContent(binIndex,(ws->function( "twoLooseLep_"+binName+"_Count" ))->getVal());
+	h2TM_data[bBin-1]->SetBinContent(binIndex,(ws->function( "twoTightMu_"+binName+"_Count" ))->getVal());
+      }
 
     hZL_sig[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLepton_"+binName+"_SignalDataYield" ))->getVal() );
     if(ABCD) hSL_sig[bBin-1]->SetBinContent( binIndex, (ws->function( "oneLepton_"+binName+"_SignalDataYield" ))->getVal() );
@@ -657,19 +659,22 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
     hLDP_ttwj[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLeptonLowDeltaPhiN_"+binName+"_TopWJetsDataYield" ))->getVal() );
     
     //MR - ttwj
-    hLL1_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta1_TopWJetsDataYield" ))->getVal());
-    hLL2_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta2_TopWJetsDataYield" ))->getVal());
-    hLL3_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta3_TopWJetsDataYield" ))->getVal());
-    hLL4_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta4_TopWJetsDataYield" ))->getVal());
-    hLL5_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta5_TopWJetsDataYield" ))->getVal());
-    hTM1_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta1_TopWJetsDataYield" ))->getVal());
-    hTM2_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta2_TopWJetsDataYield" ))->getVal());
-    hTM3_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta3_TopWJetsDataYield" ))->getVal());
-    hTM4_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta4_TopWJetsDataYield" ))->getVal());
-    hTM5_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta5_TopWJetsDataYield" ))->getVal());
-    h2LL_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "twoLooseLep_"+binName+"_TopWJetsDataYield" ))->getVal());
-    h2TM_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "twoTightMu_"+binName+"_TopWJetsDataYield" ))->getVal());
-    
+    if(!ABCD)
+      {
+	hLL1_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta1_TopWJetsDataYield" ))->getVal());
+	hLL2_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta2_TopWJetsDataYield" ))->getVal());
+	hLL3_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta3_TopWJetsDataYield" ))->getVal());
+	hLL4_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta4_TopWJetsDataYield" ))->getVal());
+	hLL5_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta5_TopWJetsDataYield" ))->getVal());
+	hTM1_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta1_TopWJetsDataYield" ))->getVal());
+	hTM2_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta2_TopWJetsDataYield" ))->getVal());
+	hTM3_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta3_TopWJetsDataYield" ))->getVal());
+	hTM4_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta4_TopWJetsDataYield" ))->getVal());
+	hTM5_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta5_TopWJetsDataYield" ))->getVal());
+	h2LL_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "twoLooseLep_"+binName+"_TopWJetsDataYield" ))->getVal());
+	h2TM_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "twoTightMu_"+binName+"_TopWJetsDataYield" ))->getVal());
+      }
+
     hZL_qcd[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLepton_"+binName+"_QCDDataYield" ))->getVal() );
     if(ABCD) hSL_qcd[bBin-1]->SetBinContent( binIndex, 0);
     hLDP_qcd[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLeptonLowDeltaPhiN_"+binName+"_QCDDataYield" ))->getVal() );
