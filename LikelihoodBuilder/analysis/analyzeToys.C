@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 
+#include "TStyle.h"
+#include "TROOT.h"
 #include "TString.h"
 #include "TTree.h"
 #include "TH1D.h"
@@ -61,7 +63,11 @@ void drawTest() {
 
 void makeHists(TString fitter = "LB") {
   
-  
+  gStyle->SetStatY(0.98);
+  gStyle->SetStatX(0.98);
+  gStyle->SetStatW(0.3);
+  gStyle->SetStatH(0.3);
+
   /*
   TH1D* hSignalCrossSection = new TH1D("hSignalCrossSection", "Signal cross section", 50, 0, 200);
   TH1D* hPull = new TH1D("hPull", "Pull using fit errors", 50, -5, 5);
