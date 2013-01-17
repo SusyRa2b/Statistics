@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void runFit(TString inpath, TString outpath, TString outname = "")
+void runFit(TString inpath, TString outpath, TString outname = "", TString option = "allWidths")
 {
 
   TString datFile = outpath; datFile+="dat_"; datFile+=outname; datFile+=".dat";
@@ -21,10 +21,10 @@ void runFit(TString inpath, TString outpath, TString outname = "")
     myfile.close();
   }
 
-  likelihoodBuilder(inpath+"setupFile.dat", inpath+"binFilesFile.dat", inpath, inpath+"sig1/", "workspace", outpath+"likelihood_"+outname+".root", inpath+"binFilesFileMR.dat", inpath+"countsMR/");
+  likelihoodBuilder(inpath+"setupFile.dat", inpath+"binFilesFile.dat", inpath, inpath+"sig1/", "workspace", outpath+"likelihood_"+outname+".root", inpath+"binFilesFileMR.dat", inpath+"countsMR/", option);
    
   //int status=0;
-  int status = minimalFit(outpath+"likelihood_"+outname+".root", 5, 0, 1000, true, outpath+"dat_"+outname+".dat"); //susy floating
+  int status = minimalFit(outpath+"likelihood_"+outname+".root", 5, 0, 1000, true, outpath+"dat_"+outname+".dat"); //susy floating 
   //int status = minimalFit(outpath+"likelihood_"+outname+".root", 0, 0, 1000, true, outpath+"dat_"+outname+".dat", true); //fix susy to zero
   //int status = minimalFit(outpath+"likelihood_"+outname+".root", 56.628, 0, 1000, true, outpath+"dat_"+outname+".dat", true); //fix susy to 56.628
   if(status != 0) return;
