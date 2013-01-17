@@ -56,6 +56,8 @@
 //#include "metReweightingBuilder.h"
 #include "metReweightingBuilderSIMPLETAU.h"
 
+#include "fixParameters.h"
+
 #include "RooStats/ModelConfig.h"
 
 #include "TMath.h"
@@ -1405,7 +1407,7 @@ void setupUnderlyingModel(likelihoodOptions options, TString binFilesPath, map<T
 }
 
 
-void buildLikelihood( TString setupFileName, TString binFilesFileName, TString binFilesPath, TString signalModelFilesPath, TString workspaceName, TString outputFileName, TString binFilesFileNameMR, TString countsMRPath ) 
+void buildLikelihood( TString setupFileName, TString binFilesFileName, TString binFilesPath, TString signalModelFilesPath, TString workspaceName, TString outputFileName, TString binFilesFileNameMR, TString countsMRPath, TString option ) 
 {
   
   RooWorkspace ws (workspaceName) ;
@@ -1439,7 +1441,8 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   options.qcdMethod = "model4";//choices: htDependent, singleScaleWithCorrections
   //options.TopWJetsMethod = "ABCD"; //choices: ABCD, metReweighting
   options.TopWJetsMethod = "metReweighting";
-  options.nuisanceOption = "noWidths"; //choices: allWidths, noWidths
+  //options.nuisanceOption = "allWidths"; //choices: allWidths, noWidths
+  options.nuisanceOption = option;
 
   //Read in setupFile and binFilesFile
   setupUnderlyingModel(options, binFilesPath, binFileNames, signalModelFilesPath, binFileNamesInsideSignalMR, binFileNamesOutsideSignalMR, binNames, setupFileName , binFilesFileName , numbers);
@@ -1486,6 +1489,9 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
       makeOneBin(options, ws , *thisBin , names , numbers, observations[*thisBin] , bins[*thisBin] , oneLeptonTotal, zeroLeptonTopWJetsGuess );
     }
   
+  //Fix parameters if you want to
+  //fixParameters(ws);
+
   //Construct likelihood
   RooArgSet allpdfs = ws.allPdfs();
   cout << endl; cout << endl;
@@ -1514,6 +1520,10 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   cout << "globalObservables, size: " <<   (*ws.set(names.globalObservables)).getSize() << endl;
   (*ws.set(names.globalObservables)).Print("v");
 
+  cout << endl; cout << endl;
+  cout << "nuisances, size: " <<   (*ws.set(names.nuisances)).getSize() << endl;
+  (*ws.set(names.nuisances)).Print("v");
+  
   cout << endl; cout << endl;
   cout << "setting up models" << endl;
 
@@ -1544,6 +1554,6 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
 }
 
 
-void likelihoodBuilder( TString setupFileName, TString binFilesFileName, TString binFilesPath, TString signalModelFilesPath, TString workspaceName, TString outputFileName, TString binFilesFileNameMR, TString countsMRPath ) {
-  buildLikelihood( setupFileName, binFilesFileName, binFilesPath, signalModelFilesPath, workspaceName, outputFileName, binFilesFileNameMR, countsMRPath );
+void likelihoodBuilder( TString setupFileName, TString binFilesFileName, TString binFilesPath, TString signalModelFilesPath, TString workspaceName, TString outputFileName, TString binFilesFileNameMR, TString countsMRPath, TString option ) {
+  buildLikelihood( setupFileName, binFilesFileName, binFilesPath, signalModelFilesPath, workspaceName, outputFileName, binFilesFileNameMR, countsMRPath, option );
 }
