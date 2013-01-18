@@ -64,8 +64,6 @@ public :
    Int_t           nIsoTracks15_005_03; 
    Int_t           maxTOBTECjetDeltaMult;
    Int_t           TOBTECjetChMult;	
-   Float_t         hltHTeff;
-   Float_t         hltMHTeff;
    Float_t         pdfWeightsCTEQ[45];
    Float_t         pdfWeightsMSTW[41];
    Float_t         pdfWeightsNNPDF[100];
@@ -126,7 +124,6 @@ public :
    Int_t           ntruebjets;
    Int_t           nElectrons;
    Int_t           nMuons;
-   Int_t           nTaus;
    Int_t           nElectrons5;
    Int_t           nMuons5;
    Int_t           nElectrons15;
@@ -209,6 +206,8 @@ public :
    Float_t         topCosHel;
    Float_t         WCosHel;
    Float_t         MT_b;
+   Float_t         MT_bestCSV;
+   Float_t         MT_jim;
    Float_t         MT_Wlep;
    Float_t         MT_Wlep5;
    Float_t         MT_Wlep15;
@@ -328,16 +327,6 @@ public :
    Float_t         taueta1;
    Float_t         eleRelIso;
    Float_t         muonRelIso;
-   Float_t         recomuonpt1;
-   Float_t         recomuonphi1;
-   Float_t         recomuoneta1;
-   Float_t         recomuoniso1;
-   Float_t         recomuonmindphijet1;
-   Float_t         recomuonpt2;
-   Float_t         recomuonphi2;
-   Float_t         recomuoneta2;
-   Float_t         recomuoniso2;
-   Float_t         recomuonmindphijet2;
    Float_t         rl;
    Float_t         rMET;
    Float_t         transverseSphericity_jets;
@@ -389,9 +378,7 @@ public :
    TBranch        *b_PUweightSystVar;   //!
    TBranch        *b_nIsoTracks15_005_03;   //! 
    TBranch        *b_maxTOBTECjetDeltaMult;   //!   
-   TBranch        *b_TOBTECjetChMult;   //!	     
-   TBranch        *b_hltHTeff;   //!
-   TBranch        *b_hltMHTeff;   //!
+   TBranch        *b_TOBTECjetChMult;   //!	
    TBranch        *b_pdfWeightsCTEQ;   //!
    TBranch        *b_pdfWeightsMSTW;   //!
    TBranch        *b_pdfWeightsNNPDF;   //!
@@ -452,7 +439,6 @@ public :
    TBranch        *b_ntruebjets;   //!
    TBranch        *b_nElectrons;   //!
    TBranch        *b_nMuons;   //!
-   TBranch        *b_nTaus;   //!
    TBranch        *b_nElectrons5;   //!
    TBranch        *b_nMuons5;   //!
    TBranch        *b_nElectrons15;   //!
@@ -535,6 +521,8 @@ public :
    TBranch        *b_topCosHel;   //!
    TBranch        *b_WCosHel;   //!
    TBranch        *b_MT_b;   //!
+   TBranch        *b_MT_bestCSV;   //!
+   TBranch        *b_MT_jim;   //!
    TBranch        *b_MT_Wlep;   //!
    TBranch        *b_MT_Wlep5;   //!
    TBranch        *b_MT_Wlep15;   //!
@@ -654,16 +642,6 @@ public :
    TBranch        *b_taueta1;   //!
    TBranch        *b_eleRelIso;   //!
    TBranch        *b_muonRelIso;   //!
-   TBranch        *b_recomuonpt1;   //!
-   TBranch        *b_recomuonphi1;   //!
-   TBranch        *b_recomuoneta1;   //!
-   TBranch        *b_recomuoniso1;   //!
-   TBranch        *b_recomuonmindphijet1;   //!
-   TBranch        *b_recomuonpt2;   //!
-   TBranch        *b_recomuonphi2;   //!
-   TBranch        *b_recomuoneta2;   //!
-   TBranch        *b_recomuoniso2;   //!
-   TBranch        *b_recomuonmindphijet2;   //!
    TBranch        *b_rl;   //!
    TBranch        *b_rMET;   //!
    TBranch        *b_transverseSphericity_jets;   //!
@@ -789,8 +767,6 @@ void reducedTree::Init(TTree *tree)
    fChain->SetBranchAddress("nIsoTracks15_005_03", &nIsoTracks15_005_03, &b_nIsoTracks15_005_03);
    fChain->SetBranchAddress("maxTOBTECjetDeltaMult", &maxTOBTECjetDeltaMult, &b_maxTOBTECjetDeltaMult);
    fChain->SetBranchAddress("TOBTECjetChMult", &TOBTECjetChMult, &b_TOBTECjetChMult);
-   fChain->SetBranchAddress("hltHTeff", &hltHTeff, &b_hltHTeff);
-   fChain->SetBranchAddress("hltMHTeff", &hltMHTeff, &b_hltMHTeff);
    fChain->SetBranchAddress("pdfWeightsCTEQ", pdfWeightsCTEQ, &b_pdfWeightsCTEQ);
    fChain->SetBranchAddress("pdfWeightsMSTW", pdfWeightsMSTW, &b_pdfWeightsMSTW);
    fChain->SetBranchAddress("pdfWeightsNNPDF", pdfWeightsNNPDF, &b_pdfWeightsNNPDF);
@@ -851,7 +827,6 @@ void reducedTree::Init(TTree *tree)
    fChain->SetBranchAddress("ntruebjets", &ntruebjets, &b_ntruebjets);
    fChain->SetBranchAddress("nElectrons", &nElectrons, &b_nElectrons);
    fChain->SetBranchAddress("nMuons", &nMuons, &b_nMuons);
-   fChain->SetBranchAddress("nTaus", &nTaus, &b_nTaus);
    fChain->SetBranchAddress("nElectrons5", &nElectrons5, &b_nElectrons5);
    fChain->SetBranchAddress("nMuons5", &nMuons5, &b_nMuons5);
    fChain->SetBranchAddress("nElectrons15", &nElectrons15, &b_nElectrons15);
@@ -934,6 +909,8 @@ void reducedTree::Init(TTree *tree)
    fChain->SetBranchAddress("topCosHel", &topCosHel, &b_topCosHel);
    fChain->SetBranchAddress("WCosHel", &WCosHel, &b_WCosHel);
    fChain->SetBranchAddress("MT_b", &MT_b, &b_MT_b);
+   fChain->SetBranchAddress("MT_bestCSV", &MT_bestCSV, &b_MT_bestCSV);
+   fChain->SetBranchAddress("MT_jim", &MT_jim, &b_MT_jim);
    fChain->SetBranchAddress("MT_Wlep", &MT_Wlep, &b_MT_Wlep);
    fChain->SetBranchAddress("MT_Wlep5", &MT_Wlep5, &b_MT_Wlep5);
    fChain->SetBranchAddress("MT_Wlep15", &MT_Wlep15, &b_MT_Wlep15);
@@ -1053,16 +1030,6 @@ void reducedTree::Init(TTree *tree)
    fChain->SetBranchAddress("taueta1", &taueta1, &b_taueta1);
    fChain->SetBranchAddress("eleRelIso", &eleRelIso, &b_eleRelIso);
    fChain->SetBranchAddress("muonRelIso", &muonRelIso, &b_muonRelIso);
-   fChain->SetBranchAddress("recomuonpt1", &recomuonpt1, &b_recomuonpt1);
-   fChain->SetBranchAddress("recomuonphi1", &recomuonphi1, &b_recomuonphi1);
-   fChain->SetBranchAddress("recomuoneta1", &recomuoneta1, &b_recomuoneta1);
-   fChain->SetBranchAddress("recomuoniso1", &recomuoniso1, &b_recomuoniso1);
-   fChain->SetBranchAddress("recomuonmindphijet1", &recomuonmindphijet1, &b_recomuonmindphijet1);
-   fChain->SetBranchAddress("recomuonpt2", &recomuonpt2, &b_recomuonpt2);
-   fChain->SetBranchAddress("recomuonphi2", &recomuonphi2, &b_recomuonphi2);
-   fChain->SetBranchAddress("recomuoneta2", &recomuoneta2, &b_recomuoneta2);
-   fChain->SetBranchAddress("recomuoniso2", &recomuoniso2, &b_recomuoniso2);
-   fChain->SetBranchAddress("recomuonmindphijet2", &recomuonmindphijet2, &b_recomuonmindphijet2);
    fChain->SetBranchAddress("rl", &rl, &b_rl);
    fChain->SetBranchAddress("rMET", &rMET, &b_rMET);
    fChain->SetBranchAddress("transverseSphericity_jets", &transverseSphericity_jets, &b_transverseSphericity_jets);

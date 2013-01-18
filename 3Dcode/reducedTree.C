@@ -120,6 +120,10 @@ cout << "inside loop with doQCD = " << doQCD << endl;
    newtree->Branch("qEl", &elecharge1, "qEl/I");
    newtree->Branch("qMu", &muoncharge1, "qMu/I");
    newtree->Branch("MT", &MT_Wlep, "MT/f");
+   // add mtB vars here
+   newtree->Branch("MT_b", &MT_b, "MT_b/f");	  
+   newtree->Branch("MT_bestCSV", &MT_bestCSV, "MT_bestCSV/f");
+   newtree->Branch("MT_jim", &MT_jim, "MT_jim/f");
    newtree->Branch("pfOcaloMET", &pfOcaloMET, "pfOcaloMET/f");
    newtree->Branch("spher", &transverseSphericity_jets, "spher/f");
    newtree->Branch("spherMET", &transverseSphericity_jetsMet, "spherMET/f");
@@ -180,8 +184,14 @@ cout << "inside loop with doQCD = " << doQCD << endl;
       //lastly check for blinding
       if(doBlind) {
         // blind only high signal bins
-//	if(HT>400&&MET>350&&njets>=3&&nBCSVM50>=2&&nElectrons==0&&nMuons==0&&minDeltaPhiN_asin>4) continue;   
-//	if(HT>400&&MET>150&&njets>=3&&nBCSVM50>=3&&nElectrons==0&&nMuons==0&&minDeltaPhiN_asin>4) continue;
+	//blind region for T1tttt without 1L sig region
+	//if(HT>400&&MET>350&&njets>=3&&nBCSVM50>=1&&nElectrons==0&&nMuons==0&&minDeltaPhiN_asin>4) continue;	
+	//if(HT>400&&MET>250&&njets>=3&&nBCSVM50>=2&&nElectrons==0&&nMuons==0&&minDeltaPhiN_asin>4) continue;
+	//if(nBCSVM50>=3) continue;
+	
+	// blind region for T1tttt with 1L sig region
+	//if(HT>400&&MET>250&&njets>=3&&nBCSVM50>=1&&( (nElectrons==0&&nMuons==0) || ( MT_Wlep>100&&( (nElectrons==1&&nMuons==0)||(nElectrons==0&&nMuons==1)) ) )&&minDeltaPhiN_asin>4) continue; 
+	//if(nBCSVM50>=2) continue;
 	trigWeight = 1.0;
       }
     if(!filled) {cout << "filling tree" << endl;  filled=true;}
@@ -198,252 +208,100 @@ float reducedTree::getTrigWeightMu() {
   float Mbins[5] = {125.,150.,250.,350.,99999.};    
   float Hbins[5] = {400.,500.,800.,1000.,99999.};    
 
-  float toreturnold = -1;
-  float toreturnnew = -1;
+  float toreturn = -1;
 
-  if (MET>125 && HT>400) {
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturnnew = hnum_ht400to500_mu->GetBinContent( hnum_ht400to500_mu->GetXaxis()->FindBin(MET) );    
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturnnew =  hnum_ht500to800_mu->GetBinContent( hnum_ht500to800_mu->GetXaxis()->FindBin(MET) );    
-    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturnnew =  hnum_ht800to1000_mu->GetBinContent( hnum_ht800to1000_mu->GetXaxis()->FindBin(MET) );  
-    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturnnew =  hnum_ht1000toInf_mu->GetBinContent( hnum_ht1000toInf_mu->GetXaxis()->FindBin(MET) );	 
-  }
-
-
-/* Old trigger efficiencies without HTMHT650
-  if ( (MET>Mbins[0]) && (MET<Mbins[1]) ){
-    if ( (HT>Hbins[0]) && (HT<Hbins[1]) ) return 0.962;
-    if ( (HT>Hbins[1]) && (HT<Hbins[2]) ) return 0.950;
-    if ( (HT>Hbins[2]) && (HT<Hbins[3]) ) return 0.886;
-    if ( (HT>Hbins[3]) && (HT<Hbins[4]) ) return 0.842;
-  }
-  if ( (MET>Mbins[1]) && (MET<Mbins[2]) ){
-    if ( (HT>Hbins[0]) && (HT<Hbins[1]) ) return 0.995;
-    if ( (HT>Hbins[1]) && (HT<Hbins[2]) ) return 0.991;
-    if ( (HT>Hbins[2]) && (HT<Hbins[3]) ) return 0.991;
-    if ( (HT>Hbins[3]) && (HT<Hbins[4]) ) return 0.963;
-  }
-  if ( (MET>Mbins[2]) && (MET<Mbins[3]) ){
-    if ( (HT>Hbins[0]) && (HT<Hbins[1]) ) return 1.000;
-    if ( (HT>Hbins[1]) && (HT<Hbins[2]) ) return 0.997;
-    if ( (HT>Hbins[2]) && (HT<Hbins[3]) ) return 1.000;
-    if ( (HT>Hbins[3]) && (HT<Hbins[4]) ) return 1.000;
-  }
-  if ( (MET>Mbins[3]) && (MET<Mbins[4]) ){
-    if ( (HT>Hbins[0]) && (HT<Hbins[1]) ) return 1.000;
-    if ( (HT>Hbins[1]) && (HT<Hbins[2]) ) return 1.000;
-    if ( (HT>Hbins[2]) && (HT<Hbins[3]) ) return 1.000;
-    if ( (HT>Hbins[3]) && (HT<Hbins[4]) ) return 1.000;
-  }
-*/
   if ( (MET>Mbins[0]) && (MET<=Mbins[1]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturnold =  0.962;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturnold =  0.964;
-    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturnold =  0.943;
-    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturnold =  0.947;
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.973;
+    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  0.977;
+    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
+    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
   }
   if ( (MET>Mbins[1]) && (MET<=Mbins[2]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturnold =  0.995;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturnold =  0.994;
-    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturnold =  0.929;
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.995;
+    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  0.996;
+    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
+    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
   }
   if ( (MET>Mbins[2]) && (MET<=Mbins[3]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturnold =  1.000;
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.999;
+    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  0.998;
+    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
+    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
   }
   if ( (MET>Mbins[3]) && (MET<=Mbins[4]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturnold =  1.000;
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  1.000;
+    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  1.000;
+    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
+    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
   }
 
-//cout << "1mu: HT = " << HT << " MET " << MET << "   old value: " << toreturnold << "  new value: " << toreturnnew << endl;
-//cout << "1mu eff to return = " << toreturnnew << " from MET bin " <<  hnum_ht400to500_mu->GetXaxis()->FindBin(MET) << " with MET = " << MET << " and HT = " << HT << endl;
-
-return toreturnnew;
-
-  return -1.0;
+  return toreturn;
 }
 
 float reducedTree::getTrigWeightEl() {
   float Mbins[5] = {125.,150.,250.,350.,99999.};    
   float Hbins[5] = {400.,500.,800.,1000.,99999.};    
-  float toreturnold = -1;
-  float toreturnnew = -1;
+  float toreturn = -1;
 
-  if (MET>125 && HT>400) {
-    if ( (HT>Hbins[0]) && (HT<Hbins[1]) ) toreturnnew =  hnum_ht400to500_ele->GetBinContent( hnum_ht400to500_ele->GetXaxis()->FindBin(MET) );    
-    if ( (HT>Hbins[1]) && (HT<Hbins[2]) ) toreturnnew =  hnum_ht500to800_ele->GetBinContent( hnum_ht500to800_ele->GetXaxis()->FindBin(MET) );    
-    if ( (HT>Hbins[2]) && (HT<Hbins[3]) ) toreturnnew =  hnum_ht800to1000_ele->GetBinContent( hnum_ht800to1000_ele->GetXaxis()->FindBin(MET) );  
-    if ( (HT>Hbins[3]) && (HT<Hbins[4]) ) toreturnnew =  hnum_ht1000toInf_ele->GetBinContent( hnum_ht1000toInf_ele->GetXaxis()->FindBin(MET) );	 
-  }
-
-
-/* eff without PFHT650
-  if ( (MET>Mbins[0]) && (MET<Mbins[1]) ){
-    if ( (HT>Hbins[0]) && (HT<Hbins[1]) ) return 0.792;
-    if ( (HT>Hbins[1]) && (HT<Hbins[2]) ) return 0.748;
-    if ( (HT>Hbins[2]) && (HT<Hbins[3]) ) return 0.794;
-    if ( (HT>Hbins[3]) && (HT<Hbins[4]) ) return 0.733;
-  }
-  if ( (MET>Mbins[1]) && (MET<Mbins[2]) ){
-    if ( (HT>Hbins[0]) && (HT<Hbins[1]) ) return 0.964;
-    if ( (HT>Hbins[1]) && (HT<Hbins[2]) ) return 0.953;
-    if ( (HT>Hbins[2]) && (HT<Hbins[3]) ) return 0.964;
-    if ( (HT>Hbins[3]) && (HT<Hbins[4]) ) return 0.907;
-  }
-  if ( (MET>Mbins[2]) && (MET<Mbins[3]) ){
-    if ( (HT>Hbins[0]) && (HT<Hbins[1]) ) return 1.000;
-    if ( (HT>Hbins[1]) && (HT<Hbins[2]) ) return 0.996;
-    if ( (HT>Hbins[2]) && (HT<Hbins[3]) ) return 0.976;
-    if ( (HT>Hbins[3]) && (HT<Hbins[4]) ) return 1.000;
-  }
-  if ( (MET>Mbins[3]) && (MET<Mbins[4]) ){
-    if ( (HT>Hbins[0]) && (HT<Hbins[1]) ) return 1.000;
-    if ( (HT>Hbins[1]) && (HT<Hbins[2]) ) return 1.000;
-    if ( (HT>Hbins[2]) && (HT<Hbins[3]) ) return 1.000;
-    if ( (HT>Hbins[3]) && (HT<Hbins[4]) ) return 1.000;
-  }
-  */
-    if ( (MET>Mbins[0]) && (MET<=Mbins[1]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturnold =  0.833;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturnold =  0.918;
-    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturnold =  0.941;
-    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturnold =  0.933;
+  if ( (MET>Mbins[0]) && (MET<=Mbins[1]) ){
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.855;
+    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  0.925;
+    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
+    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
   }
   if ( (MET>Mbins[1]) && (MET<=Mbins[2]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturnold =  0.975;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturnold =  0.986;
-    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturnold =  0.929;
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.980;
+    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  0.992;
+    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
+    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
   }
   if ( (MET>Mbins[2]) && (MET<=Mbins[3]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturnold =  0.996;
-    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturnold =  0.976;
-    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturnold =  1.000;
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  1.000;
+    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  1.000;
+    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
+    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
   }
   if ( (MET>Mbins[3]) && (MET<=Mbins[4]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturnold =  1.000;
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  1.000;
+    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  1.000;
+    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
+    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
   }
 
-//  cout << "1el: HT = " << HT << " MET " << MET << "   old value: " << toreturnold << "  new value: " << toreturnnew << endl;
-//cout << "1el eff to return = " << toreturnnew << " from MET bin " <<  hnum_ht400to500_ele->GetXaxis()->FindBin(MET) << " with MET = " << MET << " and HT = " << HT << endl;
-
-  return toreturnnew;
-  
-  return -1.0;
+  return toreturn;
 }
 
 float reducedTree::getTrigWeight0L() {
   float Mbins[5] = {125.,150.,250.,350.,99999.};    
   float Hbins[5] = {400.,500.,800.,1000.,99999.};    
-  float toreturnold = -1;
-  float toreturnnew = -1;
-  float toreturnfakemet = -1;
-
-  if (MET>125 && HT>400) {
-    if ( (HT>Hbins[0]) && (HT<Hbins[1]) ) toreturnnew =  hnum_ht400to500_0L->GetBinContent( hnum_ht400to500_0L->GetXaxis()->FindBin(MET) );    
-    if ( (HT>Hbins[1]) && (HT<Hbins[2]) ) toreturnnew =  hnum_ht500to800_0L->GetBinContent( hnum_ht500to800_0L->GetXaxis()->FindBin(MET) );    
-    if ( (HT>Hbins[2]) && (HT<Hbins[3]) ) {
-      toreturnnew =  hnum_ht800to1000_0L->GetBinContent( hnum_ht800to1000_0L->GetXaxis()->FindBin(MET) );  
-      // for coarse binning, set HT3 MET4 to 100% by hand because no events
-      //if (MET>350) toreturnnew = 1.0;
-      // for variable binning set two highest HT bins to 100% (file binning not good)
-      if (MET>125) toreturnnew = 1.0;
-    }
-    if ( (HT>Hbins[3]) && (HT<Hbins[4]) ) {
-      toreturnnew =  hnum_ht1000toInf_0L->GetBinContent( hnum_ht1000toInf_0L->GetXaxis()->FindBin(MET) );    
-      // for variable binning set two highest HT bins to 100% (file binning not good)
-      if (MET>125) toreturnnew = 1.0;
-    }
-  }
-
-/* eff without PFHT650
-  if ( (MET>Mbins[0]) && (MET<Mbins[1]) ){
-    if ( (HT>Hbins[0]) && (HT<Hbins[1]) ) return 0.696;
-    if ( (HT>Hbins[1]) && (HT<Hbins[2]) ) return 0.750;
-    if ( (HT>Hbins[2]) && (HT<Hbins[3]) ) return 0.492;
-    if ( (HT>Hbins[3]) && (HT<Hbins[4]) ) return 0.483;
-  }
-  if ( (MET>Mbins[1]) && (MET<Mbins[2]) ){
-    if ( (HT>Hbins[0]) && (HT<Hbins[1]) ) return 0.895;
-    if ( (HT>Hbins[1]) && (HT<Hbins[2]) ) return 0.864;
-    if ( (HT>Hbins[2]) && (HT<Hbins[3]) ) return 0.751;
-    if ( (HT>Hbins[3]) && (HT<Hbins[4]) ) return 0.667;
-  }
-  if ( (MET>Mbins[2]) && (MET<Mbins[3]) ){
-    if ( (HT>Hbins[0]) && (HT<Hbins[1]) ) return 1.000;
-    if ( (HT>Hbins[1]) && (HT<Hbins[2]) ) return 1.000;
-    if ( (HT>Hbins[2]) && (HT<Hbins[3]) ) return 0.936;
-    if ( (HT>Hbins[3]) && (HT<Hbins[4]) ) return 0.867;
-  }
-  if ( (MET>Mbins[3]) && (MET<Mbins[4]) ){
-    if ( (HT>Hbins[0]) && (HT<Hbins[1]) ) return 1.000;
-    if ( (HT>Hbins[1]) && (HT<Hbins[2]) ) return 1.000;
-    if ( (HT>Hbins[2]) && (HT<Hbins[3]) ) return 0.992;
-    if ( (HT>Hbins[3]) && (HT<Hbins[4]) ) return 0.980;
-  }
-  */
+  float toreturn = -1;
   
    if ( (MET>Mbins[0]) && (MET<=Mbins[1]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturnold =  0.696;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturnold =  0.800;
-    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturnold =  1.000;
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.859;
+    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  0.739;
+    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
+    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
   }
   if ( (MET>Mbins[1]) && (MET<=Mbins[2]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturnold =  0.895;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturnold =  0.864;
-    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturnold =  1.000;
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.901;
+    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  1.000;
+    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
+    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
   }
   if ( (MET>Mbins[2]) && (MET<=Mbins[3]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturnold =  1.000;
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  1.000;
+    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  1.000;
+    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
+    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
   }
   if ( (MET>Mbins[3]) && (MET<=Mbins[4]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturnold =  1.000;
-    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturnold =  1.000;
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  1.000;
+    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  1.000;
+    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
+    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
   }
   
-//   cout << "0L: HT = " << HT << " MET " << MET << "   old value: " << toreturnold << "  new value: " << toreturnnew << endl;
-
-
-  if (MET>Mbins[0] && MET<=Mbins[2] && HT>400) {
-    if ( (HT>Hbins[0]) && (HT<Hbins[1]) ) toreturnfakemet =  hnum_ht400to500_0L->GetBinContent( hnum_ht400to500_0L->GetXaxis()->FindBin(MET) );    
-    if ( (HT>Hbins[1]) && (HT<Hbins[2]) ) toreturnfakemet =  hnum_ht500to800_0L->GetBinContent( hnum_ht500to800_0L->GetXaxis()->FindBin(MET) );    
-    if ( (HT>Hbins[2]) && (HT<Hbins[3]) ) toreturnfakemet =  hnum_ht800to1000_0L->GetBinContent( hnum_ht800to1000_0L->GetXaxis()->FindBin(MET) );  
-    if ( (HT>Hbins[3]) && (HT<Hbins[4]) ) toreturnfakemet =  hnum_ht1000toInf_0L->GetBinContent( hnum_ht1000toInf_0L->GetXaxis()->FindBin(MET) );	 
-  }
-  if ( (MET>Mbins[2]) && (MET<=Mbins[3]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturnfakemet =  1.0;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturnfakemet =  1.0;
-    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturnfakemet =  1.0;
-    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturnfakemet =  1.0;
-  }
-  if ( (MET>Mbins[3]) && (MET<=Mbins[4]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturnfakemet =  1.0;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturnfakemet =  1.0;
-    if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturnfakemet =  1.0;
-    if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturnfakemet =  1.0;
-  }
-
-//cout << "0L eff to return = " << toreturnfakemet << " from MET bin " <<  hnum_ht400to500_0L->GetXaxis()->FindBin(MET) << " with MET = " << MET << " and HT = " << HT << endl;
-
-  return toreturnfakemet;
-  
-  return -1.0;
+  return toreturn;
 }
 
 
