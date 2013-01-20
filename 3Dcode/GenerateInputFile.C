@@ -838,12 +838,13 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
                char arg1[1000] ;
 
                char cuts0lep[10000] ;
-               if(useBtagSF) {
-                 sprintf( cuts0lep, "%s*(%s&&%s)"    , bcutSF[bbi], commoncuts, selcuts[0] ) ;
-               }
-               else {
+               //--- Don't do this.
+               //// if(useBtagSF) {
+                 //// sprintf( cuts0lep, "%s*(%s&&%s)"    , bcutSF[bbi], commoncuts, selcuts[0] ) ;
+               //// }
+               //// else {
                  sprintf( cuts0lep, "(%s&&%s&&%s)"    , commoncuts, selcuts[0], bcut[bbi] ) ;
-	       }
+	       //// }
                printf("     %db, 0lep cuts : %s\n", bbi+1, cuts0lep ) ;
                sprintf( arg1, "HT:MET>>h_0lep_%db_%s", bbi+1, qcdsamplename[si] ) ;
                qcdch[si] -> Draw( arg1, cuts0lep ) ;
@@ -853,9 +854,10 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 
 	       char cutsldp[10000] ;
-               if(useBtagSF) {
-                 sprintf( cutsldp, "%s*(%s&&%s)"    , bcutSF[bbi], commoncuts, selcuts[2] ) ;
-               }
+               //---- Don't do this.
+               //// if(useBtagSF) {
+                 //// sprintf( cutsldp, "%s*(%s&&%s)"    , bcutSF[bbi], commoncuts, selcuts[2] ) ;
+               //// }
                else {
                  sprintf( cutsldp, "(%s&&%s&&%s)"    , commoncuts, selcuts[2], bcut[bbi] ) ;
                }
