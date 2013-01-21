@@ -289,7 +289,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
 	    }
 	} 
       ws.import(lowDeltaPhiNMETScaleFactor_temp, RecycleConflictNodes());
-      ws.extendSet(names.nuisances, lowDeltaPhiNMETScaleFactor_temp.GetName());
+      if(!lowDeltaPhiNMETScaleFactor_temp.isConstant()) ws.extendSet(names.nuisances, lowDeltaPhiNMETScaleFactor_temp.GetName());
       lowDeltaPhiNMETScaleFactor = ws.var(lowDeltaPhiNMETScaleFactorName);
     }
   
@@ -313,7 +313,7 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
 	    }
 	} 
       ws.import(lowDeltaPhiNBTagScaleFactor_temp, RecycleConflictNodes());
-      ws.extendSet(names.nuisances, lowDeltaPhiNBTagScaleFactor_temp.GetName());
+      if(!lowDeltaPhiNBTagScaleFactor_temp.isConstant()) ws.extendSet(names.nuisances, lowDeltaPhiNBTagScaleFactor_temp.GetName());
       lowDeltaPhiNBTagScaleFactor = ws.var(lowDeltaPhiNBTagScaleFactorName);
     }
   
@@ -327,7 +327,8 @@ bool makeOneBin(const likelihoodOptions options, RooWorkspace& ws , TString& bin
   
   RooRealVar* zeroLeptonQCDClosure = (RooRealVar*)
     //getBetaPrimeConstraint(ws,"zeroLeptonQCDClosure_", binName,
-    getGaussianConstraint(ws,"zeroLeptonQCDClosure_", binName,
+    //getGaussianConstraint(ws,"zeroLeptonQCDClosure_", binName,
+    getLognormalConstraint(ws,"zeroLeptonQCDClosure_", binName,
 			   abcd.qcdClosure,abcd.qcdClosureError,
 			   names.observables,names.nuisances, names.globalObservables);
   
