@@ -28,9 +28,11 @@
 
       double min_mu_qcd_ldp(0.) ;
       double max_mu_qcd_ldp(15.0) ;
+      //double max_mu_qcd_ldp(6.0) ;
 
       double min_mu_ttwj_sl(0.) ;
       double max_mu_ttwj_sl(6.0) ;
+      //double max_mu_ttwj_sl(3.0) ;
 
       const int nbins_mu_qcd_ldp(120) ;
       const int nbins_mu_ttwj_sl(60) ;
@@ -144,7 +146,7 @@
 
       TRandom tran(12345) ;
 
-      int ngen(10000) ;
+      int ngen(100000) ;
 
       double gen_mu_qcd_ldp ;
       double gen_mu_ttwj_sl ;

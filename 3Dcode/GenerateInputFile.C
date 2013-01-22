@@ -31,9 +31,9 @@
 void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0lep=-1. ) {
 
   TChain* dyTree = new TChain("treeZ") ;
-  int nAdded = dyTree->Add("files15fb_8TeV_old1/DY.root") ;
+  int nAdded = dyTree->Add("filesMoriond_v2/DY.root") ;
   if ( nAdded <= 0 ) {
-     printf("\n\n\n *** No treeZ in files15fb_8TeV_old1/DY.root\n\n\n") ;
+     printf("\n\n\n *** No treeZ in filesMoriond_v2/DY.root\n\n\n") ;
      return ;
   }
 
@@ -65,71 +65,71 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 
   TChain chainQCD("tree") ;
-  chainQCD.Add("filesHCP_53_v6/QCD-120to170.root");
-  chainQCD.Add("filesHCP_53_v6/QCD-170to300.root");
-  chainQCD.Add("filesHCP_53_v6/QCD-300to470.root");
-  chainQCD.Add("filesHCP_53_v6/QCD-470to600.root");
-  chainQCD.Add("filesHCP_53_v6/QCD-600to800.root");
-  chainQCD.Add("filesHCP_53_v6/QCD-800to1000.root");
-  chainQCD.Add("filesHCP_53_v6/QCD-1000to1400.root");
-  chainQCD.Add("filesHCP_53_v6/QCD-1400to1800.root");
-  chainQCD.Add("filesHCP_53_v6/QCD-1800.root");
+  chainQCD.Add("filesMoriond_v2/QCD-120to170.root");
+  chainQCD.Add("filesMoriond_v2/QCD-170to300.root");
+  chainQCD.Add("filesMoriond_v2/QCD-300to470.root");
+  chainQCD.Add("filesMoriond_v2/QCD-470to600.root");
+  chainQCD.Add("filesMoriond_v2/QCD-600to800.root");
+  chainQCD.Add("filesMoriond_v2/QCD-800to1000.root");
+  chainQCD.Add("filesMoriond_v2/QCD-1000to1400.root");
+  chainQCD.Add("filesMoriond_v2/QCD-1400to1800.root");
+  chainQCD.Add("filesMoriond_v2/QCD-1800.root");
   double kfactor_qcd = 1.8 ;
   printf("\n\n Rescaling QCD by %5.3f\n\n", kfactor_qcd ) ;
 
   TChain chainZnn("tree") ;
-  chainZnn.Add("filesHCP_53_v6/Zinv-100to200.root") ;
-  chainZnn.Add("filesHCP_53_v6/Zinv-200to400.root") ;
-  chainZnn.Add("filesHCP_53_v6/Zinv-400.root") ;
+  chainZnn.Add("filesMoriond_v2/Zinv-100to200.root") ;
+  chainZnn.Add("filesMoriond_v2/Zinv-200to400.root") ;
+  chainZnn.Add("filesMoriond_v2/Zinv-400.root") ;
 
   TChain chainTT("tree") ;
   //-------
-  //chainTT.Add("filesHCP_53_v6/TT.root") ;
+  //chainTT.Add("filesMoriond_v2/TT.root") ;
   //-------
-  //chainTT.Add("filesHCP_53_v6/TT-powheg.root");
+  //chainTT.Add("filesMoriond_v2/TT-powheg.root");
   //-------
-    chainTT.Add("filesHCP_53_v6/TT_FullLept.root") ;
-    chainTT.Add("filesHCP_53_v6/TT_SemiLept.root") ;
-    chainTT.Add("filesHCP_53_v6/TT_FullHad.root") ;
+    chainTT.Add("filesMoriond_v2/TT_FullLept.root") ;
+    chainTT.Add("filesMoriond_v2/TT_SemiLept.root") ;
+    chainTT.Add("filesMoriond_v2/TT_FullHad.root") ;
   //-------
   double kfactor_tt = 0.90 ;
   printf("\n\n Rescaling ttbar by %5.3f\n\n", kfactor_tt ) ;
 
   TChain chainWJets("tree") ;
-  chainWJets.Add("filesHCP_53_v6/WJets-250to300.root") ;
-  chainWJets.Add("filesHCP_53_v6/WJets-300to400.root") ;
-  chainWJets.Add("filesHCP_53_v6/WJets-400.root") ;
-  chainWJets.Add("filesHCP_53_v6/T-s.root") ;
-  chainWJets.Add("filesHCP_53_v6/T-t.root") ;
-  chainWJets.Add("filesHCP_53_v6/T-tW.root") ;
-  chainWJets.Add("filesHCP_53_v6/Tbar-s.root") ;
-  chainWJets.Add("filesHCP_53_v6/Tbar-t.root") ;
-  chainWJets.Add("filesHCP_53_v6/Tbar-tW.root") ;
+  chainWJets.Add("filesMoriond_v2/WJets-250to300.root") ;
+  chainWJets.Add("filesMoriond_v2/WJets-300to400.root") ;
+  chainWJets.Add("filesMoriond_v2/WJets-400.root") ;
+  chainWJets.Add("filesMoriond_v2/T-s.root") ;
+  chainWJets.Add("filesMoriond_v2/T-t.root") ;
+  chainWJets.Add("filesMoriond_v2/T-tW.root") ;
+  chainWJets.Add("filesMoriond_v2/Tbar-s.root") ;
+  chainWJets.Add("filesMoriond_v2/Tbar-t.root") ;
+  chainWJets.Add("filesMoriond_v2/Tbar-tW.root") ;
   double kfactor_wjets = 0.90 ;
   printf("\n\n Rescaling wjets by %5.3f\n\n", kfactor_wjets ) ;
 
 //include Z->ll in VV contribution
   TChain chainVV("tree");
-  chainVV.Add("filesHCP_53_v6/WW.root"); 
-  chainVV.Add("filesHCP_53_v6/WZ.root");
-  chainVV.Add("filesHCP_53_v6/ZZ.root");
-  chainVV.Add("filesHCP_53_v6/DY-200to400.root");
-  chainVV.Add("filesHCP_53_v6/DY-400.root");
+  chainVV.Add("filesMoriond_v2/WW.root"); 
+  chainVV.Add("filesMoriond_v2/WZ.root");
+  chainVV.Add("filesMoriond_v2/ZZ.root");
+  chainVV.Add("filesMoriond_v2/DY-200to400.root");
+  chainVV.Add("filesMoriond_v2/DY-400.root");
 
 
 
 
 
       char qcdinputfile[9][1000] = {
-        "filesHCP_53_v6/QCD-120to170.root"
-       ,"filesHCP_53_v6/QCD-170to300.root"
-       ,"filesHCP_53_v6/QCD-300to470.root"
-       ,"filesHCP_53_v6/QCD-470to600.root"
-       ,"filesHCP_53_v6/QCD-600to800.root"
-       ,"filesHCP_53_v6/QCD-800to1000.root"
-       ,"filesHCP_53_v6/QCD-1000to1400.root"
-       ,"filesHCP_53_v6/QCD-1400to1800.root"
-       ,"filesHCP_53_v6/QCD-1800.root"
+        "filesMoriond_v2/QCD-120to170.root"
+       ,"filesMoriond_v2/QCD-170to300.root"
+       ,"filesMoriond_v2/QCD-300to470.root"
+       ,"filesMoriond_v2/QCD-470to600.root"
+       ,"filesMoriond_v2/QCD-600to800.root"
+       ,"filesMoriond_v2/QCD-800to1000.root"
+       ,"filesMoriond_v2/QCD-1000to1400.root"
+       ,"filesMoriond_v2/QCD-1400to1800.root"
+       ,"filesMoriond_v2/QCD-1800.root"
       } ;
 
       char qcdsamplename[9][100] = {
@@ -858,9 +858,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
                //// if(useBtagSF) {
                  //// sprintf( cutsldp, "%s*(%s&&%s)"    , bcutSF[bbi], commoncuts, selcuts[2] ) ;
                //// }
-               else {
+               //// else {
                  sprintf( cutsldp, "(%s&&%s&&%s)"    , commoncuts, selcuts[2], bcut[bbi] ) ;
-               }
+               //// }
                printf("     %db, ldp  cuts : %s\n", bbi+1, cutsldp  ) ;
                sprintf( arg1, "HT:MET>>h_ldp_%db_%s", bbi+1, qcdsamplename[si] ) ;
                qcdch[si] -> Draw( arg1, cutsldp, "colz" ) ;
