@@ -108,6 +108,42 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   double kfactor_wjets = 0.90 ;
   printf("\n\n Rescaling wjets by %5.3f\n\n", kfactor_wjets ) ;
 
+
+   //-- make chains of W+jets and single top separately.
+
+  TChain chainWJetsOnly("tree") ;
+  chainWJetsOnly.Add("filesMoriond_v2/WJets-250to300.root") ;
+  chainWJetsOnly.Add("filesMoriond_v2/WJets-300to400.root") ;
+  chainWJetsOnly.Add("filesMoriond_v2/WJets-400.root") ;
+  double kfactor_wjetsonly = 0.90 ;
+
+  TChain chainSingletop("tree") ;
+  chainSingletop.Add("filesMoriond_v2/T-s.root") ;
+  chainSingletop.Add("filesMoriond_v2/T-t.root") ;
+  chainSingletop.Add("filesMoriond_v2/T-tW.root") ;
+  chainSingletop.Add("filesMoriond_v2/Tbar-s.root") ;
+  chainSingletop.Add("filesMoriond_v2/Tbar-t.root") ;
+  chainSingletop.Add("filesMoriond_v2/Tbar-tW.root") ;
+  double kfactor_singletop = 0.90 ;
+
+  TChain chainSingletop_s("tree") ;
+  chainSingletop_s.Add("filesMoriond_v2/T-s.root") ;
+  chainSingletop_s.Add("filesMoriond_v2/Tbar-s.root") ;
+  double kfactor_singletops = 0.90 ;
+
+  TChain chainSingletop_t("tree") ;
+  chainSingletop_t.Add("filesMoriond_v2/T-t.root") ;
+  chainSingletop_t.Add("filesMoriond_v2/Tbar-t.root") ;
+  double kfactor_singletopt = 0.90 ;
+
+  TChain chainSingletop_tw("tree") ;
+  chainSingletop_tw.Add("filesMoriond_v2/T-tW.root") ;
+  chainSingletop_tw.Add("filesMoriond_v2/Tbar-tW.root") ;
+  double kfactor_singletoptw = 0.90 ;
+
+
+
+
 //include Z->ll in VV contribution
   TChain chainVV("tree");
   chainVV.Add("filesMoriond_v2/WW.root"); 
@@ -452,6 +488,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
    TH1F* hmctruth_ttwj[3][3] ;
    TH1F* hmctruth_ttbar[3][3] ;
    TH1F* hmctruth_wjets[3][3] ;
+   TH1F* hmctruth_wjetsonly[3][3] ;
+   TH1F* hmctruth_singletop[3][3] ;
+   TH1F* hmctruth_singletops[3][3] ;
+   TH1F* hmctruth_singletopt[3][3] ;
+   TH1F* hmctruth_singletoptw[3][3] ;
    TH1F* hmctruth_qcd[3][3] ;
    TH1F* hmctruth_znn[3][3] ;
    TH1F* hmctruth_vv[3][3] ;
@@ -476,6 +517,21 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
          sprintf( hname, "hmctruth_wjets_%s_%db", selname[si], bbi+1 ) ;
          hmctruth_wjets[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
+
+         sprintf( hname, "hmctruth_wjetsonly_%s_%db", selname[si], bbi+1 ) ;
+         hmctruth_wjetsonly[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
+
+         sprintf( hname, "hmctruth_singletop_%s_%db", selname[si], bbi+1 ) ;
+         hmctruth_singletop[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
+
+         sprintf( hname, "hmctruth_singletops_%s_%db", selname[si], bbi+1 ) ;
+         hmctruth_singletops[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
+
+         sprintf( hname, "hmctruth_singletopt_%s_%db", selname[si], bbi+1 ) ;
+         hmctruth_singletopt[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
+
+         sprintf( hname, "hmctruth_singletoptw_%s_%db", selname[si], bbi+1 ) ;
+         hmctruth_singletoptw[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
 
          sprintf( hname, "hmctruth_qcd_%s_%db", selname[si], bbi+1 ) ;
          hmctruth_qcd[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
@@ -509,6 +565,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
     TH2F* h_tt[10] ;
     TH2F* h_wjets[10] ;
+    TH2F* h_wjetsonly[10] ;
+    TH2F* h_singletop[10] ;
+    TH2F* h_singletops[10] ;
+    TH2F* h_singletopt[10] ;
+    TH2F* h_singletoptw[10] ;
     TH2F* h_qcd[10] ;
     TH2F* h_znn[10] ;
     TH2F* h_vv[10];
@@ -526,6 +587,26 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
        sprintf( hname, "h_wjets_%db", bi+1 ) ;
        h_wjets[bi]   = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
        h_wjets[bi] -> Sumw2() ;
+
+       sprintf( hname, "h_wjetsonly_%db", bi+1 ) ;
+       h_wjetsonly[bi]   = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
+       h_wjetsonly[bi] -> Sumw2() ;
+
+       sprintf( hname, "h_singletop_%db", bi+1 ) ;
+       h_singletop[bi]   = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
+       h_singletop[bi] -> Sumw2() ;
+
+       sprintf( hname, "h_singletops_%db", bi+1 ) ;
+       h_singletops[bi]   = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
+       h_singletops[bi] -> Sumw2() ;
+
+       sprintf( hname, "h_singletopt_%db", bi+1 ) ;
+       h_singletopt[bi]   = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
+       h_singletopt[bi] -> Sumw2() ;
+
+       sprintf( hname, "h_singletoptw_%db", bi+1 ) ;
+       h_singletoptw[bi]   = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
+       h_singletoptw[bi] -> Sumw2() ;
 
        sprintf( hname, "h_qcd_%db", bi+1 ) ;
        h_qcd[bi]  = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
@@ -584,6 +665,31 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
         h_wjets[k] -> Scale( kfactor_wjets ) ;
         printf("    %12s %7.1f events\n", hname, h_wjets[k]->Integral() ) ; cout << flush ;
 
+        sprintf( hname, "h_wjetsonly_%db", k+1 ) ;
+        chainWJetsOnly.Project(hname,"HT:MET",allcuts);
+        h_wjetsonly[k] -> Scale( kfactor_wjetsonly ) ;
+        printf("    %12s %7.1f events\n", hname, h_wjetsonly[k]->Integral() ) ; cout << flush ;
+
+        sprintf( hname, "h_singletop_%db", k+1 ) ;
+        chainSingletop.Project(hname,"HT:MET",allcuts);
+        h_singletop[k] -> Scale( kfactor_singletop ) ;
+        printf("    %12s %7.1f events\n", hname, h_singletop[k]->Integral() ) ; cout << flush ;
+
+        sprintf( hname, "h_singletops_%db", k+1 ) ;
+        chainSingletop_s.Project(hname,"HT:MET",allcuts);
+        h_singletops[k] -> Scale( kfactor_singletops ) ;
+        printf("    %12s %7.1f events\n", hname, h_singletops[k]->Integral() ) ; cout << flush ;
+
+        sprintf( hname, "h_singletopt_%db", k+1 ) ;
+        chainSingletop_t.Project(hname,"HT:MET",allcuts);
+        h_singletopt[k] -> Scale( kfactor_singletopt ) ;
+        printf("    %12s %7.1f events\n", hname, h_singletopt[k]->Integral() ) ; cout << flush ;
+
+        sprintf( hname, "h_singletoptw_%db", k+1 ) ;
+        chainSingletop_tw.Project(hname,"HT:MET",allcuts);
+        h_singletoptw[k] -> Scale( kfactor_singletoptw ) ;
+        printf("    %12s %7.1f events\n", hname, h_singletoptw[k]->Integral() ) ; cout << flush ;
+
         sprintf( hname, "h_qcd_%db", k+1 ) ;
         chainQCD.Project(hname,"HT:MET",allcuts);
         h_qcd[k] -> Scale( kfactor_qcd ) ;
@@ -633,6 +739,21 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
              double wjetsval = h_wjets[k] -> GetBinContent( i+1, j+1 ) ;
              double wjetserr = h_wjets[k] -> GetBinError(   i+1, j+1 ) ;
 
+             double wjetsonlyval = h_wjetsonly[k] -> GetBinContent( i+1, j+1 ) ;
+             double wjetsonlyerr = h_wjetsonly[k] -> GetBinError(   i+1, j+1 ) ;
+
+             double singletopval = h_singletop[k] -> GetBinContent( i+1, j+1 ) ;
+             double singletoperr = h_singletop[k] -> GetBinError(   i+1, j+1 ) ;
+
+             double singletopsval = h_singletops[k] -> GetBinContent( i+1, j+1 ) ;
+             double singletopserr = h_singletops[k] -> GetBinError(   i+1, j+1 ) ;
+
+             double singletoptval = h_singletopt[k] -> GetBinContent( i+1, j+1 ) ;
+             double singletopterr = h_singletopt[k] -> GetBinError(   i+1, j+1 ) ;
+
+             double singletoptwval = h_singletoptw[k] -> GetBinContent( i+1, j+1 ) ;
+             double singletoptwerr = h_singletoptw[k] -> GetBinError(   i+1, j+1 ) ;
+
              double qcdval = h_qcd[k] -> GetBinContent( i+1, j+1 ) ;
              double qcderr = h_qcd[k] -> GetBinError(   i+1, j+1 ) ;
 
@@ -645,11 +766,16 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
              double susyval = h_susy[k] -> GetBinContent( i+1, j+1 ) ;
              double susyerr = h_susy[k] -> GetBinError(   i+1, j+1 ) ;
 
-             printf(" N_%s, tt     met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, ttval,tterr) ; cout << flush ;
-             printf(" N_%s, wjets  met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, wjetsval,wjetserr) ; cout << flush ;
-             printf(" N_%s, qcd    met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, qcdval,qcderr) ; cout << flush ;
-             printf(" N_%s, znn    met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, znnval,znnerr) ; cout << flush ;
-             printf(" N_%s, vv     met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, vvval,vverr) ; cout << flush ;
+             printf(" N_%s, tt          met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, ttval,tterr) ; cout << flush ;
+             printf(" N_%s, wjets       met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, wjetsval,wjetserr) ; cout << flush ;
+             printf(" N_%s,(wjets only) met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, wjetsonlyval,wjetsonlyerr) ; cout << flush ;
+             printf(" N_%s,(singletop ) met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, singletopval,singletoperr) ; cout << flush ;
+             printf(" N_%s,((sng.t,s))  met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, singletopsval,singletopserr) ; cout << flush ;
+             printf(" N_%s,((sng.t,t))  met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, singletoptval,singletopterr) ; cout << flush ;
+             printf(" N_%s,((sng.t,tW)) met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, singletoptwval,singletoptwerr) ; cout << flush ;
+             printf(" N_%s, qcd         met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, qcdval,qcderr) ; cout << flush ;
+             printf(" N_%s, znn         met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, znnval,znnerr) ; cout << flush ;
+             printf(" N_%s, vv          met,ht,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, vvval,vverr) ; cout << flush ;
              if ( mgl>0. ) {
                 if ( target_susy_all0lep > 0. ) {
                    susyval = susyval * (target_susy_all0lep/nSusyTotal);
@@ -672,6 +798,16 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
              hmctruth_ttbar[si][k] -> SetBinError(   histbin, tterr ) ;
              hmctruth_wjets[si][k] -> SetBinContent( histbin, wjetsval  ) ;
              hmctruth_wjets[si][k] -> SetBinError(   histbin, wjetserr  ) ;
+             hmctruth_wjetsonly[si][k] -> SetBinContent( histbin, wjetsonlyval  ) ;
+             hmctruth_wjetsonly[si][k] -> SetBinError(   histbin, wjetsonlyerr  ) ;
+             hmctruth_singletop[si][k] -> SetBinContent( histbin, singletopval  ) ;
+             hmctruth_singletop[si][k] -> SetBinError(   histbin, singletoperr  ) ;
+             hmctruth_singletops[si][k] -> SetBinContent( histbin, singletopsval  ) ;
+             hmctruth_singletops[si][k] -> SetBinError(   histbin, singletopserr  ) ;
+             hmctruth_singletopt[si][k] -> SetBinContent( histbin, singletoptval  ) ;
+             hmctruth_singletopt[si][k] -> SetBinError(   histbin, singletopterr  ) ;
+             hmctruth_singletoptw[si][k] -> SetBinContent( histbin, singletoptwval  ) ;
+             hmctruth_singletoptw[si][k] -> SetBinError(   histbin, singletoptwerr  ) ;
              hmctruth_qcd[si][k]   -> SetBinContent( histbin, qcdval ) ;
              hmctruth_qcd[si][k]   -> SetBinError(   histbin, qcderr ) ;
              hmctruth_znn[si][k]   -> SetBinContent( histbin, znnval ) ;
@@ -717,6 +853,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
           for (int k = 0 ; k < nBinsBjets ; k++) {
              h_tt[k] -> Reset() ;
              h_wjets[k] -> Reset() ;
+             h_wjetsonly[k] -> Reset() ;
+             h_singletop[k] -> Reset() ;
+             h_singletops[k] -> Reset() ;
+             h_singletopt[k] -> Reset() ;
+             h_singletoptw[k] -> Reset() ;
              h_qcd[k] -> Reset() ;
              h_znn[k] -> Reset() ;
              h_vv[k] -> Reset() ;
