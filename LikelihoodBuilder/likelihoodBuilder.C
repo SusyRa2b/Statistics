@@ -1441,9 +1441,10 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   options.skipTriggerEfficiency = false;//option no longer works
   options.qcdMethod = "model4";//choices: htDependent, singleScaleWithCorrections
   //options.TopWJetsMethod = "ABCD"; //choices: ABCD, metReweighting
-  options.TopWJetsMethod = "metReweighting";
-  //options.nuisanceOption = "allWidths"; //choices: allWidths, noWidths
-  options.nuisanceOption = option;
+  //options.TopWJetsMethod = "metReweighting";
+  options.TopWJetsMethod = option;
+  options.nuisanceOption = "allWidths"; //choices: allWidths, noWidths
+  
 
   //Read in setupFile and binFilesFile
   setupUnderlyingModel(options, binFilesPath, binFileNames, signalModelFilesPath, binFileNamesInsideSignalMR, binFileNamesOutsideSignalMR, binNames, setupFileName , binFilesFileName , numbers);
@@ -1535,6 +1536,7 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   sbModel.SetGlobalObservables(*ws.set(names.globalObservables));
   sbModel.SetParametersOfInterest(*ws.set("poi"));
   sbModel.SetProtoData(*ws.data("data"));
+  sbModel.SetSnapshot(*ws.set("poi")); //At whatever value POI currently has.   
 
   ModelConfig bModel("B_model",&ws);
   bModel.SetPdf(*ws.pdf("likelihood"));
@@ -1544,7 +1546,7 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   bModel.SetParametersOfInterest(*ws.set("poi"));
   bModel.SetProtoData(*ws.data("data"));
   ws.var(names.signalCrossSection)->setVal(0.0);
-  bModel.SetSnapshot(*ws.set("poi"));
+  bModel.SetSnapshot(*ws.set("poi"));//Should definitely be zero.
 
   ws.import (sbModel);
   ws.import (bModel);
