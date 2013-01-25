@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-my $nuisanceOptions = "noWidths";
+my $nuisanceOptions = "allWidths";
 
 my $dir="";
 if($ARGV[0] =~ /(\S*)(.dat)/) {
