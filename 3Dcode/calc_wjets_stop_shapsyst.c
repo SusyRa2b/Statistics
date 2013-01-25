@@ -1123,6 +1123,77 @@
        hist1->Draw("hist") ;
 
 
+     //--- Write numbers to files.
+
+      {
+       FILE* outfp ;
+       if ( (outfp=fopen( "datfiles/wjets-xsec-shapesyst.txt", "w" ))==NULL ) {
+          printf("\n\n *** Problem opening output file: datfiles/wjets-xsec-shapesyst.txt\n\n") ;
+          return ;
+       }
+
+       fprintf( outfp, "  -1   -1   " ) ;
+
+       TH1F* hp[3] ;
+       hp[0] = h_zlsl_sf_shapesyst_wjets_1b ;
+       hp[1] = h_zlsl_sf_shapesyst_wjets_2b ;
+       hp[2] = h_zlsl_sf_shapesyst_wjets_3b ;
+       printf("\n\n") ;
+       //-- ZL values.
+       for ( int mbi=0; mbi<4; mbi++ ) {
+          for ( int hbi=0; hbi<4; hbi++ ) {
+             int histbin = mbi*5 + hbi + 2 ;
+             for ( int bbi=0; bbi<3; bbi++ ) {
+                double delta = hp[bbi] -> GetBinContent( histbin ) ;
+                printf( " wjets, m%d,h%d,b%d : %6.3f\n", mbi+1, hbi+1, bbi+1, delta ) ;
+                fprintf( outfp, " %6.3f ", delta ) ;
+             } // bbi.
+          } // hbi.
+       } // mbi.
+       //-- insert dummy values for SL and LDP.
+       for ( int i=0; i<2*4*4*3; i++ ) {
+          fprintf( outfp, " 0 " ) ;
+       }
+       fprintf( outfp, "\n" ) ;
+       printf("\n\n") ;
+
+       fclose( outfp ) ;
+      }
+
+      {
+       FILE* outfp ;
+       if ( (outfp=fopen( "datfiles/singletop-xsec-shapesyst.txt", "w" ))==NULL ) {
+          printf("\n\n *** Problem opening output file: datfiles/singletop-xsec-shapesyst.txt\n\n") ;
+          return ;
+       }
+
+       fprintf( outfp, "  -1   -1   " ) ;
+
+       TH1F* hp[3] ;
+       hp[0] = h_zlsl_sf_shapesyst_singletop_1b ;
+       hp[1] = h_zlsl_sf_shapesyst_singletop_2b ;
+       hp[2] = h_zlsl_sf_shapesyst_singletop_3b ;
+       printf("\n\n") ;
+       //-- ZL values.
+       for ( int mbi=0; mbi<4; mbi++ ) {
+          for ( int hbi=0; hbi<4; hbi++ ) {
+             int histbin = mbi*5 + hbi + 2 ;
+             for ( int bbi=0; bbi<3; bbi++ ) {
+                double delta = hp[bbi] -> GetBinContent( histbin ) ;
+                printf( " singletop, m%d,h%d,b%d : %6.3f\n", mbi+1, hbi+1, bbi+1, delta ) ;
+                fprintf( outfp, " %6.3f ", delta ) ;
+             } // bbi.
+          } // hbi.
+       } // mbi.
+       //-- insert dummy values for SL and LDP.
+       for ( int i=0; i<2*4*4*3; i++ ) {
+          fprintf( outfp, " 0 " ) ;
+       }
+       fprintf( outfp, "\n" ) ;
+       printf("\n\n") ;
+
+       fclose( outfp ) ;
+      }
 
     } // draw_ttwjfracs
 
