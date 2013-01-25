@@ -48,7 +48,9 @@ int minimalFit(TString workspaceFile = "test.root", double signalCrossSectionGue
   nll->findServer(1)->Print("V");
   */
 
-  RooFitResult* fitResult = likelihood->fitTo( *rds, Save(true), PrintLevel(0) );
+  //RooFitResult* fitResult = likelihood->fitTo( *rds, Save(true), PrintLevel(0) );
+  //Try something faster:
+  RooFitResult* fitResult = likelihood->fitTo( *rds, Save(true), PrintLevel(0), Timer(true), Hesse(false) );
   fitResult->Print();
 
   double sig = signalCrossSection->getVal();
