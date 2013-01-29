@@ -1441,6 +1441,16 @@
             xaxis->SetBinLabel(hbin,"All global") ;
             hbin++ ;
 
+            pullVal = getNPPull( "wjets_xsec", ws ) ;
+            hnp_prim_eff -> SetBinContent(hbin, pullVal ) ;
+            xaxis->SetBinLabel(hbin,"Wjets Xsec") ;
+            hbin++ ;
+
+            pullVal = getNPPull( "singletop_xsec", ws ) ;
+            hnp_prim_eff -> SetBinContent(hbin, pullVal ) ;
+            xaxis->SetBinLabel(hbin,"single top Xsec") ;
+            hbin++ ;
+
             hnp_prim_eff -> SetFillColor(kOrange+1 ) ;
 
             hnp_prim_eff -> SetLabelSize(0.055,"x") ;
