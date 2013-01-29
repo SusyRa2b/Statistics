@@ -1,5 +1,6 @@
 #include <cassert>
 #include <iostream>
+#include <fstream>
 
 #include "TFile.h"
 #include "TString.h"
