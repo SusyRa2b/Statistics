@@ -14,6 +14,9 @@
    cp datfiles/Input-met4-ht4-v15.dat datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat
    $ROOTSYS/bin/root -b -q mcclosure4.c+\(\"rootfiles/gi-plots-met4-ht4-v15.root\",\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat\",4,1,1,1\) >&! logfiles/mcclosure4-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.log
 
+   echo calc_wjets_stop_shapesyst
+   $ROOTSYS/bin/root -b -q calc_wjets_stop_shapesyst.c+ >&! logfiles/calc_wjets_stop_shapesyst.log
+
    echo MakeDataFile
    $ROOTSYS/bin/root -b -q MakeDataFile.c >&! logfiles/makedata-met4-ht4-v15.log
 

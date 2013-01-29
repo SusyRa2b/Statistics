@@ -251,18 +251,24 @@
       printf("\n\n") ;
 
 
+      //-- Jan 28, 2013: With btag weights, no motivation for doing below anymore, since >=3b has enough MC stats.
       //-- Dec 21, 2012: new method is to use =2b SF corrected by average >=3b/=2b difference for >=3b.
+
+      ///TH1F* hscalefactor_ttwj_0over1ratio_1b = (TH1F*) hmctruth_ttwj_0over1ratio_1b->Clone("hscalefactor_ttwj_0lep_1b") ;
+      ///TH1F* hscalefactor_ttwj_0over1ratio_2b = (TH1F*) hmctruth_ttwj_0over1ratio_2b->Clone("hscalefactor_ttwj_0lep_2b") ;
+      ///TH1F* hscalefactor_ttwj_0over1ratio_3b = (TH1F*) hmctruth_ttwj_0over1ratio_2b->Clone("hscalefactor_ttwj_0lep_3b") ;
 
       TH1F* hscalefactor_ttwj_0over1ratio_1b = (TH1F*) hmctruth_ttwj_0over1ratio_1b->Clone("hscalefactor_ttwj_0lep_1b") ;
       TH1F* hscalefactor_ttwj_0over1ratio_2b = (TH1F*) hmctruth_ttwj_0over1ratio_2b->Clone("hscalefactor_ttwj_0lep_2b") ;
-      TH1F* hscalefactor_ttwj_0over1ratio_3b = (TH1F*) hmctruth_ttwj_0over1ratio_2b->Clone("hscalefactor_ttwj_0lep_3b") ;
+      TH1F* hscalefactor_ttwj_0over1ratio_3b = (TH1F*) hmctruth_ttwj_0over1ratio_3b->Clone("hscalefactor_ttwj_0lep_3b") ;
 
       hscalefactor_ttwj_0over1ratio_3b->SetMarkerStyle(30) ;
       hscalefactor_ttwj_0over1ratio_3b->SetLineColor(4) ;
 
       hscalefactor_ttwj_0over1ratio_1b->Scale(1./simpleAveR_0over1) ;
       hscalefactor_ttwj_0over1ratio_2b->Scale(1./simpleAveR_0over1) ;
-      hscalefactor_ttwj_0over1ratio_3b->Scale((1./simpleAveR_0over1)*(simpleAveR_0over1_3b/simpleAveR_0over1_2b)) ;
+      ///// hscalefactor_ttwj_0over1ratio_3b->Scale((1./simpleAveR_0over1)*(simpleAveR_0over1_3b/simpleAveR_0over1_2b)) ;
+      hscalefactor_ttwj_0over1ratio_3b->Scale((1./simpleAveR_0over1)) ;
 
 
       TH1F* hscalefactor_ttwj_0over1ratio_1b_whalfcorr = (TH1F*) hscalefactor_ttwj_0over1ratio_1b->Clone("hscalefactor_ttwj_0over1ratio_1b_whalfcorr") ;

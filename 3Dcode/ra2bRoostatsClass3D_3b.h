@@ -31,7 +31,9 @@
                         const char* wsrootfilename = "ws.root",
                         const char* blindBinsList = "null",
                         const char* systFile1 = "systFile1.txt",
-                        const char* pdf_syst_file = "foo"
+                        const char* pdf_syst_file = "foo",
+                        const char* wjets_xsec_shapesyst_file = "blah.txt",
+                        const char* singletop_xsec_shapesyst_file = "blah.txt"
                         ) ;
        bool setSusyScanPoint( const char* inputScanFile,
                               double m0, double m12

@@ -111,7 +111,9 @@
 					     const char* wsrootfilename,
 					     const char* blindBinsList,
 					     const char* systFile1,
-                                             const char* pdf_syst_file
+                                             const char* pdf_syst_file,
+                                             const char* wjets_xsec_shapesyst_file,
+                                             const char* singletop_xsec_shapesyst_file
 					     ) {
 
 
@@ -1958,7 +1960,21 @@
       nShapeSystematics++ ;
 
 
+      //--- Jan28, 2013: New W+jets and single top Xsec shape systematics (for ttwj closure, not SUSY signal efficiency). ------
+      if ( useLognormal ) {
+         sss_return_status = setupShapeSyst( wjets_xsec_shapesyst_file, "wjets_xsec", 2, -1, -1, workspace ) ; // 2 = log-normal
+      } else {
+         sss_return_status = setupShapeSyst( wjets_xsec_shapesyst_file, "wjets_xsec", 1, -1, -1, workspace ) ; // 1 = Gaussian
+      }
+      if ( !sss_return_status ) { return false ; }
 
+      if ( useLognormal ) {
+         sss_return_status = setupShapeSyst( singletop_xsec_shapesyst_file, "singletop_xsec", 2, -1, -1, workspace ) ; // 2 = log-normal
+      } else {
+         sss_return_status = setupShapeSyst( singletop_xsec_shapesyst_file, "singletop_xsec", 1, -1, -1, workspace ) ; // 1 = Gaussian
+      }
+      if ( !sss_return_status ) { return false ; }
+      //-----------------------------------------------------------------------------------------------------------
 
 
 
@@ -2072,13 +2088,32 @@
 	    ttwjString   += sMbins[i]+sHbins[j]+sBbins[k] ;
 
 
-            TString ttwjrfvString = " @0 * @1 * @2" ;
+            //--- Jan28, 2013: Insert new W+jets and singletop Xsec shape systematics here. -----------------------------
+
+              //// TString ttwjrfvString = " @0 * @1 * @2" ;
+              //// rfv_mu_ttwj[i][j][k] = new RooFormulaVar( ttwjString, ttwjrfvString,
+              ////                 RooArgSet( *rar_sf_ttwj[i][j][k], *rv_mu_ttwj_sl[i][j][k], *rv_ttwj_0lep1lep_ratio ) ) ;
+
+            //--------------
+
+            char xsecshapesystname[1000] ;
+
+            sprintf( xsecshapesystname, "wjets_xsec_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+            RooAbsReal* rar_wjets_xsec_shape_syst = (RooAbsReal*) workspace.obj( xsecshapesystname ) ;
+            if ( rar_wjets_xsec_shape_syst == 0x0 ) { printf("\n\n *** Missing NP : %s\n\n", xsecshapesystname ) ; return false ; }
+
+            sprintf( xsecshapesystname, "singletop_xsec_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+            RooAbsReal* rar_singletop_xsec_shape_syst = (RooAbsReal*) workspace.obj( xsecshapesystname ) ;
+            if ( rar_singletop_xsec_shape_syst == 0x0 ) { printf("\n\n *** Missing NP : %s\n\n", xsecshapesystname ) ; return false ; }
+
+            TString ttwjrfvString = " @0 * @1 * @2 * @3 * @4" ;
             rfv_mu_ttwj[i][j][k] = new RooFormulaVar( ttwjString, ttwjrfvString,
-                            RooArgSet( *rar_sf_ttwj[i][j][k], *rv_mu_ttwj_sl[i][j][k], *rv_ttwj_0lep1lep_ratio ) ) ;
+                            RooArgSet( *rar_wjets_xsec_shape_syst, *rar_singletop_xsec_shape_syst,
+                                       *rar_sf_ttwj[i][j][k], *rv_mu_ttwj_sl[i][j][k], *rv_ttwj_0lep1lep_ratio ) ) ;
+
+            //-----------------------------------------------------------------------------------------------------------
 
             rv_mu_ttwj[i][j][k] = rfv_mu_ttwj[i][j][k] ;
-
-
 
 
 
@@ -3487,7 +3522,7 @@
 
        rar = new RooFormulaVar( NP_name, formula, RooArgSet( *ln_mean, *ln_sigma, *rrv_np_base_par ) ) ;
 
-       printf(" makeCorrelatedLognormalConstraint : creating correlated log-normal NP with formula : %s,  %s, val = %g\n", formula, NP_name, rar->getVal() ) ;
+       printf(" makeCorrelatedLognormalConstraint : creating correlated log-normal NP with formula : %s,  %s, val = %g, mean=%g, sigma=%g\n", formula, NP_name, rar->getVal(), NP_val, NP_err ) ;
 
 
        return rar ;
@@ -3696,7 +3731,7 @@
       } // mbi.
 
 
-      printf("\n\n setupShapeSyst: %s : Min syst = %6.2f, Max syst = %6.2f\n\n", systname, minSyst, maxSyst ) ;
+      printf("\n\n setupShapeSyst: %s : Min syst = %6.3f, Max syst = %6.3f\n\n", systname, minSyst, maxSyst ) ;
 
       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
          for ( int hbi=0; hbi<nBinsHT; hbi++ ) {

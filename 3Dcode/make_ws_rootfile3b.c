@@ -10,7 +10,9 @@
                            const char* wsrootfilename = "ws3b.root",
                            const char* blindBinsList = "null",
                            const char* systfilename = "datfiles/sigsystematics.T1bbbb.JES.txt",
-                           const char* pdf_syst_file = "datfiles/sigsystematics.T1bbbb.PDF.txt"
+                           const char* pdf_syst_file = "datfiles/sigsystematics.T1bbbb.PDF.txt",
+                           const char* wjets_xsec_shapesyst_file = "blah.txt",
+                           const char* singletop_xsec_shapesyst_file = "blah.txt"
                          ) {
 
        gROOT->LoadMacro("RooRatio.cxx+") ;
@@ -20,7 +22,7 @@
 
        ra2bRoostatsClass3D_3b ra2b ;
 
-       ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, input_deffdbtagfile_lightflavor, qcdModelIndex, wsrootfilename, blindBinsList, systfilename, pdf_syst_file ) ;
+       ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, input_deffdbtagfile_lightflavor, qcdModelIndex, wsrootfilename, blindBinsList, systfilename, pdf_syst_file, wjets_xsec_shapesyst_file, singletop_xsec_shapesyst_file ) ;
 
 
    }
