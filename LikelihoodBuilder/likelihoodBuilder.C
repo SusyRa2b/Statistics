@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string.h>
 #include <complex>
 #include <map>
@@ -62,6 +63,7 @@
 
 #include "TMath.h"
 
+using namespace std ;
 using namespace RooFit ;
 using namespace RooStats ;
 
