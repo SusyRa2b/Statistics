@@ -47,28 +47,25 @@
 
        TChain datach("tree") ;
 
-       datach.Add( "filesHCP_53_v6/MET_2012A.root" ) ;
-       datach.Add( "filesHCP_53_v6/MET_2012B.root" ) ;
-       datach.Add( "filesHCP_53_v6/MET_2012C_pr.root" ) ;
-       datach.Add( "filesHCP_53_v6/MET_2012C_rr.root" ) ;
-       datach.Add( "filesHCP_53_v6/HT_2012A.root" ) ;
-       datach.Add( "filesHCP_53_v6/HTMHT_2012B.root" ) ;
-       datach.Add( "filesHCP_53_v6/HTMHT_2012C_pr.root" ) ;
-       datach.Add( "filesHCP_53_v6/HTMHT_2012C_rr.root" ) ;
-       datach.Add( "filesHCP_53_v6/JetHT_2012B.root" ) ;
-       datach.Add( "filesHCP_53_v6/JetHT_2012C_pr.root" ) ;
-       datach.Add( "filesHCP_53_v6/JetHT_2012C_rr.root" ) ;
+       datach.Add( "filesMoriond_v3/MET_2012A.root" ) ;
+       datach.Add( "filesMoriond_v3/MET_2012B.root" ) ;
+       datach.Add( "filesMoriond_v3/MET_2012C_pr.root" ) ;
+       datach.Add( "filesMoriond_v3/MET_2012C_rr.root" ) ;
+       datach.Add( "filesMoriond_v3/MET_2012D1.root" ) ;
+       datach.Add( "filesMoriond_v3/MET_2012D2.root" ) ;
 
-       datach.Add( "filesHCP_53_v6/MET_2012D_pr.root") ;
-       datach.Add( "filesHCP_53_v6/HTMHT_2012D_pr.root") ;
-       datach.Add( "filesHCP_53_v6/JetHT_2012D_pr.root") ;
+       datach.Add( "filesMoriond_v3/HT_2012A.root" ) ;
+       datach.Add( "filesMoriond_v3/HTMHT_2012B.root" ) ;
+       datach.Add( "filesMoriond_v3/HTMHT_2012C_pr.root" ) ;
+       datach.Add( "filesMoriond_v3/HTMHT_2012C_rr.root" ) ;
+       datach.Add( "filesMoriond_v3/HTMHT_2012D1.root" ) ;
+       datach.Add( "filesMoriond_v3/HTMHT_2012D2.root" ) ;
 
-       datach.Add( "filesMoriond_v1/HTMHT_2012D2.root" ) ;
-       datach.Add( "filesMoriond_v1/JetHT_2012D2.root" ) ;
-       datach.Add( "filesMoriond_v1/MET_2012D2.root" ) ;
-       datach.Add( "filesMoriond_v1/HTMHT_2012D3.root" ) ;
-       datach.Add( "filesMoriond_v1/JetHT_2012D3.root" ) ;
-       datach.Add( "filesMoriond_v1/MET_2012D3.root" ) ;
+       datach.Add( "filesMoriond_v3/JetHT_2012B.root" ) ;
+       datach.Add( "filesMoriond_v3/JetHT_2012C_pr.root" ) ;
+       datach.Add( "filesMoriond_v3/JetHT_2012C_rr.root" ) ;
+       datach.Add( "filesMoriond_v3/JetHT_2012D1.root" ) ;
+       datach.Add( "filesMoriond_v3/JetHT_2012D2.root" ) ;
 
        TH2F* h_ldp[nBinsBjets] ;
        TH2F* h_zl [nBinsBjets] ;

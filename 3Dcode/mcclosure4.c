@@ -1151,8 +1151,11 @@
                   float closure_error = fabs( 1 - (valwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] )) );
                   float stat_error = ( errwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) );
 		  float sub_error = 0.10; // 
+                  float total_error = sqrt( closure_error*closure_error + stat_error*stat_error + sub_error*sub_error ) ;
+                  //-- Owen, Jan 28, 2013: Put a cap on error to avoid crazy values.
+                  if ( total_error > 1.0 ) { total_error = 1.0 ; }
 		  hflat_scale_factor_withRMSerror[bbi] -> SetBinContent( histbin, 1.0 );
-		  hflat_scale_factor_withRMSerror[bbi] -> SetBinError(   histbin, sqrt( closure_error*closure_error + stat_error*stat_error + sub_error*sub_error ) ) ;
+		  hflat_scale_factor_withRMSerror[bbi] -> SetBinError(   histbin, total_error ) ;
                   printf(" QCD SF: met=%d, ht=%d, nb=%d : closure_error=%5.3f,  stat_error=%5.3f,  sub_error=%5.3f,  total_error=%5.3f\n",
                         mbi+1, hbi+1, bbi+1,
                         closure_error, stat_error, sub_error, sqrt( closure_error*closure_error + stat_error*stat_error + sub_error*sub_error ) ) ;
