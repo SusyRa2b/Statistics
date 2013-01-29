@@ -557,8 +557,7 @@
 
             sprintf( parameterName, "sf_ttwj_M%d_H%d_1b_err", mbi+1, hbi+1 ) ;
             printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_0lep_1b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
-          //--- include 4% systematic for W fraction variation
-            err        = sqrt( hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
+            err        = sqrt( hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinError(hbin)  )  ;
             correction = hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinContent(hbin)  ;
             if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
             if ( doTTWJSyst ) {
@@ -578,8 +577,7 @@
 
             sprintf( parameterName, "sf_ttwj_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
             printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_0lep_2b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
-         //-- include 4% systematic for W fraction variation
-            err        = sqrt( hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
+            err        = sqrt( hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinError(hbin) )  ;
             correction = hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinContent(hbin)  ;
             if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
             if ( doTTWJSyst ) {
@@ -598,8 +596,7 @@
 
             sprintf( parameterName, "sf_ttwj_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
             printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_0lep_3b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
-         //-- include 4% systematic for W fraction variation
-            err        = sqrt( hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
+            err        = sqrt( hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinError(hbin)  )  ;
             correction = hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinContent(hbin)  ;
             if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
             if ( doTTWJSyst ) {

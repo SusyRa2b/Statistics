@@ -284,6 +284,9 @@
        legend->Draw() ;
 
 
+       can1->SaveAs("outputfiles/wjets-singletop-ttwj-frac.pdf") ;
+
+
 
 
 
@@ -435,6 +438,7 @@
 
 
 
+       can2->SaveAs("outputfiles/wjets-singletop-ttwj-events.pdf") ;
 
 
 
@@ -559,6 +563,7 @@
 
 
 
+       can3->SaveAs("outputfiles/wjets-singletop-ttwj-zlsl-ratio.pdf") ;
 
 
 
@@ -958,6 +963,7 @@
        hist3->Draw("same") ;
 
 
+       can4->SaveAs("outputfiles/wjets-singletop-ttwj-zlsl-ratio-variations.pdf") ;
 
     //--- SFs
 
@@ -1033,6 +1039,7 @@
        hist3->Draw("same") ;
 
 
+       can5->SaveAs("outputfiles/wjets-singletop-ttwj-zlsl-sf-variations.pdf") ;
 
    //--- Shape syst
    //
@@ -1122,6 +1129,7 @@
        hist1 -> SetMaximum(+0.1) ;
        hist1->Draw("hist") ;
 
+       can6->SaveAs("outputfiles/wjets-singletop-ttwj-zlsl-sf-shapesyst.pdf") ;
 
      //--- Write numbers to files.
 
