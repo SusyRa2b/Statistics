@@ -55,10 +55,11 @@ int minimalFit(TString workspaceFile = "test.root", double signalCrossSectionGue
 
   double sig = signalCrossSection->getVal();
   double sigerr = signalCrossSection->getError();
+  double nll = fitResult->minNll();
   cout << "signalCrossSection = " << sig << " +- " <<  sigerr << endl;
   cout << "RooFitResult status = " << fitResult->status() << endl;
   cout << "RooFitResult covQual = " << fitResult->covQual() << endl;
-  cout << "RooFitResult minNll = " << fitResult->minNll() << endl;
+  cout << "RooFitResult minNll = " << nll << endl;
 
   //if(fitResult->status() != 0) return fitResult->status();
   if(fixSignal==false && fabs((sig-signalCrossSectionGuess)/signalCrossSectionGuess)<1e-5) return 1;
@@ -67,7 +68,7 @@ int minimalFit(TString workspaceFile = "test.root", double signalCrossSectionGue
     ofstream myfile;
     myfile.open(datFile.Data(), ios::out | ios::app);
     assert(myfile.is_open());
-    myfile << sig << " " << sigerr << " ";
+    myfile << sig << " " << sigerr << " " << nll << " " ;
     myfile.close();
   }
 
