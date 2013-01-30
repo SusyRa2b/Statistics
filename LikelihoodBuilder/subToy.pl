@@ -34,8 +34,9 @@ while(<$flist>) {
     print $fsub "if [ ! -d \"$tmpDirectory\" ]; then mkdir $tmpDirectory; fi;\n";
     print $fsub "cd $workdir\n";
     print $fsub "source /afs/cern.ch/sw/lcg/contrib/gcc/4.3/x86_64-slc5/setup.sh\n";
-    print $fsub "source /afs/cern.ch/sw/lcg/app/releases/ROOT/5.33.02/x86_64-slc5-gcc43-opt/root/bin/thisroot.sh\n";
-    print $fsub "root -q -l -b callRunFit.C'(\"$workdir/$dir/$inputDirectory/\",\"$tmpDirectory/\",\"".$dir."_$inputDirectory\",\"allWidths\")'\n";
+    print $fsub "source /afs/cern.ch/sw/lcg/app/releases/ROOT/5.34.04/x86_64-slc5-gcc43-opt/root/bin/thisroot.sh\n";
+    #print $fsub "source /afs/cern.ch/sw/lcg/app/releases/ROOT/5.33.02/x86_64-slc5-gcc43-opt/root/bin/thisroot.sh\n";
+    print $fsub "root -q -l -b callRunFit.C'(\"$workdir/$dir/$inputDirectory/\",\"$tmpDirectory/\",\"".$dir."_$inputDirectory\",\"metReweighting\")'\n";
     print $fsub "if [ -e \"$tmpDirectory/dat_".$dir."_$inputDirectory.dat\" ]; then mv $tmpDirectory/dat_".$dir."_$inputDirectory.dat $workdir/$datDirectory/dat_".$dir."_$inputDirectory.dat; fi\n";
     print $fsub "if [ -e \"$tmpDirectory/likelihood_".$dir."_$inputDirectory.root\" ]; then mv $tmpDirectory/likelihood_".$dir."_$inputDirectory.root $workdir/$rootDirectory/likelihood_".$dir."_$inputDirectory.root; fi\n";
 
