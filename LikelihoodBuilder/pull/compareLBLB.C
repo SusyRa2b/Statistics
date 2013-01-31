@@ -162,7 +162,7 @@ TString translate(TString name)
       if(prefix == "eff_sf_sl_M") return "oneLeptonSignalError_"+translatedBin;
       if(prefix == "mu_qcd_ldp_M") return "zeroLeptonLowDeltaPhiN_"+translatedBin+"_QCDYield";
       if(prefix == "mu_ttwj_sl_M") return "oneLepton_"+translatedBin+"_TopWJetsYield";
-      if(prefix == "sf_qcd_M") return "zeroLeptonQCDClosure_"+translatedBin;
+      if(prefix == "sf_qcd_M") return "prim_zeroLeptonQCDClosure_"+translatedBin;
       if(prefix == "sf_ttwj_M") return "zeroLeptonTopWJetsClosure_"+translatedBin;
     }
 
@@ -306,7 +306,7 @@ TString translatePDF(TString name)
       if(prefix == "pdf_N_0lep_M") return "zeroLepton_"+translatedBin+"_Constraint";
       if(prefix == "pdf_N_1lep_M") return "oneLepton_"+translatedBin+"_Constraint";
       if(prefix == "pdf_N_ldp_M") return "zeroLeptonLowDeltaPhiN_"+translatedBin+"_Constraint";
-      if(prefix == "pdf_sf_qcd_M") return "pdf_zeroLeptonQCDClosure_"+translatedBin;
+      if(prefix == "pdf_sf_qcd_M") return "pdf_prim_zeroLeptonQCDClosure_"+translatedBin;
       if(prefix == "pdf_sf_ttwj_M") return "pdf_zeroLeptonTopWJetsClosure_"+translatedBin;
     }
 
@@ -508,11 +508,11 @@ void compareFit()
 {
   
   //Open workspaces
-  TFile fOAK("likelihood_jan10test_Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig-toy0000.root", "READ");
+  TFile fOAK("old.root", "READ");
   RooWorkspace* wsOAK = (RooWorkspace*)fOAK.Get("workspace");
 
   //TFile fLB("likelihood_toy100_Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig-toy0000.root", "READ");
-  TFile fLB("likelihood_toy_old_susy100_Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig-toy0000.root", "READ");
+  TFile fLB("new.root", "READ");
   RooWorkspace *wsLB = (RooWorkspace*)fLB.Get("workspace");
   
 
@@ -673,7 +673,7 @@ void compareFit()
 
 
 
-void comparePDFs(RooWorkspace* wsLB, RooWorkspace* wsOAK)
+void comparePDFs(RooWorkspace* wsLB, RooWorkspace* wsOAK, bool ABCD)
 {
 
   /*
@@ -690,12 +690,12 @@ void comparePDFs(RooWorkspace* wsLB, RooWorkspace* wsOAK)
   vector<TString> names;
   names.push_back("pdf_eff_sf_");
   names.push_back("pdf_eff_sf_ldp_");
-  names.push_back("pdf_eff_sf_sl_");
+  if(ABCD) names.push_back("pdf_eff_sf_sl_");
   names.push_back("pdf_N_0lep_");
-  names.push_back("pdf_N_1lep_");
+  if(ABCD) names.push_back("pdf_N_1lep_");
   names.push_back("pdf_N_ldp_");
   names.push_back("pdf_sf_qcd_");
-  names.push_back("pdf_sf_ttwj_");
+  if(ABCD) names.push_back("pdf_sf_ttwj_");
   for(vector<TString>::iterator it = names.begin(); it != names.end(); ++it)
     {
       TString name = *it;
@@ -724,9 +724,10 @@ void comparePDFs(RooWorkspace* wsLB, RooWorkspace* wsOAK)
   
   printDiff_PDF_PDF(wsOAK, translatePDF("pdf_JES_sf"), wsLB, translatePDF("pdf_JES_sf"));
   
-  printDiff_PDF_PDF(wsOAK, translatePDF("pdf_SFqcd_met3"), wsLB, "pdf_lowDeltaPhiNMETScaleFactor_M3");
-  printDiff_PDF_PDF(wsOAK, translatePDF("pdf_SFqcd_met4"), wsLB, "pdf_lowDeltaPhiNMETScaleFactor_M4");
-  printDiff_PDF_PDF(wsOAK, translatePDF("pdf_SFqcd_nb3"), wsLB, "pdf_lowDeltaPhiNBTagScaleFactor_3b");
+  //printDiff_PDF_PDF(wsOAK, translatePDF("pdf_SFqcd_met3"), wsLB, "pdf_lowDeltaPhiNMETScaleFactor_M3");
+  printDiff_PDF_PDF(wsOAK, "pdf_lowDeltaPhiNMETScaleFactor_M3", wsLB, "pdf_lowDeltaPhiNMETScaleFactor_M3");
+  printDiff_PDF_PDF(wsOAK, "pdf_lowDeltaPhiNMETScaleFactor_M4", wsLB, "pdf_lowDeltaPhiNMETScaleFactor_M4");
+  printDiff_PDF_PDF(wsOAK, "pdf_lowDeltaPhiNBTagScaleFactor_3b", wsLB, "pdf_lowDeltaPhiNBTagScaleFactor_3b");
 
   printDiff_PDF_PDF(wsOAK, translatePDF("pdf_acc_Zee_M1"), wsLB, translatePDF("pdf_acc_Zee_M1"));
   printDiff_PDF_PDF(wsOAK, translatePDF("pdf_acc_Zee_M2"), wsLB, translatePDF("pdf_acc_Zee_M2"));
@@ -850,9 +851,10 @@ void setVal_RRV_RRV(double val, RooWorkspace* ws1, TString name1, RooWorkspace* 
 
 void setVal_RAR_RRV(double val, RooWorkspace* ws1, TString name1, RooWorkspace* ws2, TString name2)
 {
+  cout << "About to set " << name1 << endl;
   ((RooRealVar*)(ws1->function(name1)))->setVal(val);
+  cout << "About to set " << name2 << endl;
   (ws2->var(name2))->setVal(val);
-  //cout << "Set" << endl;
 }
 
 
@@ -942,24 +944,25 @@ void setSame()
 {
 
   //Open workspaces
-  TFile fOAK("likelihood_jan10test_Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig-toy0000.root", "READ");
+  TFile fOAK("old.root", "READ");
   RooWorkspace* wsOAK = (RooWorkspace*)fOAK.Get("workspace");
   
-  TFile fLB("likelihood_toy_old_susy100_Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig-toy0000.root", "READ");
+  TFile fLB("new.root", "READ");
   RooWorkspace *wsLB = (RooWorkspace*)fLB.Get("workspace");
   
  
+  bool ABCD = false;
   
   //First the things that don't need special treatment
   //eff_sf_M1_H1_1b, eff_sf_ldp_M1_H1_1b, eff_sf_sl_M1_H1_1b, mu_qcd_ldp_M1_H1_1b, mu_ttwj_sl_M1_H1_1b, sf_qcd_M1_H1_1b, sf_ttwj_M1_H1_1b
   vector<TString> names;
   names.push_back("eff_sf_");
   names.push_back("eff_sf_ldp_");
-  names.push_back("eff_sf_sl_");
+  if(ABCD) names.push_back("eff_sf_sl_");
   names.push_back("mu_qcd_ldp_");
-  names.push_back("mu_ttwj_sl_");
+  if(ABCD) names.push_back("mu_ttwj_sl_");
   names.push_back("sf_qcd_");
-  names.push_back("sf_ttwj_");
+  if(ABCD) names.push_back("sf_ttwj_");
   for(vector<TString>::iterator it = names.begin(); it != names.end(); ++it)
     {
       TString name = *it;
@@ -1041,52 +1044,55 @@ void setSame()
       setVal_RRV_RRV(7, wsOAK, translate("mu_qcd_ldp_M4_H4_2b"), wsLB, translate("mu_qcd_ldp_M4_H4_2b"));
       setVal_RRV_RRV(0.5, wsOAK, translate("mu_qcd_ldp_M4_H4_3b"), wsLB, translate("mu_qcd_ldp_M4_H4_3b"));
       
-      setVal_RRV_RRV(978, wsOAK, translate("mu_ttwj_sl_M1_H1_1b"), wsLB, translate("mu_ttwj_sl_M1_H1_1b"));
-      setVal_RRV_RRV(609, wsOAK, translate("mu_ttwj_sl_M1_H1_2b"), wsLB, translate("mu_ttwj_sl_M1_H1_2b"));
-      setVal_RRV_RRV(49, wsOAK, translate("mu_ttwj_sl_M1_H1_3b"), wsLB, translate("mu_ttwj_sl_M1_H1_3b"));
-      setVal_RRV_RRV(778, wsOAK, translate("mu_ttwj_sl_M1_H2_1b"), wsLB, translate("mu_ttwj_sl_M1_H2_1b"));
-      setVal_RRV_RRV(436, wsOAK, translate("mu_ttwj_sl_M1_H2_2b"), wsLB, translate("mu_ttwj_sl_M1_H2_2b"));
-      setVal_RRV_RRV(46, wsOAK, translate("mu_ttwj_sl_M1_H2_3b"), wsLB, translate("mu_ttwj_sl_M1_H2_3b"));
-      setVal_RRV_RRV(77, wsOAK, translate("mu_ttwj_sl_M1_H3_1b"), wsLB, translate("mu_ttwj_sl_M1_H3_1b"));
-      setVal_RRV_RRV(39, wsOAK, translate("mu_ttwj_sl_M1_H3_2b"), wsLB, translate("mu_ttwj_sl_M1_H3_2b"));
-      setVal_RRV_RRV(3, wsOAK, translate("mu_ttwj_sl_M1_H3_3b"), wsLB, translate("mu_ttwj_sl_M1_H3_3b"));
-      setVal_RRV_RRV(22, wsOAK, translate("mu_ttwj_sl_M1_H4_1b"), wsLB, translate("mu_ttwj_sl_M1_H4_1b"));
-      setVal_RRV_RRV(13, wsOAK, translate("mu_ttwj_sl_M1_H4_2b"), wsLB, translate("mu_ttwj_sl_M1_H4_2b"));
-      setVal_RRV_RRV(0.00001, wsOAK, translate("mu_ttwj_sl_M1_H4_3b"), wsLB, translate("mu_ttwj_sl_M1_H4_3b"));
-      setVal_RRV_RRV(1650, wsOAK, translate("mu_ttwj_sl_M2_H1_1b"), wsLB, translate("mu_ttwj_sl_M2_H1_1b"));
-      setVal_RRV_RRV(900, wsOAK, translate("mu_ttwj_sl_M2_H1_2b"), wsLB, translate("mu_ttwj_sl_M2_H1_2b"));
-      setVal_RRV_RRV(86, wsOAK, translate("mu_ttwj_sl_M2_H1_3b"), wsLB, translate("mu_ttwj_sl_M2_H1_3b"));
-      setVal_RRV_RRV(1455, wsOAK, translate("mu_ttwj_sl_M2_H2_1b"), wsLB, translate("mu_ttwj_sl_M2_H2_1b"));
-      setVal_RRV_RRV(897, wsOAK, translate("mu_ttwj_sl_M2_H2_2b"), wsLB, translate("mu_ttwj_sl_M2_H2_2b"));
-      setVal_RRV_RRV(70, wsOAK, translate("mu_ttwj_sl_M2_H2_3b"), wsLB, translate("mu_ttwj_sl_M2_H2_3b"));
-      setVal_RRV_RRV(154, wsOAK, translate("mu_ttwj_sl_M2_H3_1b"), wsLB, translate("mu_ttwj_sl_M2_H3_1b"));
-      setVal_RRV_RRV(91, wsOAK, translate("mu_ttwj_sl_M2_H3_2b"), wsLB, translate("mu_ttwj_sl_M2_H3_2b"));
-      setVal_RRV_RRV(13, wsOAK, translate("mu_ttwj_sl_M2_H3_3b"), wsLB, translate("mu_ttwj_sl_M2_H3_3b"));
-      setVal_RRV_RRV(70, wsOAK, translate("mu_ttwj_sl_M2_H4_1b"), wsLB, translate("mu_ttwj_sl_M2_H4_1b"));
-      setVal_RRV_RRV(36, wsOAK, translate("mu_ttwj_sl_M2_H4_2b"), wsLB, translate("mu_ttwj_sl_M2_H4_2b"));
-      setVal_RRV_RRV(5, wsOAK, translate("mu_ttwj_sl_M2_H4_3b"), wsLB, translate("mu_ttwj_sl_M2_H4_3b"));
-      setVal_RRV_RRV(262, wsOAK, translate("mu_ttwj_sl_M3_H1_1b"), wsLB, translate("mu_ttwj_sl_M3_H1_1b"));
-      setVal_RRV_RRV(111, wsOAK, translate("mu_ttwj_sl_M3_H1_2b"), wsLB, translate("mu_ttwj_sl_M3_H1_2b"));
-      setVal_RRV_RRV(9, wsOAK, translate("mu_ttwj_sl_M3_H1_3b"), wsLB, translate("mu_ttwj_sl_M3_H1_3b"));
-      setVal_RRV_RRV(438, wsOAK, translate("mu_ttwj_sl_M3_H2_1b"), wsLB, translate("mu_ttwj_sl_M3_H2_1b"));
-      setVal_RRV_RRV(193, wsOAK, translate("mu_ttwj_sl_M3_H2_2b"), wsLB, translate("mu_ttwj_sl_M3_H2_2b"));
-      setVal_RRV_RRV(119, wsOAK, translate("mu_ttwj_sl_M3_H2_3b"), wsLB, translate("mu_ttwj_sl_M3_H2_3b"));
-      setVal_RRV_RRV(59, wsOAK, translate("mu_ttwj_sl_M3_H3_1b"), wsLB, translate("mu_ttwj_sl_M3_H3_1b"));
-      setVal_RRV_RRV(32, wsOAK, translate("mu_ttwj_sl_M3_H3_2b"), wsLB, translate("mu_ttwj_sl_M3_H3_2b"));
-      setVal_RRV_RRV(2, wsOAK, translate("mu_ttwj_sl_M3_H3_3b"), wsLB, translate("mu_ttwj_sl_M3_H3_3b"));
-      setVal_RRV_RRV(25, wsOAK, translate("mu_ttwj_sl_M3_H4_1b"), wsLB, translate("mu_ttwj_sl_M3_H4_1b"));
-      setVal_RRV_RRV(12, wsOAK, translate("mu_ttwj_sl_M3_H4_2b"), wsLB, translate("mu_ttwj_sl_M3_H4_2b"));
-      setVal_RRV_RRV(1, wsOAK, translate("mu_ttwj_sl_M3_H4_3b"), wsLB, translate("mu_ttwj_sl_M3_H4_3b"));
-      setVal_RRV_RRV(134, wsOAK, translate("mu_ttwj_sl_M4_H2_1b"), wsLB, translate("mu_ttwj_sl_M4_H2_1b"));
-      setVal_RRV_RRV(51, wsOAK, translate("mu_ttwj_sl_M4_H2_2b"), wsLB, translate("mu_ttwj_sl_M4_H2_2b"));
-      setVal_RRV_RRV(5, wsOAK, translate("mu_ttwj_sl_M4_H2_3b"), wsLB, translate("mu_ttwj_sl_M4_H2_3b"));
-      setVal_RRV_RRV(42, wsOAK, translate("mu_ttwj_sl_M4_H3_1b"), wsLB, translate("mu_ttwj_sl_M4_H3_1b"));
-      setVal_RRV_RRV(14, wsOAK, translate("mu_ttwj_sl_M4_H3_2b"), wsLB, translate("mu_ttwj_sl_M4_H3_2b"));
-      setVal_RRV_RRV(2, wsOAK, translate("mu_ttwj_sl_M4_H3_3b"), wsLB, translate("mu_ttwj_sl_M4_H3_3b"));
-      setVal_RRV_RRV(27, wsOAK, translate("mu_ttwj_sl_M4_H4_1b"), wsLB, translate("mu_ttwj_sl_M4_H4_1b"));
-      setVal_RRV_RRV(11, wsOAK, translate("mu_ttwj_sl_M4_H4_2b"), wsLB, translate("mu_ttwj_sl_M4_H4_2b"));
-      setVal_RRV_RRV(1, wsOAK, translate("mu_ttwj_sl_M4_H4_3b"), wsLB, translate("mu_ttwj_sl_M4_H4_3b"));
-      
+      if(ABCD) 
+	{
+	  setVal_RRV_RRV(978, wsOAK, translate("mu_ttwj_sl_M1_H1_1b"), wsLB, translate("mu_ttwj_sl_M1_H1_1b"));
+	  setVal_RRV_RRV(609, wsOAK, translate("mu_ttwj_sl_M1_H1_2b"), wsLB, translate("mu_ttwj_sl_M1_H1_2b"));
+	  setVal_RRV_RRV(49, wsOAK, translate("mu_ttwj_sl_M1_H1_3b"), wsLB, translate("mu_ttwj_sl_M1_H1_3b"));
+	  setVal_RRV_RRV(778, wsOAK, translate("mu_ttwj_sl_M1_H2_1b"), wsLB, translate("mu_ttwj_sl_M1_H2_1b"));
+	  setVal_RRV_RRV(436, wsOAK, translate("mu_ttwj_sl_M1_H2_2b"), wsLB, translate("mu_ttwj_sl_M1_H2_2b"));
+	  setVal_RRV_RRV(46, wsOAK, translate("mu_ttwj_sl_M1_H2_3b"), wsLB, translate("mu_ttwj_sl_M1_H2_3b"));
+	  setVal_RRV_RRV(77, wsOAK, translate("mu_ttwj_sl_M1_H3_1b"), wsLB, translate("mu_ttwj_sl_M1_H3_1b"));
+	  setVal_RRV_RRV(39, wsOAK, translate("mu_ttwj_sl_M1_H3_2b"), wsLB, translate("mu_ttwj_sl_M1_H3_2b"));
+	  setVal_RRV_RRV(3, wsOAK, translate("mu_ttwj_sl_M1_H3_3b"), wsLB, translate("mu_ttwj_sl_M1_H3_3b"));
+	  setVal_RRV_RRV(22, wsOAK, translate("mu_ttwj_sl_M1_H4_1b"), wsLB, translate("mu_ttwj_sl_M1_H4_1b"));
+	  setVal_RRV_RRV(13, wsOAK, translate("mu_ttwj_sl_M1_H4_2b"), wsLB, translate("mu_ttwj_sl_M1_H4_2b"));
+	  setVal_RRV_RRV(0.00001, wsOAK, translate("mu_ttwj_sl_M1_H4_3b"), wsLB, translate("mu_ttwj_sl_M1_H4_3b"));
+	  setVal_RRV_RRV(1650, wsOAK, translate("mu_ttwj_sl_M2_H1_1b"), wsLB, translate("mu_ttwj_sl_M2_H1_1b"));
+	  setVal_RRV_RRV(900, wsOAK, translate("mu_ttwj_sl_M2_H1_2b"), wsLB, translate("mu_ttwj_sl_M2_H1_2b"));
+	  setVal_RRV_RRV(86, wsOAK, translate("mu_ttwj_sl_M2_H1_3b"), wsLB, translate("mu_ttwj_sl_M2_H1_3b"));
+	  setVal_RRV_RRV(1455, wsOAK, translate("mu_ttwj_sl_M2_H2_1b"), wsLB, translate("mu_ttwj_sl_M2_H2_1b"));
+	  setVal_RRV_RRV(897, wsOAK, translate("mu_ttwj_sl_M2_H2_2b"), wsLB, translate("mu_ttwj_sl_M2_H2_2b"));
+	  setVal_RRV_RRV(70, wsOAK, translate("mu_ttwj_sl_M2_H2_3b"), wsLB, translate("mu_ttwj_sl_M2_H2_3b"));
+	  setVal_RRV_RRV(154, wsOAK, translate("mu_ttwj_sl_M2_H3_1b"), wsLB, translate("mu_ttwj_sl_M2_H3_1b"));
+	  setVal_RRV_RRV(91, wsOAK, translate("mu_ttwj_sl_M2_H3_2b"), wsLB, translate("mu_ttwj_sl_M2_H3_2b"));
+	  setVal_RRV_RRV(13, wsOAK, translate("mu_ttwj_sl_M2_H3_3b"), wsLB, translate("mu_ttwj_sl_M2_H3_3b"));
+	  setVal_RRV_RRV(70, wsOAK, translate("mu_ttwj_sl_M2_H4_1b"), wsLB, translate("mu_ttwj_sl_M2_H4_1b"));
+	  setVal_RRV_RRV(36, wsOAK, translate("mu_ttwj_sl_M2_H4_2b"), wsLB, translate("mu_ttwj_sl_M2_H4_2b"));
+	  setVal_RRV_RRV(5, wsOAK, translate("mu_ttwj_sl_M2_H4_3b"), wsLB, translate("mu_ttwj_sl_M2_H4_3b"));
+	  setVal_RRV_RRV(262, wsOAK, translate("mu_ttwj_sl_M3_H1_1b"), wsLB, translate("mu_ttwj_sl_M3_H1_1b"));
+	  setVal_RRV_RRV(111, wsOAK, translate("mu_ttwj_sl_M3_H1_2b"), wsLB, translate("mu_ttwj_sl_M3_H1_2b"));
+	  setVal_RRV_RRV(9, wsOAK, translate("mu_ttwj_sl_M3_H1_3b"), wsLB, translate("mu_ttwj_sl_M3_H1_3b"));
+	  setVal_RRV_RRV(438, wsOAK, translate("mu_ttwj_sl_M3_H2_1b"), wsLB, translate("mu_ttwj_sl_M3_H2_1b"));
+	  setVal_RRV_RRV(193, wsOAK, translate("mu_ttwj_sl_M3_H2_2b"), wsLB, translate("mu_ttwj_sl_M3_H2_2b"));
+	  setVal_RRV_RRV(119, wsOAK, translate("mu_ttwj_sl_M3_H2_3b"), wsLB, translate("mu_ttwj_sl_M3_H2_3b"));
+	  setVal_RRV_RRV(59, wsOAK, translate("mu_ttwj_sl_M3_H3_1b"), wsLB, translate("mu_ttwj_sl_M3_H3_1b"));
+	  setVal_RRV_RRV(32, wsOAK, translate("mu_ttwj_sl_M3_H3_2b"), wsLB, translate("mu_ttwj_sl_M3_H3_2b"));
+	  setVal_RRV_RRV(2, wsOAK, translate("mu_ttwj_sl_M3_H3_3b"), wsLB, translate("mu_ttwj_sl_M3_H3_3b"));
+	  setVal_RRV_RRV(25, wsOAK, translate("mu_ttwj_sl_M3_H4_1b"), wsLB, translate("mu_ttwj_sl_M3_H4_1b"));
+	  setVal_RRV_RRV(12, wsOAK, translate("mu_ttwj_sl_M3_H4_2b"), wsLB, translate("mu_ttwj_sl_M3_H4_2b"));
+	  setVal_RRV_RRV(1, wsOAK, translate("mu_ttwj_sl_M3_H4_3b"), wsLB, translate("mu_ttwj_sl_M3_H4_3b"));
+	  setVal_RRV_RRV(134, wsOAK, translate("mu_ttwj_sl_M4_H2_1b"), wsLB, translate("mu_ttwj_sl_M4_H2_1b"));
+	  setVal_RRV_RRV(51, wsOAK, translate("mu_ttwj_sl_M4_H2_2b"), wsLB, translate("mu_ttwj_sl_M4_H2_2b"));
+	  setVal_RRV_RRV(5, wsOAK, translate("mu_ttwj_sl_M4_H2_3b"), wsLB, translate("mu_ttwj_sl_M4_H2_3b"));
+	  setVal_RRV_RRV(42, wsOAK, translate("mu_ttwj_sl_M4_H3_1b"), wsLB, translate("mu_ttwj_sl_M4_H3_1b"));
+	  setVal_RRV_RRV(14, wsOAK, translate("mu_ttwj_sl_M4_H3_2b"), wsLB, translate("mu_ttwj_sl_M4_H3_2b"));
+	  setVal_RRV_RRV(2, wsOAK, translate("mu_ttwj_sl_M4_H3_3b"), wsLB, translate("mu_ttwj_sl_M4_H3_3b"));
+	  setVal_RRV_RRV(27, wsOAK, translate("mu_ttwj_sl_M4_H4_1b"), wsLB, translate("mu_ttwj_sl_M4_H4_1b"));
+	  setVal_RRV_RRV(11, wsOAK, translate("mu_ttwj_sl_M4_H4_2b"), wsLB, translate("mu_ttwj_sl_M4_H4_2b"));
+	  setVal_RRV_RRV(1, wsOAK, translate("mu_ttwj_sl_M4_H4_3b"), wsLB, translate("mu_ttwj_sl_M4_H4_3b"));
+	}
+
       setVal_RAR_RRV(-0.05, wsOAK, translate("JES_sf"), wsLB, translate("JES_sf"));
       
       setVal_RAR_RRV(1.15, wsOAK, translate("SFqcd_met2"), wsLB, translate("SFqcd_met2"));
@@ -1221,7 +1227,7 @@ void setSame()
 	}
       
     }
-  comparePDFs(wsLB, wsOAK);
+      comparePDFs(wsLB, wsOAK, ABCD);
 
   fOAK.Close();
   fLB.Close();
