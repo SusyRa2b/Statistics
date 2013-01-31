@@ -36,6 +36,11 @@ void makeTree(int trueN_in, TString inFile, TString fitter = "LB") {
     //branchDescriptor = "zeroLeptonCountTotal";
     branchDescriptor = "XXsignalCrossSection:signalCrossSectionError:signalCrossSection";
   }
+  else if(fitter == "sensitivity") {
+    branchDescriptor = "signalCrossSection/D:signalCrossSectionError";
+    branchDescriptor += ":lowerLimit95:upperLimit95";
+    branchDescriptor += ":susyFloatingNLL:susyFixedToZeroNLL";
+  }
   else {
     branchDescriptor = "signalCrossSection/D:signalCrossSectionError";
     branchDescriptor += ":lowerLimit68:upperLimit68:lowerLimit95:upperLimit95";
@@ -86,6 +91,9 @@ void makeHists(TString fitter = "LB") {
   TH1D* hZeroLeptonZtoNuNuYieldTotal = new TH1D("hZeroLeptonZtoNuNuYieldTotal", "Zero lepton Z-invisible yield", 50, 1000, 2000);
   TH1D* hZeroLeptonYieldTotal = new TH1D("hZeroLeptonYieldTotal", "Zero lepton yield", 50, 25000, 28000);
   TH1D* hZeroLeptonCountTotal = new TH1D("hZeroLeptonCountTotal", "Zero lepton count", 50, 25000, 28000);
+  TH1D* hUpperLimit95 = new TH1D("hUpperLimit95", "95% Confidence Level Upper Limit", 50, 0, 200);
+  TH1D* hSignificance = new TH1D("hSignificance", "Significance", 50, 0, 5);
+
 
   hSignalCrossSection->SetFillColor(6);
   hZeroLeptonSignalYieldTotal->SetFillColor(6);  
@@ -94,6 +102,8 @@ void makeHists(TString fitter = "LB") {
   hZeroLeptonZtoNuNuYieldTotal->SetFillColor(kGreen-3);
   hZeroLeptonYieldTotal->SetFillColor(kGray+1);
   hZeroLeptonCountTotal->SetFillColor(kGray+1);
+  hUpperLimit95->SetFillColor(kGray+1);
+  hSignificance->SetFillColor(kGray+1);
 
   treeToys->Project("hSignalCrossSection","signalCrossSection");
   treeToys->Project("hZeroLeptonSignalYieldTotal", "zeroLeptonSignalYieldTotal");
@@ -105,6 +115,9 @@ void makeHists(TString fitter = "LB") {
 
   treeToys->Project("hPullPL", "(signalCrossSection-"+trueXsec_string+")/( (upperLimit68-lowerLimit68)/2.0 )");
   treeToys->Project("hPull", "(signalCrossSection-"+trueXsec_string+")/( signalCrossSectionError )");
+
+  treeToys->Project("hUpperLimit95", "upperLimit95");
+  treeToys->Project("hSignificance", "sqrt(2.0*(susyFixedToZeroNLL - susyFloatingNLL))");
 
   cout << "CrossSection = " << hSignalCrossSection->GetMean() << " +- " << hSignalCrossSection->GetRMS() << endl;
   cout << "Yield Total = " << hZeroLeptonYieldTotal->GetMean() << " +- " << hZeroLeptonYieldTotal->GetRMS() << endl;
@@ -185,6 +198,15 @@ void makeHists(TString fitter = "LB") {
   cZeroLeptonYieldTotal->cd(2);
   hZeroLeptonCountTotal->Draw();
   cZeroLeptonYieldTotal->Print("cZeroLeptonYield_"+trueN_string+"_"+fitter+".pdf");
+
+  TCanvas* cSensitivity = new TCanvas("cSensitivity", "Sensitivity", 800, 330);
+  cSensitivity->Divide(2,1);
+  cSensitivity->cd(1);
+  hUpperLimit95->Draw();
+  cSensitivity->cd(2);
+  hSignificance->Draw();
+  cSensitivity->Print("cSensitivity_"+trueN_string+"_"+fitter+".pdf");
+
 
   return;
 }
