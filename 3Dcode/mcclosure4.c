@@ -1,3 +1,8 @@
+#include "TROOT.h"
+
+#include "TText.h"
+#include "TLatex.h"
+
 #include "TH1F.h"
 #include "TH2F.h"
 #include "TFile.h"
@@ -13,6 +18,8 @@
 
 #include "updateFileValue.c"
 #include "getFileValue.c"
+
+#include "defineCmsStyle.c"
 
 #include <iostream>
 #include <fstream>
@@ -38,6 +45,10 @@
 
       int ncomps(5) ;
       char compname[5][100] = { "ttbar", "wjets", "qcd", "znn", "vv" } ;
+
+bool usePublicStyle_=true;
+void setFormatting(TH1F* hh, const TString & ytitle="", const int ndiv=-1) ;
+
 
   //-----------
 
@@ -97,6 +108,26 @@
                     bool applyTriggerEfficiencyToNobs = false
                     ) {
 
+     TLatex* cmssim=new TLatex(5,23.08044,"CMS Simulation, #sqrt{s} = 8 TeV");//i think the numbers here mean nothing
+     TLatex* nblabel = new TLatex();
+     float nblabel_x = 0.23;
+     float nblabel_y = 0.84;
+     if (usePublicStyle_) {
+       initCmsStyle();
+       gROOT->SetStyle("CMS");
+       gROOT->ForceStyle();
+       cmssim->SetNDC();
+       cmssim->SetTextAlign(13);
+       cmssim->SetX(0.23); //0.5
+       cmssim->SetY(0.95); //0.94
+       cmssim->SetTextFont(42);
+       cmssim->SetTextSize(0.06);
+
+       nblabel->SetTextSize(0.06);
+       nblabel->SetTextFont(62);
+       nblabel->SetNDC();
+     }
+
       if ( useAverageTtwjClosure ) printf("I like green eggs and ham.\n") ; //-- to make the compiler not give a warning.
 
       if ( qcdModelIndex < 2 || qcdModelIndex > 4 ) {
@@ -112,10 +143,10 @@
       gSystem->Exec("mkdir -p outputfiles") ;
 
       gStyle->SetOptStat(0) ;
-      gStyle->SetPadTopMargin(0.03) ;
-      gStyle->SetPadBottomMargin(0.30) ;
+      gStyle->SetPadTopMargin(usePublicStyle_ ? 0.1 : 0.03) ;
+      gStyle->SetPadBottomMargin(usePublicStyle_ ? 0.2 : 0.30) ;
       gStyle->SetPadRightMargin(0.05) ;
-      gStyle->SetPadLeftMargin(0.15) ;
+      gStyle->SetPadLeftMargin(usePublicStyle_ ? 0.2 : 0.15) ;
       gStyle->SetTitleX(0.98) ;
       gStyle->SetTitleAlign(33) ;
 
@@ -330,16 +361,14 @@
 
 
 
-
-
-
+      float toprowmax = usePublicStyle_ ? 2 : 3;
 
       hmctruth_ttwj_0over1ratio_1b->SetMinimum(0.) ;
       hmctruth_ttwj_0over1ratio_2b->SetMinimum(0.) ;
       hmctruth_ttwj_0over1ratio_3b->SetMinimum(0.) ;
-      hmctruth_ttwj_0over1ratio_1b->SetMaximum(3.) ;
-      hmctruth_ttwj_0over1ratio_2b->SetMaximum(3.) ;
-      hmctruth_ttwj_0over1ratio_3b->SetMaximum(3.) ;
+      hmctruth_ttwj_0over1ratio_1b->SetMaximum(toprowmax) ;
+      hmctruth_ttwj_0over1ratio_2b->SetMaximum(toprowmax) ;
+      hmctruth_ttwj_0over1ratio_3b->SetMaximum(toprowmax) ;
 
       hscalefactor_ttwj_0over1ratio_1b->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_2b->SetMinimum(0.) ;
@@ -355,6 +384,19 @@
       hscalefactor_ttwj_0over1ratio_2b_whalfcorr->SetMaximum(2.5) ;
       hscalefactor_ttwj_0over1ratio_3b_whalfcorr->SetMaximum(2.5) ;
 
+      if (usePublicStyle_) {
+	setFormatting(hmctruth_ttwj_0over1ratio_1b,"ZL/SL ratio",404);
+	setFormatting(hmctruth_ttwj_0over1ratio_2b,"ZL/SL ratio",404);
+	setFormatting(hmctruth_ttwj_0over1ratio_3b,"ZL/SL ratio",404);
+	setFormatting(hscalefactor_ttwj_0over1ratio_1b_whalfcorr,"Normalized ZL/SL ratios S_{i,j,k}^{ttWj}",405);
+	setFormatting(hscalefactor_ttwj_0over1ratio_2b_whalfcorr,"Normalized ZL/SL ratios S_{i,j,k}^{ttWj}",405);
+	setFormatting(hscalefactor_ttwj_0over1ratio_3b_whalfcorr,"Normalized ZL/SL ratios S_{i,j,k}^{ttWj}",405);
+
+	setFormatting(hscalefactor_ttwj_0over1ratio_1b);
+	setFormatting(hscalefactor_ttwj_0over1ratio_2b);
+	setFormatting(hscalefactor_ttwj_0over1ratio_3b);
+
+      }
 
       TH1F* hdummy1 = (TH1F*) hmctruth_ttwj_0over1ratio_1b->Clone( "hdummy1" ) ;
       hdummy1->Reset() ;
@@ -362,14 +404,19 @@
       hdummy1->SetMinimum(0.) ;
       hdummy1->SetTitle("") ;
 
-      resetBinLabels( hmctruth_ttwj_0over1ratio_1b ) ;
-      resetBinLabels( hmctruth_ttwj_0over1ratio_2b ) ;
-      resetBinLabels( hmctruth_ttwj_0over1ratio_3b ) ;
+      resetBinLabels( hmctruth_ttwj_0over1ratio_1b ,usePublicStyle_) ;
+      resetBinLabels( hmctruth_ttwj_0over1ratio_2b ,usePublicStyle_) ;
+      resetBinLabels( hmctruth_ttwj_0over1ratio_3b ,usePublicStyle_) ;
 
-      resetBinLabels( hscalefactor_ttwj_0over1ratio_1b ) ;
-      resetBinLabels( hscalefactor_ttwj_0over1ratio_2b ) ;
-      resetBinLabels( hscalefactor_ttwj_0over1ratio_3b ) ;
+      resetBinLabels( hscalefactor_ttwj_0over1ratio_1b ,usePublicStyle_) ;
+      resetBinLabels( hscalefactor_ttwj_0over1ratio_2b ,usePublicStyle_) ;
+      resetBinLabels( hscalefactor_ttwj_0over1ratio_3b ,usePublicStyle_) ;
 
+      if (usePublicStyle_) {
+	resetBinLabels( hscalefactor_ttwj_0over1ratio_1b_whalfcorr ,usePublicStyle_) ;
+	resetBinLabels( hscalefactor_ttwj_0over1ratio_2b_whalfcorr ,usePublicStyle_) ;
+	resetBinLabels( hscalefactor_ttwj_0over1ratio_3b_whalfcorr ,usePublicStyle_) ;
+      }
 
       gStyle->SetPadRightMargin(0.08) ;
       TCanvas* cttwj = (TCanvas*) gDirectory->FindObject("cttwj") ;
@@ -386,7 +433,7 @@
       legend_ttwj->AddEntry( hmctruth_ttwj_0over1ratio_3b, ">=3b") ;
 
       cttwj->cd(1) ;
-      hdummy1->SetMaximum(3.0) ;
+      hdummy1->SetMaximum(toprowmax) ;
       hdummy1->SetYTitle("ttwj 0 lep / 1 lep ratio") ;
       hdummy1->DrawCopy() ;
       hmctruth_ttwj_0over1ratio_1b->SetTitle("ttwj: 0 Lepton / 1 Lepton, Ratio") ;
@@ -425,13 +472,25 @@
 
       cttwj3->cd(1) ;
       hmctruth_ttwj_0over1ratio_1b->SetTitle("ttwj =1b: 0 Lepton / 1 Lepton, Ratio") ;
-      hmctruth_ttwj_0over1ratio_1b->Draw() ;
+      hmctruth_ttwj_0over1ratio_1b->Draw("E1") ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 1");
+      }
       cttwj3->cd(2) ;
       hmctruth_ttwj_0over1ratio_2b->SetTitle("ttwj =2b: 0 Lepton / 1 Lepton, Ratio") ;
-      hmctruth_ttwj_0over1ratio_2b->Draw() ;
+      hmctruth_ttwj_0over1ratio_2b->Draw("E1") ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+      }
       cttwj3->cd(3) ;
       hmctruth_ttwj_0over1ratio_3b->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Ratio") ;
-      hmctruth_ttwj_0over1ratio_3b->Draw() ;
+      hmctruth_ttwj_0over1ratio_3b->Draw("E1") ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
+      }
 
       cttwj3->cd(4) ;
       hscalefactor_ttwj_0over1ratio_1b->SetTitle("ttwj =1b: 0 Lepton / 1 Lepton, Scale Factor") ;
@@ -439,18 +498,30 @@
       hscalefactor_ttwj_0over1ratio_1b->DrawCopy("samee1") ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
       hscalefactor_ttwj_0over1ratio_1b->Draw("same") ;
+      if (usePublicStyle_)   {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 1");
+      }
       cttwj3->cd(5) ;
       hscalefactor_ttwj_0over1ratio_2b->SetTitle("ttwj =2b: 0 Lepton / 1 Lepton, Scale Factor") ;
       hscalefactor_ttwj_0over1ratio_2b_whalfcorr->DrawCopy("e1") ;
       hscalefactor_ttwj_0over1ratio_2b->DrawCopy("samee1") ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
       hscalefactor_ttwj_0over1ratio_2b->Draw("same") ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+      }
       cttwj3->cd(6) ;
       hscalefactor_ttwj_0over1ratio_3b->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Scale Factor") ;
       hscalefactor_ttwj_0over1ratio_3b_whalfcorr->DrawCopy("e1") ;
       hscalefactor_ttwj_0over1ratio_3b->DrawCopy("samee1") ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
       hscalefactor_ttwj_0over1ratio_3b->Draw("same") ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
+      }
 
 
       TString outttwj3( infileStr ) ;
@@ -1381,62 +1452,119 @@
       cqcd4->Clear() ;
       cqcd4->Divide(3,1) ;
 
+      if (usePublicStyle_) {
+	nblabel_y -= 0.01;
+
+	for (int ii=0;ii<3;ii++)   {
+	  resetBinLabels(hflat_0lepldp_ratio_ave[ii] , false ) ;
+	  hflat_0lepldp_ratio_ave[ii]->SetYTitle("ZL/LDP ratio");
+	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetYTitle("ZL/LDP ratio");
+
+	  hflat_0lepldp_ratio_ave[ii]->SetMarkerStyle(kCircle);
+	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetMarkerStyle(kCircle);
+
+	  hflat_0lepldp_ratio_ave[ii]->SetMarkerSize(1);
+	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetMarkerSize(1);
+
+	  hflat_0lepldp_ratio_ave[ii]->SetLineWidth(1);
+	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetLineWidth(1);
+
+	  hflat_0lepldp_ratio_model[ii] -> SetLineWidth(1);
+
+	  hflat_0lepldp_ratio_model[ii] -> SetLineColor(kRed); //was red
+
+	  hflat_0lepldp_ratio_ave[ii]->SetMarkerColor(kBlack); //was black
+	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetMarkerColor(kBlack);//was black
+
+	  hflat_0lepldp_ratio_ave[ii]->SetLineColor(kBlack); //was black
+	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetLineColor(kBlue);
+
+
+	  hflat_0lepldp_ratio_ave[ii] -> SetMaximum(0.6) ;
+	  hflat_0lepldp_ratio_ave[ii] -> SetMinimum(-0.1) ; //change this?
+	}
+      }
+      else {
+
+	hflat_0lepldp_ratio_ave[0] -> SetTitle("Average QCD 0lep/LDP ratio, nb=1") ;
+	hflat_0lepldp_ratio_ave[0] -> SetMarkerSize(1.2) ;
+	hflat_0lepldp_ratio_ave[0] -> SetMarkerStyle(20) ;
+	hflat_0lepldp_ratio_ave[0] -> SetMaximum(0.6) ;
+	hflat_0lepldp_ratio_ave[0] -> SetMinimum(-0.1) ;
+	
+	hflat_0lepldp_ratio_ave_withRMSerror[0]->SetMarkerStyle() ;
+	hflat_0lepldp_ratio_ave_withRMSerror[0]->SetLineColor(4) ;
+	hflat_0lepldp_ratio_model[0] -> SetLineColor(2) ;
+	hflat_0lepldp_ratio_model[0] -> SetLineWidth(2) ;
+	hflat_0lepldp_ratio_ave[1] -> SetMarkerSize(1.2) ;
+	hflat_0lepldp_ratio_ave[1] -> SetMarkerStyle(20) ;
+	hflat_0lepldp_ratio_ave[1] -> SetMaximum(0.6) ;
+	hflat_0lepldp_ratio_ave[1] -> SetMinimum(-0.1) ;
+	
+	hflat_0lepldp_ratio_ave_withRMSerror[1]->SetMarkerStyle() ;
+	hflat_0lepldp_ratio_ave_withRMSerror[1]->SetLineColor(4) ;
+	
+	hflat_0lepldp_ratio_model[1] -> SetLineColor(2) ;
+	hflat_0lepldp_ratio_model[1] -> SetLineWidth(2) ;
+	hflat_0lepldp_ratio_ave[2] -> SetMarkerSize(1.2) ;
+	hflat_0lepldp_ratio_ave[2] -> SetMarkerStyle(20) ;
+	hflat_0lepldp_ratio_ave[2] -> SetMaximum(0.6) ;
+	hflat_0lepldp_ratio_ave[2] -> SetMinimum(-0.1) ;
+	hflat_0lepldp_ratio_ave_withRMSerror[2]->SetMarkerStyle() ;
+	hflat_0lepldp_ratio_ave_withRMSerror[2]->SetLineColor(4) ;
+	
+	hflat_0lepldp_ratio_model[2] -> SetLineColor(2) ;
+	hflat_0lepldp_ratio_model[2] -> SetLineWidth(2) ;
+
+      }
+
       cqcd4 -> cd(1) ;
-      hflat_0lepldp_ratio_ave[0] -> SetTitle("Average QCD 0lep/LDP ratio, nb=1") ;
-      hflat_0lepldp_ratio_ave[0] -> SetMarkerSize(1.2) ;
-      hflat_0lepldp_ratio_ave[0] -> SetMarkerStyle(20) ;
-      hflat_0lepldp_ratio_ave[0] -> SetMaximum(0.6) ;
-      hflat_0lepldp_ratio_ave[0] -> SetMinimum(-0.1) ;
+
+
       hflat_0lepldp_ratio_ave[0]->DrawCopy("e1") ;
-      hflat_0lepldp_ratio_ave_withRMSerror[0]->SetMarkerStyle() ;
-      hflat_0lepldp_ratio_ave_withRMSerror[0]->SetLineColor(4) ;
       hflat_0lepldp_ratio_ave_withRMSerror[0]->DrawCopy("samee1") ;
       hflat_0lepldp_ratio_ave[0]->DrawCopy("samee1") ;
-      hflat_0lepldp_ratio_model[0] -> SetLineColor(2) ;
-      hflat_0lepldp_ratio_model[0] -> SetLineWidth(2) ;
       hflat_0lepldp_ratio_model[0] -> Draw("histsame") ;
       hflat_0lepldp_ratio_ave[0]->DrawCopy("samee1") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
-      gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 1");
+      }
+      else      gPad->SetGridx(1) ;
 
       cqcd4 -> cd(2) ;
       hflat_0lepldp_ratio_ave[1] -> SetTitle("Average QCD 0lep/LDP ratio, nb=2") ;
-      hflat_0lepldp_ratio_ave[1] -> SetMarkerSize(1.2) ;
-      hflat_0lepldp_ratio_ave[1] -> SetMarkerStyle(20) ;
-      hflat_0lepldp_ratio_ave[1] -> SetMaximum(0.6) ;
-      hflat_0lepldp_ratio_ave[1] -> SetMinimum(-0.1) ;
       hflat_0lepldp_ratio_ave[1]->DrawCopy("e1") ;
-      hflat_0lepldp_ratio_ave_withRMSerror[1]->SetMarkerStyle() ;
-      hflat_0lepldp_ratio_ave_withRMSerror[1]->SetLineColor(4) ;
       hflat_0lepldp_ratio_ave_withRMSerror[1]->DrawCopy("samee1") ;
       hflat_0lepldp_ratio_ave[1]->DrawCopy("samee1") ;
-      hflat_0lepldp_ratio_model[1] -> SetLineColor(2) ;
-      hflat_0lepldp_ratio_model[1] -> SetLineWidth(2) ;
       hflat_0lepldp_ratio_model[1] -> Draw("histsame") ;
       hflat_0lepldp_ratio_ave[1]->DrawCopy("samee1") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
-      gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+
+      }
+      else      gPad->SetGridx(1) ;
 
       cqcd4 -> cd(3) ;
       hflat_0lepldp_ratio_ave[2] -> SetTitle("Average QCD 0lep/LDP ratio, nb>=3") ;
-      hflat_0lepldp_ratio_ave[2] -> SetMarkerSize(1.2) ;
-      hflat_0lepldp_ratio_ave[2] -> SetMarkerStyle(20) ;
-      hflat_0lepldp_ratio_ave[2] -> SetMaximum(0.6) ;
-      hflat_0lepldp_ratio_ave[2] -> SetMinimum(-0.1) ;
       hflat_0lepldp_ratio_ave[2]->DrawCopy("e1") ;
-      hflat_0lepldp_ratio_ave_withRMSerror[2]->SetMarkerStyle() ;
-      hflat_0lepldp_ratio_ave_withRMSerror[2]->SetLineColor(4) ;
       hflat_0lepldp_ratio_ave_withRMSerror[2]->DrawCopy("samee1") ;
       hflat_0lepldp_ratio_ave[2]->DrawCopy("samee1") ;
-      hflat_0lepldp_ratio_model[2] -> SetLineColor(2) ;
-      hflat_0lepldp_ratio_model[2] -> SetLineWidth(2) ;
       hflat_0lepldp_ratio_model[2] -> Draw("histsame") ;
       hflat_0lepldp_ratio_ave[2]->DrawCopy("samee1") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
-      gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
+
+      }
+      else      gPad->SetGridx(1) ;
 
 
       cqcd4->Update() ; cqcd4->Draw() ;
@@ -1450,9 +1578,36 @@
 
 
 
-
-
-
+      if (usePublicStyle_)  {
+	for (int ii=0;ii<3;ii++)   {
+	  resetBinLabels(hflat_0lepldp_ratio_ave[ii] , false ) ;
+	  
+	  hflat_0lepldp_ratio_ave[ii]->SetYTitle("Normalized ZL/LDP ratios S_{i,j,k}^{QCD}");
+	  
+	  hflat_0lepldp_ratio_ave[ii]->SetLineWidth(1);
+	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetLineWidth(1);
+	  
+	  hflat_0lepldp_ratio_ave[ii]->SetMarkerStyle(kCircle);
+	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetMarkerStyle(kCircle);
+	  
+	  hflat_0lepldp_ratio_ave[ii]->SetMarkerSize(1);
+	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetMarkerSize(1);
+	}
+      }
+      else {
+	hflat_0lepldp_ratio_ave[0] -> SetMarkerSize(1.2) ;
+	hflat_0lepldp_ratio_ave[0] -> SetMarkerStyle(20) ;
+	hflat_0lepldp_ratio_ave_withRMSerror[0]->SetMarkerStyle() ;
+	hflat_0lepldp_ratio_ave_withRMSerror[0]->SetLineColor(4) ;
+	hflat_0lepldp_ratio_ave[1] -> SetMarkerSize(1.2) ;
+	hflat_0lepldp_ratio_ave[1] -> SetMarkerStyle(20) ;
+	hflat_0lepldp_ratio_ave_withRMSerror[1]->SetMarkerStyle() ;
+	hflat_0lepldp_ratio_ave_withRMSerror[1]->SetLineColor(4) ;
+	hflat_0lepldp_ratio_ave[2] -> SetMarkerSize(1.2) ;
+	hflat_0lepldp_ratio_ave[2] -> SetMarkerStyle(20) ;
+	hflat_0lepldp_ratio_ave_withRMSerror[2]->SetMarkerStyle() ;
+	hflat_0lepldp_ratio_ave_withRMSerror[2]->SetLineColor(4) ;
+      }
 
 
       cqcd4->Clear() ;
@@ -1460,47 +1615,50 @@
 
       cqcd4 -> cd(1) ;
       hflat_0lepldp_ratio_ave[0] -> SetTitle("Average QCD 0lep/LDP ratio, nb=1") ;
-      hflat_0lepldp_ratio_ave[0] -> SetMarkerSize(1.2) ;
-      hflat_0lepldp_ratio_ave[0] -> SetMarkerStyle(20) ;
       hflat_0lepldp_ratio_ave[0] -> SetMaximum(0.6) ;
       hflat_0lepldp_ratio_ave[0] -> SetMinimum(-0.1) ;
       hflat_0lepldp_ratio_ave[0]->DrawCopy("e1") ;
-      hflat_0lepldp_ratio_ave_withRMSerror[0]->SetMarkerStyle() ;
-      hflat_0lepldp_ratio_ave_withRMSerror[0]->SetLineColor(4) ;
       hflat_0lepldp_ratio_ave_withRMSerror[0]->DrawCopy("samee1") ;
       hflat_0lepldp_ratio_ave[0]->DrawCopy("samee1") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
-      gPad->SetGridx(1) ;
+     if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 1");
+
+      }
+      else      gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
 
       cqcd4 -> cd(2) ;
       hflat_0lepldp_ratio_ave[1] -> SetTitle("Average QCD 0lep/LDP ratio, nb=2") ;
-      hflat_0lepldp_ratio_ave[1] -> SetMarkerSize(1.2) ;
-      hflat_0lepldp_ratio_ave[1] -> SetMarkerStyle(20) ;
       hflat_0lepldp_ratio_ave[1] -> SetMaximum(0.6) ;
       hflat_0lepldp_ratio_ave[1] -> SetMinimum(-0.1) ;
       hflat_0lepldp_ratio_ave[1]->DrawCopy("e1") ;
-      hflat_0lepldp_ratio_ave_withRMSerror[1]->SetMarkerStyle() ;
-      hflat_0lepldp_ratio_ave_withRMSerror[1]->SetLineColor(4) ;
       hflat_0lepldp_ratio_ave_withRMSerror[1]->DrawCopy("samee1") ;
       hflat_0lepldp_ratio_ave[1]->DrawCopy("samee1") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
-      gPad->SetGridx(1) ;
+     if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+
+      }
+      else      gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
 
       cqcd4 -> cd(3) ;
       hflat_0lepldp_ratio_ave[2] -> SetTitle("Average QCD 0lep/LDP ratio, nb>=3") ;
-      hflat_0lepldp_ratio_ave[2] -> SetMarkerSize(1.2) ;
-      hflat_0lepldp_ratio_ave[2] -> SetMarkerStyle(20) ;
       hflat_0lepldp_ratio_ave[2] -> SetMaximum(0.6) ;
       hflat_0lepldp_ratio_ave[2] -> SetMinimum(-0.1) ;
       hflat_0lepldp_ratio_ave[2]->DrawCopy("e1") ;
-      hflat_0lepldp_ratio_ave_withRMSerror[2]->SetMarkerStyle() ;
-      hflat_0lepldp_ratio_ave_withRMSerror[2]->SetLineColor(4) ;
       hflat_0lepldp_ratio_ave_withRMSerror[2]->DrawCopy("samee1") ;
       hflat_0lepldp_ratio_ave[2]->DrawCopy("samee1") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
-      gPad->SetGridx(1) ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
+
+      }
+      else      gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
 
 
@@ -1516,7 +1674,37 @@
 
 
 
+      if (usePublicStyle_) {
+	for (int ii=0;ii<3;ii++) {
+	  hflat_scale_factor[ii] -> SetMarkerSize(1) ;
+	  hflat_scale_factor[ii] -> SetMarkerStyle(kCircle) ;
+	  hflat_scale_factor_withRMSerror[ii]->SetMarkerStyle(20) ;
+	  hflat_scale_factor_withRMSerror[ii]->SetMarkerSize(0.01) ;
+	  hflat_scale_factor_withRMSerror[ii]->SetLineColor(4) ;
 
+	  hflat_scale_factor[ii] -> SetLineWidth(1) ;
+	  hflat_scale_factor_withRMSerror[ii] -> SetLineWidth(1) ;
+
+	  hflat_scale_factor[ii] -> SetMaximum(2.5) ;
+	  hflat_scale_factor[ii] -> SetMinimum(0) ;
+	  hflat_scale_factor[ii]->SetYTitle("Normalized ZL/LDP ratios S_{i,j,k}^{QCD}");
+	  resetBinLabels(hflat_scale_factor[ii],false);
+	}
+
+      }
+      else {
+	for (int ii=0;ii<3;ii++) {
+	  hflat_scale_factor[ii] -> SetMarkerSize(1.2) ;
+	  hflat_scale_factor[ii] -> SetMarkerStyle(20) ;
+	  hflat_scale_factor_withRMSerror[ii]->SetMarkerStyle() ;
+	  hflat_scale_factor_withRMSerror[ii]->SetLineColor(4) ;
+
+	  hflat_scale_factor[ii] -> SetMaximum(2.6) ;
+	  hflat_scale_factor[ii] -> SetMinimum(-0.1) ;
+
+	}
+
+      }
 
 
 
@@ -1536,62 +1724,59 @@
 
       cqcd5 -> cd(1) ;
       hflat_scale_factor[0] -> SetTitle("QCD Scale Factor, nb=1") ;
-      hflat_scale_factor[0] -> SetMarkerSize(1.2) ;
-      hflat_scale_factor[0] -> SetMarkerStyle(20) ;
-      hflat_scale_factor[0] -> SetMaximum(2.6) ;
-      hflat_scale_factor[0] -> SetMinimum(-0.1) ;
       hflat_scale_factor[0]->DrawCopy("e1") ;
       line->SetLineColor(2) ;
       line->SetLineStyle(1) ;
       line->DrawLine(0.5,1.0,nbins+0.5,1.0) ;
-      hflat_scale_factor_withRMSerror[0]->SetMarkerStyle() ;
-      hflat_scale_factor_withRMSerror[0]->SetLineColor(4) ;
       hflat_scale_factor_withRMSerror[0]->DrawCopy("samee1") ;
       hflat_scale_factor[0]->DrawCopy("samee1") ;
       line->SetLineColor(4) ;
       line->SetLineStyle(1) ;
-      line->DrawLine(0.5,0,nbins+0.5,0) ;
-      gPad->SetGridx(1) ;
+      if (!usePublicStyle_) line->DrawLine(0.5,0,nbins+0.5,0) ;
+     if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 1");
+
+      }
+      else      gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
 
       cqcd5 -> cd(2) ;
       hflat_scale_factor[1] -> SetTitle("QCD Scale Factor, nb=2") ;
-      hflat_scale_factor[1] -> SetMarkerSize(1.2) ;
-      hflat_scale_factor[1] -> SetMarkerStyle(20) ;
-      hflat_scale_factor[1] -> SetMaximum(2.6) ;
-      hflat_scale_factor[1] -> SetMinimum(-0.1) ;
       hflat_scale_factor[1]->DrawCopy("e1") ;
       line->SetLineColor(2) ;
       line->SetLineStyle(1) ;
       line->DrawLine(0.5,1.0,nbins+0.5,1.0) ;
-      hflat_scale_factor_withRMSerror[1]->SetMarkerStyle() ;
-      hflat_scale_factor_withRMSerror[1]->SetLineColor(4) ;
       hflat_scale_factor_withRMSerror[1]->DrawCopy("samee1") ;
       hflat_scale_factor[1]->DrawCopy("samee1") ;
       line->SetLineColor(4) ;
       line->SetLineStyle(1) ;
-      line->DrawLine(0.5,0,nbins+0.5,0) ;
-      gPad->SetGridx(1) ;
+      if (!usePublicStyle_) line->DrawLine(0.5,0,nbins+0.5,0) ;
+     if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+
+      }
+      else      gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
 
       cqcd5 -> cd(3) ;
       hflat_scale_factor[2] -> SetTitle("QCD Scale Factor, nb>=3") ;
-      hflat_scale_factor[2] -> SetMarkerSize(1.2) ;
-      hflat_scale_factor[2] -> SetMarkerStyle(20) ;
-      hflat_scale_factor[2] -> SetMaximum(2.6) ;
-      hflat_scale_factor[2] -> SetMinimum(-0.1) ;
       hflat_scale_factor[2]->DrawCopy("e1") ;
       line->SetLineColor(2) ;
       line->SetLineStyle(1) ;
       line->DrawLine(0.5,1.0,nbins+0.5,1.0) ;
-      hflat_scale_factor_withRMSerror[2]->SetMarkerStyle() ;
-      hflat_scale_factor_withRMSerror[2]->SetLineColor(4) ;
       hflat_scale_factor_withRMSerror[2]->DrawCopy("samee1") ;
       hflat_scale_factor[2]->DrawCopy("samee1") ;
       line->SetLineColor(4) ;
       line->SetLineStyle(1) ;
-      line->DrawLine(0.5,0,nbins+0.5,0) ;
-      gPad->SetGridx(1) ;
+      if (!usePublicStyle_) line->DrawLine(0.5,0,nbins+0.5,0) ;
+     if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
+
+      }
+      else      gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
 
 
@@ -2305,7 +2490,13 @@ void loadHist(const char* filename, const char* pfx, const char* pat, Bool_t doA
       for ( int bi=1; bi<=nbins; bi++ ) {
          TString label = xaxis->GetBinLabel( bi ) ;
          label.ReplaceAll("0lep_","") ;
-         if ( eraseNb ) { label.Resize( label.Sizeof()-4 ) ; }
+         if ( eraseNb &&label.Length()>4) { label.Resize( label.Sizeof()-4 ) ; }
+
+	 if (usePublicStyle_) { //a bit of a nasty hack to resort to using a global here
+	   label.ReplaceAll("M","MET");
+	   label.ReplaceAll("H","HT");
+	   label.ReplaceAll("_","-");
+	 }
          xaxis -> SetBinLabel( bi, label ) ;
       } // bi
 
@@ -2313,9 +2504,15 @@ void loadHist(const char* filename, const char* pfx, const char* pat, Bool_t doA
 
 //==========================================================================================
 
+void setFormatting(TH1F* hh, const TString & ytitle, const int ndiv) {
 
+  if (ytitle!="")  hh->SetYTitle(ytitle);
 
+  if (ndiv>=0)  hh->GetYaxis()->SetNdivisions(ndiv);
+  hh->SetMarkerStyle(kCircle);
+  hh->SetMarkerSize(1);
 
+  hh->SetMarkerColor(kBlue+1);
+  hh->SetLineColor(kBlue+1);
 
-
-
+}
