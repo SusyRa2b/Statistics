@@ -783,6 +783,12 @@ void drawSet( const char* hname_base, const char* xtitle, const char* norm_key, 
          TH1F* hmc = (TH1F*) gDirectory->FindObject( hname ) ;
          if ( hmc == 0x0 ) { printf("\n\n *** drawSet: missing MC hist %s\n", hname ) ; return ; }
 
+	 //jmt -- set histo style
+	 if (usePublicStyle_) {
+	   hmc->SetFillColor( getSampleColor(hname));
+	   hmc->SetMarkerSize(0);
+	 }
+
 
          if ( !kfactorAlreadyApplied ) {
             if ( strcmp( norm_key, "none" ) != 0 ) {

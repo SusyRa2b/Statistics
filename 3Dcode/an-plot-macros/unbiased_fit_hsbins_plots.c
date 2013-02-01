@@ -443,11 +443,11 @@ void formatClone(TGraphAsymmErrors * gg) {
 
 
        if ( doLogy ) {
-          cmip->SaveAs("fitresult-unbiased-hsbins-18fb-logy.pdf" ) ;
+          cmip->SaveAs("fitresult-unbiased-hsbins-2sig-19fb-logy.pdf" ) ;
        } else {
-          cmip->SaveAs("fitresult-unbiased-hsbins-18fb.eps" ) ;
-          cmip->SaveAs("fitresult-unbiased-hsbins-18fb.png" ) ;
-          cmip->SaveAs("fitresult-unbiased-hsbins-18fb.pdf" ) ;
+          cmip->SaveAs("fitresult-unbiased-hsbins-2sig-19fb.eps" ) ;
+          cmip->SaveAs("fitresult-unbiased-hsbins-2sig-19fb.png" ) ;
+          cmip->SaveAs("fitresult-unbiased-hsbins-2sig-19fb.pdf" ) ;
        }
 
 

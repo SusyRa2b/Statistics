@@ -12,8 +12,8 @@
 
        fill_arrays() ;
 
-       int fillStyle1sig = 1 ;
-       int fillStyle2sig = 1 ;
+       int fillStyle1sig = 1001 ;
+       int fillStyle2sig = 1001 ;
        int fillColor1sig = kBlue-9 ;
        int fillColor2sig = kBlue-10 ;
        int fillColor1sig_ff = kGreen-7 ;
@@ -248,6 +248,11 @@
        h_data_nb3_ms -> Draw("same e") ;
 
 
+       if ( doLogy ) {
+          cmipbs->SaveAs("fitresult-binsums-hsbins-2sig-19fb-logy.pdf") ;
+       } else {
+          cmipbs->SaveAs("fitresult-binsums-hsbins-2sig-19fb.pdf") ;
+       }
 
 
 

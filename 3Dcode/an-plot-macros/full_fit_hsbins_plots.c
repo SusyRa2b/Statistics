@@ -437,9 +437,9 @@ void formatClone(TGraphAsymmErrors * gg) {
        cmip->Draw() ;
 
        if ( doLogy ) {
-          cmip->SaveAs("fitresult-fullfit-hsbins-18fb-logy.pdf" ) ;
+          cmip->SaveAs("fitresult-fullfit-hsbins-2sig-19fb-logy.pdf" ) ;
        } else {
-          cmip->SaveAs("fitresult-fullfit-hsbins-18fb.pdf" ) ;
+          cmip->SaveAs("fitresult-fullfit-hsbins-2sig-19fb.pdf" ) ;
        }
 
 
