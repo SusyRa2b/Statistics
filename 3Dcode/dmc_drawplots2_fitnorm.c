@@ -91,8 +91,8 @@ bool usePublicStyle_=true;
 
   //----------
 
-    void dmc_drawplots2_fitnorm( const char* infile = "rootfiles/dmc_plots2_all.root", 
-                                 const char* arg_infitfile = "outputfiles/fitresults-ws-data-unblind-1200-300-susyFixed0.0.txt",
+    void dmc_drawplots2_fitnorm( const char* infile = "rootfiles/dmc_plots_btw_all.root", 
+                                 const char* arg_infitfile = "outputfiles/fitresults-ws-data-unblind-susyFixed0.0.txt",
                                  bool arg_savePdf = true,
                                  bool arg_recycleCanvas=true,
                                  const char* histnamepat = "" ) {

@@ -66,7 +66,7 @@
 
   //----------
 
-    void dmc_drawplots_btw( const char* infile = "rootfiles/dmc_plots2_all.root", bool arg_savePdf = true, bool arg_recycleCanvas=true, const char* histnamepat = "" ) {
+    void dmc_drawplots_btw( const char* infile = "rootfiles/dmc_plots_btw_all.root", bool arg_savePdf = true, bool arg_recycleCanvas=true, const char* histnamepat = "" ) {
 
        recycleCanvas = arg_recycleCanvas ;
        savePdf = arg_savePdf ;
