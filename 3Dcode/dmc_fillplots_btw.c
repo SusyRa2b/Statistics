@@ -52,87 +52,62 @@
        sprintf( compname[compind], "data" ) ;
        if ( strcmp(dataset_string, "all" ) == 0 || strcmp(dataset_string, "RunsABCDT") == 0 ) {
           printf("\n\n Loading all data.\n\n") ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012A.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_rr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HT_2012A.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_rr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_rr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012D_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012D_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012D_pr.root" ) ;
-          compchain[compind] -> Add( "filesMoriond_v1/HTMHT_2012D2.root" ) ;
-          compchain[compind] -> Add( "filesMoriond_v1/JetHT_2012D2.root" ) ;
-          compchain[compind] -> Add( "filesMoriond_v1/MET_2012D2.root" ) ;
-          compchain[compind] -> Add( "filesMoriond_v1/HTMHT_2012D3.root" ) ;
-          compchain[compind] -> Add( "filesMoriond_v1/JetHT_2012D3.root" ) ;
-          compchain[compind] -> Add( "filesMoriond_v1/MET_2012D3.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/MET_2012A.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/MET_2012B.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/MET_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/MET_2012C_rr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/MET_2012D1.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/MET_2012D2.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/HT_2012A.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/HTMHT_2012B.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/HTMHT_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/HTMHT_2012C_rr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/HTMHT_2012D1.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/HTMHT_2012D2.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/JetHT_2012B.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/JetHT_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/JetHT_2012C_rr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/JetHT_2012D1.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/JetHT_2012D2.root" ) ;
           complumi[compind] = 12.03 + 5.58 + 1.78 ;
-       } else if ( strcmp(dataset_string, "RunsABCD") == 0 ) {
-          printf("\n\n Loading Runs ABCD without topoff data.\n\n") ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012A.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_rr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HT_2012A.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_rr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_rr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012D_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012D_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012D_pr.root" ) ;
-          complumi[compind] = 12.03 + 5.58 ;
        } else if ( strcmp(dataset_string, "RunsAB" ) == 0 ) {
           printf("\n\n Loading runs A and B.\n\n") ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012A.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HT_2012A.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012B.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/MET_2012A.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/MET_2012B.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/HT_2012A.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/HTMHT_2012B.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/JetHT_2012B.root" ) ;
           complumi[compind] = 5.23 ;
        } else if ( strcmp(dataset_string, "RunsABC" ) == 0 ) {
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012A.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_rr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HT_2012A.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_rr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012B.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_rr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/MET_2012A.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/MET_2012B.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/MET_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/MET_2012C_rr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/HT_2012A.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/HTMHT_2012B.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/HTMHT_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/HTMHT_2012C_rr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/JetHT_2012B.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/JetHT_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/JetHT_2012C_rr.root" ) ;
           complumi[compind] = 12.03 ;
        } else if ( strcmp(dataset_string, "RunC" ) == 0 ) {
           printf("\n\n Loading run C.\n\n") ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012C_rr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012C_rr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012C_rr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/MET_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/MET_2012C_rr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/HTMHT_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/HTMHT_2012C_rr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/JetHT_2012C_pr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/JetHT_2012C_rr.root" ) ;
           complumi[compind] = 6.81 ;
        } else if ( strcmp(dataset_string, "RunD" ) == 0 ) {
-          compchain[compind] -> Add( "filesHCP_53_v6/HTMHT_2012D_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/JetHT_2012D_pr.root" ) ;
-          compchain[compind] -> Add( "filesHCP_53_v6/MET_2012D_pr.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/MET_2012D1.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/MET_2012D2.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/HTMHT_2012D1.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/HTMHT_2012D2.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/JetHT_2012D1.root" ) ;
+          compchain[compind] -> Add( "filesMoriond_v3/JetHT_2012D2.root" ) ;
           complumi[compind] = 5.58 ;
-       } else if ( strcmp(dataset_string, "RunT" ) == 0 ) {
-          compchain[compind] -> Add( "filesMoriond_v1/HTMHT_2012D2.root" ) ;
-          compchain[compind] -> Add( "filesMoriond_v1/JetHT_2012D2.root" ) ;
-          compchain[compind] -> Add( "filesMoriond_v1/MET_2012D2.root" ) ;
-          compchain[compind] -> Add( "filesMoriond_v1/HTMHT_2012D3.root" ) ;
-          compchain[compind] -> Add( "filesMoriond_v1/JetHT_2012D3.root" ) ;
-          compchain[compind] -> Add( "filesMoriond_v1/MET_2012D3.root" ) ;
-          complumi[compind] = 1.78 ;
        } else {
           printf("\n\n *** Unknown dataset: %s\n\n", dataset_string ) ;
           return ;
@@ -143,14 +118,15 @@
 
 
        //// double MClumi = 12.03 ;
-       double MClumi = 17.61 ;
+       //// double MClumi = 17.61 ;
+       double MClumi = 19.39 ;
 
     //-- Diboson.
        compind = 1 ;
        sprintf( compname[compind], "diboson" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/WW.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/WZ.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/ZZ.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/WW.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/WZ.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/ZZ.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 800+7 ; // kOrange = 800
        compscale[compind] = complumi[0] / complumi[compind] ;
@@ -162,9 +138,9 @@
     //-- Zinvisible
        compind = 2 ;
        sprintf( compname[compind], "znn" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/Zinv-100to200.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/Zinv-200to400.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/Zinv-400.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/Zinv-100to200.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/Zinv-200to400.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/Zinv-400.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 416-3 ; // kGreen = 416
        compscale[compind] = complumi[0] / complumi[compind] ;
@@ -175,15 +151,19 @@
     //-- QCD
        compind = 3 ;
        sprintf( compname[compind], "qcd" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/QCD-120to170.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/QCD-170to300.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/QCD-300to470.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/QCD-470to600.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/QCD-600to800.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/QCD-800to1000.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/QCD-1000to1400.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/QCD-1400to1800.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/QCD-1800.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/QCD-120to170.root" ) ;
+       //-----------------
+       compchain[compind] -> Add( "filesMoriond_v3/QCD-170to300.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/QCD-300to470.root" ) ;
+       /////////// compchain[compind] -> Add( "filesMoriond_v3/QCD-170to300-smallSample.root" ) ;
+       /////////// compchain[compind] -> Add( "filesMoriond_v3/QCD-300to470-smallSample.root" ) ;
+       //-----------------
+       compchain[compind] -> Add( "filesMoriond_v3/QCD-470to600.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/QCD-600to800.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/QCD-800to1000.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/QCD-1000to1400.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/QCD-1400to1800.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/QCD-1800.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 2 ;
        compscale[compind] = complumi[0] / complumi[compind] ;
@@ -194,12 +174,12 @@
     //-- single top
        compind = 4 ;
        sprintf( compname[compind], "singlet" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/T-t.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/Tbar-t.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/T-s.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/Tbar-s.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/T-tW.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/Tbar-tW.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/T-t.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/Tbar-t.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/T-s.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/Tbar-s.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/T-tW.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/Tbar-tW.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 600-9 ; // kBlue = 600
        compscale[compind] = complumi[0] / complumi[compind] ;
@@ -209,9 +189,9 @@
     //-- W+jets
        compind = 5 ;
        sprintf( compname[compind], "wjets" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/WJets-250to300.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/WJets-300to400.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/WJets-400.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/WJets-250to300.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/WJets-300to400.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/WJets-400.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 600-4 ; // kBlue = 600
        compscale[compind] = complumi[0] / complumi[compind] ;
@@ -221,10 +201,10 @@
     //-- ttbar
        compind = 6 ;
        sprintf( compname[compind], "ttbar" ) ;
-       ///////compchain[compind] -> Add( "filesMoriond_v1/TT.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/TT_FullLept.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/TT_SemiLept.root" ) ;
-       compchain[compind] -> Add( "filesMoriond_v1/TT_FullHad.root" ) ;
+       ///////compchain[compind] -> Add( "filesMoriond_v3/TT.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/TT_FullLept.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/TT_SemiLept.root" ) ;
+       compchain[compind] -> Add( "filesMoriond_v3/TT_FullHad.root" ) ;
        complumi[compind] = MClumi ;
        compcolor[compind] = 600-7 ; // kBlue = 600
        compscale[compind] = complumi[0] / complumi[compind] ;
@@ -1992,7 +1972,10 @@
 
 
        char outfile[10000] ;
+       //---------------------
        sprintf( outfile, "rootfiles/dmc_plots_btw_%s.root", dataset_string ) ;
+       /////// sprintf( outfile, "rootfiles/dmc_plots_btw_smallQcd_%s.root", dataset_string ) ;
+       //---------------------
        saveHist( outfile, "h*" ) ;
 
     } // dmc_fillplots.
