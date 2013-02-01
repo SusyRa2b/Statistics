@@ -65,46 +65,46 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 
   TChain chainQCD("tree") ;
-  chainQCD.Add("filesMoriond_v3/QCD-120to170.root");
-  chainQCD.Add("filesMoriond_v3/QCD-170to300.root");
-  chainQCD.Add("filesMoriond_v3/QCD-300to470.root");
-  chainQCD.Add("filesMoriond_v3/QCD-470to600.root");
-  chainQCD.Add("filesMoriond_v3/QCD-600to800.root");
-  chainQCD.Add("filesMoriond_v3/QCD-800to1000.root");
-  chainQCD.Add("filesMoriond_v3/QCD-1000to1400.root");
-  chainQCD.Add("filesMoriond_v3/QCD-1400to1800.root");
-  chainQCD.Add("filesMoriond_v3/QCD-1800.root");
+  chainQCD.Add("filesMoriond_v4/QCD-120to170.root");
+  chainQCD.Add("filesMoriond_v4/QCD-170to300.root");
+  chainQCD.Add("filesMoriond_v4/QCD-300to470.root");
+  chainQCD.Add("filesMoriond_v4/QCD-470to600.root");
+  chainQCD.Add("filesMoriond_v4/QCD-600to800.root");
+  chainQCD.Add("filesMoriond_v4/QCD-800to1000.root");
+  chainQCD.Add("filesMoriond_v4/QCD-1000to1400.root");
+  chainQCD.Add("filesMoriond_v4/QCD-1400to1800.root");
+  chainQCD.Add("filesMoriond_v4/QCD-1800.root");
   double kfactor_qcd = 1.8 ;
   printf("\n\n Rescaling QCD by %5.3f\n\n", kfactor_qcd ) ;
 
   TChain chainZnn("tree") ;
-  chainZnn.Add("filesMoriond_v3/Zinv-100to200.root") ;
-  chainZnn.Add("filesMoriond_v3/Zinv-200to400.root") ;
-  chainZnn.Add("filesMoriond_v3/Zinv-400.root") ;
+  chainZnn.Add("filesMoriond_v4/Zinv-100to200.root") ;
+  chainZnn.Add("filesMoriond_v4/Zinv-200to400.root") ;
+  chainZnn.Add("filesMoriond_v4/Zinv-400.root") ;
 
   TChain chainTT("tree") ;
   //-------
-  //chainTT.Add("filesMoriond_v3/TT.root") ;
+  //chainTT.Add("filesMoriond_v4/TT.root") ;
   //-------
-  //chainTT.Add("filesMoriond_v3/TT-powheg.root");
+  //chainTT.Add("filesMoriond_v4/TT-powheg.root");
   //-------
-    chainTT.Add("filesMoriond_v3/TT_FullLept.root") ;
-    chainTT.Add("filesMoriond_v3/TT_SemiLept.root") ;
-    chainTT.Add("filesMoriond_v3/TT_FullHad.root") ;
+    chainTT.Add("filesMoriond_v4/TT_FullLept.root") ;
+    chainTT.Add("filesMoriond_v4/TT_SemiLept.root") ;
+    chainTT.Add("filesMoriond_v4/TT_FullHad.root") ;
   //-------
   double kfactor_tt = 0.90 ;
   printf("\n\n Rescaling ttbar by %5.3f\n\n", kfactor_tt ) ;
 
   TChain chainWJets("tree") ;
-  chainWJets.Add("filesMoriond_v3/WJets-250to300.root") ;
-  chainWJets.Add("filesMoriond_v3/WJets-300to400.root") ;
-  chainWJets.Add("filesMoriond_v3/WJets-400.root") ;
-  chainWJets.Add("filesMoriond_v3/T-s.root") ;
-  chainWJets.Add("filesMoriond_v3/T-t.root") ;
-  chainWJets.Add("filesMoriond_v3/T-tW.root") ;
-  chainWJets.Add("filesMoriond_v3/Tbar-s.root") ;
-  chainWJets.Add("filesMoriond_v3/Tbar-t.root") ;
-  chainWJets.Add("filesMoriond_v3/Tbar-tW.root") ;
+  chainWJets.Add("filesMoriond_v4/WJets-250to300.root") ;
+  chainWJets.Add("filesMoriond_v4/WJets-300to400.root") ;
+  chainWJets.Add("filesMoriond_v4/WJets-400.root") ;
+  chainWJets.Add("filesMoriond_v4/T-s.root") ;
+  chainWJets.Add("filesMoriond_v4/T-t.root") ;
+  chainWJets.Add("filesMoriond_v4/T-tW.root") ;
+  chainWJets.Add("filesMoriond_v4/Tbar-s.root") ;
+  chainWJets.Add("filesMoriond_v4/Tbar-t.root") ;
+  chainWJets.Add("filesMoriond_v4/Tbar-tW.root") ;
   double kfactor_wjets = 0.90 ;
   printf("\n\n Rescaling wjets by %5.3f\n\n", kfactor_wjets ) ;
 
@@ -112,33 +112,33 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
    //-- make chains of W+jets and single top separately.
 
   TChain chainWJetsOnly("tree") ;
-  chainWJetsOnly.Add("filesMoriond_v3/WJets-250to300.root") ;
-  chainWJetsOnly.Add("filesMoriond_v3/WJets-300to400.root") ;
-  chainWJetsOnly.Add("filesMoriond_v3/WJets-400.root") ;
+  chainWJetsOnly.Add("filesMoriond_v4/WJets-250to300.root") ;
+  chainWJetsOnly.Add("filesMoriond_v4/WJets-300to400.root") ;
+  chainWJetsOnly.Add("filesMoriond_v4/WJets-400.root") ;
   double kfactor_wjetsonly = 0.90 ;
 
   TChain chainSingletop("tree") ;
-  chainSingletop.Add("filesMoriond_v3/T-s.root") ;
-  chainSingletop.Add("filesMoriond_v3/T-t.root") ;
-  chainSingletop.Add("filesMoriond_v3/T-tW.root") ;
-  chainSingletop.Add("filesMoriond_v3/Tbar-s.root") ;
-  chainSingletop.Add("filesMoriond_v3/Tbar-t.root") ;
-  chainSingletop.Add("filesMoriond_v3/Tbar-tW.root") ;
+  chainSingletop.Add("filesMoriond_v4/T-s.root") ;
+  chainSingletop.Add("filesMoriond_v4/T-t.root") ;
+  chainSingletop.Add("filesMoriond_v4/T-tW.root") ;
+  chainSingletop.Add("filesMoriond_v4/Tbar-s.root") ;
+  chainSingletop.Add("filesMoriond_v4/Tbar-t.root") ;
+  chainSingletop.Add("filesMoriond_v4/Tbar-tW.root") ;
   double kfactor_singletop = 0.90 ;
 
   TChain chainSingletop_s("tree") ;
-  chainSingletop_s.Add("filesMoriond_v3/T-s.root") ;
-  chainSingletop_s.Add("filesMoriond_v3/Tbar-s.root") ;
+  chainSingletop_s.Add("filesMoriond_v4/T-s.root") ;
+  chainSingletop_s.Add("filesMoriond_v4/Tbar-s.root") ;
   double kfactor_singletops = 0.90 ;
 
   TChain chainSingletop_t("tree") ;
-  chainSingletop_t.Add("filesMoriond_v3/T-t.root") ;
-  chainSingletop_t.Add("filesMoriond_v3/Tbar-t.root") ;
+  chainSingletop_t.Add("filesMoriond_v4/T-t.root") ;
+  chainSingletop_t.Add("filesMoriond_v4/Tbar-t.root") ;
   double kfactor_singletopt = 0.90 ;
 
   TChain chainSingletop_tw("tree") ;
-  chainSingletop_tw.Add("filesMoriond_v3/T-tW.root") ;
-  chainSingletop_tw.Add("filesMoriond_v3/Tbar-tW.root") ;
+  chainSingletop_tw.Add("filesMoriond_v4/T-tW.root") ;
+  chainSingletop_tw.Add("filesMoriond_v4/Tbar-tW.root") ;
   double kfactor_singletoptw = 0.90 ;
 
 
@@ -146,26 +146,26 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 //include Z->ll in VV contribution
   TChain chainVV("tree");
-  chainVV.Add("filesMoriond_v3/WW.root"); 
-  chainVV.Add("filesMoriond_v3/WZ.root");
-  chainVV.Add("filesMoriond_v3/ZZ.root");
-  chainVV.Add("filesMoriond_v3/DY-200to400.root");
-  chainVV.Add("filesMoriond_v3/DY-400.root");
+  chainVV.Add("filesMoriond_v4/WW.root"); 
+  chainVV.Add("filesMoriond_v4/WZ.root");
+  chainVV.Add("filesMoriond_v4/ZZ.root");
+  chainVV.Add("filesMoriond_v4/DY-200to400.root");
+  chainVV.Add("filesMoriond_v4/DY-400.root");
 
 
 
 
 
       char qcdinputfile[9][1000] = {
-        "filesMoriond_v3/QCD-120to170.root"
-       ,"filesMoriond_v3/QCD-170to300.root"
-       ,"filesMoriond_v3/QCD-300to470.root"
-       ,"filesMoriond_v3/QCD-470to600.root"
-       ,"filesMoriond_v3/QCD-600to800.root"
-       ,"filesMoriond_v3/QCD-800to1000.root"
-       ,"filesMoriond_v3/QCD-1000to1400.root"
-       ,"filesMoriond_v3/QCD-1400to1800.root"
-       ,"filesMoriond_v3/QCD-1800.root"
+        "filesMoriond_v4/QCD-120to170.root"
+       ,"filesMoriond_v4/QCD-170to300.root"
+       ,"filesMoriond_v4/QCD-300to470.root"
+       ,"filesMoriond_v4/QCD-470to600.root"
+       ,"filesMoriond_v4/QCD-600to800.root"
+       ,"filesMoriond_v4/QCD-800to1000.root"
+       ,"filesMoriond_v4/QCD-1000to1400.root"
+       ,"filesMoriond_v4/QCD-1400to1800.root"
+       ,"filesMoriond_v4/QCD-1800.root"
       } ;
 
       char qcdsamplename[9][100] = {

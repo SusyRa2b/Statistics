@@ -47,25 +47,25 @@
 
        TChain datach("tree") ;
 
-       datach.Add( "filesMoriond_v3/MET_2012A.root" ) ;
-       datach.Add( "filesMoriond_v3/MET_2012B.root" ) ;
-       datach.Add( "filesMoriond_v3/MET_2012C_pr.root" ) ;
-       datach.Add( "filesMoriond_v3/MET_2012C_rr.root" ) ;
-       datach.Add( "filesMoriond_v3/MET_2012D1.root" ) ;
-       datach.Add( "filesMoriond_v3/MET_2012D2.root" ) ;
+       datach.Add( "filesMoriond_v4/MET_2012A.root" ) ;
+       datach.Add( "filesMoriond_v4/MET_2012B.root" ) ;
+       datach.Add( "filesMoriond_v4/MET_2012C_pr.root" ) ;
+       datach.Add( "filesMoriond_v4/MET_2012C_rr.root" ) ;
+       datach.Add( "filesMoriond_v4/MET_2012D1.root" ) ;
+       datach.Add( "filesMoriond_v4/MET_2012D2.root" ) ;
 
-       datach.Add( "filesMoriond_v3/HT_2012A.root" ) ;
-       datach.Add( "filesMoriond_v3/HTMHT_2012B.root" ) ;
-       datach.Add( "filesMoriond_v3/HTMHT_2012C_pr.root" ) ;
-       datach.Add( "filesMoriond_v3/HTMHT_2012C_rr.root" ) ;
-       datach.Add( "filesMoriond_v3/HTMHT_2012D1.root" ) ;
-       datach.Add( "filesMoriond_v3/HTMHT_2012D2.root" ) ;
+       datach.Add( "filesMoriond_v4/HT_2012A.root" ) ;
+       datach.Add( "filesMoriond_v4/HTMHT_2012B.root" ) ;
+       datach.Add( "filesMoriond_v4/HTMHT_2012C_pr.root" ) ;
+       datach.Add( "filesMoriond_v4/HTMHT_2012C_rr.root" ) ;
+       datach.Add( "filesMoriond_v4/HTMHT_2012D1.root" ) ;
+       datach.Add( "filesMoriond_v4/HTMHT_2012D2.root" ) ;
 
-       datach.Add( "filesMoriond_v3/JetHT_2012B.root" ) ;
-       datach.Add( "filesMoriond_v3/JetHT_2012C_pr.root" ) ;
-       datach.Add( "filesMoriond_v3/JetHT_2012C_rr.root" ) ;
-       datach.Add( "filesMoriond_v3/JetHT_2012D1.root" ) ;
-       datach.Add( "filesMoriond_v3/JetHT_2012D2.root" ) ;
+       datach.Add( "filesMoriond_v4/JetHT_2012B.root" ) ;
+       datach.Add( "filesMoriond_v4/JetHT_2012C_pr.root" ) ;
+       datach.Add( "filesMoriond_v4/JetHT_2012C_rr.root" ) ;
+       datach.Add( "filesMoriond_v4/JetHT_2012D1.root" ) ;
+       datach.Add( "filesMoriond_v4/JetHT_2012D2.root" ) ;
 
        TH2F* h_ldp[nBinsBjets] ;
        TH2F* h_zl [nBinsBjets] ;
