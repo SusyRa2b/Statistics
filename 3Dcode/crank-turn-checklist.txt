@@ -155,6 +155,20 @@
 
 
 
+  9) Make expected T1bbbb signal distributions for Figure 30 in Results
+  section of AN.
+
+     start root
+     .L doplotsig.c
+     doplotsig()
+     exit root
+     cd outputfiles
+     mv susycounts-hsbins-mgl-800-mlsp-600.pdf susycounts-hsbins-mgl-0800-mlsp-600.pdf
+     mv susycounts-hsbins-mgl-900-mlsp-650.pdf susycounts-hsbins-mgl-0900-mlsp-650.pdf
+     mv susycounts-hsbins-mgl-1250-mlsp-400.pdf susycounts-hsbins-mgl-1250-mlsp-0400.pdf
+
+
+
   -------------------------------------------------------------------------------------
   9) Copy figure pdf files into AN directories
 

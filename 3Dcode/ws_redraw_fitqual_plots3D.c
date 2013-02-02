@@ -31,12 +31,14 @@
 
 //----------------
 
+
    void ws_redraw_fitqual_plots3D( const char* histfile = "fitqual-hists-ws-met3-ht3-v1.root",
                                    bool logy=false,
                                    bool doNorm=false,
                                    double normmax=2.0,
                                    int metgroupzoom=1,
-                                   bool savePlots = false ) {
+                                   bool savePlots = false,
+                                   bool noChi2 = false ) {
 
 
      char savenamebase[1000] ;
@@ -449,28 +451,28 @@
 
      cnp3->cd(1) ;
      hnp_prim_eff->Draw() ;
-     chi2 = addChi2FromPullHist( hnp_prim_eff ) ;
+     if ( !noChi2 ) chi2 = addChi2FromPullHist( hnp_prim_eff ) ;
      globalChi2 += chi2 ;
      npChi2 += chi2 ;
 
 
      cnp3->cd(2) ;
      hnp_znn->Draw() ;
-     chi2 = addChi2FromPullHist( hnp_znn ) ;
+     if ( !noChi2 ) chi2 = addChi2FromPullHist( hnp_znn ) ;
      globalChi2 += chi2 ;
      npChi2 += chi2 ;
 
 
      cnp3->cd(3) ;
      hnp_trig_0lep->Draw() ;
-     chi2 = addChi2FromPullHist( hnp_trig_0lep ) ;
+     if ( !noChi2 ) chi2 = addChi2FromPullHist( hnp_trig_0lep ) ;
      globalChi2 += chi2 ;
      npChi2 += chi2 ;
 
 
      cnp3->cd(4) ;
      hnp_trig_1lep->Draw() ;
-     chi2 = addChi2FromPullHist( hnp_trig_1lep ) ;
+     if ( !noChi2 ) chi2 = addChi2FromPullHist( hnp_trig_1lep ) ;
      globalChi2 += chi2 ;
      npChi2 += chi2 ;
 
@@ -517,21 +519,21 @@
 
         cnp2->cd(1) ;
         hnp_eff_sf_1b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_eff_sf_1b_pull ) ;
+        if ( !noChi2 ) chi2 = addChi2FromPullHist( hnp_eff_sf_1b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
         cnp2->cd(2) ;
         hnp_eff_sf_2b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_eff_sf_2b_pull ) ;
+        if ( !noChi2 ) chi2 = addChi2FromPullHist( hnp_eff_sf_2b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
         cnp2->cd(3) ;
         hnp_eff_sf_3b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_eff_sf_3b_pull ) ;
+        if ( !noChi2 ) chi2 = addChi2FromPullHist( hnp_eff_sf_3b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
         gPad->SetGridy(1) ;
@@ -540,21 +542,21 @@
 
         cnp2->cd(4) ;
         hnp_eff_sf_sl_1b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_eff_sf_sl_1b_pull ) ;
+        if ( !noChi2 ) chi2 = addChi2FromPullHist( hnp_eff_sf_sl_1b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
         cnp2->cd(5) ;
         hnp_eff_sf_sl_2b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_eff_sf_sl_2b_pull ) ;
+        if ( !noChi2 ) chi2 = addChi2FromPullHist( hnp_eff_sf_sl_2b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
         cnp2->cd(6) ;
         hnp_eff_sf_sl_3b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_eff_sf_sl_3b_pull ) ;
+        if ( !noChi2 ) chi2 = addChi2FromPullHist( hnp_eff_sf_sl_3b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
         gPad->SetGridy(1) ;
@@ -563,21 +565,21 @@
 
         cnp2->cd(7) ;
         hnp_eff_sf_ldp_1b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_1b_pull ) ;
+        if ( !noChi2 ) chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_1b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
         cnp2->cd(8) ;
         hnp_eff_sf_ldp_2b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_2b_pull ) ;
+        if ( !noChi2 ) chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_2b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
         gPad->SetGridy(1) ;
 
         cnp2->cd(9) ;
         hnp_eff_sf_ldp_3b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_3b_pull ) ;
+        if ( !noChi2 ) chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_3b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
         gPad->SetGridy(1) ;
@@ -671,20 +673,20 @@
       //---
         cnp->cd(4) ;
         hnp_ttwj_1b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_ttwj_1b_pull ) ;
+        if ( !noChi2 ) chi2 = addChi2FromPullHist( hnp_ttwj_1b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
 
         cnp->cd(5) ;
         hnp_ttwj_2b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_ttwj_2b_pull ) ;
+        if ( !noChi2) chi2 = addChi2FromPullHist( hnp_ttwj_2b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
         cnp->cd(6) ;
         hnp_ttwj_3b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_ttwj_3b_pull ) ;
+        if ( !noChi2) chi2 = addChi2FromPullHist( hnp_ttwj_3b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
@@ -706,19 +708,19 @@
       //---
         cnp->cd(10) ;
         hnp_qcd_1b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_qcd_1b_pull ) ;
+        if ( !noChi2) chi2 = addChi2FromPullHist( hnp_qcd_1b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
         cnp->cd(11) ;
         hnp_qcd_2b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_qcd_2b_pull ) ;
+        if ( !noChi2) chi2 = addChi2FromPullHist( hnp_qcd_2b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
         cnp->cd(12) ;
         hnp_qcd_3b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_qcd_3b_pull ) ;
+        if ( !noChi2) chi2 = addChi2FromPullHist( hnp_qcd_3b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
@@ -800,7 +802,7 @@
      hfitqual_data_0lep_1b->Draw("same") ;
      gPad->SetGridy(1) ;
      if ( !doNorm ) {
-        chi2 = addChi2FromObs( hfitqual_data_0lep_1b, hfitqual_model_0lep_1b, doNorm ) ;
+        if ( !noChi2) chi2 = addChi2FromObs( hfitqual_data_0lep_1b, hfitqual_model_0lep_1b, doNorm ) ;
         globalChi2 += chi2 ;
         obsChi2 += chi2 ;
      }
@@ -812,7 +814,7 @@
      hfitqual_data_0lep_2b->Draw("same") ;
      gPad->SetGridy(1) ;
      if ( !doNorm ) {
-        chi2 = addChi2FromObs( hfitqual_data_0lep_2b, hfitqual_model_0lep_2b, doNorm ) ;
+        if ( !noChi2) chi2 = addChi2FromObs( hfitqual_data_0lep_2b, hfitqual_model_0lep_2b, doNorm ) ;
         globalChi2 += chi2 ;
         obsChi2 += chi2 ;
      }
@@ -824,7 +826,7 @@
      hfitqual_data_0lep_3b->Draw("same") ;
      gPad->SetGridy(1) ;
      if ( !doNorm ) {
-        chi2 = addChi2FromObs( hfitqual_data_0lep_3b, hfitqual_model_0lep_3b, doNorm ) ;
+        if ( !noChi2) chi2 = addChi2FromObs( hfitqual_data_0lep_3b, hfitqual_model_0lep_3b, doNorm ) ;
         globalChi2 += chi2 ;
         obsChi2 += chi2 ;
      }
@@ -838,7 +840,7 @@
      hfitqual_data_1lep_1b->Draw("same") ;
      gPad->SetGridy(1) ;
      if ( !doNorm ) {
-        chi2 = addChi2FromObs( hfitqual_data_1lep_1b, hfitqual_model_1lep_1b, doNorm ) ;
+        if ( !noChi2) chi2 = addChi2FromObs( hfitqual_data_1lep_1b, hfitqual_model_1lep_1b, doNorm ) ;
         globalChi2 += chi2 ;
         obsChi2 += chi2 ;
      }
@@ -850,7 +852,7 @@
      hfitqual_data_1lep_2b->Draw("same") ;
      gPad->SetGridy(1) ;
      if ( !doNorm ) {
-        chi2 = addChi2FromObs( hfitqual_data_1lep_2b, hfitqual_model_1lep_2b, doNorm ) ;
+        if ( !noChi2) chi2 = addChi2FromObs( hfitqual_data_1lep_2b, hfitqual_model_1lep_2b, doNorm ) ;
         globalChi2 += chi2 ;
         obsChi2 += chi2 ;
      }
@@ -862,7 +864,7 @@
      hfitqual_data_1lep_3b->Draw("same") ;
      gPad->SetGridy(1) ;
      if ( !doNorm ) {
-        chi2 = addChi2FromObs( hfitqual_data_1lep_3b, hfitqual_model_1lep_3b, doNorm ) ;
+        if ( !noChi2) chi2 = addChi2FromObs( hfitqual_data_1lep_3b, hfitqual_model_1lep_3b, doNorm ) ;
         globalChi2 += chi2 ;
         obsChi2 += chi2 ;
      }
@@ -878,7 +880,7 @@
      hfitqual_data_ldp_1b->Draw("same") ;
      gPad->SetGridy(1) ;
      if ( !doNorm ) {
-        chi2 = addChi2FromObs( hfitqual_data_ldp_1b, hfitqual_model_ldp_1b, doNorm ) ;
+        if ( !noChi2) chi2 = addChi2FromObs( hfitqual_data_ldp_1b, hfitqual_model_ldp_1b, doNorm ) ;
         globalChi2 += chi2 ;
         obsChi2 += chi2 ;
      }
@@ -890,7 +892,7 @@
      hfitqual_data_ldp_2b->Draw("same") ;
      gPad->SetGridy(1) ;
      if ( !doNorm ) {
-        chi2 = addChi2FromObs( hfitqual_data_ldp_2b, hfitqual_model_ldp_2b, doNorm ) ;
+        if ( !noChi2) chi2 = addChi2FromObs( hfitqual_data_ldp_2b, hfitqual_model_ldp_2b, doNorm ) ;
         globalChi2 += chi2 ;
         obsChi2 += chi2 ;
      }
@@ -902,7 +904,7 @@
      hfitqual_data_ldp_3b->Draw("same") ;
      gPad->SetGridy(1) ;
      if ( !doNorm ) {
-        chi2 = addChi2FromObs( hfitqual_data_ldp_3b, hfitqual_model_ldp_3b, doNorm ) ;
+        if ( !noChi2) chi2 = addChi2FromObs( hfitqual_data_ldp_3b, hfitqual_model_ldp_3b, doNorm ) ;
         globalChi2 += chi2 ;
         obsChi2 += chi2 ;
      }
@@ -916,7 +918,7 @@
      hfitqual_data_zee_1b->Draw("same") ;
      gPad->SetGridy(1) ;
      if ( !doNorm ) {
-        chi2 = addChi2FromObs( hfitqual_data_zee_1b, hfitqual_fit_zee_1b, doNorm ) ;
+        if ( !noChi2) chi2 = addChi2FromObs( hfitqual_data_zee_1b, hfitqual_fit_zee_1b, doNorm ) ;
         globalChi2 += chi2 ;
         obsChi2 += chi2 ;
      }
@@ -927,7 +929,7 @@
      hfitqual_data_zmm_1b->Draw("same") ;
      gPad->SetGridy(1) ;
      if ( !doNorm ) {
-        chi2 = addChi2FromObs( hfitqual_data_zmm_1b, hfitqual_fit_zmm_1b, doNorm ) ;
+        if ( !noChi2) chi2 = addChi2FromObs( hfitqual_data_zmm_1b, hfitqual_fit_zmm_1b, doNorm ) ;
         globalChi2 += chi2 ;
         obsChi2 += chi2 ;
      }
@@ -979,7 +981,7 @@
      chi2text->SetTextAlign(32) ;
      char chi2string[1000] ;
 
-     if ( !doNorm ) {
+     if ( !doNorm && !noChi2 ) {
         sprintf( chi2string, "Overall Chi2 = %6.2f", globalChi2 ) ;
         chi2text->DrawTextNDC(0.55, 0.90, chi2string ) ;
         sprintf( chi2string, "obs Chi2 = %6.2f", obsChi2 ) ;
