@@ -155,6 +155,7 @@
 
 
 
+  -------------------------------------------------------------------------------------
   9) Make expected T1bbbb signal distributions for Figure 30 in Results
   section of AN.
 
@@ -168,9 +169,15 @@
      mv susycounts-hsbins-mgl-1250-mlsp-400.pdf susycounts-hsbins-mgl-1250-mlsp-0400.pdf
 
 
+  -------------------------------------------------------------------------------------
+  10) Redo excess study.
+
+     Use ws_constrained_profile3D_debug.c to get the values for the constant
+     parameters that are inputs to pvaltoy2.c.  Update those, then run
+     pvaltoy2.c
 
   -------------------------------------------------------------------------------------
-  9) Copy figure pdf files into AN directories
+  11) Copy figure pdf files into AN directories
 
      
 

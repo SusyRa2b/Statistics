@@ -7,19 +7,27 @@
 #include "TRandom.h"
 #include "TTree.h"
 #include "TFile.h"
+#include "TArrow.h"
+#include "TText.h"
 
 
    void pvaltoy2( double Nobs_sl = 0, double Nobs_ldp = 1, double Nobs_zl = 4 ) {
 
       gStyle->SetOptStat(0) ;
+      gStyle->SetTitleSize(0.05,"x") ;
+      gStyle->SetTitleSize(0.05,"y") ;
+      gStyle->SetPadBottomMargin(0.15) ;
+      gStyle->SetPadLeftMargin(0.15) ;
+      gStyle->SetOptTitle(0) ;
+      gStyle->SetTitleOffset(1.4,"y") ;
 
-      double mu_znn_zl = 0.20 ;
-      double mu_znn_ldp = 0.06 ;
-      double Rttwj_zloversl = 0.93 ;
-      double Rttwj_ldpoverzl = 0.66 ;
-      double Sttwj = 1.59 ;
-      double Sqcd = 1.00 ;
-      double K3qcd = 0.14 ;
+      double mu_znn_zl = 0.24 ;
+      double mu_znn_ldp = 0.05 ;
+      double Rttwj_zloversl = 0.94 ;
+      double Rttwj_ldpoverzl = 0.62 ;
+      double Sttwj = 1.24 ;
+      double Sqcd = 1.03 ;
+      double K3qcd = 0.15 ;
       double etrig_had = 1.00 ;
       double etrig_sl = 1.00 ;
 
@@ -146,7 +154,7 @@
 
       TRandom tran(12345) ;
 
-      int ngen(100000) ;
+      int ngen(10000) ;
 
       double gen_mu_qcd_ldp ;
       double gen_mu_ttwj_sl ;
@@ -252,7 +260,7 @@
       hlh_2bin_gen_data_obs -> Draw("colz") ;
       can2->Draw() ;
 
-      gStyle->SetOptStat("emrou") ;
+      gStyle->SetOptStat("emr") ;
       h_Nsl_gen->UseCurrentStyle() ;
       h_Nzl_gen->UseCurrentStyle() ;
       h_Nldp_gen->UseCurrentStyle() ;
@@ -293,6 +301,72 @@
       outfile.Close() ;
 
 
+    //--- Nice version of plots for the AN.
+    //
+
+
+      int nzlbin = h_Nzl_gen->FindBin( Nobs_zl ) ;
+      int nllbin = h_toy_3bin_max_lh->FindBin( -log(data_3bin_lh_max) ) ;
+      double nzlpval = ( h_Nzl_gen->Integral( nzlbin,h_Nzl_gen->GetNbinsX() ) ) / ( h_Nzl_gen->Integral(1,h_Nzl_gen->GetNbinsX())) ;
+      double nllpval = ( h_toy_3bin_max_lh->Integral( nllbin,h_toy_3bin_max_lh->GetNbinsX() ) ) / ( h_toy_3bin_max_lh->Integral(1,h_toy_3bin_max_lh->GetNbinsX())) ;
+      printf("\n\n") ;
+      printf("  Nzl,  bin=%d, pval=%6.3f\n", nzlbin, nzlpval ) ;
+      printf("  -lnL, bin=%d, pval=%6.3f\n", nllbin, nllpval ) ;
+      printf("\n\n") ;
+
+
+      TH1F* h_Nzl_gen_geobs = (TH1F*) h_Nzl_gen->Clone("h_Nzl_gen_geobs") ;
+      for ( int bi=1; bi<nzlbin; bi++ ) { h_Nzl_gen_geobs->SetBinContent(bi,0) ; }
+      TH1F* h_toy_3bin_max_lh_geobs = (TH1F*) h_toy_3bin_max_lh->Clone("h_toy_3bin_max_lh_geobs") ;
+      for ( int bi=1; bi<nllbin; bi++ ) { h_toy_3bin_max_lh_geobs->SetBinContent(bi,0) ; }
+      h_Nzl_gen_geobs->SetFillColor(15) ;
+      h_toy_3bin_max_lh_geobs -> SetFillColor(15) ;
+
+      TArrow* arrow = new TArrow() ;
+      arrow->SetLineWidth(2) ;
+      arrow->SetLineColor(4) ;
+
+      TText* pvtext = new TText() ;
+      pvtext->SetTextFont(42) ;
+      char pvalstr[1000] ;
+
+      TCanvas* can5 = new TCanvas("can5","can5", 1300, 350 ) ;
+
+      can5 -> Divide(4,1) ;
+
+      can5->cd(1) ;
+      h_Nsl_gen->SetXTitle("N_{SL} generated") ;
+      h_Nsl_gen->SetYTitle("Toy experiments / bin") ;
+      h_Nsl_gen->Draw() ;
+      arrow->DrawArrow( Nobs_sl, 0.4*h_Nsl_gen->GetMaximum(), Nobs_sl, 0., 0.01 ) ;
+
+
+      can5->cd(2) ;
+      h_Nldp_gen->SetXTitle("N_{LDP} generated") ;
+      h_Nldp_gen->SetYTitle("Toy experiments / bin") ;
+      h_Nldp_gen->Draw() ;
+      arrow->DrawArrow( Nobs_ldp, 0.4*h_Nldp_gen->GetMaximum(), Nobs_ldp, 0., 0.01 ) ;
+
+      can5->cd(3) ;
+      h_Nzl_gen->SetXTitle("N_{ZL} generated") ;
+      h_Nzl_gen->SetYTitle("Toy experiments / bin") ;
+      h_Nzl_gen->Draw() ;
+      //h_Nzl_gen_geobs->Draw("same") ;
+      arrow->DrawArrow( Nobs_zl, 0.4*h_Nzl_gen->GetMaximum(), Nobs_zl, 0., 0.01 ) ;
+      sprintf( pvalstr, "p-value: %5.3f\n", nzlpval ) ;
+      pvtext->DrawTextNDC(0.55,0.80, pvalstr ) ;
+
+      can5->cd(4) ;
+      h_toy_3bin_max_lh->SetXTitle("min -ln(L 3-bin)") ;
+      h_toy_3bin_max_lh->SetYTitle("Toy experiments / bin") ;
+      h_toy_3bin_max_lh->Draw() ;
+      //h_toy_3bin_max_lh_geobs->Draw("same") ;
+      arrow->DrawArrow( -log(data_3bin_lh_max), 0.4*h_toy_3bin_max_lh->GetMaximum(), -log(data_3bin_lh_max), 0., 0.01 ) ;
+      sprintf( pvalstr, "p-value: %5.3f\n", nllpval ) ;
+      pvtext->DrawTextNDC(0.55,0.80, pvalstr ) ;
+
+
+      can5->SaveAs("outputfiles/pvaltoy2.pdf") ;
 
 
 
