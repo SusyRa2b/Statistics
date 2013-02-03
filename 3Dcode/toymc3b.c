@@ -388,7 +388,7 @@
        tran = new TRandom(12345) ;
        //tran = new TRandom(592815) ;
        //tran = new TRandom() ;
-       //tran->SetSeed(0);
+       tran->SetSeed(0);
 
 
        qcdModelIndex = input_qcdModelIndex ;
@@ -415,7 +415,7 @@
                         wsfilename,
                         blindBinsList,
                         jes_syst_file,
-                        pdf_syst_file ) ;
+                        pdf_syst_file, "datfiles_18fb/wjets-xsec-shapesyst.txt", "datfiles_18fb/singletop-xsec-shapesyst.txt" ) ;
        TFile wsfile( wsfilename ) ;
        workspace = (RooWorkspace*) wsfile.Get("ws") ;
        if ( workspace == 0x0 ) {
@@ -2032,6 +2032,12 @@
       } // mbi.
 
       sprintf( npname, "all_gu" ) ;
+      fit_chi2_np += getChi2LognormNP( npname ) ;
+
+      sprintf( npname, "wjets_xsec" ) ;
+      fit_chi2_np += getChi2LognormNP( npname ) ;
+
+      sprintf( npname, "singletop_xsec" ) ;
       fit_chi2_np += getChi2LognormNP( npname ) ;
 
       fit_chi2_overall = fit_chi2_obs + fit_chi2_np ;
