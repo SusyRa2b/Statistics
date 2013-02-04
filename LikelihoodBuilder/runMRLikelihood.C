@@ -11,7 +11,7 @@
   
   //////////////////////////////////////////////////////////////////////////
 
-  TString wspacefile("testoutput.root");
+  TString wspacefile("testoutput_smmc.root");
 
 
 
@@ -19,29 +19,79 @@
   //  gSystem->CompileMacro("RooProdPdfLogSum.cxx"       ,"k0") ;
   gROOT->ProcessLine(".L RooProdPdfLogSum.cxx++");
   gROOT->ProcessLine(".L metReweightingBuilderSIMPLETAU.C++");
+  //  gROOT->ProcessLine(".L metReweightingBuilderSIMPLETAUSF.C++");
+
+  /*
+
+  float vx[7] = { 0., 25.57, 51.13, 76.70, 102.3, 153.4, 204.5 };
+  float vy[7] = { 15.98, 35.63, 50.05, 69.91, 89.00, 127.1, 160.7 };
+
+  float vxerr[7] = { 0., 0., 0., 0., 0., 0., 0. };
+  float vyerr[7] = { 6.5, 8.2, 8.3, 8.6, 1.0, 9.4, 9.7 };
+
+  TGraphErrors *tg = new TGraphErrors(7,vx,vy,vxerr,vyerr);
+  tg->SetMarkerStyle(20);
+  tg->SetLineColor(4);
+  tg->SetLineWidth(2);
+  tg->SetMarkerColor(4);
+  tg->GetYaxis()->SetRangeUser(0,180);
+  tg->Draw("ap");
+
+
+  TLine line(0,0,180,180);
+  line->Draw("same");
+
+  */
+
+  for( int i=200; i<230; i++ ){
+
+    cout << " START NEW WORKSPACE " << endl;
 
   // SETUP WORKSPACE IN FRESH FILE
   RooWorkspace*  wspace = new RooWorkspace("wspace");
 
+  cout << " START NEW RANDOM " << endl;
 
+  TRandom2 *rd = new TRandom();
+  rd->SetSeed(i);
+
+  /*
+  cout << " INITIALIZE XSEC " << endl;
+  
   // SETUP SIGNAL CROSS-SECTION
-  RooRealVar signalCrossSection("signalCrossSection","signalCrossSection",0.,0.,0.); // SET TO 0!
+  RooRealVar signalCrossSection("signalCrossSection","signalCrossSection",0.001,0.,10.); // SET TO 0!
+  //RooRealVar signalCrossSection("signalCrossSection","signalCrossSection",0.,0.,0.); // SET TO 0!
   wspace->import(signalCrossSection);
   wspace->defineSet("namesfordata","");
   wspace->defineSet("nuisances","");
-
+  */
+  cout << " START LIKELIHOOD BUILDER " << endl;
 
   //buildMRLikelihood( wspacefile.Data(), "testSimpleSetupFileHT3.txt" );
 
-    buildMRLikelihood( *wspace, wspacefile.Data(), "testDataSimpleMRSetupFile.txt", true );
-    //    buildMRLikelihood( *wspace, wspacefile.Data(), "testSMMCSimpleMRSetupFile.txt", true );
-  wspace->writeToFile( wspacefile.Data(), true ); 
+  //    buildMRLikelihood( *wspace, wspacefile.Data(), "testDataSimpleMRSetupFile.txt", true );
+  //  buildMRLikelihood( *wspace, wspacefile.Data(), "testSMMCSimpleMRSetupFileNOMT.txt", true );
+
+  buildMRLikelihood( *wspace, wspacefile.Data(), "testT1bbbbSimpleMRSetupFile.txt", true, *rd, "output_NEW300.txt" );
+
+  cout << " OUTSIDE LIKELIHOOD BUILDER " << endl;
+
+  //  wspace->writeToFile( wspacefile.Data(), true ); 
+  //  signalCrossSection->Delete();
+  //  rd->Delete();
+  delete rd;
+
+  //  wspace->Delete();
+  delete wspace;
+
+  cout << " AFTER DELETING STUFF" << endl;
 
 
+  }
 
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
-
+  /*
 
   gStyle->SetPalette(1);
   gStyle->SetOptStat(0);
@@ -61,6 +111,8 @@
   TFile *test = new TFile( wspacefile.Data(), "READ" );
   RooWorkspace *wspace2 = (RooWorkspace*) test->Get("wspace");
   wspace2->autoImportClassCode(true);
+
+
 
   /*
   cout << wspace2->function("zeroLepton_bin26_TopWJetsPolarizationDataYield")->getTitle() << "  " <<  wspace2->function("zeroLepton_bin26_TopWJetsPolarizationDataYield")->getVal() << endl;//"  " <<  wspace2->function("zeroLepton_bin26_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
@@ -173,7 +225,7 @@
   frame4->Draw();
   c4->SaveAs("PLL_data26_2lep.eps");
 
-  */
+
 
 
   // crude plotting of all NBs/MET for a slice of HT
@@ -201,12 +253,16 @@
   //    for( int nb=1; nb<4; nb++  ){
 
   int i = 0;
+  total = 0.;
 
   for( int bin=26; bin<49; bin++ ){
 
       //      if( (metbin==0 && nb==1) || (metbin==3 && nb==3)  ){
 	//if( (metbin==0 && nb==1) ){
-    if( bin!=28 && bin!=31 && bin!=34 && bin!=37 && bin!=40 && bin!=43 && bin!=46  ){
+    //    if( bin!=28 && bin!=31 && bin!=34 && bin!=37 && bin!=40 && bin!=43 && bin!=46  ){
+    //    if( bin==26 ||  bin==27 || bin==29 || bin==30 || bin==32 || bin==33 || bin==35 || bin==36 ){
+
+    if( bin!=37 && bin!=38 && bin!=39 ){
 
     TString zeroLeptonName("zeroLepton_bin");
     zeroLeptonName+=bin;
@@ -443,6 +499,8 @@
     //if( metbin==0 ) truesig_0L->Fill( fillbin+5, 3.8*5. );
     //if( metbin==3 ) truesig_0L->Fill( fillbin+5, 19.6*5. );
 
+    cout << endl << endl << (wspace2.function(names01.Data()))->getVal() << endl << endl;
+    total = total + (wspace2.function(names01.Data()))->getVal();
 
     cout << " after 0L signal and observation " << endl;
     // 0L background
@@ -488,10 +546,11 @@
 
     i++;
 
-    }// select a few bins
+  }// select a few bins
 
   }
 
+  cout << " TOTAL FITTED SIGNAL: " << total << endl;
 
 cout << " MAKING PLOTS " << endl;
 
@@ -518,9 +577,10 @@ cout << " MAKING PLOTS " << endl;
   st1a->Add(truebkg_0L);
   st1a->Add(truesig_0L);
   st1a->Draw("histsame");
-*/
+
+  c1->SaveAs("BINS_smmc_0L.eps");
   c1->SetLogy(1);
-  c1->SaveAs("BINS_data_0Llog.eps");
+  c1->SaveAs("BINS_smmc_0Llog.eps");
 
   //////
 
@@ -543,10 +603,11 @@ cout << " MAKING PLOTS " << endl;
   st2a->Add(truebkg_1L);
   st2a->Add(truesig_1L);
   st2a->Draw("histsame");
-*/
-  c2->SetLogy(1);
-  c2->SaveAs("BINS_data_1Llog.eps");
 
+  c2->SaveAs("BINS_smmc_1L.eps");
+  c2->SetLogy(1);
+  c2->SaveAs("BINS_smmc_1Llog.eps");
+*/
   
 
 

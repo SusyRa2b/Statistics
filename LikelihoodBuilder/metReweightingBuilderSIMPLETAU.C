@@ -725,16 +725,22 @@ void makeTauHadBinPrediction( RooWorkspace& wspace, TString binname, TString bin
 
 
 //void buildMRLikelihood( TString outputFile, TString setupFileName ) 
+<<<<<<< metReweightingBuilderSIMPLETAU.C
+void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupFileName,
+			bool standalone, TRandom2& rd, TString outputTextFile ) 
+=======
 void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupFileName, bool standalone, TString nuisanceOption, TString countsPath ) 
+>>>>>>> 1.17
 {
 
   ///////////////////////////////////////////////////
 
   //int error = 0;
-  //ofstream test;
-  //test.open(outputFile.Data(),ios::app);
-
   
+  ofstream text;
+  text.open(outputTextFile.Data(),ios::app);
+
+  /*
   TFile *test;
   if( standalone ) 
     {
@@ -744,6 +750,17 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
     }
 
   RooRealVar *signalCrossSection = wspace.var( "signalCrossSection" );
+  */
+
+
+
+  RooRealVar signalCrossSection("signalCrossSection","signalCrossSection",0.001,0.,10.);
+  wspace.import(signalCrossSection);
+  wspace.defineSet("namesfordata","");
+  wspace.defineSet("nuisances","");
+
+  ///////////////////////////////////////////////////
+  ///////////////////////////////////////////////////
 
   cout << " EVERYTHING IN INITIAL WORKSPACE: " << endl;
   wspace.Print();
@@ -869,22 +886,34 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 
       RooRealVar* TriggerEfficiency = (RooRealVar*)
 	getGaussianConstraint(wspace,triggername, "",
+<<<<<<< metReweightingBuilderSIMPLETAU.C
+			      //1.0,0.01,
+			      1.0,0.,
+			       "trig1","trig2");
+=======
 			       1.0,0.01,
 			      "trig1","trig2","globalObservables");
+>>>>>>> 1.17
       wspace.import(*TriggerEfficiency,RecycleConflictNodes());
 
       ////// 
 
-      signalfracFile>>count;
-      signalfracFile>>counterror;
 
-      count = count*12.0; // a cheap way to get around lumi for now
+      signalfracFile>>count;
+      //signalfracFile>>counterror;
+      //count = count*12.0; // a cheap way to get around lumi for now
 
       RooRealVar acount0(zeroLeptonName+"_SignalFrac",zeroLeptonName+"_SignalFrac",count); 
 
       RooAbsArg* zeroLeptonError = getGaussianConstraint(wspace,"zeroLeptonSignalError_", thisBin,
+<<<<<<< metReweightingBuilderSIMPLETAU.C
+							 //1.0, counterror,
+							 1.0, 0.,
+							 "sigerr1","sigerr2");
+=======
 							 1.0, counterror,
 							 "sigerr1","sigerr2","globalObservables");
+>>>>>>> 1.17
 
 
       RooProduct zeroLepton(zeroLeptonName+"_SignalYield",zeroLeptonName+"_SignalYield",RooArgSet(acount0,*wspace.var("signalCrossSection"), *zeroLeptonError));
@@ -970,7 +999,15 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 
       ////// 
       // leaving placeholder in 0L count space
+      TString blah = zeroLeptonName+"_SignalFrac";
+      cout << blah << endl;
       contentFile>>count;
+      cout << (*wspace.var(blah.Data())).getVal() << "  " << count ;
+      count = count + (300./84.28)*(*wspace.var(blah.Data())).getVal();
+      cout << "  " << count << endl;
+      rd.Poisson(count);
+      count = TMath::Nint(count);
+      cout << count << endl;
 
       // ONLY ADD ZERO LEPTON COUNT TO WORKSPACE IN STANDALONE MODE
       if( standalone ){
@@ -990,7 +1027,11 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 	TString oneLooseLepThetaName(oneLooseLepName+"_Theta");
 	oneLooseLepThetaName+=j;
 	
-	contentFile>>count;     
+	TString blah1 = oneTightMuThetaName+"_SignalFrac";
+	contentFile>>count;    
+	count = count + (300./84.28)*(*wspace.var(blah1.Data())).getVal(); 
+	count = rd.Poisson(count);
+	count = TMath::Nint(count);
  	RooRealVar oneTightMuThetaCount(oneTightMuThetaName+"_Count",oneTightMuThetaName+"_Count",count);
 	oneTightMuThetaCount.setConstant();
 	wspace.import(oneTightMuThetaCount,RecycleConflictNodes());
@@ -999,7 +1040,11 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 	
 	//cout << endl << endl << oneTightMuThetaCount.getVal() << endl << endl;
 
+	TString blah2 = oneLooseLepThetaName+"_SignalFrac";
 	contentFile>>count;
+	count = count + (300./84.28)*(*wspace.var(blah2.Data())).getVal();
+	count = rd.Poisson(count);
+	count = TMath::Nint(count);
 	RooRealVar oneLooseLepThetaCount(oneLooseLepThetaName+"_Count",oneLooseLepThetaName+"_Count",count);
 	oneLooseLepThetaCount.setConstant();
 	wspace.import(oneLooseLepThetaCount,RecycleConflictNodes());
@@ -1010,8 +1055,11 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 
       }
       
-
+      TString blah3 = twoTightMuName+"_SignalFrac";
       contentFile>>count;
+      count = count + (300./84.28)*(*wspace.var(blah3.Data())).getVal();
+      count = rd.Poisson(count);
+      count = TMath::Nint(count);
       RooRealVar twoTightMuCount(twoTightMuName+"_Count",twoTightMuName+"_Count",count);
       twoTightMuCount.setConstant();
       wspace.import(twoTightMuCount,RecycleConflictNodes());
@@ -1020,7 +1068,11 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 
       //cout << endl << endl << twoTightMuCount.getVal() << endl << endl;
 
+      TString blah4 = twoLooseLepName+"_SignalFrac";
       contentFile>>count;
+      count = count + (300./84.28)*(*wspace.var(blah4.Data())).getVal();
+      count = rd.Poisson(count);
+      count = TMath::Nint(count);
       RooRealVar twoLooseLepCount(twoLooseLepName+"_Count",twoLooseLepName+"_Count",count);
       twoLooseLepCount.setConstant();
       wspace.import(twoLooseLepCount,RecycleConflictNodes());
@@ -1203,12 +1255,12 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   /////////////////////////////////////////////////////////////////////////////////////////////////
   if( standalone ){
 
-    
+    /*
     (*wspace.var("oneLooseLep_bin47_Theta5_TopWJetsYield")).Print();
     (*wspace.arg("zeroLepton_bin47_Theta5_TopWJetsYield")).Print();
     (*wspace.arg("zeroLepton_bin47_SignalYield")).Print();
     (*wspace.arg("zeroLepton_bin47_DataYieldSum")).Print();
-    
+    */
   
     cout << " putting together the model " << endl;
 
@@ -1242,7 +1294,35 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 
 
   RooFitResult *fitResult = model.fitTo(dataset, Save(true) );//, Minos(kTRUE), Save(true),"s");
+
+                                                                                                                                                       
+  cout << " XSEC AFTER FIT " << wspace.var("signalCrossSection")->getValV() << "  "
+       << wspace.var("signalCrossSection")->getPropagatedError(*fitResult) << endl;
+
+  double total = 0.;
+  double totalerror = 0.;
+
+       
+  for( int i=0; i<binnames.size(); i++ )
+    {
+
+      TString zeroLeptonName = "zeroLepton_";
+      TString thisBin = binnames.at(i);
+      zeroLeptonName.Append(thisBin);
+
+      TString name00(zeroLeptonName+"_SignalDataYield");
+      cout << thisBin << "  " << (wspace.function(name00.Data()))->getVal() << " " << wspace.function(name00.Data())->getPropagatedError(*fitResult) << endl;
+
+      total = total+(wspace.function(name00.Data()))->getVal();
+      totalerror = totalerror + ( wspace.function(name00.Data())->getPropagatedError(*fitResult) 
+				  * wspace.function(name00.Data())->getPropagatedError(*fitResult) );
+
+    }
+  totalerror = TMath::Sqrt(totalerror);
   
+  cout << endl << endl << total << "  " << totalerror << endl << endl;;
+  text << total << "  " << totalerror << endl;
+
   /*
 
   cout << binnames.size() << endl;
@@ -1394,9 +1474,8 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
   cout << " XSEC AFTER FIT " << wspace.var("signalCrossSection")->getValV() << "  " 
      << wspace.var("signalCrossSection")->getError() << endl;
 
-     */
-
-  cout << endl;
+     
+     cout << endl;
   cout << wspace.function("zeroLepton_bin26_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin26_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
   cout << wspace.function("zeroLepton_bin27_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin27_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
   cout << wspace.function("zeroLepton_bin38_TopWJetsPolarizationDataYield")->getVal() << " " << wspace.function("zeroLepton_bin38_TopWJetsPolarizationDataYield")->getPropagatedError(*fitResult) << endl;
@@ -1513,12 +1592,16 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 
 
   //test << wspace.var("signalCrossSection")->getValV() << endl;
-  test->Write(); 
-  test->Close(); 
+  //  test->Write(); 
+  //  test->Close(); 
+
+  text.close();
+
+  cout << " CLOSED STUFF " << endl;
 
   }
 
-  wspace.writeToFile( outputFile.Data(), false ); // DO NOT RECREATE ROOT FILE!!! 
+  //  wspace.writeToFile( outputFile.Data(), false ); // DO NOT RECREATE ROOT FILE!!! 
 
   ////////////////////////////////////
 
