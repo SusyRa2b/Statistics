@@ -211,20 +211,20 @@ float reducedTree::getTrigWeightMu() {
   float toreturn = -1;
 
   if ( (MET>Mbins[0]) && (MET<=Mbins[1]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.973;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  0.977;
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.956;
+    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  0.972;
     if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
     if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
   }
   if ( (MET>Mbins[1]) && (MET<=Mbins[2]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.995;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  0.996;
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.994;
+    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  0.992;
     if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
     if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
   }
   if ( (MET>Mbins[2]) && (MET<=Mbins[3]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.999;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  0.998;
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  1.000;
+    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  1.000;
     if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
     if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
   }
@@ -244,14 +244,14 @@ float reducedTree::getTrigWeightEl() {
   float toreturn = -1;
 
   if ( (MET>Mbins[0]) && (MET<=Mbins[1]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.855;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  0.925;
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.850;
+    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  0.930;
     if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
     if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
   }
   if ( (MET>Mbins[1]) && (MET<=Mbins[2]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.980;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  0.992;
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.972;
+    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  1.000;
     if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
     if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
   }
@@ -277,13 +277,13 @@ float reducedTree::getTrigWeight0L() {
   float toreturn = -1;
   
    if ( (MET>Mbins[0]) && (MET<=Mbins[1]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.859;
-    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  0.739;
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.800;
+    if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  0.667;
     if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
     if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
   }
   if ( (MET>Mbins[1]) && (MET<=Mbins[2]) ){
-    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.901;
+    if ( (HT>Hbins[0]) && (HT<=Hbins[1]) ) toreturn =  0.833;
     if ( (HT>Hbins[1]) && (HT<=Hbins[2]) ) toreturn =  1.000;
     if ( (HT>Hbins[2]) && (HT<=Hbins[3]) ) toreturn =  1.000;
     if ( (HT>Hbins[3]) && (HT<=Hbins[4]) ) toreturn =  1.000;
