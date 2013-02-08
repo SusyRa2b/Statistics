@@ -12,7 +12,7 @@
 
 using namespace RooFit;
 
-RooAbsArg* getLognormalConstraint( RooWorkspace& ws, TString NP_name, const TString binName, 
+RooAbsArg* getLogNormalConstraint( RooWorkspace& ws, TString NP_name, const TString binName, 
 				   double NP_val, double NP_err,
 				   const TString observables, const TString nuisances, const TString globalObservables) {
   
