@@ -32,6 +32,7 @@
     void bookSetLHB( const char* hname_base, const char* htitle_base ) ;
     void fillSet( const char* hname_base, const char* varname, const char* cuts, int nb_requirement, bool doTrigCorr = true ) ;
     void fillSetLHB( const char* hname_base, const char* cuts, int nb_requirement, bool doTrigCorr = true ) ;
+    void fillSetNb( const char* hname_base, const char* cuts, bool doTrigCorr = true ) ;
     void saveHist(const char* filename, const char* pat) ;
 
    //----------------------------
@@ -917,23 +918,23 @@
      //--- n b jets
 
        sprintf( htitle, "nbjets, SL, %s", dataset_string ) ;
-       bookSet( "h_nb_sl_all", htitle, 6, -0.5, 5.5 ) ;
+       bookSet( "h_nb_sl_all", htitle, 3, 0.5, 3.5 ) ;
 
        sprintf( htitle, "nbjets, LDP, %s", dataset_string ) ;
-       bookSet( "h_nb_ldp_all", htitle, 6, -0.5, 5.5 ) ;
+       bookSet( "h_nb_ldp_all", htitle, 3, 0.5, 3.5 ) ;
 
        sprintf( htitle, "nbjets, ZL, %s", dataset_string ) ;
-       bookSet( "h_nb_zl_all", htitle, 6, -0.5, 5.5 ) ;
+       bookSet( "h_nb_zl_all", htitle, 3, 0.5, 3.5 ) ;
 
 
        sprintf( htitle, "nbjets, SL, %s", dataset_string ) ;
-       bookSet( "h_nbgt0_sl_all", htitle, 6, -0.5, 5.5 ) ;
+       bookSet( "h_nbgt0_sl_all", htitle, 3, 0.5, 3.5 ) ;
 
        sprintf( htitle, "nbjets, LDP, %s", dataset_string ) ;
-       bookSet( "h_nbgt0_ldp_all", htitle, 6, -0.5, 5.5 ) ;
+       bookSet( "h_nbgt0_ldp_all", htitle, 3, 0.5, 3.5 ) ;
 
        sprintf( htitle, "nbjets, ZL, %s", dataset_string ) ;
-       bookSet( "h_nbgt0_zl_all", htitle, 6, -0.5, 5.5 ) ;
+       bookSet( "h_nbgt0_zl_all", htitle, 3, 0.5, 3.5 ) ;
 
 
 
@@ -1251,23 +1252,23 @@
        char cuts[10000] ;
 
        sprintf( cuts, "%s", basecuts_1lep_nonb ) ;
-       fillSet( "h_nb_sl_all", "nB", cuts, -1 ) ;
+       fillSetNb( "h_nb_sl_all", cuts ) ;
 
        sprintf( cuts, "%s", basecuts_ldp_nonb ) ;
-       fillSet( "h_nb_ldp_all", "nB", cuts, -1 ) ;
+       fillSetNb( "h_nb_ldp_all", cuts ) ;
 
        sprintf( cuts, "%s", basecuts_0lep_nonb ) ;
-       fillSet( "h_nb_zl_all", "nB", cuts, -1 ) ;
+       fillSetNb( "h_nb_zl_all", cuts ) ;
 
 
        sprintf( cuts, "%s&&nB>0", basecuts_1lep_nonb ) ;
-       fillSet( "h_nbgt0_sl_all", "nB", cuts, -1 ) ;
+       fillSetNb( "h_nbgt0_sl_all", cuts ) ;
 
        sprintf( cuts, "%s&&nB>0", basecuts_ldp_nonb ) ;
-       fillSet( "h_nbgt0_ldp_all", "nB", cuts, -1 ) ;
+       fillSetNb( "h_nbgt0_ldp_all", cuts ) ;
 
        sprintf( cuts, "%s&&nB>0", basecuts_0lep_nonb ) ;
-       fillSet( "h_nbgt0_zl_all", "nB", cuts, -1 ) ;
+       fillSetNb( "h_nbgt0_zl_all", cuts ) ;
 
 
        sprintf( cuts, "%s", basecuts_1lep ) ;
@@ -2046,34 +2047,18 @@
           sprintf( hname, "%s_%s", hname_base, compname[ci] ) ;
           sprintf( arg1, "HT:MET>>%s", hname ) ;
           if ( ci==0 ) {
-             if ( doTrigCorr ) {
-                if ( nb_requirement < 0 ) {
-                   sprintf( arg2, "trigWeight*(%s)", cuts ) ;
-                } else if ( nb_requirement == 10 ) {
-                   sprintf( arg2, "trigWeight*(nB>0&&%s)", cuts ) ;
-                } else if ( nb_requirement == 0 ) {
-                   sprintf( arg2, "trigWeight*(nB==0&&%s)", cuts ) ;
-                } else if ( nb_requirement == 1 ) {
-                   sprintf( arg2, "trigWeight*(nB==1&&%s)", cuts ) ;
-                } else if ( nb_requirement == 2 ) {
-                   sprintf( arg2, "trigWeight*(nB==2&&%s)", cuts ) ;
-                } else if ( nb_requirement == 3 ) {
-                   sprintf( arg2, "trigWeight*(nB>=3&&%s)", cuts ) ;
-                }
-             } else {
-                if ( nb_requirement < 0 ) {
-                   sprintf( arg2, "(%s)", cuts ) ;
-                } else if ( nb_requirement == 10 ) {
-                   sprintf( arg2, "(nB>0&&%s)", cuts ) ;
-                } else if ( nb_requirement == 0 ) {
-                   sprintf( arg2, "(nB==0&&%s)", cuts ) ;
-                } else if ( nb_requirement == 1 ) {
-                   sprintf( arg2, "(nB==1&&%s)", cuts ) ;
-                } else if ( nb_requirement == 2 ) {
-                   sprintf( arg2, "(nB==2&&%s)", cuts ) ;
-                } else if ( nb_requirement == 3 ) {
-                   sprintf( arg2, "(nB>=3&&%s)", cuts ) ;
-                }
+             if ( nb_requirement < 0 ) {
+                sprintf( arg2, "(%s)", cuts ) ;
+             } else if ( nb_requirement == 10 ) {
+                sprintf( arg2, "(nB>0&&%s)", cuts ) ;
+             } else if ( nb_requirement == 0 ) {
+                sprintf( arg2, "(nB==0&&%s)", cuts ) ;
+             } else if ( nb_requirement == 1 ) {
+                sprintf( arg2, "(nB==1&&%s)", cuts ) ;
+             } else if ( nb_requirement == 2 ) {
+                sprintf( arg2, "(nB==2&&%s)", cuts ) ;
+             } else if ( nb_requirement == 3 ) {
+                sprintf( arg2, "(nB>=3&&%s)", cuts ) ;
              }
           } else {
              if ( doTrigCorr ) {
@@ -2144,34 +2129,18 @@
           sprintf( hname, "%s_%s", hname_base, compname[ci] ) ;
           sprintf( arg1, "%s>>%s", varname, hname ) ;
           if ( ci==0 ) {
-             if ( doTrigCorr ) {
-                if ( nb_requirement < 0 ) {
-                   sprintf( arg2, "trigWeight*(%s)", cuts ) ;
-                } else if ( nb_requirement == 10 ) {
-                   sprintf( arg2, "trigWeight*(nB>0&&%s)", cuts ) ;
-                } else if ( nb_requirement == 0 ) {
-                   sprintf( arg2, "trigWeight*(nB==0&&%s)", cuts ) ;
-                } else if ( nb_requirement == 1 ) {
-                   sprintf( arg2, "trigWeight*(nB==1&&%s)", cuts ) ;
-                } else if ( nb_requirement == 2 ) {
-                   sprintf( arg2, "trigWeight*(nB==2&&%s)", cuts ) ;
-                } else if ( nb_requirement == 3 ) {
-                   sprintf( arg2, "trigWeight*(nB>=3&&%s)", cuts ) ;
-                }
-             } else {
-                if ( nb_requirement < 0 ) {
-                   sprintf( arg2, "(%s)", cuts ) ;
-                } else if ( nb_requirement == 10 ) {
-                   sprintf( arg2, "(nB>0&&%s)", cuts ) ;
-                } else if ( nb_requirement == 0 ) {
-                   sprintf( arg2, "(nB==0&&%s)", cuts ) ;
-                } else if ( nb_requirement == 1 ) {
-                   sprintf( arg2, "(nB==1&&%s)", cuts ) ;
-                } else if ( nb_requirement == 2 ) {
-                   sprintf( arg2, "(nB==2&&%s)", cuts ) ;
-                } else if ( nb_requirement == 3 ) {
-                   sprintf( arg2, "(nB>=3&&%s)", cuts ) ;
-                }
+             if ( nb_requirement < 0 ) {
+                sprintf( arg2, "(%s)", cuts ) ;
+             } else if ( nb_requirement == 10 ) {
+                sprintf( arg2, "(nB>0&&%s)", cuts ) ;
+             } else if ( nb_requirement == 0 ) {
+                sprintf( arg2, "(nB==0&&%s)", cuts ) ;
+             } else if ( nb_requirement == 1 ) {
+                sprintf( arg2, "(nB==1&&%s)", cuts ) ;
+             } else if ( nb_requirement == 2 ) {
+                sprintf( arg2, "(nB==2&&%s)", cuts ) ;
+             } else if ( nb_requirement == 3 ) {
+                sprintf( arg2, "(nB>=3&&%s)", cuts ) ;
              }
           } else {
              if ( doTrigCorr ) {
@@ -2238,6 +2207,109 @@
 
 
     } // fillSet
+
+   //----------------------------
+
+    void fillSetNb( const char* hname_base, const char* cuts, bool doTrigCorr ) {
+
+       printf("\n\n") ;
+       for ( int ci=0; ci<nComps; ci++ ) {
+
+          char hname[1000] ;
+          char arg1[10000] ;
+          char arg2[10000] ;
+
+          sprintf( hname, "%s_%s", hname_base, compname[ci] ) ;
+          if ( ci==0 ) {
+
+             //--- this is the data component (ci==0).
+
+             sprintf( arg1, "1>>%s", hname ) ;
+             sprintf( arg2, "(nB==1&&%s)", cuts ) ;
+             printf(" %s : %s\n", arg1, arg2 ) ;
+             compchain[ci] -> Draw( arg1, arg2 ) ;
+
+             sprintf( arg1, "2>>+%s", hname ) ;
+             sprintf( arg2, "(nB==2&&%s)", cuts ) ;
+             printf(" %s : %s\n", arg1, arg2 ) ;
+             compchain[ci] -> Draw( arg1, arg2 ) ;
+
+             sprintf( arg1, "3>>+%s", hname ) ;
+             sprintf( arg2, "(nB>=3&&%s)", cuts ) ;
+             printf(" %s : %s\n", arg1, arg2 ) ;
+             compchain[ci] -> Draw( arg1, arg2 ) ;
+
+          } else {
+
+             //--- these are MC components.
+
+
+             if ( doTrigCorr ) {
+
+                sprintf( arg1, "1>>%s", hname ) ;
+                sprintf( arg2, "(trigWeight*prob1)*(%s)", cuts ) ;
+                printf(" %s : %s\n", arg1, arg2 ) ;
+                compchain[ci] -> Draw( arg1, arg2 ) ;
+
+                sprintf( arg1, "2>>+%s", hname ) ;
+                sprintf( arg2, "(trigWeight*prob2)*(%s)", cuts ) ;
+                printf(" %s : %s\n", arg1, arg2 ) ;
+                compchain[ci] -> Draw( arg1, arg2 ) ;
+
+                sprintf( arg1, "3>>+%s", hname ) ;
+                sprintf( arg2, "(trigWeight*probge3)*(%s)", cuts ) ;
+                printf(" %s : %s\n", arg1, arg2 ) ;
+                compchain[ci] -> Draw( arg1, arg2 ) ;
+
+
+             } else {
+
+                sprintf( arg1, "1>>%s", hname ) ;
+                sprintf( arg2, "(prob1)*(%s)", cuts ) ;
+                printf(" %s : %s\n", arg1, arg2 ) ;
+                compchain[ci] -> Draw( arg1, arg2 ) ;
+
+                sprintf( arg1, "2>>+%s", hname ) ;
+                sprintf( arg2, "(prob2)*(%s)", cuts ) ;
+                printf(" %s : %s\n", arg1, arg2 ) ;
+                compchain[ci] -> Draw( arg1, arg2 ) ;
+
+                sprintf( arg1, "3>>+%s", hname ) ;
+                sprintf( arg2, "(probge3)*(%s)", cuts ) ;
+                printf(" %s : %s\n", arg1, arg2 ) ;
+                compchain[ci] -> Draw( arg1, arg2 ) ;
+
+             }
+          }
+
+          TH1F* hp = (TH1F*) gDirectory->FindObject( hname ) ;
+          if ( hp == 0x0 ) { printf("\n *** missing hist! %s \n\n", hname ) ; return ; }
+
+          for ( int bi=1; bi<=hp->GetNbinsX(); bi++ ) {
+             if ( fabs( hp->GetBinCenter(bi) - 1. ) < 0.1 ) {
+                hp->GetXaxis()->SetBinLabel( bi, "=1" ) ;
+             } else if ( fabs( hp->GetBinCenter(bi) - 2. ) < 0.1 ) {
+                hp->GetXaxis()->SetBinLabel( bi, "=2" ) ;
+             } else if ( fabs( hp->GetBinCenter(bi) - 3. ) < 0.1 ) {
+                hp->GetXaxis()->SetBinLabel( bi, ">=3" ) ;
+             } else {
+                hp->GetXaxis()->SetBinLabel( bi, "" ) ;
+             }
+          }
+
+          hp -> Scale( compscale[ci] ) ;
+
+
+          hp -> Draw("hist") ;
+          hp -> Draw("esame") ;
+
+          dcan->Update() ;
+
+       } // ci
+       printf("\n\n") ;
+
+
+    } // fillSetNb
 
    //----------------------------
 
