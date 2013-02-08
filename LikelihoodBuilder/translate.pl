@@ -444,7 +444,7 @@ foreach(@binFileNames) {
 #}
 
 print $globalout "ZtollOverZtoNuNuRatio 0.168067227\n";
-print $globalout "Luminosity 17.61\n";
+print $globalout "Luminosity 19.399\n";
 print $globalout "dibosonMC 1.0\n";
 if($nuisanceOptions eq "noWidths") {
   print $globalout "dibosonMCUncertainty 0.0\n";
