@@ -11,8 +11,8 @@
 #include "RooStats/HypoTestInverter.h"
 #include "RooStats/FrequentistCalculator.h"
 #include "RooStats/ToyMCSampler.h"
-//#include "RooStats/ProfileLikelihoodTestStat.h" //TEMP
-#include "ProfileLikelihoodTestStat2.h"
+#include "RooStats/ProfileLikelihoodTestStat.h"
+
 
 #include <iostream>
 #include <fstream>
@@ -68,8 +68,7 @@ void frequentist(TString fileName) {
   ModelConfig* bModel = (ModelConfig*) w->obj("B_model");
   ModelConfig* sbModel = (ModelConfig*) w->obj("S+B_model");
 
-  //ProfileLikelihoodTestStat profll(*sbModel->GetPdf()); //TEMP 
-  ProfileLikelihoodTestStat2 profll(*sbModel->GetPdf());
+  ProfileLikelihoodTestStat profll(*sbModel->GetPdf());
   profll.SetPrintLevel(2);
   profll.SetOneSided(1);
   TestStatistic * testStat = &profll;
