@@ -13,7 +13,7 @@
 
 using namespace std;
 
-void runFit(TString inpath, TString outpath, TString outname = "", TString option = "allWidths")
+void runFit(TString inpath, TString outpath, TString outname = "", TString option = "")
 {
 
   //RooFit::PrintLevel(0); 
@@ -33,7 +33,8 @@ void runFit(TString inpath, TString outpath, TString outname = "", TString optio
   
   likelihoodBuilder(inpath+"setupFile.dat", inpath+"binFilesFile.dat", inpath, inpath+"sig1/", "workspace", outpath+"likelihood_"+outname+".root", inpath+"binFilesFileMR.dat", inpath+"countsMR/", option);
 
-  
+  return;
+
   int status=0;
   //status = minimalFit(outpath+"likelihood_"+outname+".root", 0, 0, 1000, true, outpath+"dat_"+outname+".dat", true); //fix susy to zero
   //if(status != 0) return;
