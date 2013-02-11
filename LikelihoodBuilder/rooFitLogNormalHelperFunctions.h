@@ -70,7 +70,7 @@ RooAbsReal* getCorrelatedLogNormalConstraint( RooWorkspace& ws, TString NP_name,
 					      double NP_val, double NP_err, 
 					      const TString observables, const TString nuisances, const TString globalObservables,
 					      const TString NP_base_name, 
-					      bool changeSign ) {
+					      bool changeSign = false) {
   
   NP_name = NP_name + binName;
   
