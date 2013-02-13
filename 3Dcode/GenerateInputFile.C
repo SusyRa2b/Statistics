@@ -1513,31 +1513,31 @@ inFile << "knn_3b_err       \t" << 0.0027<< endl;
     } // si
 
     // next write out measured trigger efficiencies. Values from plotEMuFrac.C from averaging e/mu bin by bin.
-    float trigeff1LVal[nBinsMET][nBinsHT] = {{0.90418,0.983407,0.999797,0.999801},{0.952519,0.996088,0.999794,0.999807},{1,1,1,1},{1,1,1,1}};
-    float trigeff1LErr[nBinsMET][nBinsHT] = {{0.0254576,0.0115725,0.0112111,0.0110318},{0.020,0.0101077,0.0101169,0.0102007},{0.0151531,0.0110547,0.013888,0.014495},{0.0108621,0.0108621,0.0108621,0.0108621}};
-    float trigeff0LVal[nBinsMET][nBinsHT] = {{0.8,0.833333,1,1},{0.666667,1,1,1},{1,1,1,1},{1,1,1,1}};
-    float trigeff0LErr[nBinsMET][nBinsHT] = {{0.136256,0.169997,0.0560853,0.0560853},{0.124213,0.0737418,0.0560853,0.0560853},{0.0207913,0.0207913,0.0207913,0.0207913},{0.0207913,0.0207913,0.0207913,0.0207913}};
+    float trigeff1LVal[nBinsHT][nBinsMET] = {{0.90418,0.983407,0.999797,0.999801},{0.952519,0.996088,0.999794,0.999807},{1,1,1,1},{1,1,1,1}};
+    float trigeff1LErr[nBinsHT][nBinsMET] = {{0.0254576,0.0115725,0.0112111,0.0110318},{0.0153225,0.0101077,0.0101169,0.0102007},{0.0151531,0.0110547,0.013888,0.014495},{0.0108621,0.0108621,0.0108621,0.0108621}};
+    float trigeff0LVal[nBinsHT][nBinsMET] = {{0.8,0.833333,1,1},{0.666667,1,1,1},{1,1,1,1},{1,1,1,1}};
+    float trigeff0LErr[nBinsHT][nBinsMET] = {{0.136256,0.169997,0.0560853,0.0560853},{0.124213,0.0737418,0.0560853,0.0560853},{0.0207913,0.0207913,0.0207913,0.0207913},{0.0207913,0.0207913,0.0207913,0.0207913}};
 
     for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
       for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
     	char parname[1000] ;
     	sprintf( parname, "trigeff_val_0L_M%d_H%d", mbi+1, hbi+1 ) ;
-    	printf(" %s  :  %6.3f \n", parname, trigeff0LVal[mbi][hbi] ) ;
-    	inFile << parname << "  \t" << trigeff0LVal[mbi][hbi] << endl;
+    	printf(" %s  :  %6.3f \n", parname, trigeff0LVal[hbi][mbi] ) ;
+    	inFile << parname << "  \t" << trigeff0LVal[hbi][mbi] << endl;
 	sprintf( parname, "trigeff_err_0L_M%d_H%d", mbi+1, hbi+1 ) ;
-    	printf(" %s  :  %6.3f \n", parname, trigeff0LErr[mbi][hbi] ) ;
-    	inFile << parname << "  \t" << trigeff0LErr[mbi][hbi] << endl;
+    	printf(" %s  :  %6.3f \n", parname, trigeff0LErr[hbi][mbi] ) ;
+    	inFile << parname << "  \t" << trigeff0LErr[hbi][mbi] << endl;
       }
     }
     for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
       for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
     	char parname[1000] ;
     	sprintf( parname, "trigeff_val_1L_M%d_H%d", mbi+1, hbi+1 ) ;
-    	printf(" %s  :  %6.3f \n", parname, trigeff1LVal[mbi][hbi] ) ;
-    	inFile << parname << "  \t" << trigeff1LVal[mbi][hbi] << endl;
+    	printf(" %s  :  %6.3f \n", parname, trigeff1LVal[hbi][mbi] ) ;
+    	inFile << parname << "  \t" << trigeff1LVal[hbi][mbi] << endl;
     	sprintf( parname, "trigeff_err_1L_M%d_H%d", mbi+1, hbi+1 ) ;
-    	printf(" %s  :  %6.3f \n", parname, trigeff1LErr[mbi][hbi] ) ;
-    	inFile << parname << "  \t" << trigeff1LErr[mbi][hbi] << endl;
+    	printf(" %s  :  %6.3f \n", parname, trigeff1LErr[hbi][mbi] ) ;
+    	inFile << parname << "  \t" << trigeff1LErr[hbi][mbi] << endl;
       }
     }
 
