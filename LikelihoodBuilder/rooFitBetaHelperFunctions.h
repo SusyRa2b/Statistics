@@ -91,7 +91,7 @@ RooAbsArg* getCorrelatedBetaPrimeConstraint(RooWorkspace& ws,const TString varNa
 
 
 RooAbsArg* getCorrelatedBetaConstraint(RooWorkspace& ws,const TString varName,const TString binName,
-				       const double value ,const double error,
+				       double value ,const double error,
 				       const TString observables, const TString nuisances, const TString globalObservables,
 				       const TString correlatedName,
                                        Bool_t useComplement=false )
@@ -108,7 +108,9 @@ RooAbsArg* getCorrelatedBetaConstraint(RooWorkspace& ws,const TString varName,co
       //NB this should not be on the 'observables' or 'nuisances' list; it should just be a constant                                                                                                                       
       return ws.arg(valueVar.GetName());
     }
-  //   
+
+  if(value >= 1.) value = 0.999; 
+
   double alpha,beta;
   betaModeTransform(value , error , alpha , beta );
 
@@ -227,7 +229,7 @@ RooAbsArg* getBetaPrimeConstraint(RooWorkspace& ws,const TString varName,const T
 }
 
 RooAbsArg* getBetaConstraint(RooWorkspace& ws,const TString varName,const TString binName,
-			     const double value ,const double error,
+			     double value ,const double error,
 			     const TString observables, const TString nuisances, const TString globalObservables,
 			     TString* passObs = NULL , TString* failObs = NULL,
 			     TString* passPar = NULL , TString* failPar = NULL)
@@ -246,6 +248,9 @@ RooAbsArg* getBetaConstraint(RooWorkspace& ws,const TString varName,const TStrin
       return ws.arg(valueVar.GetName());
     }
   //
+  
+  if(value >= 1.) value = 0.999;
+
   double alpha,beta;
   betaModeTransform(value , error , alpha , beta ); 
 

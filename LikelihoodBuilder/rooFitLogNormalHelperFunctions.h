@@ -71,7 +71,7 @@ RooAbsReal* getCorrelatedLogNormalConstraint( RooWorkspace& ws, TString NP_name,
 					      const TString observables, const TString nuisances, const TString globalObservables,
 					      const TString NP_base_name, 
 					      bool changeSign = false) {
-  
+
   NP_name = NP_name + binName;
   
   RooAbsReal* constrained_check = ws.var(NP_name);
@@ -87,7 +87,6 @@ RooAbsReal* getCorrelatedLogNormalConstraint( RooWorkspace& ws, TString NP_name,
   RooRealVar* rrv_np_base_par = ws.var( NP_base_name ) ;
   
   if ( rrv_np_base_par == 0x0 ) {
-    
     rrv_np_base_par = new RooRealVar( NP_base_name, NP_base_name, -6.0, 6.0 ) ;
     rrv_np_base_par -> setVal( 0. ) ;
     rrv_np_base_par -> setConstant( kFALSE ) ;

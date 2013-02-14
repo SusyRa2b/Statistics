@@ -33,15 +33,16 @@ void runFit(TString inpath, TString outpath, TString outname = "", TString optio
   
   likelihoodBuilder(inpath+"setupFile.dat", inpath+"binFilesFile.dat", inpath, inpath+"sig1/", "workspace", outpath+"likelihood_"+outname+".root", inpath+"binFilesFileMR.dat", inpath+"countsMR/", option);
 
-  return;
-
   int status=0;
   //status = minimalFit(outpath+"likelihood_"+outname+".root", 0, 0, 1000, true, outpath+"dat_"+outname+".dat", true); //fix susy to zero
   //if(status != 0) return;
-  //status = minimalFit(outpath+"likelihood_"+outname+".root", 5, 0, 1000, true, outpath+"dat_"+outname+".dat"); //susy floating 
+  status = minimalFit(outpath+"likelihood_"+outname+".root", 5, 0, 1000, true, outpath+"dat_"+outname+".dat"); //susy floating 
+  if(status != 0) return;
+  //status = minimalFit(outpath+"likelihood_"+outname+".root", 5, 0, 400, true, outpath+"dat_"+outname+".dat"); //susy floating 
   //if(status != 0) return;
   //int status = minimalFit(outpath+"likelihood_"+outname+".root", 56.628, 0, 1000, true, outpath+"dat_"+outname+".dat", true); //fix susy to 56.628
 
+  return;
 
   //singleAsymptotic(outpath+"likelihood_"+outname+".root");
   frequentist(outpath+"likelihood_"+outname+".root");

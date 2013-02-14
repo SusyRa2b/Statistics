@@ -494,11 +494,11 @@ void compareFit()
 {
   
   //Open workspaces
-  TFile fOAK("likelihood_jan10test_Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig-toy0000.root", "READ");
+  TFile fOAK("pull/OAK.root", "READ");
   RooWorkspace* wsOAK = (RooWorkspace*)fOAK.Get("ws");
 
   //TFile fLB("likelihood_toy100_Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig-toy0000.root", "READ");
-  TFile fLB("likelihood_toy_old_susy100_Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig-toy0000.root", "READ");
+  TFile fLB("pull/LB.root", "READ");
   RooWorkspace *wsLB = (RooWorkspace*)fLB.Get("workspace");
   
 
@@ -827,6 +827,7 @@ void comparePDFs(RooWorkspace* wsLB, RooWorkspace* wsOAK)
 
 void setVal_RRV_RRV(double val, RooWorkspace* ws1, TString name1, RooWorkspace* ws2, TString name2)
 {
+  cout << "Setting " << name1 << " " << name2 << endl;
   (ws1->var(name1))->setVal(val);
   (ws2->var(name2))->setVal(val);
   //cout << "Set" << endl;
@@ -836,6 +837,7 @@ void setVal_RRV_RRV(double val, RooWorkspace* ws1, TString name1, RooWorkspace* 
 
 void setVal_RAR_RRV(double val, RooWorkspace* ws1, TString name1, RooWorkspace* ws2, TString name2)
 {
+  cout << "Setting " << name1 << " " << name2 << endl;
   ((RooRealVar*)(ws1->function(name1)))->setVal(val);
   (ws2->var(name2))->setVal(val);
   //cout << "Set" << endl;
@@ -928,10 +930,10 @@ void setSame()
 {
 
   //Open workspaces
-  TFile fOAK("likelihood_jan10test_Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig-toy0000.root", "READ");
+  TFile fOAK("pull/OAK.root", "READ");
   RooWorkspace* wsOAK = (RooWorkspace*)fOAK.Get("ws");
   
-  TFile fLB("likelihood_toy_old_susy100_Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig-toy0000.root", "READ");
+  TFile fLB("pull/LB.root", "READ");
   RooWorkspace *wsLB = (RooWorkspace*)fLB.Get("workspace");
   
   

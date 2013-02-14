@@ -22,7 +22,11 @@ while(<$flist>) {
     #copy in binFilesFile and binFilesFileMR
     system("cp copyIn/binFilesFile.dat $copyto/.");
     system("cp copyIn/binFilesFileMR.dat $copyto/.");
-    
+
+    #copy in shape syst files
+    system("cp copyIn/singletop-xsec-shapesyst.txt $copyto/.");
+    system("cp copyIn/wjets-xsec-shapesyst.txt $copyto/.");
+
     #copy in sig directory
     system("cp -r copyIn/sig1/ $copyto/.");
     

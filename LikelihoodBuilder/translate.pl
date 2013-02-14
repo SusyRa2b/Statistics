@@ -412,6 +412,16 @@ while(<$fin>) {
 	print $globalout "metCleaningError $value\n";
       }
 
+      elsif($fullOKAname =~ /(GU_JER)/) {
+	if($nuisanceOptions eq "noWidths") { $value=0; }
+	print $globalout "jerError $value\n";
+      }
+
+      elsif($fullOKAname =~ /(GU_unclMET)/) {
+	if($nuisanceOptions eq "noWidths") { $value=0; }
+	print $globalout "unclusteredMETError $value\n";
+      }
+
       elsif($fullOKAname =~ /(SFqcd_)(\S+)/) {#no skipping widths here
 	print $globalout "$1$2 $value\n";
       }
