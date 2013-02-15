@@ -1,48 +1,48 @@
-smmctest001.txt
-smmctest002.txt
-smmctest003.txt
-smmctest011.txt
-smmctest012.txt
-smmctest013.txt
-smmctest021.txt
-smmctest022.txt
-smmctest023.txt
-smmctest031.txt
-smmctest032.txt
-smmctest033.txt
-smmctest101.txt
-smmctest102.txt
-smmctest103.txt
-smmctest111.txt
-smmctest112.txt
-smmctest113.txt
-smmctest121.txt
-smmctest122.txt
-smmctest123.txt
-smmctest131.txt
-smmctest132.txt
-smmctest133.txt
-smmctest201.txt
-smmctest202.txt
-smmctest203.txt
-smmctest211.txt
-smmctest212.txt
-smmctest213.txt
-smmctest221.txt
-smmctest222.txt
-smmctest223.txt
-smmctest231.txt
-smmctest232.txt
-smmctest233.txt
-smmctest301.txt
-smmctest302.txt
-smmctest303.txt
-smmctest311.txt
-smmctest312.txt
-smmctest313.txt
-smmctest321.txt
-smmctest322.txt
-smmctest323.txt
-smmctest331.txt
-smmctest332.txt
-smmctest333.txt
+smmctest001.txt insideSignalMRW_M1_H1_1b.dat
+smmctest002.txt insideSignalMRW_M1_H1_2b.dat
+smmctest003.txt insideSignalMRW_M1_H1_3b.dat
+smmctest011.txt insideSignalMRW_M2_H1_1b.dat
+smmctest012.txt insideSignalMRW_M2_H1_2b.dat
+smmctest013.txt insideSignalMRW_M2_H1_3b.dat
+smmctest021.txt insideSignalMRW_M3_H1_1b.dat
+smmctest022.txt insideSignalMRW_M3_H1_2b.dat
+smmctest023.txt insideSignalMRW_M3_H1_3b.dat
+smmctest031.txt insideSignalMRW_M4_H1_1b.dat
+smmctest032.txt insideSignalMRW_M4_H1_2b.dat
+smmctest033.txt insideSignalMRW_M4_H1_3b.dat
+smmctest101.txt insideSignalMRW_M1_H2_1b.dat
+smmctest102.txt insideSignalMRW_M1_H2_2b.dat
+smmctest103.txt insideSignalMRW_M1_H2_3b.dat
+smmctest111.txt insideSignalMRW_M2_H2_1b.dat
+smmctest112.txt insideSignalMRW_M2_H2_2b.dat
+smmctest113.txt insideSignalMRW_M2_H2_3b.dat
+smmctest121.txt insideSignalMRW_M3_H2_1b.dat
+smmctest122.txt insideSignalMRW_M3_H2_2b.dat
+smmctest123.txt insideSignalMRW_M3_H2_3b.dat
+smmctest131.txt insideSignalMRW_M4_H2_1b.dat
+smmctest132.txt insideSignalMRW_M4_H2_2b.dat
+smmctest133.txt insideSignalMRW_M4_H2_3b.dat
+smmctest201.txt insideSignalMRW_M1_H3_1b.dat
+smmctest202.txt insideSignalMRW_M1_H3_2b.dat
+smmctest203.txt insideSignalMRW_M1_H3_3b.dat
+smmctest211.txt insideSignalMRW_M2_H3_1b.dat
+smmctest212.txt insideSignalMRW_M2_H3_2b.dat
+smmctest213.txt insideSignalMRW_M2_H3_3b.dat
+smmctest221.txt insideSignalMRW_M3_H3_1b.dat
+smmctest222.txt insideSignalMRW_M3_H3_2b.dat
+smmctest223.txt insideSignalMRW_M3_H3_3b.dat
+smmctest231.txt insideSignalMRW_M4_H3_1b.dat
+smmctest232.txt insideSignalMRW_M4_H3_2b.dat
+smmctest233.txt insideSignalMRW_M4_H3_3b.dat
+smmctest301.txt insideSignalMRW_M1_H4_1b.dat
+smmctest302.txt insideSignalMRW_M1_H4_2b.dat
+smmctest303.txt insideSignalMRW_M1_H4_3b.dat
+smmctest311.txt insideSignalMRW_M2_H4_1b.dat
+smmctest312.txt insideSignalMRW_M2_H4_2b.dat
+smmctest313.txt insideSignalMRW_M2_H4_3b.dat
+smmctest321.txt insideSignalMRW_M3_H4_1b.dat
+smmctest322.txt insideSignalMRW_M3_H4_2b.dat
+smmctest323.txt insideSignalMRW_M3_H4_3b.dat
+smmctest331.txt insideSignalMRW_M4_H4_1b.dat
+smmctest332.txt insideSignalMRW_M4_H4_2b.dat
+smmctest333.txt insideSignalMRW_M4_H4_3b.dat

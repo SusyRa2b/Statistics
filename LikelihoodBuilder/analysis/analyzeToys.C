@@ -82,7 +82,7 @@ void makeHists(TString fitter = "LB") {
   TH1D* hZeroLeptonQCDYieldTotal = new TH1D("hZeroLeptonQCDYieldTotal", "Zero lepton QCD yield", 50, 0, 500);
   TH1D* hZeroLeptonZtoNuNuYieldTotal = new TH1D("hZeroLeptonZtoNuNuYieldTotal", "Zero lepton Z-invisible yield", 50, 150, 450);
   */
-  TH1D* hSignalCrossSection = new TH1D("hSignalCrossSection", "Signal cross section", 50, 0, 200);
+  TH1D* hSignalCrossSection = new TH1D("hSignalCrossSection", "Signal cross section", 100, 0, 400);
   TH1D* hPull = new TH1D("hPull", "Pull using fit errors", 50, -5, 5);
   TH1D* hPullPL = new TH1D("hPullPL", "Pull using PL errors", 50, -5, 5);
   TH1D* hZeroLeptonSignalYieldTotal = new TH1D("hZeroLeptonSignalYieldTotal", "Zero lepton signal yield", 50, 0, 500);
@@ -222,10 +222,10 @@ void initialize(int trueN_in, TString inFile, TString fitter = "LB") {
   //last number should not included skipped bins
 
   //signal point t1bbbb 850 600, lumi = 19.399/fb
-  trueXsec = 1000.0 * trueN_double / 1.9399 / 2651.34 ; 
+  //trueXsec = 1000.0 * trueN_double / 1.9399 / 2651.34 ; 
   
   //signal point t1tttt 1175 400, lumi = 19.399/fb
-  //trueXsec = 1000.0 * trueN_double / 1.9399 / 13532.1 ;
+  trueXsec = trueN_double * 49996.0  / (19.399 * 13496.559610000000248) ;
 
   cout << "true xsec = " << trueXsec << endl;
 

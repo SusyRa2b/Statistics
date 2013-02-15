@@ -2,6 +2,12 @@
 use strict;
 use warnings;
 
+
+#
+# Used for creating truth information for pull distributions
+#
+
+
 open (my $fin, "<", "listMR.txt") or die "Can't open input file.";
 open (my $fout, ">", "saveInputMR.dat") or die "Can't open input file.";
 

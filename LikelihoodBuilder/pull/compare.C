@@ -141,38 +141,38 @@ TString binTranslate(TString name)
 TString translate(TString name)
 {
 
-
+  cout << "translating " << name << endl;
   //OAK->LB
 
   //bin dependent -- eff_sf_M1_H1_1b, eff_sf_ldp_M1_H1_1b, eff_sf_sl_M1_H1_1b, mu_qcd_ldp_M1_H1_1b, mu_ttwj_sl_M1_H1_1b, sf_qcd_M1_H1_1b, sf_ttwj_M1_H1_1b
-  if(name.Contains("eff_sf_") || name.Contains("eff_sf_ldp_") || name.Contains("eff_sf_sl_") || 
+  if(name.Contains("prim_eff_sf_") || name.Contains("prim_eff_sf_ldp_") || name.Contains("prim_eff_sf_sl_") || 
      name.Contains("mu_qcd_ldp_") || name.Contains("mu_ttwj_sl_") ||
-     name.Contains("sf_qcd_") || name.Contains("sf_ttwj_") ) 
+     name.Contains("prim_sf_qcd_") || name.Contains("prim_sf_ttwj_") ) 
     {
-      TObjArray *subStrL = TPRegexp("(eff_sf_M|eff_sf_ldp_M|eff_sf_sl_M|mu_qcd_ldp_M|mu_ttwj_sl_M|sf_qcd_M|sf_ttwj_M)(\\S+)").MatchS(name);
+      TObjArray *subStrL = TPRegexp("(prim_eff_sf_M|prim_eff_sf_ldp_M|prim_eff_sf_sl_M|mu_qcd_ldp_M|mu_ttwj_sl_M|prim_sf_qcd_M|prim_sf_ttwj_M)(\\S+)").MatchS(name);
       TString prefix = ( ((TObjString *)subStrL->At(1))->GetString() );
       TString bin = "M";
       bin+=( ((TObjString *)subStrL->At(2))->GetString() );
-      //cout << "prefix: " << prefix << ", bin: " << bin << endl;
+      cout << "prefix: " << prefix << ", bin: " << bin << endl;
       
       TString translatedBin = binTranslate(bin);
       
-      if(prefix == "eff_sf_M") return "zeroLeptonSignalError_"+translatedBin;
-      if(prefix == "eff_sf_ldp_M") return "zeroLeptonLowDeltaPhiNSignalError_"+translatedBin;
-      if(prefix == "eff_sf_sl_M") return "oneLeptonSignalError_"+translatedBin;
+      if(prefix == "prim_eff_sf_M") return "prim_zeroLeptonSignalError_"+translatedBin;
+      if(prefix == "prim_eff_sf_ldp_M") return "prim_zeroLeptonLowDeltaPhiNSignalError_"+translatedBin;
+      if(prefix == "prim_eff_sf_sl_M") return "prim_oneLeptonSignalError_"+translatedBin;
       if(prefix == "mu_qcd_ldp_M") return "zeroLeptonLowDeltaPhiN_"+translatedBin+"_QCDYield";
       if(prefix == "mu_ttwj_sl_M") return "oneLepton_"+translatedBin+"_TopWJetsYield";
-      if(prefix == "sf_qcd_M") return "zeroLeptonQCDClosure_"+translatedBin;
-      if(prefix == "sf_ttwj_M") return "zeroLeptonTopWJetsClosure_"+translatedBin;
+      if(prefix == "prim_sf_qcd_M") return "prim_zeroLeptonQCDClosure_"+translatedBin;
+      if(prefix == "prim_sf_ttwj_M") return "prim_zeroLeptonTopWJetsClosure_"+translatedBin;
     }
 
-  if(name == "JES_sf") return "signalJesErrorCorrelated";
+  if(name == "prim_JES_sf") return "signalJesErrorCorrelated";
 
   if(name == "SFqcd_met2" ) return "lowDeltaPhiNMETScaleFactor_M2";
-  if(name == "SFqcd_met3" ) return "lowDeltaPhiNMETScaleFactor_M3";
-  if(name == "SFqcd_met4" ) return "lowDeltaPhiNMETScaleFactor_M4";
+  if(name == "prim_SFqcd_met3" ) return "prim_lowDeltaPhiNMETScaleFactor_M3";
+  if(name == "prim_SFqcd_met4" ) return "prim_lowDeltaPhiNMETScaleFactor_M4";
   if(name == "SFqcd_nb2"  ) return "lowDeltaPhiNBTagScaleFactor_2b";
-  if(name == "SFqcd_nb3"  ) return "lowDeltaPhiNBTagScaleFactor_3b";
+  if(name == "prim_SFqcd_nb3"  ) return "prim_lowDeltaPhiNBTagScaleFactor_3b";
   
   if(name == "acc_Zee_M1" ) return "ZtoeeAcceptance_M1";
   if(name == "acc_Zee_M2" ) return "ZtoeeAcceptance_M2";
@@ -183,19 +183,24 @@ TString translate(TString name)
   if(name == "acc_Zmm_M3" ) return "ZtomumuAcceptance_M3";
   if(name == "acc_Zmm_M4" ) return "ZtomumuAcceptance_M4";
 
-  if(name == "all_gu" ) return "signalGlobalUncertainty";
+  if(name == "prim_all_gu" ) return "prim_signalGlobalUncertainty";
 
-  if(name == "btageff_sf" ) return "signalBTagEfficiencyCorrelated";
+  if(name == "prim_btageff_sf" ) return "signalBTagEfficiencyCorrelated";
+  if(name == "prim_btageff_lf_sf" ) return "signalLTagEfficiencyCorrelated";
   
+  if(name == "prim_singletop_xsec" ) return "singleTopShapeSystematic";
+  if(name == "prim_wjets_xsec" ) return "wJetsShapeSystematic";
+  if(name == "prim_pdfsyst_sf" ) return "signalPdfErrorCorrelated";
+
   if(name == "eff_Zee" ) return "ZtoeeEfficiency";	
   if(name == "eff_Zmm" ) return "ZtomumuEfficiency";	
   
-  if(name == "knn_1b_M1" ) return "zeroLeptonZtoNuNubTagScaling_M1_1b";
-  if(name == "knn_1b_M2" ) return "zeroLeptonZtoNuNubTagScaling_M2_1b";
-  if(name == "knn_1b_M3" ) return "zeroLeptonZtoNuNubTagScaling_M3_1b";
-  if(name == "knn_1b_M4" ) return "zeroLeptonZtoNuNubTagScaling_M4_1b";
-  if(name == "knn_2b" ) return "zeroLeptonZtoNuNubTagScaling_2b";
-  if(name == "knn_3b" ) return "zeroLeptonZtoNuNubTagScaling_3b";
+  if(name == "prim_knn_1b_M1" ) return "prim_zeroLeptonZtoNuNubTagScaling_M1_1b";
+  if(name == "prim_knn_1b_M2" ) return "prim_zeroLeptonZtoNuNubTagScaling_M2_1b";
+  if(name == "prim_knn_1b_M3" ) return "prim_zeroLeptonZtoNuNubTagScaling_M3_1b";
+  if(name == "prim_knn_1b_M4" ) return "prim_zeroLeptonZtoNuNubTagScaling_M4_1b";
+  if(name == "prim_knn_2b" ) return "prim_zeroLeptonZtoNuNubTagScaling_2b";
+  if(name == "prim_knn_3b" ) return "prim_zeroLeptonZtoNuNubTagScaling_3b";
 
   if(name == "pur_Zee" ) return "ZtoeePurity";
   if(name == "pur_Zmm" ) return "ZtomumuPurity";
@@ -205,11 +210,11 @@ TString translate(TString name)
   if(name == "qcd_0lepLDP_ratio_H3" ) return "lowDeltaPhiNScaling_H3";
   if(name == "qcd_0lepLDP_ratio_H4" ) return "lowDeltaPhiNScaling_H4";
   
-  if(name == "rar_vv_sf" ) return "dibosonMCUncertainty";
+  if(name == "prim_rar_vv_sf" ) return "prim_dibosonMCUncertainty";
   
-  if(name == "sf_ll" ) return "ZtollSystematic";
+  if(name == "prim_sf_ll" ) return "ZtollSystematic";
   
-  if(name == "sf_mc" ) return "MCUncertainty";
+  if(name == "prim_sf_mc" ) return "prim_MCUncertainty";
   
   if(name == "trigeff_M1_H1" ) return "zeroLeptonTriggerEfficiency_M1_H1";
   if(name == "trigeff_M1_H2" ) return "zeroLeptonTriggerEfficiency_M1_H2";
@@ -285,14 +290,15 @@ TString translate(TString name)
 TString translatePDF(TString name)
 {
 
+  //cout << "translating pdf " << name << endl;
   //OAK->LB
 
   //bin dependent -- eff_sf_M1_H1_1b, eff_sf_ldp_M1_H1_1b, eff_sf_sl_M1_H1_1b, mu_qcd_ldp_M1_H1_1b, mu_ttwj_sl_M1_H1_1b, sf_qcd_M1_H1_1b, sf_ttwj_M1_H1_1b
-  if(name.Contains("pdf_eff_sf_") || name.Contains("pdf_eff_sf_ldp_") || name.Contains("pdf_eff_sf_sl_") || 
+  if(name.Contains("pdf_prim_eff_sf_") || name.Contains("pdf_prim_eff_sf_ldp_") || name.Contains("pdf_prim_eff_sf_sl_") || 
      name.Contains("pdf_N_0lep_") || name.Contains("pdf_N_1lep_") || name.Contains("pdf_N_ldp_") ||
-     name.Contains("pdf_sf_qcd_") || name.Contains("pdf_sf_ttwj_") ) 
+     name.Contains("pdf_prim_sf_qcd_") || name.Contains("pdf_prim_sf_ttwj_") ) 
     {
-      TObjArray *subStrL = TPRegexp("(pdf_eff_sf_M|pdf_eff_sf_ldp_M|pdf_eff_sf_sl_M|pdf_N_0lep_M|pdf_N_1lep_M|pdf_N_ldp_M|pdf_sf_qcd_M|pdf_sf_ttwj_M)(\\S+)").MatchS(name);
+      TObjArray *subStrL = TPRegexp("(pdf_prim_eff_sf_M|pdf_prim_eff_sf_ldp_M|pdf_prim_eff_sf_sl_M|pdf_N_0lep_M|pdf_N_1lep_M|pdf_N_ldp_M|pdf_prim_sf_qcd_M|pdf_prim_sf_ttwj_M)(\\S+)").MatchS(name);
       TString prefix = ( ((TObjString *)subStrL->At(1))->GetString() );
       TString bin = "M";
       bin+=( ((TObjString *)subStrL->At(2))->GetString() );
@@ -300,85 +306,91 @@ TString translatePDF(TString name)
       
       TString translatedBin = binTranslate(bin);
       
-      if(prefix == "pdf_eff_sf_M") return "pdf_zeroLeptonSignalError_"+translatedBin;
-      if(prefix == "pdf_eff_sf_ldp_M") return "pdf_zeroLeptonLowDeltaPhiNSignalError_"+translatedBin;
-      if(prefix == "pdf_eff_sf_sl_M") return "pdf_oneLeptonSignalError_"+translatedBin;
+      if(prefix == "pdf_prim_eff_sf_M") return "pdf_prim_zeroLeptonSignalError_"+translatedBin;
+      if(prefix == "pdf_prim_eff_sf_ldp_M") return "pdf_prim_zeroLeptonLowDeltaPhiNSignalError_"+translatedBin;
+      if(prefix == "pdf_prim_eff_sf_sl_M") return "pdf_prim_oneLeptonSignalError_"+translatedBin;
       if(prefix == "pdf_N_0lep_M") return "zeroLepton_"+translatedBin+"_Constraint";
       if(prefix == "pdf_N_1lep_M") return "oneLepton_"+translatedBin+"_Constraint";
       if(prefix == "pdf_N_ldp_M") return "zeroLeptonLowDeltaPhiN_"+translatedBin+"_Constraint";
-      if(prefix == "pdf_sf_qcd_M") return "pdf_zeroLeptonQCDClosure_"+translatedBin;
-      if(prefix == "pdf_sf_ttwj_M") return "pdf_zeroLeptonTopWJetsClosure_"+translatedBin;
+      if(prefix == "pdf_prim_sf_qcd_M") return "pdf_prim_zeroLeptonQCDClosure_"+translatedBin;
+      if(prefix == "pdf_prim_sf_ttwj_M") return "pdf_prim_zeroLeptonTopWJetsClosure_"+translatedBin;
     }
 
-  if(name == "pdf_JES_sf") return "pdf_signalJesErrorCorrelated";
+  if(name == "pdf_prim_JES_sf") return "pdf_signalJesErrorCorrelated";
 
-  if(name == "pdf_SFqcd_met3" ) return "lowDeltaPhiNMETScaleFactor_M3_Constraint";
-  if(name == "pdf_SFqcd_met4" ) return "lowDeltaPhiNMETScaleFactor_M4_Constraint";
-  if(name == "pdf_SFqcd_nb3"  ) return "lowDeltaPhiNBTagScaleFactor_3b_Constraint";
+  if(name == "pdf_prim_SFqcd_met3" ) return "pdf_prim_lowDeltaPhiNMETScaleFactor_M3";
+  if(name == "pdf_prim_SFqcd_met4" ) return "pdf_prim_lowDeltaPhiNMETScaleFactor_M4";
+  if(name == "pdf_prim_SFqcd_nb3"  ) return "pdf_prim_lowDeltaPhiNBTagScaleFactor_3b";
   
-  if(name == "pdf_acc_Zee_M1" ) return "pdf_ZtoeeAcceptance_M1";
-  if(name == "pdf_acc_Zee_M2" ) return "pdf_ZtoeeAcceptance_M2";
-  if(name == "pdf_acc_Zee_M3" ) return "pdf_ZtoeeAcceptance_M3";
-  if(name == "pdf_acc_Zee_M4" ) return "pdf_ZtoeeAcceptance_M4";
-  if(name == "pdf_acc_Zmm_M1" ) return "pdf_ZtomumuAcceptance_M1";
-  if(name == "pdf_acc_Zmm_M2" ) return "pdf_ZtomumuAcceptance_M2";
-  if(name == "pdf_acc_Zmm_M3" ) return "pdf_ZtomumuAcceptance_M3";
-  if(name == "pdf_acc_Zmm_M4" ) return "pdf_ZtomumuAcceptance_M4";
+  if(name == "betapdf_acc_Zee_M1" ) return "ZtoeeAcceptance_M1_Constraint";
+  if(name == "betapdf_acc_Zee_M2" ) return "ZtoeeAcceptance_M2_Constraint";
+  if(name == "betapdf_acc_Zee_M3" ) return "ZtoeeAcceptance_M3_Constraint";
+  if(name == "betapdf_acc_Zee_M4" ) return "ZtoeeAcceptance_M4_Constraint";
+  if(name == "betapdf_acc_Zmm_M1" ) return "ZtomumuAcceptance_M1_Constraint";
+  if(name == "betapdf_acc_Zmm_M2" ) return "ZtomumuAcceptance_M2_Constraint";
+  if(name == "betapdf_acc_Zmm_M3" ) return "ZtomumuAcceptance_M3_Constraint";
+  if(name == "betapdf_acc_Zmm_M4" ) return "ZtomumuAcceptance_M4_Constraint";
 
-  if(name == "pdf_all_gu" ) return "pdf_signalGlobalUncertainty";
+  if(name == "pdf_prim_all_gu" ) return "pdf_prim_signalGlobalUncertainty";
 
-  if(name == "pdf_btageff_sf" ) return "pdf_signalBTagEfficiencyCorrelated";
+  if(name == "pdf_prim_btageff_sf" ) return "pdf_signalBTagEfficiencyCorrelated";
+  if(name == "pdf_prim_btageff_lf_sf" ) return "pdf_signalLTagEfficiencyCorrelated";
   
-  if(name == "pdf_eff_Zee" ) return "pdf_ZtoeeEfficiency";	
-  if(name == "pdf_eff_Zmm" ) return "pdf_ZtomumuEfficiency";	
-  
-  if(name == "pdf_knn_1b_M1" ) return "pdf_zeroLeptonZtoNuNubTagScaling_M1_1b";
-  if(name == "pdf_knn_1b_M2" ) return "pdf_zeroLeptonZtoNuNubTagScaling_M2_1b";
-  if(name == "pdf_knn_1b_M3" ) return "pdf_zeroLeptonZtoNuNubTagScaling_M3_1b";
-  if(name == "pdf_knn_1b_M4" ) return "pdf_zeroLeptonZtoNuNubTagScaling_M4_1b";
-  if(name == "pdf_knn_2b" ) return "pdf_zeroLeptonZtoNuNubTagScaling_2b";
-  if(name == "pdf_knn_3b" ) return "pdf_zeroLeptonZtoNuNubTagScaling_3b";
+  if(name == "pdf_prim_singletop_xsec" ) return "pdf_singleTopShapeSystematic";
+  if(name == "pdf_prim_wjets_xsec" ) return "pdf_wJetsShapeSystematic";
 
-  if(name == "pdf_pur_Zee" ) return "pdf_ZtoeePurity";
-  if(name == "pdf_pur_Zmm" ) return "pdf_ZtomumuPurity";
+  if(name == "pdf_prim_pdfsyst_sf" ) return "pdf_signalPdfErrorCorrelated";
 
-  if(name == "pdf_rar_vv_sf" ) return "pdf_dibosonMCUncertainty";
+  if(name == "betapdf_eff_Zee" ) return "ZtoeeEfficiency_Constraint";	
+  if(name == "betapdf_eff_Zmm" ) return "ZtomumuEfficiency_Constraint";	
   
-  if(name == "pdf_sf_ll" ) return "pdf_ZtollSystematic";
-  
-  if(name == "pdf_sf_mc" ) return "pdf_MCUncertainty";
-  
-  if(name == "pdf_trigeff_M1_H1" ) return "pdf_zeroLeptonTriggerEfficiency_M1_H1";
-  if(name == "pdf_trigeff_M1_H2" ) return "pdf_zeroLeptonTriggerEfficiency_M1_H2";
-  if(name == "pdf_trigeff_M1_H3" ) return "pdf_zeroLeptonTriggerEfficiency_M1_H3";
-  if(name == "pdf_trigeff_M1_H4" ) return "pdf_zeroLeptonTriggerEfficiency_M1_H4";
-  if(name == "pdf_trigeff_M2_H1" ) return "pdf_zeroLeptonTriggerEfficiency_M2_H1";
-  if(name == "pdf_trigeff_M2_H2" ) return "pdf_zeroLeptonTriggerEfficiency_M2_H2";
-  if(name == "pdf_trigeff_M2_H3" ) return "pdf_zeroLeptonTriggerEfficiency_M2_H3";
-  if(name == "pdf_trigeff_M2_H4" ) return "pdf_zeroLeptonTriggerEfficiency_M2_H4";
-  if(name == "pdf_trigeff_M3_H1" ) return "pdf_zeroLeptonTriggerEfficiency_M3_H1";
-  if(name == "pdf_trigeff_M3_H2" ) return "pdf_zeroLeptonTriggerEfficiency_M3_H2";
-  if(name == "pdf_trigeff_M3_H3" ) return "pdf_zeroLeptonTriggerEfficiency_M3_H3";
-  if(name == "pdf_trigeff_M3_H4" ) return "pdf_zeroLeptonTriggerEfficiency_M3_H4";
-  if(name == "pdf_trigeff_M4_H2" ) return "pdf_zeroLeptonTriggerEfficiency_M4_H2";
-  if(name == "pdf_trigeff_M4_H3" ) return "pdf_zeroLeptonTriggerEfficiency_M4_H3";
-  if(name == "pdf_trigeff_M4_H4" ) return "pdf_zeroLeptonTriggerEfficiency_M4_H4";
+  if(name == "pdf_prim_knn_1b_M1" ) return "pdf_prim_zeroLeptonZtoNuNubTagScaling_M1_1b";
+  if(name == "pdf_prim_knn_1b_M2" ) return "pdf_prim_zeroLeptonZtoNuNubTagScaling_M2_1b";
+  if(name == "pdf_prim_knn_1b_M3" ) return "pdf_prim_zeroLeptonZtoNuNubTagScaling_M3_1b";
+  if(name == "pdf_prim_knn_1b_M4" ) return "pdf_prim_zeroLeptonZtoNuNubTagScaling_M4_1b";
+  if(name == "pdf_prim_knn_2b" ) return "pdf_prim_zeroLeptonZtoNuNubTagScaling_2b";
+  if(name == "pdf_prim_knn_3b" ) return "pdf_prim_zeroLeptonZtoNuNubTagScaling_3b";
 
-  if(name == "pdf_trigeff_sl_M1_H1" ) return "pdf_oneLeptonTriggerEfficiency_M1_H1";
-  if(name == "pdf_trigeff_sl_M1_H2" ) return "pdf_oneLeptonTriggerEfficiency_M1_H2";
-  if(name == "pdf_trigeff_sl_M1_H3" ) return "pdf_oneLeptonTriggerEfficiency_M1_H3";
-  if(name == "pdf_trigeff_sl_M1_H4" ) return "pdf_oneLeptonTriggerEfficiency_M1_H4";
-  if(name == "pdf_trigeff_sl_M2_H1" ) return "pdf_oneLeptonTriggerEfficiency_M2_H1";
-  if(name == "pdf_trigeff_sl_M2_H2" ) return "pdf_oneLeptonTriggerEfficiency_M2_H2";
-  if(name == "pdf_trigeff_sl_M2_H3" ) return "pdf_oneLeptonTriggerEfficiency_M2_H3";
-  if(name == "pdf_trigeff_sl_M2_H4" ) return "pdf_oneLeptonTriggerEfficiency_M2_H4";
-  if(name == "pdf_trigeff_sl_M3_H1" ) return "pdf_oneLeptonTriggerEfficiency_M3_H1";
-  if(name == "pdf_trigeff_sl_M3_H2" ) return "pdf_oneLeptonTriggerEfficiency_M3_H2";
-  if(name == "pdf_trigeff_sl_M3_H3" ) return "pdf_oneLeptonTriggerEfficiency_M3_H3";
-  if(name == "pdf_trigeff_sl_M3_H4" ) return "pdf_oneLeptonTriggerEfficiency_M3_H4";
-  if(name == "pdf_trigeff_sl_M4_H2" ) return "pdf_oneLeptonTriggerEfficiency_M4_H2";
-  if(name == "pdf_trigeff_sl_M4_H3" ) return "pdf_oneLeptonTriggerEfficiency_M4_H3";
-  if(name == "pdf_trigeff_sl_M4_H4" ) return "pdf_oneLeptonTriggerEfficiency_M4_H4";
+  if(name == "betapdf_pur_Zee" ) return "ZtoeePurity_Constraint";
+  if(name == "betapdf_pur_Zmm" ) return "ZtomumuPurity_Constraint";
+
+  if(name == "pdf_prim_rar_vv_sf" ) return "pdf_prim_dibosonMCUncertainty";
+  
+  if(name == "pdf_prim_sf_ll" ) return "pdf_ZtollSystematic";
+  
+  if(name == "pdf_prim_sf_mc" ) return "pdf_prim_MCUncertainty";
+  
+  if(name == "betapdf_trigeff_M1_H1" ) return "zeroLeptonTriggerEfficiency_M1_H1_Constraint";
+  if(name == "betapdf_trigeff_M1_H2" ) return "zeroLeptonTriggerEfficiency_M1_H2_Constraint";
+  if(name == "betapdf_trigeff_M1_H3" ) return "zeroLeptonTriggerEfficiency_M1_H3_Constraint";
+  if(name == "betapdf_trigeff_M1_H4" ) return "zeroLeptonTriggerEfficiency_M1_H4_Constraint";
+  if(name == "betapdf_trigeff_M2_H1" ) return "zeroLeptonTriggerEfficiency_M2_H1_Constraint";
+  if(name == "betapdf_trigeff_M2_H2" ) return "zeroLeptonTriggerEfficiency_M2_H2_Constraint";
+  if(name == "betapdf_trigeff_M2_H3" ) return "zeroLeptonTriggerEfficiency_M2_H3_Constraint";
+  if(name == "betapdf_trigeff_M2_H4" ) return "zeroLeptonTriggerEfficiency_M2_H4_Constraint";
+  if(name == "betapdf_trigeff_M3_H1" ) return "zeroLeptonTriggerEfficiency_M3_H1_Constraint";
+  if(name == "betapdf_trigeff_M3_H2" ) return "zeroLeptonTriggerEfficiency_M3_H2_Constraint";
+  if(name == "betapdf_trigeff_M3_H3" ) return "zeroLeptonTriggerEfficiency_M3_H3_Constraint";
+  if(name == "betapdf_trigeff_M3_H4" ) return "zeroLeptonTriggerEfficiency_M3_H4_Constraint";
+  if(name == "betapdf_trigeff_M4_H2" ) return "zeroLeptonTriggerEfficiency_M4_H2_Constraint";
+  if(name == "betapdf_trigeff_M4_H3" ) return "zeroLeptonTriggerEfficiency_M4_H3_Constraint";
+  if(name == "betapdf_trigeff_M4_H4" ) return "zeroLeptonTriggerEfficiency_M4_H4_Constraint";
+
+  if(name == "betapdf_trigeff_sl_M1_H1" ) return "oneLeptonTriggerEfficiency_M1_H1_Constraint";
+  if(name == "betapdf_trigeff_sl_M1_H2" ) return "oneLeptonTriggerEfficiency_M1_H2_Constraint";
+  if(name == "betapdf_trigeff_sl_M1_H3" ) return "oneLeptonTriggerEfficiency_M1_H3_Constraint";
+  if(name == "betapdf_trigeff_sl_M1_H4" ) return "oneLeptonTriggerEfficiency_M1_H4_Constraint";
+  if(name == "betapdf_trigeff_sl_M2_H1" ) return "oneLeptonTriggerEfficiency_M2_H1_Constraint";
+  if(name == "betapdf_trigeff_sl_M2_H2" ) return "oneLeptonTriggerEfficiency_M2_H2_Constraint";
+  if(name == "betapdf_trigeff_sl_M2_H3" ) return "oneLeptonTriggerEfficiency_M2_H3_Constraint";
+  if(name == "betapdf_trigeff_sl_M2_H4" ) return "oneLeptonTriggerEfficiency_M2_H4_Constraint";
+  if(name == "betapdf_trigeff_sl_M3_H1" ) return "oneLeptonTriggerEfficiency_M3_H1_Constraint";
+  if(name == "betapdf_trigeff_sl_M3_H2" ) return "oneLeptonTriggerEfficiency_M3_H2_Constraint";
+  if(name == "betapdf_trigeff_sl_M3_H3" ) return "oneLeptonTriggerEfficiency_M3_H3_Constraint";
+  if(name == "betapdf_trigeff_sl_M3_H4" ) return "oneLeptonTriggerEfficiency_M3_H4_Constraint";
+  if(name == "betapdf_trigeff_sl_M4_H2" ) return "oneLeptonTriggerEfficiency_M4_H2_Constraint";
+  if(name == "betapdf_trigeff_sl_M4_H3" ) return "oneLeptonTriggerEfficiency_M4_H3_Constraint";
+  if(name == "betapdf_trigeff_sl_M4_H4" ) return "oneLeptonTriggerEfficiency_M4_H4_Constraint";
 
   
   if(name == "pdf_N_Zee_M1_H1" ) return "diElectron_M1_H1_Constraint";
@@ -454,10 +466,20 @@ void printDiff_RAR_RRV(RooWorkspace* ws1, TString name1, RooWorkspace* ws2, TStr
   cout << name1 << " " << name2 << " " << v1 << " " << v2 << " " << v1-v2 << " " << percentDifference(v1, v2) << endl;
 }
 
+void printDiff_RAR_RAR(RooWorkspace* ws1, TString name1, RooWorkspace* ws2, TString name2)
+{
+  double v1 = (ws1->function(name1))->getVal();
+  double v2 = (ws2->function(name2))->getVal();
+  cout << name1 << " " << name2 << " " << v1 << " " << v2 << " " << v1-v2 << " " << percentDifference(v1, v2) << endl;
+}
+
 void printDiff_PDF_PDF(RooWorkspace* ws1, TString name1, RooWorkspace* ws2, TString name2)
 {
+
   cout.precision(20);
+  //  cout << "Printing " << name1 << endl;
   double v1 = (ws1->pdf(name1))->getVal();
+  //  cout << "Printing " << name2 << endl;
   double v2 = (ws2->pdf(name2))->getVal();
   cout << name1 << " " << name2 << " " << v1 << " " << v2 << " " << v1-v2 << " " << percentDifference(v1, v2) << endl;
 }
@@ -466,8 +488,8 @@ void printDiff_PDF_PDF(RooWorkspace* ws1, TString name1, RooWorkspace* ws2, TStr
 void printZtoNuNu(RooWorkspace* ws1, TString name1, RooWorkspace* ws2, TString bin2, TString scale2)
 {
   double znnOAK = (ws1->function(name1))->getVal();
-  RooRealVar* ZtoNuNuVeryLoose = ws2->var("ZtoNuNu_VeryLooseBtagYield_"+bin2);
-  RooRealVar* knn = ws2->var("zeroLeptonZtoNuNubTagScaling_"+scale2);
+  RooAbsReal* ZtoNuNuVeryLoose = ws2->function("ZtoNuNu_VeryLooseBtagYield_"+bin2);
+  RooAbsReal* knn = ws2->function("zeroLeptonZtoNuNubTagScaling_"+scale2);
   RooProduct ZtoNuNu("ZtoNuNu", "ZtoNuNu", RooArgSet(*ZtoNuNuVeryLoose, *knn));
   cout << name1 << " " << "xxx" << " " << znnOAK << " " << ZtoNuNu.getVal() << " " << znnOAK - ZtoNuNu.getVal() << " " << percentDifference(znnOAK, ZtoNuNu.getVal()) << endl;
 
@@ -674,14 +696,14 @@ void comparePDFs(RooWorkspace* wsLB, RooWorkspace* wsOAK)
   //First the things that don't need special treatment
   //eff_sf_M1_H1_1b, eff_sf_ldp_M1_H1_1b, eff_sf_sl_M1_H1_1b, mu_qcd_ldp_M1_H1_1b, mu_ttwj_sl_M1_H1_1b, sf_qcd_M1_H1_1b, sf_ttwj_M1_H1_1b
   vector<TString> names;
-  names.push_back("pdf_eff_sf_");
-  names.push_back("pdf_eff_sf_ldp_");
-  names.push_back("pdf_eff_sf_sl_");
+  names.push_back("pdf_prim_eff_sf_");
+  names.push_back("pdf_prim_eff_sf_ldp_");
+  names.push_back("pdf_prim_eff_sf_sl_");
   names.push_back("pdf_N_0lep_");
   names.push_back("pdf_N_1lep_");
   names.push_back("pdf_N_ldp_");
-  names.push_back("pdf_sf_qcd_");
-  names.push_back("pdf_sf_ttwj_");
+  names.push_back("pdf_prim_sf_qcd_");
+  names.push_back("pdf_prim_sf_ttwj_");
   for(vector<TString>::iterator it = names.begin(); it != names.end(); ++it)
     {
       TString name = *it;
@@ -708,83 +730,89 @@ void comparePDFs(RooWorkspace* wsLB, RooWorkspace* wsOAK)
     }//vector of names
   
   
-  printDiff_PDF_PDF(wsOAK, "pdf_JES_sf", wsLB, translatePDF("pdf_JES_sf"));
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_JES_sf", wsLB, translatePDF("pdf_prim_JES_sf"));
   
-  printDiff_PDF_PDF(wsOAK, "pdf_SFqcd_met3", wsLB, translatePDF("pdf_SFqcd_met3"));
-  printDiff_PDF_PDF(wsOAK, "pdf_SFqcd_met4", wsLB, translatePDF("pdf_SFqcd_met4"));
-  printDiff_PDF_PDF(wsOAK, "pdf_SFqcd_nb3", wsLB, translatePDF("pdf_SFqcd_nb3"));
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_SFqcd_met3", wsLB, translatePDF("pdf_prim_SFqcd_met3"));
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_SFqcd_met4", wsLB, translatePDF("pdf_prim_SFqcd_met4"));
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_SFqcd_nb3", wsLB, translatePDF("pdf_prim_SFqcd_nb3"));
 
-  printDiff_PDF_PDF(wsOAK, "pdf_acc_Zee_M1", wsLB, translatePDF("pdf_acc_Zee_M1"));
-  printDiff_PDF_PDF(wsOAK, "pdf_acc_Zee_M2", wsLB, translatePDF("pdf_acc_Zee_M2"));
-  printDiff_PDF_PDF(wsOAK, "pdf_acc_Zee_M3", wsLB, translatePDF("pdf_acc_Zee_M3"));
-  printDiff_PDF_PDF(wsOAK, "pdf_acc_Zee_M4", wsLB, translatePDF("pdf_acc_Zee_M4"));
-  printDiff_PDF_PDF(wsOAK, "pdf_acc_Zmm_M1", wsLB, translatePDF("pdf_acc_Zmm_M1"));
-  printDiff_PDF_PDF(wsOAK, "pdf_acc_Zmm_M2", wsLB, translatePDF("pdf_acc_Zmm_M2"));
-  printDiff_PDF_PDF(wsOAK, "pdf_acc_Zmm_M3", wsLB, translatePDF("pdf_acc_Zmm_M3"));
-  printDiff_PDF_PDF(wsOAK, "pdf_acc_Zmm_M4", wsLB, translatePDF("pdf_acc_Zmm_M4"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_acc_Zee_M1", wsLB, translatePDF("betapdf_acc_Zee_M1"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_acc_Zee_M2", wsLB, translatePDF("betapdf_acc_Zee_M2"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_acc_Zee_M3", wsLB, translatePDF("betapdf_acc_Zee_M3"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_acc_Zee_M4", wsLB, translatePDF("betapdf_acc_Zee_M4"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_acc_Zmm_M1", wsLB, translatePDF("betapdf_acc_Zmm_M1"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_acc_Zmm_M2", wsLB, translatePDF("betapdf_acc_Zmm_M2"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_acc_Zmm_M3", wsLB, translatePDF("betapdf_acc_Zmm_M3"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_acc_Zmm_M4", wsLB, translatePDF("betapdf_acc_Zmm_M4"));
 
-  printDiff_PDF_PDF(wsOAK, "pdf_all_gu", wsLB, translatePDF("pdf_all_gu"));
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_all_gu", wsLB, translatePDF("pdf_prim_all_gu"));
   
-  printDiff_PDF_PDF(wsOAK, "pdf_btageff_sf", wsLB, translatePDF("pdf_btageff_sf"));
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_btageff_sf", wsLB, translatePDF("pdf_prim_btageff_sf"));
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_btageff_lf_sf", wsLB, translatePDF("pdf_prim_btageff_lf_sf"));
 
-  printDiff_PDF_PDF(wsOAK, "pdf_eff_Zee", wsLB, translatePDF("pdf_eff_Zee"));
-  printDiff_PDF_PDF(wsOAK, "pdf_eff_Zmm", wsLB, translatePDF("pdf_eff_Zmm"));
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_singletop_xsec", wsLB, translatePDF("pdf_prim_singletop_xsec"));
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_wjets_xsec", wsLB, translatePDF("pdf_prim_wjets_xsec"));
+
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_pdfsyst_sf", wsLB, translatePDF("pdf_prim_pdfsyst_sf"));
+
+  printDiff_PDF_PDF(wsOAK, "betapdf_eff_Zee", wsLB, translatePDF("betapdf_eff_Zee"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_eff_Zmm", wsLB, translatePDF("betapdf_eff_Zmm"));
   
-  printDiff_PDF_PDF(wsOAK, "pdf_knn_1b_M1", wsLB, translatePDF("pdf_knn_1b_M1"));
-  printDiff_PDF_PDF(wsOAK, "pdf_knn_1b_M2", wsLB, translatePDF("pdf_knn_1b_M2"));
-  printDiff_PDF_PDF(wsOAK, "pdf_knn_1b_M3", wsLB, translatePDF("pdf_knn_1b_M3"));
-  printDiff_PDF_PDF(wsOAK, "pdf_knn_1b_M4", wsLB, translatePDF("pdf_knn_1b_M4"));
-  printDiff_PDF_PDF(wsOAK, "pdf_knn_2b", wsLB, translatePDF("pdf_knn_2b"));
-  printDiff_PDF_PDF(wsOAK, "pdf_knn_3b", wsLB, translatePDF("pdf_knn_3b"));
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_knn_1b_M1", wsLB, translatePDF("pdf_prim_knn_1b_M1"));
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_knn_1b_M2", wsLB, translatePDF("pdf_prim_knn_1b_M2"));
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_knn_1b_M3", wsLB, translatePDF("pdf_prim_knn_1b_M3"));
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_knn_1b_M4", wsLB, translatePDF("pdf_prim_knn_1b_M4"));
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_knn_2b", wsLB, translatePDF("pdf_prim_knn_2b"));
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_knn_3b", wsLB, translatePDF("pdf_prim_knn_3b"));
 
-  printDiff_PDF_PDF(wsOAK, "pdf_pur_Zee", wsLB, translatePDF("pdf_pur_Zee"));
-  printDiff_PDF_PDF(wsOAK, "pdf_pur_Zmm", wsLB, translatePDF("pdf_pur_Zmm"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_pur_Zee", wsLB, translatePDF("betapdf_pur_Zee"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_pur_Zmm", wsLB, translatePDF("betapdf_pur_Zmm"));
 
-  printDiff_PDF_PDF(wsOAK, "pdf_rar_vv_sf", wsLB, translatePDF("pdf_rar_vv_sf"));
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_rar_vv_sf", wsLB, translatePDF("pdf_prim_rar_vv_sf"));
 
-  printDiff_PDF_PDF(wsOAK, "pdf_sf_ll", wsLB, translatePDF("pdf_sf_ll"));
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_sf_ll", wsLB, translatePDF("pdf_prim_sf_ll"));
   
-  printDiff_PDF_PDF(wsOAK, "pdf_sf_mc", wsLB, translatePDF("pdf_sf_mc"));
+  printDiff_PDF_PDF(wsOAK, "pdf_prim_sf_mc", wsLB, translatePDF("pdf_prim_sf_mc"));
   
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_M1_H1", wsLB, translatePDF("pdf_trigeff_M1_H1"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_M1_H2", wsLB, translatePDF("pdf_trigeff_M1_H2"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_M1_H3", wsLB, translatePDF("pdf_trigeff_M1_H3"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_M1_H4", wsLB, translatePDF("pdf_trigeff_M1_H4"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_M2_H1", wsLB, translatePDF("pdf_trigeff_M2_H1"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_M2_H2", wsLB, translatePDF("pdf_trigeff_M2_H2"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_M2_H3", wsLB, translatePDF("pdf_trigeff_M2_H3"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_M2_H4", wsLB, translatePDF("pdf_trigeff_M2_H4"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_M3_H1", wsLB, translatePDF("pdf_trigeff_M3_H1"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_M3_H2", wsLB, translatePDF("pdf_trigeff_M3_H2"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_M3_H3", wsLB, translatePDF("pdf_trigeff_M3_H3"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_M3_H4", wsLB, translatePDF("pdf_trigeff_M3_H4"));
-  //printDiff_PDF_PDF(wsOAK, "pdf_trigeff_M4_H1", wsLB, translatePDF("pdf_trigeff_M4_H1"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_M4_H2", wsLB, translatePDF("pdf_trigeff_M4_H2"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_M4_H3", wsLB, translatePDF("pdf_trigeff_M4_H3"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_M4_H4", wsLB, translatePDF("pdf_trigeff_M4_H4"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_M1_H1", wsLB, translatePDF("betapdf_trigeff_M1_H1"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_M1_H2", wsLB, translatePDF("betapdf_trigeff_M1_H2"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_M1_H3", wsLB, translatePDF("betapdf_trigeff_M1_H3"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_M1_H4", wsLB, translatePDF("betapdf_trigeff_M1_H4"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_M2_H1", wsLB, translatePDF("betapdf_trigeff_M2_H1"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_M2_H2", wsLB, translatePDF("betapdf_trigeff_M2_H2"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_M2_H3", wsLB, translatePDF("betapdf_trigeff_M2_H3"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_M2_H4", wsLB, translatePDF("betapdf_trigeff_M2_H4"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_M3_H1", wsLB, translatePDF("betapdf_trigeff_M3_H1"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_M3_H2", wsLB, translatePDF("betapdf_trigeff_M3_H2"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_M3_H3", wsLB, translatePDF("betapdf_trigeff_M3_H3"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_M3_H4", wsLB, translatePDF("betapdf_trigeff_M3_H4"));
+  //printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_M4_H1", wsLB, translatePDF("betapdf_trigeff_M4_H1"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_M4_H2", wsLB, translatePDF("betapdf_trigeff_M4_H2"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_M4_H3", wsLB, translatePDF("betapdf_trigeff_M4_H3"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_M4_H4", wsLB, translatePDF("betapdf_trigeff_M4_H4"));
 
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_sl_M1_H1", wsLB, translatePDF("pdf_trigeff_sl_M1_H1"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_sl_M1_H2", wsLB, translatePDF("pdf_trigeff_sl_M1_H2"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_sl_M1_H3", wsLB, translatePDF("pdf_trigeff_sl_M1_H3"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_sl_M1_H4", wsLB, translatePDF("pdf_trigeff_sl_M1_H4"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_sl_M2_H1", wsLB, translatePDF("pdf_trigeff_sl_M2_H1"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_sl_M2_H2", wsLB, translatePDF("pdf_trigeff_sl_M2_H2"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_sl_M2_H3", wsLB, translatePDF("pdf_trigeff_sl_M2_H3"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_sl_M2_H4", wsLB, translatePDF("pdf_trigeff_sl_M2_H4"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_sl_M3_H1", wsLB, translatePDF("pdf_trigeff_sl_M3_H1"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_sl_M3_H2", wsLB, translatePDF("pdf_trigeff_sl_M3_H2"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_sl_M3_H3", wsLB, translatePDF("pdf_trigeff_sl_M3_H3"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_sl_M3_H4", wsLB, translatePDF("pdf_trigeff_sl_M3_H4"));
-  //printDiff_PDF_PDF(wsOAK, "pdf_trigeff_sl_M4_H1", wsLB, translatePDF("pdf_trigeff_sl_M4_H1"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_sl_M4_H2", wsLB, translatePDF("pdf_trigeff_sl_M4_H2"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_sl_M4_H3", wsLB, translatePDF("pdf_trigeff_sl_M4_H3"));
-  printDiff_PDF_PDF(wsOAK, "pdf_trigeff_sl_M4_H4", wsLB, translatePDF("pdf_trigeff_sl_M4_H4"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_sl_M1_H1", wsLB, translatePDF("betapdf_trigeff_sl_M1_H1"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_sl_M1_H2", wsLB, translatePDF("betapdf_trigeff_sl_M1_H2"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_sl_M1_H3", wsLB, translatePDF("betapdf_trigeff_sl_M1_H3"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_sl_M1_H4", wsLB, translatePDF("betapdf_trigeff_sl_M1_H4"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_sl_M2_H1", wsLB, translatePDF("betapdf_trigeff_sl_M2_H1"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_sl_M2_H2", wsLB, translatePDF("betapdf_trigeff_sl_M2_H2"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_sl_M2_H3", wsLB, translatePDF("betapdf_trigeff_sl_M2_H3"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_sl_M2_H4", wsLB, translatePDF("betapdf_trigeff_sl_M2_H4"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_sl_M3_H1", wsLB, translatePDF("betapdf_trigeff_sl_M3_H1"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_sl_M3_H2", wsLB, translatePDF("betapdf_trigeff_sl_M3_H2"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_sl_M3_H3", wsLB, translatePDF("betapdf_trigeff_sl_M3_H3"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_sl_M3_H4", wsLB, translatePDF("betapdf_trigeff_sl_M3_H4"));
+  //printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_sl_M4_H1", wsLB, translatePDF("betapdf_trigeff_sl_M4_H1"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_sl_M4_H2", wsLB, translatePDF("betapdf_trigeff_sl_M4_H2"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_sl_M4_H3", wsLB, translatePDF("betapdf_trigeff_sl_M4_H3"));
+  printDiff_PDF_PDF(wsOAK, "betapdf_trigeff_sl_M4_H4", wsLB, translatePDF("betapdf_trigeff_sl_M4_H4"));
   
 
 
   //for anders
-  cout << "anders" << endl;
-  printDiff_RRV_RRV(wsOAK, "mean_trigeff_sl_M2_H3", wsLB, "mean_oneLeptonTriggerEfficiency_M2_H3");
+  //cout << "anders" << endl;
+  //printDiff_RRV_RRV(wsOAK, "mean_trigeff_sl_M2_H3", wsLB, "mean_oneLeptonTriggerEfficiency_M2_H3");
   //printDiff_RRV_RRV(wsOAK, "sigma_trigeff_sl_M2_H3", wsLB, "sigma_oneLeptonTriggerEfficiency_M2_H3");
 
   
@@ -819,7 +847,84 @@ void comparePDFs(RooWorkspace* wsLB, RooWorkspace* wsOAK)
   printDiff_PDF_PDF(wsOAK, "pdf_N_Zmm_M4_H2", wsLB, translatePDF("pdf_N_Zmm_M4_H2"));
   printDiff_PDF_PDF(wsOAK, "pdf_N_Zmm_M4_H3", wsLB, translatePDF("pdf_N_Zmm_M4_H3"));
   printDiff_PDF_PDF(wsOAK, "pdf_N_Zmm_M4_H4", wsLB, translatePDF("pdf_N_Zmm_M4_H4"));
+
+
+  //special -- can remove later -- not pdfs -- just testing
+  /*
+  printZtoNuNu(wsOAK, "mu_znn_M1_H1_1b", wsLB, "M1_H1", "M1_1b");
+  printZtoNuNu(wsOAK, "mu_znn_M1_H2_1b", wsLB, "M1_H2", "M1_1b");
+  printZtoNuNu(wsOAK, "mu_znn_M1_H3_1b", wsLB, "M1_H3", "M1_1b");
+  printZtoNuNu(wsOAK, "mu_znn_M1_H4_1b", wsLB, "M1_H4", "M1_1b");
+  printZtoNuNu(wsOAK, "mu_znn_M2_H1_1b", wsLB, "M2_H1", "M2_1b");
+  printZtoNuNu(wsOAK, "mu_znn_M2_H2_1b", wsLB, "M2_H2", "M2_1b");
+  printZtoNuNu(wsOAK, "mu_znn_M2_H3_1b", wsLB, "M2_H3", "M2_1b");
+  printZtoNuNu(wsOAK, "mu_znn_M2_H4_1b", wsLB, "M2_H4", "M2_1b");
+  printZtoNuNu(wsOAK, "mu_znn_M3_H1_1b", wsLB, "M3_H1", "M3_1b");
+  printZtoNuNu(wsOAK, "mu_znn_M3_H2_1b", wsLB, "M3_H2", "M3_1b");
+  printZtoNuNu(wsOAK, "mu_znn_M3_H3_1b", wsLB, "M3_H3", "M3_1b");
+  printZtoNuNu(wsOAK, "mu_znn_M3_H4_1b", wsLB, "M3_H4", "M3_1b");
+  printZtoNuNu(wsOAK, "mu_znn_M4_H2_1b", wsLB, "M4_H2", "M4_1b");
+  printZtoNuNu(wsOAK, "mu_znn_M4_H3_1b", wsLB, "M4_H3", "M4_1b");
+  printZtoNuNu(wsOAK, "mu_znn_M4_H4_1b", wsLB, "M4_H4", "M4_1b");
+  printDiff_RAR_RAR(wsOAK, "n_ee_M1_H1", wsLB, "diElectron_M1_H1_Yield");
+  //printDiff_RAR_RAR(wsOAK, "n_ee_M1_H1", wsLB, "Ztoll_M1_H1");
+  printDiff_RAR_RAR(wsOAK, "acc_Zee_M1", wsLB, "ZtoeeAcceptance_M1");
+  printDiff_RAR_RAR(wsOAK, "eff_Zee", wsLB, "ZtoeeEfficiency");
+  printDiff_RAR_RAR(wsOAK, "pur_Zee", wsLB, "ZtoeeInvPurity");
+  printDiff_RAR_RAR(wsOAK, "sf_ee", wsLB, "ZtoeeSystematic");
+  printDiff_RAR_RAR(wsOAK, "mu_znn_M1_H1_1b", wsLB, "ZtoNuNu_VeryLooseBtagYield_M1_H1");
+  printDiff_RAR_RAR(wsOAK, "knn_1b_M1", wsLB, "ZtoNuNu_VeryLooseBtagYield_M1_H1");
+  printDiff_RAR_RAR(wsOAK, "znnoverll_bfratio", wsLB, "ZtollOverZtoNuNuRatio");
+  printDiff_RAR_RAR(wsOAK, "dataoverll_lumiratio", wsLB, "ZtollOverZtoNuNuRatio");
+  */
+
+
+  //more tests
+  /*
+  printDiff_RAR_RAR(wsOAK, "mu_ttwj_M4_H2_3b", wsLB, "zeroLepton_bin42_TopWJetsYield");
+  printDiff_RAR_RAR(wsOAK, "mu_vv_M4_H2_3b", wsLB, "zeroLepton_bin42_DibosonYield");
+  printDiff_RAR_RAR(wsOAK, "mu_znn_M4_H2_3b", wsLB, "zeroLepton_bin42_ZtoNuNuYield");
+  printDiff_RAR_RAR(wsOAK, "mu_qcd_M4_H2_3b", wsLB, "zeroLepton_bin42_QCDYield");
+  printDiff_RAR_RAR(wsOAK, "mu_qcd_ldp_M4_H2_3b", wsLB, "zeroLeptonLowDeltaPhiN_bin42_QCDYield");
+  printDiff_RAR_RAR(wsOAK, "sf_qcd_M4_H2_3b", wsLB, "zeroLeptonQCDClosure_bin42");
   
+  //qcd test
+  printDiff_RAR_RAR(wsOAK, "qcd_0lepLDP_ratio_H2", wsLB, "lowDeltaPhiNScaling_H2");
+  printDiff_RAR_RAR(wsOAK, "SFqcd_met4", wsLB, "lowDeltaPhiNMETScaleFactor_M4");
+  printDiff_RAR_RAR(wsOAK, "SFqcd_nb3", wsLB, "lowDeltaPhiNBTagScaleFactor_3b");
+  printDiff_RAR_RAR(wsOAK, "prim_SFqcd_met4", wsLB, "prim_lowDeltaPhiNMETScaleFactor_M4");
+  printDiff_RAR_RAR(wsOAK, "mean_SFqcd_met4", wsLB, "mean_lowDeltaPhiNMETScaleFactor_M4");
+  printDiff_RAR_RAR(wsOAK, "sigma_SFqcd_met4", wsLB, "sigma_lowDeltaPhiNMETScaleFactor_M4");
+  */
+
+  
+  //susy tests
+  /*
+  printDiff_RAR_RAR(wsOAK, "all_gu", wsLB, "signalGlobalUncertainty");
+  printDiff_RAR_RAR(wsOAK, "eff_sf_M4_H4_3b", wsLB, "zeroLeptonSignalError_bin48");
+  printDiff_RAR_RAR(wsOAK, "btageff_sf_M4_H4_3b", wsLB, "zeroLeptonBTagEfficiencyError_bin48");
+  printDiff_RAR_RAR(wsOAK, "sigma_btageff_sf_M4_H4_3b", wsLB, "sigma_zeroLeptonBTagEfficiencyError_bin48");
+  printDiff_RAR_RAR(wsOAK, "btageff_lf_sf_M4_H4_3b", wsLB, "zeroLeptonLTagEfficiencyError_bin48");
+  printDiff_RAR_RAR(wsOAK, "JES_sf_M4_H4_3b", wsLB, "zeroLeptonJesError_bin48");
+  printDiff_RAR_RAR(wsOAK, "pdfsyst_sf_M4_H4_3b", wsLB, "zeroLeptonPdfError_bin48");
+  
+  printDiff_RAR_RAR(wsOAK, "mu_susy_M4_H4_3b", wsLB, "zeroLepton_bin48_SignalYield");
+  printDiff_RAR_RAR(wsOAK, "mu_susymc_M4_H4_3b", wsLB, "zeroLepton_bin48_SignalFractionOAK");
+  printDiff_RAR_RAR(wsOAK, "mu_susy_all0lep", wsLB, "zeroLepton_bin48_SignalYield");
+  printDiff_RAR_RAR(wsOAK, "mu_susymc_all0lep", wsLB, "zeroLepton_bin48_SignalYield");
+  */
+
+  printDiff_RAR_RAR(wsOAK, "all_gu", wsLB, "signalGlobalUncertainty");
+  printDiff_RAR_RAR(wsOAK, "eff_sf_sl_M4_H4_3b", wsLB, "oneLeptonSignalError_bin48");
+  printDiff_RAR_RAR(wsOAK, "btageff_sf_sl_M4_H4_3b", wsLB, "oneLeptonBTagEfficiencyError_bin48");
+  printDiff_RAR_RAR(wsOAK, "btageff_lf_sf_sl_M4_H4_3b", wsLB, "oneLeptonLTagEfficiencyError_bin48");
+  printDiff_RAR_RAR(wsOAK, "JES_sf_sl_M4_H4_3b", wsLB, "oneLeptonJesError_bin48");
+  printDiff_RAR_RAR(wsOAK, "pdfsyst_sf_sl_M4_H4_3b", wsLB, "oneLeptonPdfError_bin48");
+  
+  printDiff_RAR_RAR(wsOAK, "mu_susy_sl_M4_H4_3b", wsLB, "oneLepton_bin48_SignalYield");
+  printDiff_RAR_RAR(wsOAK, "mu_susymc_sl_M4_H4_3b", wsLB, "oneLepton_bin48_SignalFractionOAK");
+  printDiff_RAR_RAR(wsOAK, "mu_susy_all0lep", wsLB, "oneLepton_bin48_SignalYield");
+  printDiff_RAR_RAR(wsOAK, "mu_susymc_all0lep", wsLB, "oneLepton_bin48_SignalYield");
 
 }
 
@@ -843,6 +948,16 @@ void setVal_RAR_RRV(double val, RooWorkspace* ws1, TString name1, RooWorkspace* 
   //cout << "Set" << endl;
 }
 
+void setVal_RAR_RAR(double val, RooWorkspace* ws1, TString name1, RooWorkspace* ws2, TString name2)
+{
+  cout << "Setting " << name1 << " " << ws1->function(name1) << endl;
+  ((RooRealVar*)(ws1->function(name1)))->setVal(val);
+  cout << "Setting " << name2 << " " << ws2->function(name2) << endl;
+  ((RooRealVar*)(ws2->function(name2)))->setVal(val);
+  //  (ws2->var(name2))->setVal(val);
+  //cout << "Set" << endl;
+}
+
 
 /*
 
@@ -862,32 +977,50 @@ void setZtoNuNu(RooWorkspace* ws1, TString name1, RooWorkspace* ws2, TString bin
 
 */
 
-
+ /*
 void setZtoNuNu(RooWorkspace* ws1, TString name1, double val1, RooWorkspace* ws2, TString bin2, double val2, TString scale2, double val3)
 {
+  //  setZtoNuNu(wsOAK, "mu_znn_M1_H1_1b", 128, wsLB, "M1_H1", 128/0.4, "M1_1b", 0.4);
+
   //OAK Znn
   ((RooRealVar*)(ws1->function(name1)))->setVal(val1);
   
   //LB Znn = ZtoNuNuVeryLoose*knn
   RooRealVar* ZtoNuNuVeryLoose = ws2->var("ZtoNuNu_VeryLooseBtagYield_"+bin2);
   ZtoNuNuVeryLoose->setVal(val2);
-  RooRealVar* knn = ws2->var("zeroLeptonZtoNuNubTagScaling_"+scale2);
+  RooRealVar* knn = (RooRealVar*)ws2->function("prim_zeroLeptonZtoNuNubTagScaling_"+scale2);
   knn->setVal(val3);
   
   //cout << "Set" << endl;
 }
+ */
 
+ void setZtoNuNu(RooWorkspace* ws1, TString name1, double val1, RooWorkspace* ws2, TString bin2, double val2, TString scale2, double val3)
+ {
+   //OAK Znn
+   ((RooRealVar*)(ws1->function(name1)))->setVal(val1);
+   
+   //LB
+   RooRealVar* ZtoNuNuVeryLoose = ws2->var("ZtoNuNu_VeryLooseBtagYield_"+bin2);
+   RooAbsReal* knn = ws2->function("zeroLeptonZtoNuNubTagScaling_"+scale2);
+   ZtoNuNuVeryLoose->setVal(val1/(knn->getVal()));
+ }
 
 
 void setSignal(RooWorkspace* ws1, RooWorkspace* ws2)
 {
 
   RooRealVar* rv_mu_susy_all0lep = ws1->var("mu_susy_all0lep");
-  rv_mu_susy_all0lep->setVal(100);
+  rv_mu_susy_all0lep->setVal(200);
+  //rv_mu_susy_all0lep->setVal(0);
   //cout << "mu_susy_all0lep " << rv_mu_susy_all0lep->getVal() << endl;
   
   RooRealVar* signalCrossSection = ws2->var("signalCrossSection");
-  signalCrossSection->setVal(23.3903355811);
+  //signalCrossSection->setVal( 1000.0 * 200.0 / 1.9399 / 2740.09 );
+  //signalCrossSection->setVal( 1000.0 * 200.0 / 1.9399 / 2651.3400760000008631 );
+  signalCrossSection->setVal( 200.0 * 49996.0  / (19.399 * 13496.559610000000248) ) ;
+  //signalCrossSection->setVal( 200.0 * 49996.0  / (19.399 * 13496.559619545936584) ) ;
+  //signalCrossSection->setVal(0);
   //cout << "signalCrossSection " << signalCrossSection->getVal() << endl;
 
   //RooRealVar* rv_mu_susymc_all0lep = ws1->var("mu_susymc_all0lep");
@@ -936,17 +1069,18 @@ void setSame()
   TFile fLB("pull/LB.root", "READ");
   RooWorkspace *wsLB = (RooWorkspace*)fLB.Get("workspace");
   
-  
+  cout << "workspace pointers " << wsOAK << " " << wsLB << endl;
+
   //First the things that don't need special treatment
   //eff_sf_M1_H1_1b, eff_sf_ldp_M1_H1_1b, eff_sf_sl_M1_H1_1b, mu_qcd_ldp_M1_H1_1b, mu_ttwj_sl_M1_H1_1b, sf_qcd_M1_H1_1b, sf_ttwj_M1_H1_1b
   vector<TString> names;
-  names.push_back("eff_sf_");
-  names.push_back("eff_sf_ldp_");
-  names.push_back("eff_sf_sl_");
+  names.push_back("prim_eff_sf_");
+  names.push_back("prim_eff_sf_ldp_");
+  names.push_back("prim_eff_sf_sl_");
   names.push_back("mu_qcd_ldp_");
   names.push_back("mu_ttwj_sl_");
-  names.push_back("sf_qcd_");
-  names.push_back("sf_ttwj_");
+  names.push_back("prim_sf_qcd_");
+  names.push_back("prim_sf_ttwj_");
   for(vector<TString>::iterator it = names.begin(); it != names.end(); ++it)
     {
       TString name = *it;
@@ -967,13 +1101,15 @@ void setSame()
 		  
 		  if(name.Contains("eff_sf_") || name.Contains("sf_qcd_") || name.Contains("sf_ttwj_") )
 		    {
-		      setVal_RAR_RRV(0.9, wsOAK, varName, wsLB, translate(varName));
+		      //setVal_RAR_RRV(0.9, wsOAK, varName, wsLB, translate(varName));
+		      setVal_RAR_RAR(0.9, wsOAK, varName, wsLB, translate(varName));
 		    }
 		  
+		  //set these later
 		  //if(name.Contains("mu_"))
-		  //  {
-		  //    setVal_RRV_RRV(1, wsOAK, varName, wsLB, translate(varName));
-		  //  }
+		  // {
+		  //    setVal_RAR_RAR(1, wsOAK, varName, wsLB, translate(varName));
+		  // }
 		  
 		}//b
 	    }//h
@@ -1074,26 +1210,31 @@ void setSame()
   setVal_RRV_RRV(11, wsOAK, "mu_ttwj_sl_M4_H4_2b", wsLB, translate("mu_ttwj_sl_M4_H4_2b"));
   setVal_RRV_RRV(1, wsOAK, "mu_ttwj_sl_M4_H4_3b", wsLB, translate("mu_ttwj_sl_M4_H4_3b"));
 
-  setVal_RAR_RRV(-0.05, wsOAK, "JES_sf", wsLB, translate("JES_sf"));
+  setVal_RAR_RAR(-0.05, wsOAK, "prim_JES_sf", wsLB, translate("prim_JES_sf"));
   
-  setVal_RAR_RRV(1.15, wsOAK, "SFqcd_met2", wsLB, translate("SFqcd_met2"));
-  setVal_RAR_RRV(1.38, wsOAK, "SFqcd_met3", wsLB, translate("SFqcd_met3"));
-  setVal_RAR_RRV(1.89, wsOAK, "SFqcd_met4", wsLB, translate("SFqcd_met4"));
-  setVal_RAR_RRV(0.7, wsOAK, "SFqcd_nb2", wsLB, translate("SFqcd_nb2"));
-  setVal_RAR_RRV(0.7, wsOAK, "SFqcd_nb3", wsLB, translate("SFqcd_nb3"));
+  setVal_RAR_RAR(1.15, wsOAK, "SFqcd_met2", wsLB, translate("SFqcd_met2"));
+  setVal_RAR_RAR(1.38, wsOAK, "prim_SFqcd_met3", wsLB, translate("prim_SFqcd_met3"));
+  setVal_RAR_RAR(1.89, wsOAK, "prim_SFqcd_met4", wsLB, translate("prim_SFqcd_met4"));
+  setVal_RAR_RAR(0.7, wsOAK, "SFqcd_nb2", wsLB, translate("SFqcd_nb2"));
+  setVal_RAR_RAR(0.7, wsOAK, "prim_SFqcd_nb3", wsLB, translate("prim_SFqcd_nb3"));
 
-  setVal_RAR_RRV(0.67, wsOAK, "acc_Zee_M1", wsLB, translate("acc_Zee_M1"));
-  setVal_RAR_RRV(0.69, wsOAK, "acc_Zee_M2", wsLB, translate("acc_Zee_M2"));
-  setVal_RAR_RRV(0.74, wsOAK, "acc_Zee_M3", wsLB, translate("acc_Zee_M3"));
-  setVal_RAR_RRV(0.79, wsOAK, "acc_Zee_M4", wsLB, translate("acc_Zee_M4"));
-  setVal_RAR_RRV(0.67, wsOAK, "acc_Zmm_M1", wsLB, translate("acc_Zmm_M1"));
-  setVal_RAR_RRV(0.73, wsOAK, "acc_Zmm_M2", wsLB, translate("acc_Zmm_M2"));
-  setVal_RAR_RRV(0.80, wsOAK, "acc_Zmm_M3", wsLB, translate("acc_Zmm_M3"));
-  setVal_RAR_RRV(0.85, wsOAK, "acc_Zmm_M4", wsLB, translate("acc_Zmm_M4"));
+  setVal_RAR_RAR(0.67, wsOAK, "acc_Zee_M1", wsLB, translate("acc_Zee_M1"));
+  setVal_RAR_RAR(0.69, wsOAK, "acc_Zee_M2", wsLB, translate("acc_Zee_M2"));
+  setVal_RAR_RAR(0.74, wsOAK, "acc_Zee_M3", wsLB, translate("acc_Zee_M3"));
+  setVal_RAR_RAR(0.79, wsOAK, "acc_Zee_M4", wsLB, translate("acc_Zee_M4"));
+  setVal_RAR_RAR(0.67, wsOAK, "acc_Zmm_M1", wsLB, translate("acc_Zmm_M1"));
+  setVal_RAR_RAR(0.73, wsOAK, "acc_Zmm_M2", wsLB, translate("acc_Zmm_M2"));
+  setVal_RAR_RAR(0.80, wsOAK, "acc_Zmm_M3", wsLB, translate("acc_Zmm_M3"));
+  setVal_RAR_RAR(0.85, wsOAK, "acc_Zmm_M4", wsLB, translate("acc_Zmm_M4"));
 
-  setVal_RAR_RRV(0.9, wsOAK, "all_gu", wsLB, translate("all_gu"));
+  setVal_RAR_RAR(0.9, wsOAK, "prim_all_gu", wsLB, translate("prim_all_gu"));
   
-  setVal_RAR_RRV(-0.09, wsOAK, "btageff_sf", wsLB, translate("btageff_sf"));
+  setVal_RAR_RAR(-0.09, wsOAK, "prim_btageff_sf", wsLB, translate("prim_btageff_sf"));
+  setVal_RAR_RAR(-0.09, wsOAK, "prim_btageff_lf_sf", wsLB, translate("prim_btageff_lf_sf"));
+
+  setVal_RAR_RAR(-0.05, wsOAK, "prim_singletop_xsec", wsLB, translate("prim_singletop_xsec"));
+  setVal_RAR_RAR(0.05, wsOAK, "prim_wjets_xsec", wsLB, translate("prim_wjets_xsec"));
+  setVal_RAR_RAR(0.05, wsOAK, "prim_pdfsyst_sf", wsLB, translate("prim_pdfsyst_sf"));
 
   setVal_RAR_RRV(0.85, wsOAK, "eff_Zee", wsLB, translate("eff_Zee"));
   setVal_RAR_RRV(0.88, wsOAK, "eff_Zmm", wsLB, translate("eff_Zmm"));
@@ -1108,11 +1249,11 @@ void setSame()
   setVal_RRV_RRV(0.11, wsOAK, "qcd_0lepLDP_ratio_H3", wsLB, translate("qcd_0lepLDP_ratio_H3"));
   setVal_RRV_RRV(0.05, wsOAK, "qcd_0lepLDP_ratio_H4", wsLB, translate("qcd_0lepLDP_ratio_H4"));
 
-  setVal_RAR_RRV(0.9, wsOAK, "rar_vv_sf", wsLB, translate("rar_vv_sf"));
+  setVal_RAR_RAR(0.9, wsOAK, "prim_rar_vv_sf", wsLB, translate("prim_rar_vv_sf"));
 
-  setVal_RAR_RRV(-0.23, wsOAK, "sf_ll", wsLB, translate("sf_ll"));
+  setVal_RAR_RAR(-0.23, wsOAK, "prim_sf_ll", wsLB, translate("prim_sf_ll"));
   
-  setVal_RAR_RRV(0.98, wsOAK, "sf_mc", wsLB, translate("sf_mc"));
+  setVal_RAR_RAR(0.98, wsOAK, "prim_sf_mc", wsLB, translate("prim_sf_mc"));
   
   setVal_RAR_RRV(0.61, wsOAK, "trigeff_M1_H1", wsLB, translate("trigeff_M1_H1"));
   setVal_RAR_RRV(0.72, wsOAK, "trigeff_M1_H2", wsLB, translate("trigeff_M1_H2"));
@@ -1148,12 +1289,12 @@ void setSame()
   setVal_RAR_RRV(0.99, wsOAK, "trigeff_sl_M4_H3", wsLB, translate("trigeff_sl_M4_H3"));
   setVal_RAR_RRV(0.99, wsOAK, "trigeff_sl_M4_H4", wsLB, translate("trigeff_sl_M4_H4"));
   
-  setVal_RAR_RRV(0.4, wsOAK, "knn_1b_M1", wsLB, translate("knn_1b_M1"));
-  setVal_RAR_RRV(0.4, wsOAK, "knn_1b_M2", wsLB, translate("knn_1b_M2"));
-  setVal_RAR_RRV(0.4, wsOAK, "knn_1b_M3", wsLB, translate("knn_1b_M3"));
-  setVal_RAR_RRV(0.4, wsOAK, "knn_1b_M4", wsLB, translate("knn_1b_M4"));
-  setVal_RAR_RRV(0.1, wsOAK, "knn_2b", wsLB, translate("knn_2b"));
-  setVal_RAR_RRV(0.01, wsOAK, "knn_3b", wsLB, translate("knn_3b"));
+  setVal_RAR_RAR(0.4, wsOAK, "prim_knn_1b_M1", wsLB, translate("prim_knn_1b_M1"));
+  setVal_RAR_RAR(0.4, wsOAK, "prim_knn_1b_M2", wsLB, translate("prim_knn_1b_M2"));
+  setVal_RAR_RAR(0.4, wsOAK, "prim_knn_1b_M3", wsLB, translate("prim_knn_1b_M3"));
+  setVal_RAR_RAR(0.4, wsOAK, "prim_knn_1b_M4", wsLB, translate("prim_knn_1b_M4"));
+  setVal_RAR_RAR(0.1, wsOAK, "prim_knn_2b", wsLB, translate("prim_knn_2b"));
+  setVal_RAR_RAR(0.01, wsOAK, "prim_knn_3b", wsLB, translate("prim_knn_3b"));
   //NOTE -- LB Knn will be reset by setZtoNuNu function
   
   setZtoNuNu(wsOAK, "mu_znn_M1_H1_1b", 128, wsLB, "M1_H1", 128/0.4, "M1_1b", 0.4);
@@ -1182,7 +1323,8 @@ void setSame()
   cout << "rv_mu_susymc_all0lep " << rv_mu_susymc_all0lep->getVal() << endl;
 
   
-  setVal_RRV_RRV(1.21, wsOAK, "ttwj_0lep1lep_ratio", wsLB, translate("ttwj_0lep1lep_ratio"));
+  setVal_RAR_RAR(1.21, wsOAK, "ttwj_0lep1lep_ratio", wsLB, translate("ttwj_0lep1lep_ratio"));
+
 
 
   if(0)

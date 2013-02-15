@@ -942,8 +942,11 @@ void setupSignalModelOAK( vector<TString> binNames, TString signalModelFilesPath
 			  map<TString,yields> &signalJesErrorOAK, map<TString,yields> &signalPdfErrorOAK)
 {
   
-  TString signalModel = "T1bbbb"; //Options are: T1bbbb, T1tttt
-  
+  TString signalModel = "T1tttt"; //Options are: T1bbbb, T1tttt
+  cout << endl;
+  cout << "NOTE: USING CODE HARDCODED FOR " << signalModel << endl;
+  cout << endl;
+
   //Deal with different formats for Josh vs Pawandeep and T1bbbb vs T1tttt
   //WARNING: HARDCODING!!
   unsigned int nbins_input = 48;
@@ -1039,7 +1042,7 @@ void setupSignalModelOAK( vector<TString> binNames, TString signalModelFilesPath
   signalFile.close();
   
   cout << "Total zero lepton (including skipped bins) = " << zeroLeptonTotal << endl;
-  cout << "Total zero lepton (no skipped bins) = " << zeroLeptonTotal_skipped << endl;
+  cout << "Total zero lepton (skipping bins) = " << zeroLeptonTotal_skipped << endl;
   
   
   //btag eff

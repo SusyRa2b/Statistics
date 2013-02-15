@@ -40,7 +40,8 @@ while(<$fin>) {
     else {die "expected new name.\n"; }
   }
   elsif(/(\S+)/) {
-    print $fout "$1\n";
+    my $num = $1*19.399/12.0;
+    print $fout "$num\n";
   }
   
   $line += 1;
