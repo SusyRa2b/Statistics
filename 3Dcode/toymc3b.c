@@ -5,6 +5,7 @@
 #include "updateFileValue.c"
 #include "getFileValue.c"
 #include "fixAllNPs.c"
+#include "fixBGPars.c"
 
    static const int nBinsMET  = 4 ;
    static const int nBinsHT   = 4 ;
@@ -262,7 +263,8 @@
                 bool input_inputObservablesArePostTrigger = true,
                 const char* jes_syst_file = "systFile1.txt",
                 const char* pdf_syst_file = "foo",
-                bool fixNPs = false
+                bool fixNPs = false,
+                bool fixBGPs = false
                         ) {
 
 
@@ -569,7 +571,16 @@
              printf("\n\n *** Problem fixing NPs.\n\n" ) ;
              return ;
           }
-          printf("\n\n === Refitting with NPs fixed.\n\n") ;
+       }
+       if ( fixBGPs ) {
+          bool isok = fixBGPars( mcfitResult->floatParsFinal(), workspace ) ;
+          if ( !isok ) {
+             printf("\n\n *** Problem fixing BG Pars.\n\n" ) ;
+             return ;
+          }
+       }
+       if ( fixNPs || fixBGPs ) {
+          printf("\n\n === Refitting with fixed pars.\n\n") ;
           mcfitResult = likelihood->fitTo( *rdsMCvals, Save(true), PrintLevel(0) ) ;
        }
 
@@ -621,8 +632,10 @@
 
        RooFitResult* mcfitResult2 = likelihood->fitTo( *toydsNofluctuations, Save(true), PrintLevel(0) ) ;
 
-       if ( ! setReinitValues( mcfitResult2 ) ) {
-          printf("\n\n *** Problem in collecting inital vals for floating parameters from MC fit.\n\n") ; return ;
+       if ( !fixBGPs ) {
+          if ( ! setReinitValues( mcfitResult2 ) ) {
+             printf("\n\n *** Problem in collecting inital vals for floating parameters from MC fit.\n\n") ; return ;
+          }
        }
 
 
@@ -2604,8 +2617,17 @@
       } else if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
          for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
             if ( initFit_qcd_0lepLDP_ratio_HT[hbi] < 0 ) {
-               printf("\n\n *** Did not find floating parameter initFit_qcd_0lepLDP_ratio_H%d.  Can't continue.\n\n", hbi+1 ) ;
+               printf("\n\n *** Did not find floating parameter initFit_qcd_0lepLDP_ratio_H%d.  Assuming its fixed..\n\n", hbi+1 ) ;
+            }
+            char pname[1000] ;
+            sprintf( pname, "qcd_0lepLDP_ratio_H%d", hbi+1 ) ;
+            RooAbsReal* rar = (RooAbsReal*) workspace->obj( pname ) ;
+            if ( rar == 0x0 ) {
+               printf("\n\n *** Did not find %s.  Can't continue.\n\n", pname ) ;
                return false ;
+            } else {
+               printf("  Found it with value %g\n\n", rar->getVal() ) ;
+               initFit_qcd_0lepLDP_ratio_HT[hbi] = rar->getVal() ;
             }
          } // hbi.
          for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
@@ -2619,8 +2641,16 @@
                   printf("\n\n Found it.  Val = %6.3f\n", rcv->getVal() ) ;
                   initFit_SFqcd_met[mbi] = rcv->getVal() ;
                } else {
-                  printf("\n\n Didn't find it.  I quit.\n\n") ;
-                  return false ;
+                  sprintf( pname, "SFqcd_met%d", mbi+1 ) ;
+                  printf("\n\n Didn't find it.  Checking for fixed parameter with name %s.\n\n", pname) ;
+                  RooAbsReal* rar = (RooAbsReal*) workspace->obj( pname ) ;
+                  if ( rar == 0x0 ) {
+                     printf("\n\n *** I give up.\n\n") ;
+                     return false ;
+                  } else {
+                     printf("  Found %s with value %g\n\n", pname, rar->getVal() ) ;
+                     initFit_SFqcd_met[mbi] = rar->getVal() ;
+                  }
                }
             }
          } // mbi.
@@ -2635,8 +2665,16 @@
                   printf("\n\n Found it.  Val = %6.3f\n", rcv->getVal() ) ;
                   initFit_SFqcd_nb[bbi] = rcv->getVal() ;
                } else {
-                  printf("\n\n Didn't find it.  I quit.\n\n") ;
-                  return false ;
+                  sprintf( pname, "SFqcd_nb%d", bbi+1 ) ;
+                  printf("\n\n Didn't find it.  Checking for fixed parameter with name %s.\n\n", pname ) ;
+                  RooAbsReal* rar = (RooAbsReal*) workspace->obj( pname ) ;
+                  if ( rar == 0x0 ) {
+                     printf("\n\n *** Did not find %s.  I give up.\n\n", pname ) ;
+                     return false ;
+                  } else {
+                     printf("  Found %s with value %g\n\n", pname, rar->getVal() ) ;
+                     initFit_SFqcd_nb[bbi] = rar->getVal() ;
+                  }
                }
             }
          } // bbi.

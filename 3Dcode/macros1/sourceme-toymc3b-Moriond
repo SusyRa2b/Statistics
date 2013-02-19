@@ -1,7 +1,7 @@
 
 
    echo toymc3b
-   $ROOTSYS/bin/root -b -q toywrapper3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat\",\"datfiles_18fb/sigcounts.T1bbbb.txt\",1100,300,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",0.,\"output-toymc3b-test-moriond\",1000,\"rootfiles/gi-plots-met4-ht4-v15.root\",true,4,false,false,\"null\",true,\"datfiles_18fb/sigsystematics.T1bbbb.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbb.PDF.txt\",true\)>&! logfiles/toymc3b.log
+   $ROOTSYS/bin/root -b -q toywrapper3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat\",\"datfiles_18fb/sigcounts.T1bbbb.txt\",1100,300,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",0.,\"output-toymc3b-test-moriond\",50,\"rootfiles/gi-plots-met4-ht4-v15.root\",true,4,false,false,\"null\",true,\"datfiles_18fb/sigsystematics.T1bbbb.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbb.PDF.txt\",true\)>&! logfiles/toymc3b.log
    mv logfiles/toymc3b.log output-toymc3b-test-moriond/
 
 

@@ -1,0 +1,62 @@
+
+
+   echo ideal, 1200,300, nosig
+
+   $ROOTSYS/bin/root -b -q toywrapper3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat\",\"datfiles_18fb/sigcounts.T1bbbb.txt\",1200,300,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",0.,\"output-toymc3b-1200-300-nsig0-ideal\",50,\"rootfiles/gi-plots-met4-ht4-v15.root\",true,4,false,true,\"null\",true,\"datfiles_18fb/sigsystematics.T1bbbb.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbb.PDF.txt\",true,true\)>&! logfiles/toymc3b-1200-300-nsig0-ideal.log
+   mv logfiles/toymc3b-1200-300-nsig0-ideal.log output-toymc3b-1200-300-nsig0-ideal/
+
+
+
+
+   echo ideal, 1100,700, nosig
+
+   $ROOTSYS/bin/root -b -q toywrapper3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat\",\"datfiles_18fb/sigcounts.T1bbbb.txt\",1100,700,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",0.,\"output-toymc3b-1100-700-nsig0-ideal\",50,\"rootfiles/gi-plots-met4-ht4-v15.root\",true,4,false,true,\"null\",true,\"datfiles_18fb/sigsystematics.T1bbbb.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbb.PDF.txt\",true,true\)>&! logfiles/toymc3b-1100-700-nsig0-ideal.log
+   mv logfiles/toymc3b-1100-700-nsig0-ideal.log output-toymc3b-1100-700-nsig0-ideal/
+
+
+
+   echo ideal, 1200,300, nsig39
+
+   $ROOTSYS/bin/root -b -q toywrapper3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat\",\"datfiles_18fb/sigcounts.T1bbbb.txt\",1200,300,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",39.,\"output-toymc3b-1200-300-nsig39-ideal\",50,\"rootfiles/gi-plots-met4-ht4-v15.root\",true,4,true,false,\"null\",true,\"datfiles_18fb/sigsystematics.T1bbbb.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbb.PDF.txt\",true,true\)>&! logfiles/toymc3b-1200-300-nsig39-ideal.log
+   mv logfiles/toymc3b-1200-300-nsig39-ideal.log output-toymc3b-1200-300-nsig39-ideal/
+
+
+
+
+   echo ideal, 1100,700, nsig116
+
+   $ROOTSYS/bin/root -b -q toywrapper3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat\",\"datfiles_18fb/sigcounts.T1bbbb.txt\",1100,700,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",116.,\"output-toymc3b-1100-700-nsig116-ideal\",50,\"rootfiles/gi-plots-met4-ht4-v15.root\",true,4,true,false,\"null\",true,\"datfiles_18fb/sigsystematics.T1bbbb.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbb.PDF.txt\",true,true\)>&! logfiles/toymc3b-1100-700-nsig116-ideal.log
+   mv logfiles/toymc3b-1100-700-nsig116-ideal.log output-toymc3b-1100-700-nsig116-ideal/
+
+
+#------------------------------
+
+   echo real, 1200,300, nosig
+
+   $ROOTSYS/bin/root -b -q toywrapper3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat\",\"datfiles_18fb/sigcounts.T1bbbb.txt\",1200,300,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",0.,\"output-toymc3b-1200-300-nsig0-real\",100,\"rootfiles/gi-plots-met4-ht4-v15.root\",true,4,false,true,\"null\",true,\"datfiles_18fb/sigsystematics.T1bbbb.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbb.PDF.txt\",false,false\)>&! logfiles/toymc3b-1200-300-nsig0-real.log
+   mv logfiles/toymc3b-1200-300-nsig0-real.log output-toymc3b-1200-300-nsig0-real/
+
+
+
+
+   echo real, 1100,700, nosig
+
+   $ROOTSYS/bin/root -b -q toywrapper3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat\",\"datfiles_18fb/sigcounts.T1bbbb.txt\",1100,700,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",0.,\"output-toymc3b-1100-700-nsig0-real\",100,\"rootfiles/gi-plots-met4-ht4-v15.root\",true,4,false,true,\"null\",true,\"datfiles_18fb/sigsystematics.T1bbbb.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbb.PDF.txt\",false,false\)>&! logfiles/toymc3b-1100-700-nsig0-real.log
+   mv logfiles/toymc3b-1100-700-nsig0-real.log output-toymc3b-1100-700-nsig0-real/
+
+
+
+   echo real, 1200,300, nsig39
+
+   $ROOTSYS/bin/root -b -q toywrapper3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat\",\"datfiles_18fb/sigcounts.T1bbbb.txt\",1200,300,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",39.,\"output-toymc3b-1200-300-nsig39-real\",100,\"rootfiles/gi-plots-met4-ht4-v15.root\",true,4,true,false,\"null\",true,\"datfiles_18fb/sigsystematics.T1bbbb.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbb.PDF.txt\",false,false\)>&! logfiles/toymc3b-1200-300-nsig39-real.log
+   mv logfiles/toymc3b-1200-300-nsig39-real.log output-toymc3b-1200-300-nsig39-real/
+
+
+
+
+   echo real, 1100,700, nsig116
+
+   $ROOTSYS/bin/root -b -q toywrapper3b.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat\",\"datfiles_18fb/sigcounts.T1bbbb.txt\",1100,700,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",116.,\"output-toymc3b-1100-700-nsig116-real\",100,\"rootfiles/gi-plots-met4-ht4-v15.root\",true,4,true,false,\"null\",true,\"datfiles_18fb/sigsystematics.T1bbbb.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbb.PDF.txt\",false,false\)>&! logfiles/toymc3b-1100-700-nsig116-real.log
+   mv logfiles/toymc3b-1100-700-nsig116-real.log output-toymc3b-1100-700-nsig116-real/
+
+
