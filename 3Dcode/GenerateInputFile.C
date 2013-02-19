@@ -83,14 +83,16 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   chainZnn.Add("filesMoriond_v4/Zinv-400.root") ;
 
   TChain chainTT("tree") ;
+  TChain chainTTPowheg("tree") ;
+  TChain chainTTMCaNLO("tree") ;
+
+  chainTT.Add("filesMoriond_v4/TT_FullLept.root") ;
+  chainTT.Add("filesMoriond_v4/TT_SemiLept.root") ;
+  chainTT.Add("filesMoriond_v4/TT_FullHad.root") ;
   //-------
-  //chainTT.Add("filesMoriond_v4/TT.root") ;
+  chainTTPowheg.Add("filesMoriond_v4/TT-powheg.root");
   //-------
-  //chainTT.Add("filesMoriond_v4/TT-powheg.root");
-  //-------
-    chainTT.Add("filesMoriond_v4/TT_FullLept.root") ;
-    chainTT.Add("filesMoriond_v4/TT_SemiLept.root") ;
-    chainTT.Add("filesMoriond_v4/TT_FullHad.root") ;
+  chainTTMCaNLO.Add("filesMoriond_v4/TT-MCatNLO.root");
   //-------
   double kfactor_tt = 0.90 ;
   printf("\n\n Rescaling ttbar by %5.3f\n\n", kfactor_tt ) ;
@@ -487,6 +489,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
    TH1F* hmctruth_susy[3][3] ;
    TH1F* hmctruth_ttwj[3][3] ;
+   TH1F* hmctruth_ttwjpowheg[3][3] ;
+   TH1F* hmctruth_ttwjmcanlo[3][3] ;
    TH1F* hmctruth_ttbar[3][3] ;
    TH1F* hmctruth_wjets[3][3] ;
    TH1F* hmctruth_wjetsonly[3][3] ;
@@ -512,6 +516,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
          sprintf( hname, "hmctruth_ttwj_%s_%db", selname[si], bbi+1 ) ;
          hmctruth_ttwj[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
+
+         sprintf( hname, "hmctruth_ttwjpowheg_%s_%db", selname[si], bbi+1 ) ;
+         hmctruth_ttwjpowheg[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
+
+         sprintf( hname, "hmctruth_ttwjmcanlo_%s_%db", selname[si], bbi+1 ) ;
+         hmctruth_ttwjmcanlo[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
 
          sprintf( hname, "hmctruth_ttbar_%s_%db", selname[si], bbi+1 ) ;
          hmctruth_ttbar[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsMET, nBinsHT ) ;
@@ -565,6 +575,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   //--- histograms used in getting the observables.
 
     TH2F* h_tt[10] ;
+    TH2F* h_ttpowheg[10] ;
+    TH2F* h_ttmcanlo[10] ;
     TH2F* h_wjets[10] ;
     TH2F* h_wjetsonly[10] ;
     TH2F* h_singletop[10] ;
@@ -584,6 +596,14 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
        sprintf( hname, "h_tt_%db", bi+1 ) ;
        h_tt[bi]   = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
        h_tt[bi] -> Sumw2() ;
+
+       sprintf( hname, "h_ttpowheg_%db", bi+1 ) ;
+       h_ttpowheg[bi]   = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
+       h_ttpowheg[bi] -> Sumw2() ;
+
+       sprintf( hname, "h_ttmcanlo_%db", bi+1 ) ;
+       h_ttmcanlo[bi]   = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
+       h_ttmcanlo[bi] -> Sumw2() ;
 
        sprintf( hname, "h_wjets_%db", bi+1 ) ;
        h_wjets[bi]   = new TH2F( hname, hname , nBinsMET, Mbins, nBinsHT, Hbins ) ;
@@ -661,6 +681,16 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
         h_tt[k] -> Scale( kfactor_tt ) ;
         printf("    %12s %7.1f events\n", hname, h_tt[k]->Integral() ) ; cout << flush ;
 
+        sprintf( hname, "h_ttpowheg_%db", k+1 ) ;
+        chainTTPowheg.Project (hname,"HT:MET",allcuts);
+        h_ttpowheg[k] -> Scale( kfactor_tt ) ;
+        printf("    %12s %7.1f events\n", hname, h_ttpowheg[k]->Integral() ) ; cout << flush ;
+
+        sprintf( hname, "h_ttmcanlo_%db", k+1 ) ;
+        chainTTMCaNLO.Project (hname,"HT:MET",allcuts);
+        h_ttmcanlo[k] -> Scale( kfactor_tt ) ;
+        printf("    %12s %7.1f events\n", hname, h_ttmcanlo[k]->Integral() ) ; cout << flush ;
+
         sprintf( hname, "h_wjets_%db", k+1 ) ;
         chainWJets.Project(hname,"HT:MET",allcuts);
         h_wjets[k] -> Scale( kfactor_wjets ) ;
@@ -737,6 +767,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
              double ttval = h_tt[k] -> GetBinContent( i+1, j+1 ) ;
              double tterr = h_tt[k] -> GetBinError(   i+1, j+1 ) ;
 
+             double ttpowhegval = h_ttpowheg[k] -> GetBinContent( i+1, j+1 ) ;
+             double ttpowhegerr = h_ttpowheg[k] -> GetBinError(   i+1, j+1 ) ;
+
+             double ttmcanloval = h_ttmcanlo[k] -> GetBinContent( i+1, j+1 ) ;
+             double ttmcanloerr = h_ttmcanlo[k] -> GetBinError(   i+1, j+1 ) ;
+
              double wjetsval = h_wjets[k] -> GetBinContent( i+1, j+1 ) ;
              double wjetserr = h_wjets[k] -> GetBinError(   i+1, j+1 ) ;
 
@@ -795,6 +831,10 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
              hmctruth_ttwj[si][k]  -> SetBinContent( histbin, ttval + wjetsval  ) ;
              hmctruth_ttwj[si][k]  -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(wjetserr,2) )  ) ;
+             hmctruth_ttwjpowheg[si][k]  -> SetBinContent( histbin, ttpowhegval + wjetsval  ) ;
+             hmctruth_ttwjpowheg[si][k]  -> SetBinError(   histbin, sqrt( pow(ttpowhegerr,2) + pow(wjetserr,2) )  ) ;
+             hmctruth_ttwjmcanlo[si][k]  -> SetBinContent( histbin, ttmcanloval + wjetsval  ) ;
+             hmctruth_ttwjmcanlo[si][k]  -> SetBinError(   histbin, sqrt( pow(ttmcanloerr,2) + pow(wjetserr,2) )  ) ;
              hmctruth_ttbar[si][k] -> SetBinContent( histbin, ttval ) ;
              hmctruth_ttbar[si][k] -> SetBinError(   histbin, tterr ) ;
              hmctruth_wjets[si][k] -> SetBinContent( histbin, wjetsval  ) ;
