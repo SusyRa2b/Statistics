@@ -89,6 +89,13 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   chainTT.Add("filesMoriond_v4/TT_FullLept.root") ;
   chainTT.Add("filesMoriond_v4/TT_SemiLept.root") ;
   chainTT.Add("filesMoriond_v4/TT_FullHad.root") ;
+
+  //chainTT.Add("filesMoriond_v4/TT_matchingdown.root") ;
+  //chainTT.Add("filesMoriond_v4/TT_matchingup.root") ;
+  //chainTT.Add("filesMoriond_v4/TT_scaleup.root") ;
+  //chainTT.Add("filesMoriond_v4/TT_scaledown.root") ;
+
+
   //-------
   chainTTPowheg.Add("filesMoriond_v4/TT-powheg.root");
   //-------

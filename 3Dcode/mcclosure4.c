@@ -46,7 +46,7 @@
       int ncomps(5) ;
       char compname[5][100] = { "ttbar", "wjets", "qcd", "znn", "vv" } ;
 
-bool usePublicStyle_=false;
+bool usePublicStyle_=true;
 void setFormatting(TH1F* hh, const TString & ytitle="", const int ndiv=-1) ;
 
 
@@ -622,9 +622,14 @@ void setFormatting(TH1F* hh, const TString & ytitle="", const int ndiv=-1) ;
 
 
 
-
-
-
+      TFile f("rootfiles/gi-plots-met4-ht4-v15-mcclosure-ttwj3.root","recreate");
+      hscalefactor_ttwj_0over1ratio_1b->Write();
+      hscalefactor_ttwj_0over1ratio_1b_whalfcorr->Write();
+      hscalefactor_ttwj_0over1ratio_2b->Write();
+      hscalefactor_ttwj_0over1ratio_2b_whalfcorr->Write();
+      hscalefactor_ttwj_0over1ratio_3b->Write();
+      hscalefactor_ttwj_0over1ratio_3b_whalfcorr->Write();
+      f.Write();
 
 
 

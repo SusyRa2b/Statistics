@@ -440,6 +440,7 @@ void formatClone(TGraphAsymmErrors * gg) {
           cmip->SaveAs("fitresult-fullfit-hsbins-2sig-19fb-logy.pdf" ) ;
        } else {
           cmip->SaveAs("fitresult-fullfit-hsbins-2sig-19fb.pdf" ) ;
+          cmip->SaveAs("fitresult-fullfit-hsbins-2sig-19fb.png" ) ;
        }
 
 

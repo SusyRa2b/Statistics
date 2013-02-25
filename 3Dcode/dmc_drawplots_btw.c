@@ -120,303 +120,303 @@
        char histsel[500][100] ;
        int hind(0) ;
 
-       sprintf( histnamelist[hind], "h_met_sl_all" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nb2" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nb3" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_all" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nb2" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nb3" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_sl_htlt800_all" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_htlt800_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_htlt800_nb2" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_htlt800_nb3" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_htlt800_all" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_htlt800_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_htlt800_nb2" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_htlt800_nb3" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_sl_htgt800_all" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_htgt800_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_htgt800_nb2" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_htgt800_nb3" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_htgt800_all" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_htgt800_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_htgt800_nb2" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_htgt800_nb3" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_all" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_nb2" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_nb3" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_all" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_nb2" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_nb3" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht1_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht2_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht1_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht2_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht1_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht2_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht3_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht4_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht1_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht2_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht3_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht4_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_sl_ht1_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_ht2_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht1_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht2_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_sl_ht1_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_ht2_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_ht3_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_ht4_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht1_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht2_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht3_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht4_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht1_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht4_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht1_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht4_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht1_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht2_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht3_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht4_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht1_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht2_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht3_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_nomctrigcorr_ht4_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_sl_ht1_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_ht4_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht1_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht4_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_sl_ht1_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_ht2_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_ht3_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_sl_ht4_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht1_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht2_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht3_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_sl_ht4_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_ldp_all" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nb2" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nb3" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_all" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nb2" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nb3" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_ldp_htlt800_all" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_htlt800_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_htlt800_nb2" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_htlt800_nb3" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_htlt800_all" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_htlt800_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_htlt800_nb2" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_htlt800_nb3" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_ldp_htgt800_all" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_htgt800_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_htgt800_nb2" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_htgt800_nb3" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_htgt800_all" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_htgt800_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_htgt800_nb2" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_htgt800_nb3" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_all" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_nb2" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_nb3" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_all" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_nb2" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_nb3" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht1_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht2_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht1_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht2_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht1_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht2_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht3_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht4_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht1_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht2_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht3_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht4_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_ldp_ht1_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_ht2_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht1_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht2_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_ldp_ht1_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_ht2_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_ht3_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_ht4_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht1_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht2_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht3_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht4_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht1_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht4_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht1_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht4_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht1_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht2_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht3_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht4_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht1_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht2_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht3_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_nomctrigcorr_ht4_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_ldp_ht1_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_ht4_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht1_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht4_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_met_ldp_ht1_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_ht2_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_ht3_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_ldp_ht4_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-
-
-       sprintf( histnamelist[hind], "h_met_zl_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nb2" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nb3" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_nb2" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_nb3" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht1_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht2_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht1_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht2_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht3_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht4_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-
-       sprintf( histnamelist[hind], "h_met_zl_ht1_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_ht2_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-
-       sprintf( histnamelist[hind], "h_met_zl_ht1_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_ht2_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_ht3_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_ht4_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht1_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht4_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht1_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht2_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht3_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht4_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-
-       sprintf( histnamelist[hind], "h_met_zl_ht1_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_ht4_nb0" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-
-       sprintf( histnamelist[hind], "h_met_zl_ht1_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_ht2_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_ht3_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_met_zl_ht4_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "MET (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht1_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht2_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht3_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_ldp_ht4_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
 
 
+       sprintf( histnamelist[hind], "h_met_zl_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nb2" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nb3" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_nb2" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_nb3" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_ht_sl_all" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_nb2" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_nb3" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht1_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht2_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_met1_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_met2_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_met3_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_met4_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht1_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht2_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht3_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht4_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_ht_sl_met1_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_met2_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_met3_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_met4_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht1_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht2_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht3_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht4_nb1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_met1_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_met2_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_met3_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_met4_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht1_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht2_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht3_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht4_nb1_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_ht_sl_met1_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_met2_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_met3_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_met4_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht1_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht4_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_ht_sl_metlt250_all" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_metlt250_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_metlt250_nb2" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_metlt250_nb3" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht1_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht2_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht3_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_nomctrigcorr_ht4_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_ht_sl_metgt250_all" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_metgt250_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_metgt250_nb2" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_metgt250_nb3" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht1_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht2_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht3_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht4_nb0" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_all" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_nb2" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_nb3" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht1_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht2_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht3_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_met_zl_ht4_nb0_wide1" ) ; sprintf( histxtitlelist[hind], "E_{T}^{miss} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
 
 
 
-       sprintf( histnamelist[hind], "h_ht_ldp_all" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_nb2" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_nb3" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_all" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_nb2" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_nb3" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_met1_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_met2_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_met3_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_met4_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_met1_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_met2_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_met3_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_met4_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_ht_ldp_met1_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_met2_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_met3_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_met4_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_met1_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_met2_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_met3_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_met4_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_met1_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_met2_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_met3_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_met4_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_met1_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_met2_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_met3_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_met4_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_ht_ldp_met1_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_met2_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_met3_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_met4_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_met1_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_met2_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_met3_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_met4_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_ht_ldp_metlt250_all" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_metlt250_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_metlt250_nb2" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_metlt250_nb3" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_metlt250_all" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_metlt250_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_metlt250_nb2" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_metlt250_nb3" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_ht_ldp_metgt250_all" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_metgt250_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_metgt250_nb2" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_metgt250_nb3" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_metgt250_all" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_metgt250_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_metgt250_nb2" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_metgt250_nb3" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
-       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_all" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_nb2" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_nb3" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-
-
-       sprintf( histnamelist[hind], "h_ht_zl_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_nb2" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_nb3" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_nb2" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_nb3" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-
-       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_met1_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_met2_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_met3_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_met4_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-
-       sprintf( histnamelist[hind], "h_ht_zl_met1_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_met2_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_met3_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_met4_nb1" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-
-       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_met1_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_met2_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_met3_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_met4_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-
-       sprintf( histnamelist[hind], "h_ht_zl_met1_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_met2_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_met3_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_ht_zl_met4_nb0" ) ; sprintf( histxtitlelist[hind], "HT (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_all" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_nb2" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_sl_nomctrigcorr_nb3" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
 
 
 
-       sprintf( histnamelist[hind], "h_nb_sl_all" ) ; sprintf( histxtitlelist[hind], "N btags" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_nb_ldp_all" ) ; sprintf( histxtitlelist[hind], "N btags" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
-       sprintf( histnamelist[hind], "h_nb_zl_all" ) ; sprintf( histxtitlelist[hind], "N btags" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_all" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_nb2" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_nb3" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+
+       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_met1_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_met2_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_met3_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_met4_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+
+       sprintf( histnamelist[hind], "h_ht_ldp_met1_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_met2_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_met3_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_met4_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+
+       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_met1_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_met2_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_met3_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_met4_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+
+       sprintf( histnamelist[hind], "h_ht_ldp_met1_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_met2_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_met3_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_met4_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+
+       sprintf( histnamelist[hind], "h_ht_ldp_metlt250_all" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_metlt250_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_metlt250_nb2" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_metlt250_nb3" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+
+       sprintf( histnamelist[hind], "h_ht_ldp_metgt250_all" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_metgt250_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_metgt250_nb2" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_metgt250_nb3" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+
+       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_all" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_nb2" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_ldp_nomctrigcorr_nb3" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+
+
+       sprintf( histnamelist[hind], "h_ht_zl_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_nb2" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_nb3" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_nb2" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_nb3" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+
+       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_met1_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_met2_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_met3_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_met4_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+
+       sprintf( histnamelist[hind], "h_ht_zl_met1_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_met2_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_met3_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_met4_nb1" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+
+       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_met1_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_met2_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_met3_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_nomctrigcorr_met4_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+
+       sprintf( histnamelist[hind], "h_ht_zl_met1_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_met2_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_met3_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_ht_zl_met4_nb0" ) ; sprintf( histxtitlelist[hind], "H_{T} (GeV)" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
+
+
+
+       sprintf( histnamelist[hind], "h_nb_sl_all" ) ; sprintf( histxtitlelist[hind], "N_{b-jet}" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_nb_ldp_all" ) ; sprintf( histxtitlelist[hind], "N_{b-jet}" ) ; sprintf( histsel[hind], "LDP" ) ; hind++ ;
+       sprintf( histnamelist[hind], "h_nb_zl_all" ) ; sprintf( histxtitlelist[hind], "N_{b-jet}" ) ; sprintf( histsel[hind], "ZL" ) ; hind++ ;
 
        sprintf( histnamelist[hind], "h_njets_sl_all" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
        sprintf( histnamelist[hind], "h_njets_sl_nb0" ) ; sprintf( histxtitlelist[hind], "N jets" ) ; sprintf( histsel[hind], "SL" ) ; hind++ ;
@@ -858,6 +858,16 @@
             sprintf( filename, "outputfiles/%s_flat_btw_logy.pdf", hname_base ) ;
          } else {
             sprintf( filename, "outputfiles/%s_flat_btw.pdf", hname_base ) ;
+         }
+         dmccan->SaveAs( filename ) ;
+      // TString dataset( inrootfile ) ;
+      // dataset.ReplaceAll("rootfiles/dmc_plots2_","") ;
+      // dataset.ReplaceAll(".root","") ;
+         char filename[10000] ;
+         if ( islogy ) {
+            sprintf( filename, "outputfiles/%s_flat_btw_logy.png", hname_base ) ;
+         } else {
+            sprintf( filename, "outputfiles/%s_flat_btw.png", hname_base ) ;
          }
          dmccan->SaveAs( filename ) ;
       }
