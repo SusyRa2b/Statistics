@@ -85,7 +85,7 @@
   6) Make the fit result tables and figures
 
        Make sure you have the updated scan-results-19fb.txt before running.
-       Also need current file for dmc-root-files/dmc_plots_btw_RunsABCDT-as-drawn.root
+       Also need current file for dmc-root-files/dmc_plots_btw_all-as-drawn.root
        to get the MC values for the high-sensitivity bins (in the tables).
 
        cdwd

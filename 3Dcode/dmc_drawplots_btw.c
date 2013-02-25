@@ -920,7 +920,8 @@
       hdata -> SetLineWidth(2) ;
       hdata -> SetMarkerStyle(20) ;
 
-      TLegend* legend = usePublicStyle_ ? new TLegend( 0.68, 0.5, 0.93, 0.85 ) : new TLegend( 0.80, 0.67, 0.95, 0.92) ;
+      ////TLegend* legend = usePublicStyle_ ? new TLegend( 0.68, 0.5, 0.93, 0.85 ) : new TLegend( 0.80, 0.67, 0.95, 0.92) ;
+          TLegend* legend = usePublicStyle_ ? new TLegend( 0.70, 0.5, 0.93, 0.85 ) : new TLegend( 0.80, 0.67, 0.95, 0.92) ;
       legend->SetFillColor(kWhite) ;
       if (usePublicStyle_) {
 	legend->SetBorderSize(0);
@@ -988,8 +989,15 @@
       if ( hmcsum->GetBinContent( hmcsum->GetMaximumBin() ) > hmax ) { hmax = hmcsum->GetBinContent( hmcsum->GetMaximumBin() ) ; }
       if ( islogy ) {
          hmax = 3*hmax ;
+         TString hnb( hname_base ) ;
+         if ( hnb.Contains("h_nb_") ) {
+            hdata->SetMinimum(10) ;
+         } else {
+            hdata->SetMinimum(0.5) ;
+         }
       } else {
          hmax = 1.2*hmax ;
+         hdata->SetMinimum(0) ;
       }
       hdata->SetMaximum(hmax) ;
       hdata->SetXTitle( xtitle ) ;
@@ -1063,7 +1071,8 @@
   	title->SetTextFont(62); //42 but bold
   	TString theselection = selection;
   	theselection.ToUpper();
-  	title->DrawTextNDC( 0.69, 0.86, theselection.Data() ) ;
+  	//// title->DrawTextNDC( 0.69, 0.86, theselection.Data() ) ;
+  	     title->DrawTextNDC( 0.71, 0.86, theselection.Data() ) ;
       }
       else {
 	title = new TText() ;
@@ -1129,6 +1138,12 @@
             sprintf( filename, "outputfiles/%s_btw_logy.pdf", hname_base ) ;
          } else {
             sprintf( filename, "outputfiles/%s_btw.pdf", hname_base ) ;
+         }
+         dmccan->SaveAs( filename ) ;
+         if ( islogy ) {
+            sprintf( filename, "outputfiles/%s_btw_logy.png", hname_base ) ;
+         } else {
+            sprintf( filename, "outputfiles/%s_btw.png", hname_base ) ;
          }
          dmccan->SaveAs( filename ) ;
       }
