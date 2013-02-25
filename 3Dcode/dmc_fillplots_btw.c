@@ -804,13 +804,13 @@
        bookSet( "h_ht_zl_nomctrigcorr_nb3", htitle, 32, 400., 2000. ) ;
 
        sprintf( htitle, "HT, ZL, nB=0, %s", dataset_string ) ;
-       bookSet( "h_ht_zl_nb0", htitle, 30, 400., 2000. ) ;
+       bookSet( "h_ht_zl_nb0", htitle, 32, 400., 2000. ) ;
        sprintf( htitle, "HT, ZL, nB=1, %s", dataset_string ) ;
-       bookSet( "h_ht_zl_nb1", htitle, 30, 400., 2000. ) ;
+       bookSet( "h_ht_zl_nb1", htitle, 32, 400., 2000. ) ;
        sprintf( htitle, "HT, ZL, nB=2, %s", dataset_string ) ;
-       bookSet( "h_ht_zl_nb2", htitle, 30, 400., 2000. ) ;
+       bookSet( "h_ht_zl_nb2", htitle, 32, 400., 2000. ) ;
        sprintf( htitle, "HT, ZL, nB>=3, %s", dataset_string ) ;
-       bookSet( "h_ht_zl_nb3", htitle, 30, 400., 2000. ) ;
+       bookSet( "h_ht_zl_nb3", htitle, 32, 400., 2000. ) ;
 
        sprintf( htitle, "HT, ZL, nB=1, no MC trig correction, MET[125,150], %s", dataset_string ) ;
        bookSet( "h_ht_zl_nomctrigcorr_met1_nb1", htitle, 32, 400., 2000. ) ;
