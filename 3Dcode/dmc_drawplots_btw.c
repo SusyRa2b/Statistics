@@ -104,16 +104,16 @@
        sprintf( compname[0], "data" ) ;      kfactor[0] = 1.00 ;
        sprintf( compname[1], "diboson" ) ;   kfactor[1] = 1.00 ;
        sprintf( compname[2], "znn" ) ;       kfactor[2] = 1.00 ;
-       ///sprintf( compname[3], "qcd" ) ;       kfactor[3] = 1.80 ; //**********************
+       ///sprintf( compname[3], "qcd" ) ;       kfactor[3] = 1.80 ; //
        sprintf( compname[3], "qcd" ) ;       kfactor[3] = 1.00 ;
        sprintf( compname[4], "singlet" ) ;   kfactor[4] = 1.00 ;
-       //sprintf( compname[5], "wjets" ) ;     kfactor[5] = 0.90 ; //**********************
-       //sprintf( compname[6], "ttbar" ) ;     kfactor[6] = 0.90 ; //**********************
+       //sprintf( compname[5], "wjets" ) ;     kfactor[5] = 0.90 ; //
+       //sprintf( compname[6], "ttbar" ) ;     kfactor[6] = 0.90 ; //
        sprintf( compname[5], "wjets" ) ;     kfactor[5] = 1.00 ;
        sprintf( compname[6], "ttbar" ) ;     kfactor[6] = 1.00 ;
 
 
-     //---------
+       //---------
 
        char histnamelist[500][100] ;
        char histxtitlelist[500][100] ;
@@ -889,6 +889,9 @@
          isHtPlot = true ;
       }
 
+      bool changeXtickmarks = false;
+      if  ( hnstr.Contains( "h_ht_sl_nb3" ) || hnstr.Contains( "h_ht_zl_nb3" ) || hnstr.Contains( "h_ht_ldp_nb3" ) ) changeXtickmarks = true;       
+
       printf(" drawSet : %s\n", hname_base ) ;
 
       bool islogy = gStyle->GetOptLogy() ;
@@ -1052,6 +1055,7 @@
 	else	ytitle.Form("Events / %.0f %s", hdata->GetBinWidth( 1), "GeV");
 	hdata->GetYaxis()->SetTitle(ytitle);
 	hdata->GetYaxis()->SetTitleOffset(1) ; //was .14
+        if ( changeXtickmarks ) hdata->GetXaxis()->SetNdivisions(505);  	
       }
       hdata->DrawCopy() ;//jmt drawing this first neither helps nor hurts
       hmcstack->Draw("samehist") ;
@@ -1126,6 +1130,7 @@
 	hratio->GetYaxis()->SetTitleSize(0.14) ;
 	hratio->GetYaxis()->SetTitleOffset(0.42) ; //was 0.14
 	hratio->SetMaximum(2.2);
+        if ( changeXtickmarks ) hratio->GetXaxis()->SetNdivisions(505);						   
       }
       TLine* line = new TLine() ;
       line->SetLineStyle(2) ;
