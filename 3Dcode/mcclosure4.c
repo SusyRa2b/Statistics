@@ -548,6 +548,8 @@ void setFormatting(TH1F* hh, const TString & ytitle="", const int ndiv=-1) ;
       outttwj.ReplaceAll("rootfiles","outputfiles") ;
       outttwj.ReplaceAll(".root","-mcclosure-ttwj1.pdf") ;
       cttwj->SaveAs( outttwj ) ;
+      outttwj.ReplaceAll(".pdf",".png") ;
+      cttwj->SaveAs( outttwj ) ;
 
 
 
@@ -618,6 +620,8 @@ void setFormatting(TH1F* hh, const TString & ytitle="", const int ndiv=-1) ;
       TString outttwj3( infileStr ) ;
       outttwj3.ReplaceAll("rootfiles","outputfiles") ;
       outttwj3.ReplaceAll(".root","-mcclosure-ttwj3.pdf") ;
+      cttwj3->SaveAs( outttwj3 ) ;
+      outttwj3.ReplaceAll(".pdf",".png") ;
       cttwj3->SaveAs( outttwj3 ) ;
 
 
@@ -700,6 +704,8 @@ void setFormatting(TH1F* hh, const TString & ytitle="", const int ndiv=-1) ;
       TString outttwj3b( infileStr ) ;
       outttwj3b.ReplaceAll("rootfiles","outputfiles") ;
       outttwj3b.ReplaceAll(".root","-mcclosure-ttwj3b.pdf") ;
+      cttwj3b->SaveAs( outttwj3b ) ;
+      outttwj3b.ReplaceAll(".pdf",".png") ;
       cttwj3b->SaveAs( outttwj3b ) ;
 
    //----
