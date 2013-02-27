@@ -734,7 +734,7 @@
       hdata -> SetLineWidth(2) ;
       hdata -> SetMarkerStyle(20) ;
 
-      TLegend* legend = usePublicStyle_ ? new TLegend( 0.68, 0.5, 0.93, 0.85 ) : new TLegend( 0.80, 0.67, 0.95, 0.92) ;
+      TLegend* legend = usePublicStyle_ ? new TLegend( 0.67, 0.5, 0.92, 0.85 ) : new TLegend( 0.80, 0.67, 0.95, 0.92) ;
       legend->SetFillColor(kWhite) ;
       if (usePublicStyle_) {
 	legend->SetBorderSize(0);
@@ -934,7 +934,7 @@
       hdata -> SetMarkerStyle(20) ;
 
       ////TLegend* legend = usePublicStyle_ ? new TLegend( 0.68, 0.5, 0.93, 0.85 ) : new TLegend( 0.80, 0.67, 0.95, 0.92) ;
-          TLegend* legend = usePublicStyle_ ? new TLegend( 0.70, 0.5, 0.93, 0.85 ) : new TLegend( 0.80, 0.67, 0.95, 0.92) ;
+          TLegend* legend = usePublicStyle_ ? new TLegend( 0.69, 0.5, 0.92, 0.85 ) : new TLegend( 0.80, 0.67, 0.95, 0.92) ;
       legend->SetFillColor(kWhite) ;
       if (usePublicStyle_) {
 	legend->SetBorderSize(0);
@@ -1030,7 +1030,7 @@
       bottompad->Draw() ;
 
       if (usePublicStyle_) {
-	float rightmargin = 0.04;
+	float rightmargin = 0.048;
         gStyle->SetPadBorderMode(0);
 	toppad->cd();
 	toppad->SetBottomMargin(0);
@@ -1080,13 +1080,16 @@
   	plotheader->Draw();
   
   	//"ZL" etc label requested by Bill
-  	title = new TText();
+  	TString theselection = selection;
+        if ( hnb.Contains("_nb3") ) theselection += ", N_{b-jet} #geq 3";
+        title = new TLatex(0.71, 0.86, theselection.Data() );
   	title->SetTextSize(0.045) ;
   	title->SetTextFont(62); //42 but bold
-  	TString theselection = selection;
-  	theselection.ToUpper();
-  	//// title->DrawTextNDC( 0.69, 0.86, theselection.Data() ) ;
-  	     title->DrawTextNDC( 0.71, 0.86, theselection.Data() ) ;
+  	title->SetNDC();
+  	title->SetTextAlign(13);
+  	title->SetX(0.70);
+  	title->SetY(0.892);
+        title->Draw();
       }
       else {
 	title = new TText() ;
@@ -1126,6 +1129,10 @@
 	hratio->GetXaxis()->SetTitleOffset(1.1) ;
 	hratio->GetXaxis()->SetLabelOffset(0.04);
 	hratio->GetXaxis()->SetLabelSize(0.14);
+	if ( hnb.Contains("h_nb") ) {
+	  hratio->GetXaxis()->SetLabelSize(0.22);
+	  hratio->GetXaxis()->SetLabelOffset(0.025);
+	}
 	hratio->GetXaxis()->SetTitleSize(0.14);
 	hratio->GetYaxis()->SetTitleSize(0.14) ;
 	hratio->GetYaxis()->SetTitleOffset(0.42) ; //was 0.14

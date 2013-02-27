@@ -2291,8 +2291,8 @@
              } else if ( fabs( hp->GetBinCenter(bi) - 2. ) < 0.1 ) {
                 hp->GetXaxis()->SetBinLabel( bi, "=2" ) ;
              } else if ( fabs( hp->GetBinCenter(bi) - 3. ) < 0.1 ) {
-                hp->GetXaxis()->SetBinLabel( bi, ">=3" ) ;
-             } else {
+                hp->GetXaxis()->SetBinLabel( bi, "#geq3" ) ;
+	     } else {
                 hp->GetXaxis()->SetBinLabel( bi, "" ) ;
              }
           }
