@@ -430,7 +430,7 @@ void formatClone(TGraphAsymmErrors * gg) {
 	 leg1->SetTextFont(42);
 	 leg1->SetFillStyle(0);
 	 leg1->SetNColumns(2);
-	 leg1->AddEntry(gr_nb2_m4_noyerr,"Unbiased fit","lf");
+	 leg1->AddEntry(gr_nb2_m4_noyerr,"Sideband fit","lf");
 	 leg1->AddEntry(h_data_nb2_m4,"Data");
 	 leg1->Draw();
 
