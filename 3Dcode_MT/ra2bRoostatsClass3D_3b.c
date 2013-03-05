@@ -113,7 +113,9 @@
 					     bool constrainBjetShape,
 					     bool floatSLSigRatios,
 					     const char* systFile1,
-					     const char* pdf_syst_file
+					     const char* pdf_syst_file,
+					     const char* wjets_xsec_shapesyst_file,
+                                             const char* singletop_xsec_shapesyst_file,
 					     ) {
 
 
@@ -2001,11 +2003,11 @@
 
          if ( useLognormal ) {
             rv_SFqcd_met[2] = makeLognormalConstraint( "SFqcd_met3", input_SFqcd_met3, input_SFqcd_met3_err ) ;
-            rv_SFqcd_met[3] = makeLognormalConstraint( "SFqcd_met4", input_SFqcd_met4, input_SFqcd_met3_err ) ;
+            rv_SFqcd_met[3] = makeLognormalConstraint( "SFqcd_met4", input_SFqcd_met4, input_SFqcd_met4_err ) ;
             rv_SFqcd_nb[2]  = makeLognormalConstraint( "SFqcd_nb3",  input_SFqcd_nb3 , input_SFqcd_nb3_err  ) ;
          } else {
             rv_SFqcd_met[2] = makeGaussianConstraint(  "SFqcd_met3", input_SFqcd_met3, input_SFqcd_met3_err ) ;
-            rv_SFqcd_met[3] = makeGaussianConstraint(  "SFqcd_met4", input_SFqcd_met4, input_SFqcd_met3_err ) ;
+            rv_SFqcd_met[3] = makeGaussianConstraint(  "SFqcd_met4", input_SFqcd_met4, input_SFqcd_met4_err ) ;
             rv_SFqcd_nb[2]  = makeGaussianConstraint(  "SFqcd_nb3",  input_SFqcd_nb3 , input_SFqcd_nb3_err  ) ;
          }
       }
@@ -2126,6 +2128,24 @@
       }
       if ( !sss_return_status ) { return false ; }
       nShapeSystematics++ ;
+
+
+      //--- Jan28, 2013: New W+jets and single top Xsec shape systematics (for ttwj closure, not SUSY signal efficiency). ------
+      if ( useLognormal ) {
+         sss_return_status = setupShapeSyst( wjets_xsec_shapesyst_file, "wjets_xsec", 2, -1, -1, workspace ) ; // 2 = log-normal
+      } else {
+         sss_return_status = setupShapeSyst( wjets_xsec_shapesyst_file, "wjets_xsec", 1, -1, -1, workspace ) ; // 1 = Gaussian
+      }
+      if ( !sss_return_status ) { return false ; }
+
+      if ( useLognormal ) {
+         sss_return_status = setupShapeSyst( singletop_xsec_shapesyst_file, "singletop_xsec", 2, -1, -1, workspace ) ; // 2 = log-normal
+      } else {
+         sss_return_status = setupShapeSyst( singletop_xsec_shapesyst_file, "singletop_xsec", 1, -1, -1, workspace ) ; // 1 = Gaussian
+      }
+      if ( !sss_return_status ) { return false ; }
+      //-----------------------------------------------------------------------------------------------------------
+
 
 
 
@@ -2296,10 +2316,20 @@
 	    TString ttwjString   = "mu_ttwj";
 	    ttwjString   += sMbins[i]+sHbins[j]+sBbins[k] ;
 
+            char xsecshapesystname[1000] ;
+	    
+            sprintf( xsecshapesystname, "wjets_xsec_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+            RooAbsReal* rar_wjets_xsec_shape_syst = (RooAbsReal*) workspace.obj( xsecshapesystname ) ;
+            if ( rar_wjets_xsec_shape_syst == 0x0 ) { printf("\n\n *** Missing NP : %s\n\n", xsecshapesystname ) ; return false ; }
+	    
+            sprintf( xsecshapesystname, "singletop_xsec_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+            RooAbsReal* rar_singletop_xsec_shape_syst = (RooAbsReal*) workspace.obj( xsecshapesystname ) ;
+            if ( rar_singletop_xsec_shape_syst == 0x0 ) { printf("\n\n *** Missing NP : %s\n\n", xsecshapesystname ) ; return false ; }
 
-            TString ttwjrfvString = " @0 * @1 * @2" ;
+            TString ttwjrfvString = " @0 * @1 * @2 * @3 * @4" ;
             rfv_mu_ttwj[i][j][k] = new RooFormulaVar( ttwjString, ttwjrfvString,
-                            RooArgSet( *rar_sf_ttwj[i][j][k], *rv_mu_ttwj_sl[i][j][k], *rv_ttwj_0lep1lep_ratio ) ) ;
+						      RooArgSet( *rar_wjets_xsec_shape_syst, *rar_singletop_xsec_shape_syst,
+								 *rar_sf_ttwj[i][j][k], *rv_mu_ttwj_sl[i][j][k], *rv_ttwj_0lep1lep_ratio ) ) ;
 
             rv_mu_ttwj[i][j][k] = rfv_mu_ttwj[i][j][k] ;
 
@@ -3701,61 +3731,66 @@
           return new RooConstVar( NP_name, NP_name, NP_val ) ;
        }
 
-       RooRealVar* rrv_np_base_par = (RooRealVar*) allNuisances -> find( NP_base_name ) ;
-
+       char prim_name[1000] ;
+       sprintf( prim_name, "prim_%s", NP_base_name ) ;
+       RooRealVar* rrv_np_base_par = (RooRealVar*) allNuisances -> find( prim_name ) ;
+       
        if ( rrv_np_base_par == 0x0 ) {
-
-          printf("\n\n makeCorrelatedLognormalConstraint : creating base nuisance parameter - %s\n\n", NP_base_name ) ;
-          rrv_np_base_par = new RooRealVar( NP_base_name, NP_base_name, -6.0, 6.0 ) ;
-          rrv_np_base_par -> setVal( 0. ) ;
-          rrv_np_base_par -> setConstant( kFALSE ) ;
-          allNuisances -> add( *rrv_np_base_par ) ;
-
-          char vname[1000] ;
-          sprintf( vname, "mean_%s", NP_base_name ) ;
-          RooRealVar* g_mean = new RooRealVar( vname, vname, 0.0,-10.,10. ) ;
-          g_mean->setConstant(kTRUE);
-          sprintf( vname, "sigma_%s", NP_base_name ) ;
-          RooConstVar* g_sigma = new RooConstVar( vname, vname, 1.0 ) ;
-
-          char pdfname[100] ;
-          sprintf( pdfname, "pdf_%s", NP_base_name ) ;
-          printf("\n\n makeCorrelatedLognormalConstraint : creating base nuisance parameter pdf - %s\n\n", pdfname ) ;
-          RooGaussian* base_np_pdf = new RooGaussian( pdfname, pdfname, *rrv_np_base_par, *g_mean, *g_sigma ) ;
-
-          allNuisancePdfs -> add( *base_np_pdf ) ;
-          globalObservables -> add( *g_mean ) ;
-
+	 
+	 printf("\n\n makeCorrelatedLognormalConstraint : creating base nuisance parameter - %s\n\n", prim_name ) ;
+	 rrv_np_base_par = new RooRealVar( prim_name, prim_name, -6.0, 6.0 ) ;
+	 rrv_np_base_par -> setVal( 0. ) ;
+	 rrv_np_base_par -> setConstant( kFALSE ) ;
+	 allNuisances -> add( *rrv_np_base_par ) ;
+	 
+	 char vname[1000] ;
+	 // sprintf( vname, "mean_%s", NP_base_name ) ;
+	 sprintf( vname, "prim_mean_%s", NP_base_name ) ;
+	 RooRealVar* g_mean = new RooRealVar( vname, vname, 0.0,-10.,10. ) ;
+	 g_mean->setConstant(kTRUE);
+	 // sprintf( vname, "sigma_%s", NP_base_name ) ;
+	 sprintf( vname, "prim_sigma_%s", NP_base_name ) ;
+	 RooConstVar* g_sigma = new RooConstVar( vname, vname, 1.0 ) ;
+	 
+	 char pdfname[100] ;
+	 // sprintf( pdfname, "pdf_%s", NP_base_name ) ;
+	 sprintf( pdfname, "pdf_prim_%s", NP_base_name ) ;
+	 printf("\n\n makeCorrelatedLognormalConstraint : creating base nuisance parameter pdf - %s\n\n", pdfname ) ;
+	 RooGaussian* base_np_pdf = new RooGaussian( pdfname, pdfname, *rrv_np_base_par, *g_mean, *g_sigma ) ;
+	 
+	 allNuisancePdfs -> add( *base_np_pdf ) ;
+	 globalObservables -> add( *g_mean ) ;
+	 
        }
+
 
        //-- create const variables for mean and sigma so that they can be saved and accessed from workspace later.
 
        char vname[1000] ;
-
        sprintf( vname, "mean_%s", NP_name ) ;
        RooConstVar* ln_mean  = new RooConstVar( vname, vname, NP_val ) ;
-
+       
        sprintf( vname, "sigma_%s", NP_name ) ;
        RooConstVar* ln_sigma = new RooConstVar( vname, vname, NP_err ) ;
-
-
+       
+       
        RooAbsReal* rar(0x0) ;
-
-
+       
+       
        char formula[1000] ;
-
+       
        if ( !changeSign ) {
-	 //sprintf( formula, "@0 * pow( exp( @1/@0 ), @2 )" ) ;
+	 ////// sprintf( formula, "@0 * pow( exp( @1/@0 ), @2 )" ) ;
 	 sprintf( formula, "@0 * pow( ( @1/@0 + 1.), @2 )" ) ;
        } else {
-	 //sprintf( formula, "@0 * pow( exp( @1/@0 ), -1.0 * @2 )" ) ;
+	 ////// sprintf( formula, "@0 * pow( exp( @1/@0 ), -1.0 * @2 )" ) ;
 	 sprintf( formula, "@0 * pow( ( @1/@0 + 1.), -1.0 * @2 )" ) ;
        }
-
+       
        rar = new RooFormulaVar( NP_name, formula, RooArgSet( *ln_mean, *ln_sigma, *rrv_np_base_par ) ) ;
-
-       printf(" makeCorrelatedLognormalConstraint : creating correlated log-normal NP with formula : %s,  %s, val = %g\n", formula, NP_name, rar->getVal() ) ;
-
+       
+       printf(" makeCorrelatedLognormalConstraint : creating correlated log-normal NP with formula : %s,  %s, val = %g, mean=%g, sigma=%g\n", formula, NP_name, rar->getVal(), NP_val, NP_err ) ;
+       
 
        return rar ;
 
