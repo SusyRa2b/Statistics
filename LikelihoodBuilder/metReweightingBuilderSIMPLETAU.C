@@ -40,6 +40,7 @@ USES STANDARD INPUT FILES
 #include "RooWorkspace.h"
 #include "RooDataSet.h"
 #include "RooAbsArg.h"
+#include "RooAbsReal.h"
 #include "RooRealVar.h"
 #include "RooConstVar.h"
 #include "RooTrace.h"
@@ -371,15 +372,22 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
 
 
     ////////////////////////////////////////////////////
-    // COMBINE SIGNAL AND TTWT COMPONENTS OF THIS DTHETA BIN AND SET CONTROL SAMPLE CONSTRAINTS
+    // COMBINE SIGNAL, DibosonDY, AND TTWT COMPONENTS OF THIS DTHETA BIN AND SET CONTROL SAMPLE CONSTRAINTS
+
+
+    //Get DibosonDY out of workspace
+    RooAbsReal* oneTightMuDibosonDYYield = wspace.function(oneTightMuName+"_DibosonDYYield");
+    RooAbsReal* oneLooseLepDibosonDYYield = wspace.function(oneLooseLepName+"_DibosonDYYield");
+    assert(oneTightMuDibosonDYYield);
+    assert(oneLooseLepDibosonDYYield);
 
     cout << " BEFORE YIELDS AND TRIG EFF " << endl;
 
     RooAddition oneTightMuYieldSum(oneTightMuName+"_YieldSum",oneTightMuName+"_YieldSum",
-				   RooArgSet(*wspace.arg(oneTightMuSignalYieldName.Data()),oneTightMuTopWJetsYield));
+				   RooArgSet(*wspace.arg(oneTightMuSignalYieldName.Data()), oneTightMuTopWJetsYield, *oneTightMuDibosonDYYield));
 
     RooAddition oneLooseLepYieldSum(oneLooseLepName+"_YieldSum",oneLooseLepName+"_YieldSum",
-				  RooArgSet(*wspace.arg(oneLooseLepSignalYieldName.Data()),oneLooseLepTopWJetsYield));
+				    RooArgSet(*wspace.arg(oneLooseLepSignalYieldName.Data()), oneLooseLepTopWJetsYield, *oneLooseLepDibosonDYYield));
 
 
     TString triggername = "oneLeptonTriggerEfficiency_";
@@ -414,6 +422,10 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
 					 RooArgSet( *wspace.arg(oneTightMuSignalYieldName.Data()), *triggerefficiency));
     wspace.import( oneTightMuSignalDataYield,RecycleConflictNodes() );
     
+    RooProduct oneTightMuDibosonDYDataYield(oneTightMuName+"_DibosonDYDataYield",oneTightMuName+"_DibosonDYDataYield",
+					   RooArgSet( *oneTightMuDibosonDYYield, *triggerefficiency));
+    wspace.import( oneTightMuDibosonDYDataYield,RecycleConflictNodes() );
+
     RooProduct oneLooseLepTopWJetsDataYield(oneLooseLepName+"_TopWJetsDataYield",oneLooseLepName+"_TopWJetsDataYield",
 					    RooArgSet( oneLooseLepTopWJetsYield, *triggerefficiency));
     wspace.import( oneLooseLepTopWJetsDataYield,RecycleConflictNodes() );
@@ -422,6 +434,9 @@ void makePolarizationConstraintsPredictions( RooWorkspace& wspace, TString binna
 					  RooArgSet( *wspace.arg(oneLooseLepSignalYieldName.Data()), *triggerefficiency));
     wspace.import( oneLooseLepSignalDataYield,RecycleConflictNodes() );
 
+    RooProduct oneLooseLepDibosonDYDataYield(oneLooseLepName+"_DibosonDYDataYield",oneLooseLepName+"_DibosonDYDataYield",
+					    RooArgSet( *oneLooseLepDibosonDYYield, *triggerefficiency));
+    wspace.import( oneLooseLepDibosonDYDataYield,RecycleConflictNodes() );
     
     ////////////////////////////////////////////////////
     // CONSTRUCT THE 0L BACKGROUND PREDICTION FROM THIS DTHETA BIN
@@ -526,12 +541,18 @@ void makeDileptonConstraintsPredictions( RooWorkspace& wspace, TString binname, 
   // PRODUCE SIGNAL+BACKGROUND DILEPTON CONSTRAINTS (NOT EVER BINNED IN DTHETA) 
   // CONSTRAINTS ARE DONE SEPARATELY FOR EACH DILEPTON TYPE
  
+  //Diboson
+  RooAbsReal* twoTightMuDibosonDYYield = wspace.function(twoTightMuName+"_DibosonDYYield");
+  RooAbsReal* twoLooseLepDibosonDYYield = wspace.function(twoLooseLepName+"_DibosonDYYield");
+  assert(twoTightMuDibosonDYYield);
+  assert(twoLooseLepDibosonDYYield);
+
   RooAddition twoTightMuYieldSum(twoTightMuName+"_YieldSum",twoTightMuName+"_YieldSum",
-				RooArgSet( *wspace.arg(twoTightMuSignalYieldName.Data()), twoTightMuTopWJetsYield ));
+				 RooArgSet( *wspace.arg(twoTightMuSignalYieldName.Data()), twoTightMuTopWJetsYield, *twoTightMuDibosonDYYield ));
 
 
   RooAddition twoLooseLepYieldSum(twoLooseLepName+"_YieldSum",twoLooseLepName+"_YieldSum",
-				RooArgSet( *wspace.arg(twoLooseLepSignalYieldName.Data()), twoLooseLepTopWJetsYield ));
+				  RooArgSet( *wspace.arg(twoLooseLepSignalYieldName.Data()), twoLooseLepTopWJetsYield, *twoLooseLepDibosonDYYield ));
   
   TString triggername = "oneLeptonTriggerEfficiency_";
   triggername.Append(trigeffname);
@@ -563,6 +584,10 @@ void makeDileptonConstraintsPredictions( RooWorkspace& wspace, TString binname, 
 				       RooArgSet( *wspace.arg(twoTightMuSignalYieldName.Data()), *triggerefficiency ));
   wspace.import( twoTightMuSignalDataYield,RecycleConflictNodes() );
 
+  RooProduct twoTightMuDibosonDYDataYield(twoTightMuName+"_DibosonDYDataYield",twoTightMuName+"_DibosonDYDataYield",
+					 RooArgSet( *twoTightMuDibosonDYYield, *triggerefficiency ));
+  wspace.import( twoTightMuDibosonDYDataYield,RecycleConflictNodes() );
+  
   RooProduct twoLooseLepTopWJetsDataYield(twoLooseLepName+"_TopWJetsDataYield",twoLooseLepName+"_TopWJetsDataYield",
                                     RooArgSet( twoLooseLepTopWJetsYield, *triggerefficiency ));
   wspace.import( twoLooseLepTopWJetsDataYield,RecycleConflictNodes() );
@@ -571,6 +596,9 @@ void makeDileptonConstraintsPredictions( RooWorkspace& wspace, TString binname, 
 					RooArgSet( *wspace.arg(twoLooseLepSignalYieldName.Data()), *triggerefficiency ));
   wspace.import( twoLooseLepSignalDataYield,RecycleConflictNodes() );
   
+  RooProduct twoLooseLepDibosonDYDataYield(twoLooseLepName+"_DibosonDYDataYield",twoLooseLepName+"_DibosonDYDataYield",
+                                    RooArgSet( *twoLooseLepDibosonDYYield, *triggerefficiency ));
+  wspace.import( twoLooseLepDibosonDYDataYield,RecycleConflictNodes() );
   
   cout << " END OF DILEPTON AND DITAU CONSTRAINTS " << endl;
   twoTightMuConstraint.Print();

@@ -795,6 +795,91 @@ void makeUnderlyingLikelihood(const likelihoodOptions options, RooWorkspace& ws 
 }
 
 
+void setupDibosonDYMR(RooWorkspace& ws, allBinNames& names, const TString binName, const TString binFileNameInsideDibosonDYMR)
+{
+  
+  cout << "Reading in MR DibosonDY inputs for " << binName << endl;
+  
+  ifstream insideFile;
+  
+  cout << "getting the file: " << binFileNameInsideDibosonDYMR << endl;
+  
+  insideFile.open(binFileNameInsideDibosonDYMR.Data(),fstream::in);
+  assert(insideFile.is_open());
+  
+  string fileLine;
+  
+  TString index;
+  double value;
+  
+  map<TString,double> thisInsideDibosonDYMRValue;
+  map<TString,double> thisInsideDibosonDYMRError;
+
+  while(!insideFile.eof())
+    {
+
+      getline(insideFile,fileLine);
+      TString thisLine(fileLine.c_str());
+
+      TStringToken nameAndNumber(thisLine," ");
+      nameAndNumber.NextToken();
+      index = nameAndNumber;
+      if(index == "") continue;
+      nameAndNumber.NextToken();
+      value = nameAndNumber.Atof();
+      cout << index << " : " << value << endl;
+      
+      if(index == "oneTightMu_Theta1_DibosonDYCount"       ) { thisInsideDibosonDYMRValue.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta1", value) ); }
+      else if(index == "oneLooseLep_Theta1_DibosonDYCount" ) { thisInsideDibosonDYMRValue.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta1", value) ); }
+      else if(index == "oneTightMu_Theta2_DibosonDYCount"  ) { thisInsideDibosonDYMRValue.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta2", value) ); } 
+      else if(index == "oneLooseLep_Theta2_DibosonDYCount" ) { thisInsideDibosonDYMRValue.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta2", value) ); }
+      else if(index == "oneTightMu_Theta3_DibosonDYCount"  ) { thisInsideDibosonDYMRValue.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta3", value) ); }
+      else if(index == "oneLooseLep_Theta3_DibosonDYCount" ) { thisInsideDibosonDYMRValue.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta3", value) ); }
+      else if(index == "oneTightMu_Theta4_DibosonDYCount"  ) { thisInsideDibosonDYMRValue.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta4", value) ); }
+      else if(index == "oneLooseLep_Theta4_DibosonDYCount" ) { thisInsideDibosonDYMRValue.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta4", value) ); }
+      else if(index == "oneTightMu_Theta5_DibosonDYCount"  ) { thisInsideDibosonDYMRValue.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta5", value) ); }
+      else if(index == "oneLooseLep_Theta5_DibosonDYCount" ) { thisInsideDibosonDYMRValue.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta5", value) ); }
+      else if(index == "twoTightMu_DibosonDYCount"         ) { thisInsideDibosonDYMRValue.insert( pair<TString,double>("twoTightMu_"+binName, value) ); }
+      else if(index == "twoLooseLep_DibosonDYCount"        ) { thisInsideDibosonDYMRValue.insert( pair<TString,double>("twoLooseLep_"+binName, value) ); }
+
+      else if(index == "oneTightMu_Theta1_DibosonDYCountError"  ) { thisInsideDibosonDYMRError.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta1", value) ); }
+      else if(index == "oneLooseLep_Theta1_DibosonDYCountError" ) { thisInsideDibosonDYMRError.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta1", value) ); }
+      else if(index == "oneTightMu_Theta2_DibosonDYCountError"  ) { thisInsideDibosonDYMRError.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta2", value) ); } 
+      else if(index == "oneLooseLep_Theta2_DibosonDYCountError" ) { thisInsideDibosonDYMRError.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta2", value) ); }
+      else if(index == "oneTightMu_Theta3_DibosonDYCountError"  ) { thisInsideDibosonDYMRError.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta3", value) ); }
+      else if(index == "oneLooseLep_Theta3_DibosonDYCountError" ) { thisInsideDibosonDYMRError.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta3", value) ); }
+      else if(index == "oneTightMu_Theta4_DibosonDYCountError"  ) { thisInsideDibosonDYMRError.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta4", value) ); }
+      else if(index == "oneLooseLep_Theta4_DibosonDYCountError" ) { thisInsideDibosonDYMRError.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta4", value) ); }
+      else if(index == "oneTightMu_Theta5_DibosonDYCountError"  ) { thisInsideDibosonDYMRError.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta5", value) ); }
+      else if(index == "oneLooseLep_Theta5_DibosonDYCountError" ) { thisInsideDibosonDYMRError.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta5", value) ); }
+      else if(index == "twoTightMu_DibosonDYCountError"         ) { thisInsideDibosonDYMRError.insert( pair<TString,double>("twoTightMu_"+binName, value) ); }
+      else if(index == "twoLooseLep_DibosonDYCountError"        ) { thisInsideDibosonDYMRError.insert( pair<TString,double>("twoLooseLep_"+binName, value) ); }
+
+      else {assert(0);}
+    }
+  insideFile.close();
+  
+  //Get uncertainty from workspace
+  RooAbsArg* dibosonMCUncertainty = ws.arg(names.dibosonMCUncertainty);
+  assert(dibosonMCUncertainty);
+  
+  //Put yields into workspace, e.g. oneTightMu_bin9_Theta3_DibosonDYYield
+  //Do nothing with error
+  for( map<TString,double>::iterator it=thisInsideDibosonDYMRValue.begin(); it!=thisInsideDibosonDYMRValue.end(); it++ )
+    {
+      TString thisname = (*it).first;
+      double thisvalue = (*it).second;
+
+      RooRealVar dibosonDYMCYield(thisname+"_DibosonDYMCYield", thisname+"_DibosonDYMCYield", thisvalue );
+      dibosonDYMCYield.setConstant();
+
+      RooProduct dibosonDYYield(thisname+"_DibosonDYYield", thisname+"_DibosonDYYield", RooArgSet(dibosonDYMCYield, *dibosonMCUncertainty));
+      ws.import(dibosonDYYield, RecycleConflictNodes());
+    }
+  
+}
+
+
 
 void setupSignalModelMR(const TString binName, const TString binFileNameInsideSignalMR, map<TString,map<TString,mcCount> >& insideSignalMR, 
 			const TString binFileNameOutsideSignalMR, map<TString,map<TString,mcCount> >& outsideSignalMR )
@@ -1722,7 +1807,7 @@ void setupObservations(TString binName, TString binFileName, map<TString,abcdBin
 }
 
 void setupUnderlyingModel(likelihoodOptions options, TString binFilesPath, map<TString,TString>& binFileNames,  
-			  TString signalModelFilesPath, map<TString,TString>& binFileNamesInsideSignalMR,  map<TString,TString>& binFileNamesOutsideSignalMR,
+			  TString signalModelFilesPath, map<TString,TString>& binFileNamesInsideSignalMR,  map<TString,TString>& binFileNamesOutsideSignalMR, map<TString,TString>& binFileNamesInsideDibosonDYMR,
 			  vector<TString>& binNames, TString& modelFileName, TString& binFilesFileName, allBins& numbers)
 {
   ifstream setupFile;
@@ -1784,7 +1869,7 @@ void setupUnderlyingModel(likelihoodOptions options, TString binFilesPath, map<T
   ifstream binFilesFile;
   binFilesFile.open(binFilesFileName.Data(),fstream::in);
 
-  TString fileName, fileNameInsideSignalMR, fileNameOutsideSignalMR;
+  TString fileName, fileNameInsideSignalMR, fileNameOutsideSignalMR, fileNameInsideDibosonDY;
 
   while(!binFilesFile.eof())
     {
@@ -1809,9 +1894,13 @@ void setupUnderlyingModel(likelihoodOptions options, TString binFilesPath, map<T
 	  fileNameInsideSignalMR = binString;
 	  binString.NextToken();
 	  fileNameOutsideSignalMR = binString;
+	  binString.NextToken();
+	  fileNameInsideDibosonDY = binString;
+
 	  binFileNamesInsideSignalMR[index] = signalModelFilesPath+fileNameInsideSignalMR;
 	  binFileNamesOutsideSignalMR[index] = signalModelFilesPath+fileNameOutsideSignalMR;
-	  cout << index << " : " << binFileNamesInsideSignalMR[index] << ", " << binFileNamesOutsideSignalMR[index] << endl;
+	  binFileNamesInsideDibosonDYMR[index] = binFilesPath+"dbdy/" + fileNameInsideDibosonDY;
+	  cout << index << " : " << binFileNamesInsideSignalMR[index] << ", " << binFileNamesOutsideSignalMR[index] << ", " << binFileNamesInsideDibosonDYMR[index] << endl;
 	}
    }
   binFilesFile.close();
@@ -1844,6 +1933,7 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   map<TString,TString> binFileNamesInsideSignalMR;
   map<TString,map<TString,mcCount> > insideSignalMR;
   map<TString,TString> binFileNamesOutsideSignalMR;
+  map<TString,TString> binFileNamesInsideDibosonDYMR;
   map<TString,map<TString,mcCount> > outsideSignalMR;
   
   double oneLeptonTotal(0.);
@@ -1859,7 +1949,7 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
   
 
   //Read in setupFile and binFilesFile
-  setupUnderlyingModel(options, binFilesPath, binFileNames, signalModelFilesPath, binFileNamesInsideSignalMR, binFileNamesOutsideSignalMR, binNames, setupFileName , binFilesFileName , numbers);
+  setupUnderlyingModel(options, binFilesPath, binFileNames, signalModelFilesPath, binFileNamesInsideSignalMR, binFileNamesOutsideSignalMR, binFileNamesInsideDibosonDYMR, binNames, setupFileName , binFilesFileName , numbers);
   
   //Read in each bin file
   for(map<TString,TString>::iterator thisBin = binFileNames.begin(); thisBin != binFileNames.end() ; thisBin++)
@@ -1881,6 +1971,15 @@ void buildLikelihood( TString setupFileName, TString binFilesFileName, TString b
       makeTriggerEfficiencies(ws, names, bins[*thisBin] );
     }
   
+  //Read in and put DibosonDY into workspace
+  if(options.TopWJetsMethod == "metReweighting")
+    {
+      for(vector<TString>::iterator thisBin = binNames.begin(); thisBin != binNames.end() ; thisBin++)
+	{
+	  setupDibosonDYMR(ws, names, *thisBin, binFileNamesInsideDibosonDYMR[*thisBin] );
+	}
+    }
+
   //Read in MR signal
   if(options.TopWJetsMethod == "metReweighting")
     {
