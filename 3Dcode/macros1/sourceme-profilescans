@@ -1,0 +1,14 @@
+
+
+
+  echo 1200,300
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-1200-300.root\",80.,0.,6.\) >& logfiles/scan-1200-300.log
+
+
+  echo 900,600
+  root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-900-600.root\",80.,0.,6.\) >& logfiles/scan-900-600.log
+
+
+
+
+
