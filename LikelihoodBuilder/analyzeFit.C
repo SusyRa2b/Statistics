@@ -189,6 +189,77 @@ void integratedTotals(TString workspaceFile = "test.root", TString binFilesFile 
 }
 
 
+
+void binTotals(TString workspaceFile = "test.root", TString binFilesFile = "binFilesFile.dat", TString datFile = "", bool includeTriggerEfficiency = false)
+{
+  cout << "Starting binTotals" << endl;
+  
+  TString addName = "";
+  if(includeTriggerEfficiency) addName = "Data";
+
+  TFile* wstf = new TFile ( workspaceFile );
+  RooWorkspace* ws = (RooWorkspace*)wstf->Get("workspace");
+  
+  RooRealVar * signalCrossSection = ws->var("signalCrossSection");
+  RooRealVar * luminosity = ws->var("luminosity");
+  
+  ifstream binStream;
+  binStream.open(binFilesFile.Data(),fstream::in);
+  
+  TString index;
+  string fileLine;
+  std::vector<TString> binNames;
+  std::vector<TString> binFiles;  
+  while(!binStream.eof()) {
+    getline(binStream,fileLine);
+    TString thisLine(fileLine.c_str());
+    
+    TStringToken nameAndNumber(thisLine," ");
+    nameAndNumber.NextToken();
+    index = nameAndNumber;
+    if(index=="") continue;
+    
+    binNames.push_back(index);
+    
+    nameAndNumber.NextToken();
+    index = nameAndNumber;
+    binFiles.push_back(index);
+  }
+  binStream.close();
+
+  cout << "nbins: " << binNames.size() << endl;
+    
+  for(unsigned int i = 0; i<binNames.size(); i++) {
+    
+    if( skipBinInAnalysis(binNames.at(i)) ) continue;
+    cout << "binName: " << binNames.at(i) << endl;
+    cout << "binFile: " << binFiles.at(i) << endl;
+    
+
+    RooAbsReal * ttwj = ws->function("zeroLepton_"+binNames.at(i)+"_TopWJets"+addName+"Yield");
+    RooAbsReal * qcd = ws->function("zeroLepton_"+binNames.at(i)+"_QCD"+addName+"Yield");
+    RooAbsReal * znn = ws->function("zeroLepton_"+binNames.at(i)+"_ZtoNuNu"+addName+"Yield");
+    RooAbsReal * vv = ws->function("zeroLepton_"+binNames.at(i)+"_Diboson"+addName+"Yield");
+    
+    RooRealVar * dat = ws->var("zeroLepton_"+binNames.at(i)+"_Count");
+    
+    assert (  (ttwj != NULL) && (qcd != NULL) && (znn !=NULL) && (vv !=NULL) && (dat !=NULL) );
+
+    double background = ttwj->getVal() + qcd->getVal() + znn->getVal() + vv->getVal();
+    //dattot += dat->getVal();
+    
+    cout << binNames.at(i) << " " << binFiles.at(i) << " " << background << endl;
+
+  }
+  
+    
+  wstf->Close();
+
+  return;
+}
+
+
+
 /*
   //this version takes the yield fractions  from the input file (hardcoded  in scale object)
 void integratedTotals(TString workspaceFile = "test.root", TString name = "")
