@@ -13,8 +13,14 @@ void GenerateDummySyst() {
 
   gROOT->Reset();
 
+  int nBinsMET   = 4 ;
+  int nBinsHT    = 4 ;
+  int nBinsBjets = 3 ;
+
+  int nBins = nBinsMET * nBinsHT * nBinsBjets ;
+
   // just generate one line, gluino mass, lsp mass (for the point 1225, 225),
-  // followed by 4*48 dummy numbers 
+  // followed by 4*Nbins dummy numbers 
 
   double dummySig   = 0.01 ;
   double dummySLSig = 0.015 ;
@@ -26,19 +32,19 @@ void GenerateDummySyst() {
 
   outDummy << "1225 " << "225 " ;
 
-  for ( int i = 0 ; i < 48 ; i++ ) {
+  for ( int i = 0 ; i < nBins ; i++ ) {
     outDummy << dummySig << " " ;
   }
 
-  for ( int i = 0 ; i < 48 ; i++ ) {
+  for ( int i = 0 ; i < nBins ; i++ ) {
     outDummy << dummySLSig << " " ;
   }
 
-  for ( int i = 0 ; i < 48 ; i++ ) {
+  for ( int i = 0 ; i < nBins ; i++ ) {
     outDummy << dummySL << " " ;
   }
 
-  for ( int i = 0 ; i < 48 ; i++ ) {
+  for ( int i = 0 ; i < nBins ; i++ ) {
     outDummy << dummyLdp << " " ;
   }
 

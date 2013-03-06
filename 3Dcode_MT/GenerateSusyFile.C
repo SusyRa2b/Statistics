@@ -22,62 +22,40 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
      return ;
   }
 
-// bin 1 = gluino mass = 100 GeV, 2 = 125, 3 = 150, 4 = 175, ...
-// so gluino mass = 75+nbin*25; or nbin = (gluinomass-75)/25.
+  // bin 1 = gluino mass = 100 GeV, 2 = 125, 3 = 150, 4 = 175, ...
+  // so gluino mass = 75+nbin*25; or nbin = (gluinomass-75)/25.
 
-  TChain chainT1tttt("tree");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_11.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_12.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_19.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_1.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_21.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_22.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_25.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_29.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_35.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_38.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_39.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_48.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_50.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_54.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_57.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_5.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_63.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_65.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_67.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_69.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_6.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_70.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_71.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_72.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_74.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_76.root");
-  chainT1tttt.Add("files12p0fb_lastHCP/T1tttt_partial_8.root");
-
+  TChain chainT2tt("tree");
+  chainT2tt.Add("filesMoriond_v3/T2tt.root");
 
   gROOT->Reset();
 
-  const int nBinsBjets = 3 ;   // this must always be 3
-  const int nJetsCut = 4 ;     // #jets >= nJetsCut
-
+  const int nJetsCut = 3 ;     // #jets >= nJetsCut
+  const int MTbCut   = 0 ;   // MTb cut
 
   //-- met4-ht4-v15
-      const int nBinsMET   = 4 ;
-      const int nBinsHT    = 4 ;
-      const int version = 15;
-      float Mbins[nBinsMET+1] = {125.,150.,250.,350.,99999.};
-      float Hbins[nBinsHT+1] = {400.,500.,800.,1000.,99999.};
+  const int nBinsMET   = 4 ;
+  const int nBinsHT    = 4 ;
+  const int nBinsBjets = 3 ;   
+  const int version = 15;
+  float Mbins[nBinsMET+1] = {125.,150.,250.,350.,99999.};
+  float Hbins[nBinsHT+1] = {400.,500.,800.,1000.,99999.};
 
+  TString cBbins[nBinsBjets];
+  
+  cBbins[0] = "nB==1" ;
 
-//TString sMbins[nBinsMET];
-//TString sHbins[nBinsHT];
-//TString sBbins[3] = {"_1b","_2b","_3b"};
-
-//TString cMbins[nBinsMET];
-//TString cHbins[nBinsHT];
-  ////// TString cBbins[3] = {"&&nB==1","&&nB==2","&&nB>=3"};
-  TString cBbins[3] = {"nB==1","nB==2","nB>=3"};
-
+  if ( nBinsBjets == 2 ) {
+    cBbins[1] = "nB>=2" ;
+  }
+  else if ( nBinsBjets == 3 ) {
+    cBbins[1] = "nB==2" ;    
+    cBbins[2] = "nB>=3" ;
+  }
+  else {
+    cout << "\n\n This number of #b-jets bins is not implemented! Exiting ... " << endl ;
+    return ;
+  }
 
   // jet pt thresholds
   double minLeadJetPt = 70. ;
@@ -95,7 +73,7 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
   ofstream inFile;
   char outfile[10000] ;
-  sprintf( outfile, "datfiles/T1tttt-met%d-ht%d-v%d.dat", nBinsMET, nBinsHT, version ) ;
+  sprintf( outfile, "datfiles/T2tt-met%d-ht%d-v%d.dat", nBinsMET, nBinsHT, version ) ;
   inFile.open( outfile );
 
   // loop over gluino masses
@@ -107,8 +85,8 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
   TString cutsLDP   = "minDelPhiN<4&&nMu==0&&nEl==0&&";
 
   char commoncuts[10000] ;
-  sprintf( commoncuts, "maxChNMultDiff<40&&pfOcaloMET<2.0&&nJets>=%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&",
-           nJetsCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
+  sprintf( commoncuts, "maxChNMultDiff<40&&pfOcaloMET<2.0&&nJets>=%d&&MT_bestCSV>%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)&&",
+           nJetsCut, MTbCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
 
   cutsSig   += commoncuts ;
   cutsSLSig += commoncuts ;
@@ -138,17 +116,17 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
   float xsec8TeV = -1. ;
 
-  int mGls[4] = {1175,1175,1025,900} ;
-  int mLsps[4] = {75,400,500,475} ;
+  int mGls[4] = {350,450,550,650} ;
+  int mLsps[4] = {0,0,0,0} ;
 
-  for ( int iGl = 0 ; iGl < 4 ; iGl++ ) {
+  for ( int iGl = 0 ; iGl < 1/*4*/ ; iGl++ ) {
 
   int mGl = mGls[iGl] ;
   int mLsp = mLsps[iGl] ;
 
     int theBin8TeV = gluinoxsec8TeV->FindBin( mGl ) ;					      
     if ( theBin8TeV <=0 || theBin8TeV > gluinoxsec8TeV->GetNbinsX() ) {			      
-       printf("\n\n *** can't find bin for mgl=%d.  Returned %d\n\n", mGl, theBin ) ; 
+       printf("\n\n *** can't find bin for mgl=%d.  Returned %d\n\n", mGl, theBin8TeV ) ; 
        return ; 								      
     }										      
     xsec8TeV = gluinoxsec8TeV->GetBinContent( theBin8TeV ) ;				      
@@ -187,19 +165,19 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
          char hname[1000] ;
 
          sprintf( hname, "h_susy_sig_%db", k+1 ) ;
-         chainT1tttt.Project( hname,"HT:MET",allSigCuts);
+         chainT2tt.Project( hname,"HT:MET",allSigCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  SIG selection %9.1f events.\n", mGl, mLsp, k+1, h_susy_sig[k]->Integral() ) ; cout << flush ;
 
          sprintf( hname, "h_susy_slsig_%db", k+1 ) ;
-         chainT1tttt.Project( hname,"HT:MET",allSLSigCuts);
+         chainT2tt.Project( hname,"HT:MET",allSLSigCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  SL Sig selection %6.1f events.\n", mGl, mLsp, k+1, h_susy_slsig[k]->Integral() ) ; cout << flush ;
 
          sprintf( hname, "h_susy_sl_%db", k+1 ) ;
-         chainT1tttt.Project( hname,"HT:MET",allSLCuts);
+         chainT2tt.Project( hname,"HT:MET",allSLCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  SL  selection %9.1f events.\n", mGl, mLsp, k+1, h_susy_sl[k]->Integral() ) ; cout << flush ;
 
          sprintf( hname, "h_susy_ldp_%db", k+1 ) ;
-         chainT1tttt.Project( hname,"HT:MET",allLDPCuts);
+         chainT2tt.Project( hname,"HT:MET",allLDPCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  LDP selection %9.1f events.\n", mGl, mLsp, k+1, h_susy_ldp[k]->Integral() ) ; cout << flush ;
 
       } // k (nBjets)
