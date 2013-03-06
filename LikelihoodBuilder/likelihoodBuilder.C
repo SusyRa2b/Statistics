@@ -831,31 +831,31 @@ void setupSignalModelMR(const TString binName, const TString binFileNameInsideSi
       value = nameAndNumber.Atof();
       cout << index << " : " << value << endl;
       
-      if(index == "oneTightMu_Theta1_SignalCount"       ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta1", value) ); }
-      else if(index == "oneLooseLep_Theta1_SignalCount" ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta1", value) ); }
-      else if(index == "oneTightMu_Theta2_SignalCount"  ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta2", value) ); } 
-      else if(index == "oneLooseLep_Theta2_SignalCount" ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta2", value) ); }
-      else if(index == "oneTightMu_Theta3_SignalCount"  ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta3", value) ); }
-      else if(index == "oneLooseLep_Theta3_SignalCount" ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta3", value) ); }
-      else if(index == "oneTightMu_Theta4_SignalCount"  ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta4", value) ); }
-      else if(index == "oneLooseLep_Theta4_SignalCount" ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta4", value) ); }
-      else if(index == "oneTightMu_Theta5_SignalCount"  ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta5", value) ); }
-      else if(index == "oneLooseLep_Theta5_SignalCount" ) { thisInsideSignalMRValue.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta5", value) ); }
-      else if(index == "twoTightMu_SignalCount"         ) { thisInsideSignalMRValue.insert( pair<TString,int>("twoTightMu_"+binName, value) ); }
-      else if(index == "twoLooseLep_SignalCount"        ) { thisInsideSignalMRValue.insert( pair<TString,int>("twoLooseLep_"+binName, value) ); }
+      if(index == "oneTightMu_Theta1_SignalCount"       ) { thisInsideSignalMRValue.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta1", value) ); }
+      else if(index == "oneLooseLep_Theta1_SignalCount" ) { thisInsideSignalMRValue.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta1", value) ); }
+      else if(index == "oneTightMu_Theta2_SignalCount"  ) { thisInsideSignalMRValue.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta2", value) ); } 
+      else if(index == "oneLooseLep_Theta2_SignalCount" ) { thisInsideSignalMRValue.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta2", value) ); }
+      else if(index == "oneTightMu_Theta3_SignalCount"  ) { thisInsideSignalMRValue.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta3", value) ); }
+      else if(index == "oneLooseLep_Theta3_SignalCount" ) { thisInsideSignalMRValue.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta3", value) ); }
+      else if(index == "oneTightMu_Theta4_SignalCount"  ) { thisInsideSignalMRValue.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta4", value) ); }
+      else if(index == "oneLooseLep_Theta4_SignalCount" ) { thisInsideSignalMRValue.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta4", value) ); }
+      else if(index == "oneTightMu_Theta5_SignalCount"  ) { thisInsideSignalMRValue.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta5", value) ); }
+      else if(index == "oneLooseLep_Theta5_SignalCount" ) { thisInsideSignalMRValue.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta5", value) ); }
+      else if(index == "twoTightMu_SignalCount"         ) { thisInsideSignalMRValue.insert( pair<TString,double>("twoTightMu_"+binName, value) ); }
+      else if(index == "twoLooseLep_SignalCount"        ) { thisInsideSignalMRValue.insert( pair<TString,double>("twoLooseLep_"+binName, value) ); }
 
-      else if(index == "oneTightMu_Theta1_SignalCountError"  ) { thisInsideSignalMRError.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta1", value) ); }
-      else if(index == "oneLooseLep_Theta1_SignalCountError" ) { thisInsideSignalMRError.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta1", value) ); }
-      else if(index == "oneTightMu_Theta2_SignalCountError"  ) { thisInsideSignalMRError.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta2", value) ); } 
-      else if(index == "oneLooseLep_Theta2_SignalCountError" ) { thisInsideSignalMRError.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta2", value) ); }
-      else if(index == "oneTightMu_Theta3_SignalCountError"  ) { thisInsideSignalMRError.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta3", value) ); }
-      else if(index == "oneLooseLep_Theta3_SignalCountError" ) { thisInsideSignalMRError.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta3", value) ); }
-      else if(index == "oneTightMu_Theta4_SignalCountError"  ) { thisInsideSignalMRError.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta4", value) ); }
-      else if(index == "oneLooseLep_Theta4_SignalCountError" ) { thisInsideSignalMRError.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta4", value) ); }
-      else if(index == "oneTightMu_Theta5_SignalCountError"  ) { thisInsideSignalMRError.insert( pair<TString,int>("oneTightMu_"+binName+"_Theta5", value) ); }
-      else if(index == "oneLooseLep_Theta5_SignalCountError" ) { thisInsideSignalMRError.insert( pair<TString,int>("oneLooseLep_"+binName+"_Theta5", value) ); }
-      else if(index == "twoTightMu_SignalCountError"         ) { thisInsideSignalMRError.insert( pair<TString,int>("twoTightMu_"+binName, value) ); }
-      else if(index == "twoLooseLep_SignalCountError"        ) { thisInsideSignalMRError.insert( pair<TString,int>("twoLooseLep_"+binName, value) ); }
+      else if(index == "oneTightMu_Theta1_SignalCountError"  ) { thisInsideSignalMRError.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta1", value) ); }
+      else if(index == "oneLooseLep_Theta1_SignalCountError" ) { thisInsideSignalMRError.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta1", value) ); }
+      else if(index == "oneTightMu_Theta2_SignalCountError"  ) { thisInsideSignalMRError.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta2", value) ); } 
+      else if(index == "oneLooseLep_Theta2_SignalCountError" ) { thisInsideSignalMRError.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta2", value) ); }
+      else if(index == "oneTightMu_Theta3_SignalCountError"  ) { thisInsideSignalMRError.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta3", value) ); }
+      else if(index == "oneLooseLep_Theta3_SignalCountError" ) { thisInsideSignalMRError.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta3", value) ); }
+      else if(index == "oneTightMu_Theta4_SignalCountError"  ) { thisInsideSignalMRError.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta4", value) ); }
+      else if(index == "oneLooseLep_Theta4_SignalCountError" ) { thisInsideSignalMRError.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta4", value) ); }
+      else if(index == "oneTightMu_Theta5_SignalCountError"  ) { thisInsideSignalMRError.insert( pair<TString,double>("oneTightMu_"+binName+"_Theta5", value) ); }
+      else if(index == "oneLooseLep_Theta5_SignalCountError" ) { thisInsideSignalMRError.insert( pair<TString,double>("oneLooseLep_"+binName+"_Theta5", value) ); }
+      else if(index == "twoTightMu_SignalCountError"         ) { thisInsideSignalMRError.insert( pair<TString,double>("twoTightMu_"+binName, value) ); }
+      else if(index == "twoLooseLep_SignalCountError"        ) { thisInsideSignalMRError.insert( pair<TString,double>("twoLooseLep_"+binName, value) ); }
 
       else {assert(0);}
     }
@@ -867,7 +867,9 @@ void setupSignalModelMR(const TString binName, const TString binFileNameInsideSi
       TString name = (*it).first;
       mcCount thisCount;
       thisCount.value = (*it).second;
+      assert(thisInsideSignalMRError.count(name));
       thisCount.error = thisInsideSignalMRError[name];
+      cout << "Putting into map " << name << " " << thisCount.value << " " << thisCount.error << endl;
       thisInsideSignalMR.insert( pair<TString,mcCount>(name, thisCount) );
     }
   //for( map<TString,mcCount>::iterator it=thisInsideSignalMR.begin(); it!=thisInsideSignalMR.end(); it++ ) cout << "Map: " << (*it).first << " = " << ((*it).second).value << " +- " << ((*it).second).error << endl;
@@ -1238,8 +1240,10 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
       
       if(options.TopWJetsMethod == "metReweighting")
 	{
+	  ////////////////////////////////////////////
 	  //Zero lepton and zero lepton low deltaPhiN
-	  
+	  ////////////////////////////////////////////
+
 	  TString zeroLeptonName("zeroLepton_");
 	  zeroLeptonName+=binName;
 	  TString zeroLeptonLowDeltaPhiNName("zeroLeptonLowDeltaPhiN_");
@@ -1380,9 +1384,14 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	  ws.import(zeroLeptonLowDeltaPhiNSignalYieldOAK, RecycleConflictNodes());
 	  
 	  
+	  //////////////////////////
+	  //MET Reweighting Bins
+	  //////////////////////////
+
 	  //Single lepton
 
 	  //inside
+	  assert(insideSignalMR.count(binName));
 	  map<TString,mcCount> thisInsideSignalMR = insideSignalMR[binName];
 	  for ( map<TString,mcCount>::iterator it=thisInsideSignalMR.begin() ; it != thisInsideSignalMR.end(); it++ ) 
 	    { 
@@ -1395,6 +1404,9 @@ void makeSignalModel(const likelihoodOptions options, RooWorkspace& ws , vector<
 	      RooRealVar signalFraction(signalName+"_SignalFraction", signalName+"_SignalFraction", signalValue/nGenerated);
 	      signalFraction.setConstant();
 	      
+	      cout << "MR Inside Signal ingredients, " << signalName << " " << signalValue << " " << nGenerated << " " << signalError << endl;
+	      cout << "MR Inside Signal, " << signalName << " " <<  signalValue/nGenerated << " +- " << percentError << endl;
+
 	      RooAbsArg* signalStatisticalError = getLogNormalConstraint(ws, signalName+"_SignalError", "",
 							     1.0, percentError,
 							     names.observables, names.nuisances, names.globalObservables);
