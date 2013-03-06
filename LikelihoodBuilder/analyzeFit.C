@@ -674,6 +674,19 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
 	hTM5_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta5_TopWJetsDataYield" ))->getVal());
 	h2LL_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "twoLooseLep_"+binName+"_TopWJetsDataYield" ))->getVal());
 	h2TM_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "twoTightMu_"+binName+"_TopWJetsDataYield" ))->getVal());
+
+	hLL1_sig[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta1_SignalDataYield" ))->getVal());
+	hLL2_sig[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta2_SignalDataYield" ))->getVal());
+	hLL3_sig[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta3_SignalDataYield" ))->getVal());
+	hLL4_sig[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta4_SignalDataYield" ))->getVal());
+	hLL5_sig[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta5_SignalDataYield" ))->getVal());
+	hTM1_sig[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta1_SignalDataYield" ))->getVal());
+	hTM2_sig[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta2_SignalDataYield" ))->getVal());
+	hTM3_sig[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta3_SignalDataYield" ))->getVal());
+	hTM4_sig[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta4_SignalDataYield" ))->getVal());
+	hTM5_sig[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta5_SignalDataYield" ))->getVal());
+	h2LL_sig[bBin-1]->SetBinContent(binIndex,(ws->function( "twoLooseLep_"+binName+"_SignalDataYield" ))->getVal());
+	h2TM_sig[bBin-1]->SetBinContent(binIndex,(ws->function( "twoTightMu_"+binName+"_SignalDataYield" ))->getVal());
       }
 
     hZL_qcd[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLepton_"+binName+"_QCDDataYield" ))->getVal() );
