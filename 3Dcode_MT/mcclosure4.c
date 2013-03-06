@@ -33,7 +33,7 @@
 
    int nBinsMET ;
    int nBinsHT ;
-   const int nBinsBjets(3) ;
+   const int nBinsBjets(2) ;
    const int nQcdSamples(9) ;
 
    int ncomps(5) ;
@@ -154,18 +154,18 @@
       TH1F* hmctruth_ttwj_1lSover1ratio_2b = (TH1F*) hmctruth_ttwj_1lepSig_2b->Clone("hmctruth_ttwj_1lSover1ratio_2b") ;
       hmctruth_ttwj_1lSover1ratio_2b->Divide( hmctruth_ttwj_1lep_2b ) ;
 
-
       TH1F* hmctruth_ttwj_0lep_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_0lep_3b") ;
       if ( hmctruth_ttwj_0lep_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_0lep_3b.\n\n") ; return ; }
       TH1F* hmctruth_ttwj_1lep_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_1lep_3b") ;
       if ( hmctruth_ttwj_1lep_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_1lep_3b.\n\n") ; return ; }
       TH1F* hmctruth_ttwj_1lepSig_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_1lepSig_3b") ;
       if ( hmctruth_ttwj_1lepSig_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_1lepSig_3b.\n\n") ; return ; }
-
+      
       TH1F* hmctruth_ttwj_0over1ratio_3b = (TH1F*) hmctruth_ttwj_0lep_3b->Clone("hmctruth_ttwj_0over1ratio_3b") ;
       hmctruth_ttwj_0over1ratio_3b->Divide( hmctruth_ttwj_1lep_3b ) ;
       TH1F* hmctruth_ttwj_1lSover1ratio_3b = (TH1F*) hmctruth_ttwj_1lepSig_3b->Clone("hmctruth_ttwj_1lSover1ratio_3b") ;
       hmctruth_ttwj_1lSover1ratio_3b->Divide( hmctruth_ttwj_1lep_3b ) ;
+      
 
 
       hmctruth_ttwj_0over1ratio_1b->SetLineColor(2) ;
@@ -175,7 +175,6 @@
       hmctruth_ttwj_0over1ratio_1b->SetMarkerStyle(20) ;
       hmctruth_ttwj_0over1ratio_2b->SetMarkerStyle(25) ;
       hmctruth_ttwj_0over1ratio_3b->SetMarkerStyle(30) ;
-
 
       hmctruth_ttwj_1lSover1ratio_1b->SetLineColor(2) ;
       hmctruth_ttwj_1lSover1ratio_2b->SetLineColor(6) ;

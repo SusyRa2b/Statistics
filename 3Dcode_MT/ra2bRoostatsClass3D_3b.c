@@ -115,7 +115,7 @@
 					     const char* systFile1,
 					     const char* pdf_syst_file,
 					     const char* wjets_xsec_shapesyst_file,
-                                             const char* singletop_xsec_shapesyst_file,
+                                             const char* singletop_xsec_shapesyst_file
 					     ) {
 
 
@@ -623,9 +623,11 @@
 
       fscanf( infp, "%s %g", label, &knn_2b ) ; cout << "knn_2b" << " = " << knn_2b << endl ;
       fscanf( infp, "%s %g", label, &knn_2b_err ) ; cout << "knn_2b_err" << " = " << knn_2b_err << endl ;
-      fscanf( infp, "%s %g", label, &knn_3b ) ; cout << "knn_3b" << " = " << knn_3b << endl ;
-      fscanf( infp, "%s %g", label, &knn_3b_err ) ; cout << "knn_3b_err" << " = " << knn_3b_err << endl ;
-
+      
+      if ( nBinsBtag > 2 ) {
+	fscanf( infp, "%s %g", label, &knn_3b ) ; cout << "knn_3b" << " = " << knn_3b << endl ;
+	fscanf( infp, "%s %g", label, &knn_3b_err ) ; cout << "knn_3b_err" << " = " << knn_3b_err << endl ;
+      }
 
       // Z -> ll purities
 
@@ -939,7 +941,7 @@
       
       for (int i = 0 ; i < nBinsMET ; i++) {
         for (int j = 0 ; j < nBinsHT ; j++) {
-          for (int k = 0 ; k < nBinsBtag ; k++) {
+          for (int k = 0 ; k < 3 ; k++) {
 
             if ( k == 0 ) {
               sl_fracNb_val[i][j][k] = 1. ;
@@ -1628,8 +1630,6 @@
       cout << "\n\n Back from setSusyScanPoint.  Now defining parameters.\n\n" << flush ;
 
       //--- Systematics and other nuisance parameters
-      // THIS WILL NEED TO BE CAREFULLY REVISED !!!!
-      // STILL USING THE LOG-NORMALS TO GET STARTED
 
       char formula[1024];
 
@@ -1860,13 +1860,14 @@
          rar_knn_2b = makeGaussianConstraint( NP_name, knn_2b, knn_2b_err ) ;
       }
 
-      sprintf( NP_name, "knn_3b" ) ;
-      if ( useLognormal ) {
-         rar_knn_3b = makeLognormalConstraint( NP_name, knn_3b, knn_3b_err ) ;
-      } else {
-         rar_knn_3b = makeGaussianConstraint( NP_name, knn_3b, knn_3b_err ) ;
+      if ( nBinsBtag > 2 ) {
+	sprintf( NP_name, "knn_3b" ) ;
+	if ( useLognormal ) {
+	  rar_knn_3b = makeLognormalConstraint( NP_name, knn_3b, knn_3b_err ) ;
+	} else {
+	  rar_knn_3b = makeGaussianConstraint( NP_name, knn_3b, knn_3b_err ) ;
+	}
       }
-
 
 
 
@@ -1996,7 +1997,7 @@
       if ( qcdModelIndex == 4 ) {
 
         //-- constrain MET scale factors for >= bin 3 (counting from 1).
-         if (  ! (nBinsMET==4 && nBinsBtag==3)  ) {
+         if (  ! (nBinsMET==4)  ) {
             printf("\n\n *** QCD model 4 : I don't know what to do for this binning.  Parameters hardwired for nMET=4, nB=3\n") ;
             return false ;
          }
@@ -2004,11 +2005,11 @@
          if ( useLognormal ) {
             rv_SFqcd_met[2] = makeLognormalConstraint( "SFqcd_met3", input_SFqcd_met3, input_SFqcd_met3_err ) ;
             rv_SFqcd_met[3] = makeLognormalConstraint( "SFqcd_met4", input_SFqcd_met4, input_SFqcd_met4_err ) ;
-            rv_SFqcd_nb[2]  = makeLognormalConstraint( "SFqcd_nb3",  input_SFqcd_nb3 , input_SFqcd_nb3_err  ) ;
+            if ( nBinsBtag == 3 ) rv_SFqcd_nb[2]  = makeLognormalConstraint( "SFqcd_nb3",  input_SFqcd_nb3 , input_SFqcd_nb3_err  ) ;
          } else {
             rv_SFqcd_met[2] = makeGaussianConstraint(  "SFqcd_met3", input_SFqcd_met3, input_SFqcd_met3_err ) ;
             rv_SFqcd_met[3] = makeGaussianConstraint(  "SFqcd_met4", input_SFqcd_met4, input_SFqcd_met4_err ) ;
-            rv_SFqcd_nb[2]  = makeGaussianConstraint(  "SFqcd_nb3",  input_SFqcd_nb3 , input_SFqcd_nb3_err  ) ;
+            if ( nBinsBtag == 3 ) rv_SFqcd_nb[2]  = makeGaussianConstraint(  "SFqcd_nb3",  input_SFqcd_nb3 , input_SFqcd_nb3_err  ) ;
          }
       }
       printf("\n\n") ;

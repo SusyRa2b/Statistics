@@ -191,7 +191,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   gROOT->Reset();
 
   const int nJetsCut = 3 ;     // #jets >= nJetsCut
-  const int MTbCut = 150 ;       // cut on MTb
+  const int MTbCut = 0 ;       // cut on MTb
 
   double minLeadJetPt = 70. ;
   double min3rdJetPt = 50. ;
@@ -200,7 +200,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   //-- met4-ht4-v15
   const int nBinsMET   = 4 ;
   const int nBinsHT    = 4 ;
-  const int nBinsBjets = 2 ;
+  const int nBinsBjets = 3 ;
   const int version = 15;
   float Mbins[nBinsMET+1] = {125.,150.,250.,350.,99999.};
   float Hbins[nBinsHT+1] = {400.,500.,800.,1000.,99999.};
