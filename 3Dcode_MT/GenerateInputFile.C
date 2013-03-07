@@ -208,7 +208,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
   TString sMbins[nBinsMET];
   TString sHbins[nBinsHT];
-  TString sBbins[3] = {"_1b","_2b","_3b"};
+  TString sBbins[4] = {"_1b","_2b","_3b","_4b"};
 
   TString cMbins[nBinsMET];
   TString cHbins[nBinsHT];
@@ -282,22 +282,35 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   inFile << endl ;
 
 
-  bool useBtagSF = false ;
+  bool useBtagSF = true ;
   char bcut[nBinsBjets][100] ;
   char bcutSF[nBinsBjets][100] ;
 
   sprintf(bcut[0],"nB==1");
   sprintf(bcutSF[0],"prob1");
-  sprintf(bcutSF[1],"prob2");
+
+  // this will have to be modified once we get the probge4 in the tiny trees
 
   if ( nBinsBjets == 2 ) {
     sprintf(bcut[1],"nB>=2");
+    sprintf(bcutSF[1],"prob2+probge3");
   }
   if ( nBinsBjets == 3 ) {
     sprintf(bcut[1],"nB==2");
     sprintf(bcut[2],"nB>=3");
+    sprintf(bcutSF[1],"prob2");
     sprintf(bcutSF[2],"probge3");
   }
+  if ( nBinsBjets == 4 ) {
+    sprintf(bcut[1],"nB==2");
+    sprintf(bcut[2],"nB==3");
+    sprintf(bcut[3],"nB>=4");
+    sprintf(bcutSF[1],"prob2");
+    sprintf(bcutSF[2],"prob3");
+    sprintf(bcutSF[3],"probge4");
+  }
+
+
 
   char commoncuts[10000] ;
   sprintf( commoncuts, "maxChNMultDiff<40&&pfOcaloMET<2.0&&nJets>=%d&&MT_bestCSV>%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)",
@@ -1038,6 +1051,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
       inFile << "knn_3b_err       \t" << 0.001<< endl;
     }
 
+    if ( nBinsBjets > 3 ) {
+      inFile << "knn_4b           \t" << 0.0002<< endl;
+      inFile << "knn_4b_err       \t" << 0.0001<< endl;
+    }
+
     // Z -> ll purity
   
     inFile << "Z_ee_pur  \t" << 0.80 << endl;
@@ -1269,6 +1287,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     inFile << "SFqcd_met4_err   0.48" << endl ;
     inFile << "SFqcd_nb3        0.79" << endl ;
     inFile << "SFqcd_nb3_err    0.18" << endl ;
+
+    inFile << "SFqcd_nb4        1.00" << endl ;     // these are dummy values for now!!!
+    inFile << "SFqcd_nb4_err    0.10" << endl ;
 
 
 

@@ -52,6 +52,11 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
     cBbins[1] = "nB==2" ;    
     cBbins[2] = "nB>=3" ;
   }
+  else if ( nBinsBjets == 4 ) {
+    cBbins[1] = "nB==2" ;    
+    cBbins[2] = "nB==3" ;
+    cBbins[3] = "nB>=4" ;
+  }
   else {
     cout << "\n\n This number of #b-jets bins is not implemented! Exiting ... " << endl ;
     return ;

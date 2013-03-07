@@ -214,7 +214,7 @@
 
 
 
-
+      
       double dummy ;
       if ( isT1bbbb ) dummy = t1bbbbXsec ;
 
@@ -277,8 +277,10 @@
       float knn_1b_err[nBinsMET] ;
       float knn_2b ;
       float knn_2b_err ;
-      float knn_3b ;
-      float knn_3b_err ;
+      float knn_3b(-999.) ;
+      float knn_3b_err(-999.) ;
+      float knn_4b(-999.) ;
+      float knn_4b_err(-999.) ;
 
       float pur_Zee;
       float pur_Zee_err;
@@ -627,6 +629,10 @@
       if ( nBinsBtag > 2 ) {
 	fscanf( infp, "%s %g", label, &knn_3b ) ; cout << "knn_3b" << " = " << knn_3b << endl ;
 	fscanf( infp, "%s %g", label, &knn_3b_err ) ; cout << "knn_3b_err" << " = " << knn_3b_err << endl ;
+	if ( nBinsBtag > 3 ) {
+	  fscanf( infp, "%s %g", label, &knn_4b ) ; cout << "knn_4b" << " = " << knn_4b << endl ;
+	  fscanf( infp, "%s %g", label, &knn_4b_err ) ; cout << "knn_4b_err" << " = " << knn_4b_err << endl ;
+	}
       }
 
       // Z -> ll purities
@@ -907,6 +913,8 @@
       float input_SFqcd_met4_err(0.) ;
       float input_SFqcd_nb3(0.) ;
       float input_SFqcd_nb3_err(0.) ;
+      float input_SFqcd_nb4(0.) ;
+      float input_SFqcd_nb4_err(0.) ;
 
 
       sprintf( target_label, "SFqcd_met3" ) ;
@@ -933,6 +941,14 @@
       fscanf( infp, "%s %g", label, &input_SFqcd_nb3_err ) ;
       if ( strcmp( label, target_label ) != 0 ) { printf("\n\n *** expecting %s, found %s\n\n", target_label, label ) ; return false ; }
 
+      sprintf( target_label, "SFqcd_nb4" ) ;
+      fscanf( infp, "%s %g", label, &input_SFqcd_nb4 ) ;
+      if ( strcmp( label, target_label ) != 0 ) { printf("\n\n *** expecting %s, found %s\n\n", target_label, label ) ; return false ; }
+
+      sprintf( target_label, "SFqcd_nb4_err" ) ;
+      fscanf( infp, "%s %g", label, &input_SFqcd_nb4_err ) ;
+      if ( strcmp( label, target_label ) != 0 ) { printf("\n\n *** expecting %s, found %s\n\n", target_label, label ) ; return false ; }
+
 
 
 
@@ -941,8 +957,8 @@
       
       for (int i = 0 ; i < nBinsMET ; i++) {
         for (int j = 0 ; j < nBinsHT ; j++) {
-          for (int k = 0 ; k < 3 ; k++) {
-
+          for (int k = 0 ; k < 3 ; k++) {         // note that in thins case nBinsBtag is hardcoded
+	                                          // to be revisited if we decide to use these fractions
             if ( k == 0 ) {
               sl_fracNb_val[i][j][k] = 1. ;
               sl_fracNb_err[i][j][k] = 0.00001 ;
@@ -1042,8 +1058,12 @@
 	      initialval_znn_ee[i][j][k] = (N_Zee[i][j]) * ( 5.95 * pur_Zee * knn_3b ) / ( acc_Zee[i] * eff_Zee ) ;
 	      initialval_znn_mm[i][j][k] = (N_Zmm[i][j]) * ( 5.95 * pur_Zmm * knn_3b ) / ( acc_Zmm[i] * eff_Zmm ) ;
 	    }
+	    else if ( k == 3 ) { 
+	      initialval_znn_ee[i][j][k] = (N_Zee[i][j]) * ( 5.95 * pur_Zee * knn_4b ) / ( acc_Zee[i] * eff_Zee ) ;
+	      initialval_znn_mm[i][j][k] = (N_Zmm[i][j]) * ( 5.95 * pur_Zmm * knn_4b ) / ( acc_Zmm[i] * eff_Zmm ) ;
+	    }
 	    else {
-	      cout << "\n\n It looks like you are using more than 3 b-jet bins, you need to adjust the Z -> inv stuff! \n" << endl ;
+	      cout << "\n\n It looks like you are using more than 4 b-jet bins, you need to adjust the Z -> inv stuff! \n" << endl ;
 	    }
 
 
@@ -1841,6 +1861,7 @@
       RooAbsReal* rar_knn_1b[nBinsMET] ;
       RooAbsReal* rar_knn_2b ;
       RooAbsReal* rar_knn_3b ;
+      RooAbsReal* rar_knn_4b ;
 
       for (int i = 0 ; i < nBinsMET ; i++) {
 
@@ -1866,6 +1887,15 @@
 	  rar_knn_3b = makeLognormalConstraint( NP_name, knn_3b, knn_3b_err ) ;
 	} else {
 	  rar_knn_3b = makeGaussianConstraint( NP_name, knn_3b, knn_3b_err ) ;
+	}
+      }
+
+      if ( nBinsBtag > 3 ) {
+	sprintf( NP_name, "knn_4b" ) ;
+	if ( useLognormal ) {
+	  rar_knn_4b = makeLognormalConstraint( NP_name, knn_4b, knn_4b_err ) ;
+	} else {
+	  rar_knn_4b = makeGaussianConstraint( NP_name, knn_4b, knn_4b_err ) ;
 	}
       }
 
@@ -2005,11 +2035,13 @@
          if ( useLognormal ) {
             rv_SFqcd_met[2] = makeLognormalConstraint( "SFqcd_met3", input_SFqcd_met3, input_SFqcd_met3_err ) ;
             rv_SFqcd_met[3] = makeLognormalConstraint( "SFqcd_met4", input_SFqcd_met4, input_SFqcd_met4_err ) ;
-            if ( nBinsBtag == 3 ) rv_SFqcd_nb[2]  = makeLognormalConstraint( "SFqcd_nb3",  input_SFqcd_nb3 , input_SFqcd_nb3_err  ) ;
+            if ( nBinsBtag > 2 ) rv_SFqcd_nb[2]  = makeLognormalConstraint( "SFqcd_nb3",  input_SFqcd_nb3 , input_SFqcd_nb3_err  ) ;
+            if ( nBinsBtag > 3 ) rv_SFqcd_nb[3]  = makeLognormalConstraint( "SFqcd_nb4",  input_SFqcd_nb4 , input_SFqcd_nb4_err  ) ;
          } else {
             rv_SFqcd_met[2] = makeGaussianConstraint(  "SFqcd_met3", input_SFqcd_met3, input_SFqcd_met3_err ) ;
             rv_SFqcd_met[3] = makeGaussianConstraint(  "SFqcd_met4", input_SFqcd_met4, input_SFqcd_met4_err ) ;
-            if ( nBinsBtag == 3 ) rv_SFqcd_nb[2]  = makeGaussianConstraint(  "SFqcd_nb3",  input_SFqcd_nb3 , input_SFqcd_nb3_err  ) ;
+            if ( nBinsBtag > 2 ) rv_SFqcd_nb[2]  = makeGaussianConstraint(  "SFqcd_nb3",  input_SFqcd_nb3 , input_SFqcd_nb3_err  ) ;
+            if ( nBinsBtag > 3 ) rv_SFqcd_nb[3]  = makeGaussianConstraint(  "SFqcd_nb4",  input_SFqcd_nb4 , input_SFqcd_nb4_err  ) ;
          }
       }
       printf("\n\n") ;
@@ -2487,8 +2519,16 @@
 						      RooArgSet( *rv_mu_znn[i][j][0], *rar_knn_3b, *rar_knn_1b[i] ) ) ;
 	      
 	    }
+	    else if ( k == 3 ) {
+	      
+	      TString rfvZnnString = "@0 * ( @1 / @2 )" ;
+
+	      rv_mu_znn[i][j][k] = new RooFormulaVar( muZnnString, rfvZnnString,
+						      RooArgSet( *rv_mu_znn[i][j][0], *rar_knn_4b, *rar_knn_1b[i] ) ) ;
+	      
+	    }
 	    else {
-	      cout << "\n\n It looks like you are using more than 3 b-jet bins, you need to adjust the Z -> inv stuff! \n" << endl ;
+	      cout << "\n\n It looks like you are using more than 4 b-jet bins, you need to adjust the Z -> inv stuff! \n" << endl ;
 	    }
       
 
