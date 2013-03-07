@@ -626,14 +626,14 @@ void setFormatting(TH1F* hh, const TString & ytitle="", const int ndiv=-1) ;
 
 
 
-      TFile f("rootfiles/gi-plots-met4-ht4-v15-mcclosure-ttwj3.root","recreate");
-      hscalefactor_ttwj_0over1ratio_1b->Write();
-      hscalefactor_ttwj_0over1ratio_1b_whalfcorr->Write();
-      hscalefactor_ttwj_0over1ratio_2b->Write();
-      hscalefactor_ttwj_0over1ratio_2b_whalfcorr->Write();
-      hscalefactor_ttwj_0over1ratio_3b->Write();
-      hscalefactor_ttwj_0over1ratio_3b_whalfcorr->Write();
-      f.Write();
+//      TFile f("rootfiles/gi-plots-met4-ht4-v15-mcclosure-ttwj3.root","recreate");
+//      hscalefactor_ttwj_0over1ratio_1b->Write();
+//      hscalefactor_ttwj_0over1ratio_1b_whalfcorr->Write();
+//      hscalefactor_ttwj_0over1ratio_2b->Write();
+//      hscalefactor_ttwj_0over1ratio_2b_whalfcorr->Write();
+//      hscalefactor_ttwj_0over1ratio_3b->Write();
+//      hscalefactor_ttwj_0over1ratio_3b_whalfcorr->Write();
+//      f.Write();
 
 
 
@@ -2601,6 +2601,7 @@ void loadHist(const char* filename, const char* pfx, const char* pat, Bool_t doA
 	 }
          xaxis -> SetBinLabel( bi, label ) ;
       } // bi
+      xaxis->SetLabelSize(0.06);
 
    } // resetBinLabels
 
