@@ -1029,7 +1029,7 @@ void setupSignalModelOAK( vector<TString> binNames, TString signalModelFilesPath
 			  map<TString,yields> &signalJesErrorOAK, map<TString,yields> &signalPdfErrorOAK)
 {
   
-  TString signalModel = "T1tttt"; //Options are: T1bbbb, T1tttt
+  TString signalModel = "T1bbbb"; //Options are: T1bbbb, T1tttt
   cout << endl;
   cout << "NOTE: USING CODE HARDCODED FOR " << signalModel << endl;
   cout << endl;
