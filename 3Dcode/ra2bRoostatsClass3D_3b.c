@@ -113,7 +113,8 @@
 					     const char* systFile1,
                                              const char* pdf_syst_file,
                                              const char* wjets_xsec_shapesyst_file,
-                                             const char* singletop_xsec_shapesyst_file
+                                             const char* singletop_xsec_shapesyst_file,
+					     const char* isr_shapesyst_file
 					     ) {
 
 
@@ -1977,6 +1978,16 @@
       //-----------------------------------------------------------------------------------------------------------
 
 
+      //--- Mar08, 2013: New ISR shape systematics
+
+      if ( useLognormal ) {
+         sss_return_status = setupShapeSyst( isr_shapesyst_file, "isr_syst", 2, -1, -1, workspace ) ; // 2 = log-normal
+      } else {
+         sss_return_status = setupShapeSyst( isr_shapesyst_file, "isr_syst", 1, -1, -1, workspace ) ; // 1 = Gaussian
+      }
+      if ( !sss_return_status ) { return false ; }
+
+      //-----------------------------------------------------------------------------------------------------------
 
 
       RooAbsReal* rar_vv_sf(0x0) ;
