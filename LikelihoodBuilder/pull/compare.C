@@ -3,10 +3,13 @@
 
 #include "TFile.h"
 #include "TString.h"
+#include "TH1D.h"
+#include "TCanvas.h"
 #include "TPRegexp.h"
 #include "TObject.h"
 #include "TObjArray.h"
 #include "TObjString.h"
+#include "TStyle.h"
 
 #include "RooWorkspace.h"
 #include "RooRealVar.h"
@@ -17,6 +20,7 @@
 #include "RooAbsPdf.h"
 #include "RooStats/ModelConfig.h"
 #include "RooDataSet.h"
+#include "RooFitResult.h"
 
 using namespace std;
 
@@ -1351,6 +1355,185 @@ void setSame()
   fOAK.Close();
   fLB.Close();
 }
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Compare Zero Lepton Yields
+
+
+void getValueAndError(RooWorkspace* ws, RooFitResult* fitResult, TString varName, double &value, double &error)
+{
+
+  RooAbsReal* var = ws->function(varName);
+  assert(var);
+  
+  value = var->getVal();
+  error = var->getPropagatedError(*fitResult);
+
+  //cout << varName << " " << value << " +- " << error << endl;
+
+}
+
+
+
+void compareZL() 
+{
+  gStyle->SetOptStat(0);
+
+  //likelihood models
+  TString model1 = "LB"; //options are "OAK" and "LB"
+  TString wsname1 = "workspace";
+  TString f1path = "pull/ws1.root";
+  TString fitresultname1 = "fitresult_likelihood_data";
+
+  TString model2 = "LB"; //options are "OAK" and "LB"
+  TString wsname2 = "workspace";
+  TString f2path = "pull/ws2.root";
+  TString fitresultname2 = "fitresult_likelihood_data";
+
+  //Open workspaces
+  TFile f1(f1path, "READ");
+  RooWorkspace* ws1 = (RooWorkspace*)f1.Get(wsname1);
+  RooFitResult *fitResult1 = (RooFitResult*)f1.Get(fitresultname1);
+
+  TFile f2(f2path, "READ");
+  RooWorkspace *ws2 = (RooWorkspace*)f2.Get(wsname2);
+  RooFitResult *fitResult2 = (RooFitResult*)f2.Get(fitresultname2);
+  
+  vector<TString> names;
+  names.push_back("TopWJets");
+  
+  names.push_back("Diboson");
+  names.push_back("ZtoNuNu");
+  names.push_back("QCD");
+  names.push_back("Signal");
+  for(vector<TString>::iterator it = names.begin(); it != names.end(); ++it)
+    {
+      TString componentName = *it;
+      cout << componentName << endl;
+      
+      TH1D h1("h1", componentName+" offset yield = yield - <yield>", 48, 0.5, 48.5);
+      TH1D h2("h2", componentName+" offset yield = yield - <yield>", 48, 0.5, 48.5);
+
+      TH1D hpercentdiff("hpercentdiff", componentName+" percent difference = 100*(y1-y2)/<y>", 48, 0.5, 48.5);
+      TH1D hsignificance("hsignificance", componentName+" difference significance = (y1-y2)/sqrt(e1^2+e2^2)", 48, 0.5, 48.5);
+
+      int binNum = 0;
+      for(int m = 1; m<=4; m++)
+	{
+	  for(int h = 1; h<=4; h++)
+	    {
+	      for(int b = 1; b<=3; b++)
+		{
+		  binNum++;
+		  TString binCheck = "bin"; binCheck += binNum;
+		  if(m==4 && h==1) continue;
+
+		  TString bin = "M"; bin+=m; bin+="_H"; bin+=h; bin+="_"; bin+=b; bin+="b";
+		  TString binLB = binTranslate(bin);
+		  assert(binLB == binCheck);//sanity check
+		  
+		  TString varName = "zeroLepton_";
+		  varName += binLB;
+		  varName += "_";
+		  varName += componentName;
+		  varName += "Yield";
+		  //cout << varName << endl;
+	       
+		  double value1, error1;
+		  getValueAndError(ws1, fitResult1, varName, value1, error1);
+
+		  double value2, error2;
+		  getValueAndError(ws2, fitResult2, varName, value2, error2);
+
+		  //cout << value1 << " " << error1 << " " << value2 << " " << error2 << endl;
+
+		  double averageValue = (value1+value2)/2.0;
+
+		  h1.SetBinContent(binNum, value1-averageValue);
+		  h1.SetBinError(binNum, error1);
+		  h2.SetBinContent(binNum, value2-averageValue);
+		  h2.SetBinError(binNum, error2);
+		  
+		  if( (value1!=0) && (value2!=0) ) hpercentdiff.SetBinContent(binNum, 100.0*(value1-value2)/((value1+value2)/2.0) );
+		  if( (error1!=0) && (error2!=0) ) hsignificance.SetBinContent(binNum, (value1-value2)/(sqrt(error1*error1+error2*error2)) );
+
+		  h1.GetXaxis()->SetBinLabel(binNum, bin);
+		  h2.GetXaxis()->SetBinLabel(binNum, bin);
+		  hpercentdiff.GetXaxis()->SetBinLabel(binNum, bin);
+		  hsignificance.GetXaxis()->SetBinLabel(binNum, bin);
+
+		}//b
+	    }//h
+	}//m
+
+
+      h1.SetLineColor(kRed);
+      h2.SetLineColor(kBlue);
+
+      h1.SetMarkerColor(kRed);
+      h2.SetMarkerColor(kBlue);
+      
+      h1.SetMarkerStyle(20);
+      h2.SetMarkerStyle(20);
+      hpercentdiff.SetMarkerStyle(20);
+      hsignificance.SetMarkerStyle(20);
+
+      h1.SetMarkerSize(1);
+      h2.SetMarkerSize(1);
+      hpercentdiff.SetMarkerSize(1);
+      hsignificance.SetMarkerSize(1);
+
+      //h1.SetMinimum(-5);
+      //h1.SetMaximum(5);
+
+      h1.GetXaxis()->LabelsOption("v");
+      h2.GetXaxis()->LabelsOption("v");
+      hpercentdiff.GetXaxis()->LabelsOption("v");
+      hsignificance.GetXaxis()->LabelsOption("v");
+
+      TCanvas c("c", "c", 800, 400);
+      c.cd();
+      h1.Draw("E1 P");
+      h2.Draw("SAME E1 P");
+      gPad->SetBottomMargin(0.15);
+      c.Print("plots/"+componentName+"_yields.pdf");
+
+      TCanvas cpercentdiff("cpercentdiff", "cpercentdiff", 800, 400);
+      cpercentdiff.cd();
+      hpercentdiff.Draw("E1 P");
+      gPad->SetBottomMargin(0.15);
+      cpercentdiff.Print("plots/"+componentName+"_percentdiff.pdf");
+
+      TCanvas csignificance("csignificance", "csignificance", 800, 400);
+      csignificance.cd();
+      hsignificance.Draw("E1 P");
+      gPad->SetBottomMargin(0.15);
+      csignificance.Print("plots/"+componentName+"_significance.pdf");
+
+    }//vector of names
+  
+
+  f1.Close();
+  f2.Close();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 void compare()
