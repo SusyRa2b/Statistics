@@ -730,9 +730,22 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
     if(ABCD) hSL_ttwj[bBin-1]->SetBinContent( binIndex, (ws->function( "oneLepton_"+binName+"_TopWJetsDataYield" ))->getVal() );
     hLDP_ttwj[bBin-1]->SetBinContent( binIndex, (ws->function( "zeroLeptonLowDeltaPhiN_"+binName+"_TopWJetsDataYield" ))->getVal() );
     
-    //MR - ttwj
+    //MR 
     if(!ABCD)
       {
+	hLL1_vv[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta1_DibosonDYDataYield" ))->getVal());
+	hLL2_vv[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta2_DibosonDYDataYield" ))->getVal());
+	hLL3_vv[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta3_DibosonDYDataYield" ))->getVal());
+	hLL4_vv[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta4_DibosonDYDataYield" ))->getVal());
+	hLL5_vv[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta5_DibosonDYDataYield" ))->getVal());
+	hTM1_vv[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta1_DibosonDYDataYield" ))->getVal());
+	hTM2_vv[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta2_DibosonDYDataYield" ))->getVal());
+	hTM3_vv[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta3_DibosonDYDataYield" ))->getVal());
+	hTM4_vv[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta4_DibosonDYDataYield" ))->getVal());
+	hTM5_vv[bBin-1]->SetBinContent(binIndex,(ws->function( "oneTightMu_"+binName+"_Theta5_DibosonDYDataYield" ))->getVal());
+	h2LL_vv[bBin-1]->SetBinContent(binIndex,(ws->function( "twoLooseLep_"+binName+"_DibosonDYDataYield" ))->getVal());
+	h2TM_vv[bBin-1]->SetBinContent(binIndex,(ws->function( "twoTightMu_"+binName+"_DibosonDYDataYield" ))->getVal());
+
 	hLL1_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta1_TopWJetsDataYield" ))->getVal());
 	hLL2_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta2_TopWJetsDataYield" ))->getVal());
 	hLL3_ttwj[bBin-1]->SetBinContent(binIndex,(ws->function( "oneLooseLep_"+binName+"_Theta3_TopWJetsDataYield" ))->getVal());
