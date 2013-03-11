@@ -1,3 +1,8 @@
+#include "TROOT.h"
+
+#include "TText.h"
+#include "TLatex.h"
+
 #include "TH1F.h"
 #include "TH2F.h"
 #include "TFile.h"
@@ -13,6 +18,8 @@
 
 #include "updateFileValue.c"
 #include "getFileValue.c"
+
+#include "defineCmsStyle.c"
 
 #include <iostream>
 #include <fstream>
@@ -38,6 +45,10 @@
 
    int ncomps(5) ;
    char compname[5][100] = { "ttbar", "wjets", "qcd", "znn", "vv" } ;
+
+   bool usePublicStyle_=true;
+   void setFormatting(TH1F* hh, const TString & ytitle="", const int ndiv=-1) ;
+
 
   //-----------
 
@@ -97,6 +108,30 @@
                     bool applyTriggerEfficiencyToNobs = false
                     ) {
 
+ 
+     TLatex* cmssim=new TLatex(5,23.08044,"CMS Simulation, #sqrt{s} = 8 TeV");//i think the numbers here mean nothing
+     TLatex* nblabel = new TLatex();
+     float nblabel_x = 0.23;
+     float nblabel_y = 0.84;
+     if (usePublicStyle_) {
+       initCmsStyle();
+       gROOT->SetStyle("CMS");
+       gROOT->ForceStyle();
+       cmssim->SetNDC();
+       cmssim->SetTextAlign(13);
+       cmssim->SetX(0.23); //0.5
+       cmssim->SetY(0.95); //0.94
+       cmssim->SetTextFont(42);
+       cmssim->SetTextSize(0.06);
+
+       nblabel->SetTextSize(0.06);
+       nblabel->SetTextFont(62);
+       nblabel->SetNDC();
+     }
+
+     if ( useAverageTtwjClosure ) printf("I like green eggs and ham.\n") ; //-- to make the compiler not give a warning.
+
+
       if ( qcdModelIndex < 2 || qcdModelIndex > 4 ) {
          printf("\n\n *** Unsupported qcdModelIndex (%d).  Try 2, 3, or 4.\n\n", qcdModelIndex ) ;
       }
@@ -110,13 +145,12 @@
       gSystem->Exec("mkdir -p outputfiles") ;
 
       gStyle->SetOptStat(0) ;
-      gStyle->SetPadTopMargin(0.03) ;
-      gStyle->SetPadBottomMargin(0.30) ;
+      gStyle->SetPadTopMargin(usePublicStyle_ ? 0.1 : 0.03) ;
+      gStyle->SetPadBottomMargin(usePublicStyle_ ? 0.2 : 0.30) ;
       gStyle->SetPadRightMargin(0.05) ;
-      gStyle->SetPadLeftMargin(0.15) ;
+      gStyle->SetPadLeftMargin(usePublicStyle_ ? 0.2 : 0.15) ;
       gStyle->SetTitleX(0.98) ;
       gStyle->SetTitleAlign(33) ;
-
 
       gStyle->SetPadGridY(1) ;
 
@@ -129,60 +163,258 @@
 
       loadHist( infile ) ;
 
-      TH1F* hmctruth_ttwj_0lep_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_0lep_1b") ;
+
+      // declare here histograms
+
+      TH1F* hmctruth_ttwj_0lep_1b ;
+      TH1F* hmctruth_ttwj_1lep_1b ;
+      TH1F* hmctruth_ttwj_1lepSig_1b ;
+      TH1F* hmctruth_ttwj_0over1ratio_1b ;
+      TH1F* hmctruth_ttwj_1lSover1ratio_1b ;
+
+      TH1F* hmctruth_ttwj_0lep_2b ;
+      TH1F* hmctruth_ttwj_1lep_2b ;
+      TH1F* hmctruth_ttwj_1lepSig_2b ;
+      TH1F* hmctruth_ttwj_0over1ratio_2b ;
+      TH1F* hmctruth_ttwj_1lSover1ratio_2b ;
+
+      TH1F* hmctruth_ttwj_0lep_3b ;
+      TH1F* hmctruth_ttwj_1lep_3b ;
+      TH1F* hmctruth_ttwj_1lepSig_3b ;
+      TH1F* hmctruth_ttwj_0over1ratio_3b ;
+      TH1F* hmctruth_ttwj_1lSover1ratio_3b ;
+
+      TH1F* hmctruth_ttwj_0lep_4b ;
+      TH1F* hmctruth_ttwj_1lep_4b ;
+      TH1F* hmctruth_ttwj_1lepSig_4b ;
+      TH1F* hmctruth_ttwj_0over1ratio_4b ;
+      TH1F* hmctruth_ttwj_1lSover1ratio_4b ;
+
+
+      TH1F* hmctruth_ttwjpowheg_0lep_1b ;
+      TH1F* hmctruth_ttwjpowheg_1lep_1b ;
+      TH1F* hmctruth_ttwjpowheg_1lepSig_1b ;
+      TH1F* hmctruth_ttwjpowheg_0over1ratio_1b ;
+      TH1F* hmctruth_ttwjpowheg_1lSover1ratio_1b ;
+
+      TH1F* hmctruth_ttwjpowheg_0lep_2b ;
+      TH1F* hmctruth_ttwjpowheg_1lep_2b ;
+      TH1F* hmctruth_ttwjpowheg_1lepSig_2b ;
+      TH1F* hmctruth_ttwjpowheg_0over1ratio_2b ;
+      TH1F* hmctruth_ttwjpowheg_1lSover1ratio_2b ;
+
+      TH1F* hmctruth_ttwjpowheg_0lep_3b ;
+      TH1F* hmctruth_ttwjpowheg_1lep_3b ;
+      TH1F* hmctruth_ttwjpowheg_1lepSig_3b ;
+      TH1F* hmctruth_ttwjpowheg_0over1ratio_3b ;
+      TH1F* hmctruth_ttwjpowheg_1lSover1ratio_3b ;
+
+      TH1F* hmctruth_ttwjpowheg_0lep_4b ;
+      TH1F* hmctruth_ttwjpowheg_1lep_4b ;
+      TH1F* hmctruth_ttwjpowheg_1lepSig_4b ;
+      TH1F* hmctruth_ttwjpowheg_0over1ratio_4b ;
+      TH1F* hmctruth_ttwjpowheg_1lSover1ratio_4b ;
+
+
+      TH1F* hmctruth_ttwjmcanlo_0lep_1b ;
+      TH1F* hmctruth_ttwjmcanlo_1lep_1b ;
+      TH1F* hmctruth_ttwjmcanlo_1lepSig_1b ;
+      TH1F* hmctruth_ttwjmcanlo_0over1ratio_1b ;
+      TH1F* hmctruth_ttwjmcanlo_1lSover1ratio_1b ;
+
+      TH1F* hmctruth_ttwjmcanlo_0lep_2b ;
+      TH1F* hmctruth_ttwjmcanlo_1lep_2b ;
+      TH1F* hmctruth_ttwjmcanlo_1lepSig_2b ;
+      TH1F* hmctruth_ttwjmcanlo_0over1ratio_2b ;
+      TH1F* hmctruth_ttwjmcanlo_1lSover1ratio_2b ;
+
+      TH1F* hmctruth_ttwjmcanlo_0lep_3b ;
+      TH1F* hmctruth_ttwjmcanlo_1lep_3b ;
+      TH1F* hmctruth_ttwjmcanlo_1lepSig_3b ;
+      TH1F* hmctruth_ttwjmcanlo_0over1ratio_3b ;
+      TH1F* hmctruth_ttwjmcanlo_1lSover1ratio_3b ;
+
+      TH1F* hmctruth_ttwjmcanlo_0lep_4b ;
+      TH1F* hmctruth_ttwjmcanlo_1lep_4b ;
+      TH1F* hmctruth_ttwjmcanlo_1lepSig_4b ;
+      TH1F* hmctruth_ttwjmcanlo_0over1ratio_4b ;
+      TH1F* hmctruth_ttwjmcanlo_1lSover1ratio_4b ;
+
+
+      hmctruth_ttwj_0lep_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_0lep_1b") ;
       if ( hmctruth_ttwj_0lep_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_0lep_1b.\n\n") ; return ; }
-      TH1F* hmctruth_ttwj_1lep_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_1lep_1b") ;
+      hmctruth_ttwj_1lep_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_1lep_1b") ;
       if ( hmctruth_ttwj_1lep_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_1lep_1b.\n\n") ; return ; }
-      TH1F* hmctruth_ttwj_1lepSig_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_1lepSig_1b") ;
+      hmctruth_ttwj_1lepSig_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_1lepSig_1b") ;
       if ( hmctruth_ttwj_1lepSig_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_1lepSig_1b.\n\n") ; return ; }
 
-      TH1F* hmctruth_ttwj_0over1ratio_1b = (TH1F*) hmctruth_ttwj_0lep_1b->Clone("hmctruth_ttwj_0over1ratio_1b") ;
+      hmctruth_ttwj_0over1ratio_1b = (TH1F*) hmctruth_ttwj_0lep_1b->Clone("hmctruth_ttwj_0over1ratio_1b") ;
       hmctruth_ttwj_0over1ratio_1b->Divide( hmctruth_ttwj_1lep_1b ) ;
-      TH1F* hmctruth_ttwj_1lSover1ratio_1b = (TH1F*) hmctruth_ttwj_1lepSig_1b->Clone("hmctruth_ttwj_1lSover1ratio_1b") ;
+      hmctruth_ttwj_1lSover1ratio_1b = (TH1F*) hmctruth_ttwj_1lepSig_1b->Clone("hmctruth_ttwj_1lSover1ratio_1b") ;
       hmctruth_ttwj_1lSover1ratio_1b->Divide( hmctruth_ttwj_1lep_1b ) ;
 
+      hmctruth_ttwjpowheg_0lep_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_0lep_1b") ;
+      if ( hmctruth_ttwjpowheg_0lep_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_0lep_1b.\n\n") ; return ; }
+      hmctruth_ttwjpowheg_1lep_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_1lep_1b") ;
+      if ( hmctruth_ttwjpowheg_1lep_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_1lep_1b.\n\n") ; return ; }
+      hmctruth_ttwjpowheg_1lepSig_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_1lepSig_1b") ;
+      if ( hmctruth_ttwjpowheg_1lepSig_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_1lepSig_1b.\n\n") ; return ; }
 
-      TH1F* hmctruth_ttwj_0lep_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_0lep_2b") ;
+      hmctruth_ttwjpowheg_0over1ratio_1b = (TH1F*) hmctruth_ttwjpowheg_0lep_1b->Clone("hmctruth_ttwjpowheg_0over1ratio_1b") ;
+      hmctruth_ttwjpowheg_0over1ratio_1b->Divide( hmctruth_ttwjpowheg_1lep_1b ) ;
+      hmctruth_ttwjpowheg_1lSover1ratio_1b = (TH1F*) hmctruth_ttwjpowheg_1lepSig_1b->Clone("hmctruth_ttwjpowheg_1lSover1ratio_1b") ;
+      hmctruth_ttwjpowheg_1lSover1ratio_1b->Divide( hmctruth_ttwjpowheg_1lep_1b ) ;
+
+      hmctruth_ttwjmcanlo_0lep_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_0lep_1b") ;
+      if ( hmctruth_ttwjmcanlo_0lep_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_0lep_1b.\n\n") ; return ; }
+      hmctruth_ttwjmcanlo_1lep_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_1lep_1b") ;
+      if ( hmctruth_ttwjmcanlo_1lep_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_1lep_1b.\n\n") ; return ; }
+      hmctruth_ttwjmcanlo_1lepSig_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_1lepSig_1b") ;
+      if ( hmctruth_ttwjmcanlo_1lepSig_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_1lepSig_1b.\n\n") ; return ; }
+
+      hmctruth_ttwjmcanlo_0over1ratio_1b = (TH1F*) hmctruth_ttwjmcanlo_0lep_1b->Clone("hmctruth_ttwjmcanlo_0over1ratio_1b") ;
+      hmctruth_ttwjmcanlo_0over1ratio_1b->Divide( hmctruth_ttwjmcanlo_1lep_1b ) ;
+      hmctruth_ttwjmcanlo_1lSover1ratio_1b = (TH1F*) hmctruth_ttwjmcanlo_1lepSig_1b->Clone("hmctruth_ttwjmcanlo_1lSover1ratio_1b") ;
+      hmctruth_ttwjmcanlo_1lSover1ratio_1b->Divide( hmctruth_ttwjmcanlo_1lep_1b ) ;
+
+
+      hmctruth_ttwj_0lep_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_0lep_2b") ;
       if ( hmctruth_ttwj_0lep_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_0lep_2b.\n\n") ; return ; }
-      TH1F* hmctruth_ttwj_1lep_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_1lep_2b") ;
+      hmctruth_ttwj_1lep_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_1lep_2b") ;
       if ( hmctruth_ttwj_1lep_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_1lep_2b.\n\n") ; return ; }
-      TH1F* hmctruth_ttwj_1lepSig_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_1lepSig_2b") ;
+      hmctruth_ttwj_1lepSig_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_1lepSig_2b") ;
       if ( hmctruth_ttwj_1lepSig_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_1lepSig_2b.\n\n") ; return ; }
 
-      TH1F* hmctruth_ttwj_0over1ratio_2b = (TH1F*) hmctruth_ttwj_0lep_2b->Clone("hmctruth_ttwj_0over1ratio_2b") ;
+      hmctruth_ttwj_0over1ratio_2b = (TH1F*) hmctruth_ttwj_0lep_2b->Clone("hmctruth_ttwj_0over1ratio_2b") ;
       hmctruth_ttwj_0over1ratio_2b->Divide( hmctruth_ttwj_1lep_2b ) ;
-      TH1F* hmctruth_ttwj_1lSover1ratio_2b = (TH1F*) hmctruth_ttwj_1lepSig_2b->Clone("hmctruth_ttwj_1lSover1ratio_2b") ;
+      hmctruth_ttwj_1lSover1ratio_2b = (TH1F*) hmctruth_ttwj_1lepSig_2b->Clone("hmctruth_ttwj_1lSover1ratio_2b") ;
       hmctruth_ttwj_1lSover1ratio_2b->Divide( hmctruth_ttwj_1lep_2b ) ;
 
-      TH1F* hmctruth_ttwj_0lep_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_0lep_3b") ;
-      if ( hmctruth_ttwj_0lep_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_0lep_3b.\n\n") ; return ; }
-      TH1F* hmctruth_ttwj_1lep_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_1lep_3b") ;
-      if ( hmctruth_ttwj_1lep_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_1lep_3b.\n\n") ; return ; }
-      TH1F* hmctruth_ttwj_1lepSig_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_1lepSig_3b") ;
-      if ( hmctruth_ttwj_1lepSig_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_1lepSig_3b.\n\n") ; return ; }
-      
-      TH1F* hmctruth_ttwj_0over1ratio_3b = (TH1F*) hmctruth_ttwj_0lep_3b->Clone("hmctruth_ttwj_0over1ratio_3b") ;
-      hmctruth_ttwj_0over1ratio_3b->Divide( hmctruth_ttwj_1lep_3b ) ;
-      TH1F* hmctruth_ttwj_1lSover1ratio_3b = (TH1F*) hmctruth_ttwj_1lepSig_3b->Clone("hmctruth_ttwj_1lSover1ratio_3b") ;
-      hmctruth_ttwj_1lSover1ratio_3b->Divide( hmctruth_ttwj_1lep_3b ) ;
-      
+      hmctruth_ttwjpowheg_0lep_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_0lep_2b") ;
+      if ( hmctruth_ttwjpowheg_0lep_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_0lep_2b.\n\n") ; return ; }
+      hmctruth_ttwjpowheg_1lep_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_1lep_2b") ;
+      if ( hmctruth_ttwjpowheg_1lep_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_1lep_2b.\n\n") ; return ; }
+      hmctruth_ttwjpowheg_1lepSig_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_1lepSig_2b") ;
+      if ( hmctruth_ttwjpowheg_1lepSig_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_1lepSig_2b.\n\n") ; return ; }
+
+      hmctruth_ttwjpowheg_0over1ratio_2b = (TH1F*) hmctruth_ttwjpowheg_0lep_2b->Clone("hmctruth_ttwjpowheg_0over1ratio_2b") ;
+      hmctruth_ttwjpowheg_0over1ratio_2b->Divide( hmctruth_ttwjpowheg_1lep_2b ) ;
+      hmctruth_ttwjpowheg_1lSover1ratio_2b = (TH1F*) hmctruth_ttwjpowheg_1lepSig_2b->Clone("hmctruth_ttwjpowheg_1lSover1ratio_2b") ;
+      hmctruth_ttwjpowheg_1lSover1ratio_2b->Divide( hmctruth_ttwjpowheg_1lep_2b ) ;
+
+      hmctruth_ttwjmcanlo_0lep_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_0lep_2b") ;
+      if ( hmctruth_ttwjmcanlo_0lep_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_0lep_2b.\n\n") ; return ; }
+      hmctruth_ttwjmcanlo_1lep_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_1lep_2b") ;
+      if ( hmctruth_ttwjmcanlo_1lep_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_1lep_2b.\n\n") ; return ; }
+      hmctruth_ttwjmcanlo_1lepSig_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_1lepSig_2b") ;
+      if ( hmctruth_ttwjmcanlo_1lepSig_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_1lepSig_2b.\n\n") ; return ; }
+
+      hmctruth_ttwjmcanlo_0over1ratio_2b = (TH1F*) hmctruth_ttwjmcanlo_0lep_2b->Clone("hmctruth_ttwjmcanlo_0over1ratio_2b") ;
+      hmctruth_ttwjmcanlo_0over1ratio_2b->Divide( hmctruth_ttwjmcanlo_1lep_2b ) ;
+      hmctruth_ttwjmcanlo_1lSover1ratio_2b = (TH1F*) hmctruth_ttwjmcanlo_1lepSig_2b->Clone("hmctruth_ttwjmcanlo_1lSover1ratio_2b") ;
+      hmctruth_ttwjmcanlo_1lSover1ratio_2b->Divide( hmctruth_ttwjmcanlo_1lep_2b ) ;
+
+
+      if ( nBinsBjets > 2 ) {
+
+	hmctruth_ttwj_0lep_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_0lep_3b") ;
+	if ( hmctruth_ttwj_0lep_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_0lep_3b.\n\n") ; return ; }
+	hmctruth_ttwj_1lep_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_1lep_3b") ;
+	if ( hmctruth_ttwj_1lep_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_1lep_3b.\n\n") ; return ; }
+	hmctruth_ttwj_1lepSig_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_1lepSig_3b") ;
+	if ( hmctruth_ttwj_1lepSig_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_1lepSig_3b.\n\n") ; return ; }
+	
+	hmctruth_ttwj_0over1ratio_3b = (TH1F*) hmctruth_ttwj_0lep_3b->Clone("hmctruth_ttwj_0over1ratio_3b") ;
+	hmctruth_ttwj_0over1ratio_3b->Divide( hmctruth_ttwj_1lep_3b ) ;
+	hmctruth_ttwj_1lSover1ratio_3b = (TH1F*) hmctruth_ttwj_1lepSig_3b->Clone("hmctruth_ttwj_1lSover1ratio_3b") ;
+	hmctruth_ttwj_1lSover1ratio_3b->Divide( hmctruth_ttwj_1lep_3b ) ;
+
+	hmctruth_ttwjpowheg_0lep_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_0lep_3b") ;
+	if ( hmctruth_ttwjpowheg_0lep_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_0lep_3b.\n\n") ; return ; }
+	hmctruth_ttwjpowheg_1lep_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_1lep_3b") ;
+	if ( hmctruth_ttwjpowheg_1lep_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_1lep_3b.\n\n") ; return ; }
+	hmctruth_ttwjpowheg_1lepSig_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_1lepSig_3b") ;
+	if ( hmctruth_ttwjpowheg_1lepSig_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_1lepSig_3b.\n\n") ; return ; }
+	
+	hmctruth_ttwjpowheg_0over1ratio_3b = (TH1F*) hmctruth_ttwjpowheg_0lep_3b->Clone("hmctruth_ttwjpowheg_0over1ratio_3b") ;
+	hmctruth_ttwjpowheg_0over1ratio_3b->Divide( hmctruth_ttwjpowheg_1lep_3b ) ;
+	hmctruth_ttwjpowheg_1lSover1ratio_3b = (TH1F*) hmctruth_ttwjpowheg_1lepSig_3b->Clone("hmctruth_ttwjpowheg_1lSover1ratio_3b") ;
+	hmctruth_ttwjpowheg_1lSover1ratio_3b->Divide( hmctruth_ttwjpowheg_1lep_3b ) ;
+
+	hmctruth_ttwjmcanlo_0lep_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_0lep_3b") ;
+	if ( hmctruth_ttwjmcanlo_0lep_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_0lep_3b.\n\n") ; return ; }
+	hmctruth_ttwjmcanlo_1lep_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_1lep_3b") ;
+	if ( hmctruth_ttwjmcanlo_1lep_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_1lep_3b.\n\n") ; return ; }
+	hmctruth_ttwjmcanlo_1lepSig_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_1lepSig_3b") ;
+	if ( hmctruth_ttwjmcanlo_1lepSig_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_1lepSig_3b.\n\n") ; return ; }
+	
+	hmctruth_ttwjmcanlo_0over1ratio_3b = (TH1F*) hmctruth_ttwjmcanlo_0lep_3b->Clone("hmctruth_ttwjmcanlo_0over1ratio_3b") ;
+	hmctruth_ttwjmcanlo_0over1ratio_3b->Divide( hmctruth_ttwjmcanlo_1lep_3b ) ;
+	hmctruth_ttwjmcanlo_1lSover1ratio_3b = (TH1F*) hmctruth_ttwjmcanlo_1lepSig_3b->Clone("hmctruth_ttwjmcanlo_1lSover1ratio_3b") ;
+	hmctruth_ttwjmcanlo_1lSover1ratio_3b->Divide( hmctruth_ttwjmcanlo_1lep_3b ) ;
+	
+	if ( nBinsBjets > 3 ) {
+
+	  hmctruth_ttwj_0lep_4b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_0lep_4b") ;
+	  if ( hmctruth_ttwj_0lep_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_0lep_4b.\n\n") ; return ; }
+	  hmctruth_ttwj_1lep_4b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_1lep_4b") ;
+	  if ( hmctruth_ttwj_1lep_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_1lep_4b.\n\n") ; return ; }
+	  hmctruth_ttwj_1lepSig_4b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_1lepSig_4b") ;
+	  if ( hmctruth_ttwj_1lepSig_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_1lepSig_4b.\n\n") ; return ; }
+	  
+	  hmctruth_ttwj_0over1ratio_4b = (TH1F*) hmctruth_ttwj_0lep_4b->Clone("hmctruth_ttwj_0over1ratio_4b") ;
+	  hmctruth_ttwj_0over1ratio_4b->Divide( hmctruth_ttwj_1lep_4b ) ;
+	  hmctruth_ttwj_1lSover1ratio_4b = (TH1F*) hmctruth_ttwj_1lepSig_4b->Clone("hmctruth_ttwj_1lSover1ratio_4b") ;
+	  hmctruth_ttwj_1lSover1ratio_4b->Divide( hmctruth_ttwj_1lep_4b ) ;
+
+	  hmctruth_ttwjpowheg_0lep_4b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_0lep_4b") ;
+	  if ( hmctruth_ttwjpowheg_0lep_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_0lep_4b.\n\n") ; return ; }
+	  hmctruth_ttwjpowheg_1lep_4b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_1lep_4b") ;
+	  if ( hmctruth_ttwjpowheg_1lep_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_1lep_4b.\n\n") ; return ; }
+	  hmctruth_ttwjpowheg_1lepSig_4b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_1lepSig_4b") ;
+	  if ( hmctruth_ttwjpowheg_1lepSig_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_1lepSig_4b.\n\n") ; return ; }
+	  
+	  hmctruth_ttwjpowheg_0over1ratio_4b = (TH1F*) hmctruth_ttwjpowheg_0lep_4b->Clone("hmctruth_ttwjpowheg_0over1ratio_4b") ;
+	  hmctruth_ttwjpowheg_0over1ratio_4b->Divide( hmctruth_ttwjpowheg_1lep_4b ) ;
+	  hmctruth_ttwjpowheg_1lSover1ratio_4b = (TH1F*) hmctruth_ttwjpowheg_1lepSig_4b->Clone("hmctruth_ttwjpowheg_1lSover1ratio_4b") ;
+	  hmctruth_ttwjpowheg_1lSover1ratio_4b->Divide( hmctruth_ttwjpowheg_1lep_4b ) ;
+
+	  hmctruth_ttwjmcanlo_0lep_4b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_0lep_4b") ;
+	  if ( hmctruth_ttwjmcanlo_0lep_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_0lep_4b.\n\n") ; return ; }
+	  hmctruth_ttwjmcanlo_1lep_4b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_1lep_4b") ;
+	  if ( hmctruth_ttwjmcanlo_1lep_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_1lep_4b.\n\n") ; return ; }
+	  hmctruth_ttwjmcanlo_1lepSig_4b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_1lepSig_4b") ;
+	  if ( hmctruth_ttwjmcanlo_1lepSig_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_1lepSig_4b.\n\n") ; return ; }
+	  
+	  hmctruth_ttwjmcanlo_0over1ratio_4b = (TH1F*) hmctruth_ttwjmcanlo_0lep_4b->Clone("hmctruth_ttwjmcanlo_0over1ratio_4b") ;
+	  hmctruth_ttwjmcanlo_0over1ratio_4b->Divide( hmctruth_ttwjmcanlo_1lep_4b ) ;
+	  hmctruth_ttwjmcanlo_1lSover1ratio_4b = (TH1F*) hmctruth_ttwjmcanlo_1lepSig_4b->Clone("hmctruth_ttwjmcanlo_1lSover1ratio_4b") ;
+	  hmctruth_ttwjmcanlo_1lSover1ratio_4b->Divide( hmctruth_ttwjmcanlo_1lep_4b ) ;
+	
+	}
+
+      }
 
 
       hmctruth_ttwj_0over1ratio_1b->SetLineColor(2) ;
       hmctruth_ttwj_0over1ratio_2b->SetLineColor(6) ;
       hmctruth_ttwj_0over1ratio_3b->SetLineColor(4) ;
+      hmctruth_ttwj_0over1ratio_4b->SetLineColor(8) ;
 
       hmctruth_ttwj_0over1ratio_1b->SetMarkerStyle(20) ;
       hmctruth_ttwj_0over1ratio_2b->SetMarkerStyle(25) ;
       hmctruth_ttwj_0over1ratio_3b->SetMarkerStyle(30) ;
+      hmctruth_ttwj_0over1ratio_4b->SetMarkerStyle(22) ;
 
       hmctruth_ttwj_1lSover1ratio_1b->SetLineColor(2) ;
       hmctruth_ttwj_1lSover1ratio_2b->SetLineColor(6) ;
       hmctruth_ttwj_1lSover1ratio_3b->SetLineColor(4) ;
+      hmctruth_ttwj_1lSover1ratio_4b->SetLineColor(8) ;
 
       hmctruth_ttwj_1lSover1ratio_1b->SetMarkerStyle(20) ;
       hmctruth_ttwj_1lSover1ratio_2b->SetMarkerStyle(25) ;
       hmctruth_ttwj_1lSover1ratio_3b->SetMarkerStyle(30) ;
+      hmctruth_ttwj_1lSover1ratio_4b->SetMarkerStyle(22) ;
 
 
       char binlabel[1000] ;
@@ -203,56 +435,250 @@
       double sumw20lep(0.) ;
       double sumw21lep(0.) ;
       double sumw21lepSig(0.) ;
+      double total0lep_powheg(0.) ;
+      double total1lep_powheg(0.) ;
+      double total1lepSig_powheg(0.) ;
+      double total0lep_mcanlo(0.) ;
+      double total1lep_mcanlo(0.) ;
+      double total1lepSig_mcanlo(0.) ;
+
+      //-- also compute averages for (>)=2b, (>)=3b, and >=4b only.
+      double total0lep_2b(0.) ;
+      double total0lep_3b(0.) ;
+      double total0lep_4b(0.) ;
+      double total1lep_2b(0.) ;
+      double total1lep_3b(0.) ;
+      double total1lep_4b(0.) ;
+      double total1lepSig_2b(0.) ;
+      double total1lepSig_3b(0.) ;
+      double total1lepSig_4b(0.) ;
+
+      double sumw20lep_2b(0.) ;
+      double sumw20lep_3b(0.) ;
+      double sumw20lep_4b(0.) ;
+      double sumw21lep_2b(0.) ;
+      double sumw21lep_3b(0.) ;
+      double sumw21lep_4b(0.) ;
+      double sumw21lepSig_2b(0.) ;
+      double sumw21lepSig_3b(0.) ;
+      double sumw21lepSig_4b(0.) ;
+
 
       for ( int bi=1; bi<=nBins; bi++ ) {
 
-         total0lep += hmctruth_ttwj_0lep_1b->GetBinContent( bi ) ;
-         total0lep += hmctruth_ttwj_0lep_2b->GetBinContent( bi ) ;
-         total0lep += hmctruth_ttwj_0lep_3b->GetBinContent( bi ) ;
+         total0lep    += hmctruth_ttwj_0lep_1b->GetBinContent( bi ) ;
+         total0lep    += hmctruth_ttwj_0lep_2b->GetBinContent( bi ) ;
+	 total0lep_2b += hmctruth_ttwj_0lep_2b->GetBinContent( bi ) ;
+         if ( nBinsBjets > 2 ) {
+	   total0lep    += hmctruth_ttwj_0lep_3b->GetBinContent( bi ) ;
+	   total0lep_3b += hmctruth_ttwj_0lep_3b->GetBinContent( bi ) ;
+	   if ( nBinsBjets > 3 ) {
+	     total0lep    += hmctruth_ttwj_0lep_4b->GetBinContent( bi ) ;
+	     total0lep_4b += hmctruth_ttwj_0lep_4b->GetBinContent( bi ) ;
+	   }
+	 }
 
-         total1lep += hmctruth_ttwj_1lep_1b->GetBinContent( bi ) ;
-         total1lep += hmctruth_ttwj_1lep_2b->GetBinContent( bi ) ;
-         total1lep += hmctruth_ttwj_1lep_3b->GetBinContent( bi ) ;
 
-         total1lepSig += hmctruth_ttwj_1lepSig_1b->GetBinContent( bi ) ;
-         total1lepSig += hmctruth_ttwj_1lepSig_2b->GetBinContent( bi ) ;
-         total1lepSig += hmctruth_ttwj_1lepSig_3b->GetBinContent( bi ) ;
+         total1lep    += hmctruth_ttwj_1lep_1b->GetBinContent( bi ) ;
+         total1lep    += hmctruth_ttwj_1lep_2b->GetBinContent( bi ) ;
+         total1lep_2b += hmctruth_ttwj_1lep_2b->GetBinContent( bi ) ;
+         if ( nBinsBjets > 2 ) {
+	   total1lep    += hmctruth_ttwj_1lep_3b->GetBinContent( bi ) ;
+	   total1lep_3b += hmctruth_ttwj_1lep_3b->GetBinContent( bi ) ;
+	   if ( nBinsBjets > 3 ) {
+	     total1lep    += hmctruth_ttwj_1lep_4b->GetBinContent( bi ) ;
+	     total1lep_4b += hmctruth_ttwj_1lep_4b->GetBinContent( bi ) ;
+	   }
+	 }
 
-         sumw20lep += pow( hmctruth_ttwj_0lep_1b->GetBinError( bi ), 2 ) ;
-         sumw20lep += pow( hmctruth_ttwj_0lep_2b->GetBinError( bi ), 2 ) ;
-         sumw20lep += pow( hmctruth_ttwj_0lep_3b->GetBinError( bi ), 2 ) ;
 
-         sumw21lep += pow( hmctruth_ttwj_1lep_1b->GetBinError( bi ), 2 ) ;
-         sumw21lep += pow( hmctruth_ttwj_1lep_2b->GetBinError( bi ), 2 ) ;
-         sumw21lep += pow( hmctruth_ttwj_1lep_3b->GetBinError( bi ), 2 ) ;
+         total1lepSig    += hmctruth_ttwj_1lepSig_1b->GetBinContent( bi ) ;
+         total1lepSig    += hmctruth_ttwj_1lepSig_2b->GetBinContent( bi ) ;
+         total1lepSig_2b += hmctruth_ttwj_1lepSig_2b->GetBinContent( bi ) ;
+         if ( nBinsBjets > 2 ) {
+	   total1lepSig    += hmctruth_ttwj_1lepSig_3b->GetBinContent( bi ) ;
+	   total1lepSig_3b += hmctruth_ttwj_1lepSig_3b->GetBinContent( bi ) ;
+	   if ( nBinsBjets > 3 ) {
+	     total1lepSig    += hmctruth_ttwj_1lepSig_4b->GetBinContent( bi ) ;
+	     total1lepSig_4b += hmctruth_ttwj_1lepSig_4b->GetBinContent( bi ) ;
+	   }
+	 }
 
-         sumw21lepSig += pow( hmctruth_ttwj_1lepSig_1b->GetBinError( bi ), 2 ) ;
-         sumw21lepSig += pow( hmctruth_ttwj_1lepSig_2b->GetBinError( bi ), 2 ) ;
-         sumw21lepSig += pow( hmctruth_ttwj_1lepSig_3b->GetBinError( bi ), 2 ) ;
+
+         sumw20lep    += pow( hmctruth_ttwj_0lep_1b->GetBinError( bi ), 2 ) ;
+         sumw20lep    += pow( hmctruth_ttwj_0lep_2b->GetBinError( bi ), 2 ) ;
+         sumw20lep_2b += pow( hmctruth_ttwj_0lep_2b->GetBinError( bi ), 2 ) ;
+         if ( nBinsBjets > 2 ) {
+	   sumw20lep    += pow( hmctruth_ttwj_0lep_3b->GetBinError( bi ), 2 ) ;
+	   sumw20lep_3b += pow( hmctruth_ttwj_0lep_3b->GetBinError( bi ), 2 ) ;
+	   if ( nBinsBjets > 3 ) {
+	     sumw20lep    += pow( hmctruth_ttwj_0lep_4b->GetBinError( bi ), 2 ) ;
+	     sumw20lep_4b += pow( hmctruth_ttwj_0lep_4b->GetBinError( bi ), 2 ) ;
+	   }
+	 }
+
+
+         sumw21lep    += pow( hmctruth_ttwj_1lep_1b->GetBinError( bi ), 2 ) ;
+         sumw21lep    += pow( hmctruth_ttwj_1lep_2b->GetBinError( bi ), 2 ) ;
+         sumw21lep_2b += pow( hmctruth_ttwj_1lep_2b->GetBinError( bi ), 2 ) ;
+         if ( nBinsBjets > 2 ) {
+	   sumw21lep    += pow( hmctruth_ttwj_1lep_3b->GetBinError( bi ), 2 ) ;
+	   sumw21lep_3b += pow( hmctruth_ttwj_1lep_3b->GetBinError( bi ), 2 ) ;
+	   if ( nBinsBjets > 3 ) { 
+	     sumw21lep    += pow( hmctruth_ttwj_1lep_4b->GetBinError( bi ), 2 ) ;
+	     sumw21lep_4b += pow( hmctruth_ttwj_1lep_4b->GetBinError( bi ), 2 ) ;
+	   }
+	 }
+
+
+         sumw21lepSig    += pow( hmctruth_ttwj_1lepSig_1b->GetBinError( bi ), 2 ) ;
+         sumw21lepSig    += pow( hmctruth_ttwj_1lepSig_2b->GetBinError( bi ), 2 ) ;
+         sumw21lepSig_2b += pow( hmctruth_ttwj_1lepSig_2b->GetBinError( bi ), 2 ) ;
+         if ( nBinsBjets > 2 ) {
+	   sumw21lepSig    += pow( hmctruth_ttwj_1lepSig_3b->GetBinError( bi ), 2 ) ;
+	   sumw21lepSig_3b += pow( hmctruth_ttwj_1lepSig_3b->GetBinError( bi ), 2 ) ;
+	   if ( nBinsBjets > 3 ) { 
+	     sumw21lepSig    += pow( hmctruth_ttwj_1lepSig_4b->GetBinError( bi ), 2 ) ;
+	     sumw21lepSig_4b += pow( hmctruth_ttwj_1lepSig_4b->GetBinError( bi ), 2 ) ;
+	   }
+	 }
+
+
+	 // also add up powheg and mc@nlo results
+
+         total0lep_powheg += hmctruth_ttwjpowheg_0lep_1b->GetBinContent( bi ) ;
+         total0lep_mcanlo += hmctruth_ttwjmcanlo_0lep_1b->GetBinContent( bi ) ;
+         total0lep_powheg += hmctruth_ttwjpowheg_0lep_2b->GetBinContent( bi ) ;
+         total0lep_mcanlo += hmctruth_ttwjmcanlo_0lep_2b->GetBinContent( bi ) ;
+	 if ( nBinsBjets > 2 ) {
+	   total0lep_powheg += hmctruth_ttwjpowheg_0lep_3b->GetBinContent( bi ) ;
+	   total0lep_mcanlo += hmctruth_ttwjmcanlo_0lep_3b->GetBinContent( bi ) ;
+	   if ( nBinsBjets > 3 ) {
+	     total0lep_powheg += hmctruth_ttwjpowheg_0lep_4b->GetBinContent( bi ) ;
+	     total0lep_mcanlo += hmctruth_ttwjmcanlo_0lep_4b->GetBinContent( bi ) ;
+	   }
+	 }
+
+         total1lep_powheg += hmctruth_ttwjpowheg_1lep_1b->GetBinContent( bi ) ;
+         total1lep_mcanlo += hmctruth_ttwjmcanlo_1lep_1b->GetBinContent( bi ) ;
+         total1lep_powheg += hmctruth_ttwjpowheg_1lep_2b->GetBinContent( bi ) ;
+         total1lep_mcanlo += hmctruth_ttwjmcanlo_1lep_2b->GetBinContent( bi ) ;
+	 if ( nBinsBjets > 2 ) {
+	   total1lep_powheg += hmctruth_ttwjpowheg_1lep_3b->GetBinContent( bi ) ;
+	   total1lep_mcanlo += hmctruth_ttwjmcanlo_1lep_3b->GetBinContent( bi ) ;
+	   if ( nBinsBjets > 3 ) {
+	     total1lep_powheg += hmctruth_ttwjpowheg_1lep_4b->GetBinContent( bi ) ;
+	     total1lep_mcanlo += hmctruth_ttwjmcanlo_1lep_4b->GetBinContent( bi ) ;
+	   }
+	 }
+
+         total1lepSig_powheg += hmctruth_ttwjpowheg_1lepSig_1b->GetBinContent( bi ) ;
+         total1lepSig_mcanlo += hmctruth_ttwjmcanlo_1lepSig_1b->GetBinContent( bi ) ;
+         total1lepSig_powheg += hmctruth_ttwjpowheg_1lepSig_2b->GetBinContent( bi ) ;
+         total1lepSig_mcanlo += hmctruth_ttwjmcanlo_1lepSig_2b->GetBinContent( bi ) ;
+	 if ( nBinsBjets > 2 ) {
+	   total1lepSig_powheg += hmctruth_ttwjpowheg_1lepSig_3b->GetBinContent( bi ) ;
+	   total1lepSig_mcanlo += hmctruth_ttwjmcanlo_1lepSig_3b->GetBinContent( bi ) ;
+	   if ( nBinsBjets > 3 ) {
+	     total1lepSig_powheg += hmctruth_ttwjpowheg_1lepSig_4b->GetBinContent( bi ) ;
+	     total1lepSig_mcanlo += hmctruth_ttwjmcanlo_1lepSig_4b->GetBinContent( bi ) ;
+	   }
+	 }
+
 
       } // bi.
 
-      double simpleAveR_0over1 = total0lep / total1lep ;
-      double simpleAveR_0over1_err = simpleAveR_0over1 * sqrt( sumw20lep/(total0lep*total0lep) + sumw21lep/(total1lep*total1lep)  ) ;
+      double simpleAveR_0over1 ;
+      double simpleAveR_0over1_err ;
+      double simpleAveR_0over1_2b ;
+      double simpleAveR_0over1_2b_err ;
+      double simpleAveR_0over1_3b ;
+      double simpleAveR_0over1_3b_err ;
+      double simpleAveR_0over1_4b ;
+      double simpleAveR_0over1_4b_err ;
+      double simpleAveR_0over1_powheg ;
+      double simpleAveR_0over1_mcanlo ;
 
-      printf("\n\n Simple average 0lep/1lep = %5.3f +/- %5.3f\n\n", simpleAveR_0over1, simpleAveR_0over1_err ) ;
+
+      simpleAveR_0over1 = total0lep / total1lep ;
+      simpleAveR_0over1_err = simpleAveR_0over1 * sqrt( sumw20lep/(total0lep*total0lep) + sumw21lep/(total1lep*total1lep)  ) ;
+
+      simpleAveR_0over1_2b = total0lep_2b / total1lep_2b ;
+      simpleAveR_0over1_2b_err = simpleAveR_0over1_2b * sqrt( sumw20lep_2b/(total0lep_2b*total0lep_2b) + sumw21lep_2b/(total1lep_2b*total1lep_2b)  ) ;
+
+      if ( nBinsBjets > 2 ) {
+	simpleAveR_0over1_3b = total0lep_3b / total1lep_3b ;
+	simpleAveR_0over1_3b_err = simpleAveR_0over1_3b * sqrt( sumw20lep_3b/(total0lep_3b*total0lep_3b) + sumw21lep_3b/(total1lep_3b*total1lep_3b)  ) ;
+	if ( nBinsBjets > 3 ) {
+	  simpleAveR_0over1_4b = total0lep_4b / total1lep_4b ;
+	  simpleAveR_0over1_4b_err = simpleAveR_0over1_4b * sqrt( sumw20lep_4b/(total0lep_4b*total0lep_4b) + sumw21lep_4b/(total1lep_4b*total1lep_4b)  ) ;
+	}
+      }
+
+      simpleAveR_0over1_powheg = total0lep_powheg / total1lep_powheg ;
+      simpleAveR_0over1_mcanlo = total0lep_mcanlo / total1lep_mcanlo ;
+
+      printf("\n\n") ;
+      printf(" Simple average 0lep/1lep,  all      = %5.3f +/- %5.3f\n", simpleAveR_0over1, simpleAveR_0over1_err ) ;
+      printf(" Simple average 0lep/1lep,  2b only = %5.3f +/- %5.3f\n", simpleAveR_0over1_2b, simpleAveR_0over1_2b_err ) ;
+      if ( nBinsBjets > 2 ) printf(" Simple average 0lep/1lep,  3b only = %5.3f +/- %5.3f\n", simpleAveR_0over1_3b, simpleAveR_0over1_3b_err ) ;
+      if ( nBinsBjets > 3 ) printf(" Simple average 0lep/1lep,  4b only = %5.3f +/- %5.3f\n", simpleAveR_0over1_4b, simpleAveR_0over1_4b_err ) ;
+      printf("\n\n") ;
+      
 
 
       TH1F* hscalefactor_ttwj_0over1ratio_1b = (TH1F*) hmctruth_ttwj_0over1ratio_1b->Clone("hscalefactor_ttwj_0lep_1b") ;
       TH1F* hscalefactor_ttwj_0over1ratio_2b = (TH1F*) hmctruth_ttwj_0over1ratio_2b->Clone("hscalefactor_ttwj_0lep_2b") ;
       TH1F* hscalefactor_ttwj_0over1ratio_3b = (TH1F*) hmctruth_ttwj_0over1ratio_3b->Clone("hscalefactor_ttwj_0lep_3b") ;
+      TH1F* hscalefactor_ttwj_0over1ratio_4b = (TH1F*) hmctruth_ttwj_0over1ratio_4b->Clone("hscalefactor_ttwj_0lep_4b") ;
 
       hscalefactor_ttwj_0over1ratio_1b->Scale(1./simpleAveR_0over1) ;
       hscalefactor_ttwj_0over1ratio_2b->Scale(1./simpleAveR_0over1) ;
-      hscalefactor_ttwj_0over1ratio_3b->Scale(1./simpleAveR_0over1) ;
+      if ( nBinsBjets > 2 ) hscalefactor_ttwj_0over1ratio_3b->Scale(1./simpleAveR_0over1) ;
+      if ( nBinsBjets > 3 ) hscalefactor_ttwj_0over1ratio_4b->Scale(1./simpleAveR_0over1) ;
+
+
+      // also get scaled versions powheg and mc@nlo
+
+      TH1F* hscalefactor_ttwjpowheg_0over1ratio_1b ;
+      TH1F* hscalefactor_ttwjpowheg_0over1ratio_2b ;
+      TH1F* hscalefactor_ttwjpowheg_0over1ratio_3b ;
+      TH1F* hscalefactor_ttwjpowheg_0over1ratio_4b ;
+      TH1F* hscalefactor_ttwjmcanlo_0over1ratio_1b ;
+      TH1F* hscalefactor_ttwjmcanlo_0over1ratio_2b ;
+      TH1F* hscalefactor_ttwjmcanlo_0over1ratio_3b ;
+      TH1F* hscalefactor_ttwjmcanlo_0over1ratio_4b ;
+
+      hscalefactor_ttwjpowheg_0over1ratio_1b = (TH1F*) hmctruth_ttwjpowheg_0over1ratio_1b->Clone("hscalefactor_ttwjpowheg_0lep_1b") ;
+      hscalefactor_ttwjpowheg_0over1ratio_2b = (TH1F*) hmctruth_ttwjpowheg_0over1ratio_2b->Clone("hscalefactor_ttwjpowheg_0lep_2b") ;
+      if ( nBinsBjets > 2 ) hscalefactor_ttwjpowheg_0over1ratio_3b = (TH1F*) hmctruth_ttwjpowheg_0over1ratio_3b->Clone("hscalefactor_ttwjpowheg_0lep_3b") ;
+      if ( nBinsBjets > 3 ) hscalefactor_ttwjpowheg_0over1ratio_4b = (TH1F*) hmctruth_ttwjpowheg_0over1ratio_4b->Clone("hscalefactor_ttwjpowheg_0lep_4b") ;
+      hscalefactor_ttwjmcanlo_0over1ratio_1b = (TH1F*) hmctruth_ttwjmcanlo_0over1ratio_1b->Clone("hscalefactor_ttwjmcanlo_0lep_1b") ;
+      hscalefactor_ttwjmcanlo_0over1ratio_2b = (TH1F*) hmctruth_ttwjmcanlo_0over1ratio_2b->Clone("hscalefactor_ttwjmcanlo_0lep_2b") ;
+      if ( nBinsBjets > 2 ) hscalefactor_ttwjmcanlo_0over1ratio_3b = (TH1F*) hmctruth_ttwjmcanlo_0over1ratio_3b->Clone("hscalefactor_ttwjmcanlo_0lep_3b") ;
+      if ( nBinsBjets > 3 ) hscalefactor_ttwjmcanlo_0over1ratio_4b = (TH1F*) hmctruth_ttwjmcanlo_0over1ratio_4b->Clone("hscalefactor_ttwjmcanlo_0lep_4b") ;
+
+      hscalefactor_ttwjpowheg_0over1ratio_1b->Scale(1./simpleAveR_0over1_powheg) ;
+      hscalefactor_ttwjpowheg_0over1ratio_2b->Scale(1./simpleAveR_0over1_powheg) ;
+      if ( nBinsBjets > 2 ) hscalefactor_ttwjpowheg_0over1ratio_3b->Scale((1./simpleAveR_0over1_powheg)) ;
+      if ( nBinsBjets > 3 ) hscalefactor_ttwjpowheg_0over1ratio_4b->Scale((1./simpleAveR_0over1_powheg)) ;
+      hscalefactor_ttwjmcanlo_0over1ratio_1b->Scale(1./simpleAveR_0over1_mcanlo) ;
+      hscalefactor_ttwjmcanlo_0over1ratio_2b->Scale(1./simpleAveR_0over1_mcanlo) ;
+      if ( nBinsBjets > 2 ) hscalefactor_ttwjmcanlo_0over1ratio_3b->Scale((1./simpleAveR_0over1_mcanlo)) ;
+      if ( nBinsBjets > 3 ) hscalefactor_ttwjmcanlo_0over1ratio_4b->Scale((1./simpleAveR_0over1_mcanlo)) ;
+
 
       TH1F* hscalefactor_ttwj_0over1ratio_1b_whalfcorr = (TH1F*) hscalefactor_ttwj_0over1ratio_1b->Clone("hscalefactor_ttwj_0over1ratio_1b_whalfcorr") ;
       TH1F* hscalefactor_ttwj_0over1ratio_2b_whalfcorr = (TH1F*) hscalefactor_ttwj_0over1ratio_2b->Clone("hscalefactor_ttwj_0over1ratio_2b_whalfcorr") ;
       TH1F* hscalefactor_ttwj_0over1ratio_3b_whalfcorr = (TH1F*) hscalefactor_ttwj_0over1ratio_3b->Clone("hscalefactor_ttwj_0over1ratio_3b_whalfcorr") ;
+      TH1F* hscalefactor_ttwj_0over1ratio_4b_whalfcorr = (TH1F*) hscalefactor_ttwj_0over1ratio_4b->Clone("hscalefactor_ttwj_0over1ratio_4b_whalfcorr") ;
 
 
       double simpleAveR_1lSover1 = total1lepSig / total1lep ;
       double simpleAveR_1lSover1_err = simpleAveR_1lSover1 * sqrt( sumw21lepSig/(total1lepSig*total1lepSig) + sumw21lep/(total1lep*total1lep)  ) ;
+
+      double simpleAveR_1lSover1_powheg = total1lepSig_powheg / total1lep_powheg ;
+      double simpleAveR_1lSover1_mcanlo = total1lepSig_mcanlo / total1lep_mcanlo ;
 
       printf("\n\n Simple average 1lepSig/1lep = %5.3f +/- %5.3f\n\n", simpleAveR_1lSover1, simpleAveR_1lSover1_err ) ;
 
@@ -260,44 +686,125 @@
       TH1F* hscalefactor_ttwj_1lSover1ratio_1b = (TH1F*) hmctruth_ttwj_1lSover1ratio_1b->Clone("hscalefactor_ttwj_1lepSig_1b") ;
       TH1F* hscalefactor_ttwj_1lSover1ratio_2b = (TH1F*) hmctruth_ttwj_1lSover1ratio_2b->Clone("hscalefactor_ttwj_1lepSig_2b") ;
       TH1F* hscalefactor_ttwj_1lSover1ratio_3b = (TH1F*) hmctruth_ttwj_1lSover1ratio_3b->Clone("hscalefactor_ttwj_1lepSig_3b") ;
+      TH1F* hscalefactor_ttwj_1lSover1ratio_4b = (TH1F*) hmctruth_ttwj_1lSover1ratio_4b->Clone("hscalefactor_ttwj_1lepSig_4b") ;
 
       hscalefactor_ttwj_1lSover1ratio_1b->Scale(1./simpleAveR_1lSover1) ;
       hscalefactor_ttwj_1lSover1ratio_2b->Scale(1./simpleAveR_1lSover1) ;
-      hscalefactor_ttwj_1lSover1ratio_3b->Scale(1./simpleAveR_1lSover1) ;
+      if ( nBinsBjets > 2 ) hscalefactor_ttwj_1lSover1ratio_3b->Scale(1./simpleAveR_1lSover1) ;
+      if ( nBinsBjets > 3 ) hscalefactor_ttwj_1lSover1ratio_4b->Scale(1./simpleAveR_1lSover1) ;
+
+
+      // also get scaled versions powheg and mc@nlo
+
+      TH1F* hscalefactor_ttwjpowheg_1lSover1ratio_1b ;
+      TH1F* hscalefactor_ttwjpowheg_1lSover1ratio_2b ;
+      TH1F* hscalefactor_ttwjpowheg_1lSover1ratio_3b ;
+      TH1F* hscalefactor_ttwjpowheg_1lSover1ratio_4b ;
+      TH1F* hscalefactor_ttwjmcanlo_1lSover1ratio_1b ;
+      TH1F* hscalefactor_ttwjmcanlo_1lSover1ratio_2b ;
+      TH1F* hscalefactor_ttwjmcanlo_1lSover1ratio_3b ;
+      TH1F* hscalefactor_ttwjmcanlo_1lSover1ratio_4b ;
+
+      hscalefactor_ttwjpowheg_1lSover1ratio_1b = (TH1F*) hmctruth_ttwjpowheg_1lSover1ratio_1b->Clone("hscalefactor_ttwjpowheg_0lep_1b") ;
+      hscalefactor_ttwjpowheg_1lSover1ratio_2b = (TH1F*) hmctruth_ttwjpowheg_1lSover1ratio_2b->Clone("hscalefactor_ttwjpowheg_0lep_2b") ;
+      if ( nBinsBjets > 2 ) hscalefactor_ttwjpowheg_1lSover1ratio_3b = (TH1F*) hmctruth_ttwjpowheg_1lSover1ratio_3b->Clone("hscalefactor_ttwjpowheg_0lep_3b") ;
+      if ( nBinsBjets > 3 ) hscalefactor_ttwjpowheg_1lSover1ratio_4b = (TH1F*) hmctruth_ttwjpowheg_1lSover1ratio_4b->Clone("hscalefactor_ttwjpowheg_0lep_4b") ;
+      hscalefactor_ttwjmcanlo_1lSover1ratio_1b = (TH1F*) hmctruth_ttwjmcanlo_1lSover1ratio_1b->Clone("hscalefactor_ttwjmcanlo_0lep_1b") ;
+      hscalefactor_ttwjmcanlo_1lSover1ratio_2b = (TH1F*) hmctruth_ttwjmcanlo_1lSover1ratio_2b->Clone("hscalefactor_ttwjmcanlo_0lep_2b") ;
+      if ( nBinsBjets > 2 ) hscalefactor_ttwjmcanlo_1lSover1ratio_3b = (TH1F*) hmctruth_ttwjmcanlo_1lSover1ratio_3b->Clone("hscalefactor_ttwjmcanlo_0lep_3b") ;
+      if ( nBinsBjets > 3 ) hscalefactor_ttwjmcanlo_1lSover1ratio_4b = (TH1F*) hmctruth_ttwjmcanlo_1lSover1ratio_4b->Clone("hscalefactor_ttwjmcanlo_0lep_4b") ;
+
+      hscalefactor_ttwjpowheg_1lSover1ratio_1b->Scale(1./simpleAveR_1lSover1_powheg) ;
+      hscalefactor_ttwjpowheg_1lSover1ratio_2b->Scale(1./simpleAveR_1lSover1_powheg) ;
+      if ( nBinsBjets > 2 ) hscalefactor_ttwjpowheg_1lSover1ratio_3b->Scale((1./simpleAveR_1lSover1_powheg)) ;
+      if ( nBinsBjets > 3 ) hscalefactor_ttwjpowheg_1lSover1ratio_4b->Scale((1./simpleAveR_1lSover1_powheg)) ;
+      hscalefactor_ttwjmcanlo_1lSover1ratio_1b->Scale(1./simpleAveR_1lSover1_mcanlo) ;
+      hscalefactor_ttwjmcanlo_1lSover1ratio_2b->Scale(1./simpleAveR_1lSover1_mcanlo) ;
+      if ( nBinsBjets > 2 ) hscalefactor_ttwjmcanlo_1lSover1ratio_3b->Scale((1./simpleAveR_1lSover1_mcanlo)) ;
+      if ( nBinsBjets > 3 ) hscalefactor_ttwjmcanlo_1lSover1ratio_4b->Scale((1./simpleAveR_1lSover1_mcanlo)) ;
+
 
       TH1F* hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr = (TH1F*) hscalefactor_ttwj_1lSover1ratio_1b->Clone("hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr") ;
       TH1F* hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr = (TH1F*) hscalefactor_ttwj_1lSover1ratio_2b->Clone("hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr") ;
       TH1F* hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr = (TH1F*) hscalefactor_ttwj_1lSover1ratio_3b->Clone("hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr") ;
+      TH1F* hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr = (TH1F*) hscalefactor_ttwj_1lSover1ratio_4b->Clone("hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr") ;
+
 
 
       // "regular" 0lep scale factors
 
       for ( int hbi=1; hbi<=nBins; hbi++ ) {
 
-         double val, err, halfdiff, errwhalfcorr ;
+         double val, err, halfdiff, errwhalfcorr, mean ;
 
          val = hscalefactor_ttwj_0over1ratio_1b -> GetBinContent( hbi ) ;
          err = hscalefactor_ttwj_0over1ratio_1b -> GetBinError( hbi ) ;
-	 // also include additional 1% uncertainty from contribution of non-ttwj in 1L sample
-	 err = sqrt( err*err + 0.01*val*0.01*val );
-         if ( err <= 0 ) continue ;
-         halfdiff = 0.5*(val - 1.) ;
-         errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
-         hscalefactor_ttwj_0over1ratio_1b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
 
+	 // also include additional 1% uncertainty from contribution of non-ttwj in 1L sample
+         if ( err> 0 ) {
+	   err = sqrt( err*err + 0.01*val*0.01*val );
+	   halfdiff = 0.5*(val - 1.) ;
+	   /* comment alternative code to base uncertainty on RMS of three tt MC samples
+	      mean = (hscalefactor_ttwj_0over1ratio_1b -> GetBinContent( hbi ) + hscalefactor_ttwjpowheg_0over1ratio_1b -> GetBinContent( hbi ) +
+	      hscalefactor_ttwjmcanlo_0over1ratio_1b -> GetBinContent( hbi ) )/3.;
+	      halfdiff = sqrt( (1./3.)*( pow(mean-hscalefactor_ttwj_0over1ratio_1b -> GetBinContent( hbi ), 2) +   
+	      pow(mean-hscalefactor_ttwjpowheg_0over1ratio_1b -> GetBinContent( hbi ), 2) +   
+	      pow(mean-hscalefactor_ttwjmcanlo_0over1ratio_1b -> GetBinContent( hbi ), 2) ) );*/
+	   errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
+	   hscalefactor_ttwj_0over1ratio_1b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
+         }
+	 
          val = hscalefactor_ttwj_0over1ratio_2b -> GetBinContent( hbi ) ;
          err = hscalefactor_ttwj_0over1ratio_2b -> GetBinError( hbi ) ;
-         if ( err <= 0 ) continue ;
-         halfdiff = 0.5*(val - 1.) ;
-         errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
-         hscalefactor_ttwj_0over1ratio_2b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
+         if ( err > 0 ) {
+	   halfdiff = 0.5*(val - 1.) ;
+           /* comment alternative code to base uncertainty on RMS of three tt MC samples
+	      mean = (hscalefactor_ttwj_0over1ratio_2b -> GetBinContent( hbi ) + hscalefactor_ttwjpowheg_0over1ratio_2b -> GetBinContent( hbi ) +
+	      hscalefactor_ttwjmcanlo_0over1ratio_2b -> GetBinContent( hbi ) )/3.;
+	      halfdiff = sqrt( (1./3.)*( pow(mean-hscalefactor_ttwj_0over1ratio_2b -> GetBinContent( hbi ), 2) +   
+	      pow(mean-hscalefactor_ttwjpowheg_0over1ratio_2b -> GetBinContent( hbi ), 2) +   
+	      pow(mean-hscalefactor_ttwjmcanlo_0over1ratio_2b -> GetBinContent( hbi ), 2) ) ); */
+	   errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
+	   hscalefactor_ttwj_0over1ratio_2b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
+	   
+         }
+	 
+	 
+	 
+	 if ( nBinsBjets > 2 ) {
 
-         val = hscalefactor_ttwj_0over1ratio_3b -> GetBinContent( hbi ) ;
-         err = hscalefactor_ttwj_0over1ratio_3b -> GetBinError( hbi ) ;
-         if ( err <= 0 ) continue ;
-         halfdiff = 0.5*(val - 1.) ;
-         errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
-         hscalefactor_ttwj_0over1ratio_3b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
+	   val = hscalefactor_ttwj_0over1ratio_3b -> GetBinContent( hbi ) ;
+	   err = hscalefactor_ttwj_0over1ratio_3b -> GetBinError( hbi ) ;
+	   if ( err > 0 ) {
+	     halfdiff = 0.5*(val - 1.) ;
+	     /* comment alternative code to base uncertainty on RMS of three tt MC samples
+		mean = (hscalefactor_ttwj_0over1ratio_3b -> GetBinContent( hbi ) + hscalefactor_ttwjpowheg_0over1ratio_3b -> GetBinContent( hbi ) +
+		hscalefactor_ttwjmcanlo_0over1ratio_3b -> GetBinContent( hbi ) )/3.;
+		halfdiff = sqrt( (1./3.)*( pow(mean-hscalefactor_ttwj_0over1ratio_3b -> GetBinContent( hbi ), 2) +   
+		pow(mean-hscalefactor_ttwjpowheg_0over1ratio_3b -> GetBinContent( hbi ), 2) +   
+		pow(mean-hscalefactor_ttwjmcanlo_0over1ratio_3b -> GetBinContent( hbi ), 2) ) ); */
+	     errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
+	     hscalefactor_ttwj_0over1ratio_3b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
+	   }
+
+	   if ( nBinsBjets > 3 ) {
+
+	     val = hscalefactor_ttwj_0over1ratio_4b -> GetBinContent( hbi ) ;
+	     err = hscalefactor_ttwj_0over1ratio_4b -> GetBinError( hbi ) ;
+	     if ( err > 0 ) {
+	       halfdiff = 0.5*(val - 1.) ;
+	       /* comment alternative code to base uncertainty on RMS of three tt MC samples
+		  mean = (hscalefactor_ttwj_0over1ratio_4b -> GetBinContent( hbi ) + hscalefactor_ttwjpowheg_0over1ratio_4b -> GetBinContent( hbi ) +
+		  hscalefactor_ttwjmcanlo_0over1ratio_4b -> GetBinContent( hbi ) )/3.;
+		  halfdiff = sqrt( (1./3.)*( pow(mean-hscalefactor_ttwj_0over1ratio_4b -> GetBinContent( hbi ), 2) +   
+		  pow(mean-hscalefactor_ttwjpowheg_0over1ratio_4b -> GetBinContent( hbi ), 2) +   
+		  pow(mean-hscalefactor_ttwjmcanlo_0over1ratio_4b -> GetBinContent( hbi ), 2) ) ); */
+	       errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
+	       hscalefactor_ttwj_0over1ratio_4b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
+	     }
+
+	   }
+	 }
 
       }
 
@@ -306,283 +813,169 @@
 
       for ( int hbi=1; hbi<=nBins; hbi++ ) {
 
-         double val, err, halfdiff, errwhalfcorr ;
+         double val, err, halfdiff, errwhalfcorr, mean ;
 
          val = hscalefactor_ttwj_1lSover1ratio_1b -> GetBinContent( hbi ) ;
          err = hscalefactor_ttwj_1lSover1ratio_1b -> GetBinError( hbi ) ;
-	 // also include additional 1% uncertainty (arbitrary, as we are doing for the regular 1lep component)
-	 err = sqrt( err*err + 0.01*val*0.01*val );
-         if ( err <= 0 ) continue ;
-         halfdiff = 0.5*(val - 1.) ;
-         errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
-         hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
 
+	 // also include additional 1% uncertainty from contribution of non-ttwj in 1L sample
+         if ( err> 0 ) {
+	   err = sqrt( err*err + 0.01*val*0.01*val );
+	   halfdiff = 0.5*(val - 1.) ;
+	   /* comment alternative code to base uncertainty on RMS of three tt MC samples
+	      mean = (hscalefactor_ttwj_1lSover1ratio_1b -> GetBinContent( hbi ) + hscalefactor_ttwjpowheg_1lSover1ratio_1b -> GetBinContent( hbi ) +
+	      hscalefactor_ttwjmcanlo_1lSover1ratio_1b -> GetBinContent( hbi ) )/3.;
+	      halfdiff = sqrt( (1./3.)*( pow(mean-hscalefactor_ttwj_1lSover1ratio_1b -> GetBinContent( hbi ), 2) +   
+	      pow(mean-hscalefactor_ttwjpowheg_1lSover1ratio_1b -> GetBinContent( hbi ), 2) +   
+	      pow(mean-hscalefactor_ttwjmcanlo_1lSover1ratio_1b -> GetBinContent( hbi ), 2) ) );*/
+	   errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
+	   hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
+         }
+	 
          val = hscalefactor_ttwj_1lSover1ratio_2b -> GetBinContent( hbi ) ;
          err = hscalefactor_ttwj_1lSover1ratio_2b -> GetBinError( hbi ) ;
-         if ( err <= 0 ) continue ;
-         halfdiff = 0.5*(val - 1.) ;
-         errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
-         hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
+         if ( err > 0 ) {
+	   halfdiff = 0.5*(val - 1.) ;
+           /* comment alternative code to base uncertainty on RMS of three tt MC samples
+	      mean = (hscalefactor_ttwj_1lSover1ratio_2b -> GetBinContent( hbi ) + hscalefactor_ttwjpowheg_1lSover1ratio_2b -> GetBinContent( hbi ) +
+	      hscalefactor_ttwjmcanlo_1lSover1ratio_2b -> GetBinContent( hbi ) )/3.;
+	      halfdiff = sqrt( (1./3.)*( pow(mean-hscalefactor_ttwj_1lSover1ratio_2b -> GetBinContent( hbi ), 2) +   
+	      pow(mean-hscalefactor_ttwjpowheg_1lSover1ratio_2b -> GetBinContent( hbi ), 2) +   
+	      pow(mean-hscalefactor_ttwjmcanlo_1lSover1ratio_2b -> GetBinContent( hbi ), 2) ) ); */
+	   errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
+	   hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
+	   
+         }
+	 
+	 
+	 
+	 if ( nBinsBjets > 2 ) {
 
-         val = hscalefactor_ttwj_1lSover1ratio_3b -> GetBinContent( hbi ) ;
-         err = hscalefactor_ttwj_1lSover1ratio_3b -> GetBinError( hbi ) ;
-         if ( err <= 0 ) continue ;
-         halfdiff = 0.5*(val - 1.) ;
-         errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
-         hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
+	   val = hscalefactor_ttwj_1lSover1ratio_3b -> GetBinContent( hbi ) ;
+	   err = hscalefactor_ttwj_1lSover1ratio_3b -> GetBinError( hbi ) ;
+	   if ( err > 0 ) {
+	     halfdiff = 0.5*(val - 1.) ;
+	     /* comment alternative code to base uncertainty on RMS of three tt MC samples
+		mean = (hscalefactor_ttwj_1lSover1ratio_3b -> GetBinContent( hbi ) + hscalefactor_ttwjpowheg_1lSover1ratio_3b -> GetBinContent( hbi ) +
+		hscalefactor_ttwjmcanlo_1lSover1ratio_3b -> GetBinContent( hbi ) )/3.;
+		halfdiff = sqrt( (1./3.)*( pow(mean-hscalefactor_ttwj_1lSover1ratio_3b -> GetBinContent( hbi ), 2) +   
+		pow(mean-hscalefactor_ttwjpowheg_1lSover1ratio_3b -> GetBinContent( hbi ), 2) +   
+		pow(mean-hscalefactor_ttwjmcanlo_1lSover1ratio_3b -> GetBinContent( hbi ), 2) ) ); */
+	     errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
+	     hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
+	   }
 
-      }
+	   if ( nBinsBjets > 3 ) {
 
+	     val = hscalefactor_ttwj_1lSover1ratio_4b -> GetBinContent( hbi ) ;
+	     err = hscalefactor_ttwj_1lSover1ratio_4b -> GetBinError( hbi ) ;
+	     if ( err > 0 ) {
+	       halfdiff = 0.5*(val - 1.) ;
+	       /* comment alternative code to base uncertainty on RMS of three tt MC samples
+		  mean = (hscalefactor_ttwj_1lSover1ratio_4b -> GetBinContent( hbi ) + hscalefactor_ttwjpowheg_1lSover1ratio_4b -> GetBinContent( hbi ) +
+		  hscalefactor_ttwjmcanlo_1lSover1ratio_4b -> GetBinContent( hbi ) )/3.;
+		  halfdiff = sqrt( (1./3.)*( pow(mean-hscalefactor_ttwj_1lSover1ratio_4b -> GetBinContent( hbi ), 2) +   
+		  pow(mean-hscalefactor_ttwjpowheg_1lSover1ratio_4b -> GetBinContent( hbi ), 2) +   
+		  pow(mean-hscalefactor_ttwjmcanlo_1lSover1ratio_4b -> GetBinContent( hbi ), 2) ) ); */
+	       errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
+	       hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
+	     }
 
-
-
-    //--- Try computing an average over the nbjet samples.
-
-      TH1F* h_ttwj_ave_0over1ratio = (TH1F*) hmctruth_ttwj_0over1ratio_1b->Clone("h_ttwj_ave_0over1ratio") ;
-      h_ttwj_ave_0over1ratio->Reset() ;
-      h_ttwj_ave_0over1ratio->Sumw2() ;
-
-      TH1F* h_ttwj_ave_1lSover1ratio = (TH1F*) hmctruth_ttwj_1lSover1ratio_1b->Clone("h_ttwj_ave_1lSover1ratio") ;
-      h_ttwj_ave_1lSover1ratio->Reset() ;
-      h_ttwj_ave_1lSover1ratio->Sumw2() ;
-
-      double ttwj_wvsum[100] ;
-      double ttwj_wsum[100] ;
-      double ttwj_slSig_wvsum[100] ;
-      double ttwj_slSig_wsum[100] ;
-      for ( int j=0; j<100; j++ ) { ttwj_wvsum[j] = 0. ; ttwj_wsum[j] = 0. ; ttwj_slSig_wvsum[j] = 0. ; ttwj_slSig_wsum[j] = 0. ; }
-
-      for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-
-         TH1F* hp(0x0) ;
-         TH1F* hp_slSig(0x0) ;
-
-         if ( bbi==0 ) hp = hmctruth_ttwj_0over1ratio_1b ;
-         if ( bbi==1 ) hp = hmctruth_ttwj_0over1ratio_2b ;
-         if ( bbi==2 ) hp = hmctruth_ttwj_0over1ratio_3b ;
-
-         if ( bbi==0 ) hp_slSig = hmctruth_ttwj_1lSover1ratio_1b ;
-         if ( bbi==1 ) hp_slSig = hmctruth_ttwj_1lSover1ratio_2b ;
-         if ( bbi==2 ) hp_slSig = hmctruth_ttwj_1lSover1ratio_3b ;
-
-         for ( int hbi=1; hbi<=nBins; hbi++ ) {
-
-            double val = hp->GetBinContent( hbi ) ;
-            double err = hp->GetBinError( hbi ) ;
-            if ( err <= 0 ) continue ;
-
-            ttwj_wvsum[hbi] += val / (err*err) ;
-            ttwj_wsum [hbi] += 1.0 / (err*err) ;
-
-            printf(" nb=%d, hb=%d %s: val = %5.3f, err = %5.3f\n", bbi+1, hbi, hp->GetXaxis()->GetBinLabel(hbi), val, err ) ;
-
+	   }
 	 }
 
-	 for ( int hbi=1; hbi<=nBins; hbi++ ) {
-
-            double val = hp_slSig->GetBinContent( hbi ) ;
-            double err = hp_slSig->GetBinError( hbi ) ;
-            if ( err <= 0 ) continue ;
-
-            ttwj_slSig_wvsum[hbi] += val / (err*err) ;
-            ttwj_slSig_wsum [hbi] += 1.0 / (err*err) ;
-
-            printf("slSig: nb=%d, hb=%d %s: val = %5.3f, err = %5.3f\n", bbi+1, hbi, hp_slSig->GetXaxis()->GetBinLabel(hbi), val, err ) ;
-
-         } // hbi.
-         printf("\n\n") ;
-
-      } // bbi.
-
-      for ( int hbi=1; hbi<=nBins; hbi++ ) {
-         if ( ttwj_wsum[hbi] <= 0. ) continue ;
-         double ave = ttwj_wvsum[hbi] / ttwj_wsum[hbi] ;
-         double err = sqrt(1./ttwj_wsum[hbi]) ;
-         printf(" ave hb=%d %s : ave = %5.3f, err = %5.3f\n", hbi, h_ttwj_ave_0over1ratio->GetXaxis()->GetBinLabel(hbi), ave, err ) ;
-         h_ttwj_ave_0over1ratio -> SetBinContent( hbi, ave ) ;
-         h_ttwj_ave_0over1ratio -> SetBinError( hbi, err ) ;
-      } // hbi.
-
-      for ( int hbi=1; hbi<=nBins; hbi++ ) {
-         if ( ttwj_slSig_wsum[hbi] <= 0. ) continue ;
-         double ave = ttwj_slSig_wvsum[hbi] / ttwj_slSig_wsum[hbi] ;
-         double err = sqrt(1./ttwj_slSig_wsum[hbi]) ;
-         printf("slSig: ave hb=%d %s : ave = %5.3f, err = %5.3f\n", hbi, h_ttwj_ave_1lSover1ratio->GetXaxis()->GetBinLabel(hbi), ave, err ) ;
-         h_ttwj_ave_1lSover1ratio -> SetBinContent( hbi, ave ) ;
-         h_ttwj_ave_1lSover1ratio -> SetBinError( hbi, err ) ;
-      } // hbi.
-
-
-
-     //--- Compute RMS of =1, =2, >=3 values.  Don't use points with big errors.
-
-      int ttwj_nsum[100] ;
-      int ttwj_slSig_nsum[100] ;
-      double ttwj_sumdiffsq[100] ;
-      double ttwj_slSig_sumdiffsq[100] ;
-      for ( int j=0; j<100; j++ ) { ttwj_nsum[j] = 0; ttwj_sumdiffsq[j] = 0. ; ttwj_slSig_nsum[j] = 0; ttwj_slSig_sumdiffsq[j] = 0. ; }
-
-      for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-
-         TH1F* hp(0x0) ;
-         TH1F* hp_slSig(0x0) ;
-
-         if ( bbi==0 ) hp = hmctruth_ttwj_0over1ratio_1b ;
-         if ( bbi==1 ) hp = hmctruth_ttwj_0over1ratio_2b ;
-         if ( bbi==2 ) hp = hmctruth_ttwj_0over1ratio_3b ;
-
-         if ( bbi==0 ) hp_slSig = hmctruth_ttwj_1lSover1ratio_1b ;
-         if ( bbi==1 ) hp_slSig = hmctruth_ttwj_1lSover1ratio_2b ;
-         if ( bbi==2 ) hp_slSig = hmctruth_ttwj_1lSover1ratio_3b ;
-
-         for ( int hbi=1; hbi<=nBins; hbi++ ) {
-
-            double val = hp->GetBinContent( hbi ) ;
-            double err = hp->GetBinError( hbi ) ;
-            if ( err <= 0 ) continue ;
-            if ( err > 0.4 ) continue ;
-
-            double ave = h_ttwj_ave_0over1ratio->GetBinContent( hbi ) ;
-
-            double diff = val - ave ;
-
-            ttwj_sumdiffsq[hbi] += diff*diff ;
-            ttwj_nsum[hbi] ++ ;
-
-         } // hbi.
-
-         for ( int hbi=1; hbi<=nBins; hbi++ ) {
-
-            double val = hp_slSig->GetBinContent( hbi ) ;
-            double err = hp_slSig->GetBinError( hbi ) ;
-            if ( err <= 0 ) continue ;
-            if ( err > 0.8 ) continue ;  // increased the error "tolerance"
-
-            double ave = h_ttwj_ave_1lSover1ratio->GetBinContent( hbi ) ;
-
-            double diff = val - ave ;
-
-            ttwj_slSig_sumdiffsq[hbi] += diff*diff ;
-            ttwj_slSig_nsum[hbi] ++ ;
-
-         } // hbi.
-
-         printf("\n\n") ;
-
-      } // bbi.
-
-      TH1F* h_ttwj_ave_0over1ratio_wrms = (TH1F*) h_ttwj_ave_0over1ratio->Clone("h_ttwj_ave_0over1ratio_wrms") ;
-      TH1F* h_ttwj_ave_1lSover1ratio_wrms = (TH1F*) h_ttwj_ave_1lSover1ratio->Clone("h_ttwj_ave_1lSover1ratio_wrms") ;
-
-      for ( int hbi=1; hbi<=nBins; hbi++ ) {
-         double staterr = h_ttwj_ave_0over1ratio->GetBinError( hbi ) ;
-         if ( staterr <= 0 ) continue ;
-         double rms = 0. ;
-         if ( ttwj_nsum[hbi] > 0 ) {
-            rms = sqrt( ttwj_sumdiffsq[hbi] / ttwj_nsum[hbi] ) ;
-         }
-         double totalerr = sqrt( staterr*staterr + rms*rms ) ;
-         h_ttwj_ave_0over1ratio_wrms->SetBinError( hbi, totalerr ) ;
-      } // hbi.
-
-      for ( int hbi=1; hbi<=nBins; hbi++ ) {
-         double staterr = h_ttwj_ave_1lSover1ratio->GetBinError( hbi ) ;
-         if ( staterr <= 0 ) continue ;
-         double rms = 0. ;
-         if ( ttwj_slSig_nsum[hbi] > 0 ) {
-            rms = sqrt( ttwj_slSig_sumdiffsq[hbi] / ttwj_slSig_nsum[hbi] ) ;
-         }
-         double totalerr = sqrt( staterr*staterr + rms*rms ) ;
-         h_ttwj_ave_1lSover1ratio_wrms->SetBinError( hbi, totalerr ) ;
-      } // hbi.
-
-      TH1F* hscalefactor_ttwj_ave_0over1ratio      = (TH1F*) h_ttwj_ave_0over1ratio     ->Clone("hscalefactor_ttwj_ave_0over1ratio") ;
-      TH1F* hscalefactor_ttwj_ave_0over1ratio_wrms = (TH1F*) h_ttwj_ave_0over1ratio_wrms->Clone("hscalefactor_ttwj_ave_0over1ratio_wrms") ;
-
-      hscalefactor_ttwj_ave_0over1ratio      -> Scale(1./simpleAveR_0over1) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms -> Scale(1./simpleAveR_0over1) ;
-
-      resetBinLabels( hscalefactor_ttwj_ave_0over1ratio_wrms, true ) ;
-
-
-      TH1F* hscalefactor_ttwj_ave_1lSover1ratio      = (TH1F*) h_ttwj_ave_1lSover1ratio     ->Clone("hscalefactor_ttwj_ave_1lSover1ratio") ;
-      TH1F* hscalefactor_ttwj_ave_1lSover1ratio_wrms = (TH1F*) h_ttwj_ave_1lSover1ratio_wrms->Clone("hscalefactor_ttwj_ave_1lSover1ratio_wrms") ;
-
-      hscalefactor_ttwj_ave_1lSover1ratio      -> Scale(1./simpleAveR_1lSover1) ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms -> Scale(1./simpleAveR_1lSover1) ;
-
-      resetBinLabels( hscalefactor_ttwj_ave_1lSover1ratio_wrms, true ) ;
-
-
-
-      TH1F* hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr = (TH1F*) hscalefactor_ttwj_ave_0over1ratio_wrms->Clone("hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr") ;
-      for ( int hbi=1; hbi<=nBins; hbi++ ) {
-         double val = hscalefactor_ttwj_ave_0over1ratio_wrms -> GetBinContent( hbi ) ;
-         double err = hscalefactor_ttwj_ave_0over1ratio_wrms -> GetBinError( hbi ) ;
-         if ( err <= 0 ) continue ;
-         double halfdiff = 0.5*(val - 1.) ;
-         double errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
-         hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
-      }
-
-
-      TH1F* hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr = (TH1F*) hscalefactor_ttwj_ave_1lSover1ratio->Clone("hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr") ;
-      for ( int hbi=1; hbi<=nBins; hbi++ ) {
-         double val = hscalefactor_ttwj_ave_1lSover1ratio -> GetBinContent( hbi ) ;
-         double err = hscalefactor_ttwj_ave_1lSover1ratio -> GetBinError( hbi ) ;
-         if ( err <= 0 ) continue ;
-         double halfdiff = 0.5*(val - 1.) ;
-         double errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
-         hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
       }
 
 
 
-
-
+      float toprowmax = usePublicStyle_ ? 2 : 3;
 
       hmctruth_ttwj_0over1ratio_1b->SetMinimum(0.) ;
       hmctruth_ttwj_0over1ratio_2b->SetMinimum(0.) ;
       hmctruth_ttwj_0over1ratio_3b->SetMinimum(0.) ;
-      hmctruth_ttwj_0over1ratio_1b->SetMaximum(3.) ;
-      hmctruth_ttwj_0over1ratio_2b->SetMaximum(3.) ;
-      hmctruth_ttwj_0over1ratio_3b->SetMaximum(3.) ;
+      hmctruth_ttwj_0over1ratio_4b->SetMinimum(0.) ;
+      hmctruth_ttwj_0over1ratio_1b->SetMaximum(toprowmax) ;
+      hmctruth_ttwj_0over1ratio_2b->SetMaximum(toprowmax) ;
+      hmctruth_ttwj_0over1ratio_3b->SetMaximum(toprowmax) ;
+      hmctruth_ttwj_0over1ratio_4b->SetMaximum(toprowmax) ;
 
       hscalefactor_ttwj_0over1ratio_1b->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_2b->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_3b->SetMinimum(0.) ;
+      hscalefactor_ttwj_0over1ratio_4b->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_1b->SetMaximum(2.5) ;
       hscalefactor_ttwj_0over1ratio_2b->SetMaximum(2.5) ;
       hscalefactor_ttwj_0over1ratio_3b->SetMaximum(2.5) ;
+      hscalefactor_ttwj_0over1ratio_4b->SetMaximum(2.5) ;
 
       hscalefactor_ttwj_0over1ratio_1b_whalfcorr->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_2b_whalfcorr->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_3b_whalfcorr->SetMinimum(0.) ;
+      hscalefactor_ttwj_0over1ratio_4b_whalfcorr->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_1b_whalfcorr->SetMaximum(2.5) ;
       hscalefactor_ttwj_0over1ratio_2b_whalfcorr->SetMaximum(2.5) ;
       hscalefactor_ttwj_0over1ratio_3b_whalfcorr->SetMaximum(2.5) ;
+      hscalefactor_ttwj_0over1ratio_4b_whalfcorr->SetMaximum(2.5) ;
+
+      if (usePublicStyle_) {
+	setFormatting(hmctruth_ttwj_0over1ratio_1b,"ZL/SL ratio",404);
+	setFormatting(hmctruth_ttwj_0over1ratio_2b,"ZL/SL ratio",404);
+	setFormatting(hmctruth_ttwj_0over1ratio_3b,"ZL/SL ratio",404);
+	setFormatting(hmctruth_ttwj_0over1ratio_4b,"ZL/SL ratio",404);
+	setFormatting(hscalefactor_ttwj_0over1ratio_1b_whalfcorr,"Normalized ZL/SL ratios S_{i,j,k}^{ttWj}",405);
+	setFormatting(hscalefactor_ttwj_0over1ratio_2b_whalfcorr,"Normalized ZL/SL ratios S_{i,j,k}^{ttWj}",405);
+	setFormatting(hscalefactor_ttwj_0over1ratio_3b_whalfcorr,"Normalized ZL/SL ratios S_{i,j,k}^{ttWj}",405);
+	setFormatting(hscalefactor_ttwj_0over1ratio_4b_whalfcorr,"Normalized ZL/SL ratios S_{i,j,k}^{ttWj}",405);
+
+	setFormatting(hscalefactor_ttwj_0over1ratio_1b);
+	setFormatting(hscalefactor_ttwj_0over1ratio_2b);
+	setFormatting(hscalefactor_ttwj_0over1ratio_3b);
+	setFormatting(hscalefactor_ttwj_0over1ratio_4b);
+      }
 
 
       hmctruth_ttwj_1lSover1ratio_1b->SetMinimum(0.) ;
       hmctruth_ttwj_1lSover1ratio_2b->SetMinimum(0.) ;
       hmctruth_ttwj_1lSover1ratio_3b->SetMinimum(0.) ;
+      hmctruth_ttwj_1lSover1ratio_4b->SetMinimum(0.) ;
       hmctruth_ttwj_1lSover1ratio_1b->SetMaximum(.3) ;
       hmctruth_ttwj_1lSover1ratio_2b->SetMaximum(.3) ;
       hmctruth_ttwj_1lSover1ratio_3b->SetMaximum(.3) ;
+      hmctruth_ttwj_1lSover1ratio_4b->SetMaximum(.3) ;
 
       hscalefactor_ttwj_1lSover1ratio_1b->SetMinimum(0.) ;
       hscalefactor_ttwj_1lSover1ratio_2b->SetMinimum(0.) ;
       hscalefactor_ttwj_1lSover1ratio_3b->SetMinimum(0.) ;
+      hscalefactor_ttwj_1lSover1ratio_4b->SetMinimum(0.) ;
       hscalefactor_ttwj_1lSover1ratio_1b->SetMaximum(2.5) ;
       hscalefactor_ttwj_1lSover1ratio_2b->SetMaximum(2.5) ;
       hscalefactor_ttwj_1lSover1ratio_3b->SetMaximum(2.5) ;
+      hscalefactor_ttwj_1lSover1ratio_4b->SetMaximum(2.5) ;
 
       hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr->SetMinimum(0.) ;
       hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr->SetMinimum(0.) ;
       hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->SetMinimum(0.) ;
+      hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr->SetMinimum(0.) ;
       hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr->SetMaximum(2.5) ;
       hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr->SetMaximum(2.5) ;
       hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->SetMaximum(2.5) ;
+      hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr->SetMaximum(2.5) ;
+
+      if (usePublicStyle_) {
+	setFormatting(hmctruth_ttwj_1lSover1ratio_1b,"SLSig/SL ratio",404);
+	setFormatting(hmctruth_ttwj_1lSover1ratio_2b,"SLSig/SL ratio",404);
+	setFormatting(hmctruth_ttwj_1lSover1ratio_3b,"SLSig/SL ratio",404);
+	setFormatting(hmctruth_ttwj_1lSover1ratio_4b,"SLSig/SL ratio",404);
+	setFormatting(hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr,"Normalized SLSig/SL ratios S_{i,j,k}^{ttWj}",405);
+	setFormatting(hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr,"Normalized SLSig/SL ratios S_{i,j,k}^{ttWj}",405);
+	setFormatting(hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr,"Normalized SLSig/SL ratios S_{i,j,k}^{ttWj}",405);
+	setFormatting(hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr,"Normalized SLSig/SL ratios S_{i,j,k}^{ttWj}",405);
+
+	setFormatting(hscalefactor_ttwj_1lSover1ratio_1b);
+	setFormatting(hscalefactor_ttwj_1lSover1ratio_2b);
+	setFormatting(hscalefactor_ttwj_1lSover1ratio_3b);
+	setFormatting(hscalefactor_ttwj_1lSover1ratio_4b);
+      }
 
 
       TH1F* hdummy1 = (TH1F*) hmctruth_ttwj_0over1ratio_1b->Clone( "hdummy1" ) ;
@@ -591,13 +984,23 @@
       hdummy1->SetMinimum(0.) ;
       hdummy1->SetTitle("") ;
 
-      resetBinLabels( hmctruth_ttwj_0over1ratio_1b ) ;
-      resetBinLabels( hmctruth_ttwj_0over1ratio_2b ) ;
-      resetBinLabels( hmctruth_ttwj_0over1ratio_3b ) ;
+      resetBinLabels( hmctruth_ttwj_0over1ratio_1b, usePublicStyle_ ) ;
+      resetBinLabels( hmctruth_ttwj_0over1ratio_2b, usePublicStyle_ ) ;
+      resetBinLabels( hmctruth_ttwj_0over1ratio_3b, usePublicStyle_ ) ;
+      resetBinLabels( hmctruth_ttwj_0over1ratio_4b, usePublicStyle_ ) ;
 
-      resetBinLabels( hscalefactor_ttwj_0over1ratio_1b ) ;
-      resetBinLabels( hscalefactor_ttwj_0over1ratio_2b ) ;
-      resetBinLabels( hscalefactor_ttwj_0over1ratio_3b ) ;
+      resetBinLabels( hscalefactor_ttwj_0over1ratio_1b, usePublicStyle_ ) ;
+      resetBinLabels( hscalefactor_ttwj_0over1ratio_2b, usePublicStyle_ ) ;
+      resetBinLabels( hscalefactor_ttwj_0over1ratio_3b, usePublicStyle_ ) ;
+      resetBinLabels( hscalefactor_ttwj_0over1ratio_4b, usePublicStyle_ ) ;
+
+      if (usePublicStyle_) {
+	resetBinLabels( hscalefactor_ttwj_0over1ratio_1b_whalfcorr ,usePublicStyle_) ;
+	resetBinLabels( hscalefactor_ttwj_0over1ratio_2b_whalfcorr ,usePublicStyle_) ;
+	resetBinLabels( hscalefactor_ttwj_0over1ratio_3b_whalfcorr ,usePublicStyle_) ;
+	resetBinLabels( hscalefactor_ttwj_0over1ratio_4b_whalfcorr ,usePublicStyle_) ;
+      }
+
 
 
       TH1F* hdummy1_slSig = (TH1F*) hmctruth_ttwj_1lSover1ratio_1b->Clone( "hdummy1_slSig" ) ;
@@ -606,16 +1009,26 @@
       hdummy1_slSig->SetMinimum(0.) ;
       hdummy1_slSig->SetTitle("") ;
 
-      resetBinLabels( hmctruth_ttwj_1lSover1ratio_1b ) ;
-      resetBinLabels( hmctruth_ttwj_1lSover1ratio_2b ) ;
-      resetBinLabels( hmctruth_ttwj_1lSover1ratio_3b ) ;
+      resetBinLabels( hmctruth_ttwj_1lSover1ratio_1b, usePublicStyle_ ) ;
+      resetBinLabels( hmctruth_ttwj_1lSover1ratio_2b, usePublicStyle_ ) ;
+      resetBinLabels( hmctruth_ttwj_1lSover1ratio_3b, usePublicStyle_ ) ;
+      resetBinLabels( hmctruth_ttwj_1lSover1ratio_4b, usePublicStyle_ ) ;
 
-      resetBinLabels( hscalefactor_ttwj_1lSover1ratio_1b ) ;
-      resetBinLabels( hscalefactor_ttwj_1lSover1ratio_2b ) ;
-      resetBinLabels( hscalefactor_ttwj_1lSover1ratio_3b ) ;
+      resetBinLabels( hscalefactor_ttwj_1lSover1ratio_1b, usePublicStyle_ ) ;
+      resetBinLabels( hscalefactor_ttwj_1lSover1ratio_2b, usePublicStyle_ ) ;
+      resetBinLabels( hscalefactor_ttwj_1lSover1ratio_3b, usePublicStyle_ ) ;
+      resetBinLabels( hscalefactor_ttwj_1lSover1ratio_4b, usePublicStyle_ ) ;
+
+      if (usePublicStyle_) {
+	resetBinLabels( hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr ,usePublicStyle_) ;
+	resetBinLabels( hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr ,usePublicStyle_) ;
+	resetBinLabels( hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr ,usePublicStyle_) ;
+	resetBinLabels( hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr ,usePublicStyle_) ;
+      }
 
 
       gStyle->SetPadRightMargin(0.08) ;
+
 
       // regular ttwj
 
@@ -629,17 +1042,31 @@
       TLegend* legend_ttwj = new TLegend( 0.91, 0.77,  0.99, 0.93 ) ;
       legend_ttwj->SetFillColor(kWhite) ;
       legend_ttwj->AddEntry( hmctruth_ttwj_0over1ratio_1b, "=1b") ;
-      legend_ttwj->AddEntry( hmctruth_ttwj_0over1ratio_2b, "=2b") ;
-      legend_ttwj->AddEntry( hmctruth_ttwj_0over1ratio_3b, ">=3b") ;
+
+      if ( nBinsBjets == 2 ) {
+	legend_ttwj->AddEntry( hmctruth_ttwj_0over1ratio_2b, ">=2b") ;
+      }
+      else {
+	legend_ttwj->AddEntry( hmctruth_ttwj_0over1ratio_2b, "=2b") ;
+	if ( nBinsBjets == 3 ) {
+	  legend_ttwj->AddEntry( hmctruth_ttwj_0over1ratio_3b, ">=3b") ;
+	}
+	else {
+	  legend_ttwj->AddEntry( hmctruth_ttwj_0over1ratio_3b, "==3b") ;
+	  legend_ttwj->AddEntry( hmctruth_ttwj_0over1ratio_4b, ">=4b") ;
+	}
+      }
+
 
       cttwj->cd(1) ;
-      hdummy1->SetMaximum(3.0) ;
+      hdummy1->SetMaximum(toprowmax) ;
       hdummy1->SetYTitle("ttwj 0 lep / 1 lep ratio") ;
       hdummy1->DrawCopy() ;
       hmctruth_ttwj_0over1ratio_1b->SetTitle("ttwj: 0 Lepton / 1 Lepton, Ratio") ;
       hmctruth_ttwj_0over1ratio_1b->DrawCopy("same") ;
       hmctruth_ttwj_0over1ratio_2b->DrawCopy("same") ;
-      hmctruth_ttwj_0over1ratio_3b->DrawCopy("same") ;
+      if ( nBinsBjets > 2 ) hmctruth_ttwj_0over1ratio_3b->DrawCopy("same") ;
+      if ( nBinsBjets > 3 ) hmctruth_ttwj_0over1ratio_4b->DrawCopy("same") ;
       legend_ttwj->Draw() ;
 
       cttwj->cd(2) ;
@@ -649,13 +1076,16 @@
       hscalefactor_ttwj_0over1ratio_1b->SetTitle("ttwj: 0 Lepton / 1 Lepton, Scale Factor") ;
       hscalefactor_ttwj_0over1ratio_1b->DrawCopy("same") ;
       hscalefactor_ttwj_0over1ratio_2b->DrawCopy("same") ;
-      hscalefactor_ttwj_0over1ratio_3b->DrawCopy("same") ;
+      if ( nBinsBjets > 2 ) hscalefactor_ttwj_0over1ratio_3b->DrawCopy("same") ;
+      if ( nBinsBjets > 3 ) hscalefactor_ttwj_0over1ratio_4b->DrawCopy("same") ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
       legend_ttwj->Draw() ;
 
       TString outttwj( infileStr ) ;
       outttwj.ReplaceAll("rootfiles","outputfiles") ;
       outttwj.ReplaceAll(".root","-mcclosure-ttwj1.pdf") ;
+      cttwj->SaveAs( outttwj ) ;
+      outttwj.ReplaceAll(".pdf",".png") ;
       cttwj->SaveAs( outttwj ) ;
 
 
@@ -675,7 +1105,8 @@
       hmctruth_ttwj_1lSover1ratio_1b->SetTitle("ttwj: 1 Lepton SIG / 1 Lepton, Ratio") ;
       hmctruth_ttwj_1lSover1ratio_1b->DrawCopy("same") ;
       hmctruth_ttwj_1lSover1ratio_2b->DrawCopy("same") ;
-      hmctruth_ttwj_1lSover1ratio_3b->DrawCopy("same") ;
+      if ( nBinsBjets > 2 ) hmctruth_ttwj_1lSover1ratio_3b->DrawCopy("same") ;
+      if ( nBinsBjets > 3 ) hmctruth_ttwj_1lSover1ratio_4b->DrawCopy("same") ;
       legend_ttwj->Draw() ;
 
       cttwj_slSig->cd(2) ;
@@ -685,7 +1116,8 @@
       hscalefactor_ttwj_1lSover1ratio_1b->SetTitle("ttwj: 0 Lepton / 1 Lepton, Scale Factor") ;
       hscalefactor_ttwj_1lSover1ratio_1b->DrawCopy("same") ;
       hscalefactor_ttwj_1lSover1ratio_2b->DrawCopy("same") ;
-      hscalefactor_ttwj_1lSover1ratio_3b->DrawCopy("same") ;
+      if ( nBinsBjets > 2 ) hscalefactor_ttwj_1lSover1ratio_3b->DrawCopy("same") ;
+      if ( nBinsBjets > 3 ) hscalefactor_ttwj_1lSover1ratio_4b->DrawCopy("same") ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_1lSover1ratio_1b->GetNbinsX()+0.5,1.) ;
       legend_ttwj->Draw() ;
 
@@ -693,368 +1125,277 @@
       outttwj_slSig.ReplaceAll("rootfiles","outputfiles") ;
       outttwj_slSig.ReplaceAll(".root","-mcclosure-ttwj_slSig1.pdf") ;
       cttwj_slSig->SaveAs( outttwj_slSig ) ;
+      outttwj_slSig.ReplaceAll(".pdf",".png") ;
+      cttwj_slSig->SaveAs( outttwj_slSig ) ;
 
 
-   //----
-
-      TCanvas* cttwjave = (TCanvas*) gDirectory->FindObject("cttwjave") ;
-      if ( cttwjave == 0x0 ) {
-         cttwjave = new TCanvas("cttwjave","ttwj closure", 700, 600) ;
-      }
-      cttwjave->Clear() ;
-
-      gStyle->SetEndErrorSize(3) ;
-
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->SetLineColor(1) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms          ->SetLineColor(1) ;
-      hscalefactor_ttwj_ave_0over1ratio               ->SetLineColor(1) ;
-
-      hdummy1->SetYTitle("ttwj 0 lep / 1 lep Scale factor") ;
-      hdummy1->SetMaximum(2.0) ;
-      hdummy1->DrawCopy() ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr -> Draw("samee1") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms -> Draw("samee1") ;
-      hscalefactor_ttwj_ave_0over1ratio -> Draw("samee1") ;
-      line->DrawLine(0.5,1.,hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetNbinsX()+0.5,1.) ;
-
-      TString outttwjave( infileStr ) ;
-      outttwjave.ReplaceAll("rootfiles","outputfiles") ;
-      outttwjave.ReplaceAll(".root","-mcclosure-ttwj1-ave.pdf") ;
-      cttwjave->SaveAs( outttwjave ) ;
-
-
-      TCanvas* cttwj_slSigave = (TCanvas*) gDirectory->FindObject("cttwj_slSigave") ;
-      if ( cttwj_slSigave == 0x0 ) {
-         cttwj_slSigave = new TCanvas("cttwj_slSigave","ttwj_slSig closure", 700, 600) ;
-      }
-      cttwj_slSigave->Clear() ;
-
-      gStyle->SetEndErrorSize(3) ;
-
-      hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->SetLineColor(1) ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms          ->SetLineColor(1) ;
-      hscalefactor_ttwj_ave_1lSover1ratio               ->SetLineColor(1) ;
-
-      hdummy1->SetYTitle("ttwj 1 lep SIG / 1 lep Scale factor") ;
-      hdummy1->SetMaximum(2.0) ;
-      hdummy1->DrawCopy() ;
-      hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr -> Draw("samee1") ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms -> Draw("samee1") ;
-      hscalefactor_ttwj_ave_1lSover1ratio -> Draw("samee1") ;
-      line->DrawLine(0.5,1.,hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->GetNbinsX()+0.5,1.) ;
-
-      TString outttwj_slSigave( infileStr ) ;
-      outttwj_slSigave.ReplaceAll("rootfiles","outputfiles") ;
-      outttwj_slSigave.ReplaceAll(".root","-mcclosure-ttwj_slSig1-ave.pdf") ;
-      cttwj_slSigave->SaveAs( outttwj_slSigave ) ;
-
-   //----
 
       TCanvas* cttwj3 = (TCanvas*) gDirectory->FindObject("cttwj3") ;
       if ( cttwj3 == 0x0 ) {
          cttwj3 = new TCanvas("cttwj3","ttwj closure", 1200, 950) ;
       }
       cttwj3->Clear() ;
-      cttwj3->Divide(3,2) ;
+      cttwj3->Divide(nBinsBjets,2) ;
 
       cttwj3->cd(1) ;
       hmctruth_ttwj_0over1ratio_1b->SetTitle("ttwj =1b: 0 Lepton / 1 Lepton, Ratio") ;
-      hmctruth_ttwj_0over1ratio_1b->Draw() ;
-      cttwj3->cd(2) ;
-      hmctruth_ttwj_0over1ratio_2b->SetTitle("ttwj =2b: 0 Lepton / 1 Lepton, Ratio") ;
-      hmctruth_ttwj_0over1ratio_2b->Draw() ;
-      cttwj3->cd(3) ;
-      hmctruth_ttwj_0over1ratio_3b->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Ratio") ;
-      hmctruth_ttwj_0over1ratio_3b->Draw() ;
+      hmctruth_ttwj_0over1ratio_1b->Draw("E1") ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 1");
+      }
 
-      cttwj3->cd(4) ;
+      cttwj3->cd(2) ;
+      if ( nBinsBjets == 2 ) hmctruth_ttwj_0over1ratio_2b->SetTitle("ttwj >=2b: 0 Lepton / 1 Lepton, Ratio") ;
+      else                   hmctruth_ttwj_0over1ratio_2b->SetTitle("ttwj =2b: 0 Lepton / 1 Lepton, Ratio") ;
+      hmctruth_ttwj_0over1ratio_2b->Draw("E1") ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	if ( nBinsBjets == 2 ) nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 2");
+	else                   nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+      }
+
+      if ( nBinsBjets > 2 ) {
+	cttwj3->cd(3) ;
+	if ( nBinsBjets == 3 ) hmctruth_ttwj_0over1ratio_3b->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Ratio") ;
+	else                   hmctruth_ttwj_0over1ratio_3b->SetTitle("ttwj =3b: 0 Lepton / 1 Lepton, Ratio") ;
+	hmctruth_ttwj_0over1ratio_3b->Draw("E1") ;
+	if (usePublicStyle_)  {
+	  cmssim->Draw();
+	  if ( nBinsBjets == 3 ) nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
+	  else                   nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 3");
+	}
+
+	if ( nBinsBjets > 3 ) {
+	  cttwj3->cd(4) ;
+	  hmctruth_ttwj_0over1ratio_4b->SetTitle("ttwj >=4b: 0 Lepton / 1 Lepton, Ratio") ;
+	  hmctruth_ttwj_0over1ratio_4b->Draw("E1") ;
+	  if (usePublicStyle_)  {
+	    cmssim->Draw();
+	    nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 4");
+	  }
+	}
+
+      }
+
+
+      cttwj3->cd(nBinsBjets+1) ;
+
       hscalefactor_ttwj_0over1ratio_1b->SetTitle("ttwj =1b: 0 Lepton / 1 Lepton, Scale Factor") ;
       hscalefactor_ttwj_0over1ratio_1b_whalfcorr->DrawCopy("e1") ;
       hscalefactor_ttwj_0over1ratio_1b->DrawCopy("samee1") ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
       hscalefactor_ttwj_0over1ratio_1b->Draw("same") ;
-      cttwj3->cd(5) ;
-      hscalefactor_ttwj_0over1ratio_2b->SetTitle("ttwj =2b: 0 Lepton / 1 Lepton, Scale Factor") ;
+      if (usePublicStyle_)   {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 1");
+      }
+
+      cttwj3->cd(nBinsBjets+2) ;
+      if ( nBinsBjets == 2 ) hscalefactor_ttwj_0over1ratio_2b->SetTitle("ttwj >=2b: 0 Lepton / 1 Lepton, Scale Factor") ;
+      else                  hscalefactor_ttwj_0over1ratio_2b->SetTitle("ttwj =2b: 0 Lepton / 1 Lepton, Scale Factor") ;
       hscalefactor_ttwj_0over1ratio_2b_whalfcorr->DrawCopy("e1") ;
       hscalefactor_ttwj_0over1ratio_2b->DrawCopy("samee1") ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
       hscalefactor_ttwj_0over1ratio_2b->Draw("same") ;
-      cttwj3->cd(6) ;
-//using average here for 3b bin
-//really should set up something to check useAverageTtwjClosure but this is the plot we need for the AN
-      h_ttwj_ave_0over1ratio->SetMarkerStyle(24) ;
-      h_ttwj_ave_0over1ratio->SetLineColor(1) ;
-      h_ttwj_ave_0over1ratio_wrms->SetMarkerStyle(24) ;
-      h_ttwj_ave_0over1ratio_wrms->SetLineColor(4) ;
-      hscalefactor_ttwj_ave_0over1ratio->SetMarkerStyle(24) ;
-      hscalefactor_ttwj_ave_0over1ratio->SetLineColor(1) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms->SetMarkerStyle(24) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms->SetLineColor(4) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->SetMarkerStyle(24) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->SetLineColor(1) ;
-      hscalefactor_ttwj_ave_0over1ratio->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Scale Factor") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms->SetTitle("0lep, #geq 1 btag") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms->SetMaximum(2.5);
-      hscalefactor_ttwj_ave_0over1ratio_wrms->Draw("e1") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->Draw("samee1") ;
-      hscalefactor_ttwj_ave_0over1ratio->DrawCopy("samee1") ;
-      line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
-      hscalefactor_ttwj_ave_0over1ratio->Draw("same") ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	if ( nBinsBjets > 2 ) nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 2");
+	else                  nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+      }
 
+      if ( nBinsBjets > 2 ) {
+	cttwj3->cd(nBinsBjets+3) ;
+	if ( nBinsBjets == 3 ) hscalefactor_ttwj_0over1ratio_3b->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Scale Factor") ;
+	else                   hscalefactor_ttwj_0over1ratio_3b->SetTitle("ttwj =3b: 0 Lepton / 1 Lepton, Scale Factor") ;
+	hscalefactor_ttwj_0over1ratio_3b_whalfcorr->DrawCopy("e1") ;
+	hscalefactor_ttwj_0over1ratio_3b->DrawCopy("samee1") ;
+	line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
+	hscalefactor_ttwj_0over1ratio_3b->Draw("same") ;
+	if (usePublicStyle_)  {
+	  cmssim->Draw();
+	  if ( nBinsBjets == 3 ) nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
+	  else                   nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 3");
+	}
+
+	if ( nBinsBjets > 3 ) {
+	  cttwj3->cd(nBinsBjets+4) ;
+	  hscalefactor_ttwj_0over1ratio_4b->SetTitle("ttwj >=4b: 0 Lepton / 1 Lepton, Scale Factor") ;
+	  hscalefactor_ttwj_0over1ratio_4b_whalfcorr->DrawCopy("e1") ;
+	  hscalefactor_ttwj_0over1ratio_4b->DrawCopy("samee1") ;
+	  line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
+	  hscalefactor_ttwj_0over1ratio_4b->Draw("same") ;
+	  if (usePublicStyle_)  {
+	    cmssim->Draw();
+	    nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 4");
+	  }
+	}
+      }
 
       TString outttwj3( infileStr ) ;
       outttwj3.ReplaceAll("rootfiles","outputfiles") ;
       outttwj3.ReplaceAll(".root","-mcclosure-ttwj3.pdf") ;
       cttwj3->SaveAs( outttwj3 ) ;
+      outttwj3.ReplaceAll(".pdf",".png") ;
+      cttwj3->SaveAs( outttwj3 ) ;
+
+
+
+
 
 
       TCanvas* cttwj_slSig3 = (TCanvas*) gDirectory->FindObject("cttwj_slSig3") ;
       if ( cttwj_slSig3 == 0x0 ) {
-         cttwj_slSig3 = new TCanvas("cttwj_slSig3","ttwj_slSig closure", 1200, 950) ;
+         cttwj_slSig3 = new TCanvas("cttwj_slSig3","ttwj closure", 1200, 950) ;
       }
       cttwj_slSig3->Clear() ;
-      cttwj_slSig3->Divide(3,2) ;
+      cttwj_slSig3->Divide(nBinsBjets,2) ;
 
       cttwj_slSig3->cd(1) ;
-      hmctruth_ttwj_1lSover1ratio_1b->SetTitle("ttwj =1b: 1 Lepton SIG / 1 Lepton, Ratio") ;
-      hmctruth_ttwj_1lSover1ratio_1b->Draw() ;
-      cttwj_slSig3->cd(2) ;
-      hmctruth_ttwj_1lSover1ratio_2b->SetTitle("ttwj =2b: 1 Lepton SIG / 1 Lepton, Ratio") ;
-      hmctruth_ttwj_1lSover1ratio_2b->Draw() ;
-      cttwj_slSig3->cd(3) ;
-      hmctruth_ttwj_1lSover1ratio_3b->SetTitle("ttwj >=3b: 1 Lepton SIG / 1 Lepton, Ratio") ;
-      hmctruth_ttwj_1lSover1ratio_3b->Draw() ;
+      hmctruth_ttwj_1lSover1ratio_1b->SetTitle("ttwj =1b: 1 LepSig / 1 Lepton, Ratio") ;
+      hmctruth_ttwj_1lSover1ratio_1b->Draw("E1") ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 1");
+      }
 
-      cttwj_slSig3->cd(4) ;
-      hscalefactor_ttwj_1lSover1ratio_1b->SetTitle("ttwj =1b: 1 Lepton SIG / 1 Lepton, Scale Factor") ;
+      cttwj_slSig3->cd(2) ;
+      if ( nBinsBjets == 2 ) hmctruth_ttwj_1lSover1ratio_2b->SetTitle("ttwj >=2b: 1 LepSig / 1 Lepton, Ratio") ;
+      else                   hmctruth_ttwj_1lSover1ratio_2b->SetTitle("ttwj =2b: 1 LepSig / 1 Lepton, Ratio") ;
+      hmctruth_ttwj_1lSover1ratio_2b->Draw("E1") ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	if ( nBinsBjets == 2 ) nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 2");
+	else                   nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+      }
+
+      if ( nBinsBjets > 2 ) {
+	cttwj_slSig3->cd(3) ;
+	if ( nBinsBjets == 3 ) hmctruth_ttwj_1lSover1ratio_3b->SetTitle("ttwj >=3b: 1 LepSig / 1 Lepton, Ratio") ;
+	else                   hmctruth_ttwj_1lSover1ratio_3b->SetTitle("ttwj =3b: 1 LepSig / 1 Lepton, Ratio") ;
+	hmctruth_ttwj_1lSover1ratio_3b->Draw("E1") ;
+	if (usePublicStyle_)  {
+	  cmssim->Draw();
+	  if ( nBinsBjets == 3 ) nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
+	  else                   nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 3");
+	}
+
+	if ( nBinsBjets > 3 ) {
+	  cttwj_slSig3->cd(4) ;
+	  hmctruth_ttwj_1lSover1ratio_4b->SetTitle("ttwj >=4b: 1 LepSig / 1 Lepton, Ratio") ;
+	  hmctruth_ttwj_1lSover1ratio_4b->Draw("E1") ;
+	  if (usePublicStyle_)  {
+	    cmssim->Draw();
+	    nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 4");
+	  }
+	}
+
+      }
+
+
+      cttwj_slSig3->cd(nBinsBjets+1) ;
+
+      hscalefactor_ttwj_1lSover1ratio_1b->SetTitle("ttwj =1b: 1 LepSig / 1 Lepton, Scale Factor") ;
       hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr->DrawCopy("e1") ;
       hscalefactor_ttwj_1lSover1ratio_1b->DrawCopy("samee1") ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_1lSover1ratio_1b->GetNbinsX()+0.5,1.) ;
       hscalefactor_ttwj_1lSover1ratio_1b->Draw("same") ;
-      cttwj_slSig3->cd(5) ;
-      hscalefactor_ttwj_1lSover1ratio_2b->SetTitle("ttwj =2b: 1 Lepton SIG / 1 Lepton, Scale Factor") ;
+      if (usePublicStyle_)   {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 1");
+      }
+
+      cttwj_slSig3->cd(nBinsBjets+2) ;
+      if ( nBinsBjets == 2 ) hscalefactor_ttwj_1lSover1ratio_2b->SetTitle("ttwj >=2b: 1 LepSig / 1 Lepton, Scale Factor") ;
+      else                  hscalefactor_ttwj_1lSover1ratio_2b->SetTitle("ttwj =2b: 1 LepSig / 1 Lepton, Scale Factor") ;
       hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr->DrawCopy("e1") ;
       hscalefactor_ttwj_1lSover1ratio_2b->DrawCopy("samee1") ;
       line->DrawLine(0.5,1.,hscalefactor_ttwj_1lSover1ratio_1b->GetNbinsX()+0.5,1.) ;
       hscalefactor_ttwj_1lSover1ratio_2b->Draw("same") ;
-      cttwj_slSig3->cd(6) ;
-//using average here for 3b bin
-//really should set up something to check useAverageTtwjClosure but this is the plot we need for the AN
-      h_ttwj_ave_1lSover1ratio->SetMarkerStyle(24) ;
-      h_ttwj_ave_1lSover1ratio->SetLineColor(1) ;
-      h_ttwj_ave_1lSover1ratio_wrms->SetMarkerStyle(24) ;
-      h_ttwj_ave_1lSover1ratio_wrms->SetLineColor(4) ;
-      hscalefactor_ttwj_ave_1lSover1ratio->SetMarkerStyle(24) ;
-      hscalefactor_ttwj_ave_1lSover1ratio->SetLineColor(1) ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms->SetMarkerStyle(24) ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms->SetLineColor(4) ;
-      hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->SetMarkerStyle(24) ;
-      hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->SetLineColor(1) ;
-      hscalefactor_ttwj_ave_1lSover1ratio->SetTitle("ttwj >=3b: 1 Lepton SIG / 1 Lepton, Scale Factor") ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms->SetTitle("1 lep Sig, #geq 1 btag") ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms->SetMaximum(2.5);
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms->Draw("e1") ;
-      hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->Draw("samee1") ;
-      hscalefactor_ttwj_ave_1lSover1ratio->DrawCopy("samee1") ;
-      line->DrawLine(0.5,1.,hscalefactor_ttwj_1lSover1ratio_1b->GetNbinsX()+0.5,1.) ;
-      hscalefactor_ttwj_ave_1lSover1ratio->Draw("same") ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	if ( nBinsBjets > 2 ) nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 2");
+	else                  nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+      }
 
+      if ( nBinsBjets > 2 ) {
+	cttwj_slSig3->cd(nBinsBjets+3) ;
+	if ( nBinsBjets == 3 ) hscalefactor_ttwj_1lSover1ratio_3b->SetTitle("ttwj >=3b: 1 LepSig / 1 Lepton, Scale Factor") ;
+	else                   hscalefactor_ttwj_1lSover1ratio_3b->SetTitle("ttwj =3b: 1 LepSig / 1 Lepton, Scale Factor") ;
+	hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->DrawCopy("e1") ;
+	hscalefactor_ttwj_1lSover1ratio_3b->DrawCopy("samee1") ;
+	line->DrawLine(0.5,1.,hscalefactor_ttwj_1lSover1ratio_1b->GetNbinsX()+0.5,1.) ;
+	hscalefactor_ttwj_1lSover1ratio_3b->Draw("same") ;
+	if (usePublicStyle_)  {
+	  cmssim->Draw();
+	  if ( nBinsBjets == 3 ) nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
+	  else                   nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 3");
+	}
+
+	if ( nBinsBjets > 3 ) {
+	  cttwj_slSig3->cd(nBinsBjets+4) ;
+	  hscalefactor_ttwj_1lSover1ratio_4b->SetTitle("ttwj >=4b: 1 LepSig / 1 Lepton, Scale Factor") ;
+	  hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr->DrawCopy("e1") ;
+	  hscalefactor_ttwj_1lSover1ratio_4b->DrawCopy("samee1") ;
+	  line->DrawLine(0.5,1.,hscalefactor_ttwj_1lSover1ratio_1b->GetNbinsX()+0.5,1.) ;
+	  hscalefactor_ttwj_1lSover1ratio_4b->Draw("same") ;
+	  if (usePublicStyle_)  {
+	    cmssim->Draw();
+	    nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 4");
+	  }
+	}
+      }
 
       TString outttwj_slSig3( infileStr ) ;
       outttwj_slSig3.ReplaceAll("rootfiles","outputfiles") ;
       outttwj_slSig3.ReplaceAll(".root","-mcclosure-ttwj_slSig3.pdf") ;
       cttwj_slSig3->SaveAs( outttwj_slSig3 ) ;
-
-   //----
-
-      h_ttwj_ave_0over1ratio->SetMarkerSize(1.5) ;
-      h_ttwj_ave_0over1ratio_wrms->SetMarkerSize(1.5) ;
-      hscalefactor_ttwj_ave_0over1ratio->SetMarkerSize(1.5) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms->SetMarkerSize(1.5) ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->SetMarkerSize(1.5) ;
-
-      hmctruth_ttwj_0over1ratio_1b->SetMarkerStyle(20) ;
-      hmctruth_ttwj_0over1ratio_2b->SetMarkerStyle(20) ;
-      hmctruth_ttwj_0over1ratio_3b->SetMarkerStyle(20) ;
-      hscalefactor_ttwj_0over1ratio_1b->SetMarkerStyle(20) ;
-      hscalefactor_ttwj_0over1ratio_2b->SetMarkerStyle(20) ;
-      hscalefactor_ttwj_0over1ratio_3b->SetMarkerStyle(20) ;
-      hmctruth_ttwj_0over1ratio_1b->SetLineColor(2) ;
-      hmctruth_ttwj_0over1ratio_2b->SetLineColor(2) ;
-      hmctruth_ttwj_0over1ratio_3b->SetLineColor(2) ;
-      hscalefactor_ttwj_0over1ratio_1b->SetLineColor(2) ;
-      hscalefactor_ttwj_0over1ratio_2b->SetLineColor(2) ;
-      hscalefactor_ttwj_0over1ratio_3b->SetLineColor(2) ;
-      hmctruth_ttwj_0over1ratio_1b->SetLineWidth(2) ;
-      hmctruth_ttwj_0over1ratio_2b->SetLineWidth(2) ;
-      hmctruth_ttwj_0over1ratio_3b->SetLineWidth(2) ;
-      hscalefactor_ttwj_0over1ratio_1b->SetLineWidth(2) ;
-      hscalefactor_ttwj_0over1ratio_2b->SetLineWidth(2) ;
-      hscalefactor_ttwj_0over1ratio_3b->SetLineWidth(2) ;
+      outttwj_slSig3.ReplaceAll(".pdf",".png") ;
+      cttwj_slSig3->SaveAs( outttwj_slSig3 ) ;
 
 
-      h_ttwj_ave_1lSover1ratio->SetMarkerSize(1.5) ;
-      h_ttwj_ave_1lSover1ratio_wrms->SetMarkerSize(1.5) ;
-      hscalefactor_ttwj_ave_1lSover1ratio->SetMarkerSize(1.5) ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms->SetMarkerSize(1.5) ;
-      hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->SetMarkerSize(1.5) ;
-
-      hmctruth_ttwj_1lSover1ratio_1b->SetMarkerStyle(20) ;
-      hmctruth_ttwj_1lSover1ratio_2b->SetMarkerStyle(20) ;
-      hmctruth_ttwj_1lSover1ratio_3b->SetMarkerStyle(20) ;
-      hscalefactor_ttwj_1lSover1ratio_1b->SetMarkerStyle(20) ;
-      hscalefactor_ttwj_1lSover1ratio_2b->SetMarkerStyle(20) ;
-      hscalefactor_ttwj_1lSover1ratio_3b->SetMarkerStyle(20) ;
-      hmctruth_ttwj_1lSover1ratio_1b->SetLineColor(2) ;
-      hmctruth_ttwj_1lSover1ratio_2b->SetLineColor(2) ;
-      hmctruth_ttwj_1lSover1ratio_3b->SetLineColor(2) ;
-      hscalefactor_ttwj_1lSover1ratio_1b->SetLineColor(2) ;
-      hscalefactor_ttwj_1lSover1ratio_2b->SetLineColor(2) ;
-      hscalefactor_ttwj_1lSover1ratio_3b->SetLineColor(2) ;
-      hmctruth_ttwj_1lSover1ratio_1b->SetLineWidth(2) ;
-      hmctruth_ttwj_1lSover1ratio_2b->SetLineWidth(2) ;
-      hmctruth_ttwj_1lSover1ratio_3b->SetLineWidth(2) ;
-      hscalefactor_ttwj_1lSover1ratio_1b->SetLineWidth(2) ;
-      hscalefactor_ttwj_1lSover1ratio_2b->SetLineWidth(2) ;
-      hscalefactor_ttwj_1lSover1ratio_3b->SetLineWidth(2) ;
+      TFile f("rootfiles/gi-plots-met4-ht4-v15-mcclosure-ttwj3.root","recreate");
+      hscalefactor_ttwj_0over1ratio_1b->Write();
+      hscalefactor_ttwj_0over1ratio_1b_whalfcorr->Write();
+      hscalefactor_ttwj_0over1ratio_2b->Write();
+      hscalefactor_ttwj_0over1ratio_2b_whalfcorr->Write();
+      hscalefactor_ttwj_0over1ratio_3b->Write();
+      hscalefactor_ttwj_0over1ratio_3b_whalfcorr->Write();
+      f.Write();
 
 
-      TCanvas* cttwj3ave = (TCanvas*) gDirectory->FindObject("cttwj3ave") ;
-      if ( cttwj3ave == 0x0 ) {
-         cttwj3ave = new TCanvas("cttwj3ave","ttwj closure", 1200, 950) ;
-      }
-      cttwj3ave->Clear() ;
-      cttwj3ave->Divide(3,2) ;
-
-      cttwj3ave->cd(1) ;
-      hmctruth_ttwj_0over1ratio_1b->SetTitle("ttwj =1b: 0 Lepton / 1 Lepton, Ratio") ;
-      hmctruth_ttwj_0over1ratio_1b->Draw() ;
-      h_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
-      h_ttwj_ave_0over1ratio->Draw("e1same") ;
-      cttwj3ave->cd(2) ;
-      hmctruth_ttwj_0over1ratio_2b->SetTitle("ttwj =2b: 0 Lepton / 1 Lepton, Ratio") ;
-      hmctruth_ttwj_0over1ratio_2b->Draw() ;
-      h_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
-      h_ttwj_ave_0over1ratio->Draw("e1same") ;
-      cttwj3ave->cd(3) ;
-      hmctruth_ttwj_0over1ratio_3b->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Ratio") ;
-      hmctruth_ttwj_0over1ratio_3b->Draw() ;
-      h_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
-      h_ttwj_ave_0over1ratio->Draw("e1same") ;
-
-      cttwj3ave->cd(4) ;
-      hscalefactor_ttwj_0over1ratio_1b->SetTitle("ttwj =1b: 0 Lepton / 1 Lepton, Scale Factor") ;
-      hscalefactor_ttwj_0over1ratio_1b->Draw() ;
-      line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
-      hscalefactor_ttwj_0over1ratio_1b->Draw("same") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->Draw("e1same") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
-      hscalefactor_ttwj_ave_0over1ratio->Draw("e1same") ;
-      cttwj3ave->cd(5) ;
-      hscalefactor_ttwj_0over1ratio_2b->SetTitle("ttwj =2b: 0 Lepton / 1 Lepton, Scale Factor") ;
-      hscalefactor_ttwj_0over1ratio_2b->Draw() ;
-      line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
-      hscalefactor_ttwj_0over1ratio_2b->Draw("same") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->Draw("e1same") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
-      hscalefactor_ttwj_ave_0over1ratio->Draw("e1same") ;
-      cttwj3ave->cd(6) ;
-      hscalefactor_ttwj_0over1ratio_3b->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Scale Factor") ;
-      hscalefactor_ttwj_0over1ratio_3b->Draw() ;
-      line->DrawLine(0.5,1.,hscalefactor_ttwj_0over1ratio_1b->GetNbinsX()+0.5,1.) ;
-      hscalefactor_ttwj_0over1ratio_3b->Draw("same") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->Draw("e1same") ;
-      hscalefactor_ttwj_ave_0over1ratio_wrms->Draw("e1same") ;
-      hscalefactor_ttwj_ave_0over1ratio->Draw("e1same") ;
-
-
-      TString outttwj3ave( infileStr ) ;
-      outttwj3ave.ReplaceAll("rootfiles","outputfiles") ;
-      outttwj3ave.ReplaceAll(".root","-mcclosure-ttwj3-ave.pdf") ;
-      cttwj3ave->SaveAs( outttwj3ave ) ;
-
-
-
-      TCanvas* cttwj_slSig3ave = (TCanvas*) gDirectory->FindObject("cttwj_slSig3ave") ;
-      if ( cttwj_slSig3ave == 0x0 ) {
-         cttwj_slSig3ave = new TCanvas("cttwj_slSig3ave","ttwj_slSig closure", 1200, 950) ;
-      }
-      cttwj_slSig3ave->Clear() ;
-      cttwj_slSig3ave->Divide(3,2) ;
-
-      cttwj_slSig3ave->cd(1) ;
-      hmctruth_ttwj_1lSover1ratio_1b->SetTitle("ttwj =1b: 1 Lepton SIG / 1 Lepton, Ratio") ;
-      hmctruth_ttwj_1lSover1ratio_1b->Draw() ;
-      h_ttwj_ave_1lSover1ratio_wrms->Draw("e1same") ;
-      h_ttwj_ave_1lSover1ratio->Draw("e1same") ;
-      cttwj_slSig3ave->cd(2) ;
-      hmctruth_ttwj_1lSover1ratio_2b->SetTitle("ttwj =2b: 1 Lepton SIG / 1 Lepton, Ratio") ;
-      hmctruth_ttwj_1lSover1ratio_2b->Draw() ;
-      h_ttwj_ave_1lSover1ratio_wrms->Draw("e1same") ;
-      h_ttwj_ave_1lSover1ratio->Draw("e1same") ;
-      cttwj_slSig3ave->cd(3) ;
-      hmctruth_ttwj_1lSover1ratio_3b->SetTitle("ttwj >=3b: 1 Lepton SIG / 1 Lepton, Ratio") ;
-      hmctruth_ttwj_1lSover1ratio_3b->Draw() ;
-      h_ttwj_ave_1lSover1ratio_wrms->Draw("e1same") ;
-      h_ttwj_ave_1lSover1ratio->Draw("e1same") ;
-
-      cttwj_slSig3ave->cd(4) ;
-      hscalefactor_ttwj_1lSover1ratio_1b->SetTitle("ttwj =1b: 1 Lepton SIG / 1 Lepton, Scale Factor") ;
-      hscalefactor_ttwj_1lSover1ratio_1b->Draw() ;
-      line->DrawLine(0.5,1.,hscalefactor_ttwj_1lSover1ratio_1b->GetNbinsX()+0.5,1.) ;
-      hscalefactor_ttwj_1lSover1ratio_1b->Draw("same") ;
-      hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->Draw("e1same") ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms->Draw("e1same") ;
-      hscalefactor_ttwj_ave_1lSover1ratio->Draw("e1same") ;
-      cttwj_slSig3ave->cd(5) ;
-      hscalefactor_ttwj_1lSover1ratio_2b->SetTitle("ttwj =2b: 1 Lepton SIG / 1 Lepton, Scale Factor") ;
-      hscalefactor_ttwj_1lSover1ratio_2b->Draw() ;
-      line->DrawLine(0.5,1.,hscalefactor_ttwj_1lSover1ratio_1b->GetNbinsX()+0.5,1.) ;
-      hscalefactor_ttwj_1lSover1ratio_2b->Draw("same") ;
-      hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->Draw("e1same") ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms->Draw("e1same") ;
-      hscalefactor_ttwj_ave_1lSover1ratio->Draw("e1same") ;
-      cttwj_slSig3ave->cd(6) ;
-      hscalefactor_ttwj_1lSover1ratio_3b->SetTitle("ttwj >=3b: 1 Lepton SIG / 1 Lepton, Scale Factor") ;
-      hscalefactor_ttwj_1lSover1ratio_3b->Draw() ;
-      line->DrawLine(0.5,1.,hscalefactor_ttwj_1lSover1ratio_1b->GetNbinsX()+0.5,1.) ;
-      hscalefactor_ttwj_1lSover1ratio_3b->Draw("same") ;
-      hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->Draw("e1same") ;
-      hscalefactor_ttwj_ave_1lSover1ratio_wrms->Draw("e1same") ;
-      hscalefactor_ttwj_ave_1lSover1ratio->Draw("e1same") ;
-
-
-      TString outttwj_slSig3ave( infileStr ) ;
-      outttwj_slSig3ave.ReplaceAll("rootfiles","outputfiles") ;
-      outttwj_slSig3ave.ReplaceAll(".root","-mcclosure-ttwj_slSig3-ave.pdf") ;
-      cttwj_slSig3ave->SaveAs( outttwj_slSig3ave ) ;
-
-   //----
+      //----
    
 
       hmctruth_ttwj_0lep_1b->SetFillColor(kBlue-9) ;
       hmctruth_ttwj_0lep_2b->SetFillColor(kBlue-9) ;
       hmctruth_ttwj_0lep_3b->SetFillColor(kBlue-9) ;
+      hmctruth_ttwj_0lep_4b->SetFillColor(kBlue-9) ;
 
       hmctruth_ttwj_1lep_1b->SetFillColor(kBlue-9) ;
       hmctruth_ttwj_1lep_2b->SetFillColor(kBlue-9) ;
       hmctruth_ttwj_1lep_3b->SetFillColor(kBlue-9) ;
+      hmctruth_ttwj_1lep_4b->SetFillColor(kBlue-9) ;
 
       hmctruth_ttwj_1lepSig_1b->SetFillColor(kBlue-9) ;
       hmctruth_ttwj_1lepSig_2b->SetFillColor(kBlue-9) ;
       hmctruth_ttwj_1lepSig_3b->SetFillColor(kBlue-9) ;
+      hmctruth_ttwj_1lepSig_4b->SetFillColor(kBlue-9) ;
 
       hmctruth_ttwj_0lep_1b->SetLineWidth(2) ;
       hmctruth_ttwj_0lep_2b->SetLineWidth(2) ;
       hmctruth_ttwj_0lep_3b->SetLineWidth(2) ;
+      hmctruth_ttwj_0lep_4b->SetLineWidth(2) ;
 
       hmctruth_ttwj_1lep_1b->SetLineWidth(2) ;
       hmctruth_ttwj_1lep_2b->SetLineWidth(2) ;
       hmctruth_ttwj_1lep_3b->SetLineWidth(2) ;
+      hmctruth_ttwj_1lep_4b->SetLineWidth(2) ;
 
       hmctruth_ttwj_1lepSig_1b->SetLineWidth(2) ;
       hmctruth_ttwj_1lepSig_2b->SetLineWidth(2) ;
       hmctruth_ttwj_1lepSig_3b->SetLineWidth(2) ;
+      hmctruth_ttwj_1lepSig_4b->SetLineWidth(2) ;
 
 
       TCanvas* cttwj3b = (TCanvas*) gDirectory->FindObject("cttwj3b") ;
@@ -1062,45 +1403,75 @@
          cttwj3b = new TCanvas("cttwj3b","ttwj closure", 1200, 950) ;
       }
       cttwj3b->Clear() ;
-      cttwj3b->Divide(3,2) ;
+      cttwj3b->Divide(nBinsBjets,2) ;
 
       cttwj3b->cd(1) ;
       hmctruth_ttwj_0lep_1b->SetTitle("ttwj =1b: 0 Lepton") ;
       hmctruth_ttwj_0lep_1b->Draw() ;
       hmctruth_ttwj_0lep_1b->Draw("histsame") ;
       hmctruth_ttwj_0lep_1b->Draw("esame") ;
+
       cttwj3b->cd(2) ;
-      hmctruth_ttwj_0lep_2b->SetTitle("ttwj =2b: 0 Lepton") ;
+      if ( nBinsBjets == 2 ) hmctruth_ttwj_0lep_2b->SetTitle("ttwj >=2b: 0 Lepton") ;
+      else                   hmctruth_ttwj_0lep_2b->SetTitle("ttwj =2b: 0 Lepton") ;
       hmctruth_ttwj_0lep_2b->Draw() ;
       hmctruth_ttwj_0lep_2b->Draw("histsame") ;
       hmctruth_ttwj_0lep_2b->Draw("esame") ;
-      cttwj3b->cd(3) ;
-      hmctruth_ttwj_0lep_3b->SetTitle("ttwj >=3b: 0 Lepton") ;
-      hmctruth_ttwj_0lep_3b->Draw() ;
-      hmctruth_ttwj_0lep_3b->Draw("histsame") ;
-      hmctruth_ttwj_0lep_3b->Draw("esame") ;
 
-      cttwj3b->cd(4) ;
+      if ( nBinsBjets > 2 ) {
+	cttwj3b->cd(3) ;
+	if ( nBinsBjets == 3 ) hmctruth_ttwj_0lep_3b->SetTitle("ttwj >=3b: 0 Lepton") ;
+	else                   hmctruth_ttwj_0lep_3b->SetTitle("ttwj =3b: 0 Lepton") ;
+	hmctruth_ttwj_0lep_3b->Draw() ;
+	hmctruth_ttwj_0lep_3b->Draw("histsame") ;
+	hmctruth_ttwj_0lep_3b->Draw("esame") ;
+
+	if ( nBinsBjets > 3 ) {
+	  cttwj3b->cd(4) ;
+	  hmctruth_ttwj_0lep_4b->SetTitle("ttwj >=4b: 0 Lepton") ;
+	  hmctruth_ttwj_0lep_4b->Draw() ;
+	  hmctruth_ttwj_0lep_4b->Draw("histsame") ;
+	  hmctruth_ttwj_0lep_4b->Draw("esame") ;
+
+	}
+      }
+
+      cttwj3b->cd(nBinsBjets+1) ;
       hmctruth_ttwj_1lep_1b->SetTitle("ttwj =1b: 1 Lepton") ;
       hmctruth_ttwj_1lep_1b->Draw() ;
       hmctruth_ttwj_1lep_1b->Draw("histsame") ;
       hmctruth_ttwj_1lep_1b->Draw("esame") ;
-      cttwj3b->cd(5) ;
-      hmctruth_ttwj_1lep_2b->SetTitle("ttwj =2b: 1 Lepton") ;
+
+      cttwj3b->cd(nBinsBjets+2) ;
+      if ( nBinsBjets == 2 ) hmctruth_ttwj_1lep_2b->SetTitle("ttwj >=2b: 1 Lepton") ;
+      else                   hmctruth_ttwj_1lep_2b->SetTitle("ttwj =2b: 1 Lepton") ;
       hmctruth_ttwj_1lep_2b->Draw() ;
       hmctruth_ttwj_1lep_2b->Draw("histsame") ;
       hmctruth_ttwj_1lep_2b->Draw("esame") ;
-      cttwj3b->cd(6) ;
-      hmctruth_ttwj_1lep_3b->SetTitle("ttwj >=3b: 1 Lepton") ;
-      hmctruth_ttwj_1lep_3b->Draw() ;
-      hmctruth_ttwj_1lep_3b->Draw("histsame") ;
-      hmctruth_ttwj_1lep_3b->Draw("esame") ;
+
+      if ( nBinsBjets > 2 ) {
+	cttwj3b->cd(nBinsBjets+3) ;
+	if ( nBinsBjets == 3 ) hmctruth_ttwj_1lep_3b->SetTitle("ttwj >=3b: 1 Lepton") ;
+	else                   hmctruth_ttwj_1lep_3b->SetTitle("ttwj =3b: 1 Lepton") ;
+	hmctruth_ttwj_1lep_3b->Draw() ;
+	hmctruth_ttwj_1lep_3b->Draw("histsame") ;
+	hmctruth_ttwj_1lep_3b->Draw("esame") ;
+
+	if ( nBinsBjets > 3 ) {
+	  cttwj3b->cd(nBinsBjets+4) ;
+	  hmctruth_ttwj_1lep_4b->SetTitle("ttwj >=4b: 1 Lepton") ;
+	  hmctruth_ttwj_1lep_4b->Draw() ;
+	  hmctruth_ttwj_1lep_4b->Draw("histsame") ;
+	  hmctruth_ttwj_1lep_4b->Draw("esame") ;
+	}
+      }
 
       TString outttwj3b( infileStr ) ;
       outttwj3b.ReplaceAll("rootfiles","outputfiles") ;
       outttwj3b.ReplaceAll(".root","-mcclosure-ttwj3b.pdf") ;
       cttwj3b->SaveAs( outttwj3b ) ;
-
+      outttwj3b.ReplaceAll(".pdf",".png") ;
+      cttwj3b->SaveAs( outttwj3b ) ;
 
 
       TCanvas* cttwj_slSig3b = (TCanvas*) gDirectory->FindObject("cttwj_slSig3b") ;
@@ -1108,39 +1479,68 @@
          cttwj_slSig3b = new TCanvas("cttwj_slSig3b","ttwj_slSig closure", 1200, 950) ;
       }
       cttwj_slSig3b->Clear() ;
-      cttwj_slSig3b->Divide(3,2) ;
+      cttwj_slSig3b->Divide(nBinsBjets,2) ;
 
       cttwj_slSig3b->cd(1) ;
       hmctruth_ttwj_1lepSig_1b->SetTitle("ttwj =1b: 1 Lepton Sig") ;
       hmctruth_ttwj_1lepSig_1b->Draw() ;
       hmctruth_ttwj_1lepSig_1b->Draw("histsame") ;
       hmctruth_ttwj_1lepSig_1b->Draw("esame") ;
+
       cttwj_slSig3b->cd(2) ;
-      hmctruth_ttwj_1lepSig_2b->SetTitle("ttwj =2b: 1 Lepton Sig") ;
+      if ( nBinsBjets == 2 ) hmctruth_ttwj_1lepSig_2b->SetTitle("ttwj >=2b: 1 Lepton Sig") ;
+      else                   hmctruth_ttwj_1lepSig_2b->SetTitle("ttwj =2b: 1 Lepton Sig") ;
       hmctruth_ttwj_1lepSig_2b->Draw() ;
       hmctruth_ttwj_1lepSig_2b->Draw("histsame") ;
       hmctruth_ttwj_1lepSig_2b->Draw("esame") ;
-      cttwj_slSig3b->cd(3) ;
-      hmctruth_ttwj_1lepSig_3b->SetTitle("ttwj >=3b: 1 Lepton Sig") ;
-      hmctruth_ttwj_1lepSig_3b->Draw() ;
-      hmctruth_ttwj_1lepSig_3b->Draw("histsame") ;
-      hmctruth_ttwj_1lepSig_3b->Draw("esame") ;
 
-      cttwj_slSig3b->cd(4) ;
+      if ( nBinsBjets > 2 ) {
+	cttwj_slSig3b->cd(3) ;
+	if ( nBinsBjets == 3 ) hmctruth_ttwj_1lepSig_3b->SetTitle("ttwj >=3b: 1 Lepton Sig") ;
+	else                   hmctruth_ttwj_1lepSig_3b->SetTitle("ttwj =3b: 1 Lepton Sig") ;
+	hmctruth_ttwj_1lepSig_3b->Draw() ;
+	hmctruth_ttwj_1lepSig_3b->Draw("histsame") ;
+	hmctruth_ttwj_1lepSig_3b->Draw("esame") ;
+
+	if ( nBinsBjets > 3 ) {
+	  cttwj_slSig3b->cd(4) ;
+	  hmctruth_ttwj_1lepSig_4b->SetTitle("ttwj >=4b: 1 Lepton Sig") ;
+	  hmctruth_ttwj_1lepSig_4b->Draw() ;
+	  hmctruth_ttwj_1lepSig_4b->Draw("histsame") ;
+	  hmctruth_ttwj_1lepSig_4b->Draw("esame") ;
+	}
+      }
+
+      cttwj_slSig3b->cd(nBinsBjets+1) ;
       hmctruth_ttwj_1lep_1b->SetTitle("ttwj =1b: 1 Lepton") ;
       hmctruth_ttwj_1lep_1b->Draw() ;
       hmctruth_ttwj_1lep_1b->Draw("histsame") ;
       hmctruth_ttwj_1lep_1b->Draw("esame") ;
-      cttwj_slSig3b->cd(5) ;
-      hmctruth_ttwj_1lep_2b->SetTitle("ttwj =2b: 1 Lepton") ;
+
+      cttwj_slSig3b->cd(nBinsBjets+2) ;
+      if ( nBinsBjets == 2 ) hmctruth_ttwj_1lep_2b->SetTitle("ttwj >=2b: 1 Lepton") ;
+      else                   hmctruth_ttwj_1lep_2b->SetTitle("ttwj =2b: 1 Lepton") ;
       hmctruth_ttwj_1lep_2b->Draw() ;
       hmctruth_ttwj_1lep_2b->Draw("histsame") ;
       hmctruth_ttwj_1lep_2b->Draw("esame") ;
-      cttwj_slSig3b->cd(6) ;
-      hmctruth_ttwj_1lep_3b->SetTitle("ttwj >=3b: 1 Lepton") ;
-      hmctruth_ttwj_1lep_3b->Draw() ;
-      hmctruth_ttwj_1lep_3b->Draw("histsame") ;
-      hmctruth_ttwj_1lep_3b->Draw("esame") ;
+
+      if ( nBinsBjets > 2 ) {
+	cttwj_slSig3b->cd(nBinsBjets+3) ;
+	if ( nBinsBjets == 3 ) hmctruth_ttwj_1lep_3b->SetTitle("ttwj >=3b: 1 Lepton") ;
+	else                   hmctruth_ttwj_1lep_3b->SetTitle("ttwj =3b: 1 Lepton") ;
+	hmctruth_ttwj_1lep_3b->Draw() ;
+	hmctruth_ttwj_1lep_3b->Draw("histsame") ;
+	hmctruth_ttwj_1lep_3b->Draw("esame") ;
+
+	if ( nBinsBjets > 3 ) {
+	  cttwj_slSig3b->cd(nBinsBjets+4) ;
+	  hmctruth_ttwj_1lep_4b->SetTitle("ttwj >=4b: 1 Lepton") ;
+	  hmctruth_ttwj_1lep_4b->Draw() ;
+	  hmctruth_ttwj_1lep_4b->Draw("histsame") ;
+	  hmctruth_ttwj_1lep_4b->Draw("esame") ;
+
+	}
+      }
 
 
 
@@ -1148,220 +1548,200 @@
       outttwj_slSig3b.ReplaceAll("rootfiles","outputfiles") ;
       outttwj_slSig3b.ReplaceAll(".root","-mcclosure-ttwj_slSig3b.pdf") ;
       cttwj_slSig3b->SaveAs( outttwj_slSig3b ) ;
-
-   //----
-
-
+      outttwj_slSig3b.ReplaceAll(".pdf",".png") ;
+      cttwj_slSig3b->SaveAs( outttwj_slSig3b ) ;
 
 
 
-
-
-    //--- insert ttwj numbers into file.
+      //--- insert ttwj numbers into file.
 
       for ( int mbi=0; mbi<nBinsMET ; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT ; hbi++ ) {
+	for ( int hbi=0; hbi<nBinsHT ; hbi++ ) {
+	  
+	  int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	  
+	  char parameterName[1000] ;
+	  double err, systValue, correction ;
+	  
+	  sprintf( parameterName, "sf_ttwj_M%d_H%d_1b_err", mbi+1, hbi+1 ) ;
+	  printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_0lep_1b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+	  err        = sqrt( hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinError(hbin)  )  ;
+	  correction = hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinContent(hbin)  ;
 
-            int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	  if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
+	  if ( doTTWJSyst ) {
+	    updateFileValue( datfile, parameterName, systValue ) ;
+	  } else {
+	    updateFileValue( datfile, parameterName, 0.0 ) ;
+	  }
+	  sprintf( parameterName, "sf_ttwj_M%d_H%d_1b", mbi+1, hbi+1 ) ;
+	  if ( doTTWJCorrection ) {
+	    updateFileValue( datfile, parameterName, correction ) ;
+	  } else {
+	    updateFileValue( datfile, parameterName, 1.0 ) ;
+	  }
 
-            char parameterName[1000] ;
-            double err, systValue, correction ;
+	  
+	  sprintf( parameterName, "sf_ttwj_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
+	  printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_0lep_2b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+	  err        = sqrt( hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinError(hbin) )  ;
+	  correction = hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinContent(hbin)  ;
 
-
-
-            sprintf( parameterName, "sf_ttwj_M%d_H%d_1b_err", mbi+1, hbi+1 ) ;
-            printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1,
-                  parameterName,
-                  hmctruth_ttwj_0lep_1b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
-            //if ( useAverageTtwjClosure ) {
-            //   err        = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin)  ;
-            //   correction = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinContent(hbin)  ;
-            //} else {
-	       // include 4% systematic for W fraction variation
-               err        = sqrt( hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
-               correction = hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinContent(hbin)  ;
-            //}
-            if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
-            if ( doTTWJSyst ) {
-               updateFileValue( datfile, parameterName, systValue ) ;
+	  
+	  if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
+	  if ( doTTWJSyst ) {
+	    updateFileValue( datfile, parameterName, systValue ) ;
+	  } else {
+	    updateFileValue( datfile, parameterName, 0.0 ) ;
+	  }
+	  sprintf( parameterName, "sf_ttwj_M%d_H%d_2b", mbi+1, hbi+1 ) ;
+	  if ( doTTWJCorrection ) {
+	    updateFileValue( datfile, parameterName, correction ) ;
             } else {
-               updateFileValue( datfile, parameterName, 0.0 ) ;
-            }
-            sprintf( parameterName, "sf_ttwj_M%d_H%d_1b", mbi+1, hbi+1 ) ;
-            if ( doTTWJCorrection ) {
-               updateFileValue( datfile, parameterName, correction ) ;
-            } else {
-               updateFileValue( datfile, parameterName, 1.0 ) ;
-            }
+	    updateFileValue( datfile, parameterName, 1.0 ) ;
+	  }
 
 
+	  if ( nBinsBjets > 2 ) {
+
+	    sprintf( parameterName, "sf_ttwj_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
+	    printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_0lep_3b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+	    err        = sqrt( hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinError(hbin)  )  ;
+	    correction = hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinContent(hbin)  ;
+	    
+	    if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
+	    if ( doTTWJSyst ) {
+	      updateFileValue( datfile, parameterName, systValue ) ;
+	    } else {
+	      updateFileValue( datfile, parameterName, 0.0 ) ;
+	    }
+	    sprintf( parameterName, "sf_ttwj_M%d_H%d_3b", mbi+1, hbi+1 ) ;
+	    if ( doTTWJCorrection ) {
+	      updateFileValue( datfile, parameterName, correction ) ;
+	    } else {
+	      updateFileValue( datfile, parameterName, 1.0 ) ;
+	    }
+	  
+	    if ( nBinsBjets > 3 ) {
+
+	      sprintf( parameterName, "sf_ttwj_M%d_H%d_4b_err", mbi+1, hbi+1 ) ;
+	      printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_0lep_4b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+	      err        = sqrt( hscalefactor_ttwj_0over1ratio_4b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_4b_whalfcorr->GetBinError(hbin)  )  ;
+	      correction = hscalefactor_ttwj_0over1ratio_4b_whalfcorr->GetBinContent(hbin)  ;
+	      
+	      if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
+	      if ( doTTWJSyst ) {
+		updateFileValue( datfile, parameterName, systValue ) ;
+	      } else {
+		updateFileValue( datfile, parameterName, 0.0 ) ;
+	      }
+	      sprintf( parameterName, "sf_ttwj_M%d_H%d_4b", mbi+1, hbi+1 ) ;
+	      if ( doTTWJCorrection ) {
+		updateFileValue( datfile, parameterName, correction ) ;
+	      } else {
+		updateFileValue( datfile, parameterName, 1.0 ) ;
+	      }
+	    }
+	  }
 
 
-            sprintf( parameterName, "sf_ttwj_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
-            printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1,
-                  parameterName,
-                  hmctruth_ttwj_0lep_2b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
-            //if ( useAverageTtwjClosure ) {
-            //   err        = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin)  ;
-            //   correction = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinContent(hbin)  ;
-            //} else {
-	       // include 4% systematic for W fraction variation
-               err        = sqrt( hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
-               correction = hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinContent(hbin)  ;
-            //}
-            if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
-            if ( doTTWJSyst ) {
-               updateFileValue( datfile, parameterName, systValue ) ;
-            } else {
-               updateFileValue( datfile, parameterName, 0.0 ) ;
-            }
-            sprintf( parameterName, "sf_ttwj_M%d_H%d_2b", mbi+1, hbi+1 ) ;
-            if ( doTTWJCorrection ) {
-               updateFileValue( datfile, parameterName, correction ) ;
-            } else {
-               updateFileValue( datfile, parameterName, 1.0 ) ;
-            }
-
-
-
-
-            sprintf( parameterName, "sf_ttwj_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
-            printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1,
-                  parameterName,
-                  hmctruth_ttwj_0lep_3b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
-            if ( useAverageTtwjClosure ) {
-	       // include 4% systematic for W fraction variation
-               err        = sqrt( hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
-               correction = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinContent(hbin)  ;
-            } else {
-	       // include 4% systematic for W fraction variation
-               err        = sqrt( hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
-               correction = hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinContent(hbin)  ;
-            }
-            if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
-            if ( doTTWJSyst ) {
-               updateFileValue( datfile, parameterName, systValue ) ;
-            } else {
-               updateFileValue( datfile, parameterName, 0.0 ) ;
-            }
-            sprintf( parameterName, "sf_ttwj_M%d_H%d_3b", mbi+1, hbi+1 ) ;
-            if ( doTTWJCorrection ) {
-               updateFileValue( datfile, parameterName, correction ) ;
-            } else {
-               updateFileValue( datfile, parameterName, 1.0 ) ;
-            }
-
-
-
-
-         } // hbi.
+	} // hbi.
       } // mbi.
+      
 
 
-
-
-
-
-    //--- insert ttwj_slSig numbers into file.
+      //--- insert ttwj_slSig numbers into file.
 
       for ( int mbi=0; mbi<nBinsMET ; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT ; hbi++ ) {
+	for ( int hbi=0; hbi<nBinsHT ; hbi++ ) {
+	  
+	  int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	  
+	  char parameterName[1000] ;
+	  double err, systValue, correction ;
+	  
+	  sprintf( parameterName, "sf_ttwj_slSig_M%d_H%d_1b_err", mbi+1, hbi+1 ) ;
+	  printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_1lepSig_1b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+	  err        = sqrt( hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr->GetBinError(hbin)  )  ;
+	  correction = hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr->GetBinContent(hbin)  ;
 
-            int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	  if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
+	  if ( doTTWJSyst ) {
+	    updateFileValue( datfile, parameterName, systValue ) ;
+	  } else {
+	    updateFileValue( datfile, parameterName, 0.0 ) ;
+	  }
+	  sprintf( parameterName, "sf_ttwj_slSig_M%d_H%d_1b", mbi+1, hbi+1 ) ;
+	  if ( doTTWJCorrection ) {
+	    updateFileValue( datfile, parameterName, correction ) ;
+	  } else {
+	    updateFileValue( datfile, parameterName, 1.0 ) ;
+	  }
 
-            char parameterName[1000] ;
-            double err, systValue, correction ;
+	  
+	  sprintf( parameterName, "sf_ttwj_slSig_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
+	  printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_1lepSig_2b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+	  err        = sqrt( hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr->GetBinError(hbin) )  ;
+	  correction = hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr->GetBinContent(hbin)  ;
 
-
-
-            sprintf( parameterName, "sf_ttwj_slSig_M%d_H%d_1b_err", mbi+1, hbi+1 ) ;
-            printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1,
-                  parameterName,
-                  hmctruth_ttwj_1lepSig_1b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
-            //if ( useAverageTtwjClosure ) {
-            //   err        = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin)  ;
-            //   correction = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinContent(hbin)  ;
-            //} else {
-	       // include 4% systematic for W fraction variation
-               err        = sqrt( hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
-               correction = hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr->GetBinContent(hbin)  ;
-
-            //}
-            if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
-            if ( doTTWJSyst ) {
-               updateFileValue( datfile, parameterName, systValue ) ;
+	  
+	  if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
+	  if ( doTTWJSyst ) {
+	    updateFileValue( datfile, parameterName, systValue ) ;
+	  } else {
+	    updateFileValue( datfile, parameterName, 0.0 ) ;
+	  }
+	  sprintf( parameterName, "sf_ttwj_slSig_M%d_H%d_2b", mbi+1, hbi+1 ) ;
+	  if ( doTTWJCorrection ) {
+	    updateFileValue( datfile, parameterName, correction ) ;
             } else {
-               updateFileValue( datfile, parameterName, 0.0 ) ;
-            }
-            sprintf( parameterName, "sf_ttwj_slSig_M%d_H%d_1b", mbi+1, hbi+1 ) ;
-            if ( doTTWJCorrection ) {
-               updateFileValue( datfile, parameterName, correction ) ;
-            } else {
-               updateFileValue( datfile, parameterName, 1.0 ) ;
-            }
+	    updateFileValue( datfile, parameterName, 1.0 ) ;
+	  }
 
 
+	  if ( nBinsBjets > 2 ) {
 
+	    sprintf( parameterName, "sf_ttwj_slSig_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
+	    printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_1lepSig_3b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+	    err        = sqrt( hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->GetBinError(hbin)  )  ;
+	    correction = hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->GetBinContent(hbin)  ;
+	    
+	    if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
+	    if ( doTTWJSyst ) {
+	      updateFileValue( datfile, parameterName, systValue ) ;
+	    } else {
+	      updateFileValue( datfile, parameterName, 0.0 ) ;
+	    }
+	    sprintf( parameterName, "sf_ttwj_slSig_M%d_H%d_3b", mbi+1, hbi+1 ) ;
+	    if ( doTTWJCorrection ) {
+	      updateFileValue( datfile, parameterName, correction ) ;
+	    } else {
+	      updateFileValue( datfile, parameterName, 1.0 ) ;
+	    }
+	  
+	    if ( nBinsBjets > 3 ) {
 
-            sprintf( parameterName, "sf_ttwj_slSig_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
-            printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1,
-                  parameterName,
-                  hmctruth_ttwj_1lepSig_2b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
-            //if ( useAverageTtwjClosure ) {
-            //   err        = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinError(hbin)  ;
-            //   correction = hscalefactor_ttwj_ave_0over1ratio_wrms_whalfcorr->GetBinContent(hbin)  ;
-            //} else {
-	       // include 4% systematic for W fraction variation
-               err        = sqrt( hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
-               correction = hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr->GetBinContent(hbin)  ;
-            //}
+	      sprintf( parameterName, "sf_ttwj_slSig_M%d_H%d_4b_err", mbi+1, hbi+1 ) ;
+	      printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_1lepSig_4b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+	      err        = sqrt( hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr->GetBinError(hbin)  )  ;
+	      correction = hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr->GetBinContent(hbin)  ;
+	      
+	      if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
+	      if ( doTTWJSyst ) {
+		updateFileValue( datfile, parameterName, systValue ) ;
+	      } else {
+		updateFileValue( datfile, parameterName, 0.0 ) ;
+	      }
+	      sprintf( parameterName, "sf_ttwj_slSig_M%d_H%d_4b", mbi+1, hbi+1 ) ;
+	      if ( doTTWJCorrection ) {
+		updateFileValue( datfile, parameterName, correction ) ;
+	      } else {
+		updateFileValue( datfile, parameterName, 1.0 ) ;
+	      }
+	    }
+	  }
 
-            if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
-            if ( doTTWJSyst ) {
-               updateFileValue( datfile, parameterName, systValue ) ;
-            } else {
-               updateFileValue( datfile, parameterName, 0.0 ) ;
-            }
-            sprintf( parameterName, "sf_ttwj_slSig_M%d_H%d_2b", mbi+1, hbi+1 ) ;
-            if ( doTTWJCorrection ) {
-               updateFileValue( datfile, parameterName, correction ) ;
-            } else {
-               updateFileValue( datfile, parameterName, 1.0 ) ;
-            }
-
-
-
-
-            sprintf( parameterName, "sf_ttwj_slSig_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
-            printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1,
-                  parameterName,
-                  hmctruth_ttwj_1lepSig_3b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
-            if ( useAverageTtwjClosure ) {
-	       // include 4% systematic for W fraction variation
-               err        = sqrt( hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
-               correction = hscalefactor_ttwj_ave_1lSover1ratio_whalfcorr->GetBinContent(hbin)  ;
-            } else {
-	       // include 4% systematic for W fraction variation
-               err        = sqrt( hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->GetBinError(hbin) + 0.04*0.04 )  ;
-               correction = hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->GetBinContent(hbin)  ;
-            }
-            if ( err > 0. ) { systValue = err ; } else { systValue = 3.0 ; }
-            if ( doTTWJSyst ) {
-               updateFileValue( datfile, parameterName, systValue ) ;
-            } else {
-               updateFileValue( datfile, parameterName, 0.0 ) ;
-            }
-            sprintf( parameterName, "sf_ttwj_slSig_M%d_H%d_3b", mbi+1, hbi+1 ) ;
-            if ( doTTWJCorrection ) {
-               updateFileValue( datfile, parameterName, correction ) ;
-            } else {
-               updateFileValue( datfile, parameterName, 1.0 ) ;
-            }
-
-
-
-
-         } // hbi.
+	} // hbi.
       } // mbi.
 
 
@@ -1419,7 +1799,6 @@
       char hname[1000] ;
       char htitle[1000] ;
 
-      //loadHist( "rootfiles/qcd-study1.root" ) ;
 
       for ( int si=0; si<nQcdSamples; si++ ) {
          for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
@@ -1441,8 +1820,8 @@
 
 
 
-     //--- Flatten 2D histos and compute 0lep/LDP ratios for each sample
-
+      //--- Flatten 2D histos and compute 0lep/LDP ratios for each sample
+      
       int nbins = nBinsMET*(nBinsHT+1) + 1 ;
 
       TH1F* hflat_0lep[nQcdSamples][nBinsBjets] ;
@@ -1458,219 +1837,202 @@
 
 
       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-         for ( int si=0; si<nQcdSamples; si++ ) {
+	for ( int si=0; si<nQcdSamples; si++ ) {
+	  
+	  sprintf( hname, "hflat_0lep_%db_%s", bbi+1, samplename[si] ) ;
+	  sprintf( htitle, "QCD 0lep events, nb=%d, %s", bbi+1, samplename[si] ) ;
+	  hflat_0lep[si][bbi] = bookHist( hname, htitle, si ) ;
+	  hflat_0lep[si][bbi]->SetFillColor(11) ;
+	  //////hldp[si][bbi]->Print("all") ;
+	  
+	  sprintf( hname, "hflat_ldp_%db_%s", bbi+1, samplename[si] ) ;
+	  sprintf( htitle, "QCD LDP events, nb=%d, %s", bbi+1, samplename[si] ) ;
+	  hflat_ldp[si][bbi] = bookHist( hname, htitle, si ) ;
+	  hflat_ldp[si][bbi]->SetFillColor(11) ;
 
-            sprintf( hname, "hflat_0lep_%db_%s", bbi+1, samplename[si] ) ;
-            sprintf( htitle, "QCD 0lep events, nb=%d, %s", bbi+1, samplename[si] ) ;
-            hflat_0lep[si][bbi] = bookHist( hname, htitle, si ) ;
-            hflat_0lep[si][bbi]->SetFillColor(11) ;
-            hldp[si][bbi]->Print("all") ;
+	  sprintf( hname, "hflat_0lepldp_ratio_%db_%s", bbi+1, samplename[si] ) ;
+	  sprintf( htitle, "QCD 0lep/LDP ratio, nb=%d, %s", bbi+1, samplename[si] ) ;
+	  hflat_0lepldp_ratio[si][bbi] = bookHist( hname, htitle, si ) ;
+	  
+	  for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+	    for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+	      
+	      int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	      
+	      float n0lep     = h0lep[si][bbi] -> GetBinContent( mbi+1, hbi+1 ) ;
+	      float n0lep_err = h0lep[si][bbi] -> GetBinError( mbi+1, hbi+1 ) ;
+	      
+	      float nldp      = hldp [si][bbi] -> GetBinContent( mbi+1, hbi+1 ) ;
+	      float nldp_err  = hldp [si][bbi] -> GetBinError( mbi+1, hbi+1 ) ;
+	      
+	      hflat_0lep[si][bbi] -> SetBinContent( histbin, n0lep ) ;
+	      hflat_0lep[si][bbi] -> SetBinError( histbin, n0lep_err ) ;
+	      
+	      hflat_ldp[si][bbi]  -> SetBinContent( histbin, nldp ) ;
+	      hflat_ldp[si][bbi]  -> SetBinError( histbin, nldp_err ) ;
+	      
+	      double ratio(0.) ;
+	      if ( nldp > 0 ) { ratio = n0lep / nldp ; }
+	      double ratio_err(0.) ;
+	      if ( n0lep_err > 0. && nldp_err > 0. ) {
+		ratio_err = ratio * sqrt( pow(n0lep_err/n0lep,2) + pow(nldp_err/nldp,2) ) ;
+	      }
+	      
+	      hflat_0lepldp_ratio[si][bbi] -> SetBinContent( histbin, ratio ) ;
+	      hflat_0lepldp_ratio[si][bbi] -> SetBinError( histbin, ratio_err ) ;
+	      
+	      
+	    } // hbi.
+	  } // mbi.
 
-            sprintf( hname, "hflat_ldp_%db_%s", bbi+1, samplename[si] ) ;
-            sprintf( htitle, "QCD LDP events, nb=%d, %s", bbi+1, samplename[si] ) ;
-            hflat_ldp[si][bbi] = bookHist( hname, htitle, si ) ;
-            hflat_ldp[si][bbi]->SetFillColor(11) ;
+	  hflat_0lep_all -> Add( hflat_0lep[si][bbi] ) ;
+	  hflat_ldp_all  -> Add( hflat_ldp [si][bbi] ) ;
+	  
+	  cqcd->Clear() ;
+	  cqcd->Divide(1,3) ;
+	  
+	  cqcd->cd(1) ;
+	  hflat_0lep[si][bbi] -> DrawCopy("histe") ;
+	  hflat_0lep[si][bbi] -> DrawCopy("samee") ;
+	  
+	  cqcd->cd(2) ;
+	  hflat_ldp[si][bbi] -> DrawCopy("histe") ;
+	  hflat_ldp[si][bbi] -> DrawCopy("samee") ;
+	  
+	  cqcd->cd(3) ;
+	  hflat_0lepldp_ratio[si][bbi]->SetMinimum(-0.1) ;
+	  hflat_0lepldp_ratio[si][bbi]->SetMaximum(0.6) ;
+	  hflat_0lepldp_ratio[si][bbi]->SetMarkerStyle(20) ;
+	  hflat_0lepldp_ratio[si][bbi]->SetLineWidth(2) ;
+	  hflat_0lepldp_ratio[si][bbi]->DrawCopy() ;
+	  gPad->SetGridx(1) ;
+	  gPad->SetGridy(1) ;
+	  line->DrawLine(0.5,0,nbins+0.5,0) ;
+	  
 
-            sprintf( hname, "hflat_0lepldp_ratio_%db_%s", bbi+1, samplename[si] ) ;
-            sprintf( htitle, "QCD 0lep/LDP ratio, nb=%d, %s", bbi+1, samplename[si] ) ;
-            hflat_0lepldp_ratio[si][bbi] = bookHist( hname, htitle, si ) ;
-
-            for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-               for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-
-                  int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
-
-                  float n0lep     = h0lep[si][bbi] -> GetBinContent( mbi+1, hbi+1 ) ;
-                  float n0lep_err = h0lep[si][bbi] -> GetBinError( mbi+1, hbi+1 ) ;
-
-                  float nldp      = hldp [si][bbi] -> GetBinContent( mbi+1, hbi+1 ) ;
-                  float nldp_err  = hldp [si][bbi] -> GetBinError( mbi+1, hbi+1 ) ;
-
-                  hflat_0lep[si][bbi] -> SetBinContent( histbin, n0lep ) ;
-                  hflat_0lep[si][bbi] -> SetBinError( histbin, n0lep_err ) ;
-
-                  hflat_ldp[si][bbi]  -> SetBinContent( histbin, nldp ) ;
-                  hflat_ldp[si][bbi]  -> SetBinError( histbin, nldp_err ) ;
-
-                  double ratio(0.) ;
-                  if ( nldp > 0 ) { ratio = n0lep / nldp ; }
-                  double ratio_err(0.) ;
-                  if ( n0lep_err > 0. && nldp_err > 0. ) {
-                     ratio_err = ratio * sqrt( pow(n0lep_err/n0lep,2) + pow(nldp_err/nldp,2) ) ;
-                  }
-
-                  hflat_0lepldp_ratio[si][bbi] -> SetBinContent( histbin, ratio ) ;
-                  hflat_0lepldp_ratio[si][bbi] -> SetBinError( histbin, ratio_err ) ;
-
-
-               } // hbi.
-            } // mbi.
-
-            hflat_0lep_all -> Add( hflat_0lep[si][bbi] ) ;
-            hflat_ldp_all  -> Add( hflat_ldp [si][bbi] ) ;
-
-            cqcd->Clear() ;
-            cqcd->Divide(1,3) ;
-
-            cqcd->cd(1) ;
-            hflat_0lep[si][bbi] -> DrawCopy("histe") ;
-            hflat_0lep[si][bbi] -> DrawCopy("samee") ;
-
-            cqcd->cd(2) ;
-            hflat_ldp[si][bbi] -> DrawCopy("histe") ;
-            hflat_ldp[si][bbi] -> DrawCopy("samee") ;
-
-            cqcd->cd(3) ;
-            hflat_0lepldp_ratio[si][bbi]->SetMinimum(-0.1) ;
-            hflat_0lepldp_ratio[si][bbi]->SetMaximum(0.6) ;
-            hflat_0lepldp_ratio[si][bbi]->SetMarkerStyle(20) ;
-            hflat_0lepldp_ratio[si][bbi]->SetLineWidth(2) ;
-            hflat_0lepldp_ratio[si][bbi]->DrawCopy() ;
-            gPad->SetGridx(1) ;
-            gPad->SetGridy(1) ;
-            line->DrawLine(0.5,0,nbins+0.5,0) ;
-
-
-            cqcd->Update() ; cqcd->Draw() ;
-
-         } // si.
+	  cqcd->Update() ; cqcd->Draw() ;
+	  
+	} // si.
       } // bbi.
 
       TH1F* hflat_0lep_all_sqrtNerrs = (TH1F*) hflat_0lep_all->Clone("hflat_0lep_all_sqrtNerrs") ;
       TH1F* hflat_ldp_all_sqrtNerrs  = (TH1F*) hflat_ldp_all ->Clone("hflat_ldp_all_sqrtNerrs") ;
-
+      
       for ( int bi=1; bi<=nbins; bi++ ) {
-         double val ;
-         val = hflat_0lep_all_sqrtNerrs->GetBinContent( bi ) ;
-         hflat_0lep_all_sqrtNerrs -> SetBinError( bi, sqrt(val) ) ;
-         val = hflat_ldp_all_sqrtNerrs->GetBinContent( bi ) ;
-         hflat_ldp_all_sqrtNerrs -> SetBinError( bi, sqrt(val) ) ;
+	double val ;
+	val = hflat_0lep_all_sqrtNerrs->GetBinContent( bi ) ;
+	hflat_0lep_all_sqrtNerrs -> SetBinError( bi, sqrt(val) ) ;
+	val = hflat_ldp_all_sqrtNerrs->GetBinContent( bi ) ;
+	hflat_ldp_all_sqrtNerrs -> SetBinError( bi, sqrt(val) ) ;
       }
 
 
 
-
-
-
-
-
-
-
-     //--- Compute sample average of 0lep/LDP ratio
-
-
+      //--- Compute sample average of 0lep/LDP ratio
+      
       TH1F* hflat_0lepldp_ratio_ave[nBinsBjets] ;
 
       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
-         sprintf( hname, "hflat_0lepldp_ratio_ave_%db", bbi+1 ) ;
-         sprintf( htitle, "QCD 0lep/LDP average ratio, nb=%d", bbi+1 ) ;
-         hflat_0lepldp_ratio_ave[bbi] = bookHist( hname, htitle, 5 ) ;
-
-         hflat_0lepldp_ratio_ave[bbi] -> SetMarkerStyle(24) ;
-         hflat_0lepldp_ratio_ave[bbi] -> SetMarkerSize(2.0) ;
-         hflat_0lepldp_ratio_ave[bbi] -> SetLineWidth(3) ;
-
-         for ( int binind=1; binind<=nbins; binind++ ) {
-
-            double wvsum(0.) ;
-            double wsum(0.) ;
-
-            for ( int si=0; si<nQcdSamples; si++ ) {
-
-               double val = hflat_0lepldp_ratio[si][bbi] -> GetBinContent( binind ) ;
-               double err = hflat_0lepldp_ratio[si][bbi] -> GetBinError( binind ) ;
-               if ( err > 0 ) {
-                  double weight = 1./(err*err) ;
-                  wvsum += val*weight ;
-                  wsum  += weight ;
-               }
-            } // si.
-
-            if ( wsum > 0. ) {
-               hflat_0lepldp_ratio_ave[bbi] -> SetBinContent( binind, wvsum/wsum ) ;
-               hflat_0lepldp_ratio_ave[bbi] -> SetBinError( binind, 1./sqrt(wsum) ) ;
-            }
-
-         } // binind
-
+	sprintf( hname, "hflat_0lepldp_ratio_ave_%db", bbi+1 ) ;
+	sprintf( htitle, "QCD 0lep/LDP average ratio, nb=%d", bbi+1 ) ;
+	hflat_0lepldp_ratio_ave[bbi] = bookHist( hname, htitle, 5 ) ;
+	
+	hflat_0lepldp_ratio_ave[bbi] -> SetMarkerStyle(24) ;
+	hflat_0lepldp_ratio_ave[bbi] -> SetMarkerSize(2.0) ;
+	hflat_0lepldp_ratio_ave[bbi] -> SetLineWidth(3) ;
+	
+	for ( int binind=1; binind<=nbins; binind++ ) {
+	  
+	  double wvsum(0.) ;
+	  double wsum(0.) ;
+	  
+	  for ( int si=0; si<nQcdSamples; si++ ) {
+	    
+	    double val = hflat_0lepldp_ratio[si][bbi] -> GetBinContent( binind ) ;
+	    double err = hflat_0lepldp_ratio[si][bbi] -> GetBinError( binind ) ;
+	    if ( err > 0 ) {
+	      double weight = 1./(err*err) ;
+	      wvsum += val*weight ;
+	      wsum  += weight ;
+	    }
+	  } // si.
+	  
+	  if ( wsum > 0. ) {
+	    hflat_0lepldp_ratio_ave[bbi] -> SetBinContent( binind, wvsum/wsum ) ;
+	    hflat_0lepldp_ratio_ave[bbi] -> SetBinError( binind, 1./sqrt(wsum) ) ;
+	  }
+	  
+	} // binind
+	
       } // bbi.
 
 
 
-
-
-
-
-
-     //--- Compute RMS spread of samples and total uncertainty
-
+      //--- Compute RMS spread of samples and total uncertainty
 
       TH1F* hflat_0lepldp_ratio_ave_withRMSerror[nBinsBjets] ;
-
+      
       printf("\n\n") ;
       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+	
+	sprintf( hname, "hflat_0lepldp_ratio_ave_%db_withRMSerror", bbi+1 ) ;
+	sprintf( htitle, "QCD 0lep/LDP average ratio, RMS included in error, nb=%d", bbi+1 ) ;
+	hflat_0lepldp_ratio_ave_withRMSerror[bbi] = bookHist( hname, htitle, 5 ) ;
+	
+	hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetMarkerStyle(24) ;
+	hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetMarkerSize(2.0) ;
+	hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetLineWidth(3) ;
+	
+	for ( int binind=1; binind<=nbins; binind++ ) {
+	  
+	  double sumsquare(0.) ;
+	  int    nsum(0) ;
+	  
+	  double ave     = hflat_0lepldp_ratio_ave[bbi] -> GetBinContent( binind ) ;
+	  double ave_err = hflat_0lepldp_ratio_ave[bbi] -> GetBinError( binind ) ;
+	  
+	  for ( int si=0; si<nQcdSamples; si++ ) {
+	    
+	    double val = hflat_0lepldp_ratio[si][bbi] -> GetBinContent( binind ) ;
+	    double err = hflat_0lepldp_ratio[si][bbi] -> GetBinError( binind ) ;
+	    
+	    if ( err <= 0 ) { continue ; }
+	    if ( val <= 0 ) { continue ; }
+	    //if ( err/val > 0.5 ) { continue ; } //-- do not include points with very large errors.
+	    if ( err/val > 0.3 ) { continue ; } //-- do not include points with very large errors.
+	    
 
-         sprintf( hname, "hflat_0lepldp_ratio_ave_%db_withRMSerror", bbi+1 ) ;
-         sprintf( htitle, "QCD 0lep/LDP average ratio, RMS included in error, nb=%d", bbi+1 ) ;
-         hflat_0lepldp_ratio_ave_withRMSerror[bbi] = bookHist( hname, htitle, 5 ) ;
+	    double diff = val - ave ;
+	    
+	    sumsquare += diff*diff ;
+	    
+	    nsum ++ ;
+	    
+	  } // si.
 
-         hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetMarkerStyle(24) ;
-         hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetMarkerSize(2.0) ;
-         hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetLineWidth(3) ;
-
-         for ( int binind=1; binind<=nbins; binind++ ) {
-
-            double sumsquare(0.) ;
-            int    nsum(0) ;
-
-            double ave     = hflat_0lepldp_ratio_ave[bbi] -> GetBinContent( binind ) ;
-            double ave_err = hflat_0lepldp_ratio_ave[bbi] -> GetBinError( binind ) ;
-
-            for ( int si=0; si<nQcdSamples; si++ ) {
-
-               double val = hflat_0lepldp_ratio[si][bbi] -> GetBinContent( binind ) ;
-               double err = hflat_0lepldp_ratio[si][bbi] -> GetBinError( binind ) ;
-
-               if ( err <= 0 ) { continue ; }
-               if ( val <= 0 ) { continue ; }
-               //if ( err/val > 0.5 ) { continue ; } //-- do not include points with very large errors.
-               if ( err/val > 0.3 ) { continue ; } //-- do not include points with very large errors.
-
-
-               double diff = val - ave ;
-
-               sumsquare += diff*diff ;
-
-               nsum ++ ;
-
-            } // si.
-
-            if ( nsum > 1 ) {
-               double rms = sqrt(sumsquare/nsum) ;
-               double totalerr = sqrt( ave_err*ave_err + rms*rms ) ;
-               const char* bl = hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> GetXaxis() -> GetBinLabel( binind ) ;
-               printf(" %s : %s : ratio = %5.3f, stat err = %5.3f, RMS = %5.3f,  total err = %5.3f\n",
+	  if ( nsum > 1 ) {
+	    double rms = sqrt(sumsquare/nsum) ;
+	    double totalerr = sqrt( ave_err*ave_err + rms*rms ) ;
+	    const char* bl = hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> GetXaxis() -> GetBinLabel( binind ) ;
+	    printf(" %s : %s : ratio = %5.3f, stat err = %5.3f, RMS = %5.3f,  total err = %5.3f\n",
                    hname, bl, ave, ave_err, rms, totalerr ) ;
-               hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetBinContent( binind, ave ) ;
-               hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetBinError( binind, totalerr ) ;
-            } else {
-               hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetBinContent( binind, ave ) ;
-               hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetBinError( binind, ave_err ) ;
-            }
+	    hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetBinContent( binind, ave ) ;
+	    hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetBinError( binind, totalerr ) ;
+	  } else {
+	    hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetBinContent( binind, ave ) ;
+	    hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> SetBinError( binind, ave_err ) ;
+	  }
 
-         } // binind
-         printf("\n") ;
-
+	} // binind
+	printf("\n") ;
+	
       } // bbi.
       printf("\n\n") ;
 
 
 
-
-
-
-     //--- compute average 0lep/LDP ratio globally and for each HT bin.
+      //--- compute average 0lep/LDP ratio globally and for each HT bin.
 
       double all0lep_ht[nBinsHT] ;
       double allldp_ht[nBinsHT] ;
@@ -1680,31 +2042,31 @@
          all0lep_ht[hbi] = 0. ;
          allldp_ht[hbi] = 0. ;
       } // hbi.
-
+      
       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-            for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+	for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+	  for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+	    
+	    int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
 
-               int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
-
-               all0lep_ht[hbi] += hflat_0lep_all -> GetBinContent( histbin ) ;
-               allldp_ht[hbi]  += hflat_ldp_all  -> GetBinContent( histbin ) ;
-
-               all0lep += hflat_0lep_all -> GetBinContent( histbin ) ;
-               allldp  += hflat_ldp_all  -> GetBinContent( histbin ) ;
-
-            } // bbi.
-         } // hbi.
+	    all0lep_ht[hbi] += hflat_0lep_all -> GetBinContent( histbin ) ;
+	    allldp_ht[hbi]  += hflat_ldp_all  -> GetBinContent( histbin ) ;
+	    
+	    all0lep += hflat_0lep_all -> GetBinContent( histbin ) ;
+	    allldp  += hflat_ldp_all  -> GetBinContent( histbin ) ;
+	    
+	  } // bbi.
+	} // hbi.
       } // mbi.
 
 
       printf("\n\n") ;
       for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-         htbin_0lepldp_ratio[hbi] = 0. ;
-         if ( allldp_ht[hbi] > 0. ) {
-            htbin_0lepldp_ratio[hbi] = all0lep_ht[hbi] / allldp_ht[hbi] ;
-         }
-         printf(" HT bin %d : QCD :  0lep = %7.1f,   LDP = %7.1f,   0lep/LDP = %5.3f\n", hbi+1, all0lep_ht[hbi], allldp_ht[hbi], htbin_0lepldp_ratio[hbi] ) ;
+	htbin_0lepldp_ratio[hbi] = 0. ;
+	if ( allldp_ht[hbi] > 0. ) {
+	  htbin_0lepldp_ratio[hbi] = all0lep_ht[hbi] / allldp_ht[hbi] ;
+	}
+	printf(" HT bin %d : QCD :  0lep = %7.1f,   LDP = %7.1f,   0lep/LDP = %5.3f\n", hbi+1, all0lep_ht[hbi], allldp_ht[hbi], htbin_0lepldp_ratio[hbi] ) ;
       } // hbi.
       printf("\n\n") ;
       htbin_0lepldp_ratio_global = all0lep / allldp ;
@@ -1712,250 +2074,238 @@
 
 
 
-
-
-
-
-     //--- Calculations for QCD Model 4 --------------
+      //--- Calculations for QCD Model 4 --------------
 
       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-            for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-
-               int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
-
-               double val, err ;
-
-               val = hflat_0lepldp_ratio_ave[bbi] -> GetBinContent( histbin ) ;
-               err = hflat_0lepldp_ratio_ave[bbi] -> GetBinError( histbin ) ;
-
-               data_Rqcd[mbi][hbi][bbi] = val ;
-               data_Rqcd_err[mbi][hbi][bbi] = err ;
-
-            } // bbi.
-         } // hbi.
+	for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+	  for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+	    
+	    int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	    
+	    double val, err ;
+	    
+	    val = hflat_0lepldp_ratio_ave[bbi] -> GetBinContent( histbin ) ;
+	    err = hflat_0lepldp_ratio_ave[bbi] -> GetBinError( histbin ) ;
+	    
+	    data_Rqcd[mbi][hbi][bbi] = val ;
+	    data_Rqcd_err[mbi][hbi][bbi] = err ;
+	    
+	  } // bbi.
+	} // hbi.
       } // mbi.
 
 
       TMinuit *myMinuit = new TMinuit(nBinsHT+nBinsMET-1+nBinsBjets-1) ; // arg is # of parameters
 
       myMinuit->SetFCN( minuit_fcn ) ;
-
+      
       Double_t arglist[10] ;
       Int_t ierflg = 0 ;
-
+      
       arglist[0] = 1 ;
       myMinuit->mnexcm("SET ERR", arglist ,1,ierflg); //--- do this for chi2 fit.
-
+      
       int parind(0) ;
       for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-         char pname[1000] ;
-         sprintf( pname, "Rqcd_HT%d", hbi+1 ) ;
-         myMinuit->mnparm( parind, pname, htbin_0lepldp_ratio[hbi], 0.03, 0., 2., ierflg ) ;
-         parind++ ;
+	char pname[1000] ;
+	sprintf( pname, "Rqcd_HT%d", hbi+1 ) ;
+	myMinuit->mnparm( parind, pname, htbin_0lepldp_ratio[hbi], 0.03, 0., 2., ierflg ) ;
+	parind++ ;
       } // hbi.
       for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
-         char pname[1000] ;
-         sprintf( pname, "SFqcd_MET%d", mbi+1 ) ;
-         myMinuit->mnparm( parind, pname, 1.0, 0.10, 0., 2., ierflg ) ;
-         parind++ ;
+	char pname[1000] ;
+	sprintf( pname, "SFqcd_MET%d", mbi+1 ) ;
+	myMinuit->mnparm( parind, pname, 1.0, 0.10, 0., 4., ierflg ) ;
+	parind++ ;
       } // mbi.
       for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {
-         char pname[1000] ;
-         sprintf( pname, "SFqcd_nb%d", bbi+1 ) ;
-         myMinuit->mnparm( parind, pname, 1.0, 0.10, 0., 2., ierflg ) ;
-         parind++ ;
+	char pname[1000] ;
+	sprintf( pname, "SFqcd_nb%d", bbi+1 ) ;
+	myMinuit->mnparm( parind, pname, 1.0, 0.10, 0., 4., ierflg ) ;
+	parind++ ;
       } // mbi.
 
       myMinuit->Migrad() ;
       myMinuit->mncomd("hesse",ierflg) ;
-
+      
       printf("\n\n") ;
       parind = 0 ;
       for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-         char pname[1000] ;
-         double val, err ;
-         sprintf( pname, "Rqcd_HT%d", hbi+1 ) ;
-         myMinuit->GetParameter( parind, val, err ) ;
-         printf(" %11s : %6.3f +/- %5.3f\n", pname, val, err ) ;
-         fit_Rqcd_HT[hbi] = val ;
-         parind++ ;
+	char pname[1000] ;
+	double val, err ;
+	sprintf( pname, "Rqcd_HT%d", hbi+1 ) ;
+	myMinuit->GetParameter( parind, val, err ) ;
+	printf(" %11s : %6.3f +/- %5.3f\n", pname, val, err ) ;
+	fit_Rqcd_HT[hbi] = val ;
+	parind++ ;
       } // hbi.
       for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
-         char pname[1000] ;
-         double val, err ;
-         sprintf( pname, "SFqcd_MET%d", mbi+1 ) ;
-         myMinuit->GetParameter( parind, val, err ) ;
-         printf(" %11s : %6.3f +/- %5.3f\n", pname, val, err ) ;
-         fit_SFqcd_MET[mbi] = val ;
+	char pname[1000] ;
+	double val, err ;
+	sprintf( pname, "SFqcd_MET%d", mbi+1 ) ;
+	myMinuit->GetParameter( parind, val, err ) ;
+	printf(" %11s : %6.3f +/- %5.3f\n", pname, val, err ) ;
+	fit_SFqcd_MET[mbi] = val ;
          parind++ ;
       } // mbi.
       for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {
-         char pname[1000] ;
-         double val, err ;
-         sprintf( pname, "SFqcd_nb%d", bbi+1 ) ;
-         myMinuit->GetParameter( parind, val, err ) ;
-         printf(" %11s : %6.3f +/- %5.3f\n", pname, val, err ) ;
-         fit_SFqcd_nb[bbi] = val ;
-         parind++ ;
+	char pname[1000] ;
+	double val, err ;
+	sprintf( pname, "SFqcd_nb%d", bbi+1 ) ;
+	myMinuit->GetParameter( parind, val, err ) ;
+	printf(" %11s : %6.3f +/- %5.3f\n", pname, val, err ) ;
+	fit_SFqcd_nb[bbi] = val ;
+	parind++ ;
       } // mbi.
       printf("\n\n") ;
 
 
-
-
       TH1F* hflat_0lepldp_ratio_model[nBinsBjets] ;
-
+      
       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-         sprintf( hname, "hflat_0lepldp_ratio_model_%db", bbi+1 ) ;
-         hflat_0lepldp_ratio_model[bbi] = (TH1F*) hflat_0lepldp_ratio_ave[bbi]->Clone( hname ) ;
+	sprintf( hname, "hflat_0lepldp_ratio_model_%db", bbi+1 ) ;
+	hflat_0lepldp_ratio_model[bbi] = (TH1F*) hflat_0lepldp_ratio_ave[bbi]->Clone( hname ) ;
       } // bbi.
-
+      
 
       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-            for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-
-               int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
-
-               hflat_0lepldp_ratio_model[bbi] -> SetBinContent( histbin, fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ;
-
-            } // bbi.
-         } // hbi.
+	for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+	  for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+	    
+	    int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	    
+	    hflat_0lepldp_ratio_model[bbi] -> SetBinContent( histbin, fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ;
+	    
+	  } // bbi.
+	} // hbi.
       } // mbi.
 
 
 
-
-
-
-
-
-
-
-     //--- Compute QCD scale factors
+      //--- Compute QCD scale factors
 
       TH1F* hflat_scale_factor[nBinsBjets] ;
       TH1F* hflat_scale_factor_withRMSerror[nBinsBjets] ;
 
       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
-         sprintf( hname, "hflat_scale_factor_%db", bbi+1 ) ;
-         sprintf( htitle, "QCD scale factor, nb=%d", bbi+1 ) ;
-         hflat_scale_factor[bbi] = (TH1F*) hflat_0lepldp_ratio_ave[bbi]->Clone( hname ) ;
-         hflat_scale_factor[bbi] -> SetTitle( htitle ) ;
+	sprintf( hname, "hflat_scale_factor_%db", bbi+1 ) ;
+	sprintf( htitle, "QCD scale factor, nb=%d", bbi+1 ) ;
+	hflat_scale_factor[bbi] = (TH1F*) hflat_0lepldp_ratio_ave[bbi]->Clone( hname ) ;
+	hflat_scale_factor[bbi] -> SetTitle( htitle ) ;
 
-         sprintf( hname, "hflat_scale_factor_%db_withRMSerror", bbi+1 ) ;
-         sprintf( htitle, "QCD scale factor, nb=%d, RMS error included ", bbi+1 ) ;
-         hflat_scale_factor_withRMSerror[bbi] = (TH1F*) hflat_0lepldp_ratio_ave_withRMSerror[bbi]->Clone( hname ) ;
-         hflat_scale_factor_withRMSerror[bbi] -> SetTitle( htitle ) ;
+	sprintf( hname, "hflat_scale_factor_%db_withRMSerror", bbi+1 ) ;
+	sprintf( htitle, "QCD scale factor, nb=%d, RMS error included ", bbi+1 ) ;
+	hflat_scale_factor_withRMSerror[bbi] = (TH1F*) hflat_0lepldp_ratio_ave_withRMSerror[bbi]->Clone( hname ) ;
+	hflat_scale_factor_withRMSerror[bbi] -> SetTitle( htitle ) ;
 
       } // bbi.
-
+      
       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-            for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+	for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+	  for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+	    
+	    int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	    
+	    double val, err ;
+	    double valwrmse, errwrmse ;
+	    
+	    val = hflat_0lepldp_ratio_ave[bbi] -> GetBinContent( histbin ) ;
+	    err = hflat_0lepldp_ratio_ave[bbi] -> GetBinError( histbin ) ;
+	    
+	    valwrmse = hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> GetBinContent( histbin ) ;
+	    errwrmse = hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> GetBinError( histbin ) ;
+	    
+	    
+	    if ( qcdModelIndex == 4 ) {
+	      
+	      //-- QCD Model 4.  SF_ijk = (0lep/LDP)_ijk / (Rqcd_HTj * SF_METi * SF_nbk).
+	      
+	      hflat_scale_factor[bbi] -> SetBinContent( histbin, val / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ) ;
+	      hflat_scale_factor[bbi] -> SetBinError(   histbin, err / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ) ;
+	      
+	      //make this no correction, but include full lack of closure here, plus 10% for subtraction of non-QCD contributions
+	      //hflat_scale_factor_withRMSerror[bbi] -> SetBinContent( histbin, valwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ) ;
+	      //hflat_scale_factor_withRMSerror[bbi] -> SetBinError(   histbin, errwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ) ;
+	      float closure_error = fabs( 1 - (valwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] )) );
+	      float stat_error = ( errwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) );
+	      float sub_error = 0.10; // 
+	      float total_error = sqrt( closure_error*closure_error + stat_error*stat_error + sub_error*sub_error ) ;
+	      //-- Owen, Jan 28, 2013: Put a cap on error to avoid crazy values.
+	      if ( total_error > 1.0 ) { total_error = 1.0 ; }
+	      hflat_scale_factor_withRMSerror[bbi] -> SetBinContent( histbin, 1.0 );
+	      hflat_scale_factor_withRMSerror[bbi] -> SetBinError(   histbin, total_error ) ;
+	      printf(" QCD SF: met=%d, ht=%d, nb=%d : closure_error=%5.3f,  stat_error=%5.3f,  sub_error=%5.3f,  total_error=%5.3f\n",
+		     mbi+1, hbi+1, bbi+1,
+		     closure_error, stat_error, sub_error, sqrt( closure_error*closure_error + stat_error*stat_error + sub_error*sub_error ) ) ;
+	      
+	    } else if ( qcdModelIndex == 3 ) {
+	      
+	      //-- QCD Model 3.  SF_i = (0lep/LDP)_i / global_(0lep/LDP)
+	      
+	      hflat_scale_factor[bbi] -> SetBinContent( histbin, val / htbin_0lepldp_ratio_global ) ;
+	      hflat_scale_factor[bbi] -> SetBinError(   histbin, err / htbin_0lepldp_ratio_global ) ;
+	      
+	      hflat_scale_factor_withRMSerror[bbi] -> SetBinContent( histbin, valwrmse / htbin_0lepldp_ratio_global ) ;
+	      hflat_scale_factor_withRMSerror[bbi] -> SetBinError(   histbin, errwrmse / htbin_0lepldp_ratio_global ) ;
+	      
+	    } else if ( qcdModelIndex == 2 ) {
 
-               int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
-
-               double val, err ;
-               double valwrmse, errwrmse ;
-
-               val = hflat_0lepldp_ratio_ave[bbi] -> GetBinContent( histbin ) ;
-               err = hflat_0lepldp_ratio_ave[bbi] -> GetBinError( histbin ) ;
-
-               valwrmse = hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> GetBinContent( histbin ) ;
-               errwrmse = hflat_0lepldp_ratio_ave_withRMSerror[bbi] -> GetBinError( histbin ) ;
-
-
-               if ( qcdModelIndex == 4 ) {
-
-                  //-- QCD Model 4.  SF_ijk = (0lep/LDP)_ijk / (Rqcd_HTj * SF_METi * SF_nbk).
-
-                  hflat_scale_factor[bbi] -> SetBinContent( histbin, val / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ) ;
-                  hflat_scale_factor[bbi] -> SetBinError(   histbin, err / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ) ;
-
-                  //make this no correction, but include full lack of closure here, plus 10% for subtraction of non-QCD contributions
-		  //hflat_scale_factor_withRMSerror[bbi] -> SetBinContent( histbin, valwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ) ;
-                  //hflat_scale_factor_withRMSerror[bbi] -> SetBinError(   histbin, errwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ) ;
-                  float closure_error = fabs( 1 - (valwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] )) );
-                  float stat_error = ( errwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) );
-		  float sub_error = 0.10; // 
-		  hflat_scale_factor_withRMSerror[bbi] -> SetBinContent( histbin, 1.0 );
-		  hflat_scale_factor_withRMSerror[bbi] -> SetBinError(   histbin, sqrt( closure_error*closure_error + stat_error*stat_error + sub_error*sub_error ) ) ;
-               } else if ( qcdModelIndex == 3 ) {
-
-                  //-- QCD Model 3.  SF_i = (0lep/LDP)_i / global_(0lep/LDP)
-
-                  hflat_scale_factor[bbi] -> SetBinContent( histbin, val / htbin_0lepldp_ratio_global ) ;
-                  hflat_scale_factor[bbi] -> SetBinError(   histbin, err / htbin_0lepldp_ratio_global ) ;
-
-                  hflat_scale_factor_withRMSerror[bbi] -> SetBinContent( histbin, valwrmse / htbin_0lepldp_ratio_global ) ;
-                  hflat_scale_factor_withRMSerror[bbi] -> SetBinError(   histbin, errwrmse / htbin_0lepldp_ratio_global ) ;
-
-               } else if ( qcdModelIndex == 2 ) {
-
-                  //-- QCD Model 2.  SF_i = (0lep/LDP)_i / HTbin_(0lep/LDP)
-
-                  hflat_scale_factor[bbi] -> SetBinContent( histbin, val / htbin_0lepldp_ratio[hbi] ) ;
-                  hflat_scale_factor[bbi] -> SetBinError(   histbin, err / htbin_0lepldp_ratio[hbi] ) ;
-
-                  hflat_scale_factor_withRMSerror[bbi] -> SetBinContent( histbin, valwrmse / htbin_0lepldp_ratio[hbi] ) ;
-                  hflat_scale_factor_withRMSerror[bbi] -> SetBinError(   histbin, errwrmse / htbin_0lepldp_ratio[hbi] ) ;
-
-               }
-
-            } // bbi.
-         } // hbi.
+	      //-- QCD Model 2.  SF_i = (0lep/LDP)_i / HTbin_(0lep/LDP)
+	      
+	      hflat_scale_factor[bbi] -> SetBinContent( histbin, val / htbin_0lepldp_ratio[hbi] ) ;
+	      hflat_scale_factor[bbi] -> SetBinError(   histbin, err / htbin_0lepldp_ratio[hbi] ) ;
+	      
+	      hflat_scale_factor_withRMSerror[bbi] -> SetBinContent( histbin, valwrmse / htbin_0lepldp_ratio[hbi] ) ;
+	      hflat_scale_factor_withRMSerror[bbi] -> SetBinError(   histbin, errwrmse / htbin_0lepldp_ratio[hbi] ) ;
+	      
+	    }
+	    
+	  } // bbi.
+	} // hbi.
       } // mbi.
 
 
 
 
-
-
-
-
-
-
-     //--- set Scale Factor values in dat file if one is provided.
+      //--- set Scale Factor values in dat file if one is provided.
 
       if ( strcmp( datfile, "null" ) != 0 ) {
-
-         printf("\n\n\n Setting QCD scale factors in %s\n\n", datfile ) ;
-
-         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-            for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-               for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-                  char parname[1000] ;
-                  int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
-                  double val = hflat_scale_factor_withRMSerror[bbi]->GetBinContent( histbin ) ;
-                  double err = hflat_scale_factor_withRMSerror[bbi]->GetBinError( histbin ) ;
-                  if ( err <= 0 ) {
-                     val = 1.0 ;
-                     err = 3.0 ;
-                  }
-                  sprintf( parname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                  updateFileValue( datfile, parname, val ) ;
-                  sprintf( parname, "sf_qcd_M%d_H%d_%db_err", mbi+1, hbi+1, bbi+1 ) ;
-                  updateFileValue( datfile, parname, err ) ;
-               } // bbi.
-            } // hbi.
-         } // mbi.
-
+	
+	printf("\n\n\n Setting QCD scale factors in %s\n\n", datfile ) ;
+	
+	for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+	  for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+	    for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+	      char parname[1000] ;
+	      int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	      double val = hflat_scale_factor_withRMSerror[bbi]->GetBinContent( histbin ) ;
+	      double err = hflat_scale_factor_withRMSerror[bbi]->GetBinError( histbin ) ;
+	      if ( err <= 0 ) {
+		val = 1.0 ;
+		err = 3.0 ;
+	      }
+	      sprintf( parname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+	      updateFileValue( datfile, parname, val ) ;
+	      sprintf( parname, "sf_qcd_M%d_H%d_%db_err", mbi+1, hbi+1, bbi+1 ) ;
+	      updateFileValue( datfile, parname, err ) ;
+	    } // bbi.
+	  } // hbi.
+	} // mbi.
+	
       }
 
+      
+      //===========  End QCD calculations.  QCD plots and other output below here.  ===================================
 
-     //===========  End QCD calculations.  QCD plots and other output below here.  ===================================
 
-
-     //--- Plot all samples together
+      //--- Plot all samples together
 
       TCanvas* cqcd2 = (TCanvas*) gDirectory->FindObject("cqcd2") ;
       if ( cqcd2 == 0x0 ) {
-         cqcd2 = new TCanvas("cqcd2", "qcd study", 1700, 600 ) ;
+	cqcd2 = new TCanvas("cqcd2", "qcd study", 1700, 600 ) ;
       }
-
+      
       TLegend* l2 = new TLegend( 0.79, 0.70,  0.99, 0.99 ) ;
       l2->AddEntry( hflat_0lepldp_ratio[0][0], "120 to 170" ) ;
       l2->AddEntry( hflat_0lepldp_ratio[1][0], "170 to 300" ) ;
@@ -1970,15 +2320,15 @@
 
 
       cqcd2 -> Clear() ;
-      cqcd2 -> Divide(3,1) ;
+      cqcd2 -> Divide(3,1) ;   /// AG here!
 
       cqcd2 -> cd(1) ;
       hflat_0lepldp_ratio[0][0] -> SetTitle("QCD 0lep/LDP ratio, nb=1") ;
       for ( int si=0; si<nQcdSamples; si++ ) {
-         hflat_0lepldp_ratio[si][0] -> SetMarkerStyle(20+si) ;
-         hflat_0lepldp_ratio[si][0] -> SetLineColor(samplecolor[si]) ;
-         hflat_0lepldp_ratio[si][0] -> SetMarkerColor(samplecolor[si]) ;
-         if ( si == 0 ) { hflat_0lepldp_ratio[si][0] -> DrawCopy() ; } else { hflat_0lepldp_ratio[si][0] -> DrawCopy("same") ; }
+	hflat_0lepldp_ratio[si][0] -> SetMarkerStyle(20+si) ;
+	hflat_0lepldp_ratio[si][0] -> SetLineColor(samplecolor[si]) ;
+	hflat_0lepldp_ratio[si][0] -> SetMarkerColor(samplecolor[si]) ;
+	if ( si == 0 ) { hflat_0lepldp_ratio[si][0] -> DrawCopy() ; } else { hflat_0lepldp_ratio[si][0] -> DrawCopy("same") ; }
       }
       hflat_0lepldp_ratio_ave[0]->DrawCopy("same") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
@@ -2102,62 +2452,126 @@
       cqcd4->Clear() ;
       cqcd4->Divide(3,1) ;
 
+      if (usePublicStyle_) {
+	nblabel_y -= 0.01;
+
+	for (int ii=0;ii<3;ii++)   {
+	  resetBinLabels(hflat_0lepldp_ratio_ave[ii] , false ) ;
+	  hflat_0lepldp_ratio_ave[ii]->SetYTitle("ZL/LDP ratio");
+	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetYTitle("ZL/LDP ratio");
+
+	  hflat_0lepldp_ratio_ave[ii]->SetMarkerStyle(kCircle);
+	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetMarkerStyle(kCircle);
+
+	  hflat_0lepldp_ratio_ave[ii]->SetMarkerSize(1);
+	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetMarkerSize(1);
+
+	  hflat_0lepldp_ratio_ave[ii]->SetLineWidth(1);
+	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetLineWidth(1);
+
+	  hflat_0lepldp_ratio_model[ii] -> SetLineWidth(1);
+
+	  hflat_0lepldp_ratio_model[ii] -> SetLineColor(kRed); //was red
+
+	  hflat_0lepldp_ratio_ave[ii]->SetMarkerColor(kBlack); //was black
+	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetMarkerColor(kBlack);//was black
+
+	  hflat_0lepldp_ratio_ave[ii]->SetLineColor(kBlack); //was black
+	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetLineColor(kBlue);
+
+
+	  hflat_0lepldp_ratio_ave[ii] -> SetMaximum(0.6) ;
+	  hflat_0lepldp_ratio_ave[ii] -> SetMinimum(-0.1) ; //change this?
+	}
+      }
+      else {
+
+	hflat_0lepldp_ratio_ave[0] -> SetTitle("Average QCD 0lep/LDP ratio, nb=1") ;
+	hflat_0lepldp_ratio_ave[0] -> SetMarkerSize(1.2) ;
+	hflat_0lepldp_ratio_ave[0] -> SetMarkerStyle(20) ;
+	hflat_0lepldp_ratio_ave[0] -> SetMaximum(0.6) ;
+	hflat_0lepldp_ratio_ave[0] -> SetMinimum(-0.1) ;
+	
+	hflat_0lepldp_ratio_ave_withRMSerror[0]->SetMarkerStyle() ;
+	hflat_0lepldp_ratio_ave_withRMSerror[0]->SetLineColor(4) ;
+	hflat_0lepldp_ratio_model[0] -> SetLineColor(2) ;
+	hflat_0lepldp_ratio_model[0] -> SetLineWidth(2) ;
+	hflat_0lepldp_ratio_ave[1] -> SetMarkerSize(1.2) ;
+	hflat_0lepldp_ratio_ave[1] -> SetMarkerStyle(20) ;
+	hflat_0lepldp_ratio_ave[1] -> SetMaximum(0.6) ;
+	hflat_0lepldp_ratio_ave[1] -> SetMinimum(-0.1) ;
+	
+	hflat_0lepldp_ratio_ave_withRMSerror[1]->SetMarkerStyle() ;
+	hflat_0lepldp_ratio_ave_withRMSerror[1]->SetLineColor(4) ;
+	
+	hflat_0lepldp_ratio_model[1] -> SetLineColor(2) ;
+	hflat_0lepldp_ratio_model[1] -> SetLineWidth(2) ;
+	hflat_0lepldp_ratio_ave[2] -> SetMarkerSize(1.2) ;
+	hflat_0lepldp_ratio_ave[2] -> SetMarkerStyle(20) ;
+	hflat_0lepldp_ratio_ave[2] -> SetMaximum(0.6) ;
+	hflat_0lepldp_ratio_ave[2] -> SetMinimum(-0.1) ;
+	hflat_0lepldp_ratio_ave_withRMSerror[2]->SetMarkerStyle() ;
+	hflat_0lepldp_ratio_ave_withRMSerror[2]->SetLineColor(4) ;
+	
+	hflat_0lepldp_ratio_model[2] -> SetLineColor(2) ;
+	hflat_0lepldp_ratio_model[2] -> SetLineWidth(2) ;
+
+      }
+
+
       cqcd4 -> cd(1) ;
-      hflat_0lepldp_ratio_ave[0] -> SetTitle("Average QCD 0lep/LDP ratio, nb=1") ;
-      hflat_0lepldp_ratio_ave[0] -> SetMarkerSize(1.2) ;
-      hflat_0lepldp_ratio_ave[0] -> SetMarkerStyle(20) ;
-      hflat_0lepldp_ratio_ave[0] -> SetMaximum(0.6) ;
-      hflat_0lepldp_ratio_ave[0] -> SetMinimum(-0.1) ;
+
       hflat_0lepldp_ratio_ave[0]->DrawCopy("e1") ;
-      hflat_0lepldp_ratio_ave_withRMSerror[0]->SetMarkerStyle() ;
-      hflat_0lepldp_ratio_ave_withRMSerror[0]->SetLineColor(4) ;
       hflat_0lepldp_ratio_ave_withRMSerror[0]->DrawCopy("samee1") ;
       hflat_0lepldp_ratio_ave[0]->DrawCopy("samee1") ;
-      hflat_0lepldp_ratio_model[0] -> SetLineColor(2) ;
-      hflat_0lepldp_ratio_model[0] -> SetLineWidth(2) ;
       hflat_0lepldp_ratio_model[0] -> Draw("histsame") ;
       hflat_0lepldp_ratio_ave[0]->DrawCopy("samee1") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
-      gPad->SetGridx(1) ;
+
       gPad->SetGridy(1) ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 1");
+      }
+      else      gPad->SetGridx(1) ;
+
 
       cqcd4 -> cd(2) ;
+
       hflat_0lepldp_ratio_ave[1] -> SetTitle("Average QCD 0lep/LDP ratio, nb=2") ;
-      hflat_0lepldp_ratio_ave[1] -> SetMarkerSize(1.2) ;
-      hflat_0lepldp_ratio_ave[1] -> SetMarkerStyle(20) ;
-      hflat_0lepldp_ratio_ave[1] -> SetMaximum(0.6) ;
-      hflat_0lepldp_ratio_ave[1] -> SetMinimum(-0.1) ;
       hflat_0lepldp_ratio_ave[1]->DrawCopy("e1") ;
-      hflat_0lepldp_ratio_ave_withRMSerror[1]->SetMarkerStyle() ;
-      hflat_0lepldp_ratio_ave_withRMSerror[1]->SetLineColor(4) ;
       hflat_0lepldp_ratio_ave_withRMSerror[1]->DrawCopy("samee1") ;
       hflat_0lepldp_ratio_ave[1]->DrawCopy("samee1") ;
-      hflat_0lepldp_ratio_model[1] -> SetLineColor(2) ;
-      hflat_0lepldp_ratio_model[1] -> SetLineWidth(2) ;
       hflat_0lepldp_ratio_model[1] -> Draw("histsame") ;
       hflat_0lepldp_ratio_ave[1]->DrawCopy("samee1") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
-      gPad->SetGridx(1) ;
+
       gPad->SetGridy(1) ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+
+      }
+      else      gPad->SetGridx(1) ;
+
 
       cqcd4 -> cd(3) ;
+
       hflat_0lepldp_ratio_ave[2] -> SetTitle("Average QCD 0lep/LDP ratio, nb>=3") ;
-      hflat_0lepldp_ratio_ave[2] -> SetMarkerSize(1.2) ;
-      hflat_0lepldp_ratio_ave[2] -> SetMarkerStyle(20) ;
-      hflat_0lepldp_ratio_ave[2] -> SetMaximum(0.6) ;
-      hflat_0lepldp_ratio_ave[2] -> SetMinimum(-0.1) ;
       hflat_0lepldp_ratio_ave[2]->DrawCopy("e1") ;
-      hflat_0lepldp_ratio_ave_withRMSerror[2]->SetMarkerStyle() ;
-      hflat_0lepldp_ratio_ave_withRMSerror[2]->SetLineColor(4) ;
       hflat_0lepldp_ratio_ave_withRMSerror[2]->DrawCopy("samee1") ;
       hflat_0lepldp_ratio_ave[2]->DrawCopy("samee1") ;
-      hflat_0lepldp_ratio_model[2] -> SetLineColor(2) ;
-      hflat_0lepldp_ratio_model[2] -> SetLineWidth(2) ;
       hflat_0lepldp_ratio_model[2] -> Draw("histsame") ;
       hflat_0lepldp_ratio_ave[2]->DrawCopy("samee1") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
-      gPad->SetGridx(1) ;
+
       gPad->SetGridy(1) ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
+
+      }
+      else      gPad->SetGridx(1) ;
 
 
       cqcd4->Update() ; cqcd4->Draw() ;
@@ -2168,60 +2582,89 @@
       }
 
 
-
-
-
-
-
-
-
+      if (usePublicStyle_)  {
+	for (int ii=0;ii<3;ii++)   {
+	  resetBinLabels(hflat_0lepldp_ratio_ave[ii] , false ) ;
+	  
+	  hflat_0lepldp_ratio_ave[ii]->SetYTitle("Normalized ZL/LDP ratios S_{i,j,k}^{QCD}");
+	  
+	  hflat_0lepldp_ratio_ave[ii]->SetLineWidth(1);
+	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetLineWidth(1);
+	  
+	  hflat_0lepldp_ratio_ave[ii]->SetMarkerStyle(kCircle);
+	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetMarkerStyle(kCircle);
+	  
+	  hflat_0lepldp_ratio_ave[ii]->SetMarkerSize(1);
+	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetMarkerSize(1);
+	}
+      }
+      else {
+	hflat_0lepldp_ratio_ave[0] -> SetMarkerSize(1.2) ;
+	hflat_0lepldp_ratio_ave[0] -> SetMarkerStyle(20) ;
+	hflat_0lepldp_ratio_ave_withRMSerror[0]->SetMarkerStyle() ;
+	hflat_0lepldp_ratio_ave_withRMSerror[0]->SetLineColor(4) ;
+	hflat_0lepldp_ratio_ave[1] -> SetMarkerSize(1.2) ;
+	hflat_0lepldp_ratio_ave[1] -> SetMarkerStyle(20) ;
+	hflat_0lepldp_ratio_ave_withRMSerror[1]->SetMarkerStyle() ;
+	hflat_0lepldp_ratio_ave_withRMSerror[1]->SetLineColor(4) ;
+	hflat_0lepldp_ratio_ave[2] -> SetMarkerSize(1.2) ;
+	hflat_0lepldp_ratio_ave[2] -> SetMarkerStyle(20) ;
+	hflat_0lepldp_ratio_ave_withRMSerror[2]->SetMarkerStyle() ;
+	hflat_0lepldp_ratio_ave_withRMSerror[2]->SetLineColor(4) ;
+      }
 
       cqcd4->Clear() ;
       cqcd4->Divide(3,1) ;
 
+
       cqcd4 -> cd(1) ;
+
       hflat_0lepldp_ratio_ave[0] -> SetTitle("Average QCD 0lep/LDP ratio, nb=1") ;
-      hflat_0lepldp_ratio_ave[0] -> SetMarkerSize(1.2) ;
-      hflat_0lepldp_ratio_ave[0] -> SetMarkerStyle(20) ;
       hflat_0lepldp_ratio_ave[0] -> SetMaximum(0.6) ;
       hflat_0lepldp_ratio_ave[0] -> SetMinimum(-0.1) ;
       hflat_0lepldp_ratio_ave[0]->DrawCopy("e1") ;
-      hflat_0lepldp_ratio_ave_withRMSerror[0]->SetMarkerStyle() ;
-      hflat_0lepldp_ratio_ave_withRMSerror[0]->SetLineColor(4) ;
       hflat_0lepldp_ratio_ave_withRMSerror[0]->DrawCopy("samee1") ;
       hflat_0lepldp_ratio_ave[0]->DrawCopy("samee1") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
-      gPad->SetGridx(1) ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 1");
+      }
+      else      gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
 
+
       cqcd4 -> cd(2) ;
+
       hflat_0lepldp_ratio_ave[1] -> SetTitle("Average QCD 0lep/LDP ratio, nb=2") ;
-      hflat_0lepldp_ratio_ave[1] -> SetMarkerSize(1.2) ;
-      hflat_0lepldp_ratio_ave[1] -> SetMarkerStyle(20) ;
       hflat_0lepldp_ratio_ave[1] -> SetMaximum(0.6) ;
       hflat_0lepldp_ratio_ave[1] -> SetMinimum(-0.1) ;
       hflat_0lepldp_ratio_ave[1]->DrawCopy("e1") ;
-      hflat_0lepldp_ratio_ave_withRMSerror[1]->SetMarkerStyle() ;
-      hflat_0lepldp_ratio_ave_withRMSerror[1]->SetLineColor(4) ;
       hflat_0lepldp_ratio_ave_withRMSerror[1]->DrawCopy("samee1") ;
       hflat_0lepldp_ratio_ave[1]->DrawCopy("samee1") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
-      gPad->SetGridx(1) ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+      }
+      else      gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
 
+
       cqcd4 -> cd(3) ;
+
       hflat_0lepldp_ratio_ave[2] -> SetTitle("Average QCD 0lep/LDP ratio, nb>=3") ;
-      hflat_0lepldp_ratio_ave[2] -> SetMarkerSize(1.2) ;
-      hflat_0lepldp_ratio_ave[2] -> SetMarkerStyle(20) ;
       hflat_0lepldp_ratio_ave[2] -> SetMaximum(0.6) ;
       hflat_0lepldp_ratio_ave[2] -> SetMinimum(-0.1) ;
       hflat_0lepldp_ratio_ave[2]->DrawCopy("e1") ;
-      hflat_0lepldp_ratio_ave_withRMSerror[2]->SetMarkerStyle() ;
-      hflat_0lepldp_ratio_ave_withRMSerror[2]->SetLineColor(4) ;
       hflat_0lepldp_ratio_ave_withRMSerror[2]->DrawCopy("samee1") ;
       hflat_0lepldp_ratio_ave[2]->DrawCopy("samee1") ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
-      gPad->SetGridx(1) ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
+      }
+      else      gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
 
 
@@ -2233,17 +2676,41 @@
       }
 
 
+      if (usePublicStyle_) {
+	for (int ii=0;ii<3;ii++) {
+	  hflat_scale_factor[ii] -> SetMarkerSize(1) ;
+	  hflat_scale_factor[ii] -> SetMarkerStyle(kCircle) ;
+	  hflat_scale_factor_withRMSerror[ii]->SetMarkerStyle(20) ;
+	  hflat_scale_factor_withRMSerror[ii]->SetMarkerSize(0.01) ;
+	  hflat_scale_factor_withRMSerror[ii]->SetLineColor(4) ;
+
+	  hflat_scale_factor[ii] -> SetLineWidth(1) ;
+	  hflat_scale_factor_withRMSerror[ii] -> SetLineWidth(1) ;
+
+	  hflat_scale_factor[ii] -> SetMaximum(2.5) ;
+	  hflat_scale_factor[ii] -> SetMinimum(0) ;
+	  hflat_scale_factor[ii]->SetYTitle("Normalized ZL/LDP ratios S_{i,j,k}^{QCD}");
+	  resetBinLabels(hflat_scale_factor[ii],false);
+	}
+
+      }
+      else {
+	for (int ii=0;ii<3;ii++) {
+	  hflat_scale_factor[ii] -> SetMarkerSize(1.2) ;
+	  hflat_scale_factor[ii] -> SetMarkerStyle(20) ;
+	  hflat_scale_factor_withRMSerror[ii]->SetMarkerStyle() ;
+	  hflat_scale_factor_withRMSerror[ii]->SetLineColor(4) ;
+
+	  hflat_scale_factor[ii] -> SetMaximum(2.6) ;
+	  hflat_scale_factor[ii] -> SetMinimum(-0.1) ;
+
+	}
+
+      }
 
 
 
-
-
-
-
-
-
-
-     //--- Draw the QCD scale factor with MC stat error and total error.
+      //--- Draw the QCD scale factor with MC stat error and total error.
 
       TCanvas* cqcd5 = (TCanvas*) gDirectory->FindObject("cqcd5") ;
       if ( cqcd5 == 0x0 ) {
@@ -2257,62 +2724,60 @@
 
       cqcd5 -> cd(1) ;
       hflat_scale_factor[0] -> SetTitle("QCD Scale Factor, nb=1") ;
-      hflat_scale_factor[0] -> SetMarkerSize(1.2) ;
-      hflat_scale_factor[0] -> SetMarkerStyle(20) ;
-      hflat_scale_factor[0] -> SetMaximum(2.6) ;
-      hflat_scale_factor[0] -> SetMinimum(-0.1) ;
       hflat_scale_factor[0]->DrawCopy("e1") ;
       line->SetLineColor(2) ;
       line->SetLineStyle(1) ;
       line->DrawLine(0.5,1.0,nbins+0.5,1.0) ;
-      hflat_scale_factor_withRMSerror[0]->SetMarkerStyle() ;
-      hflat_scale_factor_withRMSerror[0]->SetLineColor(4) ;
       hflat_scale_factor_withRMSerror[0]->DrawCopy("samee1") ;
       hflat_scale_factor[0]->DrawCopy("samee1") ;
       line->SetLineColor(4) ;
       line->SetLineStyle(1) ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
-      gPad->SetGridx(1) ;
+      if (!usePublicStyle_) line->DrawLine(0.5,0,nbins+0.5,0) ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 1");
+      }
+      else      gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
+
 
       cqcd5 -> cd(2) ;
       hflat_scale_factor[1] -> SetTitle("QCD Scale Factor, nb=2") ;
-      hflat_scale_factor[1] -> SetMarkerSize(1.2) ;
-      hflat_scale_factor[1] -> SetMarkerStyle(20) ;
-      hflat_scale_factor[1] -> SetMaximum(2.6) ;
-      hflat_scale_factor[1] -> SetMinimum(-0.1) ;
       hflat_scale_factor[1]->DrawCopy("e1") ;
       line->SetLineColor(2) ;
       line->SetLineStyle(1) ;
       line->DrawLine(0.5,1.0,nbins+0.5,1.0) ;
-      hflat_scale_factor_withRMSerror[1]->SetMarkerStyle() ;
-      hflat_scale_factor_withRMSerror[1]->SetLineColor(4) ;
       hflat_scale_factor_withRMSerror[1]->DrawCopy("samee1") ;
       hflat_scale_factor[1]->DrawCopy("samee1") ;
       line->SetLineColor(4) ;
       line->SetLineStyle(1) ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
-      gPad->SetGridx(1) ;
+      if (!usePublicStyle_) line->DrawLine(0.5,0,nbins+0.5,0) ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+      }
+      else      gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
 
       cqcd5 -> cd(3) ;
       hflat_scale_factor[2] -> SetTitle("QCD Scale Factor, nb>=3") ;
-      hflat_scale_factor[2] -> SetMarkerSize(1.2) ;
-      hflat_scale_factor[2] -> SetMarkerStyle(20) ;
-      hflat_scale_factor[2] -> SetMaximum(2.6) ;
-      hflat_scale_factor[2] -> SetMinimum(-0.1) ;
       hflat_scale_factor[2]->DrawCopy("e1") ;
       line->SetLineColor(2) ;
       line->SetLineStyle(1) ;
       line->DrawLine(0.5,1.0,nbins+0.5,1.0) ;
-      hflat_scale_factor_withRMSerror[2]->SetMarkerStyle() ;
-      hflat_scale_factor_withRMSerror[2]->SetLineColor(4) ;
       hflat_scale_factor_withRMSerror[2]->DrawCopy("samee1") ;
       hflat_scale_factor[2]->DrawCopy("samee1") ;
       line->SetLineColor(4) ;
       line->SetLineStyle(1) ;
       line->DrawLine(0.5,0,nbins+0.5,0) ;
-      gPad->SetGridx(1) ;
+      if (!usePublicStyle_) line->DrawLine(0.5,0,nbins+0.5,0) ;
+      if (usePublicStyle_)  {
+	cmssim->Draw();
+	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
+      }
+      else      gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
 
 
@@ -3024,7 +3489,13 @@ void loadHist(const char* filename, const char* pfx, const char* pat, Bool_t doA
       for ( int bi=1; bi<=nbins; bi++ ) {
          TString label = xaxis->GetBinLabel( bi ) ;
          label.ReplaceAll("0lep_","") ;
-         if ( eraseNb ) { label.Resize( label.Sizeof()-4 ) ; }
+         if ( eraseNb &&label.Length()>4) { label.Resize( label.Sizeof()-4 ) ; }
+
+	 if (usePublicStyle_) { //a bit of a nasty hack to resort to using a global here
+	   label.ReplaceAll("M","MET");
+	   label.ReplaceAll("H","HT");
+	   label.ReplaceAll("_","-");
+	 }
          xaxis -> SetBinLabel( bi, label ) ;
       } // bi
 
@@ -3032,6 +3503,19 @@ void loadHist(const char* filename, const char* pfx, const char* pat, Bool_t doA
 
 //==========================================================================================
 
+
+void setFormatting(TH1F* hh, const TString & ytitle, const int ndiv) {
+
+  if (ytitle!="")  hh->SetYTitle(ytitle);
+
+  if (ndiv>=0)  hh->GetYaxis()->SetNdivisions(ndiv);
+  hh->SetMarkerStyle(kCircle);
+  hh->SetMarkerSize(1);
+
+  hh->SetMarkerColor(kBlue+1);
+  hh->SetLineColor(kBlue+1);
+
+}
 
 
 
