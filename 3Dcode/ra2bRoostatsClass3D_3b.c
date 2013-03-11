@@ -112,9 +112,9 @@
 					     const char* blindBinsList,
 					     const char* systFile1,
                                              const char* pdf_syst_file,
+					     const char* isr_shapesyst_file,
                                              const char* wjets_xsec_shapesyst_file,
-                                             const char* singletop_xsec_shapesyst_file,
-					     const char* isr_shapesyst_file
+                                             const char* singletop_xsec_shapesyst_file
 					     ) {
 
 
