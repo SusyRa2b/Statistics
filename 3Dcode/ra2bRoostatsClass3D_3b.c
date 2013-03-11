@@ -1981,9 +1981,9 @@
       //--- Mar08, 2013: New ISR shape systematics
 
       if ( useLognormal ) {
-         sss_return_status = setupShapeSyst( isr_shapesyst_file, "isr_syst", 2, -1, -1, workspace ) ; // 2 = log-normal
+         sss_return_status = setupShapeSyst( isr_shapesyst_file, "isr_syst", 2, m0, m12, workspace ) ; // 2 = log-normal
       } else {
-         sss_return_status = setupShapeSyst( isr_shapesyst_file, "isr_syst", 1, -1, -1, workspace ) ; // 1 = Gaussian
+         sss_return_status = setupShapeSyst( isr_shapesyst_file, "isr_syst", 1, m0, m12, workspace ) ; // 1 = Gaussian
       }
       if ( !sss_return_status ) { return false ; }
 
