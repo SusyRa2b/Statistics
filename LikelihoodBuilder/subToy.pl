@@ -38,7 +38,13 @@ while(<$flist>) {
     print $fsub "root -q -l -b callRunFit.C'(\"$workdir/$dir/$inputDirectory/\",\"$tmpDirectory/\",\"".$dir."_$inputDirectory\",\"ABCD\")'\n";
     print $fsub "if [ -e \"$tmpDirectory/dat_".$dir."_$inputDirectory.dat\" ]; then mv $tmpDirectory/dat_".$dir."_$inputDirectory.dat $workdir/$datDirectory/dat_".$dir."_$inputDirectory.dat; fi\n";
     print $fsub "if [ -e \"$tmpDirectory/likelihood_".$dir."_$inputDirectory.root\" ]; then mv $tmpDirectory/likelihood_".$dir."_$inputDirectory.root $workdir/$rootDirectory/likelihood_".$dir."_$inputDirectory.root; fi\n";
-
+    
+    print $fsub "if [ -e \"$tmpDirectory/componentFile_TopWJets_dat_".$dir."_$inputDirectory.dat\" ]; then mv $tmpDirectory/componentFile_TopWJets_dat_".$dir."_$inputDirectory.dat $workdir/$datDirectory/componentFile_TopWJets_dat_".$dir."_$inputDirectory.dat; fi\n";
+    print $fsub "if [ -e \"$tmpDirectory/componentFile_QCD_dat_".$dir."_$inputDirectory.dat\" ]; then mv $tmpDirectory/componentFile_QCD_dat_".$dir."_$inputDirectory.dat $workdir/$datDirectory/componentFile_QCD_dat_".$dir."_$inputDirectory.dat; fi\n";
+    print $fsub "if [ -e \"$tmpDirectory/componentFile_ZtoNuNu_dat_".$dir."_$inputDirectory.dat\" ]; then mv $tmpDirectory/componentFile_ZtoNuNu_dat_".$dir."_$inputDirectory.dat $workdir/$datDirectory/componentFile_ZtoNuNu_dat_".$dir."_$inputDirectory.dat; fi\n";
+    print $fsub "if [ -e \"$tmpDirectory/componentFile_Diboson_dat_".$dir."_$inputDirectory.dat\" ]; then mv $tmpDirectory/componentFile_Diboson_dat_".$dir."_$inputDirectory.dat $workdir/$datDirectory/componentFile_Diboson_dat_".$dir."_$inputDirectory.dat; fi\n";
+    print $fsub "if [ -e \"$tmpDirectory/componentFile_Signal_dat_".$dir."_$inputDirectory.dat\" ]; then mv $tmpDirectory/componentFile_Signal_dat_".$dir."_$inputDirectory.dat $workdir/$datDirectory/componentFile_Signal_dat_".$dir."_$inputDirectory.dat; fi\n";
+    
     close $fsub;
     
     #system("bsub -q 1nh -N -oo $dir/log_files/log_$inputDirectory.txt < $subDirectory/submit_$inputDirectory.sh");
