@@ -88,7 +88,7 @@ void extractFromWorkspace(TString workspaceFile = "test.root", TString datFile =
 }
 
 
-void printZL(TString workspaceFile = "test.root", TString binFilesFile = "binFilesFile.dat", TString datFile = "")
+void printZL(TString workspaceFile = "test.root", TString binFilesFile = "binFilesFile.dat", TString datFilePath = "", TString datFileName = "")
 {
   cout << endl;
   cout << "Starting printZL" << endl;
@@ -139,14 +139,16 @@ void printZL(TString workspaceFile = "test.root", TString binFilesFile = "binFil
   for(vector<TString>::iterator it = names.begin(); it != names.end(); ++it)
     {
       TString componentName = *it;
-      TString thisDatFile = "componentFile_";
+      TString thisDatFile = datFilePath;
+      thisDatFile += "componentFile_";
       thisDatFile += componentName;
       thisDatFile += "_";
-      thisDatFile += datFile;
-
+      thisDatFile += datFileName;
+      cout << "Going to open: " << thisDatFile << endl;
+      
       //Create file
       ofstream myfile;
-      myfile.open(thisDatFile.Data(), ios::out | ios::app);
+      myfile.open(thisDatFile.Data(), ios::out | ios::trunc);
       assert(myfile.is_open());
       
       // Loop over bins
@@ -163,6 +165,7 @@ void printZL(TString workspaceFile = "test.root", TString binFilesFile = "binFil
 	myfile << var->getVal() << " ";
 
       }//bin loop
+      myfile << endl;
       myfile.close();
       
     }//component loop
@@ -1286,10 +1289,10 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
 }
 
 
-void analyzeFit(TString workspaceFile, TString binFilesFile, TString datFile) {
+void analyzeFit(TString workspaceFile, TString binFilesFile, TString datFilePath, TString datFileName, TString datFile) {
   cout << "Starting analyzeFit" << endl;
 
-  printZL(workspaceFile, binFilesFile, datFile);
+  printZL(workspaceFile, binFilesFile, datFilePath, datFileName);
 
   //extractFromWorkspace(workspaceFile, datFile, true);
 

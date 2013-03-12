@@ -38,22 +38,28 @@ void runFit(TString inpath, TString outpath, TString outname = "", TString optio
   //if(status != 0) return;
   status = minimalFit(outpath+"likelihood_"+outname+".root", 5, 0, 1000, true, outpath+"dat_"+outname+".dat"); //susy floating 
   if(status != 0) return;
+  status = minimalFit(outpath+"likelihood_"+outname+".root", 5, 0, 1000, true, outpath+"dat_"+outname+".dat"); //susy floating 
+  if(status != 0) return;
+  //status = minimalFit(outpath+"likelihood_"+outname+".root", 0, 0, 1000, true, outpath+"dat_"+outname+".dat", true); //fix susy to zero
+  //if(status != 0) return;
   //status = minimalFit(outpath+"likelihood_"+outname+".root", 5, 0, 400, true, outpath+"dat_"+outname+".dat"); //susy floating 
   //if(status != 0) return;
   //int status = minimalFit(outpath+"likelihood_"+outname+".root", 56.628, 0, 1000, true, outpath+"dat_"+outname+".dat", true); //fix susy to 56.628
 
+  analyzeFit(outpath+"likelihood_"+outname+".root", inpath+"binFilesFile.dat", outpath, "dat_"+outname+".dat", outpath+"dat_"+outname+".dat"); 
+  
   return;
 
   //singleAsymptotic(outpath+"likelihood_"+outname+".root");
-  frequentist(outpath+"likelihood_"+outname+".root");
-  return;
+  //frequentist(outpath+"likelihood_"+outname+".root");
+  //return;
 
 
   //profileLikelihoodLimit(outpath+"likelihood_"+outname+".root", "workspace", "S+B_model", "B_model", "data", "modelName", 0.682, 0.0, 1000.0, false, outpath+"dat_"+outname+".dat");
   profileLikelihoodLimit(outpath+"likelihood_"+outname+".root", "workspace", "S+B_model", "B_model", "data", "modelName", 0.95, 0.0, 1000.0, false, outpath+"dat_"+outname+".dat");
   return;
   
-  analyzeFit(outpath+"likelihood_"+outname+".root", inpath+"binFilesFile.dat", outpath+"dat_"+outname+".dat"); 
+  
   
   if(datFile != "") {
     ofstream myfile;
