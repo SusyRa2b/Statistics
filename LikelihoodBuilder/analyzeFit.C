@@ -96,7 +96,8 @@ void printZL(TString workspaceFile = "test.root", TString binFilesFile = "binFil
   //Workspace
   TFile* wstf = new TFile ( workspaceFile );
   RooWorkspace* ws = (RooWorkspace*)wstf->Get("workspace");
-  
+  RooFitResult *fitResult = (RooFitResult*)wstf->Get("fitresult_likelihood_data");
+
  
   // Bin names
   ////////////////////////////////////
@@ -155,14 +156,18 @@ void printZL(TString workspaceFile = "test.root", TString binFilesFile = "binFil
       for(unsigned int i = 0; i<binNames.size(); i++) {
 	
 	if( skipBinInAnalysis(binNames.at(i)) ) continue;
-	cout << "binName: " << binNames.at(i) << endl;
-	cout << "binFile: " << binFiles.at(i) << endl;
+	//cout << "binName: " << binNames.at(i) << endl;
+	//cout << "binFile: " << binFiles.at(i) << endl;
 	
 	TString varName = "zeroLepton_"+binNames.at(i)+"_"+componentName+"Yield";
-	cout << varName << endl;
+	//cout << varName << endl;
 	RooAbsReal* var = ( ws->function("zeroLepton_"+binNames.at(i)+"_"+componentName+"Yield") );
-	cout << var->getVal() << endl;
-	myfile << var->getVal() << " ";
+	//cout << var->getVal() << endl;
+
+	double value = var->getVal();
+	double error = var->getPropagatedError(*fitResult);
+	
+	myfile << value << " " << error << " ";
 
       }//bin loop
       myfile << endl;
