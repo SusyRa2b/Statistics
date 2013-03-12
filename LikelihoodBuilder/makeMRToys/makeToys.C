@@ -14,7 +14,7 @@ using namespace std;
   >root -l
   >.L toysMR.C+
   >toysMR("yourListFileDescribedBelow.dat")
-  (or "root -l -b -q toysMR.C+" if your file is called list.txt)
+  (or "root -l -b -q toysMR.C+" if your file is called listMR.txt)
   
   NOTE THIS ASSUMES THE SIMPLE TAU METHOD IS BEING USED
   -- Does not handle the "outside" bins
@@ -45,10 +45,12 @@ struct MRmeans {
 
 double getMean(double topW, double signal)
 {
-  double lumiScale = 19.399/12.0; // applied to topW only
+  //double lumiScale = 19.399/12.0; // applied to topW only
+  double lumiScale = 1.0;
 
   //T1tttt, 1175 400
-  double signalCrossSection = 200 * 49996.0  / (19.399 * 13496.559610000000248);
+  //double signalCrossSection = 200 * 49996.0  / (19.399 * 13496.559610000000248);
+  double signalCrossSection = 0.0;
   double lumi = 19.399;
   double Ntot = 49996.0;
 
@@ -68,7 +70,7 @@ void toysMR(TString inputList)
 
   TRandom3 rand(54321);
   
-  int ntoys = 1;
+  int ntoys = 400;
   
   //READ INPUTS INTO MEMORY
 
