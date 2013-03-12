@@ -87,6 +87,90 @@ void extractFromWorkspace(TString workspaceFile = "test.root", TString datFile =
   
 }
 
+
+void printZL(TString workspaceFile = "test.root", TString binFilesFile = "binFilesFile.dat", TString datFile = "")
+{
+  cout << endl;
+  cout << "Starting printZL" << endl;
+  
+  //Workspace
+  TFile* wstf = new TFile ( workspaceFile );
+  RooWorkspace* ws = (RooWorkspace*)wstf->Get("workspace");
+  
+ 
+  // Bin names
+  ////////////////////////////////////
+  ifstream binStream;
+  binStream.open(binFilesFile.Data(),fstream::in);
+  
+  TString index;
+  string fileLine;
+  std::vector<TString> binNames;
+  std::vector<TString> binFiles;  
+  while(!binStream.eof()) {
+    getline(binStream,fileLine);
+    TString thisLine(fileLine.c_str());
+    
+    TStringToken nameAndNumber(thisLine," ");
+    nameAndNumber.NextToken();
+    index = nameAndNumber;
+    if(index=="") continue;
+    
+    binNames.push_back(index);
+    
+    nameAndNumber.NextToken();
+    index = nameAndNumber;
+    binFiles.push_back(index);
+  }
+  binStream.close();
+
+  cout << "nbins: " << binNames.size() << endl;
+
+
+  // Main loop
+  /////////////////////////////////////
+
+  vector<TString> names;
+  names.push_back("TopWJets");
+  names.push_back("Diboson");
+  names.push_back("ZtoNuNu");
+  names.push_back("QCD");
+  names.push_back("Signal");
+  for(vector<TString>::iterator it = names.begin(); it != names.end(); ++it)
+    {
+      TString componentName = *it;
+      TString thisDatFile = "componentFile_";
+      thisDatFile += componentName;
+      thisDatFile += "_";
+      thisDatFile += datFile;
+
+      //Create file
+      ofstream myfile;
+      myfile.open(thisDatFile.Data(), ios::out | ios::app);
+      assert(myfile.is_open());
+      
+      // Loop over bins
+      for(unsigned int i = 0; i<binNames.size(); i++) {
+	
+	if( skipBinInAnalysis(binNames.at(i)) ) continue;
+	cout << "binName: " << binNames.at(i) << endl;
+	cout << "binFile: " << binFiles.at(i) << endl;
+	
+	TString varName = "zeroLepton_"+binNames.at(i)+"_"+componentName+"Yield";
+	cout << varName << endl;
+	RooAbsReal* var = ( ws->function("zeroLepton_"+binNames.at(i)+"_"+componentName+"Yield") );
+	cout << var->getVal() << endl;
+	myfile << var->getVal() << " ";
+
+      }//bin loop
+      myfile.close();
+      
+    }//component loop
+  wstf->Close();
+  
+}
+
+
 void integratedTotals(TString workspaceFile = "test.root", TString binFilesFile = "binFilesFile.dat", TString datFile = "", bool includeTriggerEfficiency = false)
 {
   cout << "Starting integratedTotals" << endl;
@@ -1205,10 +1289,11 @@ void owenPlots(TString workspaceFile = "test.root", TString binFilesFile = "binF
 void analyzeFit(TString workspaceFile, TString binFilesFile, TString datFile) {
   cout << "Starting analyzeFit" << endl;
 
-  
-  extractFromWorkspace(workspaceFile, datFile, true);
+  printZL(workspaceFile, binFilesFile, datFile);
 
-  integratedTotals(workspaceFile, binFilesFile, datFile);
+  //extractFromWorkspace(workspaceFile, datFile, true);
+
+  //integratedTotals(workspaceFile, binFilesFile, datFile);
   //integratedTotals(workspaceFile);
   //owenPlots();
 
