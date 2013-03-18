@@ -63,8 +63,8 @@
    void drawSet( const char* hname_base, const char* xtitle, const char* selection="" ) ;
    void drawSetLHB( const char* hname_base ) ;
    void flattenLHB( const char* hname_base ) ;
-   void drawMetBinEdges( TH1F* hp ) ;
-   void drawHtBinEdges( TH1F* hp ) ;
+   void drawMetBinEdges( TH1F* hp, bool partial=kFALSE ) ;
+   void drawHtBinEdges( TH1F* hp, bool partial=kFALSE ) ;
 
    void loadHist(const char* filename="in.root", const char* pfx=0, const char* pat="*", Bool_t doAdd=kFALSE, Double_t scaleFactor=-1.0) ;
    void saveHist(const char* filename, const char* pat) ;
@@ -734,7 +734,7 @@
       hdata -> SetLineWidth(2) ;
       hdata -> SetMarkerStyle(20) ;
 
-      TLegend* legend = usePublicStyle_ ? new TLegend( 0.67, 0.5, 0.92, 0.85 ) : new TLegend( 0.80, 0.67, 0.95, 0.92) ;
+      TLegend* legend = usePublicStyle_ ? new TLegend( 0.67, 0.48, 0.94, 0.90 ) : new TLegend( 0.80, 0.67, 0.95, 0.92) ;
       legend->SetFillColor(kWhite) ;
       if (usePublicStyle_) {
 	legend->SetBorderSize(0);
@@ -754,6 +754,7 @@
 
       }
 
+      legend->AddEntry( hdata , "Data", "P");
       for ( int ci=nComps-1; ci>=1; ci-- ) {
 
          sprintf( hname, "%s_%s_flat", hname_base, compname[ci] ) ;
@@ -781,13 +782,19 @@
             err = sqrt(errsq) ;
          }
          hratio->SetBinContent(bi,val) ;
-         hratio->SetBinError(bi,err) ;
+         if (hratio->GetBinContent(bi) < 0.0001) hratio->SetBinContent(bi,-1.0) ;
+	 hratio->SetBinError(bi,err) ;
       } // bi.
 
       hratio->SetMinimum(0.0) ;
       hratio->SetMaximum(2.0) ;
 
 
+      TString hnstr( hname_base ) ;
+      if (hnstr.Contains( "h_nb" ) ) {
+        hratio->SetMinimum(0.7) ;
+        hratio->SetMaximum(1.3) ;
+      }
 
 
       double hmax = hdata->GetBinContent( hdata->GetMaximumBin() ) ;
@@ -933,14 +940,31 @@
       hdata -> SetLineWidth(2) ;
       hdata -> SetMarkerStyle(20) ;
 
-      ////TLegend* legend = usePublicStyle_ ? new TLegend( 0.68, 0.5, 0.93, 0.85 ) : new TLegend( 0.80, 0.67, 0.95, 0.92) ;
-          TLegend* legend = usePublicStyle_ ? new TLegend( 0.69, 0.5, 0.92, 0.85 ) : new TLegend( 0.80, 0.67, 0.95, 0.92) ;
+      TLegend* legend = usePublicStyle_ ? new TLegend( 0.66, 0.48, 0.91, 0.90 ) : new TLegend( 0.80, 0.67, 0.95, 0.92) ;
       legend->SetFillColor(kWhite) ;
       if (usePublicStyle_) {
 	legend->SetBorderSize(0);
 	legend->SetLineStyle(0);
 	legend->SetTextFont(42);
 	legend->SetFillStyle(0);
+      }
+
+      TLegend* legenda = usePublicStyle_ ? new TLegend( 0.44, 0.72, 0.69, 0.90 ) : new TLegend( 0.80, 0.67, 0.95, 0.92) ;
+      legenda->SetFillColor(kWhite) ;
+      if (usePublicStyle_) {
+	legenda->SetBorderSize(0);
+	legenda->SetLineStyle(0);
+	legenda->SetTextFont(42);
+	legenda->SetFillStyle(0);
+      }
+
+      TLegend* legendb = usePublicStyle_ ? new TLegend( 0.69, 0.66, 0.94, 0.90 ) : new TLegend( 0.80, 0.67, 0.95, 0.92) ;
+      legendb->SetFillColor(kWhite) ;
+      if (usePublicStyle_) {
+	legendb->SetBorderSize(0);
+	legendb->SetLineStyle(0);
+	legendb->SetTextFont(42);
+	legendb->SetFillStyle(0);
       }
 
       for ( int ci=1; ci<nComps; ci++ ) {
@@ -961,13 +985,16 @@
 
       }
 
+      legend->AddEntry( hdata , "Data", "P");
+      legenda->AddEntry( hdata , "Data", "P");
       for ( int ci=nComps-1; ci>=1; ci-- ) {
 
          sprintf( hname, "%s_%s", hname_base, compname[ci] ) ;
          TH1F* hmc = (TH1F*) gDirectory->FindObject( hname ) ;
 	 //jmt: using "f" argument
          legend -> AddEntry( hmc, usePublicStyle_? getSampleLabel(hname) : compname[ci] ,"f") ;
-
+         if (ci > 4) legenda -> AddEntry( hmc, usePublicStyle_? getSampleLabel(hname) : compname[ci] ,"f") ;
+         else legendb -> AddEntry( hmc, usePublicStyle_? getSampleLabel(hname) : compname[ci] ,"f") ;
       }
 
       sprintf( hname, "%s_diff", hname_base ) ;
@@ -989,12 +1016,18 @@
             err = sqrt(errsq) ;
          }
          hratio->SetBinContent(bi,val) ;
+         if (hratio->GetBinContent(bi) < 0.00001) hratio->SetBinContent(bi,-1.0) ;
          hratio->SetBinError(bi,err) ;
       } // bi.
 
       hratio->SetMinimum(0.0) ;
       hratio->SetMaximum(2.0) ;
 
+
+      if (hnstr.Contains( "h_nb" )) {
+        hratio->SetMinimum(0.7) ;
+        hratio->SetMaximum(1.3) ;
+      }
 
 
 
@@ -1005,6 +1038,7 @@
          TString hnb( hname_base ) ;
          if ( hnb.Contains("h_nb_") ) {
             hdata->SetMinimum(10) ;
+	    hmax = 3*hmax;
          } else {
             hdata->SetMinimum(0.5) ;
          }
@@ -1061,33 +1095,41 @@
       hmcstack->Draw("samehist") ;
       hmcsum->Draw("esame") ;
       hdata->DrawCopy("same") ;
-      legend->Draw() ;
+      
+      TString hnb( hname_base ) ;
+      if ( hnb.Contains("h_nb_") ) {
+        legenda->Draw();
+	legendb->Draw();
+      } 
+      else legend->Draw() ;
       toppad->Update() ;
       toppad->Draw() ;
       TLatex* plotheader=0;
       TText* title=0;
       if (usePublicStyle_ && useLumiTitle ) {  //copied from drawReducedTrees.h
   	TString astring;
-  	astring.Form("CMS Preliminary, L_{int} = %.1f fb^{-1}, #sqrt{s} = 8 TeV",19.39);
+//  	astring.Form("CMS Preliminary, L_{int} = %.1f fb^{-1}, #sqrt{s} = 8 TeV",19.39);
+  	astring.Form("CMS, L_{int} = %.1f fb^{-1}, #sqrt{s} = 8 TeV",19.39);
   	plotheader = new TLatex(3.570061,23.08044,astring);
   	plotheader->SetNDC();
   	plotheader->SetTextAlign(13);
-  	plotheader->SetX(0.17);
-  	plotheader->SetY(0.99);
+  	plotheader->SetX(0.22);
+  	plotheader->SetY(1.00);
   	plotheader->SetTextFont(42);
-  	plotheader->SetTextSizePixels(24);
-  	plotheader->SetTextSize(0.045); 
+	plotheader->SetTextSizePixels(24);
+  	//plotheader->SetTextSize(0.045); 
+  	plotheader->SetTextSize(0.060); 
   	plotheader->Draw();
   
   	//"ZL" etc label requested by Bill
   	TString theselection = selection;
         if ( hnb.Contains("_nb3") ) theselection += ", N_{b-jet} #geq 3";
         title = new TLatex(0.71, 0.86, theselection.Data() );
-  	title->SetTextSize(0.045) ;
+  	title->SetTextSize(0.060) ;
   	title->SetTextFont(62); //42 but bold
   	title->SetNDC();
   	title->SetTextAlign(13);
-  	title->SetX(0.70);
+  	title->SetX(0.22);
   	title->SetY(0.892);
         title->Draw();
       }
@@ -1096,8 +1138,8 @@
 	title->SetTextSize(0.040) ;
 	title->DrawTextNDC( 0.05, 0.95, hdata->GetTitle() ) ;
       }
-      if ( isMetPlot ) { drawMetBinEdges( hdata ) ; }
-      if ( isHtPlot )  { drawHtBinEdges( hdata ) ; }
+      if ( isMetPlot ) { drawMetBinEdges( hdata, true ) ; }
+      if ( isHtPlot )  { drawHtBinEdges( hdata, true ) ; }
 
 
       dmccan->Update() ;
@@ -1136,11 +1178,12 @@
 	hratio->GetXaxis()->SetTitleSize(0.14);
 	hratio->GetYaxis()->SetTitleSize(0.14) ;
 	hratio->GetYaxis()->SetTitleOffset(0.42) ; //was 0.14
-	hratio->SetMaximum(2.2);
+      	if ( !hnstr.Contains( "h_nb" ) ) hratio->SetMaximum(2.2);
         if ( changeXtickmarks ) hratio->GetXaxis()->SetNdivisions(505);						   
       }
       TLine* line = new TLine() ;
       line->SetLineStyle(2) ;
+      line->SetLineWidth(2) ;
       double xl = hdata->GetBinLowEdge(1) ;
       double xh = hdata->GetBinLowEdge( hdata->GetNbinsX() ) + hdata->GetBinWidth(1) ;
       line->DrawLine( xl, 1., xh, 1. ) ;
@@ -1231,26 +1274,30 @@
 
    //=======================================================================================
 
-   void drawMetBinEdges( TH1F* hp ) {
+   void drawMetBinEdges( TH1F* hp, bool partial ) {
 
       double hmax = hp->GetMaximum() ;
       TLine* line = new TLine() ;
       line->SetLineStyle(2) ;
+      line->SetLineWidth(2) ;
       for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
-         line->DrawLine( Mbins[mbi], 0., Mbins[mbi], hmax ) ;
+         if (partial) line->DrawLine( Mbins[mbi], 0., Mbins[mbi], hmax*0.4 ) ;
+         else line->DrawLine( Mbins[mbi], 0., Mbins[mbi], hmax ) ;
       }
 
    } // drawMetBinEdges
 
    //=======================================================================================
 
-   void drawHtBinEdges( TH1F* hp ) {
+   void drawHtBinEdges( TH1F* hp, bool partial ) {
 
       double hmax = hp->GetMaximum() ;
       TLine* line = new TLine() ;
       line->SetLineStyle(2) ;
+      line->SetLineWidth(2) ;
       for ( int mbi=1; mbi<nBinsHT; mbi++ ) {
-         line->DrawLine( Hbins[mbi], 0., Hbins[mbi], hmax ) ;
+         if (partial) line->DrawLine( Hbins[mbi], 0., Hbins[mbi], hmax*0.4 ) ;
+	 else line->DrawLine( Hbins[mbi], 0., Hbins[mbi], hmax ) ;
       }
 
    } // drawHtBinEdges
