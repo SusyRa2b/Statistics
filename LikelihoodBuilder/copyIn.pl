@@ -29,6 +29,9 @@ while(<$flist>) {
 
     #copy in sig directory
     system("cp -r copyIn/sig1/ $copyto/.");
+
+    #copy in sig directory
+    system("cp -r copyIn/dbdy/ $copyto/.");
     
     #copy in toy counts
     system("cp -r $ARGV[0]/toyMR_$num/ $copyto/countsMR/");
