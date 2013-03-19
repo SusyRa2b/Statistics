@@ -690,10 +690,12 @@ void makeTauHadBinPrediction( RooWorkspace& wspace, TString binname, TString bin
   // GET COMMON MU->TAU SCALE FACTORS
     
   TString oneTauSFName("oneTau_");
-  oneTauSFName+=binname_outside;
+  //oneTauSFName+=binname_outside;
+  oneTauSFName+=binname;//now bin dependent
   oneTauSFName.Append("_ScaleFactor");
   TString twoTauSFName("twoTau_");
-  twoTauSFName+=binname_outside;
+  //twoTauSFName+=binname_outside;
+  twoTauSFName+=binname;//now bin dependent
   twoTauSFName.Append("_ScaleFactor");
   
   
@@ -1164,7 +1166,8 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       else {assert(0);}
       
       TString oneTauName("oneTau_");
-      oneTauName+=binnamesoutside[thisBin];
+      //oneTauName+=binnamesoutside[thisBin];
+      oneTauName+=thisBin;//now bin dependent
       oneTauName.Append("_ScaleFactor");
 
       TString name3("blah5");
@@ -1178,8 +1181,8 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 			       scalefactor,scalefactorerror,
 			       name3,"nuisances","globalObservables");
       wspace.import(*ScaleFactorTau,RecycleConflictNodes());
-      cout << endl << endl << " end of tau SFs" << endl << endl;
-
+      cout << "Created " << ScaleFactorTau->GetName() << " with value " << ScaleFactorTau->getVal() << endl;
+      
       //////
 
       tauhadScaleFactorFile>>scalefactor>>scalefactorerror;
@@ -1188,7 +1191,8 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
       else {assert(0);}
 
       TString twoTauName("twoTau_");
-      twoTauName+=binnamesoutside[thisBin];
+      //twoTauName+=binnamesoutside[thisBin];
+      twoTauName+=thisBin;//now bin dependent
       twoTauName.Append("_ScaleFactor");
 
       TString name5("blah7");
@@ -1202,6 +1206,7 @@ void buildMRLikelihood( RooWorkspace& wspace, TString outputFile, TString setupF
 			       scalefactor,scalefactorerror,
 			       name5,"nuisances","globalObservables");
       wspace.import(*ScaleFactorTauTau,RecycleConflictNodes());
+      cout << "Created " << ScaleFactorTauTau->GetName() << " with value " << ScaleFactorTauTau->getVal() << endl;
       cout << endl << endl << " end of ditau SFs" << endl << endl;
 
       //////
