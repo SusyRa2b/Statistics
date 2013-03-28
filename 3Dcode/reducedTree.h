@@ -73,6 +73,8 @@ public :
    Float_t         probge2;
    Float_t         prob2;
    Float_t         probge3;
+   Float_t         prob3;
+   Float_t         probge4;
    Float_t         prob0_HFplus;
    Float_t         probge1_HFplus;
    Float_t         prob1_HFplus;
@@ -137,6 +139,10 @@ public :
    Float_t         mjj1_5;
    Float_t         mjj2_5;
    Float_t         mjjdiff_5;
+   Float_t         mjj_bestTwoCSV;
+   Float_t         mjj_closestB;
+   Float_t         deltaR_bestTwoCSV;
+   Float_t         deltaR_closestB;
    Float_t         mjjb1;
    Float_t         mjjb2;
    Float_t         topPT1;
@@ -250,10 +256,6 @@ public :
    Float_t         deltaPhib2;
    Float_t         deltaPhib3;
    Float_t         minDeltaPhiMETMuonsAll;
-   Float_t         minDeltaPhiN_lostJet;
-   Float_t         deltaPhiN1_lostJet;
-   Float_t         deltaPhiN2_lostJet;
-   Float_t         deltaPhiN3_lostJet;
    Float_t         jetpt1;
    Float_t         jetgenpt1;
    Float_t         jeteta1;
@@ -337,29 +339,11 @@ public :
    Float_t         transverseSphericity_jets30Met;
    Float_t         transverseSphericity_jets30MetLeptons;
    Float_t         transverseSphericity_jets30Leptons;
-   Float_t         minDeltaPhiN_Luke;
-   Float_t         maxDeltaPhiN_Luke;
-   Float_t         deltaPhiN1_Luke;
-   Float_t         deltaPhiN2_Luke;
-   Float_t         deltaPhiN3_Luke;
    Float_t         minTransverseMETSignificance;
    Float_t         maxTransverseMETSignificance;
    Float_t         transverseMETSignificance1;
    Float_t         transverseMETSignificance2;
    Float_t         transverseMETSignificance3;
-   Int_t           njets_lostJet;
-   Int_t           nbjets_lostJet;
-   Float_t         minDeltaPhiN_Luke_lostJet;
-   Float_t         maxDeltaPhiN_Luke_lostJet;
-   Float_t         deltaPhiN1_Luke_lostJet;
-   Float_t         deltaPhiN2_Luke_lostJet;
-   Float_t         deltaPhiN3_Luke_lostJet;
-   Float_t         minTransverseMETSignificance_lostJet;
-   Float_t         maxTransverseMETSignificance_lostJet;
-   Float_t         transverseMETSignificance1_lostJet;
-   Float_t         transverseMETSignificance2_lostJet;
-   Float_t         transverseMETSignificance3_lostJet;
-   Float_t         nLostJet;
 
    // List of branches
    TBranch        *b_weight;   //!
@@ -388,6 +372,8 @@ public :
    TBranch        *b_probge2;   //!
    TBranch        *b_prob2;   //!
    TBranch        *b_probge3;   //!
+   TBranch        *b_prob3;   //!
+   TBranch        *b_probge4;   //!
    TBranch        *b_prob0_HFplus;   //!
    TBranch        *b_probge1_HFplus;   //!
    TBranch        *b_prob1_HFplus;   //!
@@ -454,6 +440,10 @@ public :
    TBranch        *b_mjjdiff_5;   //!
    TBranch        *b_mjjb1;   //!
    TBranch        *b_mjjb2;   //!
+   TBranch        *b_mjj_bestTwoCSV;   //!
+   TBranch        *b_mjj_closestB;   //!
+   TBranch        *b_deltaR_bestTwoCSV;   //!
+   TBranch        *b_deltaR_closestB;   //!
    TBranch        *b_topPT1;   //!
    TBranch        *b_topPT2;   //!
    TBranch        *b_nbjetsSSVM;   //!
@@ -565,10 +555,6 @@ public :
    TBranch        *b_deltaPhib2;   //!
    TBranch        *b_deltaPhib3;   //!
    TBranch        *b_minDeltaPhiMETMuonsAll;   //!
-   TBranch        *b_minDeltaPhiN_lostJet;   //!
-   TBranch        *b_deltaPhiN1_lostJet;   //!
-   TBranch        *b_deltaPhiN2_lostJet;   //!
-   TBranch        *b_deltaPhiN3_lostJet;   //!
    TBranch        *b_jetpt1;   //!
    TBranch        *b_jetgenpt1;   //!
    TBranch        *b_jeteta1;   //!
@@ -652,29 +638,11 @@ public :
    TBranch        *b_transverseSphericity_jets30Met;   //!
    TBranch        *b_transverseSphericity_jets30MetLeptons;   //!
    TBranch        *b_transverseSphericity_jets30Leptons;   //!
-   TBranch        *b_minDeltaPhiN_Luke;   //!
-   TBranch        *b_maxDeltaPhiN_Luke;   //!
-   TBranch        *b_deltaPhiN1_Luke;   //!
-   TBranch        *b_deltaPhiN2_Luke;   //!
-   TBranch        *b_deltaPhiN3_Luke;   //!
    TBranch        *b_minTransverseMETSignificance;   //!
    TBranch        *b_maxTransverseMETSignificance;   //!
    TBranch        *b_transverseMETSignificance1;   //!
    TBranch        *b_transverseMETSignificance2;   //!
    TBranch        *b_transverseMETSignificance3;   //!
-   TBranch        *b_njets_lostJet;   //!
-   TBranch        *b_nbjets_lostJet;   //!
-   TBranch        *b_minDeltaPhiN_Luke_lostJet;   //!
-   TBranch        *b_maxDeltaPhiN_Luke_lostJet;   //!
-   TBranch        *b_deltaPhiN1_Luke_lostJet;   //!
-   TBranch        *b_deltaPhiN2_Luke_lostJet;   //!
-   TBranch        *b_deltaPhiN3_Luke_lostJet;   //!
-   TBranch        *b_minTransverseMETSignificance_lostJet;   //!
-   TBranch        *b_maxTransverseMETSignificance_lostJet;   //!
-   TBranch        *b_transverseMETSignificance1_lostJet;   //!
-   TBranch        *b_transverseMETSignificance2_lostJet;   //!
-   TBranch        *b_transverseMETSignificance3_lostJet;   //!
-   TBranch        *b_nLostJet;   //!
 
    reducedTree(TTree *tree=0);
    virtual ~reducedTree();
@@ -776,6 +744,8 @@ void reducedTree::Init(TTree *tree)
    fChain->SetBranchAddress("probge2", &probge2, &b_probge2);
    fChain->SetBranchAddress("prob2", &prob2, &b_prob2);
    fChain->SetBranchAddress("probge3", &probge3, &b_probge3);
+   fChain->SetBranchAddress("prob3", &prob3, &b_prob3);
+   fChain->SetBranchAddress("probge4", &probge4, &b_probge4);
    fChain->SetBranchAddress("prob0_HFplus", &prob0_HFplus, &b_prob0_HFplus);
    fChain->SetBranchAddress("probge1_HFplus", &probge1_HFplus, &b_probge1_HFplus);
    fChain->SetBranchAddress("prob1_HFplus", &prob1_HFplus, &b_prob1_HFplus);
@@ -842,6 +812,10 @@ void reducedTree::Init(TTree *tree)
    fChain->SetBranchAddress("mjjdiff_5", &mjjdiff_5, &b_mjjdiff_5);
    fChain->SetBranchAddress("mjjb1", &mjjb1, &b_mjjb1);
    fChain->SetBranchAddress("mjjb2", &mjjb2, &b_mjjb2);
+   fChain->SetBranchAddress("mjj_bestTwoCSV", &mjj_bestTwoCSV, &b_mjj_bestTwoCSV);
+   fChain->SetBranchAddress("mjj_closestB", &mjj_closestB, &b_mjj_closestB);
+   fChain->SetBranchAddress("deltaR_bestTwoCSV", &deltaR_bestTwoCSV, &b_deltaR_bestTwoCSV);
+   fChain->SetBranchAddress("deltaR_closestB", &deltaR_closestB, &b_deltaR_closestB);
    fChain->SetBranchAddress("topPT1", &topPT1, &b_topPT1);
    fChain->SetBranchAddress("topPT2", &topPT2, &b_topPT2);
    fChain->SetBranchAddress("nbjetsSSVM", &nbjetsSSVM, &b_nbjetsSSVM);
@@ -953,10 +927,6 @@ void reducedTree::Init(TTree *tree)
    fChain->SetBranchAddress("deltaPhib2", &deltaPhib2, &b_deltaPhib2);
    fChain->SetBranchAddress("deltaPhib3", &deltaPhib3, &b_deltaPhib3);
    fChain->SetBranchAddress("minDeltaPhiMETMuonsAll", &minDeltaPhiMETMuonsAll, &b_minDeltaPhiMETMuonsAll);
-   fChain->SetBranchAddress("minDeltaPhiN_lostJet", &minDeltaPhiN_lostJet, &b_minDeltaPhiN_lostJet);
-   fChain->SetBranchAddress("deltaPhiN1_lostJet", &deltaPhiN1_lostJet, &b_deltaPhiN1_lostJet);
-   fChain->SetBranchAddress("deltaPhiN2_lostJet", &deltaPhiN2_lostJet, &b_deltaPhiN2_lostJet);
-   fChain->SetBranchAddress("deltaPhiN3_lostJet", &deltaPhiN3_lostJet, &b_deltaPhiN3_lostJet);
    fChain->SetBranchAddress("jetpt1", &jetpt1, &b_jetpt1);
    fChain->SetBranchAddress("jetgenpt1", &jetgenpt1, &b_jetgenpt1);
    fChain->SetBranchAddress("jeteta1", &jeteta1, &b_jeteta1);
@@ -1040,29 +1010,11 @@ void reducedTree::Init(TTree *tree)
    fChain->SetBranchAddress("transverseSphericity_jets30Met", &transverseSphericity_jets30Met, &b_transverseSphericity_jets30Met);
    fChain->SetBranchAddress("transverseSphericity_jets30MetLeptons", &transverseSphericity_jets30MetLeptons, &b_transverseSphericity_jets30MetLeptons);
    fChain->SetBranchAddress("transverseSphericity_jets30Leptons", &transverseSphericity_jets30Leptons, &b_transverseSphericity_jets30Leptons);
-   fChain->SetBranchAddress("minDeltaPhiN_Luke", &minDeltaPhiN_Luke, &b_minDeltaPhiN_Luke);
-   fChain->SetBranchAddress("maxDeltaPhiN_Luke", &maxDeltaPhiN_Luke, &b_maxDeltaPhiN_Luke);
-   fChain->SetBranchAddress("deltaPhiN1_Luke", &deltaPhiN1_Luke, &b_deltaPhiN1_Luke);
-   fChain->SetBranchAddress("deltaPhiN2_Luke", &deltaPhiN2_Luke, &b_deltaPhiN2_Luke);
-   fChain->SetBranchAddress("deltaPhiN3_Luke", &deltaPhiN3_Luke, &b_deltaPhiN3_Luke);
    fChain->SetBranchAddress("minTransverseMETSignificance", &minTransverseMETSignificance, &b_minTransverseMETSignificance);
    fChain->SetBranchAddress("maxTransverseMETSignificance", &maxTransverseMETSignificance, &b_maxTransverseMETSignificance);
    fChain->SetBranchAddress("transverseMETSignificance1", &transverseMETSignificance1, &b_transverseMETSignificance1);
    fChain->SetBranchAddress("transverseMETSignificance2", &transverseMETSignificance2, &b_transverseMETSignificance2);
    fChain->SetBranchAddress("transverseMETSignificance3", &transverseMETSignificance3, &b_transverseMETSignificance3);
-   fChain->SetBranchAddress("njets_lostJet", &njets_lostJet, &b_njets_lostJet);
-   fChain->SetBranchAddress("nbjets_lostJet", &nbjets_lostJet, &b_nbjets_lostJet);
-   fChain->SetBranchAddress("minDeltaPhiN_Luke_lostJet", &minDeltaPhiN_Luke_lostJet, &b_minDeltaPhiN_Luke_lostJet);
-   fChain->SetBranchAddress("maxDeltaPhiN_Luke_lostJet", &maxDeltaPhiN_Luke_lostJet, &b_maxDeltaPhiN_Luke_lostJet);
-   fChain->SetBranchAddress("deltaPhiN1_Luke_lostJet", &deltaPhiN1_Luke_lostJet, &b_deltaPhiN1_Luke_lostJet);
-   fChain->SetBranchAddress("deltaPhiN2_Luke_lostJet", &deltaPhiN2_Luke_lostJet, &b_deltaPhiN2_Luke_lostJet);
-   fChain->SetBranchAddress("deltaPhiN3_Luke_lostJet", &deltaPhiN3_Luke_lostJet, &b_deltaPhiN3_Luke_lostJet);
-   fChain->SetBranchAddress("minTransverseMETSignificance_lostJet", &minTransverseMETSignificance_lostJet, &b_minTransverseMETSignificance_lostJet);
-   fChain->SetBranchAddress("maxTransverseMETSignificance_lostJet", &maxTransverseMETSignificance_lostJet, &b_maxTransverseMETSignificance_lostJet);
-   fChain->SetBranchAddress("transverseMETSignificance1_lostJet", &transverseMETSignificance1_lostJet, &b_transverseMETSignificance1_lostJet);
-   fChain->SetBranchAddress("transverseMETSignificance2_lostJet", &transverseMETSignificance2_lostJet, &b_transverseMETSignificance2_lostJet);
-   fChain->SetBranchAddress("transverseMETSignificance3_lostJet", &transverseMETSignificance3_lostJet, &b_transverseMETSignificance3_lostJet);
-   fChain->SetBranchAddress("nLostJet", &nLostJet, &b_nLostJet);
    Notify();
 }
 
