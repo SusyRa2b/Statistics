@@ -2320,7 +2320,7 @@
 
 
       cqcd2 -> Clear() ;
-      cqcd2 -> Divide(3,1) ;   /// AG here!
+      cqcd2 -> Divide(nBinsBjets,1) ;   
 
       cqcd2 -> cd(1) ;
       hflat_0lepldp_ratio[0][0] -> SetTitle("QCD 0lep/LDP ratio, nb=1") ;
@@ -2337,7 +2337,8 @@
       gPad->SetGridy(1) ;
 
       cqcd2 -> cd(2) ;
-      hflat_0lepldp_ratio[0][1] -> SetTitle("QCD 0lep/LDP ratio, nb=2") ;
+      if ( nBinsBjets > 2 ) hflat_0lepldp_ratio[0][1] -> SetTitle("QCD 0lep/LDP ratio, nb=2") ;
+      else hflat_0lepldp_ratio[0][1] -> SetTitle("QCD 0lep/LDP ratio, nb>=2") ;
       for ( int si=0; si<nQcdSamples; si++ ) {
          hflat_0lepldp_ratio[si][1] -> SetMarkerStyle(20+si) ;
          hflat_0lepldp_ratio[si][1] -> SetLineColor(samplecolor[si]) ;
@@ -2350,20 +2351,38 @@
       gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
 
-      cqcd2 -> cd(3) ;
-      hflat_0lepldp_ratio[0][2] -> SetTitle("QCD 0lep/LDP ratio, nb>=3") ;
-      for ( int si=0; si<nQcdSamples; si++ ) {
-         hflat_0lepldp_ratio[si][2] -> SetMarkerStyle(20+si) ;
-         hflat_0lepldp_ratio[si][2] -> SetLineColor(samplecolor[si]) ;
-         hflat_0lepldp_ratio[si][2] -> SetMarkerColor(samplecolor[si]) ;
-         if ( si == 0 ) { hflat_0lepldp_ratio[si][2] -> DrawCopy() ; } else { hflat_0lepldp_ratio[si][2] -> DrawCopy("same") ; }
-      }
-      hflat_0lepldp_ratio_ave[2]->DrawCopy("same") ;
-      line->DrawLine(0.5,0,nbins+0.5,0) ;
-      l2->Draw() ;
-      gPad->SetGridx(1) ;
-      gPad->SetGridy(1) ;
+      if ( nBinsBjets > 2 ) {
+	cqcd2 -> cd(3) ;
+	if ( nBinsBjets > 3 ) hflat_0lepldp_ratio[0][2] -> SetTitle("QCD 0lep/LDP ratio, nb=3") ;
+	else hflat_0lepldp_ratio[0][2] -> SetTitle("QCD 0lep/LDP ratio, nb>=3") ;
+	for ( int si=0; si<nQcdSamples; si++ ) {
+	  hflat_0lepldp_ratio[si][2] -> SetMarkerStyle(20+si) ;
+	  hflat_0lepldp_ratio[si][2] -> SetLineColor(samplecolor[si]) ;
+	  hflat_0lepldp_ratio[si][2] -> SetMarkerColor(samplecolor[si]) ;
+	  if ( si == 0 ) { hflat_0lepldp_ratio[si][2] -> DrawCopy() ; } else { hflat_0lepldp_ratio[si][2] -> DrawCopy("same") ; }
+	}
+	hflat_0lepldp_ratio_ave[2]->DrawCopy("same") ;
+	line->DrawLine(0.5,0,nbins+0.5,0) ;
+	l2->Draw() ;
+	gPad->SetGridx(1) ;
+	gPad->SetGridy(1) ;
 
+	if ( nBinsBjets > 3 ) {
+	  cqcd2 -> cd(4) ;
+	  hflat_0lepldp_ratio[0][3] -> SetTitle("QCD 0lep/LDP ratio, nb>=4") ;
+	  for ( int si=0; si<nQcdSamples; si++ ) {
+	    hflat_0lepldp_ratio[si][3] -> SetMarkerStyle(20+si) ;
+	    hflat_0lepldp_ratio[si][3] -> SetLineColor(samplecolor[si]) ;
+	    hflat_0lepldp_ratio[si][3] -> SetMarkerColor(samplecolor[si]) ;
+	    if ( si == 0 ) { hflat_0lepldp_ratio[si][3] -> DrawCopy() ; } else { hflat_0lepldp_ratio[si][3] -> DrawCopy("same") ; }
+	  }
+	  hflat_0lepldp_ratio_ave[3]->DrawCopy("same") ;
+	  line->DrawLine(0.5,0,nbins+0.5,0) ;
+	  l2->Draw() ;
+	  gPad->SetGridx(1) ;
+	  gPad->SetGridy(1) ;
+	}
+      }
 
       cqcd2->Update() ; cqcd2->Draw() ;
 
@@ -2395,7 +2414,7 @@
       hflat_0lepldp_ratio[0][2] -> SetTitle(oldtitle) ;
 
       cqcd3->Clear() ;
-      cqcd3->Divide(3,3) ;
+      cqcd3->Divide(nBinsBjets,3) ;
 
       for ( int si=0; si<nQcdSamples; si++ ) {
          TLegend* l3 = new TLegend( 0.65, 0.78, 0.99, 0.92) ;
@@ -2450,12 +2469,12 @@
       gStyle->SetEndErrorSize(5) ;
 
       cqcd4->Clear() ;
-      cqcd4->Divide(3,1) ;
+      cqcd4->Divide(nBinsBjets,1) ;
 
       if (usePublicStyle_) {
 	nblabel_y -= 0.01;
 
-	for (int ii=0;ii<3;ii++)   {
+	for (int ii=0;ii<nBinsBjets;ii++)   {
 	  resetBinLabels(hflat_0lepldp_ratio_ave[ii] , false ) ;
 	  hflat_0lepldp_ratio_ave[ii]->SetYTitle("ZL/LDP ratio");
 	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetYTitle("ZL/LDP ratio");
@@ -2516,6 +2535,16 @@
 	hflat_0lepldp_ratio_model[2] -> SetLineColor(2) ;
 	hflat_0lepldp_ratio_model[2] -> SetLineWidth(2) ;
 
+	hflat_0lepldp_ratio_ave[3] -> SetMarkerSize(1.2) ;
+	hflat_0lepldp_ratio_ave[3] -> SetMarkerStyle(20) ;
+	hflat_0lepldp_ratio_ave[3] -> SetMaximum(0.6) ;
+	hflat_0lepldp_ratio_ave[3] -> SetMinimum(-0.1) ;
+	hflat_0lepldp_ratio_ave_withRMSerror[3]->SetMarkerStyle() ;
+	hflat_0lepldp_ratio_ave_withRMSerror[3]->SetLineColor(4) ;
+	
+	hflat_0lepldp_ratio_model[3] -> SetLineColor(2) ;
+	hflat_0lepldp_ratio_model[3] -> SetLineWidth(2) ;
+
       }
 
 
@@ -2538,7 +2567,8 @@
 
       cqcd4 -> cd(2) ;
 
-      hflat_0lepldp_ratio_ave[1] -> SetTitle("Average QCD 0lep/LDP ratio, nb=2") ;
+      if ( nBinsBjets > 2 ) hflat_0lepldp_ratio_ave[1] -> SetTitle("Average QCD 0lep/LDP ratio, nb=2") ;
+      else hflat_0lepldp_ratio_ave[1] -> SetTitle("Average QCD 0lep/LDP ratio, nb>=2") ;
       hflat_0lepldp_ratio_ave[1]->DrawCopy("e1") ;
       hflat_0lepldp_ratio_ave_withRMSerror[1]->DrawCopy("samee1") ;
       hflat_0lepldp_ratio_ave[1]->DrawCopy("samee1") ;
@@ -2549,29 +2579,55 @@
       gPad->SetGridy(1) ;
       if (usePublicStyle_)  {
 	cmssim->Draw();
-	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
-
+	if ( nBinsBjets > 2 ) nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+	else nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 2");
       }
       else      gPad->SetGridx(1) ;
 
 
-      cqcd4 -> cd(3) ;
+      if ( nBinsBjets > 2 ) {
 
-      hflat_0lepldp_ratio_ave[2] -> SetTitle("Average QCD 0lep/LDP ratio, nb>=3") ;
-      hflat_0lepldp_ratio_ave[2]->DrawCopy("e1") ;
-      hflat_0lepldp_ratio_ave_withRMSerror[2]->DrawCopy("samee1") ;
-      hflat_0lepldp_ratio_ave[2]->DrawCopy("samee1") ;
-      hflat_0lepldp_ratio_model[2] -> Draw("histsame") ;
-      hflat_0lepldp_ratio_ave[2]->DrawCopy("samee1") ;
-      line->DrawLine(0.5,0,nbins+0.5,0) ;
+	cqcd4 -> cd(3) ;
 
-      gPad->SetGridy(1) ;
-      if (usePublicStyle_)  {
-	cmssim->Draw();
-	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
+	if ( nBinsBjets > 3 ) hflat_0lepldp_ratio_ave[2] -> SetTitle("Average QCD 0lep/LDP ratio, nb=3") ;
+	else hflat_0lepldp_ratio_ave[2] -> SetTitle("Average QCD 0lep/LDP ratio, nb>=3") ;
+	hflat_0lepldp_ratio_ave[2]->DrawCopy("e1") ;
+	hflat_0lepldp_ratio_ave_withRMSerror[2]->DrawCopy("samee1") ;
+	hflat_0lepldp_ratio_ave[2]->DrawCopy("samee1") ;
+	hflat_0lepldp_ratio_model[2] -> Draw("histsame") ;
+	hflat_0lepldp_ratio_ave[2]->DrawCopy("samee1") ;
+	line->DrawLine(0.5,0,nbins+0.5,0) ;
 
+	gPad->SetGridy(1) ;
+	if (usePublicStyle_)  {
+	  cmssim->Draw();
+	  if ( nBinsBjets > 3 ) nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 3");
+	  else nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
+	}
+	else      gPad->SetGridx(1) ;
+
+
+	if ( nBinsBjets > 3 ) {
+
+	  cqcd4 -> cd(4) ;
+
+	  hflat_0lepldp_ratio_ave[3] -> SetTitle("Average QCD 0lep/LDP ratio, nb>=4") ;
+	  hflat_0lepldp_ratio_ave[3]->DrawCopy("e1") ;
+	  hflat_0lepldp_ratio_ave_withRMSerror[3]->DrawCopy("samee1") ;
+	  hflat_0lepldp_ratio_ave[3]->DrawCopy("samee1") ;
+	  hflat_0lepldp_ratio_model[3] -> Draw("histsame") ;
+	  hflat_0lepldp_ratio_ave[3]->DrawCopy("samee1") ;
+	  line->DrawLine(0.5,0,nbins+0.5,0) ;
+
+	  gPad->SetGridy(1) ;
+	  if (usePublicStyle_)  {
+	    cmssim->Draw();
+	    nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 4");
+	  }
+	  else      gPad->SetGridx(1) ;
+
+	}
       }
-      else      gPad->SetGridx(1) ;
 
 
       cqcd4->Update() ; cqcd4->Draw() ;
@@ -2583,7 +2639,7 @@
 
 
       if (usePublicStyle_)  {
-	for (int ii=0;ii<3;ii++)   {
+	for (int ii=0;ii<nBinsBjets;ii++)   {
 	  resetBinLabels(hflat_0lepldp_ratio_ave[ii] , false ) ;
 	  
 	  hflat_0lepldp_ratio_ave[ii]->SetYTitle("Normalized ZL/LDP ratios S_{i,j,k}^{QCD}");
@@ -2611,10 +2667,14 @@
 	hflat_0lepldp_ratio_ave[2] -> SetMarkerStyle(20) ;
 	hflat_0lepldp_ratio_ave_withRMSerror[2]->SetMarkerStyle() ;
 	hflat_0lepldp_ratio_ave_withRMSerror[2]->SetLineColor(4) ;
+	hflat_0lepldp_ratio_ave[3] -> SetMarkerSize(1.2) ;
+	hflat_0lepldp_ratio_ave[3] -> SetMarkerStyle(20) ;
+	hflat_0lepldp_ratio_ave_withRMSerror[3]->SetMarkerStyle() ;
+	hflat_0lepldp_ratio_ave_withRMSerror[3]->SetLineColor(4) ;
       }
 
       cqcd4->Clear() ;
-      cqcd4->Divide(3,1) ;
+      cqcd4->Divide(nBinsBjets,1) ;
 
 
       cqcd4 -> cd(1) ;
@@ -2636,7 +2696,8 @@
 
       cqcd4 -> cd(2) ;
 
-      hflat_0lepldp_ratio_ave[1] -> SetTitle("Average QCD 0lep/LDP ratio, nb=2") ;
+      if ( nBinsBjets > 2 ) hflat_0lepldp_ratio_ave[1] -> SetTitle("Average QCD 0lep/LDP ratio, nb=2") ;
+      else hflat_0lepldp_ratio_ave[1] -> SetTitle("Average QCD 0lep/LDP ratio, nb>=2") ;
       hflat_0lepldp_ratio_ave[1] -> SetMaximum(0.6) ;
       hflat_0lepldp_ratio_ave[1] -> SetMinimum(-0.1) ;
       hflat_0lepldp_ratio_ave[1]->DrawCopy("e1") ;
@@ -2651,21 +2712,47 @@
       gPad->SetGridy(1) ;
 
 
-      cqcd4 -> cd(3) ;
+      if ( nBinsBjets > 2 ) {
 
-      hflat_0lepldp_ratio_ave[2] -> SetTitle("Average QCD 0lep/LDP ratio, nb>=3") ;
-      hflat_0lepldp_ratio_ave[2] -> SetMaximum(0.6) ;
-      hflat_0lepldp_ratio_ave[2] -> SetMinimum(-0.1) ;
-      hflat_0lepldp_ratio_ave[2]->DrawCopy("e1") ;
-      hflat_0lepldp_ratio_ave_withRMSerror[2]->DrawCopy("samee1") ;
-      hflat_0lepldp_ratio_ave[2]->DrawCopy("samee1") ;
-      line->DrawLine(0.5,0,nbins+0.5,0) ;
-      if (usePublicStyle_)  {
-	cmssim->Draw();
-	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
+	cqcd4 -> cd(3) ;
+
+	if ( nBinsBjets > 3 ) hflat_0lepldp_ratio_ave[2] -> SetTitle("Average QCD 0lep/LDP ratio, nb=3") ;
+	else hflat_0lepldp_ratio_ave[2] -> SetTitle("Average QCD 0lep/LDP ratio, nb>=3") ;
+	hflat_0lepldp_ratio_ave[2] -> SetMaximum(0.6) ;
+	hflat_0lepldp_ratio_ave[2] -> SetMinimum(-0.1) ;
+	hflat_0lepldp_ratio_ave[2]->DrawCopy("e1") ;
+	hflat_0lepldp_ratio_ave_withRMSerror[2]->DrawCopy("samee1") ;
+	hflat_0lepldp_ratio_ave[2]->DrawCopy("samee1") ;
+	line->DrawLine(0.5,0,nbins+0.5,0) ;
+	if (usePublicStyle_)  {
+	  cmssim->Draw();
+	  if ( nBinsBjets > 3 ) nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 3");
+	  else nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
+	}
+	else      gPad->SetGridx(1) ;
+	gPad->SetGridy(1) ;
+
+
+	if ( nBinsBjets > 3 ) {
+
+	  cqcd4 -> cd(4) ;
+
+	  hflat_0lepldp_ratio_ave[3] -> SetTitle("Average QCD 0lep/LDP ratio, nb>=4") ;
+	  hflat_0lepldp_ratio_ave[3] -> SetMaximum(0.6) ;
+	  hflat_0lepldp_ratio_ave[3] -> SetMinimum(-0.1) ;
+	  hflat_0lepldp_ratio_ave[3]->DrawCopy("e1") ;
+	  hflat_0lepldp_ratio_ave_withRMSerror[3]->DrawCopy("samee1") ;
+	  hflat_0lepldp_ratio_ave[3]->DrawCopy("samee1") ;
+	  line->DrawLine(0.5,0,nbins+0.5,0) ;
+	  if (usePublicStyle_)  {
+	    cmssim->Draw();
+	    nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 4");
+	  }
+	  else      gPad->SetGridx(1) ;
+	  gPad->SetGridy(1) ;
+
+	}
       }
-      else      gPad->SetGridx(1) ;
-      gPad->SetGridy(1) ;
 
 
       cqcd4->Update() ; cqcd4->Draw() ;
@@ -2677,7 +2764,7 @@
 
 
       if (usePublicStyle_) {
-	for (int ii=0;ii<3;ii++) {
+	for (int ii=0;ii<nBinsBjets;ii++) {
 	  hflat_scale_factor[ii] -> SetMarkerSize(1) ;
 	  hflat_scale_factor[ii] -> SetMarkerStyle(kCircle) ;
 	  hflat_scale_factor_withRMSerror[ii]->SetMarkerStyle(20) ;
@@ -2695,7 +2782,7 @@
 
       }
       else {
-	for (int ii=0;ii<3;ii++) {
+	for (int ii=0;ii<nBinsBjets;ii++) {
 	  hflat_scale_factor[ii] -> SetMarkerSize(1.2) ;
 	  hflat_scale_factor[ii] -> SetMarkerStyle(20) ;
 	  hflat_scale_factor_withRMSerror[ii]->SetMarkerStyle() ;
@@ -2720,7 +2807,7 @@
       gStyle->SetEndErrorSize(5) ;
 
       cqcd5->Clear() ;
-      cqcd5->Divide(3,1) ;
+      cqcd5->Divide(nBinsBjets,1) ;
 
       cqcd5 -> cd(1) ;
       hflat_scale_factor[0] -> SetTitle("QCD Scale Factor, nb=1") ;
@@ -2743,7 +2830,8 @@
 
 
       cqcd5 -> cd(2) ;
-      hflat_scale_factor[1] -> SetTitle("QCD Scale Factor, nb=2") ;
+      if ( nBinsBjets > 2 ) hflat_scale_factor[1] -> SetTitle("QCD Scale Factor, nb=2") ;
+      else hflat_scale_factor[1] -> SetTitle("QCD Scale Factor, nb>=2") ;
       hflat_scale_factor[1]->DrawCopy("e1") ;
       line->SetLineColor(2) ;
       line->SetLineStyle(1) ;
@@ -2756,30 +2844,60 @@
       if (!usePublicStyle_) line->DrawLine(0.5,0,nbins+0.5,0) ;
       if (usePublicStyle_)  {
 	cmssim->Draw();
-	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+	if ( nBinsBjets > 2 ) nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+	else nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 2");
       }
       else      gPad->SetGridx(1) ;
       gPad->SetGridy(1) ;
 
-      cqcd5 -> cd(3) ;
-      hflat_scale_factor[2] -> SetTitle("QCD Scale Factor, nb>=3") ;
-      hflat_scale_factor[2]->DrawCopy("e1") ;
-      line->SetLineColor(2) ;
-      line->SetLineStyle(1) ;
-      line->DrawLine(0.5,1.0,nbins+0.5,1.0) ;
-      hflat_scale_factor_withRMSerror[2]->DrawCopy("samee1") ;
-      hflat_scale_factor[2]->DrawCopy("samee1") ;
-      line->SetLineColor(4) ;
-      line->SetLineStyle(1) ;
-      line->DrawLine(0.5,0,nbins+0.5,0) ;
-      if (!usePublicStyle_) line->DrawLine(0.5,0,nbins+0.5,0) ;
-      if (usePublicStyle_)  {
-	cmssim->Draw();
-	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
-      }
-      else      gPad->SetGridx(1) ;
-      gPad->SetGridy(1) ;
 
+      if ( nBinsBjets > 2 ) {
+
+	cqcd5 -> cd(3) ;
+	if ( nBinsBjets > 3 ) hflat_scale_factor[2] -> SetTitle("QCD Scale Factor, nb=3") ;
+	else hflat_scale_factor[2] -> SetTitle("QCD Scale Factor, nb>=3") ;
+	hflat_scale_factor[2]->DrawCopy("e1") ;
+	line->SetLineColor(2) ;
+	line->SetLineStyle(1) ;
+	line->DrawLine(0.5,1.0,nbins+0.5,1.0) ;
+	hflat_scale_factor_withRMSerror[2]->DrawCopy("samee1") ;
+	hflat_scale_factor[2]->DrawCopy("samee1") ;
+	line->SetLineColor(4) ;
+	line->SetLineStyle(1) ;
+	line->DrawLine(0.5,0,nbins+0.5,0) ;
+	if (!usePublicStyle_) line->DrawLine(0.5,0,nbins+0.5,0) ;
+	if (usePublicStyle_)  {
+	  cmssim->Draw();
+	  if ( nBinsBjets > 3 ) nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 3");
+	  else nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
+	}
+	else      gPad->SetGridx(1) ;
+	gPad->SetGridy(1) ;
+
+
+	if ( nBinsBjets > 3 ) {
+
+	  cqcd5 -> cd(4) ;
+	  hflat_scale_factor[3] -> SetTitle("QCD Scale Factor, nb>=4") ;
+	  hflat_scale_factor[3]->DrawCopy("e1") ;
+	  line->SetLineColor(2) ;
+	  line->SetLineStyle(1) ;
+	  line->DrawLine(0.5,1.0,nbins+0.5,1.0) ;
+	  hflat_scale_factor_withRMSerror[3]->DrawCopy("samee1") ;
+	  hflat_scale_factor[3]->DrawCopy("samee1") ;
+	  line->SetLineColor(4) ;
+	  line->SetLineStyle(1) ;
+	  line->DrawLine(0.5,0,nbins+0.5,0) ;
+	  if (!usePublicStyle_) line->DrawLine(0.5,0,nbins+0.5,0) ;
+	  if (usePublicStyle_)  {
+	    cmssim->Draw();
+	    nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 4");
+	  }
+	  else      gPad->SetGridx(1) ;
+	  gPad->SetGridy(1) ;
+
+	}
+      }
 
       cqcd5->Update() ; cqcd5->Draw() ;
 
@@ -2820,35 +2938,62 @@
 
 
      //--- ttwj MC LDP / 0lep ratios
+     
+     TH1F *hmctruth_ttwj_ldp_1b ;
+     TH1F *hmctruth_ttwj_ldp_2b ;
+     TH1F *hmctruth_ttwj_ldp_3b ;
+     TH1F *hmctruth_ttwj_ldp_4b ;
 
-      TH1F* hmctruth_ttwj_ldp_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_ldp_1b") ;
-      if ( hmctruth_ttwj_ldp_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_ldp_1b.\n\n") ; return ; }
-
-      TH1F* hmctruth_ttwj_ldpover0lep_ratio_1b = (TH1F*) hmctruth_ttwj_ldp_1b->Clone("hmctruth_ttwj_ldpover0lep_ratio_1b") ;
-      hmctruth_ttwj_ldpover0lep_ratio_1b->Divide( hmctruth_ttwj_0lep_1b ) ;
-
-
-      TH1F* hmctruth_ttwj_ldp_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_ldp_2b") ;
-      if ( hmctruth_ttwj_ldp_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_ldp_2b.\n\n") ; return ; }
-
-      TH1F* hmctruth_ttwj_ldpover0lep_ratio_2b = (TH1F*) hmctruth_ttwj_ldp_2b->Clone("hmctruth_ttwj_ldpover0lep_ratio_2b") ;
-      hmctruth_ttwj_ldpover0lep_ratio_2b->Divide( hmctruth_ttwj_0lep_2b ) ;
+     TH1F* hmctruth_ttwj_ldpover0lep_ratio_1b ;
+     TH1F* hmctruth_ttwj_ldpover0lep_ratio_2b ;
+     TH1F* hmctruth_ttwj_ldpover0lep_ratio_3b ;
+     TH1F* hmctruth_ttwj_ldpover0lep_ratio_4b ;
 
 
-      TH1F* hmctruth_ttwj_ldp_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_ldp_3b") ;
-      if ( hmctruth_ttwj_ldp_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_ldp_3b.\n\n") ; return ; }
+     hmctruth_ttwj_ldp_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_ldp_1b") ;
+     if ( hmctruth_ttwj_ldp_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_ldp_1b.\n\n") ; return ; }
+     
+     hmctruth_ttwj_ldpover0lep_ratio_1b = (TH1F*) hmctruth_ttwj_ldp_1b->Clone("hmctruth_ttwj_ldpover0lep_ratio_1b") ;
+     hmctruth_ttwj_ldpover0lep_ratio_1b->Divide( hmctruth_ttwj_0lep_1b ) ;
+     
 
-      TH1F* hmctruth_ttwj_ldpover0lep_ratio_3b = (TH1F*) hmctruth_ttwj_ldp_3b->Clone("hmctruth_ttwj_ldpover0lep_ratio_3b") ;
-      hmctruth_ttwj_ldpover0lep_ratio_3b->Divide( hmctruth_ttwj_0lep_3b ) ;
+     hmctruth_ttwj_ldp_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_ldp_2b") ;
+     if ( hmctruth_ttwj_ldp_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_ldp_2b.\n\n") ; return ; }
+     
+     hmctruth_ttwj_ldpover0lep_ratio_2b = (TH1F*) hmctruth_ttwj_ldp_2b->Clone("hmctruth_ttwj_ldpover0lep_ratio_2b") ;
+     hmctruth_ttwj_ldpover0lep_ratio_2b->Divide( hmctruth_ttwj_0lep_2b ) ;
+     
+     
+     if ( nBinsBjets > 2 ) {
 
-      hmctruth_ttwj_ldpover0lep_ratio_1b->SetLineColor(2) ;
-      hmctruth_ttwj_ldpover0lep_ratio_2b->SetLineColor(6) ;
-      hmctruth_ttwj_ldpover0lep_ratio_3b->SetLineColor(4) ;
+       hmctruth_ttwj_ldp_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_ldp_3b") ;
+       if ( hmctruth_ttwj_ldp_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_ldp_3b.\n\n") ; return ; }
+       
+       hmctruth_ttwj_ldpover0lep_ratio_3b = (TH1F*) hmctruth_ttwj_ldp_3b->Clone("hmctruth_ttwj_ldpover0lep_ratio_3b") ;
+       hmctruth_ttwj_ldpover0lep_ratio_3b->Divide( hmctruth_ttwj_0lep_3b ) ;
+     
+       if ( nBinsBjets > 3 ) {
+     
+	 hmctruth_ttwj_ldp_4b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_ldp_4b") ;
+	 if ( hmctruth_ttwj_ldp_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_ldp_4b.\n\n") ; return ; }
+	 
+	 hmctruth_ttwj_ldpover0lep_ratio_4b = (TH1F*) hmctruth_ttwj_ldp_4b->Clone("hmctruth_ttwj_ldpover0lep_ratio_4b") ;
+	 hmctruth_ttwj_ldpover0lep_ratio_4b->Divide( hmctruth_ttwj_0lep_4b ) ;
+	 
+       }
+     }
 
-      hmctruth_ttwj_ldpover0lep_ratio_1b->SetMarkerStyle(20) ;
-      hmctruth_ttwj_ldpover0lep_ratio_2b->SetMarkerStyle(25) ;
-      hmctruth_ttwj_ldpover0lep_ratio_3b->SetMarkerStyle(30) ;
 
+     hmctruth_ttwj_ldpover0lep_ratio_1b->SetLineColor(2) ;
+     hmctruth_ttwj_ldpover0lep_ratio_2b->SetLineColor(6) ;
+     hmctruth_ttwj_ldpover0lep_ratio_3b->SetLineColor(4) ;
+     hmctruth_ttwj_ldpover0lep_ratio_4b->SetLineColor(8) ;
+     
+     hmctruth_ttwj_ldpover0lep_ratio_1b->SetMarkerStyle(20) ;
+     hmctruth_ttwj_ldpover0lep_ratio_2b->SetMarkerStyle(25) ;
+     hmctruth_ttwj_ldpover0lep_ratio_3b->SetMarkerStyle(30) ;
+     hmctruth_ttwj_ldpover0lep_ratio_4b->SetMarkerStyle(22) ;
+     
 
 
       gStyle->SetPadRightMargin(0.08) ;
@@ -2861,6 +3006,7 @@
       hmctruth_ttwj_ldpover0lep_ratio_1b->Draw() ;
       hmctruth_ttwj_ldpover0lep_ratio_2b->Draw("same") ;
       hmctruth_ttwj_ldpover0lep_ratio_3b->Draw("same") ;
+      hmctruth_ttwj_ldpover0lep_ratio_4b->Draw("same") ;
 
 
       //--- write to file
@@ -2894,15 +3040,33 @@
             sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
             updateFileValue( datfile, parameterName, err ) ;
 
-            err   = hmctruth_ttwj_ldpover0lep_ratio_3b->GetBinError(hbin)  ;
-            value = hmctruth_ttwj_ldpover0lep_ratio_3b->GetBinContent(hbin)  ;
-            sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_3b", mbi+1, hbi+1 ) ;
-            printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
-                  parameterName,
-                  hmctruth_ttwj_ldpover0lep_ratio_3b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
-            updateFileValue( datfile, parameterName, value ) ;
-            sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
-            updateFileValue( datfile, parameterName, err ) ;
+	    if ( nBinsBjets > 2 ) {
+
+	      err   = hmctruth_ttwj_ldpover0lep_ratio_3b->GetBinError(hbin)  ;
+	      value = hmctruth_ttwj_ldpover0lep_ratio_3b->GetBinContent(hbin)  ;
+	      sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_3b", mbi+1, hbi+1 ) ;
+	      printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
+		      parameterName,
+		      hmctruth_ttwj_ldpover0lep_ratio_3b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
+	      updateFileValue( datfile, parameterName, value ) ;
+	      sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
+	      updateFileValue( datfile, parameterName, err ) ;
+
+	      
+	      if ( nBinsBjets > 3 ) {
+
+		err   = hmctruth_ttwj_ldpover0lep_ratio_4b->GetBinError(hbin)  ;
+		value = hmctruth_ttwj_ldpover0lep_ratio_4b->GetBinContent(hbin)  ;
+		sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_4b", mbi+1, hbi+1 ) ;
+		printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
+			parameterName,
+			hmctruth_ttwj_ldpover0lep_ratio_4b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
+		updateFileValue( datfile, parameterName, value ) ;
+		sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_4b_err", mbi+1, hbi+1 ) ;
+		updateFileValue( datfile, parameterName, err ) ;
+		
+	      }
+	    }
 
             printf("\n") ;
 
@@ -2921,39 +3085,73 @@
 
      //--- znn MC LDP / 0lep ratios
 
-      TH1F* hmctruth_znn_0lep_1b = (TH1F*) gDirectory->FindObject("hmctruth_znn_0lep_1b") ;
+      TH1F *hmctruth_znn_0lep_1b ;
+      TH1F *hmctruth_znn_0lep_2b ;
+      TH1F *hmctruth_znn_0lep_3b ;
+      TH1F *hmctruth_znn_0lep_4b ;
+
+      TH1F *hmctruth_znn_ldp_1b ;
+      TH1F *hmctruth_znn_ldp_2b ;
+      TH1F *hmctruth_znn_ldp_3b ;
+      TH1F *hmctruth_znn_ldp_4b ;
+
+      TH1F *hmctruth_znn_ldpover0lep_ratio_1b ;
+      TH1F *hmctruth_znn_ldpover0lep_ratio_2b ;
+      TH1F *hmctruth_znn_ldpover0lep_ratio_3b ;
+      TH1F *hmctruth_znn_ldpover0lep_ratio_4b ;
+
+
+      hmctruth_znn_0lep_1b = (TH1F*) gDirectory->FindObject("hmctruth_znn_0lep_1b") ;
       if ( hmctruth_znn_0lep_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_znn_0lep_1b.\n\n") ; return ; }
-      TH1F* hmctruth_znn_ldp_1b = (TH1F*) gDirectory->FindObject("hmctruth_znn_ldp_1b") ;
+      hmctruth_znn_ldp_1b = (TH1F*) gDirectory->FindObject("hmctruth_znn_ldp_1b") ;
       if ( hmctruth_znn_ldp_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_znn_ldp_1b.\n\n") ; return ; }
 
-      TH1F* hmctruth_znn_ldpover0lep_ratio_1b = (TH1F*) hmctruth_znn_ldp_1b->Clone("hmctruth_znn_ldpover0lep_ratio_1b") ;
+      hmctruth_znn_ldpover0lep_ratio_1b = (TH1F*) hmctruth_znn_ldp_1b->Clone("hmctruth_znn_ldpover0lep_ratio_1b") ;
       hmctruth_znn_ldpover0lep_ratio_1b->Divide( hmctruth_znn_0lep_1b ) ;
 
 
-      TH1F* hmctruth_znn_0lep_2b = (TH1F*) gDirectory->FindObject("hmctruth_znn_0lep_2b") ;
+      hmctruth_znn_0lep_2b = (TH1F*) gDirectory->FindObject("hmctruth_znn_0lep_2b") ;
       if ( hmctruth_znn_0lep_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_znn_0lep_2b.\n\n") ; return ; }
-      TH1F* hmctruth_znn_ldp_2b = (TH1F*) gDirectory->FindObject("hmctruth_znn_ldp_2b") ;
+      hmctruth_znn_ldp_2b = (TH1F*) gDirectory->FindObject("hmctruth_znn_ldp_2b") ;
       if ( hmctruth_znn_ldp_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_znn_ldp_2b.\n\n") ; return ; }
 
-      TH1F* hmctruth_znn_ldpover0lep_ratio_2b = (TH1F*) hmctruth_znn_ldp_2b->Clone("hmctruth_znn_ldpover0lep_ratio_2b") ;
+      hmctruth_znn_ldpover0lep_ratio_2b = (TH1F*) hmctruth_znn_ldp_2b->Clone("hmctruth_znn_ldpover0lep_ratio_2b") ;
       hmctruth_znn_ldpover0lep_ratio_2b->Divide( hmctruth_znn_0lep_2b ) ;
 
 
-      TH1F* hmctruth_znn_0lep_3b = (TH1F*) gDirectory->FindObject("hmctruth_znn_0lep_3b") ;
-      if ( hmctruth_znn_0lep_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_znn_0lep_3b.\n\n") ; return ; }
-      TH1F* hmctruth_znn_ldp_3b = (TH1F*) gDirectory->FindObject("hmctruth_znn_ldp_3b") ;
-      if ( hmctruth_znn_ldp_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_znn_ldp_3b.\n\n") ; return ; }
+      if ( nBinsBjets > 2 ) {
 
-      TH1F* hmctruth_znn_ldpover0lep_ratio_3b = (TH1F*) hmctruth_znn_ldp_3b->Clone("hmctruth_znn_ldpover0lep_ratio_3b") ;
-      hmctruth_znn_ldpover0lep_ratio_3b->Divide( hmctruth_znn_0lep_3b ) ;
+	hmctruth_znn_0lep_3b = (TH1F*) gDirectory->FindObject("hmctruth_znn_0lep_3b") ;
+	if ( hmctruth_znn_0lep_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_znn_0lep_3b.\n\n") ; return ; }
+	hmctruth_znn_ldp_3b = (TH1F*) gDirectory->FindObject("hmctruth_znn_ldp_3b") ;
+	if ( hmctruth_znn_ldp_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_znn_ldp_3b.\n\n") ; return ; }
+	
+	hmctruth_znn_ldpover0lep_ratio_3b = (TH1F*) hmctruth_znn_ldp_3b->Clone("hmctruth_znn_ldpover0lep_ratio_3b") ;
+	hmctruth_znn_ldpover0lep_ratio_3b->Divide( hmctruth_znn_0lep_3b ) ;
+	
+
+	if ( nBinsBjets > 3 ) {
+	  
+	  hmctruth_znn_0lep_4b = (TH1F*) gDirectory->FindObject("hmctruth_znn_0lep_4b") ;
+	  if ( hmctruth_znn_0lep_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_znn_0lep_4b.\n\n") ; return ; }
+	  hmctruth_znn_ldp_4b = (TH1F*) gDirectory->FindObject("hmctruth_znn_ldp_4b") ;
+	  if ( hmctruth_znn_ldp_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_znn_ldp_4b.\n\n") ; return ; }
+	  
+	  hmctruth_znn_ldpover0lep_ratio_4b = (TH1F*) hmctruth_znn_ldp_4b->Clone("hmctruth_znn_ldpover0lep_ratio_4b") ;
+	  hmctruth_znn_ldpover0lep_ratio_4b->Divide( hmctruth_znn_0lep_4b ) ;
+	  
+	}
+      }
 
       hmctruth_znn_ldpover0lep_ratio_1b->SetLineColor(2) ;
       hmctruth_znn_ldpover0lep_ratio_2b->SetLineColor(6) ;
       hmctruth_znn_ldpover0lep_ratio_3b->SetLineColor(4) ;
+      hmctruth_znn_ldpover0lep_ratio_4b->SetLineColor(8) ;
 
       hmctruth_znn_ldpover0lep_ratio_1b->SetMarkerStyle(20) ;
       hmctruth_znn_ldpover0lep_ratio_2b->SetMarkerStyle(25) ;
       hmctruth_znn_ldpover0lep_ratio_3b->SetMarkerStyle(30) ;
+      hmctruth_znn_ldpover0lep_ratio_4b->SetMarkerStyle(22) ;
 
 
 
@@ -2967,6 +3165,7 @@
       hmctruth_znn_ldpover0lep_ratio_1b->Draw() ;
       hmctruth_znn_ldpover0lep_ratio_2b->Draw("same") ;
       hmctruth_znn_ldpover0lep_ratio_3b->Draw("same") ;
+      hmctruth_znn_ldpover0lep_ratio_4b->Draw("same") ;
 
 
       //--- MC stats are too low for 2b and >=3b cases.  Use 1b values for all three.
@@ -2998,6 +3197,10 @@
             sprintf( parameterName, "znn_mc_ldpover0lep_ratio_M%d_H%d_3b", mbi+1, hbi+1 ) ;
             updateFileValue( datfile, parameterName, value ) ;
             sprintf( parameterName, "znn_mc_ldpover0lep_ratio_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
+            updateFileValue( datfile, parameterName, err ) ;
+            sprintf( parameterName, "znn_mc_ldpover0lep_ratio_M%d_H%d_4b", mbi+1, hbi+1 ) ;
+            updateFileValue( datfile, parameterName, value ) ;
+            sprintf( parameterName, "znn_mc_ldpover0lep_ratio_M%d_H%d_4b_err", mbi+1, hbi+1 ) ;
             updateFileValue( datfile, parameterName, err ) ;
 
       ///   err   = hmctruth_znn_ldpover0lep_ratio_2b->GetBinError(hbin)  ;
@@ -3146,9 +3349,9 @@
       char sel_name[4][100] = { "1lepSig", "1lep", "ldp", "0lep" } ;
 
       if ( setExpected0lepObs ) {
-         nselections = 3 ; // don't do 0lep (the 3rd).
+         nselections = 3 ; // don't do 0lep (the 4th).
       } else {
-         nselections = 4 ; // do all three.
+         nselections = 4 ; // do all four.
       }
 
       printf("\n\n") ;

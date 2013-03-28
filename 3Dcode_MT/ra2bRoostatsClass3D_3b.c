@@ -330,7 +330,7 @@
      
       TString sMbins[nBinsMET];
       TString sHbins[nBinsHT];
-      TString sBbins[3] = {"_1b","_2b","_3b"};
+      TString sBbins[4] = {"_1b","_2b","_3b","_4b"};
       
       for (int i = 0 ; i < nBinsMET ; i++) {
 	TString base = "_M";

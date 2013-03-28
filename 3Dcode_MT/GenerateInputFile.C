@@ -13,7 +13,6 @@
 #include "TSystem.h"
 #include "TH2F.h"
 #include "TCanvas.h"
-//#include "SmallTree.C"
 
   using std::stringstream ;
   using std::ofstream ;
@@ -24,9 +23,7 @@
 
   void saveHist(const char* filename, const char* pat) ;
   TH1F* bookHist(const char* hname, const char* htitle, const char* selstring, int nbjet, int nBinsMET, int nBinsHT ) ;
-////void FillHTMET(TChain *chain, TH2F *histo, int si, int k) ;
-  
-// to add in: nMu, nEl, minDelPhi
+
 
 void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0lep=-1. ) {
 
