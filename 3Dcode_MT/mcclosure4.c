@@ -189,7 +189,6 @@
 
       loadHist( infile ) ;
 
-
       // declare here histograms
 
       TH1F* hmctruth_ttwj_0lep_1b ;
@@ -1465,7 +1464,7 @@
       }
 
       f.Write();
-
+      f.Close();      
 
       //----
    
@@ -1657,9 +1656,6 @@
       cttwj_slSig3b->SaveAs( outttwj_slSig3b ) ;
       outttwj_slSig3b.ReplaceAll(".pdf",".png") ;
       cttwj_slSig3b->SaveAs( outttwj_slSig3b ) ;
-
-
-      cout << "Check 0" << endl ;
 
 
       //--- insert ttwj numbers into file.
@@ -1907,7 +1903,6 @@
 
       char hname[1000] ;
       char htitle[1000] ;
-
 
       for ( int si=0; si<nQcdSamples; si++ ) {
          for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
@@ -3092,17 +3087,19 @@
        }
      }
 
-
      hmctruth_ttwj_ldpover0lep_ratio_1b->SetLineColor(2) ;
      hmctruth_ttwj_ldpover0lep_ratio_2b->SetLineColor(6) ;
-     hmctruth_ttwj_ldpover0lep_ratio_3b->SetLineColor(4) ;
-     hmctruth_ttwj_ldpover0lep_ratio_4b->SetLineColor(8) ;
-     
      hmctruth_ttwj_ldpover0lep_ratio_1b->SetMarkerStyle(20) ;
      hmctruth_ttwj_ldpover0lep_ratio_2b->SetMarkerStyle(25) ;
-     hmctruth_ttwj_ldpover0lep_ratio_3b->SetMarkerStyle(30) ;
-     hmctruth_ttwj_ldpover0lep_ratio_4b->SetMarkerStyle(22) ;
-     
+
+     if ( nBinsBjets > 2 ) {
+       hmctruth_ttwj_ldpover0lep_ratio_3b->SetLineColor(4) ;
+       hmctruth_ttwj_ldpover0lep_ratio_3b->SetMarkerStyle(30) ;
+       if ( nBinsBjets > 3 ) {
+	 hmctruth_ttwj_ldpover0lep_ratio_4b->SetLineColor(8) ;
+	 hmctruth_ttwj_ldpover0lep_ratio_4b->SetMarkerStyle(22) ;
+       }
+     }
 
 
       gStyle->SetPadRightMargin(0.08) ;
@@ -3114,8 +3111,8 @@
 
       hmctruth_ttwj_ldpover0lep_ratio_1b->Draw() ;
       hmctruth_ttwj_ldpover0lep_ratio_2b->Draw("same") ;
-      hmctruth_ttwj_ldpover0lep_ratio_3b->Draw("same") ;
-      hmctruth_ttwj_ldpover0lep_ratio_4b->Draw("same") ;
+      if ( nBinsBjets > 2 ) hmctruth_ttwj_ldpover0lep_ratio_3b->Draw("same") ;
+      if ( nBinsBjets > 2 ) hmctruth_ttwj_ldpover0lep_ratio_4b->Draw("same") ;
 
 
       //--- write to file
@@ -3254,15 +3251,17 @@
 
       hmctruth_znn_ldpover0lep_ratio_1b->SetLineColor(2) ;
       hmctruth_znn_ldpover0lep_ratio_2b->SetLineColor(6) ;
-      hmctruth_znn_ldpover0lep_ratio_3b->SetLineColor(4) ;
-      hmctruth_znn_ldpover0lep_ratio_4b->SetLineColor(8) ;
-
       hmctruth_znn_ldpover0lep_ratio_1b->SetMarkerStyle(20) ;
       hmctruth_znn_ldpover0lep_ratio_2b->SetMarkerStyle(25) ;
-      hmctruth_znn_ldpover0lep_ratio_3b->SetMarkerStyle(30) ;
-      hmctruth_znn_ldpover0lep_ratio_4b->SetMarkerStyle(22) ;
 
-
+      if ( nBinsBjets > 2 ) {
+	hmctruth_znn_ldpover0lep_ratio_3b->SetLineColor(4) ;
+	hmctruth_znn_ldpover0lep_ratio_3b->SetMarkerStyle(30) ;
+	if ( nBinsBjets > 3 ) {
+	  hmctruth_znn_ldpover0lep_ratio_4b->SetLineColor(8) ;
+	  hmctruth_znn_ldpover0lep_ratio_4b->SetMarkerStyle(22) ;
+	}
+      }
 
       gStyle->SetPadRightMargin(0.08) ;
       TCanvas* cznnmcr = (TCanvas*) gDirectory->FindObject("cznnmcr") ;
@@ -3273,8 +3272,8 @@
 
       hmctruth_znn_ldpover0lep_ratio_1b->Draw() ;
       hmctruth_znn_ldpover0lep_ratio_2b->Draw("same") ;
-      hmctruth_znn_ldpover0lep_ratio_3b->Draw("same") ;
-      hmctruth_znn_ldpover0lep_ratio_4b->Draw("same") ;
+      if ( nBinsBjets > 2 ) hmctruth_znn_ldpover0lep_ratio_3b->Draw("same") ;
+      if ( nBinsBjets > 3 ) hmctruth_znn_ldpover0lep_ratio_4b->Draw("same") ;
 
 
       //--- MC stats are too low for 2b and >=3b cases.  Use 1b values for all three.
