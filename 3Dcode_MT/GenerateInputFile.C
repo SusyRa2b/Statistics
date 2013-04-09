@@ -323,7 +323,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
   if ( nBinsBjets == 2 ) {
     sprintf(bcut[1],"nB>=2");
-    sprintf(bcutSF[1],"prob2+probge3");
+    sprintf(bcutSF[1],"(prob2+probge3)");
   }
   if ( nBinsBjets == 3 ) {
     sprintf(bcut[1],"nB==2");

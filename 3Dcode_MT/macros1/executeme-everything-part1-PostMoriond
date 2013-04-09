@@ -1,0 +1,36 @@
+#!/bin/tcsh -f
+
+  # edit Binning.txt in order to define number and boundaries of bins
+  # edit ra2bRoostatsClass3D_3b.h and set the number of bins correspondingly
+
+  mkdir -p logfiles
+  mkdir -p rootfiles
+  mkdir -p datfiles
+  mkdir -p datfiles_repo
+  mkdir -p outputfiles
+
+
+  # get number of bins and version from Binning.txt
+
+  setenv nBinsMET   `grep nBinsMET   Binning.txt | awk '{print $2}'`
+  setenv nBinsHT    `grep nBinsHT    Binning.txt | awk '{print $2}'`
+  setenv nBinsBjets `grep nBinsBjets Binning.txt | awk '{print $2}'`
+  setenv my_version `grep version    Binning.txt | awk '{print $2}'`
+    
+
+  # generate input file
+
+  echo GenerateInputFile
+  $ROOTSYS/bin/root -b -q GenerateInputFile.C+ >& logfiles/geninput-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version.log
+  mv Input-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version.dat datfiles_repo/
+
+
+  # mcclosure4
+
+  echo mcclosure4, qcd model 4, ttwj ave, exp0lep, wtrig
+  cp datfiles_repo/Input-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version.dat datfiles_repo/Input-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version-withSyst.dat
+  $ROOTSYS/bin/root -b -q mcclosure4.c+\(\"rootfiles/gi-plots-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version.root\",\"datfiles_repo/Input-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version-withSyst.dat\",4,1,1,1\) >& logfiles/mcclosure4-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version-withSyst.log
+
+
+  # don't care about real data for now...
+    

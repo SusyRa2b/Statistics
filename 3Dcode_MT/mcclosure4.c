@@ -1282,8 +1282,8 @@
       hscalefactor_ttwj_0over1ratio_2b->Draw("same") ;
       if (usePublicStyle_)  {
 	cmssim->Draw();
-	if ( nBinsBjets > 2 ) nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 2");
-	else                  nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+	if ( nBinsBjets > 2 ) nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+	else                  nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 2");
       }
 
       if ( nBinsBjets > 2 ) {
@@ -1396,8 +1396,8 @@
       hscalefactor_ttwj_1lSover1ratio_2b->Draw("same") ;
       if (usePublicStyle_)  {
 	cmssim->Draw();
-	if ( nBinsBjets > 2 ) nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 2");
-	else                  nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+	if ( nBinsBjets > 2 ) nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
+	else                  nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 2");
       }
 
       if ( nBinsBjets > 2 ) {
@@ -2514,8 +2514,16 @@
       hflat_0lepldp_ratio[0][0] -> SetTitle(oldtitle) ;
       sprintf( oldtitle, "QCD 0lep/LDP ratio, nb=2, %s", samplename[0] ) ;
       hflat_0lepldp_ratio[0][1] -> SetTitle(oldtitle) ;
-      sprintf( oldtitle, "QCD 0lep/LDP ratio, nb>=3, %s", samplename[0] ) ;
-      hflat_0lepldp_ratio[0][2] -> SetTitle(oldtitle) ;
+      if ( nBinsBjets == 3 ) {
+	sprintf( oldtitle, "QCD 0lep/LDP ratio, nb>=3, %s", samplename[0] ) ;
+	hflat_0lepldp_ratio[0][2] -> SetTitle(oldtitle) ;
+      }
+      else if ( nBinsBjets == 4 ) {
+	sprintf( oldtitle, "QCD 0lep/LDP ratio, nb=3, %s", samplename[0] ) ;
+	hflat_0lepldp_ratio[0][2] -> SetTitle(oldtitle) ;
+	sprintf( oldtitle, "QCD 0lep/LDP ratio, nb>=4, %s", samplename[0] ) ;
+	hflat_0lepldp_ratio[0][3] -> SetTitle(oldtitle) ;
+      }
 
       cqcd3->Clear() ;
       cqcd3->Divide(nBinsBjets,3) ;
@@ -2530,12 +2538,11 @@
             hflat_0lep[si][bbi] -> DrawCopy("histe") ;
             hflat_0lep[si][bbi] -> DrawCopy("samee") ;
 
-            cqcd3->cd(4+bbi) ;
+            cqcd3->cd(nBinsBjets+bbi+1) ;
             hflat_ldp[si][bbi] -> DrawCopy("histe") ;
             hflat_ldp[si][bbi] -> DrawCopy("samee") ;
 
-
-            cqcd3->cd(7+bbi) ;
+            cqcd3->cd(2*nBinsBjets+bbi+1) ;
             gPad->SetGridx(1) ;
             gPad->SetGridy(1) ;
             hflat_0lepldp_ratio[si][bbi]->DrawCopy() ;
