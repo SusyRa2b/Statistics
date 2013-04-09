@@ -40,7 +40,7 @@
 
    int nBinsMET ;
    int nBinsHT ;
-   const int nBinsBjets(2) ;
+   int nBinsBjets ;
    const int nQcdSamples(9) ;
 
    int ncomps(5) ;
@@ -107,6 +107,32 @@
                     bool useAverageTtwjClosure = false,
                     bool applyTriggerEfficiencyToNobs = false
                     ) {
+
+     // get binning from Binning.txt
+
+     int version ;
+     TString label ;
+     
+     ifstream inBinning ;
+     inBinning.open("Binning.txt") ;
+     
+     inBinning >> label >> nBinsMET ;
+     inBinning >> label >> nBinsHT ;
+     inBinning >> label >> nBinsBjets ;
+
+     float dummy ;
+     
+     for ( int i = 0 ; i < nBinsMET ; i++ ) {
+       inBinning >> label >> dummy ;
+     }
+     
+     for ( int i = 0 ; i < nBinsHT ; i++ ) {
+       inBinning >> label >> dummy ;
+     }
+  
+     inBinning >> label >> version ;
+     
+     inBinning.close() ;
 
  
      TLatex* cmssim=new TLatex(5,23.08044,"CMS Simulation, #sqrt{s} = 8 TeV");//i think the numbers here mean nothing
@@ -395,34 +421,40 @@
 
       }
 
-
       hmctruth_ttwj_0over1ratio_1b->SetLineColor(2) ;
       hmctruth_ttwj_0over1ratio_2b->SetLineColor(6) ;
-      hmctruth_ttwj_0over1ratio_3b->SetLineColor(4) ;
-      hmctruth_ttwj_0over1ratio_4b->SetLineColor(8) ;
 
       hmctruth_ttwj_0over1ratio_1b->SetMarkerStyle(20) ;
       hmctruth_ttwj_0over1ratio_2b->SetMarkerStyle(25) ;
-      hmctruth_ttwj_0over1ratio_3b->SetMarkerStyle(30) ;
-      hmctruth_ttwj_0over1ratio_4b->SetMarkerStyle(22) ;
 
       hmctruth_ttwj_1lSover1ratio_1b->SetLineColor(2) ;
       hmctruth_ttwj_1lSover1ratio_2b->SetLineColor(6) ;
-      hmctruth_ttwj_1lSover1ratio_3b->SetLineColor(4) ;
-      hmctruth_ttwj_1lSover1ratio_4b->SetLineColor(8) ;
 
       hmctruth_ttwj_1lSover1ratio_1b->SetMarkerStyle(20) ;
       hmctruth_ttwj_1lSover1ratio_2b->SetMarkerStyle(25) ;
-      hmctruth_ttwj_1lSover1ratio_3b->SetMarkerStyle(30) ;
-      hmctruth_ttwj_1lSover1ratio_4b->SetMarkerStyle(22) ;
 
+
+      if ( nBinsBjets > 2 ) {
+	
+	hmctruth_ttwj_0over1ratio_3b->SetLineColor(4) ;
+	hmctruth_ttwj_0over1ratio_3b->SetMarkerStyle(30) ;
+	hmctruth_ttwj_1lSover1ratio_3b->SetLineColor(4) ;
+	hmctruth_ttwj_1lSover1ratio_3b->SetMarkerStyle(30) ;
+
+	if ( nBinsBjets > 3 ) {
+
+	  hmctruth_ttwj_0over1ratio_4b->SetLineColor(8) ;
+	  hmctruth_ttwj_0over1ratio_4b->SetMarkerStyle(22) ;
+	  hmctruth_ttwj_1lSover1ratio_4b->SetLineColor(8) ;
+	  hmctruth_ttwj_1lSover1ratio_4b->SetMarkerStyle(22) ;
+
+	}
+      }
 
       char binlabel[1000] ;
       sprintf( binlabel, "%s", hmctruth_ttwj_0lep_1b -> GetXaxis() -> GetBinLabel( hmctruth_ttwj_0lep_1b->GetNbinsX() - 1 ) ) ;
-      sscanf( binlabel, "0lep_M%d_H%d_1b", &nBinsMET, &nBinsHT ) ;
+      //sscanf( binlabel, "0lep_M%d_H%d_1b", &nBinsMET, &nBinsHT ) ;
       printf("\n\n Bin label: %s,  nmet=%d, nht=%d\n\n", binlabel, nBinsMET, nBinsHT ) ;
-
-
 
 
       //-- compute dumb ave ratio
@@ -624,13 +656,16 @@
       if ( nBinsBjets > 2 ) printf(" Simple average 0lep/1lep,  3b only = %5.3f +/- %5.3f\n", simpleAveR_0over1_3b, simpleAveR_0over1_3b_err ) ;
       if ( nBinsBjets > 3 ) printf(" Simple average 0lep/1lep,  4b only = %5.3f +/- %5.3f\n", simpleAveR_0over1_4b, simpleAveR_0over1_4b_err ) ;
       printf("\n\n") ;
-      
 
+      TH1F *hscalefactor_ttwj_0over1ratio_1b ;
+      TH1F *hscalefactor_ttwj_0over1ratio_2b ;
+      TH1F *hscalefactor_ttwj_0over1ratio_3b ;
+      TH1F *hscalefactor_ttwj_0over1ratio_4b ;
 
-      TH1F* hscalefactor_ttwj_0over1ratio_1b = (TH1F*) hmctruth_ttwj_0over1ratio_1b->Clone("hscalefactor_ttwj_0lep_1b") ;
-      TH1F* hscalefactor_ttwj_0over1ratio_2b = (TH1F*) hmctruth_ttwj_0over1ratio_2b->Clone("hscalefactor_ttwj_0lep_2b") ;
-      TH1F* hscalefactor_ttwj_0over1ratio_3b = (TH1F*) hmctruth_ttwj_0over1ratio_3b->Clone("hscalefactor_ttwj_0lep_3b") ;
-      TH1F* hscalefactor_ttwj_0over1ratio_4b = (TH1F*) hmctruth_ttwj_0over1ratio_4b->Clone("hscalefactor_ttwj_0lep_4b") ;
+      hscalefactor_ttwj_0over1ratio_1b = (TH1F*) hmctruth_ttwj_0over1ratio_1b->Clone("hscalefactor_ttwj_0lep_1b") ;
+      hscalefactor_ttwj_0over1ratio_2b = (TH1F*) hmctruth_ttwj_0over1ratio_2b->Clone("hscalefactor_ttwj_0lep_2b") ;
+      if ( nBinsBjets > 2 ) hscalefactor_ttwj_0over1ratio_3b = (TH1F*) hmctruth_ttwj_0over1ratio_3b->Clone("hscalefactor_ttwj_0lep_3b") ;
+      if ( nBinsBjets > 3 ) hscalefactor_ttwj_0over1ratio_4b = (TH1F*) hmctruth_ttwj_0over1ratio_4b->Clone("hscalefactor_ttwj_0lep_4b") ;
 
       hscalefactor_ttwj_0over1ratio_1b->Scale(1./simpleAveR_0over1) ;
       hscalefactor_ttwj_0over1ratio_2b->Scale(1./simpleAveR_0over1) ;
@@ -667,12 +702,15 @@
       if ( nBinsBjets > 2 ) hscalefactor_ttwjmcanlo_0over1ratio_3b->Scale((1./simpleAveR_0over1_mcanlo)) ;
       if ( nBinsBjets > 3 ) hscalefactor_ttwjmcanlo_0over1ratio_4b->Scale((1./simpleAveR_0over1_mcanlo)) ;
 
+      TH1F *hscalefactor_ttwj_0over1ratio_1b_whalfcorr ;
+      TH1F *hscalefactor_ttwj_0over1ratio_2b_whalfcorr ;
+      TH1F *hscalefactor_ttwj_0over1ratio_3b_whalfcorr ;
+      TH1F *hscalefactor_ttwj_0over1ratio_4b_whalfcorr ;
 
-      TH1F* hscalefactor_ttwj_0over1ratio_1b_whalfcorr = (TH1F*) hscalefactor_ttwj_0over1ratio_1b->Clone("hscalefactor_ttwj_0over1ratio_1b_whalfcorr") ;
-      TH1F* hscalefactor_ttwj_0over1ratio_2b_whalfcorr = (TH1F*) hscalefactor_ttwj_0over1ratio_2b->Clone("hscalefactor_ttwj_0over1ratio_2b_whalfcorr") ;
-      TH1F* hscalefactor_ttwj_0over1ratio_3b_whalfcorr = (TH1F*) hscalefactor_ttwj_0over1ratio_3b->Clone("hscalefactor_ttwj_0over1ratio_3b_whalfcorr") ;
-      TH1F* hscalefactor_ttwj_0over1ratio_4b_whalfcorr = (TH1F*) hscalefactor_ttwj_0over1ratio_4b->Clone("hscalefactor_ttwj_0over1ratio_4b_whalfcorr") ;
-
+      hscalefactor_ttwj_0over1ratio_1b_whalfcorr = (TH1F*) hscalefactor_ttwj_0over1ratio_1b->Clone("hscalefactor_ttwj_0over1ratio_1b_whalfcorr") ;
+      hscalefactor_ttwj_0over1ratio_2b_whalfcorr = (TH1F*) hscalefactor_ttwj_0over1ratio_2b->Clone("hscalefactor_ttwj_0over1ratio_2b_whalfcorr") ;
+      if ( nBinsBjets > 2 ) hscalefactor_ttwj_0over1ratio_3b_whalfcorr = (TH1F*) hscalefactor_ttwj_0over1ratio_3b->Clone("hscalefactor_ttwj_0over1ratio_3b_whalfcorr") ;
+      if ( nBinsBjets > 3 ) hscalefactor_ttwj_0over1ratio_4b_whalfcorr = (TH1F*) hscalefactor_ttwj_0over1ratio_4b->Clone("hscalefactor_ttwj_0over1ratio_4b_whalfcorr") ;
 
       double simpleAveR_1lSover1 = total1lepSig / total1lep ;
       double simpleAveR_1lSover1_err = simpleAveR_1lSover1 * sqrt( sumw21lepSig/(total1lepSig*total1lepSig) + sumw21lep/(total1lep*total1lep)  ) ;
@@ -683,10 +721,15 @@
       printf("\n\n Simple average 1lepSig/1lep = %5.3f +/- %5.3f\n\n", simpleAveR_1lSover1, simpleAveR_1lSover1_err ) ;
 
 
-      TH1F* hscalefactor_ttwj_1lSover1ratio_1b = (TH1F*) hmctruth_ttwj_1lSover1ratio_1b->Clone("hscalefactor_ttwj_1lepSig_1b") ;
-      TH1F* hscalefactor_ttwj_1lSover1ratio_2b = (TH1F*) hmctruth_ttwj_1lSover1ratio_2b->Clone("hscalefactor_ttwj_1lepSig_2b") ;
-      TH1F* hscalefactor_ttwj_1lSover1ratio_3b = (TH1F*) hmctruth_ttwj_1lSover1ratio_3b->Clone("hscalefactor_ttwj_1lepSig_3b") ;
-      TH1F* hscalefactor_ttwj_1lSover1ratio_4b = (TH1F*) hmctruth_ttwj_1lSover1ratio_4b->Clone("hscalefactor_ttwj_1lepSig_4b") ;
+      TH1F *hscalefactor_ttwj_1lSover1ratio_1b ;
+      TH1F *hscalefactor_ttwj_1lSover1ratio_2b ;
+      TH1F *hscalefactor_ttwj_1lSover1ratio_3b ;
+      TH1F *hscalefactor_ttwj_1lSover1ratio_4b ;
+
+      hscalefactor_ttwj_1lSover1ratio_1b = (TH1F*) hmctruth_ttwj_1lSover1ratio_1b->Clone("hscalefactor_ttwj_1lepSig_1b") ;
+      hscalefactor_ttwj_1lSover1ratio_2b = (TH1F*) hmctruth_ttwj_1lSover1ratio_2b->Clone("hscalefactor_ttwj_1lepSig_2b") ;
+      if ( nBinsBjets > 2 ) hscalefactor_ttwj_1lSover1ratio_3b = (TH1F*) hmctruth_ttwj_1lSover1ratio_3b->Clone("hscalefactor_ttwj_1lepSig_3b") ;
+      if ( nBinsBjets > 3 ) hscalefactor_ttwj_1lSover1ratio_4b = (TH1F*) hmctruth_ttwj_1lSover1ratio_4b->Clone("hscalefactor_ttwj_1lepSig_4b") ;
 
       hscalefactor_ttwj_1lSover1ratio_1b->Scale(1./simpleAveR_1lSover1) ;
       hscalefactor_ttwj_1lSover1ratio_2b->Scale(1./simpleAveR_1lSover1) ;
@@ -724,10 +767,15 @@
       if ( nBinsBjets > 3 ) hscalefactor_ttwjmcanlo_1lSover1ratio_4b->Scale((1./simpleAveR_1lSover1_mcanlo)) ;
 
 
-      TH1F* hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr = (TH1F*) hscalefactor_ttwj_1lSover1ratio_1b->Clone("hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr") ;
-      TH1F* hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr = (TH1F*) hscalefactor_ttwj_1lSover1ratio_2b->Clone("hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr") ;
-      TH1F* hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr = (TH1F*) hscalefactor_ttwj_1lSover1ratio_3b->Clone("hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr") ;
-      TH1F* hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr = (TH1F*) hscalefactor_ttwj_1lSover1ratio_4b->Clone("hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr") ;
+      TH1F *hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr ;
+      TH1F *hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr ;
+      TH1F *hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr ;
+      TH1F *hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr ;
+
+      hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr = (TH1F*) hscalefactor_ttwj_1lSover1ratio_1b->Clone("hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr") ;
+      hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr = (TH1F*) hscalefactor_ttwj_1lSover1ratio_2b->Clone("hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr") ;
+      if ( nBinsBjets > 2 ) hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr = (TH1F*) hscalefactor_ttwj_1lSover1ratio_3b->Clone("hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr") ;
+      if ( nBinsBjets > 3 ) hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr = (TH1F*) hscalefactor_ttwj_1lSover1ratio_4b->Clone("hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr") ;
 
 
 
@@ -892,89 +940,117 @@
 
       hmctruth_ttwj_0over1ratio_1b->SetMinimum(0.) ;
       hmctruth_ttwj_0over1ratio_2b->SetMinimum(0.) ;
-      hmctruth_ttwj_0over1ratio_3b->SetMinimum(0.) ;
-      hmctruth_ttwj_0over1ratio_4b->SetMinimum(0.) ;
       hmctruth_ttwj_0over1ratio_1b->SetMaximum(toprowmax) ;
       hmctruth_ttwj_0over1ratio_2b->SetMaximum(toprowmax) ;
-      hmctruth_ttwj_0over1ratio_3b->SetMaximum(toprowmax) ;
-      hmctruth_ttwj_0over1ratio_4b->SetMaximum(toprowmax) ;
 
       hscalefactor_ttwj_0over1ratio_1b->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_2b->SetMinimum(0.) ;
-      hscalefactor_ttwj_0over1ratio_3b->SetMinimum(0.) ;
-      hscalefactor_ttwj_0over1ratio_4b->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_1b->SetMaximum(2.5) ;
       hscalefactor_ttwj_0over1ratio_2b->SetMaximum(2.5) ;
-      hscalefactor_ttwj_0over1ratio_3b->SetMaximum(2.5) ;
-      hscalefactor_ttwj_0over1ratio_4b->SetMaximum(2.5) ;
 
       hscalefactor_ttwj_0over1ratio_1b_whalfcorr->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_2b_whalfcorr->SetMinimum(0.) ;
-      hscalefactor_ttwj_0over1ratio_3b_whalfcorr->SetMinimum(0.) ;
-      hscalefactor_ttwj_0over1ratio_4b_whalfcorr->SetMinimum(0.) ;
       hscalefactor_ttwj_0over1ratio_1b_whalfcorr->SetMaximum(2.5) ;
       hscalefactor_ttwj_0over1ratio_2b_whalfcorr->SetMaximum(2.5) ;
-      hscalefactor_ttwj_0over1ratio_3b_whalfcorr->SetMaximum(2.5) ;
-      hscalefactor_ttwj_0over1ratio_4b_whalfcorr->SetMaximum(2.5) ;
+
+      if ( nBinsBjets > 2 ) {
+
+	hmctruth_ttwj_0over1ratio_3b->SetMinimum(0.) ;
+	hmctruth_ttwj_0over1ratio_3b->SetMaximum(toprowmax) ;
+	hscalefactor_ttwj_0over1ratio_3b->SetMinimum(0.) ;
+	hscalefactor_ttwj_0over1ratio_3b->SetMaximum(2.5) ;
+	hscalefactor_ttwj_0over1ratio_3b_whalfcorr->SetMinimum(0.) ;
+	hscalefactor_ttwj_0over1ratio_3b_whalfcorr->SetMaximum(2.5) ;
+
+	if ( nBinsBjets > 3 ) {
+
+	  hmctruth_ttwj_0over1ratio_4b->SetMinimum(0.) ;
+	  hmctruth_ttwj_0over1ratio_4b->SetMaximum(toprowmax) ;
+	  hscalefactor_ttwj_0over1ratio_4b->SetMinimum(0.) ;
+	  hscalefactor_ttwj_0over1ratio_4b->SetMaximum(2.5) ;
+	  hscalefactor_ttwj_0over1ratio_4b_whalfcorr->SetMinimum(0.) ;
+	  hscalefactor_ttwj_0over1ratio_4b_whalfcorr->SetMaximum(2.5) ;
+
+	}
+      }
+
 
       if (usePublicStyle_) {
 	setFormatting(hmctruth_ttwj_0over1ratio_1b,"ZL/SL ratio",404);
 	setFormatting(hmctruth_ttwj_0over1ratio_2b,"ZL/SL ratio",404);
-	setFormatting(hmctruth_ttwj_0over1ratio_3b,"ZL/SL ratio",404);
-	setFormatting(hmctruth_ttwj_0over1ratio_4b,"ZL/SL ratio",404);
 	setFormatting(hscalefactor_ttwj_0over1ratio_1b_whalfcorr,"Normalized ZL/SL ratios S_{i,j,k}^{ttWj}",405);
 	setFormatting(hscalefactor_ttwj_0over1ratio_2b_whalfcorr,"Normalized ZL/SL ratios S_{i,j,k}^{ttWj}",405);
-	setFormatting(hscalefactor_ttwj_0over1ratio_3b_whalfcorr,"Normalized ZL/SL ratios S_{i,j,k}^{ttWj}",405);
-	setFormatting(hscalefactor_ttwj_0over1ratio_4b_whalfcorr,"Normalized ZL/SL ratios S_{i,j,k}^{ttWj}",405);
-
 	setFormatting(hscalefactor_ttwj_0over1ratio_1b);
 	setFormatting(hscalefactor_ttwj_0over1ratio_2b);
-	setFormatting(hscalefactor_ttwj_0over1ratio_3b);
-	setFormatting(hscalefactor_ttwj_0over1ratio_4b);
+
+	if ( nBinsBjets > 2 ) {
+	  setFormatting(hmctruth_ttwj_0over1ratio_3b,"ZL/SL ratio",404);
+	  setFormatting(hscalefactor_ttwj_0over1ratio_3b_whalfcorr,"Normalized ZL/SL ratios S_{i,j,k}^{ttWj}",405);
+	  setFormatting(hscalefactor_ttwj_0over1ratio_3b);
+	  if ( nBinsBjets > 3 ) {
+	    setFormatting(hmctruth_ttwj_0over1ratio_4b,"ZL/SL ratio",404);
+	    setFormatting(hscalefactor_ttwj_0over1ratio_4b_whalfcorr,"Normalized ZL/SL ratios S_{i,j,k}^{ttWj}",405);
+	    setFormatting(hscalefactor_ttwj_0over1ratio_4b);
+	  }
+	}
       }
 
 
       hmctruth_ttwj_1lSover1ratio_1b->SetMinimum(0.) ;
       hmctruth_ttwj_1lSover1ratio_2b->SetMinimum(0.) ;
-      hmctruth_ttwj_1lSover1ratio_3b->SetMinimum(0.) ;
-      hmctruth_ttwj_1lSover1ratio_4b->SetMinimum(0.) ;
       hmctruth_ttwj_1lSover1ratio_1b->SetMaximum(.3) ;
       hmctruth_ttwj_1lSover1ratio_2b->SetMaximum(.3) ;
-      hmctruth_ttwj_1lSover1ratio_3b->SetMaximum(.3) ;
-      hmctruth_ttwj_1lSover1ratio_4b->SetMaximum(.3) ;
 
       hscalefactor_ttwj_1lSover1ratio_1b->SetMinimum(0.) ;
       hscalefactor_ttwj_1lSover1ratio_2b->SetMinimum(0.) ;
-      hscalefactor_ttwj_1lSover1ratio_3b->SetMinimum(0.) ;
-      hscalefactor_ttwj_1lSover1ratio_4b->SetMinimum(0.) ;
       hscalefactor_ttwj_1lSover1ratio_1b->SetMaximum(2.5) ;
       hscalefactor_ttwj_1lSover1ratio_2b->SetMaximum(2.5) ;
-      hscalefactor_ttwj_1lSover1ratio_3b->SetMaximum(2.5) ;
-      hscalefactor_ttwj_1lSover1ratio_4b->SetMaximum(2.5) ;
 
       hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr->SetMinimum(0.) ;
       hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr->SetMinimum(0.) ;
-      hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->SetMinimum(0.) ;
-      hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr->SetMinimum(0.) ;
       hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr->SetMaximum(2.5) ;
       hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr->SetMaximum(2.5) ;
-      hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->SetMaximum(2.5) ;
-      hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr->SetMaximum(2.5) ;
+
+      if ( nBinsBjets > 2 ) {
+
+	hmctruth_ttwj_1lSover1ratio_3b->SetMinimum(0.) ;
+	hmctruth_ttwj_1lSover1ratio_3b->SetMaximum(.3) ;
+	hscalefactor_ttwj_1lSover1ratio_3b->SetMinimum(0.) ;
+	hscalefactor_ttwj_1lSover1ratio_3b->SetMaximum(2.5) ;
+	hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->SetMinimum(0.) ;
+	hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->SetMaximum(2.5) ;
+	
+	if ( nBinsBjets > 3 ) {
+
+	  hmctruth_ttwj_1lSover1ratio_4b->SetMinimum(0.) ;
+	  hmctruth_ttwj_1lSover1ratio_4b->SetMaximum(.3) ;
+	  hscalefactor_ttwj_1lSover1ratio_4b->SetMinimum(0.) ;
+	  hscalefactor_ttwj_1lSover1ratio_4b->SetMaximum(2.5) ;
+	  hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr->SetMinimum(0.) ;
+	  hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr->SetMaximum(2.5) ;
+	  
+	}
+      }
+
 
       if (usePublicStyle_) {
 	setFormatting(hmctruth_ttwj_1lSover1ratio_1b,"SLSig/SL ratio",404);
 	setFormatting(hmctruth_ttwj_1lSover1ratio_2b,"SLSig/SL ratio",404);
-	setFormatting(hmctruth_ttwj_1lSover1ratio_3b,"SLSig/SL ratio",404);
-	setFormatting(hmctruth_ttwj_1lSover1ratio_4b,"SLSig/SL ratio",404);
 	setFormatting(hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr,"Normalized SLSig/SL ratios S_{i,j,k}^{ttWj}",405);
 	setFormatting(hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr,"Normalized SLSig/SL ratios S_{i,j,k}^{ttWj}",405);
-	setFormatting(hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr,"Normalized SLSig/SL ratios S_{i,j,k}^{ttWj}",405);
-	setFormatting(hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr,"Normalized SLSig/SL ratios S_{i,j,k}^{ttWj}",405);
-
 	setFormatting(hscalefactor_ttwj_1lSover1ratio_1b);
 	setFormatting(hscalefactor_ttwj_1lSover1ratio_2b);
-	setFormatting(hscalefactor_ttwj_1lSover1ratio_3b);
-	setFormatting(hscalefactor_ttwj_1lSover1ratio_4b);
+
+	if ( nBinsBjets > 2 ) {
+	  setFormatting(hmctruth_ttwj_1lSover1ratio_3b,"SLSig/SL ratio",404);
+	  setFormatting(hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr,"Normalized SLSig/SL ratios S_{i,j,k}^{ttWj}",405);
+	  setFormatting(hscalefactor_ttwj_1lSover1ratio_3b);
+	  if ( nBinsBjets > 3 ) {
+	    setFormatting(hmctruth_ttwj_1lSover1ratio_4b,"SLSig/SL ratio",404);
+	    setFormatting(hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr,"Normalized SLSig/SL ratios S_{i,j,k}^{ttWj}",405);
+	    setFormatting(hscalefactor_ttwj_1lSover1ratio_4b);
+	  }
+	}
       }
 
 
@@ -986,21 +1062,24 @@
 
       resetBinLabels( hmctruth_ttwj_0over1ratio_1b, usePublicStyle_ ) ;
       resetBinLabels( hmctruth_ttwj_0over1ratio_2b, usePublicStyle_ ) ;
-      resetBinLabels( hmctruth_ttwj_0over1ratio_3b, usePublicStyle_ ) ;
-      resetBinLabels( hmctruth_ttwj_0over1ratio_4b, usePublicStyle_ ) ;
-
       resetBinLabels( hscalefactor_ttwj_0over1ratio_1b, usePublicStyle_ ) ;
       resetBinLabels( hscalefactor_ttwj_0over1ratio_2b, usePublicStyle_ ) ;
-      resetBinLabels( hscalefactor_ttwj_0over1ratio_3b, usePublicStyle_ ) ;
-      resetBinLabels( hscalefactor_ttwj_0over1ratio_4b, usePublicStyle_ ) ;
+
+      if ( nBinsBjets > 2 ) {
+	resetBinLabels( hmctruth_ttwj_0over1ratio_3b, usePublicStyle_ ) ;
+	resetBinLabels( hscalefactor_ttwj_0over1ratio_3b, usePublicStyle_ ) ;
+	if ( nBinsBjets > 3 ) {
+	  resetBinLabels( hmctruth_ttwj_0over1ratio_4b, usePublicStyle_ ) ;
+	  resetBinLabels( hscalefactor_ttwj_0over1ratio_4b, usePublicStyle_ ) ;
+	}
+      }
 
       if (usePublicStyle_) {
 	resetBinLabels( hscalefactor_ttwj_0over1ratio_1b_whalfcorr ,usePublicStyle_) ;
 	resetBinLabels( hscalefactor_ttwj_0over1ratio_2b_whalfcorr ,usePublicStyle_) ;
-	resetBinLabels( hscalefactor_ttwj_0over1ratio_3b_whalfcorr ,usePublicStyle_) ;
-	resetBinLabels( hscalefactor_ttwj_0over1ratio_4b_whalfcorr ,usePublicStyle_) ;
+	if ( nBinsBjets > 2 ) resetBinLabels( hscalefactor_ttwj_0over1ratio_3b_whalfcorr ,usePublicStyle_) ;
+	if ( nBinsBjets > 3 ) resetBinLabels( hscalefactor_ttwj_0over1ratio_4b_whalfcorr ,usePublicStyle_) ;
       }
-
 
 
       TH1F* hdummy1_slSig = (TH1F*) hmctruth_ttwj_1lSover1ratio_1b->Clone( "hdummy1_slSig" ) ;
@@ -1011,19 +1090,23 @@
 
       resetBinLabels( hmctruth_ttwj_1lSover1ratio_1b, usePublicStyle_ ) ;
       resetBinLabels( hmctruth_ttwj_1lSover1ratio_2b, usePublicStyle_ ) ;
-      resetBinLabels( hmctruth_ttwj_1lSover1ratio_3b, usePublicStyle_ ) ;
-      resetBinLabels( hmctruth_ttwj_1lSover1ratio_4b, usePublicStyle_ ) ;
-
       resetBinLabels( hscalefactor_ttwj_1lSover1ratio_1b, usePublicStyle_ ) ;
       resetBinLabels( hscalefactor_ttwj_1lSover1ratio_2b, usePublicStyle_ ) ;
-      resetBinLabels( hscalefactor_ttwj_1lSover1ratio_3b, usePublicStyle_ ) ;
-      resetBinLabels( hscalefactor_ttwj_1lSover1ratio_4b, usePublicStyle_ ) ;
+
+      if ( nBinsBjets > 2 ) {
+	resetBinLabels( hmctruth_ttwj_1lSover1ratio_3b, usePublicStyle_ ) ;
+	resetBinLabels( hscalefactor_ttwj_1lSover1ratio_3b, usePublicStyle_ ) ;
+	if ( nBinsBjets > 3 ) {
+	  resetBinLabels( hmctruth_ttwj_1lSover1ratio_4b, usePublicStyle_ ) ;
+	  resetBinLabels( hscalefactor_ttwj_1lSover1ratio_4b, usePublicStyle_ ) ;
+	}
+      }
 
       if (usePublicStyle_) {
 	resetBinLabels( hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr ,usePublicStyle_) ;
 	resetBinLabels( hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr ,usePublicStyle_) ;
-	resetBinLabels( hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr ,usePublicStyle_) ;
-	resetBinLabels( hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr ,usePublicStyle_) ;
+	if ( nBinsBjets > 2 ) resetBinLabels( hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr ,usePublicStyle_) ;
+	if ( nBinsBjets > 3 ) resetBinLabels( hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr ,usePublicStyle_) ;
       }
 
 
@@ -1354,13 +1437,33 @@
       cttwj_slSig3->SaveAs( outttwj_slSig3 ) ;
 
 
-      TFile f("rootfiles/gi-plots-met4-ht4-v15-mcclosure-ttwj3.root","recreate");
+      char outfile[10000] ;
+      sprintf( outfile, "rootfiles/gi-plots-met%d-ht%d-nB%d-v%d-mcclosure-ttwj3.root", nBinsMET, nBinsHT, nBinsBjets, version ) ;
+
+      TFile f(outfile,"recreate");
+
       hscalefactor_ttwj_0over1ratio_1b->Write();
       hscalefactor_ttwj_0over1ratio_1b_whalfcorr->Write();
       hscalefactor_ttwj_0over1ratio_2b->Write();
       hscalefactor_ttwj_0over1ratio_2b_whalfcorr->Write();
-      hscalefactor_ttwj_0over1ratio_3b->Write();
-      hscalefactor_ttwj_0over1ratio_3b_whalfcorr->Write();
+      hscalefactor_ttwj_1lSover1ratio_1b->Write();
+      hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr->Write();
+      hscalefactor_ttwj_1lSover1ratio_2b->Write();
+      hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr->Write();
+
+      if ( nBinsBjets > 2 ) {
+	hscalefactor_ttwj_0over1ratio_3b->Write();
+	hscalefactor_ttwj_0over1ratio_3b_whalfcorr->Write();
+	hscalefactor_ttwj_1lSover1ratio_3b->Write();
+	hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->Write();
+	if ( nBinsBjets > 3 ) {
+	  hscalefactor_ttwj_0over1ratio_4b->Write();
+	  hscalefactor_ttwj_0over1ratio_4b_whalfcorr->Write();
+	  hscalefactor_ttwj_1lSover1ratio_4b->Write();
+	  hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr->Write();
+	}
+      }
+
       f.Write();
 
 
@@ -1369,33 +1472,37 @@
 
       hmctruth_ttwj_0lep_1b->SetFillColor(kBlue-9) ;
       hmctruth_ttwj_0lep_2b->SetFillColor(kBlue-9) ;
-      hmctruth_ttwj_0lep_3b->SetFillColor(kBlue-9) ;
-      hmctruth_ttwj_0lep_4b->SetFillColor(kBlue-9) ;
-
       hmctruth_ttwj_1lep_1b->SetFillColor(kBlue-9) ;
       hmctruth_ttwj_1lep_2b->SetFillColor(kBlue-9) ;
-      hmctruth_ttwj_1lep_3b->SetFillColor(kBlue-9) ;
-      hmctruth_ttwj_1lep_4b->SetFillColor(kBlue-9) ;
-
       hmctruth_ttwj_1lepSig_1b->SetFillColor(kBlue-9) ;
       hmctruth_ttwj_1lepSig_2b->SetFillColor(kBlue-9) ;
-      hmctruth_ttwj_1lepSig_3b->SetFillColor(kBlue-9) ;
-      hmctruth_ttwj_1lepSig_4b->SetFillColor(kBlue-9) ;
 
       hmctruth_ttwj_0lep_1b->SetLineWidth(2) ;
       hmctruth_ttwj_0lep_2b->SetLineWidth(2) ;
-      hmctruth_ttwj_0lep_3b->SetLineWidth(2) ;
-      hmctruth_ttwj_0lep_4b->SetLineWidth(2) ;
-
       hmctruth_ttwj_1lep_1b->SetLineWidth(2) ;
       hmctruth_ttwj_1lep_2b->SetLineWidth(2) ;
-      hmctruth_ttwj_1lep_3b->SetLineWidth(2) ;
-      hmctruth_ttwj_1lep_4b->SetLineWidth(2) ;
-
       hmctruth_ttwj_1lepSig_1b->SetLineWidth(2) ;
       hmctruth_ttwj_1lepSig_2b->SetLineWidth(2) ;
-      hmctruth_ttwj_1lepSig_3b->SetLineWidth(2) ;
-      hmctruth_ttwj_1lepSig_4b->SetLineWidth(2) ;
+
+      if ( nBinsBjets > 2 ) {
+
+	hmctruth_ttwj_0lep_3b->SetFillColor(kBlue-9) ;
+	hmctruth_ttwj_1lep_3b->SetFillColor(kBlue-9) ;
+	hmctruth_ttwj_1lepSig_3b->SetFillColor(kBlue-9) ;
+	hmctruth_ttwj_0lep_3b->SetLineWidth(2) ;
+	hmctruth_ttwj_1lep_3b->SetLineWidth(2) ;
+	hmctruth_ttwj_1lepSig_3b->SetLineWidth(2) ;
+
+	if ( nBinsBjets > 3 ) {
+	  hmctruth_ttwj_0lep_4b->SetFillColor(kBlue-9) ;
+	  hmctruth_ttwj_1lep_4b->SetFillColor(kBlue-9) ;
+	  hmctruth_ttwj_1lepSig_4b->SetFillColor(kBlue-9) ;
+	  hmctruth_ttwj_0lep_4b->SetLineWidth(2) ;
+	  hmctruth_ttwj_1lep_4b->SetLineWidth(2) ;
+	  hmctruth_ttwj_1lepSig_4b->SetLineWidth(2) ;
+	}
+      }
+
 
 
       TCanvas* cttwj3b = (TCanvas*) gDirectory->FindObject("cttwj3b") ;
@@ -1551,6 +1658,8 @@
       outttwj_slSig3b.ReplaceAll(".pdf",".png") ;
       cttwj_slSig3b->SaveAs( outttwj_slSig3b ) ;
 
+
+      cout << "Check 0" << endl ;
 
 
       //--- insert ttwj numbers into file.

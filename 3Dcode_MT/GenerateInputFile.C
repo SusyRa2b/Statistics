@@ -292,7 +292,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
        sprintf( outfile, "InputWT2tt-mgl%.0f-mlsp%.0f-met%d-ht%d-nB%d-v%d.dat", mgl, mlsp, nBinsMET, nBinsHT, nBinsBjets, version  ) ;
      }
   } else {
-     sprintf( outfile, "Input-met%d-ht%d-v%d.dat", nBinsMET, nBinsHT, version  ) ;
+    sprintf( outfile, "Input-met%d-ht%d-nB%d-v%d.dat", nBinsMET, nBinsHT, nBinsBjets, version  ) ;
   }
   inFile.open( outfile );
 
@@ -1381,12 +1381,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     char outHistName[1000] ;
     if ( mgl>0. && mlsp>0. ) {
        if ( target_susy_all0lep > 0 ) {
-          sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%.0fevts-met%d-ht%d-v%d.root", mgl, mlsp, target_susy_all0lep, nBinsMET, nBinsHT, version ) ;
+	 sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%.0fevts-met%d-ht%d-nB$d-v%d.root", mgl, mlsp, target_susy_all0lep, nBinsMET, nBinsHT, nBinsBjets, version ) ;
        } else {
-          sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-met%d-ht%d-v%d.root", mgl, mlsp, nBinsMET, nBinsHT, version ) ;
+	 sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-met%d-ht%d-nB%d-v%d.root", mgl, mlsp, nBinsMET, nBinsHT, nBinsBjets, version ) ;
        }
     } else {
-       sprintf( outHistName, "rootfiles/gi-plots-met%d-ht%d-v%d.root", nBinsMET, nBinsHT, version ) ;
+      sprintf( outHistName, "rootfiles/gi-plots-met%d-ht%d-nB%d-v%d.root", nBinsMET, nBinsHT, nBinsBjets, version ) ;
     }
     saveHist( outHistName, "h*" ) ;
 
