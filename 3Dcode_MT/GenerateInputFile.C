@@ -62,35 +62,35 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 
   TChain chainQCD("tree") ;
-  chainQCD.Add("filesMoriond_v4/QCD-120to170.root");
-  chainQCD.Add("filesMoriond_v4/QCD-170to300.root");
-  chainQCD.Add("filesMoriond_v4/QCD-300to470.root");
-  chainQCD.Add("filesMoriond_v4/QCD-470to600.root");
-  chainQCD.Add("filesMoriond_v4/QCD-600to800.root");
-  chainQCD.Add("filesMoriond_v4/QCD-800to1000.root");
-  chainQCD.Add("filesMoriond_v4/QCD-1000to1400.root");
-  chainQCD.Add("filesMoriond_v4/QCD-1400to1800.root");
-  chainQCD.Add("filesMoriond_v4/QCD-1800.root");
+  chainQCD.Add("filesPostMoriond_v2/QCD-120to170.root");
+  chainQCD.Add("filesPostMoriond_v2/QCD-170to300.root");
+  chainQCD.Add("filesPostMoriond_v2/QCD-300to470.root");
+  chainQCD.Add("filesPostMoriond_v2/QCD-470to600.root");
+  chainQCD.Add("filesPostMoriond_v2/QCD-600to800.root");
+  chainQCD.Add("filesPostMoriond_v2/QCD-800to1000.root");
+  chainQCD.Add("filesPostMoriond_v2/QCD-1000to1400.root");
+  chainQCD.Add("filesPostMoriond_v2/QCD-1400to1800.root");
+  chainQCD.Add("filesPostMoriond_v2/QCD-1800.root");
   double kfactor_qcd = 1.8 ;
   printf("\n\n Rescaling QCD by %5.3f\n\n", kfactor_qcd ) ;
 
   TChain chainZnn("tree") ;
-  chainZnn.Add("filesMoriond_v4/Zinv-100to200.root") ;
-  chainZnn.Add("filesMoriond_v4/Zinv-200to400.root") ;
-  chainZnn.Add("filesMoriond_v4/Zinv-400.root") ;
+  chainZnn.Add("filesPostMoriond_v2/Zinv-100to200.root") ;
+  chainZnn.Add("filesPostMoriond_v2/Zinv-200to400.root") ;
+  chainZnn.Add("filesPostMoriond_v2/Zinv-400.root") ;
 
   TChain chainTT("tree") ;
   TChain chainTTPowheg("tree") ;
   TChain chainTTMCaNLO("tree") ;
 
-  chainTT.Add("filesMoriond_v4/TT_FullLept.root") ;
-  chainTT.Add("filesMoriond_v4/TT_SemiLept.root") ;
-  chainTT.Add("filesMoriond_v4/TT_FullHad.root") ;
+  chainTT.Add("filesPostMoriond_v2/TT_FullLept.root") ;
+  chainTT.Add("filesPostMoriond_v2/TT_SemiLept.root") ;
+  chainTT.Add("filesPostMoriond_v2/TT_FullHad.root") ;
 
   //-------
-  chainTTPowheg.Add("filesMoriond_v4/TT-powheg.root");
+  chainTTPowheg.Add("filesPostMoriond_v2/TT-powheg.root");
   //-------
-  chainTTMCaNLO.Add("filesMoriond_v4/TT-MCatNLO.root");
+  chainTTMCaNLO.Add("filesPostMoriond_v2/TT-MCatNLO.root");
   //-------
 
 
@@ -98,15 +98,15 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   printf("\n\n Rescaling ttbar by %5.3f\n\n", kfactor_tt ) ;
 
   TChain chainWJets("tree") ;
-  chainWJets.Add("filesMoriond_v4/WJets-250to300.root") ;
-  chainWJets.Add("filesMoriond_v4/WJets-300to400.root") ;
-  chainWJets.Add("filesMoriond_v4/WJets-400.root") ;
-  chainWJets.Add("filesMoriond_v4/T-s.root") ;
-  chainWJets.Add("filesMoriond_v4/T-t.root") ;
-  chainWJets.Add("filesMoriond_v4/T-tW.root") ;
-  chainWJets.Add("filesMoriond_v4/Tbar-s.root") ;
-  chainWJets.Add("filesMoriond_v4/Tbar-t.root") ;
-  chainWJets.Add("filesMoriond_v4/Tbar-tW.root") ;
+  chainWJets.Add("filesPostMoriond_v2/WJets-250to300.root") ;
+  chainWJets.Add("filesPostMoriond_v2/WJets-300to400.root") ;
+  chainWJets.Add("filesPostMoriond_v2/WJets-400.root") ;
+  chainWJets.Add("filesPostMoriond_v2/T-s.root") ;
+  chainWJets.Add("filesPostMoriond_v2/T-t.root") ;
+  chainWJets.Add("filesPostMoriond_v2/T-tW.root") ;
+  chainWJets.Add("filesPostMoriond_v2/Tbar-s.root") ;
+  chainWJets.Add("filesPostMoriond_v2/Tbar-t.root") ;
+  chainWJets.Add("filesPostMoriond_v2/Tbar-tW.root") ;
   double kfactor_wjets = 0.90 ;
   printf("\n\n Rescaling wjets by %5.3f\n\n", kfactor_wjets ) ;
 
@@ -114,33 +114,33 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   //-- make chains of W+jets and single top separately.
 
   TChain chainWJetsOnly("tree") ;
-  chainWJetsOnly.Add("filesMoriond_v4/WJets-250to300.root") ;
-  chainWJetsOnly.Add("filesMoriond_v4/WJets-300to400.root") ;
-  chainWJetsOnly.Add("filesMoriond_v4/WJets-400.root") ;
+  chainWJetsOnly.Add("filesPostMoriond_v2/WJets-250to300.root") ;
+  chainWJetsOnly.Add("filesPostMoriond_v2/WJets-300to400.root") ;
+  chainWJetsOnly.Add("filesPostMoriond_v2/WJets-400.root") ;
   double kfactor_wjetsonly = 0.90 ;
 
   TChain chainSingletop("tree") ;
-  chainSingletop.Add("filesMoriond_v4/T-s.root") ;
-  chainSingletop.Add("filesMoriond_v4/T-t.root") ;
-  chainSingletop.Add("filesMoriond_v4/T-tW.root") ;
-  chainSingletop.Add("filesMoriond_v4/Tbar-s.root") ;
-  chainSingletop.Add("filesMoriond_v4/Tbar-t.root") ;
-  chainSingletop.Add("filesMoriond_v4/Tbar-tW.root") ;
+  chainSingletop.Add("filesPostMoriond_v2/T-s.root") ;
+  chainSingletop.Add("filesPostMoriond_v2/T-t.root") ;
+  chainSingletop.Add("filesPostMoriond_v2/T-tW.root") ;
+  chainSingletop.Add("filesPostMoriond_v2/Tbar-s.root") ;
+  chainSingletop.Add("filesPostMoriond_v2/Tbar-t.root") ;
+  chainSingletop.Add("filesPostMoriond_v2/Tbar-tW.root") ;
   double kfactor_singletop = 0.90 ;
 
   TChain chainSingletop_s("tree") ;
-  chainSingletop_s.Add("filesMoriond_v4/T-s.root") ;
-  chainSingletop_s.Add("filesMoriond_v4/Tbar-s.root") ;
+  chainSingletop_s.Add("filesPostMoriond_v2/T-s.root") ;
+  chainSingletop_s.Add("filesPostMoriond_v2/Tbar-s.root") ;
   double kfactor_singletops = 0.90 ;
 
   TChain chainSingletop_t("tree") ;
-  chainSingletop_t.Add("filesMoriond_v4/T-t.root") ;
-  chainSingletop_t.Add("filesMoriond_v4/Tbar-t.root") ;
+  chainSingletop_t.Add("filesPostMoriond_v2/T-t.root") ;
+  chainSingletop_t.Add("filesPostMoriond_v2/Tbar-t.root") ;
   double kfactor_singletopt = 0.90 ;
 
   TChain chainSingletop_tw("tree") ;
-  chainSingletop_tw.Add("filesMoriond_v4/T-tW.root") ;
-  chainSingletop_tw.Add("filesMoriond_v4/Tbar-tW.root") ;
+  chainSingletop_tw.Add("filesPostMoriond_v2/T-tW.root") ;
+  chainSingletop_tw.Add("filesPostMoriond_v2/Tbar-tW.root") ;
   double kfactor_singletoptw = 0.90 ;
 
 
@@ -149,26 +149,26 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 //include Z->ll in VV contribution
   TChain chainVV("tree");
-  chainVV.Add("filesMoriond_v4/WW.root"); 
-  chainVV.Add("filesMoriond_v4/WZ.root");
-  chainVV.Add("filesMoriond_v4/ZZ.root");
-  chainVV.Add("filesMoriond_v4/DY-200to400.root");
-  chainVV.Add("filesMoriond_v4/DY-400.root");
+  chainVV.Add("filesPostMoriond_v2/WW.root"); 
+  chainVV.Add("filesPostMoriond_v2/WZ.root");
+  chainVV.Add("filesPostMoriond_v2/ZZ.root");
+  chainVV.Add("filesPostMoriond_v2/DY-200to400.root");
+  chainVV.Add("filesPostMoriond_v2/DY-400.root");
 
 
 
 
 
   char qcdinputfile[9][1000] = {
-    "filesMoriond_v4/QCD-120to170.root"
-    ,"filesMoriond_v4/QCD-170to300.root"
-    ,"filesMoriond_v4/QCD-300to470.root"
-    ,"filesMoriond_v4/QCD-470to600.root"
-    ,"filesMoriond_v4/QCD-600to800.root"
-    ,"filesMoriond_v4/QCD-800to1000.root"
-    ,"filesMoriond_v4/QCD-1000to1400.root"
-    ,"filesMoriond_v4/QCD-1400to1800.root"
-    ,"filesMoriond_v4/QCD-1800.root"
+    "filesPostMoriond_v2/QCD-120to170.root"
+    ,"filesPostMoriond_v2/QCD-170to300.root"
+    ,"filesPostMoriond_v2/QCD-300to470.root"
+    ,"filesPostMoriond_v2/QCD-470to600.root"
+    ,"filesPostMoriond_v2/QCD-600to800.root"
+    ,"filesPostMoriond_v2/QCD-800to1000.root"
+    ,"filesPostMoriond_v2/QCD-1000to1400.root"
+    ,"filesPostMoriond_v2/QCD-1400to1800.root"
+    ,"filesPostMoriond_v2/QCD-1800.root"
   } ;
 
   char qcdsamplename[9][100] = {
@@ -194,14 +194,46 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   double min3rdJetPt = 50. ;
 
 
-  //-- met4-ht4-v15
-  const int nBinsMET   = 4 ;
-  const int nBinsHT    = 4 ;
-  const int nBinsBjets = 3 ;
-  const int version = 15;
-  float Mbins[nBinsMET+1] = {125.,150.,250.,350.,99999.};
-  float Hbins[nBinsHT+1] = {400.,500.,800.,1000.,99999.};
+  // read in the binning definitions from Binning.txt
+
+  int in_version, in_nBinsMET, in_nBinsHT, in_nBinsBjets ;
+  TString label ;
+
+  ifstream inBinning ;
+  inBinning.open("Binning.txt") ;
+
+  inBinning >> label >> in_nBinsMET ;
+  inBinning >> label >> in_nBinsHT ;
+  inBinning >> label >> in_nBinsBjets ;
+
+  const int nBinsMET   = in_nBinsMET ;
+  const int nBinsHT    = in_nBinsHT ;
+  const int nBinsBjets = in_nBinsBjets ;
+
+  float Mbins[nBinsMET+1] ;
+  float Hbins[nBinsHT+1] ;
+
+  for ( int i = 0 ; i < nBinsMET ; i++ ) {
+    inBinning >> label >> Mbins[i] ;
+    if ( i > 0 && Mbins[i] < Mbins[i-1] ) { cout << "\n\n Mismatch in MET binning, check Binning.txt! \n\n" ; return ; }
+  }
+
+  for ( int i = 0 ; i < nBinsHT ; i++ ) {
+    inBinning >> label >> Hbins[i] ;
+    if ( i > 0 && Hbins[i] < Hbins[i-1] ) { cout << "\n\n Mismatch in HT binning, check Binning.txt! \n\n" ; return ; }
+  }
+
+  Mbins[nBinsMET] = 999999. ;
+  Hbins[nBinsHT] = 999999. ;
   
+  inBinning >> label >> in_version ;
+  const int version = in_version ;
+
+  if ( !label.Contains("version") ) {
+    cout << "\n\n Found inconsistency in Binning.txt, check number of bins and MET and HT lower bounds\n\n" << endl ;
+    return ;
+  }
+
 
   TString sMbins[nBinsMET];
   TString sHbins[nBinsHT];
@@ -253,9 +285,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   char outfile[10000] ;
   if ( mgl > 0. && mlsp > 0. ) {
      if ( target_susy_all0lep > 0. ) {
-        sprintf( outfile, "InputWT2tt-mgl%.0f-mlsp%.0f-%.0fevts-met%d-ht%d-v%d.dat", mgl, mlsp, target_susy_all0lep, nBinsMET, nBinsHT, version  ) ;
+       sprintf( outfile, "InputWT2tt-mgl%.0f-mlsp%.0f-%.0fevts-met%d-ht%d-nB%d-v%d.dat", mgl, mlsp, target_susy_all0lep, nBinsMET, nBinsHT, nBinsBjets, version  ) ;
      } else {
-        sprintf( outfile, "InputWT2tt-mgl%.0f-mlsp%.0f-met%d-ht%d-v%d.dat", mgl, mlsp, nBinsMET, nBinsHT, version  ) ;
+       sprintf( outfile, "InputWT2tt-mgl%.0f-mlsp%.0f-met%d-ht%d-nB%d-v%d.dat", mgl, mlsp, nBinsMET, nBinsHT, nBinsBjets, version  ) ;
      }
   } else {
      sprintf( outfile, "Input-met%d-ht%d-v%d.dat", nBinsMET, nBinsHT, version  ) ;
@@ -286,7 +318,6 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   sprintf(bcut[0],"nB==1");
   sprintf(bcutSF[0],"prob1");
 
-  // this will have to be modified once we get the probge4 in the tiny trees
 
   if ( nBinsBjets == 2 ) {
     sprintf(bcut[1],"nB>=2");
@@ -308,12 +339,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   }
 
 
-
   char commoncuts[10000] ;
   sprintf( commoncuts, "maxChNMultDiff<40&&pfOcaloMET<2.0&&nJets>=%d&&MT_bestCSV>%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)",
 	   nJetsCut, MTbCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
 
-   int nSel(4) ;
+   const int nSel(4) ;
    char selname[4][100] = { "0lep", "1lepSig", "1lep", "ldp" } ;
 
    char selcuts[4][10000] ;
@@ -342,6 +372,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
    TH1F* hmctruth_vv[nSel][nBinsBjets] ;
    TH1F* hmctruth_allsm[nSel][nBinsBjets] ;
    TH1F* hmctruth_all[nSel][nBinsBjets] ;
+
 
    for ( int si=0; si<nSel; si++ ) {
       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
@@ -1231,10 +1262,33 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     } // si
 
     // next write out measured trigger efficiencies. Values from plotEMuFrac.C from averaging e/mu bin by bin.
+
+    /* cannot use hardcoded trigger efficiencies in optimizing binning choices...
+       go with dummy values
+
     float trigeff1LVal[nBinsHT][nBinsMET] = {{0.90418,0.983407,0.999797,0.999801},{0.952519,0.996088,0.999794,0.999807},{1,1,1,1},{1,1,1,1}};
     float trigeff1LErr[nBinsHT][nBinsMET] = {{0.0254576,0.0115725,0.0112111,0.0110318},{0.0153225,0.0101077,0.0101169,0.0102007},{0.0151531,0.0110547,0.013888,0.014495},{0.0108621,0.0108621,0.0108621,0.0108621}};
     float trigeff0LVal[nBinsHT][nBinsMET] = {{0.8,0.833333,1,1},{0.666667,1,1,1},{1,1,1,1},{1,1,1,1}};
     float trigeff0LErr[nBinsHT][nBinsMET] = {{0.136256,0.169997,0.0560853,0.0560853},{0.124213,0.0737418,0.0560853,0.0560853},{0.0207913,0.0207913,0.0207913,0.0207913},{0.0207913,0.0207913,0.0207913,0.0207913}};
+
+    */
+
+    float trigeff1LVal[nBinsHT][nBinsMET] ;
+    float trigeff1LErr[nBinsHT][nBinsMET] ;
+    float trigeff0LVal[nBinsHT][nBinsMET] ;
+    float trigeff0LErr[nBinsHT][nBinsMET] ;
+
+    for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
+      for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
+
+	trigeff1LVal[hbi][mbi] = 0.98 ;
+	trigeff1LErr[hbi][mbi] = 0.015 ;
+	trigeff0LVal[hbi][mbi] = 0.95 ;
+	trigeff0LErr[hbi][mbi] = 0.05 ;
+
+      }
+    }
+
 
     for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
       for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {

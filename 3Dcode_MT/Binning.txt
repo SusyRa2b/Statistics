@@ -1,0 +1,10 @@
+nBinsMET	3
+nBinsHt		3
+nBinsBjets	2
+MET_lowBound1   125 
+MET_lowBound2	150
+MET_lowBound3	250
+HT_lowBound1	400
+HT_lowBound2	500
+HT_lowBound3	800
+version		15
