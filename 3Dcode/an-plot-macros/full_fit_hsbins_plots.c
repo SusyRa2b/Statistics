@@ -48,6 +48,10 @@ void formatClone(TGraphAsymmErrors * gg) {
        int fillColor2sig = kGreen-10 ;
        int lineColor = kGreen+3 ;
 
+       //appease sijin
+       fillColor2sig = kGreen-9; //or -7
+       fillColor1sig = kGreen+1;//-3;
+
        gStyle->SetOptStat(0) ;
        gStyle->SetLabelSize(usePublicStyle_? 0.17 : 0.12,"x") ;
        gStyle->SetLabelSize(usePublicStyle_? 0.12 : 0.08,"y") ;
@@ -103,12 +107,13 @@ void formatClone(TGraphAsymmErrors * gg) {
       if (usePublicStyle_) {  //copied from drawReducedTrees.h
 	padh->cd();
 	TString astring;
-	astring.Form("CMS, L_{int} = %.1f fb^{-1}, #sqrt{s} = 8 TeV",19.39);
+	astring.Form("CMS, L = %.1f fb^{-1}, #sqrt{s} = 8 TeV",19.39);
 	plotheader = new TLatex(3.570061,23.08044,astring);
 	plotheader->SetNDC();
 	//	plotheader->SetTextAlign(13);
 	plotheader->SetX(0.05);
-	plotheader->SetY(0.4);
+	//	plotheader->SetY(0.4);
+	plotheader->SetY(0.25); //jmt now that _int is gone from L, realign this in Y
 	plotheader->SetTextFont(42);
 	plotheader->SetTextSizePixels(24);
 	plotheader->SetTextSize(0.6);
