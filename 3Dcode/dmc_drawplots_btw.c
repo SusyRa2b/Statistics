@@ -733,6 +733,7 @@
 
       hdata -> SetLineWidth(2) ;
       hdata -> SetMarkerStyle(20) ;
+      hdata->SetMarkerSize(1);//jmt test
 
       TLegend* legend = usePublicStyle_ ? new TLegend( 0.67, 0.48, 0.94, 0.90 ) : new TLegend( 0.80, 0.67, 0.95, 0.92) ;
       legend->SetFillColor(kWhite) ;
@@ -754,7 +755,7 @@
 
       }
 
-      legend->AddEntry( hdata , "Data", "P");
+      legend->AddEntry( hdata , "Data");//, "P"); jmt test
       for ( int ci=nComps-1; ci>=1; ci-- ) {
 
          sprintf( hname, "%s_%s_flat", hname_base, compname[ci] ) ;
@@ -867,6 +868,7 @@
             sprintf( filename, "outputfiles/%s_flat_btw.pdf", hname_base ) ;
          }
          dmccan->SaveAs( filename ) ;
+/* jmt -- why is this block of code duplicated? Copy/paste mistake? The compiler caught it....
       // TString dataset( inrootfile ) ;
       // dataset.ReplaceAll("rootfiles/dmc_plots2_","") ;
       // dataset.ReplaceAll(".root","") ;
@@ -877,6 +879,7 @@
             sprintf( filename, "outputfiles/%s_flat_btw.png", hname_base ) ;
          }
          dmccan->SaveAs( filename ) ;
+*/
       }
 
    } // drawSetLHB
@@ -985,8 +988,8 @@
 
       }
 
-      legend->AddEntry( hdata , "Data", "P");
-      legenda->AddEntry( hdata , "Data", "P");
+      legend->AddEntry( hdata , "Data");//, "P"); //jmt test
+      legenda->AddEntry( hdata , "Data");//, "P"); //jmt test
       for ( int ci=nComps-1; ci>=1; ci-- ) {
 
          sprintf( hname, "%s_%s", hname_base, compname[ci] ) ;
@@ -1085,7 +1088,7 @@
       if (usePublicStyle_) {
 	TString ytitle;
 	//last part is kind of a nasty hack
-	if (TString(xtitle).Contains("jet")) ytitle="Events / bin";
+	if (TString(xtitle).Contains("jet")) ytitle="Events";// / bin"; // no / bin per Greg Landsberg
 	else	ytitle.Form("Events / %.0f %s", hdata->GetBinWidth( 1), "GeV");
 	hdata->GetYaxis()->SetTitle(ytitle);
 	hdata->GetYaxis()->SetTitleOffset(1) ; //was .14
@@ -1109,7 +1112,7 @@
       if (usePublicStyle_ && useLumiTitle ) {  //copied from drawReducedTrees.h
   	TString astring;
 //  	astring.Form("CMS Preliminary, L_{int} = %.1f fb^{-1}, #sqrt{s} = 8 TeV",19.39);
-  	astring.Form("CMS, L_{int} = %.1f fb^{-1}, #sqrt{s} = 8 TeV",19.39);
+  	astring.Form("CMS, L = %.1f fb^{-1}, #sqrt{s} = 8 TeV",19.39);
   	plotheader = new TLatex(3.570061,23.08044,astring);
   	plotheader->SetNDC();
   	plotheader->SetTextAlign(13);
