@@ -25,21 +25,58 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
   // bin 1 = gluino mass = 100 GeV, 2 = 125, 3 = 150, 4 = 175, ...
   // so gluino mass = 75+nbin*25; or nbin = (gluinomass-75)/25.
 
-  TChain chainT2tt("tree");
-  chainT2tt.Add("filesMoriond_v3/T2tt.root");
+  TChain chainT1tttt("tree");
+  chainT1tttt.Add("filesMoriond_v4/T1tttt.root");
 
   gROOT->Reset();
 
   const int nJetsCut = 3 ;     // #jets >= nJetsCut
   const int MTbCut   = 0 ;   // MTb cut
 
-  //-- met4-ht4-v15
-  const int nBinsMET   = 4 ;
-  const int nBinsHT    = 4 ;
-  const int nBinsBjets = 3 ;   
-  const int version = 15;
-  float Mbins[nBinsMET+1] = {125.,150.,250.,350.,99999.};
-  float Hbins[nBinsHT+1] = {400.,500.,800.,1000.,99999.};
+
+  // get binning definition from "Binning.txt"
+
+  int in_version, in_nBinsMET, in_nBinsHT, in_nBinsBjets ;
+  TString label ;
+
+  ifstream inBinning ;
+  inBinning.open("Binning.txt") ;
+
+  inBinning >> label >> in_nBinsMET ;
+  inBinning >> label >> in_nBinsHT ;
+  inBinning >> label >> in_nBinsBjets ;
+
+  const int nBinsMET   = in_nBinsMET ;
+  const int nBinsHT    = in_nBinsHT ;
+  const int nBinsBjets = in_nBinsBjets ;
+
+  float Mbins[nBinsMET+1] ;
+  float Hbins[nBinsHT+1] ;
+
+  for ( int i = 0 ; i < nBinsMET ; i++ ) {
+    inBinning >> label >> Mbins[i] ;
+    if ( i > 0 && Mbins[i] < Mbins[i-1] ) { cout << "\n\n Mismatch in MET binning, check Binning.txt! \n\n" ; return ; }
+  }
+
+  for ( int i = 0 ; i < nBinsHT ; i++ ) {
+    inBinning >> label >> Hbins[i] ;
+    if ( i > 0 && Hbins[i] < Hbins[i-1] ) { cout << "\n\n Mismatch in HT binning, check Binning.txt! \n\n" ; return ; }
+  }
+
+  Mbins[nBinsMET] = 999999. ;
+  Hbins[nBinsHT] = 999999. ;
+
+  inBinning >> label >> in_version ;
+  const int version = in_version ;
+
+  if ( !label.Contains("version") ) {
+    cout << "\n\n Found inconsistency in Binning.txt, check number of bins and MET and HT lower bounds\n\n" << endl ;
+    return ;
+  }
+
+  inBinning.close();
+
+
 
   TString cBbins[nBinsBjets];
   
@@ -78,7 +115,7 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
   ofstream inFile;
   char outfile[10000] ;
-  sprintf( outfile, "datfiles/T2tt-met%d-ht%d-v%d.dat", nBinsMET, nBinsHT, version ) ;
+  sprintf( outfile, "datfiles/T1tttt-met%d-ht%d-nB%d-v%d.dat", nBinsMET, nBinsHT, nBinsBjets, version ) ;
   inFile.open( outfile );
 
   // loop over gluino masses
@@ -121,7 +158,7 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
   float xsec8TeV = -1. ;
 
-  int mGls[4] = {350,450,550,650} ;
+  int mGls[4] = {1000,1100,1200,1300} ;
   int mLsps[4] = {0,0,0,0} ;
 
   for ( int iGl = 0 ; iGl < 1/*4*/ ; iGl++ ) {
@@ -170,19 +207,19 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
          char hname[1000] ;
 
          sprintf( hname, "h_susy_sig_%db", k+1 ) ;
-         chainT2tt.Project( hname,"HT:MET",allSigCuts);
+         chainT1tttt.Project( hname,"HT:MET",allSigCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  SIG selection %9.1f events.\n", mGl, mLsp, k+1, h_susy_sig[k]->Integral() ) ; cout << flush ;
 
          sprintf( hname, "h_susy_slsig_%db", k+1 ) ;
-         chainT2tt.Project( hname,"HT:MET",allSLSigCuts);
+         chainT1tttt.Project( hname,"HT:MET",allSLSigCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  SL Sig selection %6.1f events.\n", mGl, mLsp, k+1, h_susy_slsig[k]->Integral() ) ; cout << flush ;
 
          sprintf( hname, "h_susy_sl_%db", k+1 ) ;
-         chainT2tt.Project( hname,"HT:MET",allSLCuts);
+         chainT1tttt.Project( hname,"HT:MET",allSLCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  SL  selection %9.1f events.\n", mGl, mLsp, k+1, h_susy_sl[k]->Integral() ) ; cout << flush ;
 
          sprintf( hname, "h_susy_ldp_%db", k+1 ) ;
-         chainT2tt.Project( hname,"HT:MET",allLDPCuts);
+         chainT1tttt.Project( hname,"HT:MET",allLDPCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  LDP selection %9.1f events.\n", mGl, mLsp, k+1, h_susy_ldp[k]->Integral() ) ; cout << flush ;
 
       } // k (nBjets)

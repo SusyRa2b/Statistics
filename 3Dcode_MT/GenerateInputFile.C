@@ -234,6 +234,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     return ;
   }
 
+  inBinning.close();
+
 
   TString sMbins[nBinsMET];
   TString sHbins[nBinsHT];

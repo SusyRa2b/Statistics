@@ -13,13 +13,28 @@ void GenerateDummySyst() {
 
   gROOT->Reset();
 
-  int nBinsMET   = 4 ;
-  int nBinsHT    = 4 ;
-  int nBinsBjets = 3 ;
+  // get binning from "Binning.txt"
+
+  int in_version, in_nBinsMET, in_nBinsHT, in_nBinsBjets ;
+  TString label ;
+
+  ifstream inBinning ;
+  inBinning.open("Binning.txt") ;
+
+  inBinning >> label >> in_nBinsMET ;
+  inBinning >> label >> in_nBinsHT ;
+  inBinning >> label >> in_nBinsBjets ;
+
+  const int nBinsMET   = in_nBinsMET ;
+  const int nBinsHT    = in_nBinsHT ;
+  const int nBinsBjets = in_nBinsBjets ;
+
+  inBinning.close() ;
+
 
   int nBins = nBinsMET * nBinsHT * nBinsBjets ;
 
-  // just generate one line, gluino mass, lsp mass (for the point 1225, 225),
+  // just generate one line, gluino mass, lsp mass (for the point 1000, 0),
   // followed by 4*Nbins dummy numbers 
 
   double dummySig   = 0.01 ;
@@ -27,10 +42,13 @@ void GenerateDummySyst() {
   double dummySL    = 0.005 ;
   double dummyLdp   = 0.02 ;
 
-  ofstream outDummy;
-  outDummy.open("DummySyst.txt");
+  char outfile[10000] ;
+  sprintf( outfile, "datfiles/DummySyst-met%d-ht%d-nB%d.dat", nBinsMET, nBinsHT, nBinsBjets ) ;
 
-  outDummy << "1225 " << "225 " ;
+  ofstream outDummy;
+  outDummy.open(outfile);
+
+  outDummy << "1000 " << "0 " ;
 
   for ( int i = 0 ; i < nBins ; i++ ) {
     outDummy << dummySig << " " ;
