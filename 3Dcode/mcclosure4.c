@@ -558,11 +558,14 @@ void setFormatting(TH1F* hh, const TString & ytitle="", const int ndiv=-1) ;
 
       TCanvas* cttwj3 = (TCanvas*) gDirectory->FindObject("cttwj3") ;
       if ( cttwj3 == 0x0 ) {
-         cttwj3 = new TCanvas("cttwj3","ttwj closure", 1200, 950) ;
+	//         cttwj3 = new TCanvas("cttwj3","ttwj closure", 1200, 950) ;
+         cttwj3 = new TCanvas("cttwj3","ttwj closure", 1200, 475) ;
       }
       cttwj3->Clear() ;
-      cttwj3->Divide(3,2) ;
+      //      cttwj3->Divide(3,2) ;
+      cttwj3->Divide(3,1) ;
 
+/*
       cttwj3->cd(1) ;
       hmctruth_ttwj_0over1ratio_1b->SetTitle("ttwj =1b: 0 Lepton / 1 Lepton, Ratio") ;
       hmctruth_ttwj_0over1ratio_1b->Draw("E1") ;
@@ -584,8 +587,9 @@ void setFormatting(TH1F* hh, const TString & ytitle="", const int ndiv=-1) ;
 	cmssim->Draw();
 	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} #geq 3");
       }
+*/
 
-      cttwj3->cd(4) ;
+      cttwj3->cd(4 -3) ;
       hscalefactor_ttwj_0over1ratio_1b->SetTitle("ttwj =1b: 0 Lepton / 1 Lepton, Scale Factor") ;
       hscalefactor_ttwj_0over1ratio_1b_whalfcorr->DrawCopy("e1") ;
       hscalefactor_ttwj_0over1ratio_1b->DrawCopy("samee1") ;
@@ -595,7 +599,7 @@ void setFormatting(TH1F* hh, const TString & ytitle="", const int ndiv=-1) ;
 	cmssim->Draw();
 	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 1");
       }
-      cttwj3->cd(5) ;
+      cttwj3->cd(5 -3) ;
       hscalefactor_ttwj_0over1ratio_2b->SetTitle("ttwj =2b: 0 Lepton / 1 Lepton, Scale Factor") ;
       hscalefactor_ttwj_0over1ratio_2b_whalfcorr->DrawCopy("e1") ;
       hscalefactor_ttwj_0over1ratio_2b->DrawCopy("samee1") ;
@@ -605,7 +609,7 @@ void setFormatting(TH1F* hh, const TString & ytitle="", const int ndiv=-1) ;
 	cmssim->Draw();
 	nblabel->DrawLatex(nblabel_x,nblabel_y,"N_{b-jet} = 2");
       }
-      cttwj3->cd(6) ;
+      cttwj3->cd(6 -3) ;
       hscalefactor_ttwj_0over1ratio_3b->SetTitle("ttwj >=3b: 0 Lepton / 1 Lepton, Scale Factor") ;
       hscalefactor_ttwj_0over1ratio_3b_whalfcorr->DrawCopy("e1") ;
       hscalefactor_ttwj_0over1ratio_3b->DrawCopy("samee1") ;
