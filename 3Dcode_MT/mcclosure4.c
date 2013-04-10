@@ -3073,7 +3073,7 @@
      
      hmctruth_ttwj_ldpover0lep_ratio_2b = (TH1F*) hmctruth_ttwj_ldp_2b->Clone("hmctruth_ttwj_ldpover0lep_ratio_2b") ;
      hmctruth_ttwj_ldpover0lep_ratio_2b->Divide( hmctruth_ttwj_0lep_2b ) ;
-     
+
      
      if ( nBinsBjets > 2 ) {
 
@@ -3108,7 +3108,6 @@
        }
      }
 
-
       gStyle->SetPadRightMargin(0.08) ;
       TCanvas* cttwjmcr = (TCanvas*) gDirectory->FindObject("cttwjmcr") ;
       if ( cttwjmcr == 0x0 ) {
@@ -3119,76 +3118,73 @@
       hmctruth_ttwj_ldpover0lep_ratio_1b->Draw() ;
       hmctruth_ttwj_ldpover0lep_ratio_2b->Draw("same") ;
       if ( nBinsBjets > 2 ) hmctruth_ttwj_ldpover0lep_ratio_3b->Draw("same") ;
-      if ( nBinsBjets > 2 ) hmctruth_ttwj_ldpover0lep_ratio_4b->Draw("same") ;
+      if ( nBinsBjets > 3 ) hmctruth_ttwj_ldpover0lep_ratio_4b->Draw("same") ;
 
 
       //--- write to file
 
-      for ( int mbi=0; mbi<nBinsMET ; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT ; hbi++ ) {
+     for ( int mbi=0; mbi<nBinsMET ; mbi++ ) {
+       for ( int hbi=0; hbi<nBinsHT ; hbi++ ) {
+	 
+	 int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	 
+	 char parameterName[1000] ;
+	 double err, value ;
 
-            int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	 err   = hmctruth_ttwj_ldpover0lep_ratio_1b->GetBinError(hbin)  ;
+	 value = hmctruth_ttwj_ldpover0lep_ratio_1b->GetBinContent(hbin)  ;
+	 sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_1b", mbi+1, hbi+1 ) ;
+	 printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
+		 parameterName,
+		 hmctruth_ttwj_ldpover0lep_ratio_1b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
+	 updateFileValue( datfile, parameterName, value ) ;
+	 sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_1b_err", mbi+1, hbi+1 ) ;
+	 updateFileValue( datfile, parameterName, err ) ;
 
-            char parameterName[1000] ;
-            double err, value ;
+	 
+	 err   = hmctruth_ttwj_ldpover0lep_ratio_2b->GetBinError(hbin)  ;
+	 value = hmctruth_ttwj_ldpover0lep_ratio_2b->GetBinContent(hbin)  ;
+	 sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_2b", mbi+1, hbi+1 ) ;
+	 printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
+		 parameterName,
+		 hmctruth_ttwj_ldpover0lep_ratio_2b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
+	 updateFileValue( datfile, parameterName, value ) ;
+	 sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
+	 updateFileValue( datfile, parameterName, err ) ;
 
+	 
+	 if ( nBinsBjets > 2 ) {
+	   
+	   err   = hmctruth_ttwj_ldpover0lep_ratio_3b->GetBinError(hbin)  ;
+	   value = hmctruth_ttwj_ldpover0lep_ratio_3b->GetBinContent(hbin)  ;
+	   sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_3b", mbi+1, hbi+1 ) ;
+	   printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
+		   parameterName,
+		   hmctruth_ttwj_ldpover0lep_ratio_3b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
+	   updateFileValue( datfile, parameterName, value ) ;
+	   sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
+	   updateFileValue( datfile, parameterName, err ) ;
+	   
+	   if ( nBinsBjets > 3 ) {
 
-            err   = hmctruth_ttwj_ldpover0lep_ratio_1b->GetBinError(hbin)  ;
-            value = hmctruth_ttwj_ldpover0lep_ratio_1b->GetBinContent(hbin)  ;
-            sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_1b", mbi+1, hbi+1 ) ;
-            printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
-                  parameterName,
-                  hmctruth_ttwj_ldpover0lep_ratio_1b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
-            updateFileValue( datfile, parameterName, value ) ;
-            sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_1b_err", mbi+1, hbi+1 ) ;
-            updateFileValue( datfile, parameterName, err ) ;
-
-            err   = hmctruth_ttwj_ldpover0lep_ratio_2b->GetBinError(hbin)  ;
-            value = hmctruth_ttwj_ldpover0lep_ratio_2b->GetBinContent(hbin)  ;
-            sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_2b", mbi+1, hbi+1 ) ;
-            printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
-                  parameterName,
-                  hmctruth_ttwj_ldpover0lep_ratio_2b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
-            updateFileValue( datfile, parameterName, value ) ;
-            sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
-            updateFileValue( datfile, parameterName, err ) ;
-
-	    if ( nBinsBjets > 2 ) {
-
-	      err   = hmctruth_ttwj_ldpover0lep_ratio_3b->GetBinError(hbin)  ;
-	      value = hmctruth_ttwj_ldpover0lep_ratio_3b->GetBinContent(hbin)  ;
-	      sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_3b", mbi+1, hbi+1 ) ;
-	      printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
-		      parameterName,
-		      hmctruth_ttwj_ldpover0lep_ratio_3b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
-	      updateFileValue( datfile, parameterName, value ) ;
-	      sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
-	      updateFileValue( datfile, parameterName, err ) ;
-
-	      
-	      if ( nBinsBjets > 3 ) {
-
-		err   = hmctruth_ttwj_ldpover0lep_ratio_4b->GetBinError(hbin)  ;
-		value = hmctruth_ttwj_ldpover0lep_ratio_4b->GetBinContent(hbin)  ;
-		sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_4b", mbi+1, hbi+1 ) ;
-		printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
-			parameterName,
-			hmctruth_ttwj_ldpover0lep_ratio_4b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
-		updateFileValue( datfile, parameterName, value ) ;
-		sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_4b_err", mbi+1, hbi+1 ) ;
+	     err   = hmctruth_ttwj_ldpover0lep_ratio_4b->GetBinError(hbin)  ;
+	     value = hmctruth_ttwj_ldpover0lep_ratio_4b->GetBinContent(hbin)  ;
+	     sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_4b", mbi+1, hbi+1 ) ;
+	     printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
+		     parameterName,
+		     hmctruth_ttwj_ldpover0lep_ratio_4b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
+	     updateFileValue( datfile, parameterName, value ) ;
+	     sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_4b_err", mbi+1, hbi+1 ) ;
 		updateFileValue( datfile, parameterName, err ) ;
 		
-	      }
-	    }
-
-            printf("\n") ;
-
-
-         } // hbi.
-      } // mbi.
-
-
-
+	   }
+	 }
+	 
+	 printf("\n") ;
+	 
+	 
+       } // hbi.
+     } // mbi.
 
 
 
@@ -3269,6 +3265,7 @@
 	  hmctruth_znn_ldpover0lep_ratio_4b->SetMarkerStyle(22) ;
 	}
       }
+
 
       gStyle->SetPadRightMargin(0.08) ;
       TCanvas* cznnmcr = (TCanvas*) gDirectory->FindObject("cznnmcr") ;
