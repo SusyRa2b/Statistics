@@ -48,26 +48,35 @@ void GenerateDummySyst() {
   ofstream outDummy;
   outDummy.open(outfile);
 
-  outDummy << "1000 " << "0 " ;
 
-  for ( int i = 0 ; i < nBins ; i++ ) {
-    outDummy << dummySig << " " ;
+  // generate dummy systematics for a bunch of points 
+
+  int mGls[5] = {-1,350,500,600,700} ;
+  int mLsps[5] = {-1,0,0,0,0} ;
+
+  for ( int iGl = 0 ; iGl < 5 ; iGl++ ) {
+
+    outDummy << mGls[iGl] << " " << mLsps[iGl] << " " ;
+
+    for ( int i = 0 ; i < nBins ; i++ ) {
+      outDummy << dummySig << " " ;
+    }
+    
+    for ( int i = 0 ; i < nBins ; i++ ) {
+      outDummy << dummySLSig << " " ;
+    }
+    
+    for ( int i = 0 ; i < nBins ; i++ ) {
+      outDummy << dummySL << " " ;
+    }
+    
+    for ( int i = 0 ; i < nBins ; i++ ) {
+      outDummy << dummyLdp << " " ;
+    }
+
+    outDummy << endl ;
+    
   }
-
-  for ( int i = 0 ; i < nBins ; i++ ) {
-    outDummy << dummySLSig << " " ;
-  }
-
-  for ( int i = 0 ; i < nBins ; i++ ) {
-    outDummy << dummySL << " " ;
-  }
-
-  for ( int i = 0 ; i < nBins ; i++ ) {
-    outDummy << dummyLdp << " " ;
-  }
-
-  outDummy << endl ;
-
 
   return;
 
