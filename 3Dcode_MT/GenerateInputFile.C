@@ -1038,23 +1038,30 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   
     // various parameters needed for Z -> invis.
 
-    inFile << "acc_Zee_M1       \t" << 0.75<< endl;
-    inFile << "acc_Zee_M1_err  \t" << 0.01<< endl;
-    inFile << "acc_Zee_M2       \t" << 0.75<< endl;
-    inFile << "acc_Zee_M2_err  \t" << 0.01<< endl;
-    inFile << "acc_Zee_M3       \t" << 0.75<< endl;
-    inFile << "acc_Zee_M3_err  \t" << 0.01<< endl;
-    inFile << "acc_Zee_M4       \t" << 0.75<< endl;
-    inFile << "acc_Zee_M4_err \t" <<  0.01<< endl;
-    inFile << "acc_Zmm_M1       \t" << 0.80<< endl;
-    inFile << "acc_Zmm_M1_err  \t" << 0.01<< endl;
-    inFile << "acc_Zmm_M2       \t" << 0.80<< endl;
-    inFile << "acc_Zmm_M2_err  \t" << 0.01<< endl;
-    inFile << "acc_Zmm_M3       \t" << 0.80<< endl;
-    inFile << "acc_Zmm_M3_err \t" <<  0.01<< endl;
-    inFile << "acc_Zmm_M4       \t" << 0.80<< endl;
-    inFile << "acc_Zmm_M4_err  \t" << 0.01<< endl;
+    for (int i = 0 ; i < nBinsMET ; i++) {
 
+      TString acc_Zee = "acc_Zee" ;
+      acc_Zee = acc_Zee+sMbins[i] ;
+      
+      inFile << acc_Zee << "  \t" << 0.75 << endl ;
+      
+      acc_Zee = acc_Zee+"_err" ;
+      inFile << acc_Zee << "  \t" << 0.01 << endl ;	  
+      
+    }
+
+
+    for (int i = 0 ; i < nBinsMET ; i++) {
+
+      TString acc_Zmm = "acc_Zmm" ;
+      acc_Zmm = acc_Zmm+sMbins[i] ;
+      
+      inFile << acc_Zmm << "  \t" << 0.80 << endl ;
+      
+      acc_Zmm = acc_Zmm+"_err" ;
+      inFile << acc_Zmm << "  \t" << 0.01 << endl ;	  
+      
+    }
   
     // Z -> ll efficiencies (these are eff_reco**2 * eff_sel**2 * eff_trig
     //                       or Z_ee_eff*Z_ee_eff*Z_ee_trg*Z_ee_rec*Z_ee_rec from Zinv_inputs.dat)
@@ -1065,14 +1072,19 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     inFile << "Z_mm_eff_err      \t" << 0.05 << endl; // 
 
 
-    inFile << "knn_1b_M1        \t" << 0.40 << endl;
-    inFile << "knn_1b_M1_err    \t" << 0.05 << endl;
-    inFile << "knn_1b_M2        \t" << 0.40 << endl;
-    inFile << "knn_1b_M2_err    \t" << 0.05 << endl;
-    inFile << "knn_1b_M3       \t" <<  0.40 << endl;
-    inFile << "knn_1b_M3_err    \t" << 0.05 << endl;
-    inFile << "knn_1b_M4        \t" << 0.40 << endl;
-    inFile << "knn_1b_M4_err    \t" << 0.05 << endl;
+    for (int i = 0 ; i < nBinsMET ; i++) {
+
+      TString knn_1b = "knn_1b" ;
+      knn_1b = knn_1b+sMbins[i] ;
+      
+      inFile << knn_1b << "  \t" << 0.40 << endl ;
+      
+      knn_1b = knn_1b+"_err" ;
+      inFile << knn_1b << "  \t" << 0.05 << endl ;	  
+      
+    }
+
+
     inFile << "knn_2b           \t" << 0.05 << endl;
     inFile << "knn_2b_err       \t" << 0.02 << endl;
 

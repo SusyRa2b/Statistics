@@ -6,7 +6,6 @@
   mkdir -p logfiles
   mkdir -p rootfiles
   mkdir -p datfiles
-  mkdir -p datfiles_repo
   mkdir -p outputfiles
 
 
@@ -22,15 +21,32 @@
 
   echo GenerateInputFile
   $ROOTSYS/bin/root -b -q GenerateInputFile.C+ >& logfiles/geninput-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version.log
-  mv Input-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version.dat datfiles_repo/
+  mv Input-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version.dat datfiles/
 
 
   # mcclosure4
 
   echo mcclosure4, qcd model 4, ttwj ave, exp0lep, wtrig
-  cp datfiles_repo/Input-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version.dat datfiles_repo/Input-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version-withSyst.dat
-  $ROOTSYS/bin/root -b -q mcclosure4.c+\(\"rootfiles/gi-plots-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version.root\",\"datfiles_repo/Input-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version-withSyst.dat\",4,1,1,1\) >& logfiles/mcclosure4-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version-withSyst.log
+  cp datfiles/Input-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version.dat datfiles/Input-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version-withSyst.dat
+  $ROOTSYS/bin/root -b -q mcclosure4.c+\(\"rootfiles/gi-plots-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version.root\",\"datfiles/Input-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version-withSyst.dat\",4,1,1,1\) >& logfiles/mcclosure4-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version-withSyst.log
+
+
+  # generate susy file 
+
+  echo GenerateSusyFile
+  $ROOTSYS/bin/root -b -q GenerateSusyFile.C >& logfiles/gensusy-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version.log
+
+
+  # generate dummy systamatics file
+
+  echo GenerateDummySyst
+  $ROOTSYS/bin/root -b -q GenerateDummySyst.C >& logfiles/genDummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.log
 
 
   # don't care about real data for now...
-    
+
+  # make workspace
+
+  echo ... making workspace ...
+  $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles/Input-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version-withSyst.dat\",\"datfiles/T2tt-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version.dat\",350,0,\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\",\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\",4,\"rootfiles/ws.root\",\"null\",false,false,\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\",\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\",\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\",\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\",\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\"\)
+

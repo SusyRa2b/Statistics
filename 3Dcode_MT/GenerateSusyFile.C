@@ -25,8 +25,8 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
   // bin 1 = gluino mass = 100 GeV, 2 = 125, 3 = 150, 4 = 175, ...
   // so gluino mass = 75+nbin*25; or nbin = (gluinomass-75)/25.
 
-  TChain chainT1tttt("tree");
-  chainT1tttt.Add("filesMoriond_v4/T1tttt.root");
+  TChain chainT2tt("tree");
+  chainT2tt.Add("filesMoriond_v4/T2tt.root");
 
   gROOT->Reset();
 
@@ -115,7 +115,7 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
   ofstream inFile;
   char outfile[10000] ;
-  sprintf( outfile, "datfiles/T1tttt-met%d-ht%d-nB%d-v%d.dat", nBinsMET, nBinsHT, nBinsBjets, version ) ;
+  sprintf( outfile, "datfiles/T2tt-met%d-ht%d-nB%d-v%d.dat", nBinsMET, nBinsHT, nBinsBjets, version ) ;
   inFile.open( outfile );
 
   // loop over gluino masses
@@ -158,10 +158,10 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
   float xsec8TeV = -1. ;
 
-  int mGls[4] = {1000,1100,1200,1300} ;
+  int mGls[4] = {350,500,600,700} ;
   int mLsps[4] = {0,0,0,0} ;
 
-  for ( int iGl = 0 ; iGl < 1/*4*/ ; iGl++ ) {
+  for ( int iGl = 0 ; iGl < 4 ; iGl++ ) {
 
   int mGl = mGls[iGl] ;
   int mLsp = mLsps[iGl] ;
@@ -207,19 +207,19 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
          char hname[1000] ;
 
          sprintf( hname, "h_susy_sig_%db", k+1 ) ;
-         chainT1tttt.Project( hname,"HT:MET",allSigCuts);
+         chainT2tt.Project( hname,"HT:MET",allSigCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  SIG selection %9.1f events.\n", mGl, mLsp, k+1, h_susy_sig[k]->Integral() ) ; cout << flush ;
 
          sprintf( hname, "h_susy_slsig_%db", k+1 ) ;
-         chainT1tttt.Project( hname,"HT:MET",allSLSigCuts);
+         chainT2tt.Project( hname,"HT:MET",allSLSigCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  SL Sig selection %6.1f events.\n", mGl, mLsp, k+1, h_susy_slsig[k]->Integral() ) ; cout << flush ;
 
          sprintf( hname, "h_susy_sl_%db", k+1 ) ;
-         chainT1tttt.Project( hname,"HT:MET",allSLCuts);
+         chainT2tt.Project( hname,"HT:MET",allSLCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  SL  selection %9.1f events.\n", mGl, mLsp, k+1, h_susy_sl[k]->Integral() ) ; cout << flush ;
 
          sprintf( hname, "h_susy_ldp_%db", k+1 ) ;
-         chainT1tttt.Project( hname,"HT:MET",allLDPCuts);
+         chainT2tt.Project( hname,"HT:MET",allLDPCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  LDP selection %9.1f events.\n", mGl, mLsp, k+1, h_susy_ldp[k]->Integral() ) ; cout << flush ;
 
       } // k (nBjets)

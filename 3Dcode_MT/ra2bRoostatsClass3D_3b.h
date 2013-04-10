@@ -34,6 +34,7 @@
 			bool floatSLSigRatios = false,
 			const char* systFile1 = "systFile1.txt",
 			const char* pdf_syst_file = "foo",
+			const char* isr_syst_file = "foo2",
 			const char* wjets_xsec_shapesyst_file = "blah.txt",
 			const char* singletop_xsec_shapesyst_file = "blah.txt"
                         ) ;
@@ -81,8 +82,8 @@
 
        // number of bins of the analysis
 
-       static const int nBinsMET  = 4 ;
-       static const int nBinsHT   = 4 ;
+       static const int nBinsMET  = 3 ;
+       static const int nBinsHT   = 3 ;
 
        static const int nBinsBtag = 2 ;
        

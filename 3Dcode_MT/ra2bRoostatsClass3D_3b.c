@@ -114,6 +114,7 @@
 					     bool floatSLSigRatios,
 					     const char* systFile1,
 					     const char* pdf_syst_file,
+					     const char* isr_syst_file,
 					     const char* wjets_xsec_shapesyst_file,
                                              const char* singletop_xsec_shapesyst_file
 					     ) {
@@ -2027,19 +2028,19 @@
       if ( qcdModelIndex == 4 ) {
 
         //-- constrain MET scale factors for >= bin 3 (counting from 1).
-         if (  ! (nBinsMET==4)  ) {
-            printf("\n\n *** QCD model 4 : I don't know what to do for this binning.  Parameters hardwired for nMET=4, nB=3\n") ;
-            return false ;
-         }
+        // if (  ! (nBinsMET==4)  ) {
+        //    printf("\n\n *** QCD model 4 : I don't know what to do for this binning.  Parameters hardwired for nMET=4, nB=3\n") ;
+        //    return false ;
+        // }
 
          if ( useLognormal ) {
-            rv_SFqcd_met[2] = makeLognormalConstraint( "SFqcd_met3", input_SFqcd_met3, input_SFqcd_met3_err ) ;
-            rv_SFqcd_met[3] = makeLognormalConstraint( "SFqcd_met4", input_SFqcd_met4, input_SFqcd_met4_err ) ;
+            if ( nBinsMET > 2 )  rv_SFqcd_met[2] = makeLognormalConstraint( "SFqcd_met3", input_SFqcd_met3, input_SFqcd_met3_err ) ;
+            if ( nBinsMET > 3 )  rv_SFqcd_met[3] = makeLognormalConstraint( "SFqcd_met4", input_SFqcd_met4, input_SFqcd_met4_err ) ;
             if ( nBinsBtag > 2 ) rv_SFqcd_nb[2]  = makeLognormalConstraint( "SFqcd_nb3",  input_SFqcd_nb3 , input_SFqcd_nb3_err  ) ;
             if ( nBinsBtag > 3 ) rv_SFqcd_nb[3]  = makeLognormalConstraint( "SFqcd_nb4",  input_SFqcd_nb4 , input_SFqcd_nb4_err  ) ;
          } else {
-            rv_SFqcd_met[2] = makeGaussianConstraint(  "SFqcd_met3", input_SFqcd_met3, input_SFqcd_met3_err ) ;
-            rv_SFqcd_met[3] = makeGaussianConstraint(  "SFqcd_met4", input_SFqcd_met4, input_SFqcd_met4_err ) ;
+            if ( nBinsMET > 2 )  rv_SFqcd_met[2] = makeGaussianConstraint(  "SFqcd_met3", input_SFqcd_met3, input_SFqcd_met3_err ) ;
+            if ( nBinsMET > 3 )  rv_SFqcd_met[3] = makeGaussianConstraint(  "SFqcd_met4", input_SFqcd_met4, input_SFqcd_met4_err ) ;
             if ( nBinsBtag > 2 ) rv_SFqcd_nb[2]  = makeGaussianConstraint(  "SFqcd_nb3",  input_SFqcd_nb3 , input_SFqcd_nb3_err  ) ;
             if ( nBinsBtag > 3 ) rv_SFqcd_nb[3]  = makeGaussianConstraint(  "SFqcd_nb4",  input_SFqcd_nb4 , input_SFqcd_nb4_err  ) ;
          }
@@ -2158,6 +2159,15 @@
          sss_return_status = setupShapeSyst( pdf_syst_file               , "pdfsyst_sf"    , 2, m0, m12, workspace ) ; // 2 = log-normal
       } else {
          sss_return_status = setupShapeSyst( pdf_syst_file               , "pdfsyst_sf"    , 1, m0, m12, workspace ) ; // 1 = Gaussian
+      }
+      if ( !sss_return_status ) { return false ; }
+      nShapeSystematics++ ;
+
+      sprintf( shapeSystName[nShapeSystematics], "isrsyst_sf" ) ;
+      if ( useLognormal ) {
+         sss_return_status = setupShapeSyst( isr_syst_file               , "isrsyst_sf"    , 2, m0, m12, workspace ) ; // 2 = log-normal
+      } else {
+         sss_return_status = setupShapeSyst( isr_syst_file               , "isrsyst_sf"    , 1, m0, m12, workspace ) ; // 1 = Gaussian
       }
       if ( !sss_return_status ) { return false ; }
       nShapeSystematics++ ;

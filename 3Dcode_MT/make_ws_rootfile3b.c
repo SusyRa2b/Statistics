@@ -13,6 +13,7 @@
 			    bool floatSLSigRatios = false,
 			    const char* systfilename = "datfiles/sigsystematics.T1bbbb.JES.txt",
 			    const char* systfilename2 = "datfiles/sigsystematics.T1bbbb.PDF.txt",
+			    const char* systfilename3 = "datfiles/sigsystematics.T1bbbb.ISR.txt",
 			    const char* wjets_xsec_shapesyst_file = "blah.txt",
 			    const char* singletop_xsec_shapesyst_file = "blah.txt"
                          ) {
@@ -26,7 +27,7 @@
        ra2bRoostatsClass3D_3b ra2b ;
 
        ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, input_lightmistagfile, qcdModelIndex, 
-			wsrootfilename, blindBinsList, constrainBjetShape, floatSLSigRatios, systfilename, systfilename2,
+			wsrootfilename, blindBinsList, constrainBjetShape, floatSLSigRatios, systfilename, systfilename2, systfilename3,
 			wjets_xsec_shapesyst_file, singletop_xsec_shapesyst_file) ;
 
    }
