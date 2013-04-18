@@ -26,6 +26,8 @@
 
 #include <string.h>
 #include <sstream>
+#include <iostream>
+#include <fstream>
 
   using namespace RooFit;
   using namespace RooStats;
@@ -57,9 +59,31 @@
      double chi2(0.0) ;
 
 
-     // hardcode here the number of bins of the analysis
-     int nBinsBtag = 3 ;
+     // get the binning from "Binning.txt"
+
+     int version, nBinsMET, nBinsHT, nBinsBtag ;
+     TString label ;
      
+     ifstream inBinning ;
+     inBinning.open("Binning.txt") ;
+     
+     inBinning >> label >> nBinsMET ;
+     inBinning >> label >> nBinsHT ;
+     inBinning >> label >> nBinsBtag ;
+
+     float dummy ;
+     
+     for ( int i = 0 ; i < nBinsMET ; i++ ) {
+       inBinning >> label >> dummy ;
+     }
+     
+     for ( int i = 0 ; i < nBinsHT ; i++ ) {
+       inBinning >> label >> dummy ;
+     }
+  
+     inBinning >> label >> version ;
+     
+     inBinning.close() ;
 
 
      double hmax = 1.25 ;
@@ -70,52 +94,30 @@
      ws->Print() ;
 
 
-     // figure out the binning from the variables in the likelihood
-     int nBinsMET(1) ;
-     for ( int bi=2; bi<20; bi++ ) {
-        char vname[1000] ;
-        sprintf( vname, "mu_susymc_M%d_H2_1b", bi ) ;
-        RooRealVar* rrv = ws->var( vname ) ;
-        if ( rrv == 0x0 ) break ;
-        nBinsMET = bi ;
-     }
+     //-- Hardwire in to ignore the highest MET bin in the lowest HT bin.
+     bool ignoreBin[10][10] ;
+     for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+       for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+	 ignoreBin[mbi][hbi] = false ;
+       } // hbi
+     } // mbi
+     ignoreBin[nBinsMET-1][0] = true ;
 
-     int nBinsHT(1) ;
-     for ( int bi=2; bi<20; bi++ ) {
-        char vname[1000] ;
-        sprintf( vname, "mu_susymc_M1_H%d_1b", bi ) ;
-        RooRealVar* rrv = ws->var( vname ) ;
-        if ( rrv == 0x0 ) break ;
-        nBinsHT = bi ;
-     }
-
-
-      //-- Hardwire in to ignore the highest MET bin in the lowest HT bin.
-      bool ignoreBin[4][4] ;
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-            ignoreBin[mbi][hbi] = false ;
-         } // hbi
-      } // mbi
-      ignoreBin[nBinsMET-1][0] = true ;
-
-      printf("\n\n *** Ignoring these bins in the analysis.\n\n") ;
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-            if ( ignoreBin[mbi][hbi] ) {
-               printf("  MET %d, HT %d\n", mbi+1, hbi+1 ) ;
-            }
-         } // hbi
-      } // mbi
-      printf("\n\n\n") ;
-
+     printf("\n\n *** Ignoring these bins in the analysis.\n\n") ;
+     for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+       for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+	 if ( ignoreBin[mbi][hbi] ) {
+	   printf("  MET %d, HT %d\n", mbi+1, hbi+1 ) ;
+	 }
+       } // hbi
+     } // mbi
+     printf("\n\n\n") ;
+     
      printf("\n\n Binning: nBinsMET = %d, nBinsHT = %d\n\n", nBinsMET, nBinsHT ) ;
-
-     ////// TString sMbins[nBinsMET];
-     ////// TString sHbins[nBinsHT];
-     TString sMbins[4];
-     TString sHbins[4];
-     TString sBbins[3] = {"_1b","_2b","_3b"};
+     
+     TString sMbins[nBinsMET];
+     TString sHbins[nBinsHT];
+     TString sBbins[4] = {"_1b","_2b","_3b","_4b"};
      
      for (int i = 0 ; i < nBinsMET ; i++) {
        TString base = "_M";
@@ -339,95 +341,180 @@
 
      int nbins = nBinsMET*(nBinsHT+1) + 1 ;
 
-     TH1F* hfitqual_data_0lep_1b = new TH1F("hfitqual_data_0lep_1b", "0 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_susy_0lep_1b = new TH1F("hfitqual_susy_0lep_1b", "0 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_ttwj_0lep_1b = new TH1F("hfitqual_ttwj_0lep_1b", "0 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_qcd_0lep_1b  = new TH1F("hfitqual_qcd_0lep_1b" , "0 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_znn_0lep_1b  = new TH1F("hfitqual_znn_0lep_1b" , "0 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_model_0lep_1b  = new TH1F("hfitqual_model_0lep_1b" , "0 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-
-     TH1F* hfitqual_data_0lep_2b = new TH1F("hfitqual_data_0lep_2b", "0 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_susy_0lep_2b = new TH1F("hfitqual_susy_0lep_2b", "0 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_ttwj_0lep_2b = new TH1F("hfitqual_ttwj_0lep_2b", "0 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_qcd_0lep_2b  = new TH1F("hfitqual_qcd_0lep_2b" , "0 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_znn_0lep_2b  = new TH1F("hfitqual_znn_0lep_2b" , "0 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_model_0lep_2b  = new TH1F("hfitqual_model_0lep_2b" , "0 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
-
-     TH1F* hfitqual_data_0lep_3b = new TH1F("hfitqual_data_0lep_3b", "0 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_susy_0lep_3b = new TH1F("hfitqual_susy_0lep_3b", "0 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_ttwj_0lep_3b = new TH1F("hfitqual_ttwj_0lep_3b", "0 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_qcd_0lep_3b  = new TH1F("hfitqual_qcd_0lep_3b" , "0 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_znn_0lep_3b  = new TH1F("hfitqual_znn_0lep_3b" , "0 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_model_0lep_3b  = new TH1F("hfitqual_model_0lep_3b" , "0 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+     TH1F *hfitqual_data_0lep_1b  , *hfitqual_data_0lep_2b  , *hfitqual_data_0lep_3b  , *hfitqual_data_0lep_4b ;
+     TH1F *hfitqual_susy_0lep_1b  , *hfitqual_susy_0lep_2b  , *hfitqual_susy_0lep_3b  , *hfitqual_susy_0lep_4b ;
+     TH1F *hfitqual_ttwj_0lep_1b  , *hfitqual_ttwj_0lep_2b  , *hfitqual_ttwj_0lep_3b  , *hfitqual_ttwj_0lep_4b ;
+     TH1F *hfitqual_qcd_0lep_1b   , *hfitqual_qcd_0lep_2b   , *hfitqual_qcd_0lep_3b   , *hfitqual_qcd_0lep_4b ;
+     TH1F *hfitqual_znn_0lep_1b   , *hfitqual_znn_0lep_2b   , *hfitqual_znn_0lep_3b   , *hfitqual_znn_0lep_4b ;
+     TH1F *hfitqual_model_0lep_1b , *hfitqual_model_0lep_2b , *hfitqual_model_0lep_3b , *hfitqual_model_0lep_4b ;
 
 
+     hfitqual_data_0lep_1b = new TH1F("hfitqual_data_0lep_1b", "0 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_susy_0lep_1b = new TH1F("hfitqual_susy_0lep_1b", "0 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_ttwj_0lep_1b = new TH1F("hfitqual_ttwj_0lep_1b", "0 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_qcd_0lep_1b  = new TH1F("hfitqual_qcd_0lep_1b" , "0 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_znn_0lep_1b  = new TH1F("hfitqual_znn_0lep_1b" , "0 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_model_0lep_1b  = new TH1F("hfitqual_model_0lep_1b" , "0 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
 
-     TH1F* hfitqual_data_1lepSig_1b = new TH1F("hfitqual_data_1lepSig_1b", "1 Lep Sig, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_susy_1lepSig_1b = new TH1F("hfitqual_susy_1lepSig_1b", "1 Lep Sig, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_ttwj_1lepSig_1b = new TH1F("hfitqual_ttwj_1lepSig_1b", "1 Lep Sig, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_qcd_1lepSig_1b  = new TH1F("hfitqual_qcd_1lepSig_1b" , "1 Lep Sig, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_znn_1lepSig_1b  = new TH1F("hfitqual_znn_1lepSig_1b" , "1 Lep Sig, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_model_1lepSig_1b  = new TH1F("hfitqual_model_1lepSig_1b" , "1 Lep Sig, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_data_0lep_2b = new TH1F("hfitqual_data_0lep_2b", "0 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_susy_0lep_2b = new TH1F("hfitqual_susy_0lep_2b", "0 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_ttwj_0lep_2b = new TH1F("hfitqual_ttwj_0lep_2b", "0 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_qcd_0lep_2b  = new TH1F("hfitqual_qcd_0lep_2b" , "0 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_znn_0lep_2b  = new TH1F("hfitqual_znn_0lep_2b" , "0 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_model_0lep_2b  = new TH1F("hfitqual_model_0lep_2b" , "0 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
 
-     TH1F* hfitqual_data_1lepSig_2b = new TH1F("hfitqual_data_1lepSig_2b", "1 Lep Sig, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_susy_1lepSig_2b = new TH1F("hfitqual_susy_1lepSig_2b", "1 Lep Sig, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_ttwj_1lepSig_2b = new TH1F("hfitqual_ttwj_1lepSig_2b", "1 Lep Sig, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_qcd_1lepSig_2b  = new TH1F("hfitqual_qcd_1lepSig_2b" , "1 Lep Sig, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_znn_1lepSig_2b  = new TH1F("hfitqual_znn_1lepSig_2b" , "1 Lep Sig, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_model_1lepSig_2b  = new TH1F("hfitqual_model_1lepSig_2b" , "1 Lep Sig, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     if ( nBinsBtag > 2 ) {
 
-     TH1F* hfitqual_data_1lepSig_3b = new TH1F("hfitqual_data_1lepSig_3b", "1 Lep Sig, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_susy_1lepSig_3b = new TH1F("hfitqual_susy_1lepSig_3b", "1 Lep Sig, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_ttwj_1lepSig_3b = new TH1F("hfitqual_ttwj_1lepSig_3b", "1 Lep Sig, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_qcd_1lepSig_3b  = new TH1F("hfitqual_qcd_1lepSig_3b" , "1 Lep Sig, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_znn_1lepSig_3b  = new TH1F("hfitqual_znn_1lepSig_3b" , "1 Lep Sig, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_model_1lepSig_3b  = new TH1F("hfitqual_model_1lepSig_3b" , "1 Lep Sig, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_data_0lep_3b = new TH1F("hfitqual_data_0lep_3b", "0 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_susy_0lep_3b = new TH1F("hfitqual_susy_0lep_3b", "0 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_ttwj_0lep_3b = new TH1F("hfitqual_ttwj_0lep_3b", "0 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_qcd_0lep_3b  = new TH1F("hfitqual_qcd_0lep_3b" , "0 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_znn_0lep_3b  = new TH1F("hfitqual_znn_0lep_3b" , "0 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_model_0lep_3b  = new TH1F("hfitqual_model_0lep_3b" , "0 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
 
+       if ( nBinsBtag > 3 ) {
 
-
-     TH1F* hfitqual_data_1lep_1b = new TH1F("hfitqual_data_1lep_1b", "1 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_susy_1lep_1b = new TH1F("hfitqual_susy_1lep_1b", "1 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_ttwj_1lep_1b = new TH1F("hfitqual_ttwj_1lep_1b", "1 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_qcd_1lep_1b  = new TH1F("hfitqual_qcd_1lep_1b" , "1 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_znn_1lep_1b  = new TH1F("hfitqual_znn_1lep_1b" , "1 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_model_1lep_1b  = new TH1F("hfitqual_model_1lep_1b" , "1 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-
-     TH1F* hfitqual_data_1lep_2b = new TH1F("hfitqual_data_1lep_2b", "1 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_susy_1lep_2b = new TH1F("hfitqual_susy_1lep_2b", "1 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_ttwj_1lep_2b = new TH1F("hfitqual_ttwj_1lep_2b", "1 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_qcd_1lep_2b  = new TH1F("hfitqual_qcd_1lep_2b" , "1 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_znn_1lep_2b  = new TH1F("hfitqual_znn_1lep_2b" , "1 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_model_1lep_2b  = new TH1F("hfitqual_model_1lep_2b" , "1 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
-
-     TH1F* hfitqual_data_1lep_3b = new TH1F("hfitqual_data_1lep_3b", "1 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_susy_1lep_3b = new TH1F("hfitqual_susy_1lep_3b", "1 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_ttwj_1lep_3b = new TH1F("hfitqual_ttwj_1lep_3b", "1 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_qcd_1lep_3b  = new TH1F("hfitqual_qcd_1lep_3b" , "1 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_znn_1lep_3b  = new TH1F("hfitqual_znn_1lep_3b" , "1 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_model_1lep_3b  = new TH1F("hfitqual_model_1lep_3b" , "1 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_data_0lep_4b = new TH1F("hfitqual_data_0lep_4b", "0 Lep, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_susy_0lep_4b = new TH1F("hfitqual_susy_0lep_4b", "0 Lep, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_ttwj_0lep_4b = new TH1F("hfitqual_ttwj_0lep_4b", "0 Lep, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_qcd_0lep_4b  = new TH1F("hfitqual_qcd_0lep_4b" , "0 Lep, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_znn_0lep_4b  = new TH1F("hfitqual_znn_0lep_4b" , "0 Lep, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_model_0lep_4b  = new TH1F("hfitqual_model_0lep_4b" , "0 Lep, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 
+       }
+     }
 
 
+     TH1F *hfitqual_data_1lepSig_1b  , *hfitqual_data_1lepSig_2b  , *hfitqual_data_1lepSig_3b  , *hfitqual_data_1lepSig_4b ;
+     TH1F *hfitqual_susy_1lepSig_1b  , *hfitqual_susy_1lepSig_2b  , *hfitqual_susy_1lepSig_3b  , *hfitqual_susy_1lepSig_4b ;
+     TH1F *hfitqual_ttwj_1lepSig_1b  , *hfitqual_ttwj_1lepSig_2b  , *hfitqual_ttwj_1lepSig_3b  , *hfitqual_ttwj_1lepSig_4b ;
+     TH1F *hfitqual_qcd_1lepSig_1b   , *hfitqual_qcd_1lepSig_2b   , *hfitqual_qcd_1lepSig_3b   , *hfitqual_qcd_1lepSig_4b ;
+     TH1F *hfitqual_znn_1lepSig_1b   , *hfitqual_znn_1lepSig_2b   , *hfitqual_znn_1lepSig_3b   , *hfitqual_znn_1lepSig_4b ;
+     TH1F *hfitqual_model_1lepSig_1b , *hfitqual_model_1lepSig_2b , *hfitqual_model_1lepSig_3b , *hfitqual_model_1lepSig_4b ;
 
-     TH1F* hfitqual_data_ldp_1b = new TH1F("hfitqual_data_ldp_1b", "LDP, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_susy_ldp_1b = new TH1F("hfitqual_susy_ldp_1b", "LDP, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_ttwj_ldp_1b = new TH1F("hfitqual_ttwj_ldp_1b", "LDP, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_qcd_ldp_1b  = new TH1F("hfitqual_qcd_ldp_1b" , "LDP, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_znn_ldp_1b  = new TH1F("hfitqual_znn_ldp_1b" , "LDP, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_model_ldp_1b  = new TH1F("hfitqual_model_ldp_1b" , "LDP, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
 
-     TH1F* hfitqual_data_ldp_2b = new TH1F("hfitqual_data_ldp_2b", "LDP, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_susy_ldp_2b = new TH1F("hfitqual_susy_ldp_2b", "LDP, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_ttwj_ldp_2b = new TH1F("hfitqual_ttwj_ldp_2b", "LDP, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_qcd_ldp_2b  = new TH1F("hfitqual_qcd_ldp_2b" , "LDP, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_znn_ldp_2b  = new TH1F("hfitqual_znn_ldp_2b" , "LDP, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_model_ldp_2b  = new TH1F("hfitqual_model_ldp_2b" , "LDP, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_data_1lepSig_1b = new TH1F("hfitqual_data_1lepSig_1b", "1 Lep Sig, 1 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_susy_1lepSig_1b = new TH1F("hfitqual_susy_1lepSig_1b", "1 Lep Sig, 1 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_ttwj_1lepSig_1b = new TH1F("hfitqual_ttwj_1lepSig_1b", "1 Lep Sig, 1 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_qcd_1lepSig_1b  = new TH1F("hfitqual_qcd_1lepSig_1b" , "1 Lep Sig, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_znn_1lepSig_1b  = new TH1F("hfitqual_znn_1lepSig_1b" , "1 Lep Sig, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_model_1lepSig_1b  = new TH1F("hfitqual_model_1lepSig_1b" , "1 Lep Sig, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
 
-     TH1F* hfitqual_data_ldp_3b = new TH1F("hfitqual_data_ldp_3b", "LDP, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_susy_ldp_3b = new TH1F("hfitqual_susy_ldp_3b", "LDP, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_ttwj_ldp_3b = new TH1F("hfitqual_ttwj_ldp_3b", "LDP, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_qcd_ldp_3b  = new TH1F("hfitqual_qcd_ldp_3b" , "LDP, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_znn_ldp_3b  = new TH1F("hfitqual_znn_ldp_3b" , "LDP, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
-     TH1F* hfitqual_model_ldp_3b  = new TH1F("hfitqual_model_ldp_3b" , "LDP, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_data_1lepSig_2b = new TH1F("hfitqual_data_1lepSig_2b", "1 Lep Sig, 2 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_susy_1lepSig_2b = new TH1F("hfitqual_susy_1lepSig_2b", "1 Lep Sig, 2 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_ttwj_1lepSig_2b = new TH1F("hfitqual_ttwj_1lepSig_2b", "1 Lep Sig, 2 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_qcd_1lepSig_2b  = new TH1F("hfitqual_qcd_1lepSig_2b" , "1 Lep Sig, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_znn_1lepSig_2b  = new TH1F("hfitqual_znn_1lepSig_2b" , "1 Lep Sig, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_model_1lepSig_2b  = new TH1F("hfitqual_model_1lepSig_2b" , "1 Lep Sig, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+
+     if ( nBinsBtag > 2 ) {
+
+       hfitqual_data_1lepSig_3b = new TH1F("hfitqual_data_1lepSig_3b", "1 Lep Sig, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_susy_1lepSig_3b = new TH1F("hfitqual_susy_1lepSig_3b", "1 Lep Sig, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_ttwj_1lepSig_3b = new TH1F("hfitqual_ttwj_1lepSig_3b", "1 Lep Sig, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_qcd_1lepSig_3b  = new TH1F("hfitqual_qcd_1lepSig_3b" , "1 Lep Sig, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_znn_1lepSig_3b  = new TH1F("hfitqual_znn_1lepSig_3b" , "1 Lep Sig, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_model_1lepSig_3b  = new TH1F("hfitqual_model_1lepSig_3b" , "1 Lep Sig, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+       
+       if ( nBinsBtag > 3 ) {
+       
+	 hfitqual_data_1lepSig_4b = new TH1F("hfitqual_data_1lepSig_4b", "1 Lep Sig, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_susy_1lepSig_4b = new TH1F("hfitqual_susy_1lepSig_4b", "1 Lep Sig, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_ttwj_1lepSig_4b = new TH1F("hfitqual_ttwj_1lepSig_4b", "1 Lep Sig, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_qcd_1lepSig_4b  = new TH1F("hfitqual_qcd_1lepSig_4b" , "1 Lep Sig, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_znn_1lepSig_4b  = new TH1F("hfitqual_znn_1lepSig_4b" , "1 Lep Sig, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_model_1lepSig_4b  = new TH1F("hfitqual_model_1lepSig_4b" , "1 Lep Sig, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 
+       }
+     }
+
+
+     TH1F *hfitqual_data_1lep_1b  , *hfitqual_data_1lep_2b  , *hfitqual_data_1lep_3b  , *hfitqual_data_1lep_4b ;
+     TH1F *hfitqual_susy_1lep_1b  , *hfitqual_susy_1lep_2b  , *hfitqual_susy_1lep_3b  , *hfitqual_susy_1lep_4b ;
+     TH1F *hfitqual_ttwj_1lep_1b  , *hfitqual_ttwj_1lep_2b  , *hfitqual_ttwj_1lep_3b  , *hfitqual_ttwj_1lep_4b ;
+     TH1F *hfitqual_qcd_1lep_1b   , *hfitqual_qcd_1lep_2b   , *hfitqual_qcd_1lep_3b   , *hfitqual_qcd_1lep_4b ;
+     TH1F *hfitqual_znn_1lep_1b   , *hfitqual_znn_1lep_2b   , *hfitqual_znn_1lep_3b   , *hfitqual_znn_1lep_4b ;
+     TH1F *hfitqual_model_1lep_1b , *hfitqual_model_1lep_2b , *hfitqual_model_1lep_3b , *hfitqual_model_1lep_4b ;
+
+
+     hfitqual_data_1lep_1b = new TH1F("hfitqual_data_1lep_1b", "1 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_susy_1lep_1b = new TH1F("hfitqual_susy_1lep_1b", "1 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_ttwj_1lep_1b = new TH1F("hfitqual_ttwj_1lep_1b", "1 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_qcd_1lep_1b  = new TH1F("hfitqual_qcd_1lep_1b" , "1 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_znn_1lep_1b  = new TH1F("hfitqual_znn_1lep_1b" , "1 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_model_1lep_1b  = new TH1F("hfitqual_model_1lep_1b" , "1 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+
+     hfitqual_data_1lep_2b = new TH1F("hfitqual_data_1lep_2b", "1 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_susy_1lep_2b = new TH1F("hfitqual_susy_1lep_2b", "1 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_ttwj_1lep_2b = new TH1F("hfitqual_ttwj_1lep_2b", "1 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_qcd_1lep_2b  = new TH1F("hfitqual_qcd_1lep_2b" , "1 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_znn_1lep_2b  = new TH1F("hfitqual_znn_1lep_2b" , "1 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_model_1lep_2b  = new TH1F("hfitqual_model_1lep_2b" , "1 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+
+     if ( nBinsBtag > 2 ) {
+
+       hfitqual_data_1lep_3b = new TH1F("hfitqual_data_1lep_3b", "1 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_susy_1lep_3b = new TH1F("hfitqual_susy_1lep_3b", "1 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_ttwj_1lep_3b = new TH1F("hfitqual_ttwj_1lep_3b", "1 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_qcd_1lep_3b  = new TH1F("hfitqual_qcd_1lep_3b" , "1 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_znn_1lep_3b  = new TH1F("hfitqual_znn_1lep_3b" , "1 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_model_1lep_3b  = new TH1F("hfitqual_model_1lep_3b" , "1 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+       
+       if ( nBinsBtag > 3 ) {
+
+	 hfitqual_data_1lep_4b = new TH1F("hfitqual_data_1lep_4b", "1 Lep, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_susy_1lep_4b = new TH1F("hfitqual_susy_1lep_4b", "1 Lep, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_ttwj_1lep_4b = new TH1F("hfitqual_ttwj_1lep_4b", "1 Lep, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_qcd_1lep_4b  = new TH1F("hfitqual_qcd_1lep_4b" , "1 Lep, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_znn_1lep_4b  = new TH1F("hfitqual_znn_1lep_4b" , "1 Lep, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_model_1lep_4b  = new TH1F("hfitqual_model_1lep_4b" , "1 Lep, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 
+       }
+     }
+
+
+     TH1F *hfitqual_data_ldp_1b  , *hfitqual_data_ldp_2b  , *hfitqual_data_ldp_3b  , *hfitqual_data_ldp_4b ;
+     TH1F *hfitqual_susy_ldp_1b  , *hfitqual_susy_ldp_2b  , *hfitqual_susy_ldp_3b  , *hfitqual_susy_ldp_4b ;
+     TH1F *hfitqual_ttwj_ldp_1b  , *hfitqual_ttwj_ldp_2b  , *hfitqual_ttwj_ldp_3b  , *hfitqual_ttwj_ldp_4b ;
+     TH1F *hfitqual_qcd_ldp_1b   , *hfitqual_qcd_ldp_2b   , *hfitqual_qcd_ldp_3b   , *hfitqual_qcd_ldp_4b ;
+     TH1F *hfitqual_znn_ldp_1b   , *hfitqual_znn_ldp_2b   , *hfitqual_znn_ldp_3b   , *hfitqual_znn_ldp_4b ;
+     TH1F *hfitqual_model_ldp_1b , *hfitqual_model_ldp_2b , *hfitqual_model_ldp_3b , *hfitqual_model_ldp_4b ;
+
+
+     hfitqual_data_ldp_1b = new TH1F("hfitqual_data_ldp_1b", "LDP, 1 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_susy_ldp_1b = new TH1F("hfitqual_susy_ldp_1b", "LDP, 1 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_ttwj_ldp_1b = new TH1F("hfitqual_ttwj_ldp_1b", "LDP, 1 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_qcd_ldp_1b  = new TH1F("hfitqual_qcd_ldp_1b" , "LDP, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_znn_ldp_1b  = new TH1F("hfitqual_znn_ldp_1b" , "LDP, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_model_ldp_1b  = new TH1F("hfitqual_model_ldp_1b" , "LDP, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+
+     hfitqual_data_ldp_2b = new TH1F("hfitqual_data_ldp_2b", "LDP, 2 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_susy_ldp_2b = new TH1F("hfitqual_susy_ldp_2b", "LDP, 2 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_ttwj_ldp_2b = new TH1F("hfitqual_ttwj_ldp_2b", "LDP, 2 btag", nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_qcd_ldp_2b  = new TH1F("hfitqual_qcd_ldp_2b" , "LDP, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_znn_ldp_2b  = new TH1F("hfitqual_znn_ldp_2b" , "LDP, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_model_ldp_2b  = new TH1F("hfitqual_model_ldp_2b" , "LDP, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+
+     if ( nBinsBtag > 2 ) {
+
+       hfitqual_data_ldp_3b = new TH1F("hfitqual_data_ldp_3b", "LDP, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_susy_ldp_3b = new TH1F("hfitqual_susy_ldp_3b", "LDP, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_ttwj_ldp_3b = new TH1F("hfitqual_ttwj_ldp_3b", "LDP, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_qcd_ldp_3b  = new TH1F("hfitqual_qcd_ldp_3b" , "LDP, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_znn_ldp_3b  = new TH1F("hfitqual_znn_ldp_3b" , "LDP, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_model_ldp_3b  = new TH1F("hfitqual_model_ldp_3b" , "LDP, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+       
+       if ( nBinsBtag > 3 ) {
+	 
+	 hfitqual_data_ldp_4b = new TH1F("hfitqual_data_ldp_4b", "LDP, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_susy_ldp_4b = new TH1F("hfitqual_susy_ldp_4b", "LDP, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_ttwj_ldp_4b = new TH1F("hfitqual_ttwj_ldp_4b", "LDP, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_qcd_ldp_4b  = new TH1F("hfitqual_qcd_ldp_4b" , "LDP, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_znn_ldp_4b  = new TH1F("hfitqual_znn_ldp_4b" , "LDP, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_model_ldp_4b  = new TH1F("hfitqual_model_ldp_4b" , "LDP, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 
+       }
+     }
 
 
      TH1F* hfitqual_data_zee_1b  = new TH1F("hfitqual_data_zee_1b" , "Zee" , nbins, 0.5, nbins+0.5 ) ;
@@ -461,15 +548,27 @@
      hfitqual_data_0lep_2b->SetMarkerStyle(20) ;
      hfitqual_data_0lep_2b->SetLineWidth(2) ;
      
-     hfitqual_ttwj_0lep_3b  -> SetFillColor(kBlue-9) ;
-     hfitqual_qcd_0lep_3b   -> SetFillColor(2) ;
-     hfitqual_znn_0lep_3b   -> SetFillColor(kGreen-3) ;
-     hfitqual_susy_0lep_3b  -> SetFillColor(6) ;
-     hfitqual_data_0lep_3b->SetMarkerStyle(20) ;
-     hfitqual_data_0lep_3b->SetLineWidth(2) ;
+     if ( nBinsBtag > 2 ) {
+       
+       hfitqual_ttwj_0lep_3b  -> SetFillColor(kBlue-9) ;
+       hfitqual_qcd_0lep_3b   -> SetFillColor(2) ;
+       hfitqual_znn_0lep_3b   -> SetFillColor(kGreen-3) ;
+       hfitqual_susy_0lep_3b  -> SetFillColor(6) ;
+       hfitqual_data_0lep_3b->SetMarkerStyle(20) ;
+       hfitqual_data_0lep_3b->SetLineWidth(2) ;
+       
+       if ( nBinsBtag > 3 ) {
+	 
+	 hfitqual_ttwj_0lep_4b  -> SetFillColor(kBlue-9) ;
+	 hfitqual_qcd_0lep_4b   -> SetFillColor(2) ;
+	 hfitqual_znn_0lep_4b   -> SetFillColor(kGreen-3) ;
+	 hfitqual_susy_0lep_4b  -> SetFillColor(6) ;
+	 hfitqual_data_0lep_4b->SetMarkerStyle(20) ;
+	 hfitqual_data_0lep_4b->SetLineWidth(2) ;
 
-
-
+       }
+     }
+     
      
      hfitqual_ttwj_1lepSig_1b  -> SetFillColor(kBlue-9) ;
      hfitqual_qcd_1lepSig_1b   -> SetFillColor(2) ;
@@ -485,13 +584,26 @@
      hfitqual_data_1lepSig_2b->SetMarkerStyle(20) ;
      hfitqual_data_1lepSig_2b->SetLineWidth(2) ;
 
-     hfitqual_ttwj_1lepSig_3b  -> SetFillColor(kBlue-9) ;
-     hfitqual_qcd_1lepSig_3b   -> SetFillColor(2) ;
-     hfitqual_znn_1lepSig_3b   -> SetFillColor(kGreen-3) ;
-     hfitqual_susy_1lepSig_3b  -> SetFillColor(6) ;
-     hfitqual_data_1lepSig_3b->SetMarkerStyle(20) ;
-     hfitqual_data_1lepSig_3b->SetLineWidth(2) ;
+     if ( nBinsBtag > 2 ) {
 
+       hfitqual_ttwj_1lepSig_3b  -> SetFillColor(kBlue-9) ;
+       hfitqual_qcd_1lepSig_3b   -> SetFillColor(2) ;
+       hfitqual_znn_1lepSig_3b   -> SetFillColor(kGreen-3) ;
+       hfitqual_susy_1lepSig_3b  -> SetFillColor(6) ;
+       hfitqual_data_1lepSig_3b->SetMarkerStyle(20) ;
+       hfitqual_data_1lepSig_3b->SetLineWidth(2) ;
+
+       if ( nBinsBtag > 3 ) {
+	 
+	 hfitqual_ttwj_1lepSig_4b  -> SetFillColor(kBlue-9) ;
+	 hfitqual_qcd_1lepSig_4b   -> SetFillColor(2) ;
+	 hfitqual_znn_1lepSig_4b   -> SetFillColor(kGreen-3) ;
+	 hfitqual_susy_1lepSig_4b  -> SetFillColor(6) ;
+	 hfitqual_data_1lepSig_4b->SetMarkerStyle(20) ;
+	 hfitqual_data_1lepSig_4b->SetLineWidth(2) ;
+	 
+       }
+     }
 
 
      hfitqual_ttwj_1lep_1b  -> SetFillColor(kBlue-9) ;
@@ -508,15 +620,28 @@
      hfitqual_data_1lep_2b->SetMarkerStyle(20) ;
      hfitqual_data_1lep_2b->SetLineWidth(2) ;
 
-     hfitqual_ttwj_1lep_3b  -> SetFillColor(kBlue-9) ;
-     hfitqual_qcd_1lep_3b   -> SetFillColor(2) ;
-     hfitqual_znn_1lep_3b   -> SetFillColor(kGreen-3) ;
-     hfitqual_susy_1lep_3b  -> SetFillColor(6) ;
-     hfitqual_data_1lep_3b->SetMarkerStyle(20) ;
-     hfitqual_data_1lep_3b->SetLineWidth(2) ;
+     if ( nBinsBtag > 2 ) {
 
+       hfitqual_ttwj_1lep_3b  -> SetFillColor(kBlue-9) ;
+       hfitqual_qcd_1lep_3b   -> SetFillColor(2) ;
+       hfitqual_znn_1lep_3b   -> SetFillColor(kGreen-3) ;
+       hfitqual_susy_1lep_3b  -> SetFillColor(6) ;
+       hfitqual_data_1lep_3b->SetMarkerStyle(20) ;
+       hfitqual_data_1lep_3b->SetLineWidth(2) ;
+       
+       if ( nBinsBtag > 3 ) {
 
+	 hfitqual_ttwj_1lep_4b  -> SetFillColor(kBlue-9) ;
+	 hfitqual_qcd_1lep_4b   -> SetFillColor(2) ;
+	 hfitqual_znn_1lep_4b   -> SetFillColor(kGreen-3) ;
+	 hfitqual_susy_1lep_4b  -> SetFillColor(6) ;
+	 hfitqual_data_1lep_4b->SetMarkerStyle(20) ;
+	 hfitqual_data_1lep_4b->SetLineWidth(2) ;
+	 
+       }
+     }
      
+
      hfitqual_ttwj_ldp_1b  -> SetFillColor(kBlue-9) ;
      hfitqual_qcd_ldp_1b   -> SetFillColor(2) ;
      hfitqual_znn_ldp_1b   -> SetFillColor(kGreen-3) ;
@@ -531,51 +656,97 @@
      hfitqual_data_ldp_2b->SetMarkerStyle(20) ;
      hfitqual_data_ldp_2b->SetLineWidth(2) ;
 
-     hfitqual_ttwj_ldp_3b  -> SetFillColor(kBlue-9) ;
-     hfitqual_qcd_ldp_3b   -> SetFillColor(2) ;
-     hfitqual_znn_ldp_3b   -> SetFillColor(kGreen-3) ;
-     hfitqual_susy_ldp_3b  -> SetFillColor(6) ;
-     hfitqual_data_ldp_3b->SetMarkerStyle(20) ;
-     hfitqual_data_ldp_3b->SetLineWidth(2) ;
+     if ( nBinsBtag > 2 ) {
 
-
+       hfitqual_ttwj_ldp_3b  -> SetFillColor(kBlue-9) ;
+       hfitqual_qcd_ldp_3b   -> SetFillColor(2) ;
+       hfitqual_znn_ldp_3b   -> SetFillColor(kGreen-3) ;
+       hfitqual_susy_ldp_3b  -> SetFillColor(6) ;
+       hfitqual_data_ldp_3b->SetMarkerStyle(20) ;
+       hfitqual_data_ldp_3b->SetLineWidth(2) ;
+       
+       if ( nBinsBtag > 3 ) {
+	 
+	 hfitqual_ttwj_ldp_4b  -> SetFillColor(kBlue-9) ;
+	 hfitqual_qcd_ldp_4b   -> SetFillColor(2) ;
+	 hfitqual_znn_ldp_4b   -> SetFillColor(kGreen-3) ;
+	 hfitqual_susy_ldp_4b  -> SetFillColor(6) ;
+	 hfitqual_data_ldp_4b->SetMarkerStyle(20) ;
+	 hfitqual_data_ldp_4b->SetLineWidth(2) ;
+	 
+       }
+     }
 
 
      hfitqual_np    -> SetFillColor(kOrange+1) ;
 
-     THStack* hfitqual_fit_0lep_1b = new THStack( "hfitqual_fit_0lep_1b", "RA2b likelihood fit results, fit" ) ;
-     THStack* hfitqual_fit_0lep_2b = new THStack( "hfitqual_fit_0lep_2b", "RA2b likelihood fit results, fit" ) ;
-     THStack* hfitqual_fit_0lep_3b = new THStack( "hfitqual_fit_0lep_3b", "RA2b likelihood fit results, fit" ) ;
-
-     THStack* hfitqual_fit_1lepSig_1b = new THStack( "hfitqual_fit_1lepSig_1b", "RA2b likelihood fit results, fit" ) ;
-     THStack* hfitqual_fit_1lepSig_2b = new THStack( "hfitqual_fit_1lepSig_2b", "RA2b likelihood fit results, fit" ) ;
-     THStack* hfitqual_fit_1lepSig_3b = new THStack( "hfitqual_fit_1lepSig_3b", "RA2b likelihood fit results, fit" ) ;
-
-     THStack* hfitqual_fit_1lep_1b = new THStack( "hfitqual_fit_1lep_1b", "RA2b likelihood fit results, fit" ) ;
-     THStack* hfitqual_fit_1lep_2b = new THStack( "hfitqual_fit_1lep_2b", "RA2b likelihood fit results, fit" ) ;
-     THStack* hfitqual_fit_1lep_3b = new THStack( "hfitqual_fit_1lep_3b", "RA2b likelihood fit results, fit" ) ;
-
-     THStack* hfitqual_fit_ldp_1b  = new THStack( "hfitqual_fit_ldp_1b",  "RA2b likelihood fit results, fit" ) ;
-     THStack* hfitqual_fit_ldp_2b  = new THStack( "hfitqual_fit_ldp_2b",  "RA2b likelihood fit results, fit" ) ;
-     THStack* hfitqual_fit_ldp_3b  = new THStack( "hfitqual_fit_ldp_3b",  "RA2b likelihood fit results, fit" ) ;
+     THStack *hfitqual_fit_0lep_1b,  *hfitqual_fit_0lep_2b,  *hfitqual_fit_0lep_3b,  *hfitqual_fit_0lep_4b ;
+     THStack *hfitqual_fit_1lepSig_1b,  *hfitqual_fit_1lepSig_2b,  *hfitqual_fit_1lepSig_3b,  *hfitqual_fit_1lepSig_4b ;
+     THStack *hfitqual_fit_1lep_1b,  *hfitqual_fit_1lep_2b,  *hfitqual_fit_1lep_3b,  *hfitqual_fit_1lep_4b ;
+     THStack *hfitqual_fit_ldp_1b,  *hfitqual_fit_ldp_2b,  *hfitqual_fit_ldp_3b,  *hfitqual_fit_ldp_4b ;
 
 
+     hfitqual_fit_0lep_1b = new THStack( "hfitqual_fit_0lep_1b", "RA2b likelihood fit results, fit" ) ;
+     hfitqual_fit_1lepSig_1b = new THStack( "hfitqual_fit_1lepSig_1b", "RA2b likelihood fit results, fit" ) ;
+     hfitqual_fit_1lep_1b = new THStack( "hfitqual_fit_1lep_1b", "RA2b likelihood fit results, fit" ) ;
+     hfitqual_fit_ldp_1b  = new THStack( "hfitqual_fit_ldp_1b",  "RA2b likelihood fit results, fit" ) ;
 
-     TAxis* xaxis_0lep_1b = hfitqual_data_0lep_1b->GetXaxis() ;
-     TAxis* xaxis_0lep_2b = hfitqual_data_0lep_2b->GetXaxis() ;
-     TAxis* xaxis_0lep_3b = hfitqual_data_0lep_3b->GetXaxis() ;
+     hfitqual_fit_0lep_2b = new THStack( "hfitqual_fit_0lep_2b", "RA2b likelihood fit results, fit" ) ;
+     hfitqual_fit_1lepSig_2b = new THStack( "hfitqual_fit_1lepSig_2b", "RA2b likelihood fit results, fit" ) ;
+     hfitqual_fit_1lep_2b = new THStack( "hfitqual_fit_1lep_2b", "RA2b likelihood fit results, fit" ) ;
+     hfitqual_fit_ldp_2b  = new THStack( "hfitqual_fit_ldp_2b",  "RA2b likelihood fit results, fit" ) ;
 
-     TAxis* xaxis_1lepSig_1b = hfitqual_data_1lepSig_1b->GetXaxis() ;
-     TAxis* xaxis_1lepSig_2b = hfitqual_data_1lepSig_2b->GetXaxis() ;
-     TAxis* xaxis_1lepSig_3b = hfitqual_data_1lepSig_3b->GetXaxis() ;
 
-     TAxis* xaxis_1lep_1b = hfitqual_data_1lep_1b->GetXaxis() ;
-     TAxis* xaxis_1lep_2b = hfitqual_data_1lep_2b->GetXaxis() ;
-     TAxis* xaxis_1lep_3b = hfitqual_data_1lep_3b->GetXaxis() ;
+     if ( nBinsBtag > 2 ) {
 
-     TAxis* xaxis_ldp_1b  = hfitqual_data_ldp_1b->GetXaxis() ;
-     TAxis* xaxis_ldp_2b  = hfitqual_data_ldp_2b->GetXaxis() ;
-     TAxis* xaxis_ldp_3b  = hfitqual_data_ldp_3b->GetXaxis() ;
+       hfitqual_fit_0lep_3b = new THStack( "hfitqual_fit_0lep_3b", "RA2b likelihood fit results, fit" ) ;
+       hfitqual_fit_1lepSig_3b = new THStack( "hfitqual_fit_1lepSig_3b", "RA2b likelihood fit results, fit" ) ;
+       hfitqual_fit_1lep_3b = new THStack( "hfitqual_fit_1lep_3b", "RA2b likelihood fit results, fit" ) ;
+       hfitqual_fit_ldp_3b  = new THStack( "hfitqual_fit_ldp_3b",  "RA2b likelihood fit results, fit" ) ;
+       
+       if ( nBinsBtag > 3 ) {
+	 
+	 hfitqual_fit_0lep_4b = new THStack( "hfitqual_fit_0lep_4b", "RA2b likelihood fit results, fit" ) ;
+	 hfitqual_fit_1lepSig_4b = new THStack( "hfitqual_fit_1lepSig_4b", "RA2b likelihood fit results, fit" ) ;
+	 hfitqual_fit_1lep_4b = new THStack( "hfitqual_fit_1lep_4b", "RA2b likelihood fit results, fit" ) ;
+	 hfitqual_fit_ldp_4b  = new THStack( "hfitqual_fit_ldp_4b",  "RA2b likelihood fit results, fit" ) ;
+	 
+       }
+     }
+
+
+     TAxis *xaxis_0lep_1b,    *xaxis_0lep_2b,    *xaxis_0lep_3b,    *xaxis_0lep_4b ;
+     TAxis *xaxis_1lepSig_1b, *xaxis_1lepSig_2b, *xaxis_1lepSig_3b, *xaxis_1lepSig_4b ;
+     TAxis *xaxis_1lep_1b,    *xaxis_1lep_2b,    *xaxis_1lep_3b,    *xaxis_1lep_4b ;
+     TAxis *xaxis_ldp_1b,     *xaxis_ldp_2b,     *xaxis_ldp_3b,     *xaxis_ldp_4b ;
+
+
+     xaxis_0lep_1b = hfitqual_data_0lep_1b->GetXaxis() ;
+     xaxis_1lepSig_1b = hfitqual_data_1lepSig_1b->GetXaxis() ;
+     xaxis_1lep_1b = hfitqual_data_1lep_1b->GetXaxis() ;
+     xaxis_ldp_1b  = hfitqual_data_ldp_1b->GetXaxis() ;
+
+     xaxis_0lep_2b = hfitqual_data_0lep_2b->GetXaxis() ;
+     xaxis_1lepSig_2b = hfitqual_data_1lepSig_2b->GetXaxis() ;
+     xaxis_1lep_2b = hfitqual_data_1lep_2b->GetXaxis() ;
+     xaxis_ldp_2b  = hfitqual_data_ldp_2b->GetXaxis() ;
+
+     if ( nBinsBtag > 2 ) {
+
+       xaxis_0lep_3b = hfitqual_data_0lep_3b->GetXaxis() ;
+       xaxis_1lepSig_3b = hfitqual_data_1lepSig_3b->GetXaxis() ;
+       xaxis_1lep_3b = hfitqual_data_1lep_3b->GetXaxis() ;
+       xaxis_ldp_3b  = hfitqual_data_ldp_3b->GetXaxis() ;
+       
+       if ( nBinsBtag > 3 ) {
+	 
+	 xaxis_0lep_4b = hfitqual_data_0lep_4b->GetXaxis() ;
+	 xaxis_1lepSig_4b = hfitqual_data_1lepSig_4b->GetXaxis() ;
+	 xaxis_1lep_4b = hfitqual_data_1lep_4b->GetXaxis() ;
+	 xaxis_ldp_4b  = hfitqual_data_ldp_4b->GetXaxis() ;
+	 
+       }
+     }
 
      TAxis* xaxis_zee_1b  = hfitqual_data_zee_1b->GetXaxis() ;
      TAxis* xaxis_zmm_1b  = hfitqual_data_zmm_1b->GetXaxis() ;
@@ -758,6 +929,15 @@
               hfitqual_qcd_0lep_3b  -> SetBinContent( binIndex, qcdVal ) ;
               hfitqual_znn_0lep_3b  -> SetBinContent( binIndex, znnVal ) ;
               hfitqual_model_0lep_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
+           } else if ( k == 3 ) {
+              xaxis_0lep_4b->SetBinLabel(binIndex, binLabel ) ;
+              hfitqual_data_0lep_4b -> SetBinContent( binIndex, dataVal ) ;
+              hfitqual_data_0lep_4b -> SetBinError( binIndex, dataErr ) ;
+              hfitqual_susy_0lep_4b -> SetBinContent( binIndex, susyVal ) ;
+              hfitqual_ttwj_0lep_4b -> SetBinContent( binIndex, ttwjVal ) ;
+              hfitqual_qcd_0lep_4b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_znn_0lep_4b  -> SetBinContent( binIndex, znnVal ) ;
+              hfitqual_model_0lep_4b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            }
 
 
@@ -859,6 +1039,15 @@
               hfitqual_qcd_1lepSig_3b  -> SetBinContent( binIndex, qcdVal ) ;
               hfitqual_znn_1lepSig_3b  -> SetBinContent( binIndex, znnVal ) ;
               hfitqual_model_1lepSig_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
+           } else if ( k == 3 ) {
+              xaxis_1lepSig_4b->SetBinLabel(binIndex, binLabel ) ;
+              hfitqual_data_1lepSig_4b -> SetBinContent( binIndex, dataVal ) ;
+              hfitqual_data_1lepSig_4b -> SetBinError( binIndex, dataErr ) ;
+              hfitqual_susy_1lepSig_4b -> SetBinContent( binIndex, susyVal ) ;
+              hfitqual_ttwj_1lepSig_4b -> SetBinContent( binIndex, ttwjVal ) ;
+              hfitqual_qcd_1lepSig_4b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_znn_1lepSig_4b  -> SetBinContent( binIndex, znnVal ) ;
+              hfitqual_model_1lepSig_4b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            }
 
 
@@ -959,9 +1148,16 @@
               hfitqual_qcd_1lep_3b  -> SetBinContent( binIndex, qcdVal ) ;
               hfitqual_znn_1lep_3b  -> SetBinContent( binIndex, znnVal ) ;
               hfitqual_model_1lep_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
+           } else if ( k == 3 ) {
+              xaxis_1lep_4b->SetBinLabel(binIndex, binLabel ) ;
+              hfitqual_data_1lep_4b -> SetBinContent( binIndex, dataVal ) ;
+              hfitqual_data_1lep_4b -> SetBinError( binIndex, dataErr ) ;
+              hfitqual_susy_1lep_4b -> SetBinContent( binIndex, susyVal ) ;
+              hfitqual_ttwj_1lep_4b -> SetBinContent( binIndex, ttwjVal ) ;
+              hfitqual_qcd_1lep_4b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_znn_1lep_4b  -> SetBinContent( binIndex, znnVal ) ;
+              hfitqual_model_1lep_4b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            }
-
-
 
 
 
@@ -1093,6 +1289,15 @@
               hfitqual_qcd_ldp_3b  -> SetBinContent( binIndex, qcdVal ) ;
               hfitqual_znn_ldp_3b  -> SetBinContent( binIndex, znnVal ) ;
               hfitqual_model_ldp_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
+           } else if ( k == 3 ) {
+              xaxis_ldp_4b->SetBinLabel(binIndex, binLabel ) ;
+              hfitqual_data_ldp_4b -> SetBinContent( binIndex, dataVal ) ;
+              hfitqual_data_ldp_4b -> SetBinError( binIndex, dataErr ) ;
+              hfitqual_susy_ldp_4b -> SetBinContent( binIndex, susyVal ) ;
+              hfitqual_ttwj_ldp_4b -> SetBinContent( binIndex, ttwjVal ) ;
+              hfitqual_qcd_ldp_4b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_znn_ldp_4b  -> SetBinContent( binIndex, znnVal ) ;
+              hfitqual_model_ldp_4b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            }
 
 
@@ -1224,11 +1429,22 @@
      hfitqual_fit_0lep_2b->Add( hfitqual_ttwj_0lep_2b ) ;
      hfitqual_fit_0lep_2b->Add( hfitqual_susy_0lep_2b ) ;
 
-     hfitqual_fit_0lep_3b->Add( hfitqual_znn_0lep_3b ) ;
-     hfitqual_fit_0lep_3b->Add( hfitqual_qcd_0lep_3b ) ;
-     hfitqual_fit_0lep_3b->Add( hfitqual_ttwj_0lep_3b ) ;
-     hfitqual_fit_0lep_3b->Add( hfitqual_susy_0lep_3b ) ;
+     if ( nBinsBtag > 2 ) {
 
+       hfitqual_fit_0lep_3b->Add( hfitqual_znn_0lep_3b ) ;
+       hfitqual_fit_0lep_3b->Add( hfitqual_qcd_0lep_3b ) ;
+       hfitqual_fit_0lep_3b->Add( hfitqual_ttwj_0lep_3b ) ;
+       hfitqual_fit_0lep_3b->Add( hfitqual_susy_0lep_3b ) ;
+       
+       if ( nBinsBtag > 3 ) {
+	 
+	 hfitqual_fit_0lep_4b->Add( hfitqual_znn_0lep_4b ) ;
+	 hfitqual_fit_0lep_4b->Add( hfitqual_qcd_0lep_4b ) ;
+	 hfitqual_fit_0lep_4b->Add( hfitqual_ttwj_0lep_4b ) ;
+	 hfitqual_fit_0lep_4b->Add( hfitqual_susy_0lep_4b ) ;
+	 
+       }
+     }
 
 
      hfitqual_fit_1lepSig_1b->Add( hfitqual_znn_1lepSig_1b ) ;
@@ -1241,11 +1457,22 @@
      hfitqual_fit_1lepSig_2b->Add( hfitqual_ttwj_1lepSig_2b ) ;
      hfitqual_fit_1lepSig_2b->Add( hfitqual_susy_1lepSig_2b ) ;
 
-     hfitqual_fit_1lepSig_3b->Add( hfitqual_znn_1lepSig_3b ) ;
-     hfitqual_fit_1lepSig_3b->Add( hfitqual_qcd_1lepSig_3b ) ;
-     hfitqual_fit_1lepSig_3b->Add( hfitqual_ttwj_1lepSig_3b ) ;
-     hfitqual_fit_1lepSig_3b->Add( hfitqual_susy_1lepSig_3b ) ;
+     if ( nBinsBtag > 2 ) {
 
+       hfitqual_fit_1lepSig_3b->Add( hfitqual_znn_1lepSig_3b ) ;
+       hfitqual_fit_1lepSig_3b->Add( hfitqual_qcd_1lepSig_3b ) ;
+       hfitqual_fit_1lepSig_3b->Add( hfitqual_ttwj_1lepSig_3b ) ;
+       hfitqual_fit_1lepSig_3b->Add( hfitqual_susy_1lepSig_3b ) ;
+       
+       if ( nBinsBtag > 3 ) {
+	 
+	 hfitqual_fit_1lepSig_4b->Add( hfitqual_znn_1lepSig_4b ) ;
+	 hfitqual_fit_1lepSig_4b->Add( hfitqual_qcd_1lepSig_4b ) ;
+	 hfitqual_fit_1lepSig_4b->Add( hfitqual_ttwj_1lepSig_4b ) ;
+	 hfitqual_fit_1lepSig_4b->Add( hfitqual_susy_1lepSig_4b ) ;
+	 
+       }
+     }
 
 
      hfitqual_fit_1lep_1b->Add( hfitqual_znn_1lep_1b ) ;
@@ -1258,12 +1485,22 @@
      hfitqual_fit_1lep_2b->Add( hfitqual_ttwj_1lep_2b ) ;
      hfitqual_fit_1lep_2b->Add( hfitqual_susy_1lep_2b ) ;
 
-     hfitqual_fit_1lep_3b->Add( hfitqual_znn_1lep_3b ) ;
-     hfitqual_fit_1lep_3b->Add( hfitqual_qcd_1lep_3b ) ;
-     hfitqual_fit_1lep_3b->Add( hfitqual_ttwj_1lep_3b ) ;
-     hfitqual_fit_1lep_3b->Add( hfitqual_susy_1lep_3b ) ;
+     if ( nBinsBtag > 2 ) {
 
-
+       hfitqual_fit_1lep_3b->Add( hfitqual_znn_1lep_3b ) ;
+       hfitqual_fit_1lep_3b->Add( hfitqual_qcd_1lep_3b ) ;
+       hfitqual_fit_1lep_3b->Add( hfitqual_ttwj_1lep_3b ) ;
+       hfitqual_fit_1lep_3b->Add( hfitqual_susy_1lep_3b ) ;
+       
+       if ( nBinsBtag > 3 ) {
+	 
+	 hfitqual_fit_1lep_4b->Add( hfitqual_znn_1lep_4b ) ;
+	 hfitqual_fit_1lep_4b->Add( hfitqual_qcd_1lep_4b ) ;
+	 hfitqual_fit_1lep_4b->Add( hfitqual_ttwj_1lep_4b ) ;
+	 hfitqual_fit_1lep_4b->Add( hfitqual_susy_1lep_4b ) ;
+	 
+       }
+     }
 
 
      hfitqual_fit_ldp_1b->Add( hfitqual_znn_ldp_1b ) ;
@@ -1276,12 +1513,22 @@
      hfitqual_fit_ldp_2b->Add( hfitqual_ttwj_ldp_2b ) ;
      hfitqual_fit_ldp_2b->Add( hfitqual_susy_ldp_2b ) ;
 
-     hfitqual_fit_ldp_3b->Add( hfitqual_znn_ldp_3b ) ;
-     hfitqual_fit_ldp_3b->Add( hfitqual_qcd_ldp_3b ) ;
-     hfitqual_fit_ldp_3b->Add( hfitqual_ttwj_ldp_3b ) ;
-     hfitqual_fit_ldp_3b->Add( hfitqual_susy_ldp_3b ) ;
+     if ( nBinsBtag > 2 ) {
 
-
+       hfitqual_fit_ldp_3b->Add( hfitqual_znn_ldp_3b ) ;
+       hfitqual_fit_ldp_3b->Add( hfitqual_qcd_ldp_3b ) ;
+       hfitqual_fit_ldp_3b->Add( hfitqual_ttwj_ldp_3b ) ;
+       hfitqual_fit_ldp_3b->Add( hfitqual_susy_ldp_3b ) ;
+       
+       if ( nBinsBtag > 3 ) {
+	 
+	 hfitqual_fit_ldp_4b->Add( hfitqual_znn_ldp_4b ) ;
+	 hfitqual_fit_ldp_4b->Add( hfitqual_qcd_ldp_4b ) ;
+	 hfitqual_fit_ldp_4b->Add( hfitqual_ttwj_ldp_4b ) ;
+	 hfitqual_fit_ldp_4b->Add( hfitqual_susy_ldp_4b ) ;
+	 
+       }
+     }
 
 
      TLegend* legend = new TLegend(0.6,0.45,0.9,0.95) ;
@@ -1299,27 +1546,57 @@
        hfitqual_data_1lepSig_1b->SetMaximum( hmax ) ;
        hfitqual_data_1lep_1b->SetMaximum( hmax ) ;
        hfitqual_data_ldp_1b->SetMaximum( hmax ) ;
+
        hfitqual_data_0lep_2b->SetMaximum( hmax ) ;
        hfitqual_data_1lepSig_2b->SetMaximum( hmax ) ;
        hfitqual_data_1lep_2b->SetMaximum( hmax ) ;
        hfitqual_data_ldp_2b->SetMaximum( hmax ) ;
-       hfitqual_data_0lep_3b->SetMaximum( hmax ) ;
-       hfitqual_data_1lepSig_3b->SetMaximum( hmax ) ;
-       hfitqual_data_1lep_3b->SetMaximum( hmax ) ;
-       hfitqual_data_ldp_3b->SetMaximum( hmax ) ;
+
+       if ( nBinsBtag > 2 ) {
+	 
+	 hfitqual_data_0lep_3b->SetMaximum( hmax ) ;
+	 hfitqual_data_1lepSig_3b->SetMaximum( hmax ) ;
+	 hfitqual_data_1lep_3b->SetMaximum( hmax ) ;
+	 hfitqual_data_ldp_3b->SetMaximum( hmax ) ;
+	 
+	 if ( nBinsBtag > 3 ) {
+	   
+	   hfitqual_data_0lep_4b->SetMaximum( hmax ) ;
+	   hfitqual_data_1lepSig_4b->SetMaximum( hmax ) ;
+	   hfitqual_data_1lep_4b->SetMaximum( hmax ) ;
+	   hfitqual_data_ldp_4b->SetMaximum( hmax ) ;
+	   
+	 }
+       }
+
      } else {
        hfitqual_data_0lep_1b->SetMaximum( hmax*(hfitqual_data_0lep_1b->GetMaximum()) ) ;
        hfitqual_data_1lepSig_1b->SetMaximum( hmax*(hfitqual_data_1lepSig_1b->GetMaximum()) ) ;
        hfitqual_data_1lep_1b->SetMaximum( hmax*(hfitqual_data_1lep_1b->GetMaximum()) ) ;
        hfitqual_data_ldp_1b->SetMaximum( hmax*(hfitqual_data_ldp_1b->GetMaximum()) ) ;
+
        hfitqual_data_0lep_2b->SetMaximum( hmax*(hfitqual_data_0lep_2b->GetMaximum()) ) ;
        hfitqual_data_1lepSig_2b->SetMaximum( hmax*(hfitqual_data_1lepSig_2b->GetMaximum()) ) ;
        hfitqual_data_1lep_2b->SetMaximum( hmax*(hfitqual_data_1lep_2b->GetMaximum()) ) ;
        hfitqual_data_ldp_2b->SetMaximum( hmax*(hfitqual_data_ldp_2b->GetMaximum()) ) ;
-       hfitqual_data_0lep_3b->SetMaximum( hmax*(hfitqual_data_0lep_3b->GetMaximum()) ) ;
-       hfitqual_data_1lepSig_3b->SetMaximum( hmax*(hfitqual_data_1lepSig_3b->GetMaximum()) ) ;
-       hfitqual_data_1lep_3b->SetMaximum( hmax*(hfitqual_data_1lep_3b->GetMaximum()) ) ;
-       hfitqual_data_ldp_3b->SetMaximum( hmax*(hfitqual_data_ldp_3b->GetMaximum()) ) ;
+
+       if ( nBinsBtag > 2 ) {
+	 
+	 hfitqual_data_0lep_3b->SetMaximum( hmax*(hfitqual_data_0lep_3b->GetMaximum()) ) ;
+	 hfitqual_data_1lepSig_3b->SetMaximum( hmax*(hfitqual_data_1lepSig_3b->GetMaximum()) ) ;
+	 hfitqual_data_1lep_3b->SetMaximum( hmax*(hfitqual_data_1lep_3b->GetMaximum()) ) ;
+	 hfitqual_data_ldp_3b->SetMaximum( hmax*(hfitqual_data_ldp_3b->GetMaximum()) ) ;
+	 
+	 if ( nBinsBtag > 3 ) {
+	   
+	   hfitqual_data_0lep_4b->SetMaximum( hmax*(hfitqual_data_0lep_4b->GetMaximum()) ) ;
+	   hfitqual_data_1lepSig_4b->SetMaximum( hmax*(hfitqual_data_1lepSig_4b->GetMaximum()) ) ;
+	   hfitqual_data_1lep_4b->SetMaximum( hmax*(hfitqual_data_1lep_4b->GetMaximum()) ) ;
+	   hfitqual_data_ldp_4b->SetMaximum( hmax*(hfitqual_data_ldp_4b->GetMaximum()) ) ;
+	   
+	 }
+       }
+
      }
 
 
@@ -1347,93 +1624,172 @@
      RooConstVar* npcheck = (RooConstVar*) ws->obj( "mean_sf_qcd_M1_H1_1b" ) ;
      if ( npcheck != 0 ) {
 
-        TH1F* hnp_qcd_1b_val  = new TH1F("hnp_qcd_1b_val" , "Nuisance parameters, qcd, 1b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_qcd_2b_val  = new TH1F("hnp_qcd_2b_val" , "Nuisance parameters, qcd, 2b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_qcd_3b_val  = new TH1F("hnp_qcd_3b_val" , "Nuisance parameters, qcd, 3b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_qcd_1b_pull = new TH1F("hnp_qcd_1b_pull", "Nuisance parameters, qcd, 1b, pull"  , nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_qcd_2b_pull = new TH1F("hnp_qcd_2b_pull", "Nuisance parameters, qcd, 2b, pull"  , nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_qcd_3b_pull = new TH1F("hnp_qcd_3b_pull", "Nuisance parameters, qcd, 3b, pull"  , nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_qcd_1b_nom  = new TH1F("hnp_qcd_1b_nom" , "Nuisance parameters, qcd, 1b, nominal", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_qcd_2b_nom  = new TH1F("hnp_qcd_2b_nom" , "Nuisance parameters, qcd, 2b, nominal", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_qcd_3b_nom  = new TH1F("hnp_qcd_3b_nom" , "Nuisance parameters, qcd, 3b, nominal", nbins, 0.5, nbins+0.5 ) ;
+       TH1F *hnp_qcd_1b_val, *hnp_qcd_2b_val, *hnp_qcd_3b_val, *hnp_qcd_4b_val ;
+       TH1F *hnp_qcd_1b_pull, *hnp_qcd_2b_pull, *hnp_qcd_3b_pull, *hnp_qcd_4b_pull ;
+       TH1F *hnp_qcd_1b_nom, *hnp_qcd_2b_nom, *hnp_qcd_3b_nom, *hnp_qcd_4b_nom ;
 
-        TH1F* hnp_ttwj_1b_val  = new TH1F("hnp_ttwj_1b_val" , "Nuisance parameters, ttwj, 1b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_ttwj_2b_val  = new TH1F("hnp_ttwj_2b_val" , "Nuisance parameters, ttwj, 2b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_ttwj_3b_val  = new TH1F("hnp_ttwj_3b_val" , "Nuisance parameters, ttwj, 3b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_ttwj_1b_pull = new TH1F("hnp_ttwj_1b_pull", "Nuisance parameters, ttwj, 1b, pull"  , nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_ttwj_2b_pull = new TH1F("hnp_ttwj_2b_pull", "Nuisance parameters, ttwj, 2b, pull"  , nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_ttwj_3b_pull = new TH1F("hnp_ttwj_3b_pull", "Nuisance parameters, ttwj, 3b, pull"  , nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_ttwj_1b_nom  = new TH1F("hnp_ttwj_1b_nom" , "Nuisance parameters, ttwj, 1b, nominal", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_ttwj_2b_nom  = new TH1F("hnp_ttwj_2b_nom" , "Nuisance parameters, ttwj, 2b, nominal", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_ttwj_3b_nom  = new TH1F("hnp_ttwj_3b_nom" , "Nuisance parameters, ttwj, 3b, nominal", nbins, 0.5, nbins+0.5 ) ;
+       TH1F *hnp_ttwj_1b_val, *hnp_ttwj_2b_val, *hnp_ttwj_3b_val, *hnp_ttwj_4b_val ;
+       TH1F *hnp_ttwj_1b_pull, *hnp_ttwj_2b_pull, *hnp_ttwj_3b_pull, *hnp_ttwj_4b_pull ;
+       TH1F *hnp_ttwj_1b_nom, *hnp_ttwj_2b_nom, *hnp_ttwj_3b_nom, *hnp_ttwj_4b_nom ;
 
 
+       hnp_qcd_1b_val  = new TH1F("hnp_qcd_1b_val" , "Nuisance parameters, qcd, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_qcd_1b_pull = new TH1F("hnp_qcd_1b_pull", "Nuisance parameters, qcd, 1b, pull"  , nbins, 0.5, nbins+0.5 ) ;
+       hnp_qcd_1b_nom  = new TH1F("hnp_qcd_1b_nom" , "Nuisance parameters, qcd, 1b, nominal", nbins, 0.5, nbins+0.5 ) ;
 
-        TH1F* hnp_eff_sf_1b_val  = new TH1F("hnp_eff_sf_1b_val" , "Nuisance parameters, eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_sf_2b_val  = new TH1F("hnp_eff_sf_2b_val" , "Nuisance parameters, eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_sf_3b_val  = new TH1F("hnp_eff_sf_3b_val" , "Nuisance parameters, eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_ttwj_1b_val  = new TH1F("hnp_ttwj_1b_val" , "Nuisance parameters, ttwj, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_ttwj_1b_pull = new TH1F("hnp_ttwj_1b_pull", "Nuisance parameters, ttwj, 1b, pull"  , nbins, 0.5, nbins+0.5 ) ;
+       hnp_ttwj_1b_nom  = new TH1F("hnp_ttwj_1b_nom" , "Nuisance parameters, ttwj, 1b, nominal", nbins, 0.5, nbins+0.5 ) ;
 
-        TH1F* hnp_eff_sf_1b_pull  = new TH1F("hnp_eff_sf_1b_pull" , "Nuisance parameters, eff SF, 1b, pull", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_sf_2b_pull  = new TH1F("hnp_eff_sf_2b_pull" , "Nuisance parameters, eff SF, 2b, pull", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_sf_3b_pull  = new TH1F("hnp_eff_sf_3b_pull" , "Nuisance parameters, eff SF, 3b, pull", nbins, 0.5, nbins+0.5 ) ;
+       hnp_qcd_2b_val  = new TH1F("hnp_qcd_2b_val" , "Nuisance parameters, qcd, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_qcd_2b_pull = new TH1F("hnp_qcd_2b_pull", "Nuisance parameters, qcd, 2b, pull"  , nbins, 0.5, nbins+0.5 ) ;
+       hnp_qcd_2b_nom  = new TH1F("hnp_qcd_2b_nom" , "Nuisance parameters, qcd, 2b, nominal", nbins, 0.5, nbins+0.5 ) ;
 
-        TH1F* hnp_eff_sf_slSig_1b_val  = new TH1F("hnp_eff_sf_slSig_1b_val" , "Nuisance parameters, eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_sf_slSig_2b_val  = new TH1F("hnp_eff_sf_slSig_2b_val" , "Nuisance parameters, eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_sf_slSig_3b_val  = new TH1F("hnp_eff_sf_slSig_3b_val" , "Nuisance parameters, eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_ttwj_2b_val  = new TH1F("hnp_ttwj_2b_val" , "Nuisance parameters, ttwj, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_ttwj_2b_pull = new TH1F("hnp_ttwj_2b_pull", "Nuisance parameters, ttwj, 2b, pull"  , nbins, 0.5, nbins+0.5 ) ;
+       hnp_ttwj_2b_nom  = new TH1F("hnp_ttwj_2b_nom" , "Nuisance parameters, ttwj, 2b, nominal", nbins, 0.5, nbins+0.5 ) ;
 
-        TH1F* hnp_eff_sf_slSig_1b_pull  = new TH1F("hnp_eff_sf_slSig_1b_pull" , "Nuisance parameters, eff SF, 1b, pull", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_sf_slSig_2b_pull  = new TH1F("hnp_eff_sf_slSig_2b_pull" , "Nuisance parameters, eff SF, 2b, pull", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_sf_slSig_3b_pull  = new TH1F("hnp_eff_sf_slSig_3b_pull" , "Nuisance parameters, eff SF, 3b, pull", nbins, 0.5, nbins+0.5 ) ;
+       if ( nBinsBtag > 2 ) {
 
-        TH1F* hnp_eff_sf_sl_1b_val  = new TH1F("hnp_eff_sf_sl_1b_val" , "Nuisance parameters, eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_sf_sl_2b_val  = new TH1F("hnp_eff_sf_sl_2b_val" , "Nuisance parameters, eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_sf_sl_3b_val  = new TH1F("hnp_eff_sf_sl_3b_val" , "Nuisance parameters, eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+	 hnp_qcd_3b_val  = new TH1F("hnp_qcd_3b_val" , "Nuisance parameters, qcd, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+	 hnp_qcd_3b_pull = new TH1F("hnp_qcd_3b_pull", "Nuisance parameters, qcd, 3b, pull"  , nbins, 0.5, nbins+0.5 ) ;
+	 hnp_qcd_3b_nom  = new TH1F("hnp_qcd_3b_nom" , "Nuisance parameters, qcd, 3b, nominal", nbins, 0.5, nbins+0.5 ) ;
+	 
+	 hnp_ttwj_3b_val  = new TH1F("hnp_ttwj_3b_val" , "Nuisance parameters, ttwj, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+	 hnp_ttwj_3b_pull = new TH1F("hnp_ttwj_3b_pull", "Nuisance parameters, ttwj, 3b, pull"  , nbins, 0.5, nbins+0.5 ) ;
+	 hnp_ttwj_3b_nom  = new TH1F("hnp_ttwj_3b_nom" , "Nuisance parameters, ttwj, 3b, nominal", nbins, 0.5, nbins+0.5 ) ;
+	 
+	 if ( nBinsBtag > 3 ) {
 
-        TH1F* hnp_eff_sf_sl_1b_pull  = new TH1F("hnp_eff_sf_sl_1b_pull" , "Nuisance parameters, eff SF, 1b, pull", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_sf_sl_2b_pull  = new TH1F("hnp_eff_sf_sl_2b_pull" , "Nuisance parameters, eff SF, 2b, pull", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_sf_sl_3b_pull  = new TH1F("hnp_eff_sf_sl_3b_pull" , "Nuisance parameters, eff SF, 3b, pull", nbins, 0.5, nbins+0.5 ) ;
-
-        TH1F* hnp_eff_sf_ldp_1b_val  = new TH1F("hnp_eff_sf_ldp_1b_val" , "Nuisance parameters, eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_sf_ldp_2b_val  = new TH1F("hnp_eff_sf_ldp_2b_val" , "Nuisance parameters, eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_sf_ldp_3b_val  = new TH1F("hnp_eff_sf_ldp_3b_val" , "Nuisance parameters, eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
-
-        TH1F* hnp_eff_sf_ldp_1b_pull  = new TH1F("hnp_eff_sf_ldp_1b_pull" , "Nuisance parameters, eff SF, 1b, pull", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_sf_ldp_2b_pull  = new TH1F("hnp_eff_sf_ldp_2b_pull" , "Nuisance parameters, eff SF, 2b, pull", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_sf_ldp_3b_pull  = new TH1F("hnp_eff_sf_ldp_3b_pull" , "Nuisance parameters, eff SF, 3b, pull", nbins, 0.5, nbins+0.5 ) ;
-
+	   hnp_qcd_4b_val  = new TH1F("hnp_qcd_4b_val" , "Nuisance parameters, qcd, 4b, values", nbins, 0.5, nbins+0.5 ) ;
+	   hnp_qcd_4b_pull = new TH1F("hnp_qcd_4b_pull", "Nuisance parameters, qcd, 4b, pull"  , nbins, 0.5, nbins+0.5 ) ;
+	   hnp_qcd_4b_nom  = new TH1F("hnp_qcd_4b_nom" , "Nuisance parameters, qcd, 4b, nominal", nbins, 0.5, nbins+0.5 ) ;
+	   
+	   hnp_ttwj_4b_val  = new TH1F("hnp_ttwj_4b_val" , "Nuisance parameters, ttwj, 4b, values", nbins, 0.5, nbins+0.5 ) ;
+	   hnp_ttwj_4b_pull = new TH1F("hnp_ttwj_4b_pull", "Nuisance parameters, ttwj, 4b, pull"  , nbins, 0.5, nbins+0.5 ) ;
+	   hnp_ttwj_4b_nom  = new TH1F("hnp_ttwj_4b_nom" , "Nuisance parameters, ttwj, 4b, nominal", nbins, 0.5, nbins+0.5 ) ;
+	   
+	 }
+       }
 
 
-        TH1F* hnp_btageff_sf_1b_val  = new TH1F("hnp_btageff_sf_1b_val" , "Nuisance parameters, btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_btageff_sf_2b_val  = new TH1F("hnp_btageff_sf_2b_val" , "Nuisance parameters, btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_btageff_sf_3b_val  = new TH1F("hnp_btageff_sf_3b_val" , "Nuisance parameters, btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+       TH1F *hnp_eff_sf_1b_val, *hnp_eff_sf_2b_val, *hnp_eff_sf_3b_val, *hnp_eff_sf_4b_val ;
+       TH1F *hnp_eff_sf_slSig_1b_val, *hnp_eff_sf_slSig_2b_val, *hnp_eff_sf_slSig_3b_val, *hnp_eff_sf_slSig_4b_val ;
+       TH1F *hnp_eff_sf_sl_1b_val, *hnp_eff_sf_sl_2b_val, *hnp_eff_sf_sl_3b_val, *hnp_eff_sf_sl_4b_val ;
+       TH1F *hnp_eff_sf_ldp_1b_val, *hnp_eff_sf_ldp_2b_val, *hnp_eff_sf_ldp_3b_val, *hnp_eff_sf_ldp_4b_val ;
 
-        TH1F* hnp_eff_btageff_sf_prod_1b_val  = new TH1F("hnp_eff_btageff_sf_prod_1b_val" , "Nuisance parameters, eff SF * btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_btageff_sf_prod_2b_val  = new TH1F("hnp_eff_btageff_sf_prod_2b_val" , "Nuisance parameters, eff SF * btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_btageff_sf_prod_3b_val  = new TH1F("hnp_eff_btageff_sf_prod_3b_val" , "Nuisance parameters, eff SF * btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+       TH1F *hnp_eff_sf_1b_pull, *hnp_eff_sf_2b_pull, *hnp_eff_sf_3b_pull, *hnp_eff_sf_4b_pull ;
+       TH1F *hnp_eff_sf_slSig_1b_pull, *hnp_eff_sf_slSig_2b_pull, *hnp_eff_sf_slSig_3b_pull, *hnp_eff_sf_slSig_4b_pull ;
+       TH1F *hnp_eff_sf_sl_1b_pull, *hnp_eff_sf_sl_2b_pull, *hnp_eff_sf_sl_3b_pull, *hnp_eff_sf_sl_4b_pull ;
+       TH1F *hnp_eff_sf_ldp_1b_pull, *hnp_eff_sf_ldp_2b_pull, *hnp_eff_sf_ldp_3b_pull, *hnp_eff_sf_ldp_4b_pull ;
 
-        TH1F* hnp_btageff_sf_slSig_1b_val  = new TH1F("hnp_btageff_sf_slSig_1b_val" , "Nuisance parameters, btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_btageff_sf_slSig_2b_val  = new TH1F("hnp_btageff_sf_slSig_2b_val" , "Nuisance parameters, btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_btageff_sf_slSig_3b_val  = new TH1F("hnp_btageff_sf_slSig_3b_val" , "Nuisance parameters, btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
 
-        TH1F* hnp_eff_btageff_sf_slSig_prod_1b_val  = new TH1F("hnp_eff_btageff_sf_slSig_prod_1b_val" , "Nuisance parameters, eff SF * btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_btageff_sf_slSig_prod_2b_val  = new TH1F("hnp_eff_btageff_sf_slSig_prod_2b_val" , "Nuisance parameters, eff SF * btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_btageff_sf_slSig_prod_3b_val  = new TH1F("hnp_eff_btageff_sf_slSig_prod_3b_val" , "Nuisance parameters, eff SF * btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_sf_1b_val  = new TH1F("hnp_eff_sf_1b_val" , "Nuisance parameters, eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_sf_1b_pull  = new TH1F("hnp_eff_sf_1b_pull" , "Nuisance parameters, eff SF, 1b, pull", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_sf_slSig_1b_val  = new TH1F("hnp_eff_sf_slSig_1b_val" , "Nuisance parameters, eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_sf_slSig_1b_pull  = new TH1F("hnp_eff_sf_slSig_1b_pull" , "Nuisance parameters, eff SF, 1b, pull", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_sf_sl_1b_val  = new TH1F("hnp_eff_sf_sl_1b_val" , "Nuisance parameters, eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_sf_sl_1b_pull  = new TH1F("hnp_eff_sf_sl_1b_pull" , "Nuisance parameters, eff SF, 1b, pull", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_sf_ldp_1b_val  = new TH1F("hnp_eff_sf_ldp_1b_val" , "Nuisance parameters, eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_sf_ldp_1b_pull  = new TH1F("hnp_eff_sf_ldp_1b_pull" , "Nuisance parameters, eff SF, 1b, pull", nbins, 0.5, nbins+0.5 ) ;
 
-        TH1F* hnp_btageff_sf_sl_1b_val  = new TH1F("hnp_btageff_sf_sl_1b_val" , "Nuisance parameters, btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_btageff_sf_sl_2b_val  = new TH1F("hnp_btageff_sf_sl_2b_val" , "Nuisance parameters, btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_btageff_sf_sl_3b_val  = new TH1F("hnp_btageff_sf_sl_3b_val" , "Nuisance parameters, btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_sf_2b_val  = new TH1F("hnp_eff_sf_2b_val" , "Nuisance parameters, eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_sf_2b_pull  = new TH1F("hnp_eff_sf_2b_pull" , "Nuisance parameters, eff SF, 2b, pull", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_sf_slSig_2b_val  = new TH1F("hnp_eff_sf_slSig_2b_val" , "Nuisance parameters, eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_sf_slSig_2b_pull  = new TH1F("hnp_eff_sf_slSig_2b_pull" , "Nuisance parameters, eff SF, 2b, pull", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_sf_sl_2b_val  = new TH1F("hnp_eff_sf_sl_2b_val" , "Nuisance parameters, eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_sf_sl_2b_pull  = new TH1F("hnp_eff_sf_sl_2b_pull" , "Nuisance parameters, eff SF, 2b, pull", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_sf_ldp_2b_val  = new TH1F("hnp_eff_sf_ldp_2b_val" , "Nuisance parameters, eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_sf_ldp_2b_pull  = new TH1F("hnp_eff_sf_ldp_2b_pull" , "Nuisance parameters, eff SF, 2b, pull", nbins, 0.5, nbins+0.5 ) ;
 
-        TH1F* hnp_eff_btageff_sf_sl_prod_1b_val  = new TH1F("hnp_eff_btageff_sf_sl_prod_1b_val" , "Nuisance parameters, eff SF * btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_btageff_sf_sl_prod_2b_val  = new TH1F("hnp_eff_btageff_sf_sl_prod_2b_val" , "Nuisance parameters, eff SF * btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_btageff_sf_sl_prod_3b_val  = new TH1F("hnp_eff_btageff_sf_sl_prod_3b_val" , "Nuisance parameters, eff SF * btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+       if ( nBinsBtag > 2 ) {
 
-        TH1F* hnp_btageff_sf_ldp_1b_val  = new TH1F("hnp_btageff_sf_ldp_1b_val" , "Nuisance parameters, btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_btageff_sf_ldp_2b_val  = new TH1F("hnp_btageff_sf_ldp_2b_val" , "Nuisance parameters, btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_btageff_sf_ldp_3b_val  = new TH1F("hnp_btageff_sf_ldp_3b_val" , "Nuisance parameters, btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+	 hnp_eff_sf_3b_val  = new TH1F("hnp_eff_sf_3b_val" , "Nuisance parameters, eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+	 hnp_eff_sf_3b_pull  = new TH1F("hnp_eff_sf_3b_pull" , "Nuisance parameters, eff SF, 3b, pull", nbins, 0.5, nbins+0.5 ) ;
+	 hnp_eff_sf_slSig_3b_val  = new TH1F("hnp_eff_sf_slSig_3b_val" , "Nuisance parameters, eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+	 hnp_eff_sf_slSig_3b_pull  = new TH1F("hnp_eff_sf_slSig_3b_pull" , "Nuisance parameters, eff SF, 3b, pull", nbins, 0.5, nbins+0.5 ) ;
+	 hnp_eff_sf_sl_3b_val  = new TH1F("hnp_eff_sf_sl_3b_val" , "Nuisance parameters, eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+	 hnp_eff_sf_sl_3b_pull  = new TH1F("hnp_eff_sf_sl_3b_pull" , "Nuisance parameters, eff SF, 3b, pull", nbins, 0.5, nbins+0.5 ) ;
+	 hnp_eff_sf_ldp_3b_val  = new TH1F("hnp_eff_sf_ldp_3b_val" , "Nuisance parameters, eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+	 hnp_eff_sf_ldp_3b_pull  = new TH1F("hnp_eff_sf_ldp_3b_pull" , "Nuisance parameters, eff SF, 3b, pull", nbins, 0.5, nbins+0.5 ) ;
+	 
+	 if ( nBinsBtag > 3 ) {
+	   
+	   hnp_eff_sf_4b_val  = new TH1F("hnp_eff_sf_4b_val" , "Nuisance parameters, eff SF, 4b, values", nbins, 0.5, nbins+0.5 ) ;
+	   hnp_eff_sf_4b_pull  = new TH1F("hnp_eff_sf_4b_pull" , "Nuisance parameters, eff SF, 4b, pull", nbins, 0.5, nbins+0.5 ) ;
+	   hnp_eff_sf_slSig_4b_val  = new TH1F("hnp_eff_sf_slSig_4b_val" , "Nuisance parameters, eff SF, 4b, values", nbins, 0.5, nbins+0.5 ) ;
+	   hnp_eff_sf_slSig_4b_pull  = new TH1F("hnp_eff_sf_slSig_4b_pull" , "Nuisance parameters, eff SF, 4b, pull", nbins, 0.5, nbins+0.5 ) ;
+	   hnp_eff_sf_sl_4b_val  = new TH1F("hnp_eff_sf_sl_4b_val" , "Nuisance parameters, eff SF, 4b, values", nbins, 0.5, nbins+0.5 ) ;
+	   hnp_eff_sf_sl_4b_pull  = new TH1F("hnp_eff_sf_sl_4b_pull" , "Nuisance parameters, eff SF, 4b, pull", nbins, 0.5, nbins+0.5 ) ;
+	   hnp_eff_sf_ldp_4b_val  = new TH1F("hnp_eff_sf_ldp_4b_val" , "Nuisance parameters, eff SF, 4b, values", nbins, 0.5, nbins+0.5 ) ;
+	   hnp_eff_sf_ldp_4b_pull  = new TH1F("hnp_eff_sf_ldp_4b_pull" , "Nuisance parameters, eff SF, 4b, pull", nbins, 0.5, nbins+0.5 ) ;
+	   
+	 }
+       }
 
-        TH1F* hnp_eff_btageff_sf_ldp_prod_1b_val  = new TH1F("hnp_eff_btageff_sf_ldp_prod_1b_val" , "Nuisance parameters, eff SF * btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_btageff_sf_ldp_prod_2b_val  = new TH1F("hnp_eff_btageff_sf_ldp_prod_2b_val" , "Nuisance parameters, eff SF * btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
-        TH1F* hnp_eff_btageff_sf_ldp_prod_3b_val  = new TH1F("hnp_eff_btageff_sf_ldp_prod_3b_val" , "Nuisance parameters, eff SF * btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+
+       TH1F *hnp_btageff_sf_1b_val, *hnp_btageff_sf_2b_val, *hnp_btageff_sf_3b_val, *hnp_btageff_sf_4b_val ;
+       TH1F *hnp_btageff_sf_prod_1b_val, *hnp_btageff_sf_prod_2b_val, *hnp_btageff_sf_prod_3b_val, *hnp_btageff_sf_prod_4b_val ;
+       TH1F *hnp_btageff_sf_slSig_1b_val, *hnp_btageff_sf_slSig_2b_val, *hnp_btageff_sf_slSig_3b_val, *hnp_btageff_sf_slSig_4b_val ;
+       TH1F *hnp_btageff_sf_slSig_prod_1b_val, *hnp_btageff_sf_slSig_prod_2b_val, *hnp_btageff_sf_slSig_prod_3b_val, *hnp_btageff_sf_slSig_prod_4b_val ;
+       TH1F *hnp_btageff_sf_sl_1b_val, *hnp_btageff_sf_sl_2b_val, *hnp_btageff_sf_sl_3b_val, *hnp_btageff_sf_sl_4b_val ;
+       TH1F *hnp_btageff_sf_sl_prod_1b_val, *hnp_btageff_sf_sl_prod_2b_val, *hnp_btageff_sf_sl_prod_3b_val, *hnp_btageff_sf_sl_prod_4b_val ;
+       TH1F *hnp_btageff_sf_ldp_1b_val, *hnp_btageff_sf_ldp_2b_val, *hnp_btageff_sf_ldp_3b_val, *hnp_btageff_sf_ldp_4b_val ;
+       TH1F *hnp_btageff_sf_ldp_prod_1b_val, *hnp_btageff_sf_ldp_prod_2b_val, *hnp_btageff_sf_ldp_prod_3b_val, *hnp_btageff_sf_ldp_prod_4b_val ;
+
+       TH1F *hnp_eff_btageff_sf_1b_val, *hnp_eff_btageff_sf_2b_val, *hnp_eff_btageff_sf_3b_val, *hnp_eff_btageff_sf_4b_val ;
+       TH1F *hnp_eff_btageff_sf_prod_1b_val, *hnp_eff_btageff_sf_prod_2b_val, *hnp_eff_btageff_sf_prod_3b_val, *hnp_eff_btageff_sf_prod_4b_val ;
+       TH1F *hnp_eff_btageff_sf_slSig_1b_val, *hnp_eff_btageff_sf_slSig_2b_val, *hnp_eff_btageff_sf_slSig_3b_val, *hnp_eff_btageff_sf_slSig_4b_val ;
+       TH1F *hnp_eff_btageff_sf_slSig_prod_1b_val, *hnp_eff_btageff_sf_slSig_prod_2b_val, *hnp_eff_btageff_sf_slSig_prod_3b_val, *hnp_eff_btageff_sf_slSig_prod_4b_val ;
+       TH1F *hnp_eff_btageff_sf_sl_1b_val, *hnp_eff_btageff_sf_sl_2b_val, *hnp_eff_btageff_sf_sl_3b_val, *hnp_eff_btageff_sf_sl_4b_val ;
+       TH1F *hnp_eff_btageff_sf_sl_prod_1b_val, *hnp_eff_btageff_sf_sl_prod_2b_val, *hnp_eff_btageff_sf_sl_prod_3b_val, *hnp_eff_btageff_sf_sl_prod_4b_val ;
+       TH1F *hnp_eff_btageff_sf_ldp_1b_val, *hnp_eff_btageff_sf_ldp_2b_val, *hnp_eff_btageff_sf_ldp_3b_val, *hnp_eff_btageff_sf_ldp_4b_val ;
+       TH1F *hnp_eff_btageff_sf_ldp_prod_1b_val, *hnp_eff_btageff_sf_ldp_prod_2b_val, *hnp_eff_btageff_sf_ldp_prod_3b_val, *hnp_eff_btageff_sf_ldp_prod_4b_val ;
+
+
+       hnp_btageff_sf_1b_val  = new TH1F("hnp_btageff_sf_1b_val" , "Nuisance parameters, btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_btageff_sf_prod_1b_val  = new TH1F("hnp_eff_btageff_sf_prod_1b_val" , "Nuisance parameters, eff SF * btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_btageff_sf_slSig_1b_val  = new TH1F("hnp_btageff_sf_slSig_1b_val" , "Nuisance parameters, btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_btageff_sf_slSig_prod_1b_val  = new TH1F("hnp_eff_btageff_sf_slSig_prod_1b_val" , "Nuisance parameters, eff SF * btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_btageff_sf_sl_1b_val  = new TH1F("hnp_btageff_sf_sl_1b_val" , "Nuisance parameters, btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_btageff_sf_sl_prod_1b_val  = new TH1F("hnp_eff_btageff_sf_sl_prod_1b_val" , "Nuisance parameters, eff SF * btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_btageff_sf_ldp_1b_val  = new TH1F("hnp_btageff_sf_ldp_1b_val" , "Nuisance parameters, btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_btageff_sf_ldp_prod_1b_val  = new TH1F("hnp_eff_btageff_sf_ldp_prod_1b_val" , "Nuisance parameters, eff SF * btag eff SF, 1b, values", nbins, 0.5, nbins+0.5 ) ;
+
+       hnp_btageff_sf_2b_val  = new TH1F("hnp_btageff_sf_2b_val" , "Nuisance parameters, btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_btageff_sf_prod_2b_val  = new TH1F("hnp_eff_btageff_sf_prod_2b_val" , "Nuisance parameters, eff SF * btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_btageff_sf_slSig_2b_val  = new TH1F("hnp_btageff_sf_slSig_2b_val" , "Nuisance parameters, btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_btageff_sf_slSig_prod_2b_val  = new TH1F("hnp_eff_btageff_sf_slSig_prod_2b_val" , "Nuisance parameters, eff SF * btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_btageff_sf_sl_2b_val  = new TH1F("hnp_btageff_sf_sl_2b_val" , "Nuisance parameters, btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_btageff_sf_sl_prod_2b_val  = new TH1F("hnp_eff_btageff_sf_sl_prod_2b_val" , "Nuisance parameters, eff SF * btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_btageff_sf_ldp_2b_val  = new TH1F("hnp_btageff_sf_ldp_2b_val" , "Nuisance parameters, btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+       hnp_eff_btageff_sf_ldp_prod_2b_val  = new TH1F("hnp_eff_btageff_sf_ldp_prod_2b_val" , "Nuisance parameters, eff SF * btag eff SF, 2b, values", nbins, 0.5, nbins+0.5 ) ;
+
+       if ( nBinsBtag > 2 ) {
+
+	 hnp_btageff_sf_3b_val  = new TH1F("hnp_btageff_sf_3b_val" , "Nuisance parameters, btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+	 hnp_eff_btageff_sf_prod_3b_val  = new TH1F("hnp_eff_btageff_sf_prod_3b_val" , "Nuisance parameters, eff SF * btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+	 hnp_btageff_sf_slSig_3b_val  = new TH1F("hnp_btageff_sf_slSig_3b_val" , "Nuisance parameters, btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+	 hnp_eff_btageff_sf_slSig_prod_3b_val  = new TH1F("hnp_eff_btageff_sf_slSig_prod_3b_val" , "Nuisance parameters, eff SF * btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+	 hnp_btageff_sf_sl_3b_val  = new TH1F("hnp_btageff_sf_sl_3b_val" , "Nuisance parameters, btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+	 hnp_eff_btageff_sf_sl_prod_3b_val  = new TH1F("hnp_eff_btageff_sf_sl_prod_3b_val" , "Nuisance parameters, eff SF * btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+	 hnp_btageff_sf_ldp_3b_val  = new TH1F("hnp_btageff_sf_ldp_3b_val" , "Nuisance parameters, btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+	 hnp_eff_btageff_sf_ldp_prod_3b_val  = new TH1F("hnp_eff_btageff_sf_ldp_prod_3b_val" , "Nuisance parameters, eff SF * btag eff SF, 3b, values", nbins, 0.5, nbins+0.5 ) ;
+	 
+	 if ( nBinsBtag > 3 ) {
+	   
+	   hnp_btageff_sf_4b_val  = new TH1F("hnp_btageff_sf_4b_val" , "Nuisance parameters, btag eff SF, 4b, values", nbins, 0.5, nbins+0.5 ) ;
+	   hnp_eff_btageff_sf_prod_4b_val  = new TH1F("hnp_eff_btageff_sf_prod_4b_val" , "Nuisance parameters, eff SF * btag eff SF, 4b, values", nbins, 0.5, nbins+0.5 ) ;
+	   hnp_btageff_sf_slSig_4b_val  = new TH1F("hnp_btageff_sf_slSig_4b_val" , "Nuisance parameters, btag eff SF, 4b, values", nbins, 0.5, nbins+0.5 ) ;
+	   hnp_eff_btageff_sf_slSig_prod_4b_val  = new TH1F("hnp_eff_btageff_sf_slSig_prod_4b_val" , "Nuisance parameters, eff SF * btag eff SF, 4b, values", nbins, 0.5, nbins+0.5 ) ;
+	   hnp_btageff_sf_sl_4b_val  = new TH1F("hnp_btageff_sf_sl_4b_val" , "Nuisance parameters, btag eff SF, 4b, values", nbins, 0.5, nbins+0.5 ) ;
+	   hnp_eff_btageff_sf_sl_prod_4b_val  = new TH1F("hnp_eff_btageff_sf_sl_prod_4b_val" , "Nuisance parameters, eff SF * btag eff SF, 4b, values", nbins, 0.5, nbins+0.5 ) ;
+	   hnp_btageff_sf_ldp_4b_val  = new TH1F("hnp_btageff_sf_ldp_4b_val" , "Nuisance parameters, btag eff SF, 4b, values", nbins, 0.5, nbins+0.5 ) ;
+	   hnp_eff_btageff_sf_ldp_prod_4b_val  = new TH1F("hnp_eff_btageff_sf_ldp_prod_4b_val" , "Nuisance parameters, eff SF * btag eff SF, 4b, values", nbins, 0.5, nbins+0.5 ) ;
+	   
+	 }
+       }
+
 
         TH1F* hnp_prim_eff = new TH1F("hnp_prim_eff", "Nuisance parameters, Efficiency primary Gaussians, pull", 8, 0.5, 8.5 ) ;
 
@@ -1485,24 +1841,30 @@
                  if ( bbi==0 ) hnp_qcd_1b_val->SetBinContent( binIndex, npVal ) ;
                  if ( bbi==1 ) hnp_qcd_2b_val->SetBinContent( binIndex, npVal ) ;
                  if ( bbi==2 ) hnp_qcd_3b_val->SetBinContent( binIndex, npVal ) ;
+                 if ( bbi==3 ) hnp_qcd_4b_val->SetBinContent( binIndex, npVal ) ;
                  if ( bbi==0 ) hnp_qcd_1b_pull->SetBinContent( binIndex, pull ) ;
                  if ( bbi==1 ) hnp_qcd_2b_pull->SetBinContent( binIndex, pull ) ;
                  if ( bbi==2 ) hnp_qcd_3b_pull->SetBinContent( binIndex, pull ) ;
+                 if ( bbi==3 ) hnp_qcd_4b_pull->SetBinContent( binIndex, pull ) ;
                  if ( bbi==0 ) hnp_qcd_1b_nom->SetBinContent( binIndex, mean ) ;
                  if ( bbi==1 ) hnp_qcd_2b_nom->SetBinContent( binIndex, mean ) ;
                  if ( bbi==2 ) hnp_qcd_3b_nom->SetBinContent( binIndex, mean ) ;
+                 if ( bbi==3 ) hnp_qcd_4b_nom->SetBinContent( binIndex, mean ) ;
 
                  char label[1000] ;
                  sprintf( label, "M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  if ( bbi==0 ) hnp_qcd_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_qcd_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_qcd_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_qcd_4b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==0 ) hnp_qcd_1b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_qcd_2b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_qcd_3b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_qcd_4b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==0 ) hnp_qcd_1b_nom-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_qcd_2b_nom-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_qcd_3b_nom-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_qcd_4b_nom-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
 
 
               }
@@ -1551,24 +1913,30 @@
                  if ( bbi==0 ) hnp_ttwj_1b_val->SetBinContent( binIndex, npVal ) ;
                  if ( bbi==1 ) hnp_ttwj_2b_val->SetBinContent( binIndex, npVal ) ;
                  if ( bbi==2 ) hnp_ttwj_3b_val->SetBinContent( binIndex, npVal ) ;
+                 if ( bbi==3 ) hnp_ttwj_4b_val->SetBinContent( binIndex, npVal ) ;
                  if ( bbi==0 ) hnp_ttwj_1b_pull->SetBinContent( binIndex, pull ) ;
                  if ( bbi==1 ) hnp_ttwj_2b_pull->SetBinContent( binIndex, pull ) ;
                  if ( bbi==2 ) hnp_ttwj_3b_pull->SetBinContent( binIndex, pull ) ;
+                 if ( bbi==3 ) hnp_ttwj_4b_pull->SetBinContent( binIndex, pull ) ;
                  if ( bbi==0 ) hnp_ttwj_1b_nom->SetBinContent( binIndex, mean ) ;
                  if ( bbi==1 ) hnp_ttwj_2b_nom->SetBinContent( binIndex, mean ) ;
                  if ( bbi==2 ) hnp_ttwj_3b_nom->SetBinContent( binIndex, mean ) ;
+                 if ( bbi==3 ) hnp_ttwj_4b_nom->SetBinContent( binIndex, mean ) ;
 
                  char label[1000] ;
                  sprintf( label, "M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  if ( bbi==0 ) hnp_ttwj_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_ttwj_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_ttwj_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_ttwj_4b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==0 ) hnp_ttwj_1b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_ttwj_2b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_ttwj_3b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_ttwj_4b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==0 ) hnp_ttwj_1b_nom-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_ttwj_2b_nom-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_ttwj_3b_nom-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_ttwj_4b_nom-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
 
               }
            } // hbi
@@ -1598,7 +1966,7 @@
 
 
 
-           //--- QCD SF_met3
+	    //--- QCD SF_met3
 
             sprintf( parName, "SFqcd_met3" ) ;
             np = (RooAbsReal*) ws->obj( parName ) ;
@@ -1709,6 +2077,43 @@
 
 
 
+           //--- QCD SF_nb4
+
+            sprintf( parName, "SFqcd_nb4" ) ;
+            np = (RooAbsReal*) ws->obj( parName ) ;
+            double SFqcd_nb4_val = 0. ;
+            if ( np == 0x0 ) {
+               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+            } else {
+               SFqcd_nb4_val =  np -> getVal() ;
+            }
+
+            sprintf( parName, "pdf_mean_SFqcd_nb4" ) ;
+            np = (RooAbsReal*) ws->obj( parName ) ;
+            double SFqcd_nb4_mean = 0. ;
+            if ( np == 0x0 ) {
+               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+            } else {
+               SFqcd_nb4_mean =  np -> getVal() ;
+            }
+
+            sprintf( parName, "pdf_sigma_SFqcd_nb4" ) ;
+            np = (RooAbsReal*) ws->obj( parName ) ;
+            double SFqcd_nb4_sigma = 1. ;
+            if ( np == 0x0 ) {
+               printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
+            } else {
+               SFqcd_nb4_sigma =  np -> getVal() ;
+            }
+            double SFqcd_nb4_pull = (SFqcd_nb4_val-SFqcd_nb4_mean) / SFqcd_nb4_sigma ;
+
+            printf("\n SFqcd_nb4 : val = %6.3f, mean = %6.3f, sigma = %6.3f, pull = %6.3f\n",
+                 SFqcd_nb4_val, SFqcd_nb4_mean, SFqcd_nb4_sigma, SFqcd_nb4_pull ) ;
+
+
+
+
+
 
 
            //--- VV SF
@@ -1802,6 +2207,10 @@
 
             hnp_prim_eff -> SetBinContent( hbin, SFqcd_nb3_pull ) ;
             xaxis->SetBinLabel(hbin,"SF QCD, nB>=3") ;
+            hbin++ ;
+
+            hnp_prim_eff -> SetBinContent( hbin, SFqcd_nb4_pull ) ;
+            xaxis->SetBinLabel(hbin,"SF QCD, nB>=4") ;
             hbin++ ;
 
             hnp_prim_eff -> SetBinContent( hbin, vv_sf_pull ) ;
@@ -2261,54 +2670,70 @@
                  if ( bbi == 0 ) { hnp_eff_sf_1b_val -> SetBinContent( binIndex, bin_eff_sf ) ; }
                  if ( bbi == 1 ) { hnp_eff_sf_2b_val -> SetBinContent( binIndex, bin_eff_sf ) ; }
                  if ( bbi == 2 ) { hnp_eff_sf_3b_val -> SetBinContent( binIndex, bin_eff_sf ) ; }
+                 if ( bbi == 3 ) { hnp_eff_sf_4b_val -> SetBinContent( binIndex, bin_eff_sf ) ; }
                  if ( bbi == 0 ) { hnp_eff_sf_1b_pull -> SetBinContent( binIndex, bin_eff_sf_pull ) ; }
                  if ( bbi == 1 ) { hnp_eff_sf_2b_pull -> SetBinContent( binIndex, bin_eff_sf_pull ) ; }
                  if ( bbi == 2 ) { hnp_eff_sf_3b_pull -> SetBinContent( binIndex, bin_eff_sf_pull ) ; }
+                 if ( bbi == 3 ) { hnp_eff_sf_4b_pull -> SetBinContent( binIndex, bin_eff_sf_pull ) ; }
                  if ( bbi == 0 ) { hnp_btageff_sf_1b_val -> SetBinContent( binIndex, btageff_sf ) ; }
                  if ( bbi == 1 ) { hnp_btageff_sf_2b_val -> SetBinContent( binIndex, btageff_sf ) ; }
                  if ( bbi == 2 ) { hnp_btageff_sf_3b_val -> SetBinContent( binIndex, btageff_sf ) ; }
+                 if ( bbi == 3 ) { hnp_btageff_sf_4b_val -> SetBinContent( binIndex, btageff_sf ) ; }
                  if ( bbi == 0 ) { hnp_eff_btageff_sf_prod_1b_val -> SetBinContent( binIndex, prod ) ; }
                  if ( bbi == 1 ) { hnp_eff_btageff_sf_prod_2b_val -> SetBinContent( binIndex, prod ) ; }
                  if ( bbi == 2 ) { hnp_eff_btageff_sf_prod_3b_val -> SetBinContent( binIndex, prod ) ; }
+                 if ( bbi == 3 ) { hnp_eff_btageff_sf_prod_4b_val -> SetBinContent( binIndex, prod ) ; }
 
                  if ( bbi == 0 ) { hnp_eff_sf_slSig_1b_val -> SetBinContent( binIndex, bin_eff_sf_slSig ) ; }
                  if ( bbi == 1 ) { hnp_eff_sf_slSig_2b_val -> SetBinContent( binIndex, bin_eff_sf_slSig ) ; }
                  if ( bbi == 2 ) { hnp_eff_sf_slSig_3b_val -> SetBinContent( binIndex, bin_eff_sf_slSig ) ; }
+                 if ( bbi == 3 ) { hnp_eff_sf_slSig_4b_val -> SetBinContent( binIndex, bin_eff_sf_slSig ) ; }
                  if ( bbi == 0 ) { hnp_eff_sf_slSig_1b_pull -> SetBinContent( binIndex, bin_eff_sf_slSig_pull ) ; }
                  if ( bbi == 1 ) { hnp_eff_sf_slSig_2b_pull -> SetBinContent( binIndex, bin_eff_sf_slSig_pull ) ; }
                  if ( bbi == 2 ) { hnp_eff_sf_slSig_3b_pull -> SetBinContent( binIndex, bin_eff_sf_slSig_pull ) ; }
+                 if ( bbi == 3 ) { hnp_eff_sf_slSig_4b_pull -> SetBinContent( binIndex, bin_eff_sf_slSig_pull ) ; }
                  if ( bbi == 0 ) { hnp_btageff_sf_slSig_1b_val -> SetBinContent( binIndex, btageff_sf_slSig ) ; }
                  if ( bbi == 1 ) { hnp_btageff_sf_slSig_2b_val -> SetBinContent( binIndex, btageff_sf_slSig ) ; }
                  if ( bbi == 2 ) { hnp_btageff_sf_slSig_3b_val -> SetBinContent( binIndex, btageff_sf_slSig ) ; }
+                 if ( bbi == 3 ) { hnp_btageff_sf_slSig_4b_val -> SetBinContent( binIndex, btageff_sf_slSig ) ; }
                  if ( bbi == 0 ) { hnp_eff_btageff_sf_slSig_prod_1b_val -> SetBinContent( binIndex, prod_slSig ) ; }
                  if ( bbi == 1 ) { hnp_eff_btageff_sf_slSig_prod_2b_val -> SetBinContent( binIndex, prod_slSig ) ; }
                  if ( bbi == 2 ) { hnp_eff_btageff_sf_slSig_prod_3b_val -> SetBinContent( binIndex, prod_slSig ) ; }
+                 if ( bbi == 3 ) { hnp_eff_btageff_sf_slSig_prod_4b_val -> SetBinContent( binIndex, prod_slSig ) ; }
 
                  if ( bbi == 0 ) { hnp_eff_sf_sl_1b_val -> SetBinContent( binIndex, bin_eff_sf_sl ) ; }
                  if ( bbi == 1 ) { hnp_eff_sf_sl_2b_val -> SetBinContent( binIndex, bin_eff_sf_sl ) ; }
                  if ( bbi == 2 ) { hnp_eff_sf_sl_3b_val -> SetBinContent( binIndex, bin_eff_sf_sl ) ; }
+                 if ( bbi == 3 ) { hnp_eff_sf_sl_4b_val -> SetBinContent( binIndex, bin_eff_sf_sl ) ; }
                  if ( bbi == 0 ) { hnp_eff_sf_sl_1b_pull -> SetBinContent( binIndex, bin_eff_sf_sl_pull ) ; }
                  if ( bbi == 1 ) { hnp_eff_sf_sl_2b_pull -> SetBinContent( binIndex, bin_eff_sf_sl_pull ) ; }
                  if ( bbi == 2 ) { hnp_eff_sf_sl_3b_pull -> SetBinContent( binIndex, bin_eff_sf_sl_pull ) ; }
+                 if ( bbi == 3 ) { hnp_eff_sf_sl_4b_pull -> SetBinContent( binIndex, bin_eff_sf_sl_pull ) ; }
                  if ( bbi == 0 ) { hnp_btageff_sf_sl_1b_val -> SetBinContent( binIndex, btageff_sf_sl ) ; }
                  if ( bbi == 1 ) { hnp_btageff_sf_sl_2b_val -> SetBinContent( binIndex, btageff_sf_sl ) ; }
                  if ( bbi == 2 ) { hnp_btageff_sf_sl_3b_val -> SetBinContent( binIndex, btageff_sf_sl ) ; }
+                 if ( bbi == 3 ) { hnp_btageff_sf_sl_4b_val -> SetBinContent( binIndex, btageff_sf_sl ) ; }
                  if ( bbi == 0 ) { hnp_eff_btageff_sf_sl_prod_1b_val -> SetBinContent( binIndex, prod_sl ) ; }
                  if ( bbi == 1 ) { hnp_eff_btageff_sf_sl_prod_2b_val -> SetBinContent( binIndex, prod_sl ) ; }
                  if ( bbi == 2 ) { hnp_eff_btageff_sf_sl_prod_3b_val -> SetBinContent( binIndex, prod_sl ) ; }
+                 if ( bbi == 3 ) { hnp_eff_btageff_sf_sl_prod_4b_val -> SetBinContent( binIndex, prod_sl ) ; }
 
                  if ( bbi == 0 ) { hnp_eff_sf_ldp_1b_val -> SetBinContent( binIndex, bin_eff_sf_ldp ) ; }
                  if ( bbi == 1 ) { hnp_eff_sf_ldp_2b_val -> SetBinContent( binIndex, bin_eff_sf_ldp ) ; }
                  if ( bbi == 2 ) { hnp_eff_sf_ldp_3b_val -> SetBinContent( binIndex, bin_eff_sf_ldp ) ; }
+                 if ( bbi == 3 ) { hnp_eff_sf_ldp_4b_val -> SetBinContent( binIndex, bin_eff_sf_ldp ) ; }
                  if ( bbi == 0 ) { hnp_eff_sf_ldp_1b_pull -> SetBinContent( binIndex, bin_eff_sf_ldp_pull ) ; }
                  if ( bbi == 1 ) { hnp_eff_sf_ldp_2b_pull -> SetBinContent( binIndex, bin_eff_sf_ldp_pull ) ; }
                  if ( bbi == 2 ) { hnp_eff_sf_ldp_3b_pull -> SetBinContent( binIndex, bin_eff_sf_ldp_pull ) ; }
+                 if ( bbi == 3 ) { hnp_eff_sf_ldp_4b_pull -> SetBinContent( binIndex, bin_eff_sf_ldp_pull ) ; }
                  if ( bbi == 0 ) { hnp_btageff_sf_ldp_1b_val -> SetBinContent( binIndex, btageff_sf_ldp ) ; }
                  if ( bbi == 1 ) { hnp_btageff_sf_ldp_2b_val -> SetBinContent( binIndex, btageff_sf_ldp ) ; }
                  if ( bbi == 2 ) { hnp_btageff_sf_ldp_3b_val -> SetBinContent( binIndex, btageff_sf_ldp ) ; }
+                 if ( bbi == 3 ) { hnp_btageff_sf_ldp_4b_val -> SetBinContent( binIndex, btageff_sf_ldp ) ; }
                  if ( bbi == 0 ) { hnp_eff_btageff_sf_ldp_prod_1b_val -> SetBinContent( binIndex, prod_ldp ) ; }
                  if ( bbi == 1 ) { hnp_eff_btageff_sf_ldp_prod_2b_val -> SetBinContent( binIndex, prod_ldp ) ; }
                  if ( bbi == 2 ) { hnp_eff_btageff_sf_ldp_prod_3b_val -> SetBinContent( binIndex, prod_ldp ) ; }
+                 if ( bbi == 3 ) { hnp_eff_btageff_sf_ldp_prod_4b_val -> SetBinContent( binIndex, prod_ldp ) ; }
 
                  printf(" m,h,b %d,%d,%d : eff_sf       = %6.3f,  btageff_sf       = %6.3f,  prod = %6.3f\n", mbi, hbi, bbi, bin_eff_sf, btageff_sf, prod ) ;
                  printf(" m,h,b %d,%d,%d : eff_sf_slSig = %6.3f,  btageff_sf_slSig = %6.3f,  prod = %6.3f\n", mbi, hbi, bbi, bin_eff_sf_slSig, btageff_sf_slSig, prod_slSig ) ;
@@ -2320,54 +2745,70 @@
                  if ( bbi==0 ) hnp_eff_sf_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_eff_sf_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_eff_sf_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_eff_sf_4b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==0 ) hnp_eff_sf_1b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_eff_sf_2b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_eff_sf_3b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_eff_sf_4b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==0 ) hnp_btageff_sf_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_btageff_sf_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_btageff_sf_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_btageff_sf_4b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==0 ) hnp_eff_btageff_sf_prod_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_eff_btageff_sf_prod_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_eff_btageff_sf_prod_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_eff_btageff_sf_prod_4b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
 
                  if ( bbi==0 ) hnp_eff_sf_slSig_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_eff_sf_slSig_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_eff_sf_slSig_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_eff_sf_slSig_4b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==0 ) hnp_eff_sf_slSig_1b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_eff_sf_slSig_2b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_eff_sf_slSig_3b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_eff_sf_slSig_4b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==0 ) hnp_btageff_sf_slSig_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_btageff_sf_slSig_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_btageff_sf_slSig_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_btageff_sf_slSig_4b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==0 ) hnp_eff_btageff_sf_slSig_prod_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_eff_btageff_sf_slSig_prod_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_eff_btageff_sf_slSig_prod_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_eff_btageff_sf_slSig_prod_4b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
 
                  if ( bbi==0 ) hnp_eff_sf_sl_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_eff_sf_sl_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_eff_sf_sl_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_eff_sf_sl_4b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==0 ) hnp_eff_sf_sl_1b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_eff_sf_sl_2b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_eff_sf_sl_3b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_eff_sf_sl_4b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==0 ) hnp_btageff_sf_sl_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_btageff_sf_sl_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_btageff_sf_sl_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_btageff_sf_sl_4b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==0 ) hnp_eff_btageff_sf_sl_prod_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_eff_btageff_sf_sl_prod_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_eff_btageff_sf_sl_prod_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_eff_btageff_sf_sl_prod_4b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
 
                  if ( bbi==0 ) hnp_eff_sf_ldp_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_eff_sf_ldp_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_eff_sf_ldp_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_eff_sf_ldp_4b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==0 ) hnp_eff_sf_ldp_1b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_eff_sf_ldp_2b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_eff_sf_ldp_3b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_eff_sf_ldp_4b_pull-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==0 ) hnp_btageff_sf_ldp_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_btageff_sf_ldp_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_btageff_sf_ldp_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_btageff_sf_ldp_4b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==0 ) hnp_eff_btageff_sf_ldp_prod_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_eff_btageff_sf_ldp_prod_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_eff_btageff_sf_ldp_prod_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
+                 if ( bbi==3 ) hnp_eff_btageff_sf_ldp_prod_4b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
 
               }
            } // hbi
@@ -2375,332 +2816,540 @@
 
         hnp_eff_sf_1b_val->SetLabelSize(0.055,"x") ;
         hnp_eff_sf_1b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_sf_2b_val->SetLabelSize(0.055,"x") ;
-        hnp_eff_sf_2b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_sf_3b_val->SetLabelSize(0.055,"x") ;
-        hnp_eff_sf_3b_val->GetXaxis()->LabelsOption("v") ;
         hnp_eff_sf_1b_pull->SetLabelSize(0.055,"x") ;
         hnp_eff_sf_1b_pull->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_sf_2b_pull->SetLabelSize(0.055,"x") ;
-        hnp_eff_sf_2b_pull->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_sf_3b_pull->SetLabelSize(0.055,"x") ;
-        hnp_eff_sf_3b_pull->GetXaxis()->LabelsOption("v") ;
         hnp_btageff_sf_1b_val->SetLabelSize(0.055,"x") ;
         hnp_btageff_sf_1b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_btageff_sf_2b_val->SetLabelSize(0.055,"x") ;
-        hnp_btageff_sf_2b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_btageff_sf_3b_val->SetLabelSize(0.055,"x") ;
-        hnp_btageff_sf_3b_val->GetXaxis()->LabelsOption("v") ;
         hnp_eff_btageff_sf_prod_1b_val->SetLabelSize(0.055,"x") ;
         hnp_eff_btageff_sf_prod_1b_val->GetXaxis()->LabelsOption("v") ;
+
+        hnp_eff_sf_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_2b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_2b_pull->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_2b_pull->GetXaxis()->LabelsOption("v") ;
+        hnp_btageff_sf_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_btageff_sf_2b_val->GetXaxis()->LabelsOption("v") ;
         hnp_eff_btageff_sf_prod_2b_val->SetLabelSize(0.055,"x") ;
         hnp_eff_btageff_sf_prod_2b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_btageff_sf_prod_3b_val->SetLabelSize(0.055,"x") ;
-        hnp_eff_btageff_sf_prod_3b_val->GetXaxis()->LabelsOption("v") ;
+
+	if ( nBinsBtag > 2 ) {
+
+	  hnp_eff_sf_3b_val->SetLabelSize(0.055,"x") ;
+	  hnp_eff_sf_3b_val->GetXaxis()->LabelsOption("v") ;
+	  hnp_eff_sf_3b_pull->SetLabelSize(0.055,"x") ;
+	  hnp_eff_sf_3b_pull->GetXaxis()->LabelsOption("v") ;
+	  hnp_btageff_sf_3b_val->SetLabelSize(0.055,"x") ;
+	  hnp_btageff_sf_3b_val->GetXaxis()->LabelsOption("v") ;
+	  hnp_eff_btageff_sf_prod_3b_val->SetLabelSize(0.055,"x") ;
+	  hnp_eff_btageff_sf_prod_3b_val->GetXaxis()->LabelsOption("v") ;
+	  
+	  if ( nBinsBtag > 3 ) {
+	    
+	    hnp_eff_sf_4b_val->SetLabelSize(0.055,"x") ;
+	    hnp_eff_sf_4b_val->GetXaxis()->LabelsOption("v") ;
+	    hnp_eff_sf_4b_pull->SetLabelSize(0.055,"x") ;
+	    hnp_eff_sf_4b_pull->GetXaxis()->LabelsOption("v") ;
+	    hnp_btageff_sf_4b_val->SetLabelSize(0.055,"x") ;
+	    hnp_btageff_sf_4b_val->GetXaxis()->LabelsOption("v") ;
+	    hnp_eff_btageff_sf_prod_4b_val->SetLabelSize(0.055,"x") ;
+	    hnp_eff_btageff_sf_prod_4b_val->GetXaxis()->LabelsOption("v") ;
+
+	  }
+	}
+
 
         hnp_eff_sf_slSig_1b_val->SetLabelSize(0.055,"x") ;
         hnp_eff_sf_slSig_1b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_sf_slSig_2b_val->SetLabelSize(0.055,"x") ;
-        hnp_eff_sf_slSig_2b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_sf_slSig_3b_val->SetLabelSize(0.055,"x") ;
-        hnp_eff_sf_slSig_3b_val->GetXaxis()->LabelsOption("v") ;
         hnp_eff_sf_slSig_1b_pull->SetLabelSize(0.055,"x") ;
         hnp_eff_sf_slSig_1b_pull->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_sf_slSig_2b_pull->SetLabelSize(0.055,"x") ;
-        hnp_eff_sf_slSig_2b_pull->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_sf_slSig_3b_pull->SetLabelSize(0.055,"x") ;
-        hnp_eff_sf_slSig_3b_pull->GetXaxis()->LabelsOption("v") ;
         hnp_btageff_sf_slSig_1b_val->SetLabelSize(0.055,"x") ;
         hnp_btageff_sf_slSig_1b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_btageff_sf_slSig_2b_val->SetLabelSize(0.055,"x") ;
-        hnp_btageff_sf_slSig_2b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_btageff_sf_slSig_3b_val->SetLabelSize(0.055,"x") ;
-        hnp_btageff_sf_slSig_3b_val->GetXaxis()->LabelsOption("v") ;
         hnp_eff_btageff_sf_slSig_prod_1b_val->SetLabelSize(0.055,"x") ;
         hnp_eff_btageff_sf_slSig_prod_1b_val->GetXaxis()->LabelsOption("v") ;
+
+        hnp_eff_sf_slSig_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_slSig_2b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_slSig_2b_pull->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_slSig_2b_pull->GetXaxis()->LabelsOption("v") ;
+        hnp_btageff_sf_slSig_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_btageff_sf_slSig_2b_val->GetXaxis()->LabelsOption("v") ;
         hnp_eff_btageff_sf_slSig_prod_2b_val->SetLabelSize(0.055,"x") ;
         hnp_eff_btageff_sf_slSig_prod_2b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_btageff_sf_slSig_prod_3b_val->SetLabelSize(0.055,"x") ;
-        hnp_eff_btageff_sf_slSig_prod_3b_val->GetXaxis()->LabelsOption("v") ;
+
+	if ( nBinsBtag > 2 ) {
+
+	  hnp_eff_sf_slSig_3b_val->SetLabelSize(0.055,"x") ;
+	  hnp_eff_sf_slSig_3b_val->GetXaxis()->LabelsOption("v") ;
+	  hnp_eff_sf_slSig_3b_pull->SetLabelSize(0.055,"x") ;
+	  hnp_eff_sf_slSig_3b_pull->GetXaxis()->LabelsOption("v") ;
+	  hnp_btageff_sf_slSig_3b_val->SetLabelSize(0.055,"x") ;
+	  hnp_btageff_sf_slSig_3b_val->GetXaxis()->LabelsOption("v") ;
+	  hnp_eff_btageff_sf_slSig_prod_3b_val->SetLabelSize(0.055,"x") ;
+	  hnp_eff_btageff_sf_slSig_prod_3b_val->GetXaxis()->LabelsOption("v") ;
+	  
+	  if ( nBinsBtag > 3 ) {
+	    
+	    hnp_eff_sf_slSig_4b_val->SetLabelSize(0.055,"x") ;
+	    hnp_eff_sf_slSig_4b_val->GetXaxis()->LabelsOption("v") ;
+	    hnp_eff_sf_slSig_4b_pull->SetLabelSize(0.055,"x") ;
+	    hnp_eff_sf_slSig_4b_pull->GetXaxis()->LabelsOption("v") ;
+	    hnp_btageff_sf_slSig_4b_val->SetLabelSize(0.055,"x") ;
+	    hnp_btageff_sf_slSig_4b_val->GetXaxis()->LabelsOption("v") ;
+	    hnp_eff_btageff_sf_slSig_prod_4b_val->SetLabelSize(0.055,"x") ;
+	    hnp_eff_btageff_sf_slSig_prod_4b_val->GetXaxis()->LabelsOption("v") ;
+	    
+	  }
+	}
+
 
         hnp_eff_sf_sl_1b_val->SetLabelSize(0.055,"x") ;
         hnp_eff_sf_sl_1b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_sf_sl_2b_val->SetLabelSize(0.055,"x") ;
-        hnp_eff_sf_sl_2b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_sf_sl_3b_val->SetLabelSize(0.055,"x") ;
-        hnp_eff_sf_sl_3b_val->GetXaxis()->LabelsOption("v") ;
         hnp_eff_sf_sl_1b_pull->SetLabelSize(0.055,"x") ;
         hnp_eff_sf_sl_1b_pull->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_sf_sl_2b_pull->SetLabelSize(0.055,"x") ;
-        hnp_eff_sf_sl_2b_pull->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_sf_sl_3b_pull->SetLabelSize(0.055,"x") ;
-        hnp_eff_sf_sl_3b_pull->GetXaxis()->LabelsOption("v") ;
         hnp_btageff_sf_sl_1b_val->SetLabelSize(0.055,"x") ;
         hnp_btageff_sf_sl_1b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_btageff_sf_sl_2b_val->SetLabelSize(0.055,"x") ;
-        hnp_btageff_sf_sl_2b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_btageff_sf_sl_3b_val->SetLabelSize(0.055,"x") ;
-        hnp_btageff_sf_sl_3b_val->GetXaxis()->LabelsOption("v") ;
         hnp_eff_btageff_sf_sl_prod_1b_val->SetLabelSize(0.055,"x") ;
         hnp_eff_btageff_sf_sl_prod_1b_val->GetXaxis()->LabelsOption("v") ;
+
+        hnp_eff_sf_sl_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_sl_2b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_sl_2b_pull->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_sl_2b_pull->GetXaxis()->LabelsOption("v") ;
+        hnp_btageff_sf_sl_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_btageff_sf_sl_2b_val->GetXaxis()->LabelsOption("v") ;
         hnp_eff_btageff_sf_sl_prod_2b_val->SetLabelSize(0.055,"x") ;
         hnp_eff_btageff_sf_sl_prod_2b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_btageff_sf_sl_prod_3b_val->SetLabelSize(0.055,"x") ;
-        hnp_eff_btageff_sf_sl_prod_3b_val->GetXaxis()->LabelsOption("v") ;
+
+	if ( nBinsBtag > 2 ) {
+
+	  hnp_eff_sf_sl_3b_val->SetLabelSize(0.055,"x") ;
+	  hnp_eff_sf_sl_3b_val->GetXaxis()->LabelsOption("v") ;
+	  hnp_eff_sf_sl_3b_pull->SetLabelSize(0.055,"x") ;
+	  hnp_eff_sf_sl_3b_pull->GetXaxis()->LabelsOption("v") ;
+	  hnp_btageff_sf_sl_3b_val->SetLabelSize(0.055,"x") ;
+	  hnp_btageff_sf_sl_3b_val->GetXaxis()->LabelsOption("v") ;
+	  hnp_eff_btageff_sf_sl_prod_3b_val->SetLabelSize(0.055,"x") ;
+	  hnp_eff_btageff_sf_sl_prod_3b_val->GetXaxis()->LabelsOption("v") ;
+	  
+	  if ( nBinsBtag > 3 ) {
+	    
+	    hnp_eff_sf_sl_4b_val->SetLabelSize(0.055,"x") ;
+	    hnp_eff_sf_sl_4b_val->GetXaxis()->LabelsOption("v") ;
+	    hnp_eff_sf_sl_4b_pull->SetLabelSize(0.055,"x") ;
+	    hnp_eff_sf_sl_4b_pull->GetXaxis()->LabelsOption("v") ;
+	    hnp_btageff_sf_sl_4b_val->SetLabelSize(0.055,"x") ;
+	    hnp_btageff_sf_sl_4b_val->GetXaxis()->LabelsOption("v") ;
+	    hnp_eff_btageff_sf_sl_prod_4b_val->SetLabelSize(0.055,"x") ;
+	    hnp_eff_btageff_sf_sl_prod_4b_val->GetXaxis()->LabelsOption("v") ;
+	    
+	  }
+	}
+
 
         hnp_eff_sf_ldp_1b_val->SetLabelSize(0.055,"x") ;
         hnp_eff_sf_ldp_1b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_sf_ldp_2b_val->SetLabelSize(0.055,"x") ;
-        hnp_eff_sf_ldp_2b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_sf_ldp_3b_val->SetLabelSize(0.055,"x") ;
-        hnp_eff_sf_ldp_3b_val->GetXaxis()->LabelsOption("v") ;
         hnp_eff_sf_ldp_1b_pull->SetLabelSize(0.055,"x") ;
         hnp_eff_sf_ldp_1b_pull->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_sf_ldp_2b_pull->SetLabelSize(0.055,"x") ;
-        hnp_eff_sf_ldp_2b_pull->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_sf_ldp_3b_pull->SetLabelSize(0.055,"x") ;
-        hnp_eff_sf_ldp_3b_pull->GetXaxis()->LabelsOption("v") ;
         hnp_btageff_sf_ldp_1b_val->SetLabelSize(0.055,"x") ;
         hnp_btageff_sf_ldp_1b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_btageff_sf_ldp_2b_val->SetLabelSize(0.055,"x") ;
-        hnp_btageff_sf_ldp_2b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_btageff_sf_ldp_3b_val->SetLabelSize(0.055,"x") ;
-        hnp_btageff_sf_ldp_3b_val->GetXaxis()->LabelsOption("v") ;
         hnp_eff_btageff_sf_ldp_prod_1b_val->SetLabelSize(0.055,"x") ;
         hnp_eff_btageff_sf_ldp_prod_1b_val->GetXaxis()->LabelsOption("v") ;
+
+        hnp_eff_sf_ldp_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_ldp_2b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_eff_sf_ldp_2b_pull->SetLabelSize(0.055,"x") ;
+        hnp_eff_sf_ldp_2b_pull->GetXaxis()->LabelsOption("v") ;
+        hnp_btageff_sf_ldp_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_btageff_sf_ldp_2b_val->GetXaxis()->LabelsOption("v") ;
         hnp_eff_btageff_sf_ldp_prod_2b_val->SetLabelSize(0.055,"x") ;
         hnp_eff_btageff_sf_ldp_prod_2b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_eff_btageff_sf_ldp_prod_3b_val->SetLabelSize(0.055,"x") ;
-        hnp_eff_btageff_sf_ldp_prod_3b_val->GetXaxis()->LabelsOption("v") ;
 
-        hnp_eff_sf_1b_val->SetFillColor(kOrange+1) ;
-        hnp_eff_sf_2b_val->SetFillColor(kOrange+1) ;
-        hnp_eff_sf_3b_val->SetFillColor(kOrange+1) ;
-        hnp_eff_sf_1b_pull->SetFillColor(kOrange+1) ;
-        hnp_eff_sf_2b_pull->SetFillColor(kOrange+1) ;
-        hnp_eff_sf_3b_pull->SetFillColor(kOrange+1) ;
+	if ( nBinsBtag > 2 ) {
+
+	  hnp_eff_sf_ldp_3b_val->SetLabelSize(0.055,"x") ;
+	  hnp_eff_sf_ldp_3b_val->GetXaxis()->LabelsOption("v") ;
+	  hnp_eff_sf_ldp_3b_pull->SetLabelSize(0.055,"x") ;
+	  hnp_eff_sf_ldp_3b_pull->GetXaxis()->LabelsOption("v") ;
+	  hnp_btageff_sf_ldp_3b_val->SetLabelSize(0.055,"x") ;
+	  hnp_btageff_sf_ldp_3b_val->GetXaxis()->LabelsOption("v") ;
+	  hnp_eff_btageff_sf_ldp_prod_3b_val->SetLabelSize(0.055,"x") ;
+	  hnp_eff_btageff_sf_ldp_prod_3b_val->GetXaxis()->LabelsOption("v") ;
+	  
+	  if ( nBinsBtag > 3 ) {
+	    
+	    hnp_eff_sf_ldp_4b_val->SetLabelSize(0.055,"x") ;
+	    hnp_eff_sf_ldp_4b_val->GetXaxis()->LabelsOption("v") ;
+	    hnp_eff_sf_ldp_4b_pull->SetLabelSize(0.055,"x") ;
+	    hnp_eff_sf_ldp_4b_pull->GetXaxis()->LabelsOption("v") ;
+	    hnp_btageff_sf_ldp_4b_val->SetLabelSize(0.055,"x") ;
+	    hnp_btageff_sf_ldp_4b_val->GetXaxis()->LabelsOption("v") ;
+	    hnp_eff_btageff_sf_ldp_prod_4b_val->SetLabelSize(0.055,"x") ;
+	    hnp_eff_btageff_sf_ldp_prod_4b_val->GetXaxis()->LabelsOption("v") ;
+	    
+	  }
+	}
+
+
+        hnp_eff_sf_1b_val->SetFillColor(kOrange+1) ;        
+	hnp_eff_sf_1b_pull->SetFillColor(kOrange+1) ;
         hnp_btageff_sf_1b_val->SetFillColor(kOrange+1) ;
-        hnp_btageff_sf_2b_val->SetFillColor(kOrange+1) ;
-        hnp_btageff_sf_3b_val->SetFillColor(kOrange+1) ;
         hnp_eff_btageff_sf_prod_1b_val->SetFillColor(kOrange+1) ;
+
+        hnp_eff_sf_2b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_2b_pull->SetFillColor(kOrange+1) ;
+        hnp_btageff_sf_2b_val->SetFillColor(kOrange+1) ;
         hnp_eff_btageff_sf_prod_2b_val->SetFillColor(kOrange+1) ;
-        hnp_eff_btageff_sf_prod_3b_val->SetFillColor(kOrange+1) ;
+
+	if ( nBinsBtag > 2 ) {
+
+	  hnp_eff_sf_3b_val->SetFillColor(kOrange+1) ;
+	  hnp_eff_sf_3b_pull->SetFillColor(kOrange+1) ;
+	  hnp_btageff_sf_3b_val->SetFillColor(kOrange+1) ;
+	  hnp_eff_btageff_sf_prod_3b_val->SetFillColor(kOrange+1) ;
+	  
+	  if ( nBinsBtag > 3 ) {
+	    
+	    hnp_eff_sf_4b_val->SetFillColor(kOrange+1) ;
+	    hnp_eff_sf_4b_pull->SetFillColor(kOrange+1) ;
+	    hnp_btageff_sf_4b_val->SetFillColor(kOrange+1) ;
+	    hnp_eff_btageff_sf_prod_4b_val->SetFillColor(kOrange+1) ;
+
+	  }
+	}
+
 
         hnp_eff_sf_slSig_1b_val->SetFillColor(kOrange+1) ;
-        hnp_eff_sf_slSig_2b_val->SetFillColor(kOrange+1) ;
-        hnp_eff_sf_slSig_3b_val->SetFillColor(kOrange+1) ;
         hnp_eff_sf_slSig_1b_pull->SetFillColor(kOrange+1) ;
-        hnp_eff_sf_slSig_2b_pull->SetFillColor(kOrange+1) ;
-        hnp_eff_sf_slSig_3b_pull->SetFillColor(kOrange+1) ;
         hnp_btageff_sf_slSig_1b_val->SetFillColor(kOrange+1) ;
-        hnp_btageff_sf_slSig_2b_val->SetFillColor(kOrange+1) ;
-        hnp_btageff_sf_slSig_3b_val->SetFillColor(kOrange+1) ;
         hnp_eff_btageff_sf_slSig_prod_1b_val->SetFillColor(kOrange+1) ;
+
+        hnp_eff_sf_slSig_2b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_slSig_2b_pull->SetFillColor(kOrange+1) ;
+        hnp_btageff_sf_slSig_2b_val->SetFillColor(kOrange+1) ;
         hnp_eff_btageff_sf_slSig_prod_2b_val->SetFillColor(kOrange+1) ;
-        hnp_eff_btageff_sf_slSig_prod_3b_val->SetFillColor(kOrange+1) ;
+
+	if ( nBinsBtag > 2 ) {
+
+	  hnp_eff_sf_slSig_3b_val->SetFillColor(kOrange+1) ;
+	  hnp_eff_sf_slSig_3b_pull->SetFillColor(kOrange+1) ;
+	  hnp_btageff_sf_slSig_3b_val->SetFillColor(kOrange+1) ;
+	  hnp_eff_btageff_sf_slSig_prod_3b_val->SetFillColor(kOrange+1) ;
+	  
+	  if ( nBinsBtag > 3 ) {
+	    
+	    hnp_eff_sf_slSig_4b_val->SetFillColor(kOrange+1) ;
+	    hnp_eff_sf_slSig_4b_pull->SetFillColor(kOrange+1) ;
+	    hnp_btageff_sf_slSig_4b_val->SetFillColor(kOrange+1) ;
+	    hnp_eff_btageff_sf_slSig_prod_4b_val->SetFillColor(kOrange+1) ;
+	    
+	  }
+	}
+
 
         hnp_eff_sf_sl_1b_val->SetFillColor(kOrange+1) ;
-        hnp_eff_sf_sl_2b_val->SetFillColor(kOrange+1) ;
-        hnp_eff_sf_sl_3b_val->SetFillColor(kOrange+1) ;
         hnp_eff_sf_sl_1b_pull->SetFillColor(kOrange+1) ;
-        hnp_eff_sf_sl_2b_pull->SetFillColor(kOrange+1) ;
-        hnp_eff_sf_sl_3b_pull->SetFillColor(kOrange+1) ;
         hnp_btageff_sf_sl_1b_val->SetFillColor(kOrange+1) ;
-        hnp_btageff_sf_sl_2b_val->SetFillColor(kOrange+1) ;
-        hnp_btageff_sf_sl_3b_val->SetFillColor(kOrange+1) ;
         hnp_eff_btageff_sf_sl_prod_1b_val->SetFillColor(kOrange+1) ;
+
+        hnp_eff_sf_sl_2b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_sl_2b_pull->SetFillColor(kOrange+1) ;
+        hnp_btageff_sf_sl_2b_val->SetFillColor(kOrange+1) ;
         hnp_eff_btageff_sf_sl_prod_2b_val->SetFillColor(kOrange+1) ;
-        hnp_eff_btageff_sf_sl_prod_3b_val->SetFillColor(kOrange+1) ;
+
+	if ( nBinsBtag > 2 ) {
+
+	  hnp_eff_sf_sl_3b_val->SetFillColor(kOrange+1) ;
+	  hnp_eff_sf_sl_3b_pull->SetFillColor(kOrange+1) ;
+	  hnp_btageff_sf_sl_3b_val->SetFillColor(kOrange+1) ;
+	  hnp_eff_btageff_sf_sl_prod_3b_val->SetFillColor(kOrange+1) ;
+	  
+	  if ( nBinsBtag > 3 ) {
+	    
+	    hnp_eff_sf_sl_4b_val->SetFillColor(kOrange+1) ;
+	    hnp_eff_sf_sl_4b_pull->SetFillColor(kOrange+1) ;
+	    hnp_btageff_sf_sl_4b_val->SetFillColor(kOrange+1) ;
+	    hnp_eff_btageff_sf_sl_prod_4b_val->SetFillColor(kOrange+1) ;
+	    
+	  }
+	}
+
 
         hnp_eff_sf_ldp_1b_val->SetFillColor(kOrange+1) ;
-        hnp_eff_sf_ldp_2b_val->SetFillColor(kOrange+1) ;
-        hnp_eff_sf_ldp_3b_val->SetFillColor(kOrange+1) ;
         hnp_eff_sf_ldp_1b_pull->SetFillColor(kOrange+1) ;
-        hnp_eff_sf_ldp_2b_pull->SetFillColor(kOrange+1) ;
-        hnp_eff_sf_ldp_3b_pull->SetFillColor(kOrange+1) ;
         hnp_btageff_sf_ldp_1b_val->SetFillColor(kOrange+1) ;
-        hnp_btageff_sf_ldp_2b_val->SetFillColor(kOrange+1) ;
-        hnp_btageff_sf_ldp_3b_val->SetFillColor(kOrange+1) ;
         hnp_eff_btageff_sf_ldp_prod_1b_val->SetFillColor(kOrange+1) ;
+
+        hnp_eff_sf_ldp_2b_val->SetFillColor(kOrange+1) ;
+        hnp_eff_sf_ldp_2b_pull->SetFillColor(kOrange+1) ;
+        hnp_btageff_sf_ldp_2b_val->SetFillColor(kOrange+1) ;
         hnp_eff_btageff_sf_ldp_prod_2b_val->SetFillColor(kOrange+1) ;
-        hnp_eff_btageff_sf_ldp_prod_3b_val->SetFillColor(kOrange+1) ;
+
+	if ( nBinsBtag > 2 ) {
+
+	  hnp_eff_sf_ldp_3b_val->SetFillColor(kOrange+1) ;
+	  hnp_eff_sf_ldp_3b_pull->SetFillColor(kOrange+1) ;
+	  hnp_btageff_sf_ldp_3b_val->SetFillColor(kOrange+1) ;
+	  hnp_eff_btageff_sf_ldp_prod_3b_val->SetFillColor(kOrange+1) ;
+	  
+	  if ( nBinsBtag > 3 ) {
+	    
+	    hnp_eff_sf_ldp_4b_val->SetFillColor(kOrange+1) ;
+	    hnp_eff_sf_ldp_4b_pull->SetFillColor(kOrange+1) ;
+	    hnp_btageff_sf_ldp_4b_val->SetFillColor(kOrange+1) ;
+	    hnp_eff_btageff_sf_ldp_prod_4b_val->SetFillColor(kOrange+1) ;
+	    
+	  }
+	}
 
 
         hnp_ttwj_1b_val->SetFillColor(kBlue-9) ;
-        hnp_ttwj_2b_val->SetFillColor(kBlue-9) ;
-        hnp_ttwj_3b_val->SetFillColor(kBlue-9) ;
-
         hnp_ttwj_1b_pull->SetFillColor(kBlue-9) ;
-        hnp_ttwj_2b_pull->SetFillColor(kBlue-9) ;
-        hnp_ttwj_3b_pull->SetFillColor(kBlue-9) ;
-
         hnp_qcd_1b_val->SetFillColor(2) ;
-        hnp_qcd_2b_val->SetFillColor(2) ;
-        hnp_qcd_3b_val->SetFillColor(2) ;
-
         hnp_qcd_1b_pull->SetFillColor(2) ;
-        hnp_qcd_2b_pull->SetFillColor(2) ;
-        hnp_qcd_3b_pull->SetFillColor(2) ;
-
-
         hnp_ttwj_1b_val->SetMaximum(5.) ;
-        hnp_ttwj_2b_val->SetMaximum(5.) ;
-        hnp_ttwj_3b_val->SetMaximum(5.) ;
-        hnp_qcd_1b_val->SetMaximum(5.) ;
-        hnp_qcd_2b_val->SetMaximum(5.) ;
-        hnp_qcd_3b_val->SetMaximum(5.) ;
-
         hnp_ttwj_1b_pull->SetMinimum(-2.) ;
-        hnp_ttwj_2b_pull->SetMinimum(-2.) ;
-        hnp_ttwj_3b_pull->SetMinimum(-2.) ;
+        hnp_qcd_1b_val->SetMaximum(5.) ;
         hnp_qcd_1b_pull->SetMinimum(-2.) ;
-        hnp_qcd_2b_pull->SetMinimum(-2.) ;
-        hnp_qcd_3b_pull->SetMinimum(-2.) ;
-
         hnp_ttwj_1b_pull->SetMaximum(2.) ;
-        hnp_ttwj_2b_pull->SetMaximum(2.) ;
-        hnp_ttwj_3b_pull->SetMaximum(2.) ;
         hnp_qcd_1b_pull->SetMaximum(2.) ;
+
+        hnp_ttwj_2b_val->SetFillColor(kBlue-9) ;
+        hnp_ttwj_2b_pull->SetFillColor(kBlue-9) ;
+        hnp_qcd_2b_val->SetFillColor(2) ;
+        hnp_qcd_2b_pull->SetFillColor(2) ;
+        hnp_ttwj_2b_val->SetMaximum(5.) ;
+        hnp_qcd_2b_val->SetMaximum(5.) ;
+        hnp_ttwj_2b_pull->SetMinimum(-2.) ;
+        hnp_qcd_2b_pull->SetMinimum(-2.) ;
+        hnp_ttwj_2b_pull->SetMaximum(2.) ;
         hnp_qcd_2b_pull->SetMaximum(2.) ;
-        hnp_qcd_3b_pull->SetMaximum(2.) ;
+
+	if ( nBinsBtag > 2 ) {
+
+	  hnp_ttwj_3b_val->SetFillColor(kBlue-9) ;
+	  hnp_ttwj_3b_pull->SetFillColor(kBlue-9) ;
+	  hnp_qcd_3b_val->SetFillColor(2) ;
+	  hnp_qcd_3b_pull->SetFillColor(2) ;
+	  hnp_ttwj_3b_val->SetMaximum(5.) ;
+	  hnp_qcd_3b_val->SetMaximum(5.) ;
+	  hnp_ttwj_3b_pull->SetMinimum(-2.) ;
+	  hnp_qcd_3b_pull->SetMinimum(-2.) ;
+	  hnp_ttwj_3b_pull->SetMaximum(2.) ;
+	  hnp_qcd_3b_pull->SetMaximum(2.) ;
+	  
+	  if ( nBinsBtag > 3 ) {
+	    
+	    hnp_ttwj_4b_val->SetFillColor(kBlue-9) ;
+	    hnp_ttwj_4b_pull->SetFillColor(kBlue-9) ;
+	    hnp_qcd_4b_val->SetFillColor(2) ;
+	    hnp_qcd_4b_pull->SetFillColor(2) ;
+	    hnp_ttwj_4b_val->SetMaximum(5.) ;
+	    hnp_qcd_4b_val->SetMaximum(5.) ;
+	    hnp_ttwj_4b_pull->SetMinimum(-2.) ;
+	    hnp_qcd_4b_pull->SetMinimum(-2.) ;
+	    hnp_ttwj_4b_pull->SetMaximum(2.) ;
+	    hnp_qcd_4b_pull->SetMaximum(2.) ;
+	    
+	  }
+	}
+
 
         hnp_eff_sf_1b_val -> SetMinimum(-0.2) ;
-        hnp_eff_sf_2b_val -> SetMinimum(-0.2) ;
-        hnp_eff_sf_3b_val -> SetMinimum(-0.2) ;
         hnp_btageff_sf_1b_val -> SetMinimum(-0.2) ;
-        hnp_btageff_sf_2b_val -> SetMinimum(-0.2) ;
-        hnp_btageff_sf_3b_val -> SetMinimum(-0.2) ;
         hnp_eff_btageff_sf_prod_1b_val -> SetMinimum(-0.2) ;
-        hnp_eff_btageff_sf_prod_2b_val -> SetMinimum(-0.2) ;
-        hnp_eff_btageff_sf_prod_3b_val -> SetMinimum(-0.2) ;
-
         hnp_eff_sf_slSig_1b_val -> SetMinimum(-0.2) ;
-        hnp_eff_sf_slSig_2b_val -> SetMinimum(-0.2) ;
-        hnp_eff_sf_slSig_3b_val -> SetMinimum(-0.2) ;
         hnp_btageff_sf_slSig_1b_val -> SetMinimum(-0.2) ;
-        hnp_btageff_sf_slSig_2b_val -> SetMinimum(-0.2) ;
-        hnp_btageff_sf_slSig_3b_val -> SetMinimum(-0.2) ;
         hnp_eff_btageff_sf_slSig_prod_1b_val -> SetMinimum(-0.2) ;
-        hnp_eff_btageff_sf_slSig_prod_2b_val -> SetMinimum(-0.2) ;
-        hnp_eff_btageff_sf_slSig_prod_3b_val -> SetMinimum(-0.2) ;
-
         hnp_eff_sf_sl_1b_val -> SetMinimum(-0.2) ;
-        hnp_eff_sf_sl_2b_val -> SetMinimum(-0.2) ;
-        hnp_eff_sf_sl_3b_val -> SetMinimum(-0.2) ;
         hnp_btageff_sf_sl_1b_val -> SetMinimum(-0.2) ;
-        hnp_btageff_sf_sl_2b_val -> SetMinimum(-0.2) ;
-        hnp_btageff_sf_sl_3b_val -> SetMinimum(-0.2) ;
         hnp_eff_btageff_sf_sl_prod_1b_val -> SetMinimum(-0.2) ;
-        hnp_eff_btageff_sf_sl_prod_2b_val -> SetMinimum(-0.2) ;
-        hnp_eff_btageff_sf_sl_prod_3b_val -> SetMinimum(-0.2) ;
-
         hnp_eff_sf_ldp_1b_val -> SetMinimum(-0.2) ;
-        hnp_eff_sf_ldp_2b_val -> SetMinimum(-0.2) ;
-        hnp_eff_sf_ldp_3b_val -> SetMinimum(-0.2) ;
         hnp_btageff_sf_ldp_1b_val -> SetMinimum(-0.2) ;
-        hnp_btageff_sf_ldp_2b_val -> SetMinimum(-0.2) ;
-        hnp_btageff_sf_ldp_3b_val -> SetMinimum(-0.2) ;
         hnp_eff_btageff_sf_ldp_prod_1b_val -> SetMinimum(-0.2) ;
-        hnp_eff_btageff_sf_ldp_prod_2b_val -> SetMinimum(-0.2) ;
-        hnp_eff_btageff_sf_ldp_prod_3b_val -> SetMinimum(-0.2) ;
-
         hnp_eff_sf_1b_val -> SetMaximum(2.0) ;
-        hnp_eff_sf_2b_val -> SetMaximum(2.0) ;
-        hnp_eff_sf_3b_val -> SetMaximum(2.0) ;
         hnp_btageff_sf_1b_val -> SetMaximum(2.0) ;
-        hnp_btageff_sf_2b_val -> SetMaximum(2.0) ;
-        hnp_btageff_sf_3b_val -> SetMaximum(2.0) ;
         hnp_eff_btageff_sf_prod_1b_val -> SetMaximum(2.0) ;
-        hnp_eff_btageff_sf_prod_2b_val -> SetMaximum(2.0) ;
-        hnp_eff_btageff_sf_prod_3b_val -> SetMaximum(2.0) ;
-
         hnp_eff_sf_slSig_1b_val -> SetMaximum(2.0) ;
-        hnp_eff_sf_slSig_2b_val -> SetMaximum(2.0) ;
-        hnp_eff_sf_slSig_3b_val -> SetMaximum(2.0) ;
         hnp_btageff_sf_slSig_1b_val -> SetMaximum(2.0) ;
-        hnp_btageff_sf_slSig_2b_val -> SetMaximum(2.0) ;
-        hnp_btageff_sf_slSig_3b_val -> SetMaximum(2.0) ;
         hnp_eff_btageff_sf_slSig_prod_1b_val -> SetMaximum(2.0) ;
+
+
+        hnp_eff_sf_2b_val -> SetMinimum(-0.2) ;
+        hnp_btageff_sf_2b_val -> SetMinimum(-0.2) ;
+        hnp_eff_btageff_sf_prod_2b_val -> SetMinimum(-0.2) ;
+        hnp_eff_sf_slSig_2b_val -> SetMinimum(-0.2) ;
+        hnp_btageff_sf_slSig_2b_val -> SetMinimum(-0.2) ;
+        hnp_eff_btageff_sf_slSig_prod_2b_val -> SetMinimum(-0.2) ;
+        hnp_eff_sf_sl_2b_val -> SetMinimum(-0.2) ;
+        hnp_btageff_sf_sl_2b_val -> SetMinimum(-0.2) ;
+        hnp_eff_btageff_sf_sl_prod_2b_val -> SetMinimum(-0.2) ;
+        hnp_eff_sf_ldp_2b_val -> SetMinimum(-0.2) ;
+        hnp_btageff_sf_ldp_2b_val -> SetMinimum(-0.2) ;
+        hnp_eff_btageff_sf_ldp_prod_2b_val -> SetMinimum(-0.2) ;
+        hnp_eff_sf_2b_val -> SetMaximum(2.0) ;
+        hnp_btageff_sf_2b_val -> SetMaximum(2.0) ;
+        hnp_eff_btageff_sf_prod_2b_val -> SetMaximum(2.0) ;
+        hnp_eff_sf_slSig_2b_val -> SetMaximum(2.0) ;
+        hnp_btageff_sf_slSig_2b_val -> SetMaximum(2.0) ;
         hnp_eff_btageff_sf_slSig_prod_2b_val -> SetMaximum(2.0) ;
-        hnp_eff_btageff_sf_slSig_prod_3b_val -> SetMaximum(2.0) ;
+
+	if ( nBinsBtag > 2 ) {
+
+	  hnp_eff_sf_3b_val -> SetMinimum(-0.2) ;
+	  hnp_btageff_sf_3b_val -> SetMinimum(-0.2) ;
+	  hnp_eff_btageff_sf_prod_3b_val -> SetMinimum(-0.2) ;
+	  hnp_eff_sf_slSig_3b_val -> SetMinimum(-0.2) ;
+	  hnp_btageff_sf_slSig_3b_val -> SetMinimum(-0.2) ;
+	  hnp_eff_btageff_sf_slSig_prod_3b_val -> SetMinimum(-0.2) ;
+	  hnp_eff_sf_sl_3b_val -> SetMinimum(-0.2) ;
+	  hnp_btageff_sf_sl_3b_val -> SetMinimum(-0.2) ;
+	  hnp_eff_btageff_sf_sl_prod_3b_val -> SetMinimum(-0.2) ;
+	  hnp_eff_sf_ldp_3b_val -> SetMinimum(-0.2) ;
+	  hnp_btageff_sf_ldp_3b_val -> SetMinimum(-0.2) ;
+	  hnp_eff_btageff_sf_ldp_prod_3b_val -> SetMinimum(-0.2) ;
+	  hnp_eff_sf_3b_val -> SetMaximum(2.0) ;
+	  hnp_btageff_sf_3b_val -> SetMaximum(2.0) ;
+	  hnp_eff_btageff_sf_prod_3b_val -> SetMaximum(2.0) ;
+	  hnp_eff_sf_slSig_3b_val -> SetMaximum(2.0) ;
+	  hnp_btageff_sf_slSig_3b_val -> SetMaximum(2.0) ;
+	  hnp_eff_btageff_sf_slSig_prod_3b_val -> SetMaximum(2.0) ;
+	  
+	  if ( nBinsBtag > 3 ) {
+	    
+	    hnp_eff_sf_4b_val -> SetMinimum(-0.2) ;
+	    hnp_btageff_sf_4b_val -> SetMinimum(-0.2) ;
+	    hnp_eff_btageff_sf_prod_4b_val -> SetMinimum(-0.2) ;
+	    hnp_eff_sf_slSig_4b_val -> SetMinimum(-0.2) ;
+	    hnp_btageff_sf_slSig_4b_val -> SetMinimum(-0.2) ;
+	    hnp_eff_btageff_sf_slSig_prod_4b_val -> SetMinimum(-0.2) ;
+	    hnp_eff_sf_sl_4b_val -> SetMinimum(-0.2) ;
+	    hnp_btageff_sf_sl_4b_val -> SetMinimum(-0.2) ;
+	    hnp_eff_btageff_sf_sl_prod_4b_val -> SetMinimum(-0.2) ;
+	    hnp_eff_sf_ldp_4b_val -> SetMinimum(-0.2) ;
+	    hnp_btageff_sf_ldp_4b_val -> SetMinimum(-0.2) ;
+	    hnp_eff_btageff_sf_ldp_prod_4b_val -> SetMinimum(-0.2) ;
+	    hnp_eff_sf_4b_val -> SetMaximum(2.0) ;
+	    hnp_btageff_sf_4b_val -> SetMaximum(2.0) ;
+	    hnp_eff_btageff_sf_prod_4b_val -> SetMaximum(2.0) ;
+	    hnp_eff_sf_slSig_4b_val -> SetMaximum(2.0) ;
+	    hnp_btageff_sf_slSig_4b_val -> SetMaximum(2.0) ;
+	    hnp_eff_btageff_sf_slSig_prod_4b_val -> SetMaximum(2.0) ;
+	    
+	  }
+	}
+
 
         hnp_eff_sf_sl_1b_val -> SetMaximum(2.0) ;
-        hnp_eff_sf_sl_2b_val -> SetMaximum(2.0) ;
-        hnp_eff_sf_sl_3b_val -> SetMaximum(2.0) ;
         hnp_btageff_sf_sl_1b_val -> SetMaximum(2.0) ;
-        hnp_btageff_sf_sl_2b_val -> SetMaximum(2.0) ;
-        hnp_btageff_sf_sl_3b_val -> SetMaximum(2.0) ;
         hnp_eff_btageff_sf_sl_prod_1b_val -> SetMaximum(2.0) ;
-        hnp_eff_btageff_sf_sl_prod_2b_val -> SetMaximum(2.0) ;
-        hnp_eff_btageff_sf_sl_prod_3b_val -> SetMaximum(2.0) ;
-
         hnp_eff_sf_ldp_1b_val -> SetMaximum(2.0) ;
-        hnp_eff_sf_ldp_2b_val -> SetMaximum(2.0) ;
-        hnp_eff_sf_ldp_3b_val -> SetMaximum(2.0) ;
         hnp_btageff_sf_ldp_1b_val -> SetMaximum(2.0) ;
-        hnp_btageff_sf_ldp_2b_val -> SetMaximum(2.0) ;
-        hnp_btageff_sf_ldp_3b_val -> SetMaximum(2.0) ;
         hnp_eff_btageff_sf_ldp_prod_1b_val -> SetMaximum(2.0) ;
-        hnp_eff_btageff_sf_ldp_prod_2b_val -> SetMaximum(2.0) ;
-        hnp_eff_btageff_sf_ldp_prod_3b_val -> SetMaximum(2.0) ;
-
         hnp_eff_sf_1b_pull -> SetMinimum(-2.0) ;
-        hnp_eff_sf_2b_pull -> SetMinimum(-2.0) ;
-        hnp_eff_sf_3b_pull -> SetMinimum(-2.0) ;
         hnp_eff_sf_1b_pull -> SetMaximum( 2.0) ;
-        hnp_eff_sf_2b_pull -> SetMaximum( 2.0) ;
-        hnp_eff_sf_3b_pull -> SetMaximum( 2.0) ;
-
         hnp_eff_sf_slSig_1b_pull -> SetMinimum(-2.0) ;
-        hnp_eff_sf_slSig_2b_pull -> SetMinimum(-2.0) ;
-        hnp_eff_sf_slSig_3b_pull -> SetMinimum(-2.0) ;
         hnp_eff_sf_slSig_1b_pull -> SetMaximum( 2.0) ;
-        hnp_eff_sf_slSig_2b_pull -> SetMaximum( 2.0) ;
-        hnp_eff_sf_slSig_3b_pull -> SetMaximum( 2.0) ;
-
         hnp_eff_sf_sl_1b_pull -> SetMinimum(-2.0) ;
-        hnp_eff_sf_sl_2b_pull -> SetMinimum(-2.0) ;
-        hnp_eff_sf_sl_3b_pull -> SetMinimum(-2.0) ;
         hnp_eff_sf_sl_1b_pull -> SetMaximum( 2.0) ;
-        hnp_eff_sf_sl_2b_pull -> SetMaximum( 2.0) ;
-        hnp_eff_sf_sl_3b_pull -> SetMaximum( 2.0) ;
-
         hnp_eff_sf_ldp_1b_pull -> SetMinimum(-2.0) ;
-        hnp_eff_sf_ldp_2b_pull -> SetMinimum(-2.0) ;
-        hnp_eff_sf_ldp_3b_pull -> SetMinimum(-2.0) ;
         hnp_eff_sf_ldp_1b_pull -> SetMaximum( 2.0) ;
+
+
+        hnp_eff_sf_sl_2b_val -> SetMaximum(2.0) ;
+        hnp_btageff_sf_sl_2b_val -> SetMaximum(2.0) ;
+        hnp_eff_btageff_sf_sl_prod_2b_val -> SetMaximum(2.0) ;
+        hnp_eff_sf_ldp_2b_val -> SetMaximum(2.0) ;
+        hnp_btageff_sf_ldp_2b_val -> SetMaximum(2.0) ;
+        hnp_eff_btageff_sf_ldp_prod_2b_val -> SetMaximum(2.0) ;
+        hnp_eff_sf_2b_pull -> SetMinimum(-2.0) ;
+        hnp_eff_sf_2b_pull -> SetMaximum( 2.0) ;
+        hnp_eff_sf_slSig_2b_pull -> SetMinimum(-2.0) ;
+        hnp_eff_sf_slSig_2b_pull -> SetMaximum( 2.0) ;
+        hnp_eff_sf_sl_2b_pull -> SetMinimum(-2.0) ;
+        hnp_eff_sf_sl_2b_pull -> SetMaximum( 2.0) ;
+        hnp_eff_sf_ldp_2b_pull -> SetMinimum(-2.0) ;
         hnp_eff_sf_ldp_2b_pull -> SetMaximum( 2.0) ;
-        hnp_eff_sf_ldp_3b_pull -> SetMaximum( 2.0) ;
+
+	if ( nBinsBtag > 2 ) {
+
+	  hnp_eff_sf_sl_3b_val -> SetMaximum(2.0) ;
+	  hnp_btageff_sf_sl_3b_val -> SetMaximum(2.0) ;
+	  hnp_eff_btageff_sf_sl_prod_3b_val -> SetMaximum(2.0) ;
+	  hnp_eff_sf_ldp_3b_val -> SetMaximum(2.0) ;
+	  hnp_btageff_sf_ldp_3b_val -> SetMaximum(2.0) ;
+	  hnp_eff_btageff_sf_ldp_prod_3b_val -> SetMaximum(2.0) ;
+	  hnp_eff_sf_3b_pull -> SetMinimum(-2.0) ;
+	  hnp_eff_sf_3b_pull -> SetMaximum( 2.0) ;
+	  hnp_eff_sf_slSig_3b_pull -> SetMinimum(-2.0) ;
+	  hnp_eff_sf_slSig_3b_pull -> SetMaximum( 2.0) ;
+	  hnp_eff_sf_sl_3b_pull -> SetMinimum(-2.0) ;
+	  hnp_eff_sf_sl_3b_pull -> SetMaximum( 2.0) ;
+	  hnp_eff_sf_ldp_3b_pull -> SetMinimum(-2.0) ;
+	  hnp_eff_sf_ldp_3b_pull -> SetMaximum( 2.0) ;
+	  
+	  if ( nBinsBtag > 3 ) {
+
+	    hnp_eff_sf_sl_4b_val -> SetMaximum(2.0) ;
+	    hnp_btageff_sf_sl_4b_val -> SetMaximum(2.0) ;
+	    hnp_eff_btageff_sf_sl_prod_4b_val -> SetMaximum(2.0) ;
+	    hnp_eff_sf_ldp_4b_val -> SetMaximum(2.0) ;
+	    hnp_btageff_sf_ldp_4b_val -> SetMaximum(2.0) ;
+	    hnp_eff_btageff_sf_ldp_prod_4b_val -> SetMaximum(2.0) ;
+	    hnp_eff_sf_4b_pull -> SetMinimum(-2.0) ;
+	    hnp_eff_sf_4b_pull -> SetMaximum( 2.0) ;
+	    hnp_eff_sf_slSig_4b_pull -> SetMinimum(-2.0) ;
+	    hnp_eff_sf_slSig_4b_pull -> SetMaximum( 2.0) ;
+	    hnp_eff_sf_sl_4b_pull -> SetMinimum(-2.0) ;
+	    hnp_eff_sf_sl_4b_pull -> SetMaximum( 2.0) ;
+	    hnp_eff_sf_ldp_4b_pull -> SetMinimum(-2.0) ;
+	    hnp_eff_sf_ldp_4b_pull -> SetMaximum( 2.0) ;
+
+	  }
+	}
+
 
         hnp_ttwj_1b_val->SetLabelSize(0.055,"x") ;
         hnp_ttwj_1b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_ttwj_2b_val->SetLabelSize(0.055,"x") ;
-        hnp_ttwj_2b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_ttwj_3b_val->SetLabelSize(0.055,"x") ;
-        hnp_ttwj_3b_val->GetXaxis()->LabelsOption("v") ;
-
         hnp_qcd_1b_val->SetLabelSize(0.055,"x") ;
         hnp_qcd_1b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_qcd_2b_val->SetLabelSize(0.055,"x") ;
-        hnp_qcd_2b_val->GetXaxis()->LabelsOption("v") ;
-        hnp_qcd_3b_val->SetLabelSize(0.055,"x") ;
-        hnp_qcd_3b_val->GetXaxis()->LabelsOption("v") ;
-
         hnp_ttwj_1b_pull->SetLabelSize(0.055,"x") ;
         hnp_ttwj_1b_pull->GetXaxis()->LabelsOption("v") ;
-        hnp_ttwj_2b_pull->SetLabelSize(0.055,"x") ;
-        hnp_ttwj_2b_pull->GetXaxis()->LabelsOption("v") ;
-        hnp_ttwj_3b_pull->SetLabelSize(0.055,"x") ;
-        hnp_ttwj_3b_pull->GetXaxis()->LabelsOption("v") ;
-
         hnp_qcd_1b_pull->SetLabelSize(0.055,"x") ;
         hnp_qcd_1b_pull->GetXaxis()->LabelsOption("v") ;
+
+        hnp_ttwj_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_ttwj_2b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_qcd_2b_val->SetLabelSize(0.055,"x") ;
+        hnp_qcd_2b_val->GetXaxis()->LabelsOption("v") ;
+        hnp_ttwj_2b_pull->SetLabelSize(0.055,"x") ;
+        hnp_ttwj_2b_pull->GetXaxis()->LabelsOption("v") ;
         hnp_qcd_2b_pull->SetLabelSize(0.055,"x") ;
         hnp_qcd_2b_pull->GetXaxis()->LabelsOption("v") ;
-        hnp_qcd_3b_pull->SetLabelSize(0.055,"x") ;
-        hnp_qcd_3b_pull->GetXaxis()->LabelsOption("v") ;
 
+	if ( nBinsBtag > 2 ) {
 
+	  hnp_ttwj_3b_val->SetLabelSize(0.055,"x") ;
+	  hnp_ttwj_3b_val->GetXaxis()->LabelsOption("v") ;
+	  hnp_qcd_3b_val->SetLabelSize(0.055,"x") ;
+	  hnp_qcd_3b_val->GetXaxis()->LabelsOption("v") ;
+	  hnp_ttwj_3b_pull->SetLabelSize(0.055,"x") ;
+	  hnp_ttwj_3b_pull->GetXaxis()->LabelsOption("v") ;
+	  hnp_qcd_3b_pull->SetLabelSize(0.055,"x") ;
+	  hnp_qcd_3b_pull->GetXaxis()->LabelsOption("v") ;
+	  
+	  if ( nBinsBtag > 3 ) {
+	    
+	    hnp_ttwj_4b_val->SetLabelSize(0.055,"x") ;
+	    hnp_ttwj_4b_val->GetXaxis()->LabelsOption("v") ;
+	    hnp_qcd_4b_val->SetLabelSize(0.055,"x") ;
+	    hnp_qcd_4b_val->GetXaxis()->LabelsOption("v") ;
+	    hnp_ttwj_4b_pull->SetLabelSize(0.055,"x") ;
+	    hnp_ttwj_4b_pull->GetXaxis()->LabelsOption("v") ;
+	    hnp_qcd_4b_pull->SetLabelSize(0.055,"x") ;
+	    hnp_qcd_4b_pull->GetXaxis()->LabelsOption("v") ;
+
+	  }
+	}
 
 
         //=== Efficiency par pulls ============
@@ -2710,7 +3359,7 @@
         if ( cnp2 == 0x0 ) {
            cnp2 = new TCanvas("cnp2","RA2b efficiency par pull", 850, 1000 ) ;
         }
-        cnp2->Divide(3,4) ;
+        cnp2->Divide(nBinsBtag,4) ;
 
         cnp2->cd(1) ;
         hnp_eff_sf_1b_pull->Draw() ;
@@ -2724,73 +3373,121 @@
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
-        cnp2->cd(3) ;
-        hnp_eff_sf_3b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_eff_sf_3b_pull ) ;
-        globalChi2 += chi2 ;
-        npChi2 += chi2 ;
+	if ( nBinsBtag > 2 ) {
+	  
+	  cnp2->cd(3) ;
+	  hnp_eff_sf_3b_pull->Draw() ;
+	  chi2 = addChi2FromPullHist( hnp_eff_sf_3b_pull ) ;
+	  globalChi2 += chi2 ;
+	  npChi2 += chi2 ;
+
+	  if ( nBinsBtag > 3 ) {
+
+	    cnp2->cd(4) ;
+	    hnp_eff_sf_4b_pull->Draw() ;
+	    chi2 = addChi2FromPullHist( hnp_eff_sf_4b_pull ) ;
+	    globalChi2 += chi2 ;
+	    npChi2 += chi2 ;
+
+	  }
+	}
 
 
-
-        cnp2->cd(4) ;
+        cnp2->cd(nBinsBtag+1) ;
         hnp_eff_sf_slSig_1b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_slSig_1b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
-        cnp2->cd(5) ;
+        cnp2->cd(nBinsBtag+2) ;
         hnp_eff_sf_slSig_2b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_slSig_2b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
-        cnp2->cd(6) ;
-        hnp_eff_sf_slSig_3b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_eff_sf_slSig_3b_pull ) ;
-        globalChi2 += chi2 ;
-        npChi2 += chi2 ;
+	if ( nBinsBtag > 2 ) {
+
+	  cnp2->cd(nBinsBtag+3) ;
+	  hnp_eff_sf_slSig_3b_pull->Draw() ;
+	  chi2 = addChi2FromPullHist( hnp_eff_sf_slSig_3b_pull ) ;
+	  globalChi2 += chi2 ;
+	  npChi2 += chi2 ;
+	  
+	  if ( nBinsBtag > 3 ) {
+	    
+	    cnp2->cd(nBinsBtag+4) ;
+	    hnp_eff_sf_slSig_4b_pull->Draw() ;
+	    chi2 = addChi2FromPullHist( hnp_eff_sf_slSig_4b_pull ) ;
+	    globalChi2 += chi2 ;
+	    npChi2 += chi2 ;
+	    
+	  }
+	}
 
 
 
-        cnp2->cd(7) ;
+        cnp2->cd(2*nBinsBtag+1) ;
         hnp_eff_sf_sl_1b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_sl_1b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
-        cnp2->cd(8) ;
+        cnp2->cd(2*nBinsBtag+2) ;
         hnp_eff_sf_sl_2b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_sl_2b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
-        cnp2->cd(9) ;
-        hnp_eff_sf_sl_3b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_eff_sf_sl_3b_pull ) ;
-        globalChi2 += chi2 ;
-        npChi2 += chi2 ;
+	if ( nBinsBtag > 2 ) {
+
+	  cnp2->cd(2*nBinsBtag+3) ;
+	  hnp_eff_sf_sl_3b_pull->Draw() ;
+	  chi2 = addChi2FromPullHist( hnp_eff_sf_sl_3b_pull ) ;
+	  globalChi2 += chi2 ;
+	  npChi2 += chi2 ;
+
+	  if ( nBinsBtag > 3 ) {
+	    
+	    cnp2->cd(2*nBinsBtag+4) ;
+	    hnp_eff_sf_sl_4b_pull->Draw() ;
+	    chi2 = addChi2FromPullHist( hnp_eff_sf_sl_4b_pull ) ;
+	    globalChi2 += chi2 ;
+	    npChi2 += chi2 ;
+	    
+	  }
+	}
 
 
-
-        cnp2->cd(10) ;
+        cnp2->cd(3*nBinsBtag+1) ;
         hnp_eff_sf_ldp_1b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_1b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
-        cnp2->cd(11) ;
+        cnp2->cd(3*nBinsBtag+2) ;
         hnp_eff_sf_ldp_2b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_2b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
-        cnp2->cd(12) ;
-        hnp_eff_sf_ldp_3b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_3b_pull ) ;
-        globalChi2 += chi2 ;
-        npChi2 += chi2 ;
+	if ( nBinsBtag > 2 ) {
 
-
+	  cnp2->cd(3*nBinsBtag+3) ;
+	  hnp_eff_sf_ldp_3b_pull->Draw() ;
+	  chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_3b_pull ) ;
+	  globalChi2 += chi2 ;
+	  npChi2 += chi2 ;
+	  
+	  if ( nBinsBtag > 3 ) {
+	    
+	    cnp2->cd(3*nBinsBtag+4) ;
+	    hnp_eff_sf_ldp_4b_pull->Draw() ;
+	    chi2 = addChi2FromPullHist( hnp_eff_sf_ldp_4b_pull ) ;
+	    globalChi2 += chi2 ;
+	    npChi2 += chi2 ;
+	    
+	  }
+	}
 
 
 
@@ -2804,7 +3501,7 @@
         if ( cnp == 0x0 ) {
            cnp = new TCanvas("cnp","RA2b nuisance pars", 850, 1000 ) ;
         }
-        cnp->Divide(3,4) ;
+        cnp->Divide(nBinsBtag,4) ;
 
       //---
         cnp->cd(1) ;
@@ -2815,65 +3512,115 @@
         hnp_ttwj_2b_val->Draw() ;
         hnp_ttwj_2b_nom->Draw("same") ;
 
-        cnp->cd(3) ;
-        hnp_ttwj_3b_val->Draw() ;
-        hnp_ttwj_3b_nom->Draw("same") ;
+	if ( nBinsBtag > 2 ) {
 
+	  cnp->cd(3) ;
+	  hnp_ttwj_3b_val->Draw() ;
+	  hnp_ttwj_3b_nom->Draw("same") ;
+	  
+	  if ( nBinsBtag > 3 ) {
+
+	    cnp->cd(4) ;
+	    hnp_ttwj_4b_val->Draw() ;
+	    hnp_ttwj_4b_nom->Draw("same") ;
+	    
+	  }
+	}
+	
 
       //---
-        cnp->cd(4) ;
+
+        cnp->cd(nBinsBtag+1) ;
         hnp_ttwj_1b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_ttwj_1b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
 
-        cnp->cd(5) ;
+        cnp->cd(nBinsBtag+2) ;
         hnp_ttwj_2b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_ttwj_2b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
-        cnp->cd(6) ;
-        hnp_ttwj_3b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_ttwj_3b_pull ) ;
-        globalChi2 += chi2 ;
-        npChi2 += chi2 ;
+	if ( nBinsBtag > 2 ) {
+
+	  cnp->cd(nBinsBtag+3) ;
+	  hnp_ttwj_3b_pull->Draw() ;
+	  chi2 = addChi2FromPullHist( hnp_ttwj_3b_pull ) ;
+	  globalChi2 += chi2 ;
+	  npChi2 += chi2 ;
+	  
+	  if ( nBinsBtag > 3 ) {
+	    
+	    cnp->cd(nBinsBtag+4) ;
+	    hnp_ttwj_4b_pull->Draw() ;
+	    chi2 = addChi2FromPullHist( hnp_ttwj_4b_pull ) ;
+	    globalChi2 += chi2 ;
+	    npChi2 += chi2 ;
+
+	  }
+	}
 
 
       //---
-        cnp->cd(7) ;
+
+        cnp->cd(2*nBinsBtag+1) ;
         hnp_qcd_1b_val->Draw() ;
         hnp_qcd_1b_nom->Draw("same") ;
 
-        cnp->cd(8) ;
+        cnp->cd(2*nBinsBtag+2) ;
         hnp_qcd_2b_val->Draw() ;
         hnp_qcd_2b_nom->Draw("same") ;
 
-        cnp->cd(9) ;
-        hnp_qcd_3b_val->Draw() ;
-        hnp_qcd_3b_nom->Draw("same") ;
+	if ( nBinsBtag > 2 ) {
+	
+	  cnp->cd(2*nBinsBtag+3) ;
+	  hnp_qcd_3b_val->Draw() ;
+	  hnp_qcd_3b_nom->Draw("same") ;
+	  
+	  if ( nBinsBtag > 3 ) {
+	    
+	    cnp->cd(2*nBinsBtag+4) ;
+	    hnp_qcd_4b_val->Draw() ;
+	    hnp_qcd_4b_nom->Draw("same") ;
+	    
+	  }
+	}
 
 
       //---
-        cnp->cd(10) ;
+
+        cnp->cd(3*nBinsBtag+1) ;
         hnp_qcd_1b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_qcd_1b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
-        cnp->cd(11) ;
+        cnp->cd(3*nBinsBtag+2) ;
         hnp_qcd_2b_pull->Draw() ;
         chi2 = addChi2FromPullHist( hnp_qcd_2b_pull ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
 
-        cnp->cd(12) ;
-        hnp_qcd_3b_pull->Draw() ;
-        chi2 = addChi2FromPullHist( hnp_qcd_3b_pull ) ;
-        globalChi2 += chi2 ;
-        npChi2 += chi2 ;
+	if ( nBinsBtag > 2 ) {
 
+	  cnp->cd(3*nBinsBtag+3) ;
+	  hnp_qcd_3b_pull->Draw() ;
+	  chi2 = addChi2FromPullHist( hnp_qcd_3b_pull ) ;
+	  globalChi2 += chi2 ;
+	  npChi2 += chi2 ;
+	  
+	  if ( nBinsBtag > 3 ) {
+	    
+	    cnp->cd(3*nBinsBtag+4) ;
+	    hnp_qcd_4b_pull->Draw() ;
+	    chi2 = addChi2FromPullHist( hnp_qcd_4b_pull ) ;
+	    globalChi2 += chi2 ;
+	    npChi2 += chi2 ;
+	    
+	  }
+	}
 
 
 
@@ -2891,21 +3638,21 @@
         chi2 = addChi2FromPullHist( hnp_prim_eff ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
-
-
+	
+	
         cnp3->cd(2) ;
         hnp_znn->Draw() ;
         chi2 = addChi2FromPullHist( hnp_znn ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
-
+	
 
         cnp3->cd(3) ;
         hnp_trig_0lep->Draw() ;
         chi2 = addChi2FromPullHist( hnp_trig_0lep ) ;
         globalChi2 += chi2 ;
         npChi2 += chi2 ;
-
+	
 
         cnp3->cd(4) ;
         hnp_trig_1lep->Draw() ;
@@ -2920,7 +3667,8 @@
         printf("\n\n *** Skipping nuisance parameters.\n\n") ;
      }
 
-   //====== Observables ==================================
+
+     //====== Observables ==================================
 
 
      TCanvas* cfitqual = (TCanvas*) gDirectory->FindObject("cfitqual") ;
@@ -2928,7 +3676,9 @@
         cfitqual = new TCanvas("cfitqual","RA2b fit quality", 850, 1000 ) ;
      }
 
-     cfitqual->Divide(3,5);
+     Int_t nColumns = max(3,nBinsBtag);
+
+     cfitqual->Divide(nColumns,5);
 
      gPad->SetTicks(1,0) ;
 
@@ -2949,16 +3699,32 @@
      hfitqual_data_1lep_2b->GetXaxis()->LabelsOption("v") ;
      hfitqual_data_ldp_2b->SetLabelSize(0.055,"x") ;
      hfitqual_data_ldp_2b->GetXaxis()->LabelsOption("v") ;
+
+     if ( nBinsBtag > 2 ) {
      
-     hfitqual_data_0lep_3b->SetLabelSize(0.055,"x") ;
-     hfitqual_data_0lep_3b->GetXaxis()->LabelsOption("v") ;
-     hfitqual_data_1lepSig_3b->SetLabelSize(0.055,"x") ;
-     hfitqual_data_1lepSig_3b->GetXaxis()->LabelsOption("v") ;
-     hfitqual_data_1lep_3b->SetLabelSize(0.055,"x") ;
-     hfitqual_data_1lep_3b->GetXaxis()->LabelsOption("v") ;
-     hfitqual_data_ldp_3b->SetLabelSize(0.055,"x") ;
-     hfitqual_data_ldp_3b->GetXaxis()->LabelsOption("v") ;
-     
+       hfitqual_data_0lep_3b->SetLabelSize(0.055,"x") ;
+       hfitqual_data_0lep_3b->GetXaxis()->LabelsOption("v") ;
+       hfitqual_data_1lepSig_3b->SetLabelSize(0.055,"x") ;
+       hfitqual_data_1lepSig_3b->GetXaxis()->LabelsOption("v") ;
+       hfitqual_data_1lep_3b->SetLabelSize(0.055,"x") ;
+       hfitqual_data_1lep_3b->GetXaxis()->LabelsOption("v") ;
+       hfitqual_data_ldp_3b->SetLabelSize(0.055,"x") ;
+       hfitqual_data_ldp_3b->GetXaxis()->LabelsOption("v") ;
+       
+       if ( nBinsBtag > 3 ) {
+	 
+	 hfitqual_data_0lep_4b->SetLabelSize(0.055,"x") ;
+	 hfitqual_data_0lep_4b->GetXaxis()->LabelsOption("v") ;
+	 hfitqual_data_1lepSig_4b->SetLabelSize(0.055,"x") ;
+	 hfitqual_data_1lepSig_4b->GetXaxis()->LabelsOption("v") ;
+	 hfitqual_data_1lep_4b->SetLabelSize(0.055,"x") ;
+	 hfitqual_data_1lep_4b->GetXaxis()->LabelsOption("v") ;
+	 hfitqual_data_ldp_4b->SetLabelSize(0.055,"x") ;
+	 hfitqual_data_ldp_4b->GetXaxis()->LabelsOption("v") ;
+	 
+       }
+     }
+
      hfitqual_data_zee_1b->SetLabelSize(0.055,"x") ;
      hfitqual_data_zee_1b->GetXaxis()->LabelsOption("v") ;
      hfitqual_data_zmm_1b->SetLabelSize(0.055,"x") ;
@@ -2987,17 +3753,34 @@
      globalChi2 += chi2 ;
      obsChi2 += chi2 ;
      
-     cfitqual->cd(3);
-     hfitqual_data_0lep_3b->Draw("histpe") ;
-     hfitqual_fit_0lep_3b->Draw("same") ;
-     hfitqual_data_0lep_3b->Draw("same") ;
-     gPad->SetGridy(1) ;
-     chi2 = addChi2FromObs( hfitqual_data_0lep_3b, hfitqual_model_0lep_3b ) ;
-     globalChi2 += chi2 ;
-     obsChi2 += chi2 ;
+     if ( nBinsBtag > 2 ) {
+
+       cfitqual->cd(3);
+       hfitqual_data_0lep_3b->Draw("histpe") ;
+       hfitqual_fit_0lep_3b->Draw("same") ;
+       hfitqual_data_0lep_3b->Draw("same") ;
+       gPad->SetGridy(1) ;
+       chi2 = addChi2FromObs( hfitqual_data_0lep_3b, hfitqual_model_0lep_3b ) ;
+       globalChi2 += chi2 ;
+       obsChi2 += chi2 ;
+       
+       if ( nBinsBtag > 3 ) {
+	 
+	 cfitqual->cd(4);
+	 hfitqual_data_0lep_4b->Draw("histpe") ;
+	 hfitqual_fit_0lep_4b->Draw("same") ;
+	 hfitqual_data_0lep_4b->Draw("same") ;
+	 gPad->SetGridy(1) ;
+	 chi2 = addChi2FromObs( hfitqual_data_0lep_4b, hfitqual_model_0lep_4b ) ;
+	 globalChi2 += chi2 ;
+	 obsChi2 += chi2 ;
+	 
+       }
+     }
 
 
-     cfitqual->cd(4);
+
+     cfitqual->cd(nColumns+1);
      hfitqual_data_1lepSig_1b->Draw("histpe") ;
      hfitqual_fit_1lepSig_1b->Draw("same") ;
      hfitqual_data_1lepSig_1b->Draw("same") ;
@@ -3006,7 +3789,7 @@
      globalChi2 += chi2 ;
      obsChi2 += chi2 ;
      
-     cfitqual->cd(5);
+     cfitqual->cd(nColumns+2);
      hfitqual_data_1lepSig_2b->Draw("histpe") ;
      hfitqual_fit_1lepSig_2b->Draw("same") ;
      hfitqual_data_1lepSig_2b->Draw("same") ;
@@ -3014,20 +3797,35 @@
      chi2 = addChi2FromObs( hfitqual_data_1lepSig_2b, hfitqual_model_1lepSig_2b ) ;
      globalChi2 += chi2 ;
      obsChi2 += chi2 ;
+
+     if ( nBinsBtag > 2 ) {
      
-     cfitqual->cd(6);
-     hfitqual_data_1lepSig_3b->Draw("histpe") ;
-     hfitqual_fit_1lepSig_3b->Draw("same") ;
-     hfitqual_data_1lepSig_3b->Draw("same") ;
-     gPad->SetGridy(1) ;
-     chi2 = addChi2FromObs( hfitqual_data_1lepSig_3b, hfitqual_model_1lepSig_3b ) ;
-     globalChi2 += chi2 ;
-     obsChi2 += chi2 ;
+       cfitqual->cd(nColumns+3);
+       hfitqual_data_1lepSig_3b->Draw("histpe") ;
+       hfitqual_fit_1lepSig_3b->Draw("same") ;
+       hfitqual_data_1lepSig_3b->Draw("same") ;
+       gPad->SetGridy(1) ;
+       chi2 = addChi2FromObs( hfitqual_data_1lepSig_3b, hfitqual_model_1lepSig_3b ) ;
+       globalChi2 += chi2 ;
+       obsChi2 += chi2 ;
+       
+       if ( nBinsBtag > 3 ) {
+       
+	 cfitqual->cd(nColumns+4);
+	 hfitqual_data_1lepSig_4b->Draw("histpe") ;
+	 hfitqual_fit_1lepSig_4b->Draw("same") ;
+	 hfitqual_data_1lepSig_4b->Draw("same") ;
+	 gPad->SetGridy(1) ;
+	 chi2 = addChi2FromObs( hfitqual_data_1lepSig_4b, hfitqual_model_1lepSig_4b ) ;
+	 globalChi2 += chi2 ;
+	 obsChi2 += chi2 ;
+	 
+       }
+     }
 
 
 
-
-     cfitqual->cd(7);
+     cfitqual->cd(2*nColumns+1);
      hfitqual_data_1lep_1b->Draw("histpe") ;
      hfitqual_fit_1lep_1b->Draw("same") ;
      hfitqual_data_1lep_1b->Draw("same") ;
@@ -3036,7 +3834,7 @@
      globalChi2 += chi2 ;
      obsChi2 += chi2 ;
      
-     cfitqual->cd(8);
+     cfitqual->cd(2*nColumns+2);
      hfitqual_data_1lep_2b->Draw("histpe") ;
      hfitqual_fit_1lep_2b->Draw("same") ;
      hfitqual_data_1lep_2b->Draw("same") ;
@@ -3045,20 +3843,35 @@
      globalChi2 += chi2 ;
      obsChi2 += chi2 ;
      
-     cfitqual->cd(9);
-     hfitqual_data_1lep_3b->Draw("histpe") ;
-     hfitqual_fit_1lep_3b->Draw("same") ;
-     hfitqual_data_1lep_3b->Draw("same") ;
-     gPad->SetGridy(1) ;
-     chi2 = addChi2FromObs( hfitqual_data_1lep_3b, hfitqual_model_1lep_3b ) ;
-     globalChi2 += chi2 ;
-     obsChi2 += chi2 ;
+     if ( nBinsBtag > 2 ) {
 
+       cfitqual->cd(2*nColumns+3);
+       hfitqual_data_1lep_3b->Draw("histpe") ;
+       hfitqual_fit_1lep_3b->Draw("same") ;
+       hfitqual_data_1lep_3b->Draw("same") ;
+       gPad->SetGridy(1) ;
+       chi2 = addChi2FromObs( hfitqual_data_1lep_3b, hfitqual_model_1lep_3b ) ;
+       globalChi2 += chi2 ;
+       obsChi2 += chi2 ;
+       
+       if ( nBinsBtag > 3 ) {
+	 
+	 cfitqual->cd(2*nColumns+4);
+	 hfitqual_data_1lep_4b->Draw("histpe") ;
+	 hfitqual_fit_1lep_4b->Draw("same") ;
+	 hfitqual_data_1lep_4b->Draw("same") ;
+	 gPad->SetGridy(1) ;
+	 chi2 = addChi2FromObs( hfitqual_data_1lep_4b, hfitqual_model_1lep_4b ) ;
+	 globalChi2 += chi2 ;
+	 obsChi2 += chi2 ;
+	 
+       }
+     }
 
 
 
      
-     cfitqual->cd(10);
+     cfitqual->cd(3*nColumns+1);
      hfitqual_data_ldp_1b->Draw("histpe") ;
      hfitqual_fit_ldp_1b->Draw("same") ;
      hfitqual_data_ldp_1b->Draw("same") ;
@@ -3067,7 +3880,7 @@
      globalChi2 += chi2 ;
      obsChi2 += chi2 ;
 
-     cfitqual->cd(11);
+     cfitqual->cd(3*nColumns+2);
      hfitqual_data_ldp_2b->Draw("histpe") ;
      hfitqual_fit_ldp_2b->Draw("same") ;
      hfitqual_data_ldp_2b->Draw("same") ;
@@ -3076,19 +3889,33 @@
      globalChi2 += chi2 ;
      obsChi2 += chi2 ;
 
-     cfitqual->cd(12);
-     hfitqual_data_ldp_3b->Draw("histpe") ;
-     hfitqual_fit_ldp_3b->Draw("same") ;
-     hfitqual_data_ldp_3b->Draw("same") ;
-     gPad->SetGridy(1) ;
-     chi2 = addChi2FromObs( hfitqual_data_ldp_3b, hfitqual_model_ldp_3b ) ;
-     globalChi2 += chi2 ;
-     obsChi2 += chi2 ;
+     if ( nBinsBtag > 2 ) {
+	 
+	 cfitqual->cd(3*nColumns+3);
+	 hfitqual_data_ldp_3b->Draw("histpe") ;
+	 hfitqual_fit_ldp_3b->Draw("same") ;
+	 hfitqual_data_ldp_3b->Draw("same") ;
+	 gPad->SetGridy(1) ;
+	 chi2 = addChi2FromObs( hfitqual_data_ldp_3b, hfitqual_model_ldp_3b ) ;
+	 globalChi2 += chi2 ;
+	 obsChi2 += chi2 ;
+       
+       if ( nBinsBtag > 3 ) {
+	 
+	 cfitqual->cd(3*nColumns+4);
+	 hfitqual_data_ldp_4b->Draw("histpe") ;
+	 hfitqual_fit_ldp_4b->Draw("same") ;
+	 hfitqual_data_ldp_4b->Draw("same") ;
+	 gPad->SetGridy(1) ;
+	 chi2 = addChi2FromObs( hfitqual_data_ldp_4b, hfitqual_model_ldp_4b ) ;
+	 globalChi2 += chi2 ;
+	 obsChi2 += chi2 ;
+	 
+       }
+     }
 
 
-
-
-     cfitqual->cd(13) ;
+     cfitqual->cd(4*nColumns+1) ;
      hfitqual_data_zee_1b->Draw("histpe") ;
      hfitqual_fit_zee_1b->Draw("same") ;
      hfitqual_data_zee_1b->Draw("same") ;
@@ -3097,7 +3924,7 @@
      globalChi2 += chi2 ;
      obsChi2 += chi2 ;
 
-     cfitqual->cd(14) ;
+     cfitqual->cd(4*nColumns+2) ;
      hfitqual_data_zmm_1b->Draw("histpe") ;
      hfitqual_fit_zmm_1b->Draw("same") ;
      hfitqual_data_zmm_1b->Draw("same") ;
@@ -3107,14 +3934,14 @@
      obsChi2 += chi2 ;
 
 
-     cfitqual->cd(15);
+     cfitqual->cd(nColumns*5);
      legend->Draw() ;
 
      cfitqual->Update() ;
 
 
 
-     cfitqual->cd(15) ;
+     cfitqual->cd(nColumns*5) ;
      TText* chi2text = new TText() ;
      chi2text->SetTextSize(0.055) ;
      chi2text->SetTextAlign(32) ;
