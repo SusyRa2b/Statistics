@@ -5,13 +5,11 @@
 #include "updateFileValue.c"
 #include "getFileValue.c"
 
-   static const int nBinsMET  = 4 ;
-   static const int nBinsHT   = 4 ;
 
-// static const int nBinsMET  = 3 ;
-// static const int nBinsHT   = 3 ;
-
-   static const int nBinsBjets = 3 ;    // this must always be 3
+   // this has to be set by hand ...
+   static const int nBinsMET  = 3 ;
+   static const int nBinsHT   = 3 ;
+   static const int nBinsBjets = 4 ;   
 
 
    //-- Global variables.
@@ -255,6 +253,7 @@
 		 const char* input_susyfile = "datfiles/Susy-mgl900-mlsp300-met4-ht4.dat",
 		 double input_mgl=900, double input_mlsp=300.,
 		 const char* input_deffdbtagfile = "datfiles/dummy_DeffDbtag-met4-ht4.dat",
+		 const char* input_lightmistagfile = "datfiles/dummy_DeffDbtag-met4-ht4.dat",
 		 double input_nSusy0lep = 60.,
 		 const char* input_outputDir = "output-toymc3b",
 		 int nToy = 10,
@@ -267,7 +266,11 @@
 		 bool input_inputObservablesArePostTrigger = true,
 		 bool constrainBjetShape = false,
 		 bool floatSLSigRatios = false,
-		 const char* systfilename = "systFile1.txt"
+		 const char* systfile1 = "systFile1.txt",
+		 const char* systfile2 = "systFile2.txt",
+		 const char* systfile3 = "systFile3.txt",
+		 const char* wjets_syst = "wjetsfile.txt",
+		 const char* singletop_syst = "singletopfile.txt"
 		 ) {
      
        char command[10000] ;
@@ -404,8 +407,8 @@
 
        char wsfilename[10000] ;
        sprintf( wsfilename, "%s/ws.root", outputDir ) ;
-       ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, qcdModelIndex, wsfilename, 
-			blindBinsList, constrainBjetShape, floatSLSigRatios, systfilename ) ;
+       ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, input_lightmistagfile, qcdModelIndex, wsfilename, 
+			blindBinsList, constrainBjetShape, floatSLSigRatios, systfile1, systfile2, systfile3, wjets_syst, singletop_syst ) ;
        TFile wsfile( wsfilename ) ;
        workspace = (RooWorkspace*) wsfile.Get("ws") ;
        if ( workspace == 0x0 ) {
@@ -506,12 +509,12 @@
 		  printf("\n\n *** can't find SFqcd_nb3.\n\n") ; //return ;
                 }
              }
-             if ( nBinsBjets >=4 ) {
-                rrv_SFqcd_nb4 = workspace -> var( "SFqcd_nb4" ) ;
-                if ( rrv_SFqcd_nb4 == 0x0 ) {
-                   printf("\n\n *** can't find SFqcd_nb4.\n\n") ; return ;
-                }
-             }
+	     //             if ( nBinsBjets >=4 ) {
+             //   rrv_SFqcd_nb4 = workspace -> var( "SFqcd_nb4" ) ;
+             //   if ( rrv_SFqcd_nb4 == 0x0 ) {
+             //      printf("\n\n *** can't find SFqcd_nb4.\n\n") ; return ;
+             //   }
+             //}
           }
        }
 

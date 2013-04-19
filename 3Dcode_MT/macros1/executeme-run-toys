@@ -1,0 +1,14 @@
+#!/bin/tcsh -f
+
+  # inputs:
+  #
+  # $1 = input 0-lep susy events
+  # $2 = number of toys
+
+  setenv nBinsMET   `grep nBinsMET   Binning.txt | awk '{print $2}'`
+  setenv nBinsHT    `grep nBinsHT    Binning.txt | awk '{print $2}'`
+  setenv nBinsBjets `grep nBinsBjets Binning.txt | awk '{print $2}'`
+  setenv my_version `grep version    Binning.txt | awk '{print $2}'`
+
+  $ROOTSYS/bin/root -b -q toywrapper3b.c\(\"datfiles/Input-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version-withSyst.dat\",\"datfiles/T2tt-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version.dat\",700,0,\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\",\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\",$1,\"output-toys-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version-nSusy$1/\",$2,\"rootfiles/gi-plots-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version.root\",true,4,false,false,\"null\",true,false,false,\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\",\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\",\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\",\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\",\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\"\)
+
