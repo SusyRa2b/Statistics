@@ -1,6 +1,6 @@
 nBinsMET	3
 nBinsHT		3
-nBinsBjets	2
+nBinsBjets	3
 MET_lowBound1   125 
 MET_lowBound2	150
 MET_lowBound3	250

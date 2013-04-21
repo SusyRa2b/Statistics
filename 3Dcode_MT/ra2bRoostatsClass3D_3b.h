@@ -85,7 +85,7 @@
        static const int nBinsMET  = 3 ;
        static const int nBinsHT   = 3 ;
 
-       static const int nBinsBtag = 2 ;
+       static const int nBinsBtag = 3 ;
        
      
        // luminosity
