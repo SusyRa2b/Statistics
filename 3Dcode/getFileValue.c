@@ -2,6 +2,8 @@
 #include "TSystem.h"
 #include <iostream>
 
+#include "getFileValue.h"
+
 //=====================================================================================================
 
    bool getFileValue( const char* inFile,
