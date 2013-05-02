@@ -1,7 +1,7 @@
 
 #include "frac_arrays.h"
 
-#include "../getFileValue.c"
+#include "../getFileValue.h"
 
 
 
