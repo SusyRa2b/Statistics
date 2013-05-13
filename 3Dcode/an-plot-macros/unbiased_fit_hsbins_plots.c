@@ -103,7 +103,8 @@ void formatClone(TGraphAsymmErrors * gg) {
       if (usePublicStyle_) {  //copied from drawReducedTrees.h
 	padh->cd();
 	TString astring;
-	astring.Form("CMS Preliminary, L_{int} = %.1f fb^{-1}, #sqrt{s} = 8 TeV",19.39);
+	//astring.Form("CMS Preliminary, L_{int} = %.1f fb^{-1}, #sqrt{s} = 8 TeV",19.39);
+	astring.Form("CMS, L_{int} = %.1f fb^{-1}, #sqrt{s} = 8 TeV",19.39);
 	plotheader = new TLatex(3.570061,23.08044,astring);
 	plotheader->SetNDC();
 	//	plotheader->SetTextAlign(13);
