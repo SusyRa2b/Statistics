@@ -25,7 +25,7 @@
 
   //================================================================================================
 
-   void gen_input_file() {
+   void gen_input_file( const char* outfilename = "input-file.txt", float sig_strength = 0. ) {
 
       char metvarname[100] ;
       sprintf( metvarname, "METsig" ) ;
@@ -70,11 +70,18 @@
       bgcompchain[compIndex] -> Add( pathandfile ) ;
       compIndex++ ;
 
-     //--- signal, 250
-      sprintf( pathandfile, "%s/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff05_HLTEff0.test_TChihh_250_v68-slimskim.root", rtdir ) ;
+  // //--- signal, 250
+  //  sprintf( pathandfile, "%s/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff05_HLTEff0.test_TChihh_250_v68-slimskim.root", rtdir ) ;
+  //  sigchain = new TChain("reducedTree") ;
+  //  sigchain -> Add( pathandfile ) ;
+  //  float signal_weight = 9.0e-6 ;
+
+
+     //--- signal, 400
+      sprintf( pathandfile, "%s/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff05_HLTEff0.test_TChihh_400_v68-slimskim.root", rtdir ) ;
       sigchain = new TChain("reducedTree") ;
       sigchain -> Add( pathandfile ) ;
-      float signal_weight = 9.0e-6 ;
+      float signal_weight = 1.0e-6 ;
 
 
 
@@ -466,10 +473,12 @@
 
       gSystem -> Exec("mkdir -p outputfiles") ;
 
-      char outfilename[10000] ;
-      sprintf( outfilename, "input-file.txt" ) ;
+      printf("\n\n output file : %s\n\n", outfilename ) ; fflush(stdout) ;
+
       char outpathandfile[10000] ;
       sprintf( outpathandfile, "outputfiles/%s", outfilename ) ;
+
+      printf("\n\n output file with path: %s\n\n", outpathandfile ) ; fflush(stdout) ;
 
 
 
@@ -489,13 +498,14 @@
       fprintf( outfile, "met_variable  %s\n", metvarname ) ;
       fprintf( outfile, "bins_of_met  %d\n", bins_of_met ) ;
 
-      //-- all observables, BG totals.
-      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_4b_msig_met%d   %8.2f\n", mbi, n_4b_msig[mbi] ) ; }
-      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_4b_msb_met%d    %8.2f\n", mbi, n_4b_msb[mbi]  ) ; }
-      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_3b_msig_met%d   %8.2f\n", mbi, n_3b_msig[mbi] ) ; }
-      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_3b_msb_met%d    %8.2f\n", mbi, n_3b_msb[mbi]  ) ; }
-      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_2b_msig_met%d   %8.2f\n", mbi, n_2b_msig[mbi] ) ; }
-      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_2b_msb_met%d    %8.2f\n", mbi, n_2b_msb[mbi]  ) ; }
+      //-- all observables, BG totals.  Added in signal if requested (sig_strength>0).
+      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_4b_msig_met%d   %8.2f\n", mbi, (n_4b_msig[mbi] + sig_strength * smc_4b_msig[mbi] )  ) ; }
+      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_4b_msb_met%d    %8.2f\n", mbi, (n_4b_msb[mbi]  + sig_strength * smc_4b_msb[mbi]  )  ) ; }
+      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_3b_msig_met%d   %8.2f\n", mbi, (n_3b_msig[mbi] + sig_strength * smc_3b_msig[mbi] )  ) ; }
+      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_3b_msb_met%d    %8.2f\n", mbi, (n_3b_msb[mbi]  + sig_strength * smc_3b_msb[mbi]  )  ) ; }
+      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_2b_msig_met%d   %8.2f\n", mbi, (n_2b_msig[mbi] + sig_strength * smc_2b_msig[mbi] )  ) ; }
+      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_2b_msb_met%d    %8.2f\n", mbi, (n_2b_msb[mbi]  + sig_strength * smc_2b_msb[mbi]  )  ) ; }
+
 
       //-- signal MC values.
       for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "smc_4b_msig_met%d   %8.2f\n", mbi, smc_4b_msig[mbi] ) ; }

@@ -25,16 +25,34 @@
 #include "RooConstVar.h"
 #include "RooStats/ModelConfig.h"
 
+#include "histio.c"
 
 
   using namespace RooFit;
   using namespace RooStats;
 
 
+   void labelBins( TH1F* hist ) ;
 
    void fitqual_plots( const char* wsfile = "outputfiles/ws.root" ) {
 
       gStyle -> SetOptStat(0) ;
+      gStyle -> SetLabelSize( 0.06, "y" ) ;
+      gStyle -> SetLabelSize( 0.08, "x" ) ;
+      gStyle -> SetLabelOffset( 0.010, "y" ) ;
+      gStyle -> SetLabelOffset( 0.010, "x" ) ;
+      gStyle -> SetTitleSize( 0.07, "y" ) ;
+      gStyle -> SetTitleH( 0.07 ) ;
+      gStyle -> SetPadLeftMargin( 0.15 ) ;
+      gStyle -> SetPadBottomMargin( 0.15 ) ;
+      gStyle -> SetTitleX( 0.10 ) ;
+
+      gDirectory->Delete("h*") ;
+
+      TCanvas* cfq1 = (TCanvas*) gDirectory->FindObject("cfq1") ;
+      if ( cfq1 == 0x0 ) {
+         cfq1 = new TCanvas("cfq1","hbb fit", 700, 1000 ) ;
+      }
 
       TFile* wstf = new TFile( wsfile ) ;
 
@@ -46,6 +64,9 @@
 
       int bins_of_nb = TMath::Nint( ws->var("bins_of_nb")->getVal()  ) ;
       printf("\n\n Bins of nb : %d\n\n", bins_of_nb ) ;
+
+      RooRealVar* rv_sig_strength = ws->var("sig_strength") ;
+      if ( rv_sig_strength == 0x0 ) { printf("\n\n *** can't find sig_strength in workspace.\n\n" ) ; return ; }
 
       ModelConfig* modelConfig = (ModelConfig*) ws->obj( "SbModel" ) ;
 
@@ -99,14 +120,10 @@
 
 
 
-      TCanvas* can1 = (TCanvas*) gDirectory->FindObject("can1") ;
-      if ( can1 == 0x0 ) {
-         can1 = new TCanvas("can1","hbb fit", 700, 1000 ) ;
-      }
-      can1->Clear() ;
-      can1->Divide( 2, bins_of_nb+1 ) ;
-
       int pad(1) ;
+
+      cfq1->Clear() ;
+      cfq1->Divide( 2, bins_of_nb+1 ) ;
 
       for ( int nbi=0; nbi<bins_of_nb; nbi++ ) {
 
@@ -115,28 +132,32 @@
          sprintf( htitle, "mass sig, %db, MET", nbi+2 ) ;
          TH1F* hist_bg_msig = new TH1F( hname, htitle, bins_of_met, 0.5, bins_of_met+0.5 ) ;
          hist_bg_msig -> SetFillColor( kBlue-9 ) ;
+         labelBins( hist_bg_msig ) ;
 
          sprintf( hname, "h_bg_%db_msb_met", nbi+2 ) ;
-         sprintf( htitle, "mass sig, %db, MET", nbi+2 ) ;
+         sprintf( htitle, "mass sb, %db, MET", nbi+2 ) ;
          TH1F* hist_bg_msb = new TH1F( hname, htitle, bins_of_met, 0.5, bins_of_met+0.5 ) ;
          hist_bg_msb -> SetFillColor( kBlue-9 ) ;
+         labelBins( hist_bg_msb ) ;
 
          sprintf( hname, "h_sig_%db_msig_met", nbi+2 ) ;
          sprintf( htitle, "mass sig, %db, MET", nbi+2 ) ;
          TH1F* hist_sig_msig = new TH1F( hname, htitle, bins_of_met, 0.5, bins_of_met+0.5 ) ;
          hist_sig_msig -> SetFillColor( kMagenta+2 ) ;
+         labelBins( hist_sig_msig ) ;
 
          sprintf( hname, "h_sig_%db_msb_met", nbi+2 ) ;
-         sprintf( htitle, "mass sig, %db, MET", nbi+2 ) ;
+         sprintf( htitle, "mass sb, %db, MET", nbi+2 ) ;
          TH1F* hist_sig_msb = new TH1F( hname, htitle, bins_of_met, 0.5, bins_of_met+0.5 ) ;
          hist_sig_msb -> SetFillColor( kMagenta+2 ) ;
+         labelBins( hist_sig_msb ) ;
 
          sprintf( hname, "h_all_%db_msig_met", nbi+2 ) ;
          sprintf( htitle, "mass sig, %db, MET", nbi+2 ) ;
          TH1F* hist_all_msig = new TH1F( hname, htitle, bins_of_met, 0.5, bins_of_met+0.5 ) ;
 
          sprintf( hname, "h_all_%db_msb_met", nbi+2 ) ;
-         sprintf( htitle, "mass sig, %db, MET", nbi+2 ) ;
+         sprintf( htitle, "mass sb, %db, MET", nbi+2 ) ;
          TH1F* hist_all_msb = new TH1F( hname, htitle, bins_of_met, 0.5, bins_of_met+0.5 ) ;
 
          sprintf( hname, "h_data_%db_msig_met", nbi+2 ) ;
@@ -144,12 +165,14 @@
          TH1F* hist_data_msig = new TH1F( hname, htitle, bins_of_met, 0.5, bins_of_met+0.5 ) ;
          hist_data_msig -> SetLineWidth(2) ;
          hist_data_msig -> SetMarkerStyle(20) ;
+         labelBins( hist_data_msig ) ;
 
          sprintf( hname, "h_data_%db_msb_met", nbi+2 ) ;
-         sprintf( htitle, "mass sig, %db, MET", nbi+2 ) ;
+         sprintf( htitle, "mass sb, %db, MET", nbi+2 ) ;
          TH1F* hist_data_msb = new TH1F( hname, htitle, bins_of_met, 0.5, bins_of_met+0.5 ) ;
          hist_data_msb -> SetLineWidth(2) ;
          hist_data_msb -> SetMarkerStyle(20) ;
+         labelBins( hist_data_msb ) ;
 
          for ( int mbi=0; mbi<bins_of_met; mbi++ ) {
 
@@ -189,7 +212,7 @@
 
          } // mbi.
 
-         can1->cd( pad ) ;
+         cfq1->cd( pad ) ;
 
          sprintf( hname, "h_stack_%db_msig_met", nbi+2 ) ;
          sprintf( htitle, "mass sig, %db, MET", nbi+2 ) ;
@@ -200,12 +223,13 @@
          hist_data_msig -> Draw("e") ;
          hstack_msig -> Draw("same") ;
          hist_data_msig -> Draw("same e") ;
+         hist_data_msig -> Draw("same axis") ;
 
          pad++ ;
 
 
 
-         can1->cd( pad ) ;
+         cfq1->cd( pad ) ;
 
          sprintf( hname, "h_stack_%db_msb_met", nbi+2 ) ;
          sprintf( htitle, "mass sig, %db, MET", nbi+2 ) ;
@@ -216,6 +240,7 @@
          hist_data_msb -> Draw("e") ;
          hstack_msb -> Draw("same") ;
          hist_data_msb -> Draw("same e") ;
+         hist_data_msb -> Draw("same axis") ;
 
          pad++ ;
 
@@ -229,8 +254,8 @@
       TH1F* hist_R_msigmsb = new TH1F( "h_R_msigmsb", "R msig/msb vs met bin", bins_of_met, 0.5, 0.5+bins_of_met ) ;
       hist_R_msigmsb -> SetLineWidth(2) ;
       hist_R_msigmsb -> SetMarkerStyle(20) ;
-      hist_R_msigmsb -> SetXTitle("MET bin") ;
       hist_R_msigmsb -> SetYTitle("R msig/msb") ;
+      labelBins( hist_R_msigmsb ) ;
 
 
       for ( int mbi=0; mbi<bins_of_met; mbi++ ) {
@@ -241,22 +266,58 @@
          hist_R_msigmsb -> SetBinError( mbi+1, rrv_R -> getError() ) ;
       } // mbi.
 
-      can1->cd( pad ) ;
+      cfq1->cd( pad ) ;
 
+      gPad->SetGridy(1) ;
+
+      hist_R_msigmsb -> SetMaximum(0.35) ;
       hist_R_msigmsb -> Draw("e") ;
 
+      pad++ ;
 
 
 
+      cfq1->cd( pad ) ;
+
+      TText* text = new TText() ;
+      text->SetTextSize( 0.06 ) ;
+
+      char message[1000] ;
+
+      sprintf( message, "Signal strength = %.2f +/- %.2f", rv_sig_strength->getVal(), rv_sig_strength -> getError() ) ;
+      printf( "\n\n %s \n\n", message ) ;
+
+      text->DrawText( 0.1, 0.8, message ) ;
+
+
+
+
+
+
+
+
+
+
+      saveHist( "outputfiles/fitqual.root", "h*" ) ;
 
 
 
    } // fitqual_plots
 
+ //===========================================================================================
 
 
+   void labelBins( TH1F* hist ) {
+      TAxis* xaxis = hist->GetXaxis() ;
+      for ( int mbi=0; mbi<hist->GetNbinsX(); mbi++ ) {
+         char label[1000] ;
+         sprintf( label, "MET%d", mbi+1 ) ;
+         xaxis->SetBinLabel( mbi+1, label ) ;
+      } // mbi.
+   }
 
 
+ //===========================================================================================
 
 
 
