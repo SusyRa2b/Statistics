@@ -470,6 +470,10 @@
       sprintf( outfilename, "input-file.txt" ) ;
       char outpathandfile[10000] ;
       sprintf( outpathandfile, "outputfiles/%s", outfilename ) ;
+
+
+
+
       char command[10000] ;
       sprintf( command, "ls %s >& /dev/null", outfilename ) ;
       int returnstat = gSystem->Exec( command ) ;
@@ -504,6 +508,7 @@
       fclose( outfile ) ;
 
 
+      printf("\n\n Created likelihood input file: %s\n\n", outpathandfile ) ;
 
 
 
