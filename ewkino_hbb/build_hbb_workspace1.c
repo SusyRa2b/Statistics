@@ -56,15 +56,26 @@
       if ( !getFileValue( infile, pname, fileVal ) ) { printf("\n\n *** Error.  Can't find %s\n\n", pname ) ; return ; }
       int bins_of_met = TMath::Nint( fileVal ) ;
 
+      //-- save bins_of_met in the workspace for convenience.
+      RooRealVar bom( "bins_of_met", "bins_of_met", bins_of_met, 0., 1000. ) ;
+      bom.setConstant(kTRUE) ;
+      workspace.import(bom) ;
 
 
-      int bins_of_nb(3) ;
+      const int bins_of_nb(3) ;
+      const int max_bins_of_met(50) ;
 
-      RooRealVar* rv_N_msig[3][50] ; // first index is number of btags, second is met bin.
-      RooRealVar* rv_N_msb[3][50]  ; // first index is number of btags, second is met bin.
+      //-- save bins_of_nb in the workspace for convenience.
+      RooRealVar bonb( "bins_of_nb", "bins_of_nb", bins_of_nb, 0., 1000. ) ;
+      bonb.setConstant(kTRUE) ;
+      workspace.import(bonb) ;
 
-      RooRealVar* rv_smc_msig[3][50] ; // first index is number of btags, second is met bin.
-      RooRealVar* rv_smc_msb[3][50]  ; // first index is number of btags, second is met bin.
+
+      RooRealVar* rv_N_msig[bins_of_nb][max_bins_of_met] ; // first index is number of btags, second is met bin.
+      RooRealVar* rv_N_msb[bins_of_nb][max_bins_of_met]  ; // first index is number of btags, second is met bin.
+
+      RooRealVar* rv_smc_msig[bins_of_nb][max_bins_of_met] ; // first index is number of btags, second is met bin.
+      RooRealVar* rv_smc_msb[bins_of_nb][max_bins_of_met]  ; // first index is number of btags, second is met bin.
 
 
       for ( int nbi=0; nbi<bins_of_nb; nbi++ ) {
@@ -145,11 +156,11 @@
 
       printf("\n\n Defining mu parameters.\n\n") ;
 
-      RooAbsReal* rv_mu_bg_msig[3][50] ;  // first index is number of btags, second is met bin.
-      RooAbsReal* rv_mu_bg_msb[3][50]  ;  // first index is number of btags, second is met bin.
+      RooAbsReal* rv_mu_bg_msig[bins_of_nb][max_bins_of_met] ;  // first index is number of btags, second is met bin.
+      RooAbsReal* rv_mu_bg_msb[bins_of_nb][max_bins_of_met]  ;  // first index is number of btags, second is met bin.
 
-      RooAbsReal* rv_mu_sig_msig[3][50] ; // first index is number of btags, second is met bin.
-      RooAbsReal* rv_mu_sig_msb[3][50]  ; // first index is number of btags, second is met bin.
+      RooAbsReal* rv_mu_sig_msig[bins_of_nb][max_bins_of_met] ; // first index is number of btags, second is met bin.
+      RooAbsReal* rv_mu_sig_msb[bins_of_nb][max_bins_of_met]  ; // first index is number of btags, second is met bin.
 
       for ( int nbi=0; nbi<bins_of_nb; nbi++ ) {
 
@@ -158,7 +169,6 @@
             sprintf( pname, "mu_bg_%db_msb_met%d", nbi+2, mbi+1 ) ;
             printf( "  %s\n", pname ) ;
             rv_mu_bg_msb[nbi][mbi] = new RooRealVar( pname, pname, rv_N_msb[nbi][mbi] -> getVal(), 0., 1.e6 ) ;
-            /////// ((RooRealVar*) rv_mu_bg_msb[nbi][mbi]) -> setConstant( kTRUE ) ;
             rv_mu_bg_msb[nbi][mbi] -> Print() ;
 
 
@@ -192,8 +202,8 @@
 
      printf("\n\n Defining small n's.\n\n") ;
 
-     RooAbsReal* rv_n_msig[3][50] ;  // first index is number of btags, second is met bin.
-     RooAbsReal* rv_n_msb[3][50]  ;  // first index is number of btags, second is met bin.
+     RooAbsReal* rv_n_msig[bins_of_nb][max_bins_of_met] ;  // first index is number of btags, second is met bin.
+     RooAbsReal* rv_n_msb[bins_of_nb][max_bins_of_met]  ;  // first index is number of btags, second is met bin.
 
       for ( int nbi=0; nbi<bins_of_nb; nbi++ ) {
 
@@ -223,8 +233,8 @@
 
       printf("\n\n Defining Poisson pdfs for the observables.\n\n") ;
 
-      RooAbsReal* rv_pdf_msig[3][50] ;  // first index is number of btags, second is met bin.
-      RooAbsReal* rv_pdf_msb[3][50]  ;  // first index is number of btags, second is met bin.
+      RooAbsReal* rv_pdf_msig[bins_of_nb][max_bins_of_met] ;  // first index is number of btags, second is met bin.
+      RooAbsReal* rv_pdf_msb[bins_of_nb][max_bins_of_met]  ;  // first index is number of btags, second is met bin.
 
       RooArgSet pdflist ;
 
