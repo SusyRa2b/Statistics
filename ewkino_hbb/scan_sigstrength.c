@@ -161,9 +161,9 @@
       text->SetTextSize(0.05) ;
       char tstring[1000] ;
 
-      sprintf( tstring, "SUSY 0lep yield = %5.2f +%5.2f, -%5.2f", poiMin, poiPlusOneSigma-poiMin, poiMin-poiMinusOneSigma ) ;
+      sprintf( tstring, "SUSY signal strength = %5.2f +%5.2f, -%5.2f", poiMin, poiPlusOneSigma-poiMin, poiMin-poiMinusOneSigma ) ;
       text->DrawTextNDC( 0.25, 0.80, tstring ) ;
-      sprintf( tstring, "SUSY 0lep 95%% CL 1-sided UL = %5.2f ", poiUL ) ;
+      sprintf( tstring, "SUSY signal strength 95%% CL 1-sided UL = %5.2f ", poiUL ) ;
       text->DrawTextNDC( 0.25, 0.70, tstring ) ;
       if ( scanLow == 0. && poiSignif>-1. ) {
          sprintf( tstring, "Significance = %5.2f", poiSignif ) ;
