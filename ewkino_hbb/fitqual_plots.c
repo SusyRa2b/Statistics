@@ -27,6 +27,8 @@
 
 #include "histio.c"
 
+#include "scan_sigstrength.c"
+
 
   using namespace RooFit;
   using namespace RooStats;
@@ -42,6 +44,8 @@
       gStyle -> SetLabelOffset( 0.010, "y" ) ;
       gStyle -> SetLabelOffset( 0.010, "x" ) ;
       gStyle -> SetTitleSize( 0.07, "y" ) ;
+      gStyle -> SetTitleSize( 0.05, "x" ) ;
+      gStyle -> SetTitleOffset( 1.50, "x" ) ;
       gStyle -> SetTitleH( 0.07 ) ;
       gStyle -> SetPadLeftMargin( 0.15 ) ;
       gStyle -> SetPadBottomMargin( 0.15 ) ;
@@ -279,21 +283,22 @@
 
       cfq1->cd( pad ) ;
 
-      TText* text = new TText() ;
-      text->SetTextSize( 0.06 ) ;
+  //  TText* text = new TText() ;
+  //  text->SetTextSize( 0.06 ) ;
 
-      char message[1000] ;
+  //  char message[1000] ;
 
-      sprintf( message, "Signal strength = %.2f +/- %.2f", rv_sig_strength->getVal(), rv_sig_strength -> getError() ) ;
-      printf( "\n\n %s \n\n", message ) ;
+  //  sprintf( message, "Signal strength = %.2f +/- %.2f", rv_sig_strength->getVal(), rv_sig_strength -> getError() ) ;
+  //  printf( "\n\n %s \n\n", message ) ;
 
-      text->DrawText( 0.1, 0.8, message ) ;
+  //  text->DrawText( 0.1, 0.8, message ) ;
 
-
-
-
+      scan_sigstrength( wsfile ) ;
 
 
+
+
+      cfq1->SaveAs("outputfiles/fitqual.pdf") ;
 
 
 
