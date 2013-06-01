@@ -9,6 +9,6 @@
   root -b -q plottoy1.c+\(\"outputfiles/toytt-withsig-250-ss1.0.root\",0\)
   root -b -q plottoy1.c+\(\"outputfiles/toytt-withsig-400-ss1.0.root\",0\)
 
-  root -b -q plottoy1.c+\(\"outputfiles/toytt-nosig-250.root\",0\)
-  root -b -q plottoy1.c+\(\"outputfiles/toytt-nosig-400.root\",0\)
+  root -b -q plottoy1.c+\(\"outputfiles/toytt-nosig-250.root\",1\)
+  root -b -q plottoy1.c+\(\"outputfiles/toytt-nosig-400.root\",1\)
 
