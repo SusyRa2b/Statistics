@@ -297,13 +297,19 @@
 
 
 
+      TString pdffile( wsfile ) ;
+      pdffile.ReplaceAll("ws-","fitqual-") ;
+      pdffile.ReplaceAll("root","pdf") ;
 
-      cfq1->SaveAs("outputfiles/fitqual.pdf") ;
+
+      cfq1->SaveAs( pdffile ) ;
 
 
 
+      TString histfile( wsfile ) ;
+      histfile.ReplaceAll("ws-","fitqual-") ;
 
-      saveHist( "outputfiles/fitqual.root", "h*" ) ;
+      saveHist( histfile, "h*" ) ;
 
 
 

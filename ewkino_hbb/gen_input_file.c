@@ -25,7 +25,7 @@
 
   //================================================================================================
 
-   void gen_input_file( const char* outfilename = "input-file.txt", float sig_strength = 0. ) {
+   void gen_input_file( const char* outfilename = "input-file.txt", int sigmass = 250, float sig_strength = 0. ) {
 
       char metvarname[100] ;
       sprintf( metvarname, "METsig" ) ;
@@ -42,8 +42,8 @@
 
       for ( int si=0; si<nbgcomps; si++ ) { bgcompchain[si] = new TChain("reducedTree") ; }
 
-      /////// char rtdir[10000] = "/data/cms/hadronic-susy-bjets/hbb/reduced-trees-may23-2013" ;
-      char rtdir[10000] = "/Users/owen/work/cms/hadronic-susy-bjets/hbb/reduced-trees-may23-2013" ;
+      char rtdir[10000] = "/data/cms/hadronic-susy-bjets/hbb/reduced-trees-may23-2013" ;
+      ///////char rtdir[10000] = "/Users/owen/work/cms/hadronic-susy-bjets/hbb/reduced-trees-may23-2013" ;
 
       int compIndex(0) ;
 
@@ -71,20 +71,25 @@
       bgcompchain[compIndex] -> Add( pathandfile ) ;
       compIndex++ ;
 
-     //--- signal, 250
-      sprintf( pathandfile, "%s/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff05_HLTEff0.test_TChihh_250_v68-slimskim.root", rtdir ) ;
-      sigchain = new TChain("reducedTree") ;
-      sigchain -> Add( pathandfile ) ;
-      float signal_weight = 9.0e-6 ;
+      float signal_weight = 1. ;
 
+      if ( sigmass == 250 ) {
 
-  // //--- signal, 400
-  //  sprintf( pathandfile, "%s/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff05_HLTEff0.test_TChihh_400_v68-slimskim.root", rtdir ) ;
-  //  sigchain = new TChain("reducedTree") ;
-  //  sigchain -> Add( pathandfile ) ;
-  //  float signal_weight = 1.0e-6 ;
+        //--- signal, 250
+         sprintf( pathandfile, "%s/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff05_HLTEff0.test_TChihh_250_v68-slimskim.root", rtdir ) ;
+         sigchain = new TChain("reducedTree") ;
+         sigchain -> Add( pathandfile ) ;
+         signal_weight = 9.0e-6 ;
 
+      } else if ( sigmass == 400 ) {
 
+        //--- signal, 400
+         sprintf( pathandfile, "%s/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff05_HLTEff0.test_TChihh_400_v68-slimskim.root", rtdir ) ;
+         sigchain = new TChain("reducedTree") ;
+         sigchain -> Add( pathandfile ) ;
+         signal_weight = 1.0e-6 ;
+
+      }
 
 
 

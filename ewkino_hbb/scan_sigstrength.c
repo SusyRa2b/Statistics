@@ -161,13 +161,13 @@
       text->SetTextSize(0.05) ;
       char tstring[1000] ;
 
-      sprintf( tstring, "SUSY signal strength = %5.2f +%5.2f, -%5.2f", poiMin, poiPlusOneSigma-poiMin, poiMin-poiMinusOneSigma ) ;
-      text->DrawTextNDC( 0.25, 0.80, tstring ) ;
-      sprintf( tstring, "SUSY signal strength 95%% CL 1-sided UL = %5.2f ", poiUL ) ;
-      text->DrawTextNDC( 0.25, 0.70, tstring ) ;
+      sprintf( tstring, "SUSY sig. strength = %5.2f +%5.2f, -%5.2f", poiMin, poiPlusOneSigma-poiMin, poiMin-poiMinusOneSigma ) ;
+      text->DrawTextNDC( 0.20, 0.80, tstring ) ;
+      sprintf( tstring, "SUSY sig. strength 95%% CL 1-sided UL = %5.2f ", poiUL ) ;
+      text->DrawTextNDC( 0.20, 0.70, tstring ) ;
       if ( scanLow == 0. && poiSignif>-1. ) {
          sprintf( tstring, "Significance = %5.2f", poiSignif ) ;
-         text->DrawTextNDC( 0.25, 0.60, tstring ) ;
+         text->DrawTextNDC( 0.20, 0.60, tstring ) ;
       }
 
 

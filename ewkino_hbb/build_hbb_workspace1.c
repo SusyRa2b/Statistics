@@ -20,10 +20,13 @@
    using namespace RooFit ;
    using namespace RooStats ;
 
+   const int bins_of_nb(3) ;
+   const int max_bins_of_met(50) ;
 
 
 
-   void build_hbb_workspace1( const char* infile = "outputfiles/input-file.txt" ) {
+
+   void build_hbb_workspace1( const char* infile = "outputfiles/input-file.txt", const char* outfile = "outputfiles/ws.root" ) {
 
 
     //-------------------------------------------------------------------------
@@ -61,9 +64,6 @@
       bom.setConstant(kTRUE) ;
       workspace.import(bom) ;
 
-
-      const int bins_of_nb(3) ;
-      const int max_bins_of_met(50) ;
 
       //-- save bins_of_nb in the workspace for convenience.
       RooRealVar bonb( "bins_of_nb", "bins_of_nb", bins_of_nb, 0., 1000. ) ;
@@ -352,9 +352,6 @@
       delete pPoiAndNuisance ;
 
       workspace.Print() ;
-
-      char outfile[10000] ;
-      sprintf( outfile, "outputfiles/ws.root" ) ;
 
       printf("\n\n Saving workspace in : %s\n\n", outfile ) ;
 
