@@ -81,7 +81,8 @@
 
       RooAbsPdf* likelihood = modelConfig->GetPdf() ;
 
-      RooFitResult* fitResult = likelihood->fitTo( *rds, Save(true), PrintLevel(0) ) ;
+      ///RooFitResult* fitResult = likelihood->fitTo( *rds, Save(true), PrintLevel(0) ) ;
+      RooFitResult* fitResult = likelihood->fitTo( *rds, Save(true), PrintLevel(3) ) ;
       fitResult->Print() ;
 
 

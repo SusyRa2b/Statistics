@@ -2,6 +2,8 @@
 #include "TMath.h"
 #include "TSystem.h"
 
+#include "RooArgSet.h"
+#include "RooConstVar.h"
 #include "RooRealVar.h"
 #include "RooFormulaVar.h"
 #include "RooWorkspace.h"
@@ -23,8 +25,17 @@
    const int bins_of_nb(3) ;
    const int max_bins_of_met(50) ;
 
+   RooArgSet* globalObservables ;
+   RooArgSet* allNuisances ;
+   RooArgSet* allNuisancePdfs ;
+
+  //--- prototypes here.
+
+   RooAbsReal* makeLognormalConstraint( const char* NP_name, double NP_val, double NP_err ) ;
 
 
+
+  //===========================================================================================
 
    void build_hbb_workspace1( const char* infile = "outputfiles/input-file.txt", const char* outfile = "outputfiles/ws.root" ) {
 
@@ -38,9 +49,9 @@
       RooWorkspace workspace("ws") ;
       workspace.autoImportClassCode(true) ;
 
-   // RooArgSet* globalObservables      = new RooArgSet("globalObservables");
-   // RooArgSet* allNuisances           = new RooArgSet("allNuisances");
-   // RooArgSet* allNuisancePdfs        = new RooArgSet("allNuisancePdfs");
+      globalObservables      = new RooArgSet("globalObservables");
+      allNuisances           = new RooArgSet("allNuisances");
+      allNuisancePdfs        = new RooArgSet("allNuisancePdfs");
       RooArgSet* observedParametersList = new RooArgSet("observables") ;
 
 
@@ -77,6 +88,7 @@
       RooRealVar* rv_smc_msig[bins_of_nb][max_bins_of_met] ; // first index is number of btags, second is met bin.
       RooRealVar* rv_smc_msb[bins_of_nb][max_bins_of_met]  ; // first index is number of btags, second is met bin.
 
+      RooAbsReal* rv_Rsigsb_corr[bins_of_nb][max_bins_of_met]  ;
 
       for ( int nbi=0; nbi<bins_of_nb; nbi++ ) {
 
@@ -107,6 +119,15 @@
             rv_smc_msb[nbi][mbi] = new RooRealVar( pname, pname, 0., 1.e6 ) ;
             rv_smc_msb[nbi][mbi] -> setVal( TMath::Nint(fileVal) ) ;
             rv_smc_msb[nbi][mbi] -> setConstant( kTRUE ) ;
+
+            float corrVal, corrSyst ;
+            sprintf( pname, "Rsigsb_syst_%db_met%d", nbi+2, mbi+1 ) ;
+            if ( !getFileValue( infile, pname, corrSyst ) ) { printf("\n\n *** Error.  Can't find %s\n\n", pname ) ; return ; }
+            sprintf( pname, "Rsigsb_corr_%db_met%d", nbi+2, mbi+1 ) ;
+            if ( !getFileValue( infile, pname, corrVal  ) ) { printf("\n\n *** Error.  Can't find %s\n\n", pname ) ; return ; }
+
+            rv_Rsigsb_corr[nbi][mbi] = makeLognormalConstraint( pname, corrVal, corrSyst ) ;
+
 
          } // mbi.
 
@@ -172,18 +193,20 @@
             rv_mu_bg_msb[nbi][mbi] -> Print() ;
 
 
-            sprintf( formula, "@0 * @1" ) ;
 
+            sprintf( formula, "@0 * @1 * @2" ) ;
             sprintf( pname, "mu_bg_%db_msig_met%d", nbi+2, mbi+1 ) ;
             printf( "  %s\n", pname ) ;
-            rv_mu_bg_msig[nbi][mbi] = new RooFormulaVar( pname, formula, RooArgSet( *rv_R_msigmsb[mbi], *rv_mu_bg_msb[nbi][mbi] ) ) ;
+            rv_mu_bg_msig[nbi][mbi] = new RooFormulaVar( pname, formula, RooArgSet( *rv_Rsigsb_corr[nbi][mbi], *rv_R_msigmsb[mbi], *rv_mu_bg_msb[nbi][mbi] ) ) ;
             rv_mu_bg_msig[nbi][mbi] -> Print() ;
 
+            sprintf( formula, "@0 * @1" ) ;
             sprintf( pname, "mu_sig_%db_msig_met%d", nbi+2, mbi+1 ) ;
             printf( "  %s\n", pname ) ;
             rv_mu_sig_msig[nbi][mbi] = new RooFormulaVar( pname, formula, RooArgSet( *rv_sig_strength, *rv_smc_msig[nbi][mbi] ) ) ;
             rv_mu_sig_msig[nbi][mbi] -> Print() ;
 
+            sprintf( formula, "@0 * @1" ) ;
             sprintf( pname, "mu_sig_%db_msb_met%d", nbi+2, mbi+1 ) ;
             printf( "  %s\n", pname ) ;
             rv_mu_sig_msb[nbi][mbi] = new RooFormulaVar( pname, formula, RooArgSet( *rv_sig_strength, *rv_smc_msb[nbi][mbi] ) ) ;
@@ -266,6 +289,8 @@
 
       printf("\n\n Building the likelihood.\n\n") ;
 
+      pdflist.add( *allNuisancePdfs ) ;
+
       pdflist.Print() ;
       printf("\n") ;
 
@@ -306,8 +331,8 @@
       sbModel.SetParametersOfInterest( poi );
       sbModel.SetPriorPdf(signal_prior);
       sbModel.SetObservables( *observedParametersList );
-   // sbModel.SetNuisanceParameters( *allNuisances );
-   // sbModel.SetGlobalObservables( *globalObservables );
+      sbModel.SetNuisanceParameters( *allNuisances );
+      sbModel.SetGlobalObservables( *globalObservables );
 
       workspace.Print() ;
 
@@ -364,8 +389,68 @@
 
    } // build_hbb_workspace1.
 
+  //==============================================================================================
+
+    RooAbsReal* makeLognormalConstraint( const char* NP_name, double NP_val, double NP_err ) {
+
+       if ( NP_err <= 0. ) {
+          printf(" makeLognormalConstraint:  Uncertainty is zero.  Will return constant scale factor of %g for %s.  Input val = %g, err = %g.\n", NP_val, NP_name, NP_val, NP_err ) ;
+          return new RooConstVar( NP_name, NP_name, NP_val ) ;
+       }
+
+       char pname[1000] ;
+       sprintf( pname, "prim_%s", NP_name ) ;
+
+       printf(" makeLognormalConstraint : creating primary log-normal variable %s\n", pname ) ;
+       RooRealVar* np_prim_rrv = new RooRealVar( pname, pname, 0., -6., 6. ) ;
+       np_prim_rrv -> setVal( 0. ) ;
+       np_prim_rrv -> setConstant( kFALSE ) ;
+
+       sprintf( pname, "prim_mean_%s", NP_name ) ;
+       RooRealVar* np_prim_mean = new RooRealVar( pname, pname, 0., -6., 6. ) ;
+       np_prim_mean->setConstant(kTRUE) ;
+
+       sprintf( pname, "prim_sigma_%s", NP_name ) ;
+       RooConstVar* np_prim_sigma = new RooConstVar( pname, pname, 1. ) ;
 
 
+       char pdfname[1000] ;
+       sprintf( pdfname, "pdf_prim_%s", NP_name ) ;
+       RooGaussian* np_prim_pdf = new RooGaussian( pdfname, pdfname, *np_prim_rrv, *np_prim_mean, *np_prim_sigma ) ;
+
+       allNuisances -> add( *np_prim_rrv ) ;
+       allNuisancePdfs -> add( *np_prim_pdf ) ;
+       globalObservables -> add( *np_prim_mean ) ;
+
+
+       //-- create const variables for mean and sigma so that they can be saved and accessed from workspace later.
+
+       char vname[1000] ;
+       sprintf( vname, "mean_%s", NP_name ) ;
+       RooConstVar* g_mean  = new RooConstVar( vname, vname, NP_val ) ;
+       sprintf( vname, "sigma_%s", NP_name ) ;
+       RooConstVar* g_sigma = new RooConstVar( vname, vname, NP_err ) ;
+
+       //-- compute the log-normal-distributed parameter from the primary parameter.
+
+       //--- This is the new way.  RMS of lognormal is much closer to sigma when sigma is
+       //    large, doing it this way.  When sigma/mean is small, they are about the same.
+       //    That is, exp(sigma/mean) is close to (sigma/mean + 1).  This one is better when
+       //    sigma/mean is not small.  The high-side tail is not as strong.
+       //
+        RooFormulaVar* np_rfv = new RooFormulaVar( NP_name, "@0 * pow( ( @1/@0 + 1. ), @2)",
+                  RooArgSet( *g_mean, *g_sigma, *np_prim_rrv ) ) ;
+       //------------------------------------------------------------------------------------------
+
+
+       printf("  makeLognormalConstraint : created log-normal nuisance parameter %s : val = %g\n", NP_name, np_rfv -> getVal() ) ;
+
+       return np_rfv ;
+
+
+    } // makeLognormalConstraint.
+
+  //==============================================================================================
 
 
 

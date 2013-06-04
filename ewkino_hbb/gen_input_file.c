@@ -351,6 +351,19 @@
       float smc_3b_msb[50] ;
       float smc_2b_msb[50] ;
 
+      float Rsigsb_4b_val[50] ;
+      float Rsigsb_3b_val[50] ;
+      float Rsigsb_2b_val[50] ;
+
+      float Rsigsb_4b_err[50] ;
+      float Rsigsb_3b_err[50] ;
+      float Rsigsb_2b_err[50] ;
+
+      float Rsigsb_4b_staterr2[50] ;
+      float Rsigsb_3b_staterr2[50] ;
+      float Rsigsb_2b_staterr2[50] ;
+
+
       printf("\n\n\n") ;
       printf("============================================================================================================================================================================\n") ;
       printf(" METsig    comp  |   4bSB   4bSIG     4bSIG/4bSB    |   3bSB   3bSIG     3bSIG/3bSB     |   2bSB   2bSIG     2bSIG/2bSB     |    BG val.        3b pred.       2b pred.     |\n") ;
@@ -405,25 +418,40 @@
 
             if ( si == (nbgcomps-1) ) {
 
-               float ratio_4b_val = bgsum_nmsig_4b_val / bgsum_nmsb_4b_val ;
-               float ratio_4b_err = ratio_4b_val * sqrt( bgsum_nmsig_4b_err2 / pow(bgsum_nmsig_4b_val,2) + bgsum_nmsb_4b_err2 / pow(bgsum_nmsb_4b_val,2) ) ;
-               float ratio_3b_val = bgsum_nmsig_3b_val / bgsum_nmsb_3b_val ;
-               float ratio_3b_err = ratio_3b_val * sqrt( bgsum_nmsig_3b_err2 / pow(bgsum_nmsig_3b_val,2) + bgsum_nmsb_3b_err2 / pow(bgsum_nmsb_3b_val,2) ) ;
-               float ratio_2b_val = bgsum_nmsig_2b_val / bgsum_nmsb_2b_val ;
-               float ratio_2b_err = ratio_2b_val * sqrt( bgsum_nmsig_2b_err2 / pow(bgsum_nmsig_2b_val,2) + bgsum_nmsb_2b_err2 / pow(bgsum_nmsb_2b_val,2) ) ;
+               Rsigsb_4b_val[hbi] =  bgsum_nmsig_4b_val / bgsum_nmsb_4b_val ;
+               Rsigsb_4b_err[hbi] =  Rsigsb_4b_val[hbi] * sqrt( bgsum_nmsig_4b_err2 / pow(bgsum_nmsig_4b_val,2) + bgsum_nmsb_4b_err2 / pow(bgsum_nmsb_4b_val,2) ) ;
+               Rsigsb_3b_val[hbi] =  bgsum_nmsig_3b_val / bgsum_nmsb_3b_val ;
+               Rsigsb_3b_err[hbi] =  Rsigsb_3b_val[hbi] * sqrt( bgsum_nmsig_3b_err2 / pow(bgsum_nmsig_3b_val,2) + bgsum_nmsb_3b_err2 / pow(bgsum_nmsb_3b_val,2) ) ;
+               Rsigsb_2b_val[hbi] =  bgsum_nmsig_2b_val / bgsum_nmsb_2b_val ;
+               Rsigsb_2b_err[hbi] =  Rsigsb_2b_val[hbi] * sqrt( bgsum_nmsig_2b_err2 / pow(bgsum_nmsig_2b_val,2) + bgsum_nmsb_2b_err2 / pow(bgsum_nmsb_2b_val,2) ) ;
 
-               float bgpred_from3b_val = bgsum_nmsb_4b_val * ratio_3b_val ;
-               float bgpred_from3b_err = bgpred_from3b_val * sqrt( bgsum_nmsb_4b_err2/pow(bgsum_nmsb_4b_val,2.) + pow( ratio_3b_err/ratio_3b_val,2.) ) ;
+               Rsigsb_4b_staterr2[hbi] = 0. ;
+               if ( bgsum_nmsig_4b_val > 0. ) { Rsigsb_4b_staterr2[hbi] += Rsigsb_4b_val[hbi] * Rsigsb_4b_val[hbi] / bgsum_nmsig_4b_val ; }
+               if ( bgsum_nmsb_4b_val  > 0. ) { Rsigsb_4b_staterr2[hbi] += Rsigsb_4b_val[hbi] * Rsigsb_4b_val[hbi] / bgsum_nmsb_4b_val ; }
+               if ( Rsigsb_4b_staterr2[hbi] < 0.0001 ) { Rsigsb_4b_staterr2[hbi] = 0.15 ; }
 
-               float bgpred_from2b_val = bgsum_nmsb_4b_val * ratio_2b_val ;
-               float bgpred_from2b_err = bgpred_from2b_val * sqrt( bgsum_nmsb_4b_err2/pow(bgsum_nmsb_4b_val,2.) + pow( ratio_2b_err/ratio_2b_val,2.) ) ;
+               Rsigsb_3b_staterr2[hbi] = 0. ;
+               if ( bgsum_nmsig_3b_val > 0. ) { Rsigsb_3b_staterr2[hbi] += Rsigsb_3b_val[hbi] * Rsigsb_3b_val[hbi] / bgsum_nmsig_3b_val ; }
+               if ( bgsum_nmsb_3b_val  > 0. ) { Rsigsb_3b_staterr2[hbi] += Rsigsb_3b_val[hbi] * Rsigsb_3b_val[hbi] / bgsum_nmsb_3b_val ; }
+               if ( Rsigsb_3b_staterr2[hbi] < 0.0001 ) { Rsigsb_3b_staterr2[hbi] = 0.15 ; }
+
+               Rsigsb_2b_staterr2[hbi] = 0. ;
+               if ( bgsum_nmsig_2b_val > 0. ) { Rsigsb_2b_staterr2[hbi] += Rsigsb_2b_val[hbi] * Rsigsb_2b_val[hbi] / bgsum_nmsig_2b_val ; }
+               if ( bgsum_nmsb_2b_val  > 0. ) { Rsigsb_2b_staterr2[hbi] += Rsigsb_2b_val[hbi] * Rsigsb_2b_val[hbi] / bgsum_nmsb_2b_val ; }
+               if ( Rsigsb_2b_staterr2[hbi] < 0.0001 ) { Rsigsb_2b_staterr2[hbi] = 0.15 ; }
+
+               float bgpred_from3b_val = bgsum_nmsb_4b_val * Rsigsb_3b_val[hbi] ;
+               float bgpred_from3b_err = bgpred_from3b_val * sqrt( bgsum_nmsb_4b_err2/pow(bgsum_nmsb_4b_val,2.) + pow( Rsigsb_3b_err[hbi]/Rsigsb_3b_val[hbi],2.) ) ;
+
+               float bgpred_from2b_val = bgsum_nmsb_4b_val * Rsigsb_2b_val[hbi] ;
+               float bgpred_from2b_err = bgpred_from2b_val * sqrt( bgsum_nmsb_4b_err2/pow(bgsum_nmsb_4b_val,2.) + pow( Rsigsb_2b_err[hbi]/Rsigsb_2b_val[hbi],2.) ) ;
 
                printf( "[%3.0f,%3.0f] %6s |  %6.1f %6.1f   %5.3f +/- %5.3f |  %6.1f %6.1f   %5.3f +/- %5.3f  |  %6.1f %6.1f   %5.3f +/- %5.3f  | %4.1f +/- %4.1f   %4.1f +/- %4.1f  %4.1f +/- %4.1f  |\n",
                   metsiglow, metsighigh,
                   "bg sum",
-                  bgsum_nmsb_4b_val, bgsum_nmsig_4b_val,   ratio_4b_val, ratio_4b_err,
-                  bgsum_nmsb_3b_val, bgsum_nmsig_3b_val,   ratio_3b_val, ratio_3b_err,
-                  bgsum_nmsb_2b_val, bgsum_nmsig_2b_val,   ratio_2b_val, ratio_2b_err,
+                  bgsum_nmsb_4b_val, bgsum_nmsig_4b_val,   Rsigsb_4b_val[hbi], Rsigsb_4b_err[hbi],
+                  bgsum_nmsb_3b_val, bgsum_nmsig_3b_val,   Rsigsb_3b_val[hbi], Rsigsb_3b_err[hbi],
+                  bgsum_nmsb_2b_val, bgsum_nmsig_2b_val,   Rsigsb_2b_val[hbi], Rsigsb_2b_err[hbi],
                   bgsum_nmsig_4b_val, sqrt(bgsum_nmsig_4b_err2),
                   bgpred_from3b_val, bgpred_from3b_err,
                   bgpred_from2b_val, bgpred_from2b_err
@@ -470,6 +498,56 @@
       } // hbi.
 
       printf("\n\n\n") ;
+
+
+
+      //-- Compute SIG/SB corrections and uncertainties.
+      //
+      //  The fit will do a weighted average of the 2b, 3b, and 4b samples, so corrections
+      //  should be made with respect to that average.  In computing the weighted average
+      //  below, use sqrt(N) for uncertainty, not MC stats error, since that's what the
+      //  fit will do.
+      //
+      //  Taking the uncertainty on the correction as the (MC stat error / value) on the difference
+      //  with respect to the weighted ave combined with half of the difference with respect
+      //  to the weighted ave in quadrature.
+      //
+
+      printf("\n\n") ;
+      float wave_Rsigsb_val[50] ;
+      for ( int hbi=1; hbi<=bins_of_met; hbi++ ) {
+         wave_Rsigsb_val[hbi] =  ( Rsigsb_2b_val[hbi] / Rsigsb_2b_staterr2[hbi] + Rsigsb_3b_val[hbi] / Rsigsb_3b_staterr2[hbi] + Rsigsb_4b_val[hbi] / Rsigsb_4b_staterr2[hbi] ) /
+                                 (                1.  / Rsigsb_2b_staterr2[hbi] +                1.  / Rsigsb_3b_staterr2[hbi] +                1.  / Rsigsb_4b_staterr2[hbi] ) ;
+         printf(" expected sqrt(N) weighted Rsig/sb ave for METsig bin %d :  %5.3f\n", hbi, wave_Rsigsb_val[hbi] ) ;
+      } // hbi
+
+      float correction_Rsigsb_4b[50] ;
+      float correction_Rsigsb_3b[50] ;
+      float correction_Rsigsb_2b[50] ;
+
+      float syst_Rsigsb_4b[50] ;
+      float syst_Rsigsb_3b[50] ;
+      float syst_Rsigsb_2b[50] ;
+
+      printf("\n\n") ;
+
+      for ( int hbi=1; hbi<=bins_of_met; hbi++ ) {
+
+         correction_Rsigsb_4b[hbi] = Rsigsb_4b_val[hbi] / wave_Rsigsb_val[hbi] ;
+         correction_Rsigsb_3b[hbi] = Rsigsb_3b_val[hbi] / wave_Rsigsb_val[hbi] ;
+         correction_Rsigsb_2b[hbi] = Rsigsb_2b_val[hbi] / wave_Rsigsb_val[hbi] ;
+
+         syst_Rsigsb_4b[hbi] = sqrt( pow( (Rsigsb_4b_err[hbi]/Rsigsb_4b_val[hbi]), 2. )  +  pow( (correction_Rsigsb_4b[hbi]-1.)/2.,2. ) ) ;
+         syst_Rsigsb_3b[hbi] = sqrt( pow( (Rsigsb_3b_err[hbi]/Rsigsb_4b_val[hbi]), 2. )  +  pow( (correction_Rsigsb_3b[hbi]-1.)/2.,2. ) ) ;
+         syst_Rsigsb_2b[hbi] = sqrt( pow( (Rsigsb_2b_err[hbi]/Rsigsb_4b_val[hbi]), 2. )  +  pow( (correction_Rsigsb_2b[hbi]-1.)/2.,2. ) ) ;
+
+         printf("  Rsig/sb corrections for METsig bin %d :     4b = %5.3f +/- %5.3f,       3b =  %5.3f +/- %5.3f,      2b =  %5.3f +/- %5.3f\n",
+                  hbi,
+                  correction_Rsigsb_4b[hbi], syst_Rsigsb_4b[hbi],
+                  correction_Rsigsb_3b[hbi], syst_Rsigsb_3b[hbi],
+                  correction_Rsigsb_2b[hbi], syst_Rsigsb_2b[hbi] ) ;
+
+      } // hbi.
 
 
 
@@ -520,6 +598,23 @@
       for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "smc_3b_msb_met%d    %8.2f\n", mbi, smc_3b_msb[mbi]  ) ; }
       for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "smc_2b_msig_met%d   %8.2f\n", mbi, smc_2b_msig[mbi] ) ; }
       for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "smc_2b_msb_met%d    %8.2f\n", mbi, smc_2b_msb[mbi]  ) ; }
+
+
+      //-- Rsig/sb correction factors and systematics.
+      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) {
+         fprintf( outfile, "Rsigsb_corr_4b_met%d   %5.3f\n", mbi, correction_Rsigsb_4b[mbi] ) ;
+         fprintf( outfile, "Rsigsb_syst_4b_met%d   %5.3f\n", mbi, syst_Rsigsb_4b[mbi] ) ;
+      }
+      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) {
+         fprintf( outfile, "Rsigsb_corr_3b_met%d   %5.3f\n", mbi, correction_Rsigsb_3b[mbi] ) ;
+         fprintf( outfile, "Rsigsb_syst_3b_met%d   %5.3f\n", mbi, syst_Rsigsb_3b[mbi] ) ;
+      }
+      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) {
+         fprintf( outfile, "Rsigsb_corr_2b_met%d   %5.3f\n", mbi, correction_Rsigsb_2b[mbi] ) ;
+         fprintf( outfile, "Rsigsb_syst_2b_met%d   %5.3f\n", mbi, syst_Rsigsb_2b[mbi] ) ;
+      }
+
+
 
       fclose( outfile ) ;
 
