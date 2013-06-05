@@ -46,6 +46,9 @@
       double minNllSusyFloat = fitResult->minNll() ;
       double susy_ss_atMinNll = rv_sig_strength -> getVal() ;
 
+      RooMsgService::instance().getStream(1).removeTopic(Minimization) ;
+      RooMsgService::instance().getStream(1).removeTopic(Fitting) ;
+
 
 
       double ssVals[200] ;
@@ -66,7 +69,7 @@
          testStatVals[spi] = 2.*( minNll_sp - minNllSusyFloat ) ;
          delete fitResult_sp ;
 
-         printf("  %3d : %s = %6.1f,  test stat = %7.3f\n", spi, rv_sig_strength->GetName(), ssVals[spi], testStatVals[spi] ) ;
+         printf("  %3d : %s = %6.1f,  test stat = %7.3f\n", spi, rv_sig_strength->GetName(), ssVals[spi], testStatVals[spi] ) ; fflush(stdout) ;
 
       } // spi.
 

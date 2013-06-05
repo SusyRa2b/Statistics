@@ -5,9 +5,10 @@
 #include "TDirectory.h"
 #include "TH1.h"
 #include "TCanvas.h"
+#include "TText.h"
 
 
-   void plottoy1( const char* infile = "outputfiles/toytt-withsig-250-ss1.0.root", bool doUL = false ) {
+   void plottoy1( const char* infile = "outputfiles/toytt-withsig-250-ss1.0.root", bool doUL = false, const char* plottitle="" ) {
 
       gStyle -> SetOptStat("emro") ;
       gStyle -> SetStatW(0.30) ;
@@ -28,6 +29,8 @@
       TChain* toytt = new TChain("toytt") ;
       toytt -> Add( infile ) ;
 
+      TText* tt_title = new TText() ;
+
 
       gDirectory -> Delete( "h*" ) ;
 
@@ -45,22 +48,27 @@
 
       ctoy -> cd(1) ;
       toytt -> Draw( "fit_sig_strength>>h_str_fit", "" ) ;
+      tt_title->DrawTextNDC(0.15,0.83, plottitle ) ;
 
       ctoy -> cd(2) ;
       toytt -> Draw( "fit_sig_strength_err>>h_str_err", "" ) ;
+      tt_title->DrawTextNDC(0.15,0.83, plottitle ) ;
 
       if ( !doUL ) {
 
          ctoy -> cd(3) ;
          toytt -> Draw( "(fit_sig_strength-1.)/fit_sig_strength_err>>h_str_pull", "" ) ;
+         tt_title->DrawTextNDC(0.15,0.83, plottitle ) ;
 
          ctoy -> cd(4) ;
          toytt -> Draw( "fit_sig_signif>>h_str_signif", "" ) ;
+         tt_title->DrawTextNDC(0.15,0.83, plottitle ) ;
 
       } else {
 
          ctoy -> cd(3) ;
          toytt -> Draw( "fit_sig_ul>>h_str_ul", "" ) ;
+         tt_title->DrawTextNDC(0.15,0.83, plottitle ) ;
 
       }
 

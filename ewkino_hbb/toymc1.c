@@ -103,6 +103,9 @@
       toytt -> Branch( "fit_sig_ul", &fit_sig_ul, "fit_sig_ul/F" ) ;
 
 
+      RooMsgService::instance().getStream(1).removeTopic(Minimization) ;
+      RooMsgService::instance().getStream(1).removeTopic(Fitting) ;
+
       for ( int ti=0; ti<nToy; ti++ ) {
 
          RooDataSet* toyds = genToyData() ;

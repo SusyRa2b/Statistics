@@ -36,7 +36,10 @@
 
    void labelBins( TH1F* hist ) ;
 
-   void fitqual_plots( const char* wsfile = "outputfiles/ws.root" ) {
+   void fitqual_plots( const char* wsfile = "outputfiles/ws.root", const char* plottitle="" ) {
+
+      TText* tt_title = new TText() ;
+      tt_title -> SetTextAlign(33) ;
 
       gStyle -> SetOptStat(0) ;
       gStyle -> SetLabelSize( 0.06, "y" ) ;
@@ -230,6 +233,8 @@
          hist_data_msig -> Draw("same e") ;
          hist_data_msig -> Draw("same axis") ;
 
+         tt_title -> DrawTextNDC( 0.85, 0.85, plottitle ) ;
+
          pad++ ;
 
 
@@ -246,6 +251,8 @@
          hstack_msb -> Draw("same") ;
          hist_data_msb -> Draw("same e") ;
          hist_data_msb -> Draw("same axis") ;
+
+         tt_title -> DrawTextNDC( 0.85, 0.85, plottitle ) ;
 
          pad++ ;
 
@@ -278,23 +285,17 @@
       hist_R_msigmsb -> SetMaximum(0.35) ;
       hist_R_msigmsb -> Draw("e") ;
 
+      tt_title -> DrawTextNDC( 0.85, 0.85, plottitle ) ;
+
       pad++ ;
 
 
 
       cfq1->cd( pad ) ;
 
-  //  TText* text = new TText() ;
-  //  text->SetTextSize( 0.06 ) ;
-
-  //  char message[1000] ;
-
-  //  sprintf( message, "Signal strength = %.2f +/- %.2f", rv_sig_strength->getVal(), rv_sig_strength -> getError() ) ;
-  //  printf( "\n\n %s \n\n", message ) ;
-
-  //  text->DrawText( 0.1, 0.8, message ) ;
-
       scan_sigstrength( wsfile ) ;
+
+      tt_title -> DrawTextNDC( 0.85, 0.25, plottitle ) ;
 
 
 
