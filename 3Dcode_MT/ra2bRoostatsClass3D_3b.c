@@ -727,7 +727,6 @@
       if ( strcmp( label, "btageff_err") != 0 ) {  mismatchErr(label,"btageff_err") ; return false ; }
 
 
-
       // New for 3: ttwj and znn LDP/ZL MC ratios.
 
       float ttwj_ldp0lep_ratio[nBinsMET][nBinsHT][nBinsBtag] ;
@@ -768,6 +767,145 @@
         } // j
       } // i
       printf("\n\n") ;
+
+
+      // Next get 3b/2b and 4b/2b ratios for ttwj
+
+      float      ttwj_3b2b_ratio[nBinsMET][nBinsHT] ;
+      float ttwjSlSig_3b2b_ratio[nBinsMET][nBinsHT] ;
+      float       qcd_3b2b_ratio[nBinsMET][nBinsHT] ;
+
+      float      ttwj_3b2b_ratio_err[nBinsMET][nBinsHT] ;
+      float ttwjSlSig_3b2b_ratio_err[nBinsMET][nBinsHT] ;
+      float       qcd_3b2b_ratio_err[nBinsMET][nBinsHT] ;
+
+      float      ttwj_4b2b_ratio[nBinsMET][nBinsHT] ;
+      float ttwjSlSig_4b2b_ratio[nBinsMET][nBinsHT] ;
+      float       qcd_4b2b_ratio[nBinsMET][nBinsHT] ;
+
+      float      ttwj_4b2b_ratio_err[nBinsMET][nBinsHT] ;
+      float ttwjSlSig_4b2b_ratio_err[nBinsMET][nBinsHT] ;
+      float       qcd_4b2b_ratio_err[nBinsMET][nBinsHT] ;
+
+      // 0lep sample
+
+      if ( nBinsBtag > 2 ) {
+
+	printf("\n\n") ;
+	for (int i = 0 ; i < nBinsMET ; i++) {
+	  for (int j = 0 ; j < nBinsHT ; j++) {
+	    char expectedlabel[1000] ;                                                                                                          
+	    sprintf( expectedlabel, "ttwj_mc_3bover2b_ratio_M%d_H%d", i+1, j+1 ) ;                                                      
+	    char vallabel[1000] ;                                                                                                               
+	    char errlabel[1000] ;                                                                                                               
+	    fscanf( infp, "%s %g", vallabel, &ttwj_3b2b_ratio[i][j] ) ;                                                                 
+	    if ( strcmp( vallabel, expectedlabel ) != 0 ) { mismatchErr( label, expectedlabel ) ; return false ; }                              
+	    fscanf( infp, "%s %g", errlabel, &ttwj_3b2b_ratio_err[i][j] ) ;                                                             
+	    printf(" ttwj 3b/2b ratio : %s  %6.3f +/- %5.3f\n", vallabel, ttwj_3b2b_ratio[i][j], ttwj_3b2b_ratio_err[i][j] ) ;   
+	  } // j
+	} // i
+	printf("\n\n") ;
+	
+	if ( nBinsBtag > 3 ) {
+
+	  printf("\n\n") ;
+	  for (int i = 0 ; i < nBinsMET ; i++) {
+	    for (int j = 0 ; j < nBinsHT ; j++) {
+	      char expectedlabel[1000] ;                                                                                                          
+	      sprintf( expectedlabel, "ttwj_mc_4bover2b_ratio_M%d_H%d", i+1, j+1 ) ;                                                      
+	      char vallabel[1000] ;                                                                                                               
+	      char errlabel[1000] ;                                                                                                               
+	      fscanf( infp, "%s %g", vallabel, &ttwj_4b2b_ratio[i][j] ) ;                                                                 
+	      if ( strcmp( vallabel, expectedlabel ) != 0 ) { mismatchErr( label, expectedlabel ) ; return false ; }                              
+	      fscanf( infp, "%s %g", errlabel, &ttwj_4b2b_ratio_err[i][j] ) ;                                                             
+	      printf(" ttwj 4b/2b ratio : %s  %6.3f +/- %5.3f\n", vallabel, ttwj_4b2b_ratio[i][j], ttwj_4b2b_ratio_err[i][j] ) ;   
+	    } // j
+	  } // i
+	  printf("\n\n") ;
+	  
+	}
+      }
+
+
+      // SlSig sample
+
+      if ( nBinsBtag > 2 ) {
+
+	printf("\n\n") ;
+	for (int i = 0 ; i < nBinsMET ; i++) {
+	  for (int j = 0 ; j < nBinsHT ; j++) {
+	    char expectedlabel[1000] ;                                                                                                          
+	    sprintf( expectedlabel, "ttwjSlSig_mc_3bover2b_ratio_M%d_H%d", i+1, j+1 ) ;                                                      
+	    char vallabel[1000] ;                                                                                                               
+	    char errlabel[1000] ;                                                                                                               
+	    fscanf( infp, "%s %g", vallabel, &ttwj_3b2b_ratio[i][j] ) ;                                                                 
+	    if ( strcmp( vallabel, expectedlabel ) != 0 ) { mismatchErr( label, expectedlabel ) ; return false ; }                              
+	    fscanf( infp, "%s %g", errlabel, &ttwj_3b2b_ratio_err[i][j] ) ;                                                             
+	    printf(" ttwjSlSig 3b/2b ratio : %s  %6.3f +/- %5.3f\n", vallabel, ttwjSlSig_3b2b_ratio[i][j], ttwjSlSig_3b2b_ratio_err[i][j] ) ;   
+	  } // j
+	} // i
+	printf("\n\n") ;
+	
+	if ( nBinsBtag > 3 ) {
+
+	  printf("\n\n") ;
+	  for (int i = 0 ; i < nBinsMET ; i++) {
+	    for (int j = 0 ; j < nBinsHT ; j++) {
+	      char expectedlabel[1000] ;                                                                                                          
+	      sprintf( expectedlabel, "ttwjSlSig_mc_4bover2b_ratio_M%d_H%d", i+1, j+1 ) ;                                                      
+	      char vallabel[1000] ;                                                                                                               
+	      char errlabel[1000] ;                                                                                                               
+	      fscanf( infp, "%s %g", vallabel, &ttwj_4b2b_ratio[i][j] ) ;                                                                 
+	      if ( strcmp( vallabel, expectedlabel ) != 0 ) { mismatchErr( label, expectedlabel ) ; return false ; }                              
+	      fscanf( infp, "%s %g", errlabel, &ttwj_4b2b_ratio_err[i][j] ) ;                                                             
+	      printf(" ttwjSlSig 4b/2b ratio : %s  %6.3f +/- %5.3f\n", vallabel, ttwjSlSig_4b2b_ratio[i][j], ttwjSlSig_4b2b_ratio_err[i][j] ) ;   
+	    } // j
+	  } // i
+	  printf("\n\n") ;
+	  
+	}
+      }
+
+
+      // Next get 3b/2b and 4b/2b ratios for qcd
+
+      if ( nBinsBtag > 2 ) {
+
+	printf("\n\n") ;
+	for (int i = 0 ; i < nBinsMET ; i++) {
+	  for (int j = 0 ; j < nBinsHT ; j++) {
+	    char expectedlabel[1000] ;                                                                                                          
+	    sprintf( expectedlabel, "qcd_mc_3bover2b_ratio_M%d_H%d", i+1, j+1 ) ;                                               
+	    char vallabel[1000] ;                                                                                                               
+	    char errlabel[1000] ;                                                                                                               
+	    fscanf( infp, "%s %g", vallabel, &qcd_3b2b_ratio[i][j] ) ;                                                                  
+	    if ( strcmp( vallabel, expectedlabel ) != 0 ) { mismatchErr( label, expectedlabel ) ; return false ; }                              
+	    fscanf( infp, "%s %g", errlabel, &qcd_3b2b_ratio_err[i][j] ) ;                                                              
+	    printf(" qcd 3b/2b ratio : %s  %6.3f +/- %5.3f\n", vallabel, qcd_3b2b_ratio[i][j], qcd_3b2b_ratio_err[i][j] ) ;   
+	  } // j
+	} // i
+	printf("\n\n") ;
+
+	if ( nBinsBtag > 3 ) {
+
+	  printf("\n\n") ;
+	  for (int i = 0 ; i < nBinsMET ; i++) {
+	    for (int j = 0 ; j < nBinsHT ; j++) {
+	      char expectedlabel[1000] ;                                                                                                          
+	      sprintf( expectedlabel, "qcd_mc_4bover2b_ratio_M%d_H%d", i+1, j+1 ) ;                                               
+	      char vallabel[1000] ;                                                                                                               
+	      char errlabel[1000] ;                                                                                                               
+	      fscanf( infp, "%s %g", vallabel, &qcd_4b2b_ratio[i][j] ) ;                                                                  
+	      if ( strcmp( vallabel, expectedlabel ) != 0 ) { mismatchErr( label, expectedlabel ) ; return false ; }                              
+	      fscanf( infp, "%s %g", errlabel, &qcd_4b2b_ratio_err[i][j] ) ;                                                              
+	      printf(" qcd 4b/2b ratio : %s  %6.3f +/- %5.3f\n", vallabel, qcd_4b2b_ratio[i][j], qcd_4b2b_ratio_err[i][j] ) ;   
+	    } // j
+	  } // i
+	  printf("\n\n") ;
+
+	}
+      }
+
 
       // NVVmc_0lep
 
@@ -952,44 +1090,6 @@
 
 
 
-
-
-      // SL 2b/1b and 3b/1b fractions
-      
-      for (int i = 0 ; i < nBinsMET ; i++) {
-        for (int j = 0 ; j < nBinsHT ; j++) {
-          for (int k = 0 ; k < 3 ; k++) {         // note that in thins case nBinsBtag is hardcoded
-	                                          // to be revisited if we decide to use these fractions
-            if ( k == 0 ) {
-              sl_fracNb_val[i][j][k] = 1. ;
-              sl_fracNb_err[i][j][k] = 0.00001 ;
-            }
-            else {
-
-              TString inPar     = "sl_frac";
-              TString inPar_err = "sl_frac";
-              
-              if ( k == 1 ) { inPar += "_2b"; inPar_err += "_2b" ; }
-              if ( k == 2 ) { inPar += "_3b"; inPar_err += "_3b" ; }
-
-              inPar     += "_val"+sMbins[i]+sHbins[j] ;
-              inPar_err += "_err"+sMbins[i]+sHbins[j] ;
-
-              fscanf( infp, "%s %g", label, &sl_fracNb_val[i][j][k] ) ;
-              if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
-              cout << inPar << " = " << sl_fracNb_val[i][j][k] << endl ;          
-
-              fscanf( infp, "%s %g", label, &sl_fracNb_err[i][j][k] ) ;
-              if ( label != inPar_err ) { mismatchErr(label,inPar_err) ; return false ; }
-              cout << inPar_err << " = " << sl_fracNb_err[i][j][k] << endl ;      
-
-            }  // end if
-
-          } // k
-        } // j
-      } // i
-
-
       printf("\n Done reading in %s\n\n", infile ) ;
       fclose( infp ) ;
       
@@ -1031,17 +1131,9 @@
 
             // TTWJ stuff.
 
-	    // always use the input b-jet shape to set the initial values
-	    if ( k == 0 ) {
-	      initialval_ttwj_sl[i][j][k] = N_1lep[i][j][k] / trigeff_1L[i][j] ;
-	    }
-	    else {
-	      initialval_ttwj_sl[i][j][k] = initialval_ttwj_sl[i][j][0] * sl_fracNb_val[i][j][k] ;
-	    }
-
-            initialval_ttwj[i][j][k] = sf_ttwj[i][j][k] * initialguess_ttwj_0lep1lep_ratio* initialval_ttwj_sl[i][j][k] ;
+            initialval_ttwj_sl[i][j][k] = N_1lep[i][j][k] / trigeff_1L[i][j] ;
+            initialval_ttwj[i][j][k] = sf_ttwj[i][j][k] * initialguess_ttwj_0lep1lep_ratio * initialval_ttwj_sl[i][j][k] ;
             initialval_ttwj_ldp[i][j][k] = ttwj_ldp0lep_ratio[i][j][k] * initialval_ttwj[i][j][k] ;
-
 	    initialval_ttwj_slSig[i][j][k] = sf_ttwj_slSig[i][j][k] * initialval_ttwj_sl[i][j][k] * ratio_slSigsl ;
 
 
@@ -2016,9 +2108,118 @@
 
 
 
+      printf("\n\n QCD and ttwj nB ratio factors.\n\n") ; cout << flush ;
+
+      // QCD and TTWJ nB ratio factors
+      
+      RooAbsReal* rar_qcd_3b2b_ratio [nBinsMET][nBinsHT];
+      RooAbsReal* rar_ttwj_3b2b_ratio[nBinsMET][nBinsHT];
+      RooAbsReal* rar_ttwjSlSig_3b2b_ratio[nBinsMET][nBinsHT];
+      RooAbsReal* rar_qcd_4b2b_ratio [nBinsMET][nBinsHT];
+      RooAbsReal* rar_ttwj_4b2b_ratio[nBinsMET][nBinsHT];
+      RooAbsReal* rar_ttwjSlSig_4b2b_ratio[nBinsMET][nBinsHT];
 
 
+      if ( constrainBjetShape && nBinsBtag > 2 ) {
 
+	for (int i = 0 ; i < nBinsMET ; i++) {
+	  for (int j = 0 ; j < nBinsHT ; j++) {
+	    if ( ignoreBin[i][j] ) continue ;
+
+	    //--- QCD
+	    
+	    sprintf( NP_name, "qcd_3b2b_ratio_M%d_H%d", i+1, j+1 ) ;
+	    if ( ! (blindStudy && blind0lepBin[i][j]) ) {
+                if ( useLognormal ) {
+		  rar_qcd_3b2b_ratio[i][j] = makeLognormalConstraint( NP_name, qcd_3b2b_ratio[i][j], qcd_3b2b_ratio_err[i][j] ) ;
+                } else {
+		  rar_qcd_3b2b_ratio[i][j] = makeGaussianConstraint( NP_name, qcd_3b2b_ratio[i][j], qcd_3b2b_ratio_err[i][j] ) ;
+                }
+	    } else {
+	      rar_qcd_3b2b_ratio[i][j] = makeGaussianConstraint( NP_name, qcd_3b2b_ratio[i][j], 0. ) ; //-- this just creates a constant.
+	      workspace.import( *(rar_qcd_3b2b_ratio[i][j]) ) ;
+	    }
+	    
+	    if ( nBinsBtag > 3 ) {
+
+	      sprintf( NP_name, "qcd_4b2b_ratio_M%d_H%d", i+1, j+1 ) ;
+	      if ( ! (blindStudy && blind0lepBin[i][j]) ) {
+                if ( useLognormal ) {
+		  rar_qcd_4b2b_ratio[i][j] = makeLognormalConstraint( NP_name, qcd_4b2b_ratio[i][j], qcd_4b2b_ratio_err[i][j] ) ;
+                } else {
+		  rar_qcd_4b2b_ratio[i][j] = makeGaussianConstraint( NP_name, qcd_4b2b_ratio[i][j], qcd_4b2b_ratio_err[i][j] ) ;
+                }
+	      } else {
+		rar_qcd_4b2b_ratio[i][j] = makeGaussianConstraint( NP_name, qcd_4b2b_ratio[i][j], 0. ) ; //-- this just creates a constant.
+		workspace.import( *(rar_qcd_4b2b_ratio[i][j]) ) ;
+	      }
+	    
+	    }
+
+	    //--- ttwj 0lep
+
+	    sprintf( NP_name, "ttwj_3b2b_ratio_M%d_H%d", i+1, j+1 ) ;
+	    if ( ! (blindStudy && blind0lepBin[i][j]) ) {
+	      if ( useLognormal ) {
+                   rar_ttwj_3b2b_ratio[i][j] = makeLognormalConstraint( NP_name, ttwj_3b2b_ratio[i][j], ttwj_3b2b_ratio_err[i][j] ) ;
+	      } else {
+		rar_ttwj_3b2b_ratio[i][j] = makeGaussianConstraint( NP_name, ttwj_3b2b_ratio[i][j], ttwj_3b2b_ratio_err[i][j] ) ;
+	      }
+	    } else {
+	      rar_ttwj_3b2b_ratio[i][j] = makeGaussianConstraint( NP_name, ttwj_3b2b_ratio[i][j], 0. ) ; //-- this just creates a constant.
+	      workspace.import( *(rar_ttwj_3b2b_ratio[i][j]) ) ;
+	    }
+
+	    if ( nBinsBtag > 3 ) {
+
+	      sprintf( NP_name, "ttwj_4b2b_ratio_M%d_H%d", i+1, j+1 ) ;
+	      if ( ! (blindStudy && blind0lepBin[i][j]) ) {
+		if ( useLognormal ) {
+		  rar_ttwj_4b2b_ratio[i][j] = makeLognormalConstraint( NP_name, ttwj_4b2b_ratio[i][j], ttwj_4b2b_ratio_err[i][j] ) ;
+                } else {
+		  rar_ttwj_4b2b_ratio[i][j] = makeGaussianConstraint( NP_name, ttwj_4b2b_ratio[i][j], ttwj_4b2b_ratio_err[i][j] ) ;
+		}
+	      } else {
+		rar_ttwj_4b2b_ratio[i][j] = makeGaussianConstraint( NP_name, ttwj_4b2b_ratio[i][j], 0. ) ; //-- this just creates a constant.
+		workspace.import( *(rar_ttwj_4b2b_ratio[i][j]) ) ;
+	      }
+	    }
+	    
+	    //--- ttwj 1lepSig
+
+	    sprintf( NP_name, "ttwjSlSig_3b2b_ratio_M%d_H%d", i+1, j+1 ) ;
+	    if ( ! (blindStudy && blind0lepBin[i][j]) ) {
+	      if ( useLognormal ) {
+                   rar_ttwjSlSig_3b2b_ratio[i][j] = makeLognormalConstraint( NP_name, ttwjSlSig_3b2b_ratio[i][j], ttwjSlSig_3b2b_ratio_err[i][j] ) ;
+	      } else {
+		rar_ttwjSlSig_3b2b_ratio[i][j] = makeGaussianConstraint( NP_name, ttwjSlSig_3b2b_ratio[i][j], ttwjSlSig_3b2b_ratio_err[i][j] ) ;
+	      }
+	    } else {
+	      rar_ttwjSlSig_3b2b_ratio[i][j] = makeGaussianConstraint( NP_name, ttwjSlSig_3b2b_ratio[i][j], 0. ) ; //-- this just creates a constant.
+	      workspace.import( *(rar_ttwjSlSig_3b2b_ratio[i][j]) ) ;
+	    }
+
+	    if ( nBinsBtag > 3 ) {
+
+	      sprintf( NP_name, "ttwjSlSig_4b2b_ratio_M%d_H%d", i+1, j+1 ) ;
+	      if ( ! (blindStudy && blind0lepBin[i][j]) ) {
+		if ( useLognormal ) {
+		  rar_ttwjSlSig_4b2b_ratio[i][j] = makeLognormalConstraint( NP_name, ttwjSlSig_4b2b_ratio[i][j], ttwjSlSig_4b2b_ratio_err[i][j] ) ;
+                } else {
+		  rar_ttwjSlSig_4b2b_ratio[i][j] = makeGaussianConstraint( NP_name, ttwjSlSig_4b2b_ratio[i][j], ttwjSlSig_4b2b_ratio_err[i][j] ) ;
+	      }
+	      } else {
+		rar_ttwjSlSig_4b2b_ratio[i][j] = makeGaussianConstraint( NP_name, ttwjSlSig_4b2b_ratio[i][j], 0. ) ; //-- this just creates a constant.
+		workspace.import( *(rar_ttwjSlSig_4b2b_ratio[i][j]) ) ;
+	      }
+	    }
+
+	    printf("++++++++++++++++\n") ;
+	  } // j (ht)
+	  printf("=========================\n") ;
+	} // k (nbtag)
+
+      }
 
 
 
@@ -2258,29 +2459,6 @@
 
 
 
-
-
-      // b-jet shape parameters:
-
-      RooAbsReal* rar_sl_fracNb[nBinsMET][nBinsHT][nBinsBtag] ;
-      
-      if ( constrainBjetShape ) {
-	
-        for (int i = 0 ; i < nBinsMET ; i++) {
-          for (int j = 0 ; j < nBinsHT ; j++) {
-            for (int k = 1 ; k < nBinsBtag ; k++) {
-	      
-              sprintf( NP_name, "sl_frac_M%d_H%d_%db", i+1, j+1, k+1 ) ;
-              rar_sl_fracNb[i][j][k] = makeGaussianConstraint( NP_name, sl_fracNb_val[i][j][k], sl_fracNb_err[i][j][k] ) ;
-              
-            }  // k
-          }  // j
-        }  // i
-      }  // end if
-
-
-
-
       //+++++++++++++++++ Relationships between parameters ++++++++++++++++++++++++++++++++++++++++++++
       
       printf(" --- Defining relationships between parameters.\n" ) ;
@@ -2320,15 +2498,22 @@
 	    TString ttwjSlString   = "mu_ttwj_sl";
 	    ttwjSlString   += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    
-	    if ( k == 0 || !constrainBjetShape ) {
+	    if ( k < 2 || !constrainBjetShape ) {
 	      TString ttwjSlrfvString = "@0" ;
 	      rfv_mu_ttwj_sl[i][j][k] = new RooFormulaVar( ttwjSlString, ttwjSlrfvString, RooArgSet( *rv_mu_ttwj_sl[i][j][k] ) ) ;
 	    }
-	    else {
-	      
+	    else if ( k == 2 && constrainBjetShape ) {
 	      TString ttwjSlrfvString = " @0 * @1" ;
 	      rfv_mu_ttwj_sl[i][j][k] = new RooFormulaVar( ttwjSlString, ttwjSlrfvString,
-							   RooArgSet( *rv_mu_ttwj_sl[i][j][0], *rar_sl_fracNb[i][j][k] ) ) ;
+							   RooArgSet( *rv_mu_ttwj_sl[i][j][1], *rar_ttwj_3b2b_ratio[i][j] ) ) ;
+	    }
+	    else if ( k == 3 && constrainBjetShape ) {
+	      TString ttwjSlrfvString = " @0 * @1" ;
+	      rfv_mu_ttwj_sl[i][j][k] = new RooFormulaVar( ttwjSlString, ttwjSlrfvString,
+							   RooArgSet( *rv_mu_ttwj_sl[i][j][1], *rar_ttwj_4b2b_ratio[i][j] ) ) ;
+	    }
+	    else {
+	      cout << "\nconstrainBjetShape with nB != 3,4 ??? I have no clue what I'm doing... exiting ... \n" << endl ; return false ;
 	    }
 
 	    rv_mu_ttwj_sl[i][j][k] = rfv_mu_ttwj_sl[i][j][k] ;
@@ -2346,9 +2531,26 @@
 									 *rar_sf_ttwj_slSig[i][j][2], *rv_ttwj_slSigDD_ratio[i][j] ) ) ;
 	    }
 	    else {
-	      TString ttwjSlSigrfvString = " @0 * @1 * @2" ;
-	      rfv_mu_ttwj_slSig[i][j][k] = new RooFormulaVar( ttwjSlSigString, ttwjSlSigrfvString,
-							      RooArgSet( *rv_mu_ttwj_sl[i][j][k], *rv_ttwj_slSigsl_ratio, *rar_sf_ttwj_slSig[i][j][k] ) ) ;
+
+	      if ( k < 2 || !constrainBjetShape ) {
+		TString ttwjSlSigrfvString = " @0 * @1 * @2" ;
+		rfv_mu_ttwj_slSig[i][j][k] = new RooFormulaVar( ttwjSlSigString, ttwjSlSigrfvString,
+								RooArgSet( *rv_mu_ttwj_sl[i][j][k], *rv_ttwj_slSigsl_ratio, *rar_sf_ttwj_slSig[i][j][k] ) ) ;
+	      }
+	      else if ( k == 2 && constrainBjetShape ) {
+		TString ttwjSlSigrfvString = " @0 * @1" ;
+		rfv_mu_ttwj_slSig[i][j][k] = new RooFormulaVar( ttwjSlSigString, ttwjSlSigrfvString,
+								RooArgSet( *rv_mu_ttwj_slSig[i][j][1], *rar_ttwjSlSig_3b2b_ratio[i][j] ) ) ;
+	      }
+	      else if ( k == 3 && constrainBjetShape ) {
+		TString ttwjSlSigrfvString = " @0 * @1" ;
+		rfv_mu_ttwj_slSig[i][j][k] = new RooFormulaVar( ttwjSlSigString, ttwjSlSigrfvString,
+								RooArgSet( *rv_mu_ttwj_slSig[i][j][1], *rar_ttwjSlSig_4b2b_ratio[i][j] ) ) ;
+	      }
+	      else {
+		cout << "\nconstrainBjetShape with nB != 3,4 ??? I have no clue what I'm doing... exiting ... \n" << endl ; return false ;
+	      }
+
 	    }
 
             rv_mu_ttwj_slSig[i][j][k] = rfv_mu_ttwj_slSig[i][j][k] ;
@@ -2429,11 +2631,31 @@
 
             } else if ( qcdModelIndex == 4 ) {
 
-               TString rfvQcdString = "@0 * @1 * @2 * @3 * @4" ;
+	      if ( k < 1 || !constrainBjetShape ) {
 
-               rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
-                                                        RooArgSet( *rv_mu_qcd_ldp[i][j][k], *rar_sf_qcd[i][j][k], *rv_qcd_0lepLDP_ratio[j], *rv_SFqcd_met[i], *rv_SFqcd_nb[k] ) ) ;
+		TString rfvQcdString = "@0 * @1 * @2 * @3 * @4" ;
+		rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
+							 RooArgSet( *rv_mu_qcd_ldp[i][j][k], *rar_sf_qcd[i][j][k], *rv_qcd_0lepLDP_ratio[j], *rv_SFqcd_met[i], *rv_SFqcd_nb[k] ) ) ;
 
+	      }
+	      else if ( k == 2 && constrainBjetShape ) {
+		
+		TString rfvQcdString = "@0 * @1" ;
+		rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
+							 RooArgSet( *rv_mu_qcd[i][j][1], *rar_qcd_3b2b_ratio[i][j] ) ) ;
+
+	      }
+	      else if ( k == 3 && constrainBjetShape ) {
+		
+		TString rfvQcdString = "@0 * @1" ;
+		rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
+							 RooArgSet( *rv_mu_qcd[i][j][1], *rar_qcd_3b2b_ratio[i][j] ) ) ;
+		
+	      }
+	      else {
+		cout << "\nconstrainBjetShape with nB != 3,4 ??? I have no clue what I'm doing... exiting ... \n" << endl ; return false ;
+	      }
+	      
             }
 
             rv_mu_qcd[i][j][k] = rfv_mu_qcd[i][j][k] ;

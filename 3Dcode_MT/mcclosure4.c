@@ -717,6 +717,25 @@
       double simpleAveR_1lSover1_powheg = total1lepSig_powheg / total1lep_powheg ;
       double simpleAveR_1lSover1_mcanlo = total1lepSig_mcanlo / total1lep_mcanlo ;
 
+      double simpleAveR_1lSover1_2b ;
+      double simpleAveR_1lSover1_2b_err ;
+      double simpleAveR_1lSover1_3b ;
+      double simpleAveR_1lSover1_3b_err ;
+      double simpleAveR_1lSover1_4b ;
+      double simpleAveR_1lSover1_4b_err ;
+
+      simpleAveR_1lSover1_2b = total1lepSig_2b / total1lep_2b ;
+      simpleAveR_1lSover1_2b_err = simpleAveR_1lSover1_2b * sqrt( sumw21lepSig_2b/(total1lepSig_2b*total1lepSig_2b) + sumw21lep_2b/(total1lep_2b*total1lep_2b)  ) ;
+  
+      if ( nBinsBjets > 2 ) {
+	simpleAveR_1lSover1_3b = total1lepSig_3b / total1lep_3b ;
+	simpleAveR_1lSover1_3b_err = simpleAveR_1lSover1_3b * sqrt( sumw21lepSig_3b/(total1lepSig_3b*total1lepSig_3b) + sumw21lep_3b/(total1lep_3b*total1lep_3b)  ) ;
+	if ( nBinsBjets > 3 ) {
+	  simpleAveR_1lSover1_4b = total1lepSig_4b / total1lep_4b ;
+	  simpleAveR_1lSover1_4b_err = simpleAveR_1lSover1_4b * sqrt( sumw21lepSig_4b/(total1lepSig_4b*total1lepSig_4b) + sumw21lep_4b/(total1lep_4b*total1lep_4b)  ) ;
+	}
+      }
+
       printf("\n\n Simple average 1lepSig/1lep = %5.3f +/- %5.3f\n\n", simpleAveR_1lSover1, simpleAveR_1lSover1_err ) ;
 
 
@@ -791,12 +810,6 @@
          if ( err> 0 ) {
 	   err = sqrt( err*err + 0.01*val*0.01*val );
 	   halfdiff = 0.5*(val - 1.) ;
-	   /* comment alternative code to base uncertainty on RMS of three tt MC samples
-	      mean = (hscalefactor_ttwj_0over1ratio_1b -> GetBinContent( hbi ) + hscalefactor_ttwjpowheg_0over1ratio_1b -> GetBinContent( hbi ) +
-	      hscalefactor_ttwjmcanlo_0over1ratio_1b -> GetBinContent( hbi ) )/3.;
-	      halfdiff = sqrt( (1./3.)*( pow(mean-hscalefactor_ttwj_0over1ratio_1b -> GetBinContent( hbi ), 2) +   
-	      pow(mean-hscalefactor_ttwjpowheg_0over1ratio_1b -> GetBinContent( hbi ), 2) +   
-	      pow(mean-hscalefactor_ttwjmcanlo_0over1ratio_1b -> GetBinContent( hbi ), 2) ) );*/
 	   errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
 	   hscalefactor_ttwj_0over1ratio_1b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
          }
@@ -805,18 +818,11 @@
          err = hscalefactor_ttwj_0over1ratio_2b -> GetBinError( hbi ) ;
          if ( err > 0 ) {
 	   halfdiff = 0.5*(val - 1.) ;
-           /* comment alternative code to base uncertainty on RMS of three tt MC samples
-	      mean = (hscalefactor_ttwj_0over1ratio_2b -> GetBinContent( hbi ) + hscalefactor_ttwjpowheg_0over1ratio_2b -> GetBinContent( hbi ) +
-	      hscalefactor_ttwjmcanlo_0over1ratio_2b -> GetBinContent( hbi ) )/3.;
-	      halfdiff = sqrt( (1./3.)*( pow(mean-hscalefactor_ttwj_0over1ratio_2b -> GetBinContent( hbi ), 2) +   
-	      pow(mean-hscalefactor_ttwjpowheg_0over1ratio_2b -> GetBinContent( hbi ), 2) +   
-	      pow(mean-hscalefactor_ttwjmcanlo_0over1ratio_2b -> GetBinContent( hbi ), 2) ) ); */
 	   errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
 	   hscalefactor_ttwj_0over1ratio_2b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
 	   
          }
-	 
-	 
+
 	 
 	 if ( nBinsBjets > 2 ) {
 
@@ -824,13 +830,9 @@
 	   err = hscalefactor_ttwj_0over1ratio_3b -> GetBinError( hbi ) ;
 	   if ( err > 0 ) {
 	     halfdiff = 0.5*(val - 1.) ;
-	     /* comment alternative code to base uncertainty on RMS of three tt MC samples
-		mean = (hscalefactor_ttwj_0over1ratio_3b -> GetBinContent( hbi ) + hscalefactor_ttwjpowheg_0over1ratio_3b -> GetBinContent( hbi ) +
-		hscalefactor_ttwjmcanlo_0over1ratio_3b -> GetBinContent( hbi ) )/3.;
-		halfdiff = sqrt( (1./3.)*( pow(mean-hscalefactor_ttwj_0over1ratio_3b -> GetBinContent( hbi ), 2) +   
-		pow(mean-hscalefactor_ttwjpowheg_0over1ratio_3b -> GetBinContent( hbi ), 2) +   
-		pow(mean-hscalefactor_ttwjmcanlo_0over1ratio_3b -> GetBinContent( hbi ), 2) ) ); */
-	     errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
+	     //-- Include half the size of the >=3b/=2b correction.
+	     double half3bover2b = 0.5*( simpleAveR_0over1_3b/simpleAveR_0over1_2b - 1 ) ;
+	     errwhalfcorr = sqrt( err*err + halfdiff*halfdiff + half3bover2b*half3bover2b ) ;
 	     hscalefactor_ttwj_0over1ratio_3b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
 	   }
 
@@ -840,13 +842,9 @@
 	     err = hscalefactor_ttwj_0over1ratio_4b -> GetBinError( hbi ) ;
 	     if ( err > 0 ) {
 	       halfdiff = 0.5*(val - 1.) ;
-	       /* comment alternative code to base uncertainty on RMS of three tt MC samples
-		  mean = (hscalefactor_ttwj_0over1ratio_4b -> GetBinContent( hbi ) + hscalefactor_ttwjpowheg_0over1ratio_4b -> GetBinContent( hbi ) +
-		  hscalefactor_ttwjmcanlo_0over1ratio_4b -> GetBinContent( hbi ) )/3.;
-		  halfdiff = sqrt( (1./3.)*( pow(mean-hscalefactor_ttwj_0over1ratio_4b -> GetBinContent( hbi ), 2) +   
-		  pow(mean-hscalefactor_ttwjpowheg_0over1ratio_4b -> GetBinContent( hbi ), 2) +   
-		  pow(mean-hscalefactor_ttwjmcanlo_0over1ratio_4b -> GetBinContent( hbi ), 2) ) ); */
-	       errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
+	       //-- Include half the size of the >=4b/=2b correction.
+	       double half4bover2b = 0.5*( simpleAveR_0over1_4b/simpleAveR_0over1_2b - 1 ) ;
+	       errwhalfcorr = sqrt( err*err + halfdiff*halfdiff + half4bover2b*half4bover2b ) ;
 	       hscalefactor_ttwj_0over1ratio_4b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
 	     }
 
@@ -869,12 +867,6 @@
          if ( err> 0 ) {
 	   err = sqrt( err*err + 0.01*val*0.01*val );
 	   halfdiff = 0.5*(val - 1.) ;
-	   /* comment alternative code to base uncertainty on RMS of three tt MC samples
-	      mean = (hscalefactor_ttwj_1lSover1ratio_1b -> GetBinContent( hbi ) + hscalefactor_ttwjpowheg_1lSover1ratio_1b -> GetBinContent( hbi ) +
-	      hscalefactor_ttwjmcanlo_1lSover1ratio_1b -> GetBinContent( hbi ) )/3.;
-	      halfdiff = sqrt( (1./3.)*( pow(mean-hscalefactor_ttwj_1lSover1ratio_1b -> GetBinContent( hbi ), 2) +   
-	      pow(mean-hscalefactor_ttwjpowheg_1lSover1ratio_1b -> GetBinContent( hbi ), 2) +   
-	      pow(mean-hscalefactor_ttwjmcanlo_1lSover1ratio_1b -> GetBinContent( hbi ), 2) ) );*/
 	   errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
 	   hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
          }
@@ -883,12 +875,6 @@
          err = hscalefactor_ttwj_1lSover1ratio_2b -> GetBinError( hbi ) ;
          if ( err > 0 ) {
 	   halfdiff = 0.5*(val - 1.) ;
-           /* comment alternative code to base uncertainty on RMS of three tt MC samples
-	      mean = (hscalefactor_ttwj_1lSover1ratio_2b -> GetBinContent( hbi ) + hscalefactor_ttwjpowheg_1lSover1ratio_2b -> GetBinContent( hbi ) +
-	      hscalefactor_ttwjmcanlo_1lSover1ratio_2b -> GetBinContent( hbi ) )/3.;
-	      halfdiff = sqrt( (1./3.)*( pow(mean-hscalefactor_ttwj_1lSover1ratio_2b -> GetBinContent( hbi ), 2) +   
-	      pow(mean-hscalefactor_ttwjpowheg_1lSover1ratio_2b -> GetBinContent( hbi ), 2) +   
-	      pow(mean-hscalefactor_ttwjmcanlo_1lSover1ratio_2b -> GetBinContent( hbi ), 2) ) ); */
 	   errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
 	   hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
 	   
@@ -902,13 +888,9 @@
 	   err = hscalefactor_ttwj_1lSover1ratio_3b -> GetBinError( hbi ) ;
 	   if ( err > 0 ) {
 	     halfdiff = 0.5*(val - 1.) ;
-	     /* comment alternative code to base uncertainty on RMS of three tt MC samples
-		mean = (hscalefactor_ttwj_1lSover1ratio_3b -> GetBinContent( hbi ) + hscalefactor_ttwjpowheg_1lSover1ratio_3b -> GetBinContent( hbi ) +
-		hscalefactor_ttwjmcanlo_1lSover1ratio_3b -> GetBinContent( hbi ) )/3.;
-		halfdiff = sqrt( (1./3.)*( pow(mean-hscalefactor_ttwj_1lSover1ratio_3b -> GetBinContent( hbi ), 2) +   
-		pow(mean-hscalefactor_ttwjpowheg_1lSover1ratio_3b -> GetBinContent( hbi ), 2) +   
-		pow(mean-hscalefactor_ttwjmcanlo_1lSover1ratio_3b -> GetBinContent( hbi ), 2) ) ); */
-	     errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
+	     //-- Include half the size of the >=3b/=2b correction.
+	     double half3bover2b = 0.5*( simpleAveR_1lSover1_3b/simpleAveR_1lSover1_2b - 1 ) ;
+	     errwhalfcorr = sqrt( err*err + halfdiff*halfdiff + half3bover2b*half3bover2b ) ;
 	     hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
 	   }
 
@@ -918,13 +900,9 @@
 	     err = hscalefactor_ttwj_1lSover1ratio_4b -> GetBinError( hbi ) ;
 	     if ( err > 0 ) {
 	       halfdiff = 0.5*(val - 1.) ;
-	       /* comment alternative code to base uncertainty on RMS of three tt MC samples
-		  mean = (hscalefactor_ttwj_1lSover1ratio_4b -> GetBinContent( hbi ) + hscalefactor_ttwjpowheg_1lSover1ratio_4b -> GetBinContent( hbi ) +
-		  hscalefactor_ttwjmcanlo_1lSover1ratio_4b -> GetBinContent( hbi ) )/3.;
-		  halfdiff = sqrt( (1./3.)*( pow(mean-hscalefactor_ttwj_1lSover1ratio_4b -> GetBinContent( hbi ), 2) +   
-		  pow(mean-hscalefactor_ttwjpowheg_1lSover1ratio_4b -> GetBinContent( hbi ), 2) +   
-		  pow(mean-hscalefactor_ttwjmcanlo_1lSover1ratio_4b -> GetBinContent( hbi ), 2) ) ); */
-	       errwhalfcorr = sqrt( err*err + halfdiff*halfdiff ) ;
+	       //-- Include half the size of the >=4b/=2b correction.
+	       double half4bover2b = 0.5*( simpleAveR_1lSover1_4b/simpleAveR_1lSover1_2b - 1 ) ;
+	       errwhalfcorr = sqrt( err*err + halfdiff*halfdiff + half4bover2b*half4bover2b ) ;
 	       hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr -> SetBinError( hbi, errwhalfcorr ) ;
 	     }
 
@@ -2502,11 +2480,11 @@
 
 
 
-     //--- Go through the samples, 1 by 1, and draw numerator, denominator, and ratio
+      //--- Go through the samples, 1 by 1, and draw numerator, denominator, and ratio
 
       TCanvas* cqcd3 = (TCanvas*) gDirectory->FindObject("cqcd3") ;
       if ( cqcd3 == 0x0 ) {
-         cqcd3 = new TCanvas("cqcd3", "qcd study", 1200, 900 ) ;
+	cqcd3 = new TCanvas("cqcd3", "qcd study", 1200, 900 ) ;
       }
 
       char oldtitle[1000] ;

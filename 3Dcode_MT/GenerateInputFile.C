@@ -739,33 +739,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 	    hmctruth_all[si][k]   -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(wjetserr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(vverr,2) + pow(susyerr,2) ) ) ;
 
 
-	     // compute fractions of SL 2b/1b and 3b/1b
-	     // the fractions are computed using only the MT < 100 sample
-
-	     if ( si == 2 && k > 0 ) {
-
-	       double ttval_1b = h_tt[0] -> GetBinContent( i+1, j+1 ) ;
-	       double wjetsval_1b = h_wjets[0] -> GetBinContent( i+1, j+1 ) ;
-
-	       double ttwjval = ttval + wjetsval ;
-	       double ttwjval_1b = ttval_1b + wjetsval_1b ;
-
-	       if ( k == 1 ) {
-		 sl_frac2b_val[i][j] = ( ttwjval ) / ( ttwjval_1b ) ;
-		 sl_frac2b_err[i][j] = 0.01 ;   // start with arbitrary errors, first
-	       }
-
-	       if ( k == 2 ) {
-		 sl_frac3b_val[i][j] = ( ttwjval ) / ( ttwjval_1b ) ;
-		 sl_frac3b_err[i][j] = 0.01 ;   // start with arbitrary errors, first
-	       }
-
-	     }
-
-	  } // k
-	} // j
-      } // i
-
+	  }
+	}
+      }
 
       for (int k = 0 ; k < nBinsBjets ; k++) {
 
@@ -1255,6 +1231,224 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
       } // hbi
     } // mbi
 
+
+    //--- ttwj MC ZL 3b/2b ratios
+
+    // 0-lep
+
+    if ( nBinsBjets > 2 ) {
+
+      for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
+	for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
+	  int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	  
+	  float zl2bval = hmctruth_ttwj[0][1] -> GetBinContent( hbin ) ;
+	  float zl2berr = hmctruth_ttwj[0][1] -> GetBinError(   hbin ) ;
+	  float zl3bval  = hmctruth_ttwj[0][2] -> GetBinContent( hbin ) ;
+	  float zl3berr  = hmctruth_ttwj[0][2] -> GetBinError(   hbin ) ;
+	  
+	  float bbboverbb = 0. ;
+	  float bbboverbberr = 0. ;
+	  
+	  if ( zl2bval > 0. && zl3bval > 0. ) {
+	    bbboverbb = zl3bval / zl2bval ;
+	    bbboverbberr = bbboverbb * sqrt( pow((zl2berr/zl2bval),2) + pow((zl3berr/zl3bval),2) ) ;
+	  }
+	  
+	  char parname[1000] ;
+	  
+	  sprintf( parname, "ttwj_mc_3bover2b_ratio_M%d_H%d", mbi+1, hbi+1 ) ;
+	  printf(" %s  :  %6.3f +/- %5.3f\n", parname, bbboverbb, bbboverbberr ) ;
+	  inFile << parname << "  \t" << bbboverbb << endl;
+	  
+	  sprintf( parname, "ttwj_mc_3bover2b_ratio_M%d_H%d_err", mbi+1, hbi+1 ) ;
+	  inFile << parname << "  \t" << bbboverbberr << endl;
+	  
+	} // hbi
+      } // mbi
+      
+
+      if ( nBinsBjets > 3 ) {
+	
+	//--- ttwj MC ZL 4b/2b ratios
+	
+	for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
+	  for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
+	    int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	    
+            float zl2bval = hmctruth_ttwj[0][1] -> GetBinContent( hbin ) ;
+            float zl2berr = hmctruth_ttwj[0][1] -> GetBinError(   hbin ) ;
+            float zl4bval  = hmctruth_ttwj[0][3] -> GetBinContent( hbin ) ;
+            float zl4berr  = hmctruth_ttwj[0][3] -> GetBinError(   hbin ) ;
+	    
+            float bbbboverbb = 0. ;
+            float bbbboverbberr = 0. ;
+
+            if ( zl2bval > 0. && zl4bval > 0. ) {
+	      bbbboverbb = zl4bval / zl2bval ;
+	      bbbboverbberr = bbbboverbb * sqrt( pow((zl2berr/zl2bval),2) + pow((zl4berr/zl4bval),2) ) ;
+            }
+
+            char parname[1000] ;
+	    
+            sprintf( parname, "ttwj_mc_4bover2b_ratio_M%d_H%d", mbi+1, hbi+1 ) ;
+            printf(" %s  :  %6.3f +/- %5.3f\n", parname, bbbboverbb, bbbboverbberr ) ;
+            inFile << parname << "  \t" << bbbboverbb << endl;
+	    
+            sprintf( parname, "ttwj_mc_4bover2b_ratio_M%d_H%d_err", mbi+1, hbi+1 ) ;
+            inFile << parname << "  \t" << bbbboverbberr << endl;
+
+	  } // hbi
+	} // mbi
+	
+      }
+    }
+
+
+    // 1-lepSig
+
+    if ( nBinsBjets > 2 ) {
+      
+      for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
+	for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
+	  int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	  
+	  float zl2bval = hmctruth_ttwj[1][1] -> GetBinContent( hbin ) ;
+	  float zl2berr = hmctruth_ttwj[1][1] -> GetBinError(   hbin ) ;
+	  float zl3bval  = hmctruth_ttwj[1][2] -> GetBinContent( hbin ) ;
+	  float zl3berr  = hmctruth_ttwj[1][2] -> GetBinError(   hbin ) ;
+	  
+	  float bbboverbb = 0. ;
+	  float bbboverbberr = 0. ;
+	  
+	  if ( zl2bval > 0. && zl3bval > 0. ) {
+	    bbboverbb = zl3bval / zl2bval ;
+	    bbboverbberr = bbboverbb * sqrt( pow((zl2berr/zl2bval),2) + pow((zl3berr/zl3bval),2) ) ;
+	  }
+	  
+	  char parname[1000] ;
+	  
+	  sprintf( parname, "ttwjSlSig_mc_3bover2b_ratio_M%d_H%d", mbi+1, hbi+1 ) ;
+	  printf(" %s  :  %6.3f +/- %5.3f\n", parname, bbboverbb, bbboverbberr ) ;
+	  inFile << parname << "  \t" << bbboverbb << endl;
+	  
+	  sprintf( parname, "ttwjSlSig_mc_3bover2b_ratio_M%d_H%d_err", mbi+1, hbi+1 ) ;
+	  inFile << parname << "  \t" << bbboverbberr << endl;
+	  
+	} // hbi
+      } // mbi
+      
+
+      if ( nBinsBjets > 3 ) {
+	
+	//--- ttwj MC ZL 4b/2b ratios
+	
+	for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
+	  for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
+	    int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	    
+            float zl2bval = hmctruth_ttwj[1][1] -> GetBinContent( hbin ) ;
+            float zl2berr = hmctruth_ttwj[1][1] -> GetBinError(   hbin ) ;
+            float zl4bval  = hmctruth_ttwj[1][3] -> GetBinContent( hbin ) ;
+            float zl4berr  = hmctruth_ttwj[1][3] -> GetBinError(   hbin ) ;
+	    
+            float bbbboverbb = 0. ;
+            float bbbboverbberr = 0. ;
+
+            if ( zl2bval > 0. && zl4bval > 0. ) {
+	      bbbboverbb = zl4bval / zl2bval ;
+	      bbbboverbberr = bbbboverbb * sqrt( pow((zl2berr/zl2bval),2) + pow((zl4berr/zl4bval),2) ) ;
+            }
+
+            char parname[1000] ;
+	    
+            sprintf( parname, "ttwjSlSig_mc_4bover2b_ratio_M%d_H%d", mbi+1, hbi+1 ) ;
+            printf(" %s  :  %6.3f +/- %5.3f\n", parname, bbbboverbb, bbbboverbberr ) ;
+            inFile << parname << "  \t" << bbbboverbb << endl;
+	    
+            sprintf( parname, "ttwjSlSig_mc_4bover2b_ratio_M%d_H%d_err", mbi+1, hbi+1 ) ;
+            inFile << parname << "  \t" << bbbboverbberr << endl;
+
+	  } // hbi
+	} // mbi
+	
+      }
+    }
+
+
+    //--- qcd MC ZL 3b/2b ratios
+
+    if ( nBinsBjets > 2 ) {
+      
+      for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
+	for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
+	  int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	  
+	  float zl2bval = hmctruth_qcd[0][1] -> GetBinContent( hbin ) ;
+	  float zl2berr = hmctruth_qcd[0][1] -> GetBinError(   hbin ) ;
+	  float zl3bval  = hmctruth_qcd[0][2] -> GetBinContent( hbin ) ;
+	  float zl3berr  = hmctruth_qcd[0][2] -> GetBinError(   hbin ) ;
+	  
+	  float bbboverbb = 0. ;
+	  float bbboverbberr = 0. ;
+	  
+	  if ( zl2bval > 0. && zl3bval > 0. ) {
+	    bbboverbb = zl3bval / zl2bval ;
+	    bbboverbberr = bbboverbb * sqrt( pow((zl2berr/zl2bval),2) + pow((zl3berr/zl3bval),2) ) ;
+	  }
+	  
+	  char parname[1000] ;
+	  
+	  sprintf( parname, "qcd_mc_3bover2b_ratio_M%d_H%d", mbi+1, hbi+1 ) ;
+	  printf(" %s  :  %6.3f +/- %5.3f\n", parname, bbboverbb, bbboverbberr ) ;
+	  inFile << parname << "  \t" << bbboverbb << endl;
+	  
+	  sprintf( parname, "qcd_mc_3bover2b_ratio_M%d_H%d_err", mbi+1, hbi+1 ) ;
+	  inFile << parname << "  \t" << bbboverbberr << endl;
+	  
+	} // hbi
+      } // mbi
+      
+      if ( nBinsBjets > 3 ) {
+	
+	
+	//--- qcd MC ZL 4b/2b ratios
+	
+	for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
+	  for (int hbi = 0 ; hbi < nBinsHT ; hbi++) {
+	    int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	    
+            float zl2bval = hmctruth_qcd[0][1] -> GetBinContent( hbin ) ;
+            float zl2berr = hmctruth_qcd[0][1] -> GetBinError(   hbin ) ;
+            float zl4bval  = hmctruth_qcd[0][3] -> GetBinContent( hbin ) ;
+            float zl4berr  = hmctruth_qcd[0][3] -> GetBinError(   hbin ) ;
+	    
+            float bbbboverbb = 0. ;
+            float bbbboverbberr = 0. ;
+	    
+            if ( zl2bval > 0. && zl4bval > 0. ) {
+	      bbbboverbb = zl4bval / zl2bval ;
+	      bbbboverbberr = bbbboverbb * sqrt( pow((zl2berr/zl2bval),2) + pow((zl4berr/zl4bval),2) ) ;
+            }
+	    
+            char parname[1000] ;
+	    
+            sprintf( parname, "qcd_mc_4bover2b_ratio_M%d_H%d", mbi+1, hbi+1 ) ;
+            printf(" %s  :  %6.3f +/- %5.3f\n", parname, bbbboverbb, bbbboverbberr ) ;
+            inFile << parname << "  \t" << bbbboverbb << endl;
+
+            sprintf( parname, "qcd_mc_4bover2b_ratio_M%d_H%d_err", mbi+1, hbi+1 ) ;
+            inFile << parname << "  \t" << bbbboverbberr << endl;
+
+	  } // hbi
+	} // mbi
+	
+      }
+    }
+
+    // qcd in 1-lepSig is ignored, no need to compute these fractions
+
+    
     // print out combined mc truth values for VV and DY (included in fit from MC)
     for ( int si=0; si<nSel; si++ ) {
       for (int mbi = 0 ; mbi < nBinsMET ; mbi++) {
