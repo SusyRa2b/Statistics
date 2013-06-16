@@ -56,11 +56,6 @@
 
       gDirectory->Delete("h*") ;
 
-      TCanvas* cfq1 = (TCanvas*) gDirectory->FindObject("cfq1") ;
-      if ( cfq1 == 0x0 ) {
-         cfq1 = new TCanvas("cfq1","hbb fit", 700, 1000 ) ;
-      }
-
       TFile* wstf = new TFile( wsfile ) ;
 
       RooWorkspace* ws = dynamic_cast<RooWorkspace*>( wstf->Get("ws") );
@@ -71,6 +66,27 @@
 
       int bins_of_nb = TMath::Nint( ws->var("bins_of_nb")->getVal()  ) ;
       printf("\n\n Bins of nb : %d\n\n", bins_of_nb ) ;
+
+      int nb_lookup[10] ;
+      if ( bins_of_nb == 2 ) {
+         nb_lookup[0] = 2 ;
+         nb_lookup[1] = 4 ;
+      } else if ( bins_of_nb == 3 ) {
+         nb_lookup[0] = 2 ;
+         nb_lookup[1] = 3 ;
+         nb_lookup[2] = 4 ;
+      }
+
+      TCanvas* cfq1 = (TCanvas*) gDirectory->FindObject("cfq1") ;
+      if ( cfq1 == 0x0 ) {
+         if ( bins_of_nb == 3 ) {
+            cfq1 = new TCanvas("cfq1","hbb fit", 700, 1000 ) ;
+         } else if ( bins_of_nb == 2 ) {
+            cfq1 = new TCanvas("cfq1","hbb fit", 700, 750 ) ;
+         } else {
+            return ;
+         }
+      }
 
       RooRealVar* rv_sig_strength = ws->var("sig_strength") ;
       if ( rv_sig_strength == 0x0 ) { printf("\n\n *** can't find sig_strength in workspace.\n\n" ) ; return ; }
@@ -106,9 +122,9 @@
       while ( RooRealVar* obs = (RooRealVar*) obsIter->Next() ) {
          for ( int nbi=0; nbi<bins_of_nb; nbi++ ) {
             for ( int mbi=0; mbi<bins_of_met; mbi++ ) {
-               sprintf( pname, "N_%db_msig_met%d", nbi+2, mbi+1 ) ;
+               sprintf( pname, "N_%db_msig_met%d", nb_lookup[nbi], mbi+1 ) ;
                if ( strcmp( obs->GetName(), pname ) == 0 ) { obs_N_msig[nbi][mbi] = TMath::Nint( obs -> getVal() ) ; }
-               sprintf( pname, "N_%db_msb_met%d", nbi+2, mbi+1 ) ;
+               sprintf( pname, "N_%db_msb_met%d", nb_lookup[nbi], mbi+1 ) ;
                if ( strcmp( obs->GetName(), pname ) == 0 ) { obs_N_msb[nbi][mbi] = TMath::Nint( obs -> getVal() ) ; }
             } // mbi.
          } // nbi.
@@ -117,7 +133,7 @@
 
       printf("\n\n") ;
       for ( int nbi=0; nbi<bins_of_nb; nbi++ ) {
-         printf(" nb=%d :  ", nbi+2 ) ;
+         printf(" nb=%d :  ", nb_lookup[nbi] ) ;
          for ( int mbi=0; mbi<bins_of_met; mbi++ ) {
             printf("  sig=%3d, sb=%3d  |", obs_N_msig[nbi][mbi], obs_N_msb[nbi][mbi] ) ;
          } // mbi.
@@ -136,47 +152,47 @@
       for ( int nbi=0; nbi<bins_of_nb; nbi++ ) {
 
 
-         sprintf( hname, "h_bg_%db_msig_met", nbi+2 ) ;
-         sprintf( htitle, "mass sig, %db, MET", nbi+2 ) ;
+         sprintf( hname, "h_bg_%db_msig_met", nb_lookup[nbi] ) ;
+         sprintf( htitle, "mass sig, %db, MET", nb_lookup[nbi] ) ;
          TH1F* hist_bg_msig = new TH1F( hname, htitle, bins_of_met, 0.5, bins_of_met+0.5 ) ;
          hist_bg_msig -> SetFillColor( kBlue-9 ) ;
          labelBins( hist_bg_msig ) ;
 
-         sprintf( hname, "h_bg_%db_msb_met", nbi+2 ) ;
-         sprintf( htitle, "mass sb, %db, MET", nbi+2 ) ;
+         sprintf( hname, "h_bg_%db_msb_met", nb_lookup[nbi] ) ;
+         sprintf( htitle, "mass sb, %db, MET", nb_lookup[nbi] ) ;
          TH1F* hist_bg_msb = new TH1F( hname, htitle, bins_of_met, 0.5, bins_of_met+0.5 ) ;
          hist_bg_msb -> SetFillColor( kBlue-9 ) ;
          labelBins( hist_bg_msb ) ;
 
-         sprintf( hname, "h_sig_%db_msig_met", nbi+2 ) ;
-         sprintf( htitle, "mass sig, %db, MET", nbi+2 ) ;
+         sprintf( hname, "h_sig_%db_msig_met", nb_lookup[nbi] ) ;
+         sprintf( htitle, "mass sig, %db, MET", nb_lookup[nbi] ) ;
          TH1F* hist_sig_msig = new TH1F( hname, htitle, bins_of_met, 0.5, bins_of_met+0.5 ) ;
          hist_sig_msig -> SetFillColor( kMagenta+2 ) ;
          labelBins( hist_sig_msig ) ;
 
-         sprintf( hname, "h_sig_%db_msb_met", nbi+2 ) ;
-         sprintf( htitle, "mass sb, %db, MET", nbi+2 ) ;
+         sprintf( hname, "h_sig_%db_msb_met", nb_lookup[nbi] ) ;
+         sprintf( htitle, "mass sb, %db, MET", nb_lookup[nbi] ) ;
          TH1F* hist_sig_msb = new TH1F( hname, htitle, bins_of_met, 0.5, bins_of_met+0.5 ) ;
          hist_sig_msb -> SetFillColor( kMagenta+2 ) ;
          labelBins( hist_sig_msb ) ;
 
-         sprintf( hname, "h_all_%db_msig_met", nbi+2 ) ;
-         sprintf( htitle, "mass sig, %db, MET", nbi+2 ) ;
+         sprintf( hname, "h_all_%db_msig_met", nb_lookup[nbi] ) ;
+         sprintf( htitle, "mass sig, %db, MET", nb_lookup[nbi] ) ;
          TH1F* hist_all_msig = new TH1F( hname, htitle, bins_of_met, 0.5, bins_of_met+0.5 ) ;
 
-         sprintf( hname, "h_all_%db_msb_met", nbi+2 ) ;
-         sprintf( htitle, "mass sb, %db, MET", nbi+2 ) ;
+         sprintf( hname, "h_all_%db_msb_met", nb_lookup[nbi] ) ;
+         sprintf( htitle, "mass sb, %db, MET", nb_lookup[nbi] ) ;
          TH1F* hist_all_msb = new TH1F( hname, htitle, bins_of_met, 0.5, bins_of_met+0.5 ) ;
 
-         sprintf( hname, "h_data_%db_msig_met", nbi+2 ) ;
-         sprintf( htitle, "mass sig, %db, MET", nbi+2 ) ;
+         sprintf( hname, "h_data_%db_msig_met", nb_lookup[nbi] ) ;
+         sprintf( htitle, "mass sig, %db, MET", nb_lookup[nbi] ) ;
          TH1F* hist_data_msig = new TH1F( hname, htitle, bins_of_met, 0.5, bins_of_met+0.5 ) ;
          hist_data_msig -> SetLineWidth(2) ;
          hist_data_msig -> SetMarkerStyle(20) ;
          labelBins( hist_data_msig ) ;
 
-         sprintf( hname, "h_data_%db_msb_met", nbi+2 ) ;
-         sprintf( htitle, "mass sb, %db, MET", nbi+2 ) ;
+         sprintf( hname, "h_data_%db_msb_met", nb_lookup[nbi] ) ;
+         sprintf( htitle, "mass sb, %db, MET", nb_lookup[nbi] ) ;
          TH1F* hist_data_msb = new TH1F( hname, htitle, bins_of_met, 0.5, bins_of_met+0.5 ) ;
          hist_data_msb -> SetLineWidth(2) ;
          hist_data_msb -> SetMarkerStyle(20) ;
@@ -186,12 +202,12 @@
 
 
 
-            sprintf( pname, "mu_bg_%db_msig_met%d", nbi+2, mbi+1 ) ;
+            sprintf( pname, "mu_bg_%db_msig_met%d", nb_lookup[nbi], mbi+1 ) ;
             RooAbsReal* mu_bg_msig = ws->function( pname ) ;
             if ( mu_bg_msig == 0x0 ) { printf("\n\n *** ws missing %s\n\n", pname ) ; return ; }
             hist_bg_msig -> SetBinContent( mbi+1, mu_bg_msig->getVal() ) ;
 
-            sprintf( pname, "mu_sig_%db_msig_met%d", nbi+2, mbi+1 ) ;
+            sprintf( pname, "mu_sig_%db_msig_met%d", nb_lookup[nbi], mbi+1 ) ;
             RooAbsReal* mu_sig_msig = ws->function( pname ) ;
             if ( mu_sig_msig == 0x0 ) { printf("\n\n *** ws missing %s\n\n", pname ) ; return ; }
             hist_sig_msig -> SetBinContent( mbi+1, mu_sig_msig->getVal() ) ;
@@ -202,12 +218,12 @@
 
 
 
-            sprintf( pname, "mu_bg_%db_msb_met%d", nbi+2, mbi+1 ) ;
+            sprintf( pname, "mu_bg_%db_msb_met%d", nb_lookup[nbi], mbi+1 ) ;
             RooAbsReal* mu_bg_msb = ws->function( pname ) ;
             if ( mu_bg_msb == 0x0 ) { printf("\n\n *** ws missing %s\n\n", pname ) ; return ; }
             hist_bg_msb -> SetBinContent( mbi+1, mu_bg_msb->getVal() ) ;
 
-            sprintf( pname, "mu_sig_%db_msb_met%d", nbi+2, mbi+1 ) ;
+            sprintf( pname, "mu_sig_%db_msb_met%d", nb_lookup[nbi], mbi+1 ) ;
             RooAbsReal* mu_sig_msb = ws->function( pname ) ;
             if ( mu_sig_msb == 0x0 ) { printf("\n\n *** ws missing %s\n\n", pname ) ; return ; }
             hist_sig_msb -> SetBinContent( mbi+1, mu_sig_msb->getVal() ) ;
@@ -222,8 +238,8 @@
 
          cfq1->cd( pad ) ;
 
-         sprintf( hname, "h_stack_%db_msig_met", nbi+2 ) ;
-         sprintf( htitle, "mass sig, %db, MET", nbi+2 ) ;
+         sprintf( hname, "h_stack_%db_msig_met", nb_lookup[nbi] ) ;
+         sprintf( htitle, "mass sig, %db, MET", nb_lookup[nbi] ) ;
          THStack* hstack_msig = new THStack( hname, htitle ) ;
          hstack_msig -> Add( hist_bg_msig ) ;
          hstack_msig -> Add( hist_sig_msig ) ;
@@ -241,8 +257,8 @@
 
          cfq1->cd( pad ) ;
 
-         sprintf( hname, "h_stack_%db_msb_met", nbi+2 ) ;
-         sprintf( htitle, "mass sig, %db, MET", nbi+2 ) ;
+         sprintf( hname, "h_stack_%db_msb_met", nb_lookup[nbi] ) ;
+         sprintf( htitle, "mass sig, %db, MET", nb_lookup[nbi] ) ;
          THStack* hstack_msb = new THStack( hname, htitle ) ;
          hstack_msb -> Add( hist_bg_msb ) ;
          hstack_msb -> Add( hist_sig_msb ) ;

@@ -38,6 +38,10 @@
       if ( rv_sig_strength == 0x0 ) { printf("\n\n *** can't find sig_strength in workspace.\n\n" ) ; return ; }
 
       RooAbsPdf* likelihood = ws->pdf("likelihood") ;
+      if ( likelihood == 0x0 ) { printf("\n\n *** can't find likelihood in workspace.\n\n" ) ; return ; }
+      printf("\n\n Likelihood:\n") ;
+      likelihood -> Print() ;
+
 
 
       rv_sig_strength -> setConstant( kFALSE ) ;

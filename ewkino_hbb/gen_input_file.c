@@ -17,15 +17,26 @@
 
 
 
-   int bins_of_met(4) ;
-   float met_bin_edges[5] = { 30., 50., 100., 150., 10000. } ;
+   float met_bin_edges_1bins[2] = { 50., 10000. } ;
+
+   float met_bin_edges_4bins[5] = { 30., 50., 100., 150., 10000. } ;
+
+   float met_bin_edges[100] ;
 
 
 
 
   //================================================================================================
 
-   void gen_input_file( const char* outfilename = "input-file.txt", int sigmass = 250, float sig_strength = 0. ) {
+   void gen_input_file( const char* outfilename = "outputfiles/input-file.txt", int sigmass = 250, float sig_strength = 0., int bins_of_met = 4 ) {
+
+      if ( bins_of_met == 1 ) {
+         for ( int bi=0; bi<=bins_of_met; bi++ ) { met_bin_edges[bi] = met_bin_edges_1bins[bi] ; }
+      } else if ( bins_of_met == 4 ) {
+         for ( int bi=0; bi<=bins_of_met; bi++ ) { met_bin_edges[bi] = met_bin_edges_4bins[bi] ; }
+      } else {
+         printf("\n\n *** Don't know how to do %d met bins.\n\n", bins_of_met ) ;
+      }
 
       char metvarname[100] ;
       sprintf( metvarname, "METsig" ) ;
@@ -42,8 +53,8 @@
 
       for ( int si=0; si<nbgcomps; si++ ) { bgcompchain[si] = new TChain("reducedTree") ; }
 
-      char rtdir[10000] = "/data/cms/hadronic-susy-bjets/hbb/reduced-trees-may23-2013" ;
-      ///////char rtdir[10000] = "/Users/owen/work/cms/hadronic-susy-bjets/hbb/reduced-trees-may23-2013" ;
+      /////// char rtdir[10000] = "/data/cms/hadronic-susy-bjets/hbb/reduced-trees-may23-2013" ;
+      char rtdir[10000] = "/Users/owen/work/cms/hadronic-susy-bjets/hbb/reduced-trees-may23-2013" ;
 
       int compIndex(0) ;
 
@@ -237,6 +248,8 @@
 
       for ( int si=0; si<nbgcomps; si++ ) {
 
+         printf("\n\n ++++++++ %s component\n\n", bgcompname[si] ) ;
+
          sprintf( arg1, "%s>>h_%s_4b_msig_bg_%s", metvarname, metvarname, bgcompname[si] ) ;
          sprintf( allcuts, "((%s)&&(%s)&&(%s)&&(%s)&&(%s))*weight3*%.0f", skimcuts, leptonveto, drmaxcut, masssigcuts, btag4cuts, dataIntLumiIPB ) ;
          printf("\n %s : %s\n", arg1, allcuts ) ; fflush(stdout) ;
@@ -283,7 +296,9 @@
 
       } // si.
 
+      printf("\n\n ++++++++ signal\n\n" ) ;
 
+      printf("\n\n 4b, mass sig\n\n") ; fflush(stdout) ;
       sprintf( arg1, "%s>>h_%s_4b_msig_smc", metvarname, metvarname ) ;
       sprintf( allcuts, "((%s)&&(%s)&&(%s)&&(%s)&&(%s))*%g*%.0f", skimcuts, leptonveto, drmaxcut, masssigcuts, btag4cuts, signal_weight, dataIntLumiIPB ) ;
       printf("\n %s : %s\n", arg1, allcuts ) ; fflush(stdout) ;
@@ -291,6 +306,7 @@
       can->Update() ; can->Draw() ;
       h_4b_msig_smc -> Print("all") ;
 
+      printf("\n\n 3b, mass sig\n\n") ; fflush(stdout) ;
       sprintf( arg1, "%s>>h_%s_3b_msig_smc", metvarname, metvarname ) ;
       sprintf( allcuts, "((%s)&&(%s)&&(%s)&&(%s)&&(%s))*%g*%.0f", skimcuts, leptonveto, drmaxcut, masssigcuts, btag3cuts, signal_weight, dataIntLumiIPB ) ;
       printf("\n %s : %s\n", arg1, allcuts ) ; fflush(stdout) ;
@@ -298,6 +314,7 @@
       can->Update() ; can->Draw() ;
       h_3b_msig_smc -> Print("all") ;
 
+      printf("\n\n 2b, mass sig\n\n") ; fflush(stdout) ;
       sprintf( arg1, "%s>>h_%s_2b_msig_smc", metvarname, metvarname ) ;
       sprintf( allcuts, "((%s)&&(%s)&&(%s)&&(%s)&&(%s))*%g*%.0f", skimcuts, leptonveto, drmaxcut, masssigcuts, btag2cuts, signal_weight, dataIntLumiIPB ) ;
       printf("\n %s : %s\n", arg1, allcuts ) ; fflush(stdout) ;
@@ -307,6 +324,7 @@
 
 
 
+      printf("\n\n 4b, mass sb\n\n") ; fflush(stdout) ;
       sprintf( arg1, "%s>>h_%s_4b_msb_smc", metvarname, metvarname ) ;
       sprintf( allcuts, "((%s)&&(%s)&&(%s)&&(%s)&&(%s))*%g*%.0f", skimcuts, leptonveto, drmaxcut, masssbcuts, btag4cuts, signal_weight, dataIntLumiIPB ) ;
       printf("\n %s : %s\n", arg1, allcuts ) ; fflush(stdout) ;
@@ -314,6 +332,7 @@
       can->Update() ; can->Draw() ;
       h_4b_msb_smc -> Print("all") ;
 
+      printf("\n\n 3b, mass sb\n\n") ; fflush(stdout) ;
       sprintf( arg1, "%s>>h_%s_3b_msb_smc", metvarname, metvarname ) ;
       sprintf( allcuts, "((%s)&&(%s)&&(%s)&&(%s)&&(%s))*%g*%.0f", skimcuts, leptonveto, drmaxcut, masssbcuts, btag3cuts, signal_weight, dataIntLumiIPB ) ;
       printf("\n %s : %s\n", arg1, allcuts ) ; fflush(stdout) ;
@@ -321,6 +340,7 @@
       can->Update() ; can->Draw() ;
       h_3b_msb_smc -> Print("all") ;
 
+      printf("\n\n 2b, mass sb\n\n") ; fflush(stdout) ;
       sprintf( arg1, "%s>>h_%s_2b_msb_smc", metvarname, metvarname ) ;
       sprintf( allcuts, "((%s)&&(%s)&&(%s)&&(%s)&&(%s))*%g*%.0f", skimcuts, leptonveto, drmaxcut, masssbcuts, btag2cuts, signal_weight, dataIntLumiIPB ) ;
       printf("\n %s : %s\n", arg1, allcuts ) ; fflush(stdout) ;
@@ -368,6 +388,7 @@
       printf("============================================================================================================================================================================\n") ;
       printf(" METsig    comp  |   4bSB   4bSIG     4bSIG/4bSB    |   3bSB   3bSIG     3bSIG/3bSB     |   2bSB   2bSIG     2bSIG/2bSB     |    BG val.        3b pred.       2b pred.     |\n") ;
       printf("============================================================================================================================================================================\n") ;
+      fflush(stdout) ;
       for ( int hbi=1; hbi<=bins_of_met; hbi++ ) {
 
          float metsiglow  = h_4b_msig_smc->GetXaxis()->GetBinLowEdge( hbi ) ;
@@ -512,12 +533,18 @@
       //  with respect to the weighted ave combined with half of the difference with respect
       //  to the weighted ave in quadrature.
       //
+      //  If bins_of_met is set to 1, only use 2b and 4b (ignore 3b).
 
       printf("\n\n") ;
       float wave_Rsigsb_val[50] ;
       for ( int hbi=1; hbi<=bins_of_met; hbi++ ) {
-         wave_Rsigsb_val[hbi] =  ( Rsigsb_2b_val[hbi] / Rsigsb_2b_staterr2[hbi] + Rsigsb_3b_val[hbi] / Rsigsb_3b_staterr2[hbi] + Rsigsb_4b_val[hbi] / Rsigsb_4b_staterr2[hbi] ) /
-                                 (                1.  / Rsigsb_2b_staterr2[hbi] +                1.  / Rsigsb_3b_staterr2[hbi] +                1.  / Rsigsb_4b_staterr2[hbi] ) ;
+         if ( bins_of_met > 1 ) {
+            wave_Rsigsb_val[hbi] =  ( Rsigsb_2b_val[hbi] / Rsigsb_2b_staterr2[hbi] + Rsigsb_3b_val[hbi] / Rsigsb_3b_staterr2[hbi] + Rsigsb_4b_val[hbi] / Rsigsb_4b_staterr2[hbi] ) /
+                                    (                1.  / Rsigsb_2b_staterr2[hbi] +                1.  / Rsigsb_3b_staterr2[hbi] +                1.  / Rsigsb_4b_staterr2[hbi] ) ;
+         } else {
+            wave_Rsigsb_val[hbi] =  ( Rsigsb_2b_val[hbi] / Rsigsb_2b_staterr2[hbi] + Rsigsb_4b_val[hbi] / Rsigsb_4b_staterr2[hbi] ) /
+                                    (                1.  / Rsigsb_2b_staterr2[hbi] +                1.  / Rsigsb_4b_staterr2[hbi] ) ;
+         }
          printf(" expected sqrt(N) weighted Rsig/sb ave for METsig bin %d :  %5.3f\n", hbi, wave_Rsigsb_val[hbi] ) ;
       } // hbi
 
@@ -541,11 +568,18 @@
          syst_Rsigsb_3b[hbi] = sqrt( pow( (Rsigsb_3b_err[hbi]/Rsigsb_4b_val[hbi]), 2. )  +  pow( (correction_Rsigsb_3b[hbi]-1.)/2.,2. ) ) ;
          syst_Rsigsb_2b[hbi] = sqrt( pow( (Rsigsb_2b_err[hbi]/Rsigsb_4b_val[hbi]), 2. )  +  pow( (correction_Rsigsb_2b[hbi]-1.)/2.,2. ) ) ;
 
-         printf("  Rsig/sb corrections for METsig bin %d :     4b = %5.3f +/- %5.3f,       3b =  %5.3f +/- %5.3f,      2b =  %5.3f +/- %5.3f\n",
+         if ( bins_of_met > 1 ) {
+            printf("  Rsig/sb corrections for METsig bin %d :     4b = %5.3f +/- %5.3f,       3b =  %5.3f +/- %5.3f,      2b =  %5.3f +/- %5.3f\n",
                   hbi,
                   correction_Rsigsb_4b[hbi], syst_Rsigsb_4b[hbi],
                   correction_Rsigsb_3b[hbi], syst_Rsigsb_3b[hbi],
                   correction_Rsigsb_2b[hbi], syst_Rsigsb_2b[hbi] ) ;
+         } else {
+            printf("  Rsig/sb corrections for METsig bin %d :     4b = %5.3f +/- %5.3f,       2b =  %5.3f +/- %5.3f\n",
+                  hbi,
+                  correction_Rsigsb_4b[hbi], syst_Rsigsb_4b[hbi],
+                  correction_Rsigsb_2b[hbi], syst_Rsigsb_2b[hbi] ) ;
+         }
 
       } // hbi.
 
@@ -557,12 +591,7 @@
 
       gSystem -> Exec("mkdir -p outputfiles") ;
 
-      printf("\n\n output file : %s\n\n", outfilename ) ; fflush(stdout) ;
-
-      char outpathandfile[10000] ;
-      sprintf( outpathandfile, "outputfiles/%s", outfilename ) ;
-
-      printf("\n\n output file with path: %s\n\n", outpathandfile ) ; fflush(stdout) ;
+      printf("\n\n output file with path: %s\n\n", outfilename ) ; fflush(stdout) ;
 
 
 
@@ -572,12 +601,12 @@
       int returnstat = gSystem->Exec( command ) ;
       if ( returnstat == 0 ) {
          char mvfile[10000] ;
-         sprintf( mvfile, "%s-old", outpathandfile ) ;
+         sprintf( mvfile, "%s-old", outfilename ) ;
          printf("\n\n *** Output file already exists.  Moving it to %s\n\n", mvfile ) ;
-         sprintf( command, "mv %s %s", outpathandfile, mvfile ) ;
+         sprintf( command, "mv %s %s", outfilename, mvfile ) ;
          gSystem->Exec( command ) ;
       }
-      FILE* outfile = fopen( outpathandfile, "w" ) ;
+      FILE* outfile = fopen( outfilename, "w" ) ;
 
       fprintf( outfile, "met_variable  %s\n", metvarname ) ;
       fprintf( outfile, "bins_of_met  %d\n", bins_of_met ) ;
@@ -585,8 +614,8 @@
       //-- all observables, BG totals.  Added in signal if requested (sig_strength>0).
       for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_4b_msig_met%d   %8.2f\n", mbi, (n_4b_msig[mbi] + sig_strength * smc_4b_msig[mbi] )  ) ; }
       for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_4b_msb_met%d    %8.2f\n", mbi, (n_4b_msb[mbi]  + sig_strength * smc_4b_msb[mbi]  )  ) ; }
-      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_3b_msig_met%d   %8.2f\n", mbi, (n_3b_msig[mbi] + sig_strength * smc_3b_msig[mbi] )  ) ; }
-      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_3b_msb_met%d    %8.2f\n", mbi, (n_3b_msb[mbi]  + sig_strength * smc_3b_msb[mbi]  )  ) ; }
+      if ( bins_of_met > 1 ) { for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_3b_msig_met%d   %8.2f\n", mbi, (n_3b_msig[mbi] + sig_strength * smc_3b_msig[mbi] )  ) ; } }
+      if ( bins_of_met > 1 ) { for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_3b_msb_met%d    %8.2f\n", mbi, (n_3b_msb[mbi]  + sig_strength * smc_3b_msb[mbi]  )  ) ; } }
       for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_2b_msig_met%d   %8.2f\n", mbi, (n_2b_msig[mbi] + sig_strength * smc_2b_msig[mbi] )  ) ; }
       for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "N_2b_msb_met%d    %8.2f\n", mbi, (n_2b_msb[mbi]  + sig_strength * smc_2b_msb[mbi]  )  ) ; }
 
@@ -594,8 +623,8 @@
       //-- signal MC values.
       for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "smc_4b_msig_met%d   %8.2f\n", mbi, smc_4b_msig[mbi] ) ; }
       for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "smc_4b_msb_met%d    %8.2f\n", mbi, smc_4b_msb[mbi]  ) ; }
-      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "smc_3b_msig_met%d   %8.2f\n", mbi, smc_3b_msig[mbi] ) ; }
-      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "smc_3b_msb_met%d    %8.2f\n", mbi, smc_3b_msb[mbi]  ) ; }
+      if ( bins_of_met > 1 ) { for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "smc_3b_msig_met%d   %8.2f\n", mbi, smc_3b_msig[mbi] ) ; } }
+      if ( bins_of_met > 1 ) { for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "smc_3b_msb_met%d    %8.2f\n", mbi, smc_3b_msb[mbi]  ) ; } }
       for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "smc_2b_msig_met%d   %8.2f\n", mbi, smc_2b_msig[mbi] ) ; }
       for ( int mbi=1; mbi<=bins_of_met; mbi++ ) { fprintf( outfile, "smc_2b_msb_met%d    %8.2f\n", mbi, smc_2b_msb[mbi]  ) ; }
 
@@ -605,9 +634,11 @@
          fprintf( outfile, "Rsigsb_corr_4b_met%d   %5.3f\n", mbi, correction_Rsigsb_4b[mbi] ) ;
          fprintf( outfile, "Rsigsb_syst_4b_met%d   %5.3f\n", mbi, syst_Rsigsb_4b[mbi] ) ;
       }
-      for ( int mbi=1; mbi<=bins_of_met; mbi++ ) {
-         fprintf( outfile, "Rsigsb_corr_3b_met%d   %5.3f\n", mbi, correction_Rsigsb_3b[mbi] ) ;
-         fprintf( outfile, "Rsigsb_syst_3b_met%d   %5.3f\n", mbi, syst_Rsigsb_3b[mbi] ) ;
+      if ( bins_of_met > 1 ) {
+         for ( int mbi=1; mbi<=bins_of_met; mbi++ ) {
+            fprintf( outfile, "Rsigsb_corr_3b_met%d   %5.3f\n", mbi, correction_Rsigsb_3b[mbi] ) ;
+            fprintf( outfile, "Rsigsb_syst_3b_met%d   %5.3f\n", mbi, syst_Rsigsb_3b[mbi] ) ;
+         }
       }
       for ( int mbi=1; mbi<=bins_of_met; mbi++ ) {
          fprintf( outfile, "Rsigsb_corr_2b_met%d   %5.3f\n", mbi, correction_Rsigsb_2b[mbi] ) ;
@@ -619,7 +650,7 @@
       fclose( outfile ) ;
 
 
-      printf("\n\n Created likelihood input file: %s\n\n", outpathandfile ) ;
+      printf("\n\n Created likelihood input file: %s\n\n", outfilename ) ;
 
 
 
