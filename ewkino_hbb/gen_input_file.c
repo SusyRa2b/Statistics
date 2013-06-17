@@ -53,8 +53,8 @@
 
       for ( int si=0; si<nbgcomps; si++ ) { bgcompchain[si] = new TChain("reducedTree") ; }
 
-      /////// char rtdir[10000] = "/data/cms/hadronic-susy-bjets/hbb/reduced-trees-may23-2013" ;
-      char rtdir[10000] = "/Users/owen/work/cms/hadronic-susy-bjets/hbb/reduced-trees-may23-2013" ;
+      char rtdir[10000] = "/data/cms/hadronic-susy-bjets/hbb/reduced-trees-may23-2013" ;
+      /////char rtdir[10000] = "/Users/owen/work/cms/hadronic-susy-bjets/hbb/reduced-trees-may23-2013" ;
 
       int compIndex(0) ;
 
@@ -86,19 +86,31 @@
 
       if ( sigmass == 250 ) {
 
-        //--- signal, 250
-         sprintf( pathandfile, "%s/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff05_HLTEff0.test_TChihh_250_v68-slimskim.root", rtdir ) ;
+     // //--- signal, 250, original MC (10k gen)
+     //  sprintf( pathandfile, "%s/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff05_HLTEff0.test_TChihh_250_v68-slimskim.root", rtdir ) ;
+     //  sigchain = new TChain("reducedTree") ;
+     //  sigchain -> Add( pathandfile ) ;
+     //  signal_weight = 9.0e-6 ;
+
+        //--- signal, 250, new MC (100k gen)
+         sprintf( pathandfile, "/data/cms/hadronic-susy-bjets/hbb/reduced-trees-june14-2013/TChihh_250_Jim-slimskim.root" ) ;
          sigchain = new TChain("reducedTree") ;
          sigchain -> Add( pathandfile ) ;
-         signal_weight = 9.0e-6 ;
+         signal_weight = 9.0e-7 ;
 
       } else if ( sigmass == 400 ) {
 
-        //--- signal, 400
-         sprintf( pathandfile, "%s/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff05_HLTEff0.test_TChihh_400_v68-slimskim.root", rtdir ) ;
+     // //--- signal, 400, original MC (10k gen)
+     //  sprintf( pathandfile, "%s/reducedTree.CSVM_PF2PATjets_JES0_JER0_PFMETTypeI_METunc0_PUunc0_BTagEff05_HLTEff0.test_TChihh_400_v68-slimskim.root", rtdir ) ;
+     //  sigchain = new TChain("reducedTree") ;
+     //  sigchain -> Add( pathandfile ) ;
+     //  signal_weight = 1.0e-6 ;
+
+        //--- signal, 400, original MC (100k gen)
+         sprintf( pathandfile, "/data/cms/hadronic-susy-bjets/hbb/reduced-trees-june14-2013/TChihh_400_Jim-slimskim.root" ) ;
          sigchain = new TChain("reducedTree") ;
          sigchain -> Add( pathandfile ) ;
-         signal_weight = 1.0e-6 ;
+         signal_weight = 1.0e-7 ;
 
       }
 
