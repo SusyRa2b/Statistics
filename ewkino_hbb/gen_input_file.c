@@ -28,10 +28,11 @@
 
   //================================================================================================
 
-   void gen_input_file( const char* outfilename = "outputfiles/input-file.txt", int sigmass = 250, float sig_strength = 0., int bins_of_met = 4 ) {
+   void gen_input_file( const char* outfilename = "outputfiles/input-file.txt", int sigmass = 250, float sig_strength = 0., int bins_of_met = 4, float min_met = 50. ) {
 
       if ( bins_of_met == 1 ) {
          for ( int bi=0; bi<=bins_of_met; bi++ ) { met_bin_edges[bi] = met_bin_edges_1bins[bi] ; }
+         met_bin_edges[0] = min_met ;
       } else if ( bins_of_met == 4 ) {
          for ( int bi=0; bi<=bins_of_met; bi++ ) { met_bin_edges[bi] = met_bin_edges_4bins[bi] ; }
       } else {
