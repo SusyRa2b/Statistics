@@ -1,6 +1,6 @@
-Var1            MET
-Var2            HT
-Var3            nB
+Var1:           MET
+Var2:           HT
+Var3:           nB
 nBinsVar1	3
 nBinsVar2	3
 nBinsVar3	3

@@ -15,24 +15,28 @@ void GenerateDummySyst() {
 
   // get binning from "Binning.txt"
 
-  int in_version, in_nBinsMET, in_nBinsHT, in_nBinsBjets ;
-  TString label ;
+  int in_version, in_nBinsVar1, in_nBinsVar2, in_nBinsBjets ;
+  TString label, in_Var1, in_Var2, in_Var3 ;
 
   ifstream inBinning ;
   inBinning.open("Binning.txt") ;
 
-  inBinning >> label >> in_nBinsMET ;
-  inBinning >> label >> in_nBinsHT ;
+  inBinning >> label >> in_Var1 ;
+  inBinning >> label >> in_Var2 ;
+  inBinning >> label >> in_Var3 ;
+
+  inBinning >> label >> in_nBinsVar1 ;
+  inBinning >> label >> in_nBinsVar2 ;
   inBinning >> label >> in_nBinsBjets ;
 
-  const int nBinsMET   = in_nBinsMET ;
-  const int nBinsHT    = in_nBinsHT ;
+  const int nBinsVar1  = in_nBinsVar1 ;
+  const int nBinsVar2  = in_nBinsVar2 ;
   const int nBinsBjets = in_nBinsBjets ;
 
   inBinning.close() ;
 
 
-  int nBins = nBinsMET * nBinsHT * nBinsBjets ;
+  int nBins = nBinsVar1 * nBinsVar2 * nBinsBjets ;
 
   // just generate one line, gluino mass, lsp mass (for the point 1000, 0),
   // followed by 4*Nbins dummy numbers 
@@ -43,7 +47,7 @@ void GenerateDummySyst() {
   double dummyLdp   = 0.02 ;
 
   char outfile[10000] ;
-  sprintf( outfile, "datfiles/DummySyst-met%d-ht%d-nB%d.dat", nBinsMET, nBinsHT, nBinsBjets ) ;
+  sprintf( outfile, "datfiles/DummySyst-%s-%d-%s-%d-nB%d.dat", in_Var1.Data(), nBinsVar1, in_Var2.Data(), nBinsVar2, nBinsBjets ) ;
 
   ofstream outDummy;
   outDummy.open(outfile);

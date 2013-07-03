@@ -304,12 +304,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   char outfile[10000] ;
   if ( mgl > 0. && mlsp > 0. ) {
      if ( target_susy_all0lep > 0. ) {
-       sprintf( outfile, "InputWT2tt-mgl%.0f-mlsp%.0f-%.0fevts-%s%d-%s%d-nB%d-v%d.dat", mgl, mlsp, target_susy_all0lep, sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version  ) ;
+       sprintf( outfile, "InputWT2tt-mgl%.0f-mlsp%.0f-%.0fevts-%s-%d-%s-%d-nB%d-v%d.dat", mgl, mlsp, target_susy_all0lep, sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version  ) ;
      } else {
-       sprintf( outfile, "InputWT2tt-mgl%.0f-mlsp%.0f-%s%d-%s%d-nB%d-v%d.dat", mgl, mlsp, sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version  ) ;
+       sprintf( outfile, "InputWT2tt-mgl%.0f-mlsp%.0f-%s-%d-%s-%d-nB%d-v%d.dat", mgl, mlsp, sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version  ) ;
      }
   } else {
-    sprintf( outfile, "Input-%s%d-%s%d-nB%d-v%d.dat", sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version  ) ;
+    sprintf( outfile, "Input-%s-%d-%s-%d-nB%d-v%d.dat", sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version  ) ;
   }
   inFile.open( outfile );
 
@@ -1605,12 +1605,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     char outHistName[1000] ;
     if ( mgl>0. && mlsp>0. ) {
        if ( target_susy_all0lep > 0 ) {
-	 sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%.0fevts-%s%d-%s%d-nB$d-v%d.root", mgl, mlsp, target_susy_all0lep, sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
+	 sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%.0fevts-%s-%d-%s-%d-nB$d-v%d.root", mgl, mlsp, target_susy_all0lep, sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
        } else {
-	 sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%s%d-%s%d-nB%d-v%d.root", mgl, mlsp, sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
+	 sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%s-%d-%s-%d-nB%d-v%d.root", mgl, mlsp, sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
        }
     } else {
-      sprintf( outHistName, "rootfiles/gi-plots-%s%d-%s%d-nB%d-v%d.root", sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
+      sprintf( outHistName, "rootfiles/gi-plots-%s-%d-%s-%d-nB%d-v%d.root", sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
     }
     saveHist( outHistName, "h*" ) ;
 

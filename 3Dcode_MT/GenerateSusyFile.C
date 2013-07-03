@@ -126,7 +126,7 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
   ofstream inFile;
   char outfile[10000] ;
-  sprintf( outfile, "datfiles/T2tt-%s%d-%s%d-nB%d-v%d.dat", sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
+  sprintf( outfile, "datfiles/T2tt-%s-%d-%s-%d-nB%d-v%d.dat", sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
   inFile.open( outfile );
 
   // loop over gluino masses
