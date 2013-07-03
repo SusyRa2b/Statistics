@@ -36,41 +36,52 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
   // get binning definition from "Binning.txt"
 
-  int in_version, in_nBinsMET, in_nBinsHT, in_nBinsBjets ;
-  TString label ;
+  int in_version, in_nBinsVar1, in_nBinsVar2, in_nBinsBjets ;
+  TString label, in_Var1, in_Var2, in_Var3 ;
 
   ifstream inBinning ;
   inBinning.open("Binning.txt") ;
 
-  inBinning >> label >> in_nBinsMET ;
-  inBinning >> label >> in_nBinsHT ;
+  inBinning >> label >> in_Var1 ;
+  inBinning >> label >> in_Var2 ;
+  inBinning >> label >> in_Var3 ;
+
+  inBinning >> label >> in_nBinsVar1 ;
+  inBinning >> label >> in_nBinsVar2 ;
   inBinning >> label >> in_nBinsBjets ;
 
-  const int nBinsMET   = in_nBinsMET ;
-  const int nBinsHT    = in_nBinsHT ;
+  const int nBinsVar1  = in_nBinsVar1 ;
+  const int nBinsVar2  = in_nBinsVar2 ;
   const int nBinsBjets = in_nBinsBjets ;
 
-  float Mbins[nBinsMET+1] ;
-  float Hbins[nBinsHT+1] ;
+  float Mbins[nBinsVar1+1] ;
+  float Hbins[nBinsVar2+1] ;
 
-  for ( int i = 0 ; i < nBinsMET ; i++ ) {
+  for ( int i = 0 ; i < nBinsVar1 ; i++ ) {
     inBinning >> label >> Mbins[i] ;
-    if ( i > 0 && Mbins[i] < Mbins[i-1] ) { cout << "\n\n Mismatch in MET binning, check Binning.txt! \n\n" ; return ; }
+    if ( i > 0 && Mbins[i] < Mbins[i-1] ) { cout << "\n\n Mismatch in Var1 binning, check Binning.txt! \n\n" ; return ; }
   }
 
-  for ( int i = 0 ; i < nBinsHT ; i++ ) {
+  for ( int i = 0 ; i < nBinsVar2 ; i++ ) {
     inBinning >> label >> Hbins[i] ;
-    if ( i > 0 && Hbins[i] < Hbins[i-1] ) { cout << "\n\n Mismatch in HT binning, check Binning.txt! \n\n" ; return ; }
+    if ( i > 0 && Hbins[i] < Hbins[i-1] ) { cout << "\n\n Mismatch in Var2 binning, check Binning.txt! \n\n" ; return ; }
   }
 
-  Mbins[nBinsMET] = 999999. ;
-  Hbins[nBinsHT] = 999999. ;
+  const TString sVar1 = in_Var1 ;
+  const TString sVar2 = in_Var2 ;
+
+  TString s2DVars = sVar2;
+  s2DVars += ":";
+  s2DVars += sVar1;
+
+  Mbins[nBinsVar1] = 999999. ;
+  Hbins[nBinsVar2] = 999999. ;
 
   inBinning >> label >> in_version ;
   const int version = in_version ;
 
   if ( !label.Contains("version") ) {
-    cout << "\n\n Found inconsistency in Binning.txt, check number of bins and MET and HT lower bounds\n\n" << endl ;
+    cout << "\n\n Found inconsistency in Binning.txt, check number of bins and Var1 and Var2 lower bounds\n\n" << endl ;
     return ;
   }
 
@@ -115,7 +126,7 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
   ofstream inFile;
   char outfile[10000] ;
-  sprintf( outfile, "datfiles/T2tt-met%d-ht%d-nB%d-v%d.dat", nBinsMET, nBinsHT, nBinsBjets, version ) ;
+  sprintf( outfile, "datfiles/T2tt-%s%d-%s%d-nB%d-v%d.dat", sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
   inFile.open( outfile );
 
   // loop over gluino masses
@@ -143,16 +154,16 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
   for ( int bi=0; bi<nBinsBjets; bi++ ) {
      char hname[1000] ;
      sprintf( hname, "h_susy_sig_%db", bi+1 ) ;
-     h_susy_sig[bi] = new TH2F( hname, hname, nBinsMET, Mbins, nBinsHT, Hbins ) ;
+     h_susy_sig[bi] = new TH2F( hname, hname, nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
      h_susy_sig[bi] -> Sumw2() ;
      sprintf( hname, "h_susy_slsig_%db", bi+1 ) ;
-     h_susy_slsig[bi] = new TH2F( hname, hname, nBinsMET, Mbins, nBinsHT, Hbins ) ;
+     h_susy_slsig[bi] = new TH2F( hname, hname, nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
      h_susy_slsig[bi] -> Sumw2() ;
      sprintf( hname, "h_susy_sl_%db", bi+1 ) ;
-     h_susy_sl[bi] = new TH2F( hname, hname, nBinsMET, Mbins, nBinsHT, Hbins ) ;
+     h_susy_sl[bi] = new TH2F( hname, hname, nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
      h_susy_sl[bi] -> Sumw2() ;
      sprintf( hname, "h_susy_ldp_%db", bi+1 ) ;
-     h_susy_ldp[bi] = new TH2F( hname, hname, nBinsMET, Mbins, nBinsHT, Hbins ) ;
+     h_susy_ldp[bi] = new TH2F( hname, hname, nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
      h_susy_ldp[bi] -> Sumw2() ;
   }
 
@@ -207,30 +218,30 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
          char hname[1000] ;
 
          sprintf( hname, "h_susy_sig_%db", k+1 ) ;
-         chainT2tt.Project( hname,"HT:MET",allSigCuts);
+         chainT2tt.Project( hname,s2DVars,allSigCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  SIG selection %9.1f events.\n", mGl, mLsp, k+1, h_susy_sig[k]->Integral() ) ; cout << flush ;
 
          sprintf( hname, "h_susy_slsig_%db", k+1 ) ;
-         chainT2tt.Project( hname,"HT:MET",allSLSigCuts);
+         chainT2tt.Project( hname,s2DVars,allSLSigCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  SL Sig selection %6.1f events.\n", mGl, mLsp, k+1, h_susy_slsig[k]->Integral() ) ; cout << flush ;
 
          sprintf( hname, "h_susy_sl_%db", k+1 ) ;
-         chainT2tt.Project( hname,"HT:MET",allSLCuts);
+         chainT2tt.Project( hname,s2DVars,allSLCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  SL  selection %9.1f events.\n", mGl, mLsp, k+1, h_susy_sl[k]->Integral() ) ; cout << flush ;
 
          sprintf( hname, "h_susy_ldp_%db", k+1 ) ;
-         chainT2tt.Project( hname,"HT:MET",allLDPCuts);
+         chainT2tt.Project( hname,s2DVars,allLDPCuts);
          printf("   mGl=%d, mLsp=%d, nBjets = %d,  LDP selection %9.1f events.\n", mGl, mLsp, k+1, h_susy_ldp[k]->Integral() ) ; cout << flush ;
 
       } // k (nBjets)
       printf("\n\n") ;
 
       printf("----------------\n") ;
-      for (int i = 0 ; i < nBinsMET ; i++) {
-        for (int j = 0 ; j < nBinsHT ; j++) {
+      for (int i = 0 ; i < nBinsVar1 ; i++) {
+        for (int j = 0 ; j < nBinsVar2 ; j++) {
           for (int k = 0 ; k < nBinsBjets ; k++) {
 
-             printf ( " Raw MC counts: mGl=%d, mLsp=%d: MET,HT (%d,%d) nb=%d   SIG = %9.0f, SLSIG =%9.0f, SL=%9.0f, LDP=%9.0f\n",
+             printf ( " Raw MC counts: mGl=%d, mLsp=%d: Var1,Var2 (%d,%d) nb=%d   SIG = %9.0f, SLSIG =%9.0f, SL=%9.0f, LDP=%9.0f\n",
                  mGl, mLsp, i+1, j+1, k+1,
                  h_susy_sig[k]  -> GetBinContent( i+1, j+1 ),
                  h_susy_slsig[k]-> GetBinContent( i+1, j+1 ),
@@ -248,8 +259,8 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
       float totalSUSYyield = 0;
       printf("----------------\n") ;
-      for (int i = 0 ; i < nBinsMET ; i++) {
-        for (int j = 0 ; j < nBinsHT ; j++) {
+      for (int i = 0 ; i < nBinsVar1 ; i++) {
+        for (int j = 0 ; j < nBinsVar2 ; j++) {
           for (int k = 0 ; k < nBinsBjets ; k++) {
 
              inFile << 1.5*xsec8TeV*(h_susy_sig[k]  -> GetBinContent( i+1, j+1 )) << " " ;
@@ -265,8 +276,8 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
       // SLSig yields:
       printf("----------------\n") ;
-      for (int i = 0 ; i < nBinsMET ; i++) {
-        for (int j = 0 ; j < nBinsHT ; j++) {
+      for (int i = 0 ; i < nBinsVar1 ; i++) {
+        for (int j = 0 ; j < nBinsVar2 ; j++) {
           for (int k = 0 ; k < nBinsBjets ; k++) {
 
              inFile << 1.5*xsec8TeV*(h_susy_slsig[k]-> GetBinContent( i+1, j+1 )) << " " ;
@@ -278,8 +289,8 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
       // SL yields:
       printf("----------------\n") ;
-      for (int i = 0 ; i < nBinsMET ; i++) {
-        for (int j = 0 ; j < nBinsHT ; j++) {
+      for (int i = 0 ; i < nBinsVar1 ; i++) {
+        for (int j = 0 ; j < nBinsVar2 ; j++) {
           for (int k = 0 ; k < nBinsBjets ; k++) {
 
              inFile << 1.5*xsec8TeV*(h_susy_sl[k]   -> GetBinContent( i+1, j+1 )) << " " ;
@@ -292,8 +303,8 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
       // Ldp yields:
       printf("----------------\n") ;
-      for (int i = 0 ; i < nBinsMET ; i++) {
-        for (int j = 0 ; j < nBinsHT ; j++) {
+      for (int i = 0 ; i < nBinsVar1 ; i++) {
+        for (int j = 0 ; j < nBinsVar2 ; j++) {
           for (int k = 0 ; k < nBinsBjets ; k++) {
 
              inFile << 1.5*xsec8TeV*(h_susy_ldp[k]  -> GetBinContent( i+1, j+1 )) << " " ;
@@ -313,7 +324,7 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 	     if ( nsel_sl     > 0. ) { nevt_err_sl    = 1.5*xsec8TeV*sqrt(nsel_sl )   ; }
 	     if ( nsel_ldp    > 0. ) { nevt_err_ldp   = 1.5*xsec8TeV*sqrt(nsel_ldp)   ; }
  
-             printf ( " xsec8TeV weighted events: mGl=%d, mLsp=%d: MET,HT (%d,%d) nb=%d   SIG = %6.1f +/- %4.1f,   SLSIG=%6.1f +/- %4.1f,   SL=%6.1f +/- %4.1f,   LDP=%6.1f +/- %4.1f\n",
+             printf ( " xsec8TeV weighted events: mGl=%d, mLsp=%d: Var1,Var2 (%d,%d) nb=%d   SIG = %6.1f +/- %4.1f,   SLSIG=%6.1f +/- %4.1f,   SL=%6.1f +/- %4.1f,   LDP=%6.1f +/- %4.1f\n",
 		      mGl, mLsp, i+1, j+1, k+1,
 		      1.5*xsec8TeV*(h_susy_sig[k]  -> GetBinContent( i+1, j+1 )), nevt_err_sig,
 		      1.5*xsec8TeV*(h_susy_slsig[k]-> GetBinContent( i+1, j+1 )), nevt_err_slsig,
@@ -331,8 +342,8 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
   //----------------------------------------------------------------------------
 
       printf("----------------\n") ;
-      for (int i = 0 ; i < nBinsMET ; i++) {
-        for (int j = 0 ; j < nBinsHT ; j++) {
+      for (int i = 0 ; i < nBinsVar1 ; i++) {
+        for (int j = 0 ; j < nBinsVar2 ; j++) {
           for (int k = 0 ; k < nBinsBjets ; k++) {
              if ( flatDummyErr < 0 ) {
 
@@ -353,7 +364,7 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
                 inFile << frerr_sig << " " << frerr_slsig << " " << frerr_sl << " " << frerr_ldp << " " ;
 
-                printf ( " MC sig_eff/eff (%%): mGl=%d, mLsp=%d: MET,HT (%d,%d) nb=%d   SIG = %5.1f,   SLSIG=%5.1f,   SL=%5.1f,   LDP=%5.1f\n",
+                printf ( " MC sig_eff/eff (%%): mGl=%d, mLsp=%d: Var1,Var2 (%d,%d) nb=%d   SIG = %5.1f,   SLSIG=%5.1f,   SL=%5.1f,   LDP=%5.1f\n",
 			 mGl, mLsp, i+1, j+1, k+1,
 			 frerr_sig, frerr_slsig, frerr_sl, frerr_ldp ) ;
              }
@@ -368,8 +379,8 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
 
       // Sig uncertainty
-      for (int i = 0 ; i < nBinsMET ; i++) {
-        for (int j = 0 ; j < nBinsHT ; j++) {
+      for (int i = 0 ; i < nBinsVar1 ; i++) {
+        for (int j = 0 ; j < nBinsVar2 ; j++) {
           for (int k = 0 ; k < nBinsBjets ; k++) {
 
 	    if ( flatDummyErr >= 0 ) {
@@ -385,8 +396,8 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
 
       // SLSig uncertainty
-      for (int i = 0 ; i < nBinsMET ; i++) {
-        for (int j = 0 ; j < nBinsHT ; j++) {
+      for (int i = 0 ; i < nBinsVar1 ; i++) {
+        for (int j = 0 ; j < nBinsVar2 ; j++) {
           for (int k = 0 ; k < nBinsBjets ; k++) {
 
 	    if ( flatDummyErr >= 0 ) {
@@ -402,8 +413,8 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
 
       // SL uncertainty
-      for (int i = 0 ; i < nBinsMET ; i++) {
-        for (int j = 0 ; j < nBinsHT ; j++) {
+      for (int i = 0 ; i < nBinsVar1 ; i++) {
+        for (int j = 0 ; j < nBinsVar2 ; j++) {
           for (int k = 0 ; k < nBinsBjets ; k++) {
 
 	    if ( flatDummyErr >= 0 ) {
@@ -419,8 +430,8 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
 
       // Ldp uncertainty
-      for (int i = 0 ; i < nBinsMET ; i++) {
-        for (int j = 0 ; j < nBinsHT ; j++) {
+      for (int i = 0 ; i < nBinsVar1 ; i++) {
+        for (int j = 0 ; j < nBinsVar2 ; j++) {
           for (int k = 0 ; k < nBinsBjets ; k++) {
 
 	    if ( flatDummyErr >= 0 ) {
@@ -442,16 +453,16 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
 
   // print out header line:
-  inFile << "Using HT bins:  " ;
-  for (int j = 0 ; j <= nBinsHT ; j++ ) {
+  inFile << "Using Var2 bins:  " ;
+  for (int j = 0 ; j <= nBinsVar2 ; j++ ) {
     inFile << Hbins[j] ;
-    if ( j < nBinsHT ) inFile << "-" ;
+    if ( j < nBinsVar2 ) inFile << "-" ;
   }
 
-  inFile << "\t Using MET bins: " ;
-  for (int i = 0 ; i <= nBinsMET ; i++ ) {
+  inFile << "\t Using Var1 bins: " ;
+  for (int i = 0 ; i <= nBinsVar1 ; i++ ) {
     inFile << Mbins[i] ;
-    if ( i < nBinsMET ) inFile << "-" ;
+    if ( i < nBinsVar1 ) inFile << "-" ;
   }
   inFile << endl ;
 
