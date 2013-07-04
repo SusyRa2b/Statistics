@@ -61,23 +61,28 @@
 
      // get the binning from "Binning.txt"
 
-     int version, nBinsMET, nBinsHT, nBinsBtag ;
+     int version, nBinsVar1, nBinsVar2, nBinsBtag ;
      TString label ;
-     
+     TString sVar1, sVar2, sVar3 ;
+
      ifstream inBinning ;
      inBinning.open("Binning.txt") ;
      
-     inBinning >> label >> nBinsMET ;
-     inBinning >> label >> nBinsHT ;
+     inBinning >> label >> sVar1 ;
+     inBinning >> label >> sVar2 ;
+     inBinning >> label >> sVar3 ;
+
+     inBinning >> label >> nBinsVar1 ;
+     inBinning >> label >> nBinsVar2 ;
      inBinning >> label >> nBinsBtag ;
 
      float dummy ;
      
-     for ( int i = 0 ; i < nBinsMET ; i++ ) {
+     for ( int i = 0 ; i < nBinsVar1 ; i++ ) {
        inBinning >> label >> dummy ;
      }
      
-     for ( int i = 0 ; i < nBinsHT ; i++ ) {
+     for ( int i = 0 ; i < nBinsVar2 ; i++ ) {
        inBinning >> label >> dummy ;
      }
   
@@ -94,45 +99,55 @@
      ws->Print() ;
 
 
-     //-- Hardwire in to ignore the highest MET bin in the lowest HT bin.
+     //-- Hardwire in to ignore the highest Var1 bin in the lowest Var2 bin.
      bool ignoreBin[10][10] ;
-     for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-       for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+     for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+       for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
 	 ignoreBin[mbi][hbi] = false ;
        } // hbi
      } // mbi
-     ignoreBin[nBinsMET-1][0] = true ;
+     ignoreBin[nBinsVar1-1][0] = true ;
 
      printf("\n\n *** Ignoring these bins in the analysis.\n\n") ;
-     for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-       for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+     for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+       for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
 	 if ( ignoreBin[mbi][hbi] ) {
-	   printf("  MET %d, HT %d\n", mbi+1, hbi+1 ) ;
+	   printf("  Var1 %d, Var2 %d\n", mbi+1, hbi+1 ) ;
 	 }
        } // hbi
      } // mbi
      printf("\n\n\n") ;
      
-     printf("\n\n Binning: nBinsMET = %d, nBinsHT = %d\n\n", nBinsMET, nBinsHT ) ;
+     printf("\n\n Binning: nBinsVar1 = %d, nBinsVar2 = %d\n\n", nBinsVar1, nBinsVar2 ) ;
      
-     TString sMbins[nBinsMET];
-     TString sHbins[nBinsHT];
+     TString sMbins[nBinsVar1];
+     TString sHbins[nBinsVar2];
+
+     TString s1bins[nBinsVar1];
+     TString s2bins[nBinsVar2];
+
      TString sBbins[4] = {"_1b","_2b","_3b","_4b"};
      
-     for (int i = 0 ; i < nBinsMET ; i++) {
+     for (int i = 0 ; i < nBinsVar1 ; i++) {
        TString base = "_M";
+       TString base_1 = "_#alpha";
        stringstream sbin;
        sbin << i+1;
        base += sbin.str();
+       base_1 += sbin.str();
        sMbins[i] = base;
+       s1bins[i] = base_1;
      }
       
-     for (int j = 0 ; j < nBinsHT ; j++) {
+     for (int j = 0 ; j < nBinsVar2 ; j++) {
        TString base = "_H";
+       TString base_2 = "_#beta";
        stringstream sbin;
        sbin << j+1;
        base += sbin.str();
+       base_2 += sbin.str();
        sHbins[j] = base;
+       s2bins[j] = base_2;
      }
 
 
@@ -214,11 +229,11 @@
      printf("\n\n") ; cout << flush ;
 
 
-     double AttwjVal[nBinsMET][nBinsHT][nBinsBtag] ;
-     double AqcdVal[nBinsMET][nBinsHT][nBinsBtag] ;
+     double AttwjVal[nBinsVar1][nBinsVar2][nBinsBtag] ;
+     double AqcdVal[nBinsVar1][nBinsVar2][nBinsBtag] ;
 
-     for ( int i = 0 ; i < nBinsMET ; i++ ) {
-       for ( int j = 0 ; j < nBinsHT ; j++ ) {
+     for ( int i = 0 ; i < nBinsVar1 ; i++ ) {
+       for ( int j = 0 ; j < nBinsVar2 ; j++ ) {
 
          if ( ignoreBin[i][j] ) continue ;
 
@@ -274,15 +289,15 @@
 
      //--- unpack observables.
 
-     int dataN_0lep[nBinsMET][nBinsHT][nBinsBtag] ;
-     int dataN_1lepSig[nBinsMET][nBinsHT][nBinsBtag] ;
-     int dataN_1lep[nBinsMET][nBinsHT][nBinsBtag] ;
-     int dataN_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
-     int dataN_Zee[nBinsMET][nBinsHT] ;
-     int dataN_Zmm[nBinsMET][nBinsHT] ;
+     int dataN_0lep[nBinsVar1][nBinsVar2][nBinsBtag] ;
+     int dataN_1lepSig[nBinsVar1][nBinsVar2][nBinsBtag] ;
+     int dataN_1lep[nBinsVar1][nBinsVar2][nBinsBtag] ;
+     int dataN_ldp[nBinsVar1][nBinsVar2][nBinsBtag] ;
+     int dataN_Zee[nBinsVar1][nBinsVar2] ;
+     int dataN_Zmm[nBinsVar1][nBinsVar2] ;
 
-     for ( int i = 0 ; i < nBinsMET ; i++ ) {
-       for ( int j = 0 ; j < nBinsHT ; j++ ) {
+     for ( int i = 0 ; i < nBinsVar1 ; i++ ) {
+       for ( int j = 0 ; j < nBinsVar2 ; j++ ) {
          for ( int k = 0 ; k < nBinsBtag ; k++ ) {
             dataN_0lep[i][j][k] = 0. ;
             dataN_1lepSig[i][j][k] = 0. ;
@@ -300,8 +315,8 @@
 
      while ( RooRealVar* obs = (RooRealVar*) obsIter->Next() ) {
 
-       for ( int i = 0 ; i < nBinsMET ; i++ ) {
-	 for ( int j = 0 ; j < nBinsHT ; j++ ) {
+       for ( int i = 0 ; i < nBinsVar1 ; i++ ) {
+	 for ( int j = 0 ; j < nBinsVar2 ; j++ ) {
            if ( ignoreBin[i][j] ) continue ;
 	   for ( int k = 0 ; k < nBinsBtag ; k++ ) {
 
@@ -339,7 +354,7 @@
 
 
 
-     int nbins = nBinsMET*(nBinsHT+1) + 1 ;
+     int nbins = nBinsVar1*(nBinsVar2+1) + 1 ;
 
      TH1F *hfitqual_data_0lep_1b  , *hfitqual_data_0lep_2b  , *hfitqual_data_0lep_3b  , *hfitqual_data_0lep_4b ;
      TH1F *hfitqual_susy_0lep_1b  , *hfitqual_susy_0lep_2b  , *hfitqual_susy_0lep_3b  , *hfitqual_susy_0lep_4b ;
@@ -778,20 +793,20 @@
 
      // loop through all the bins of the analysis
 
-     for ( int i = 0 ; i < nBinsMET ; i++ ) {
-       for ( int j = 0 ; j < nBinsHT ; j++ ) {
+     for ( int i = 0 ; i < nBinsVar1 ; i++ ) {
+       for ( int j = 0 ; j < nBinsVar2 ; j++ ) {
          if ( ignoreBin[i][j] ) continue ;
          for ( int k = 0 ; k < nBinsBtag ; k++ ) {
 
            printf(" here t1\n") ; cout << flush ;
 
-           binIndex = 1 + (nBinsHT+1)*i + j + 1 ;
+           binIndex = 1 + (nBinsVar2+1)*i + j + 1 ;
 
 
            //+++++ 0 lep histograms:
 
            binLabel = "0 lep" ;
-           binLabel += sMbins[i]+sHbins[j]+sBbins[k] ;
+           binLabel += s1bins[i]+s2bins[j]+sBbins[k] ;
 
            TString EffSfString  = "eff_sf" ;
            TString MuSusyString = "mu_susy" ;
@@ -859,21 +874,21 @@
               sprintf( pname, "qcd_0lepLDP_ratio_H%d", j+1 ) ;
               RooAbsReal* r_qcd_ht = (RooAbsReal*) ws->obj(pname) ;
 
-              sprintf( pname, "SFqcd_met%d", i+1 ) ;
-              RooAbsReal* sf_qcd_met = (RooAbsReal*) ws->obj(pname) ;
+              sprintf( pname, "SFqcd_1stVar%d", i+1 ) ;
+              RooAbsReal* sf_qcd_1stVar = (RooAbsReal*) ws->obj(pname) ;
 
               sprintf( pname, "SFqcd_nb%d", k+1 ) ;
               RooAbsReal* sf_qcd_nb = (RooAbsReal*) ws->obj(pname) ;
 
-              if ( mu_qcd_ldp != 0 && sf_qcd != 0 && r_qcd_ht != 0 && sf_qcd_met != 0 && sf_qcd_nb != 0 ) {
+              if ( mu_qcd_ldp != 0 && sf_qcd != 0 && r_qcd_ht != 0 && sf_qcd_1stVar != 0 && sf_qcd_nb != 0 ) {
                  qcdVal = trigeff * (mu_qcd_ldp -> getVal())
                         * (sf_qcd -> getVal())
                         * (r_qcd_ht -> getVal())
-                        * (sf_qcd_met -> getVal())
+                        * (sf_qcd_1stVar -> getVal())
                         * (sf_qcd_nb -> getVal()) ;
               } else {
-                 printf("\n\n *** missing one of the inputs. mu_qcd_ldp %p : sf_qcd %p : r_qcd_ht %p : sf_qcd_met %p : sf_qcd_nb %p\n",
-                     mu_qcd_ldp, sf_qcd, r_qcd_ht, sf_qcd_met, sf_qcd_nb ) ;
+                 printf("\n\n *** missing one of the inputs. mu_qcd_ldp %p : sf_qcd %p : r_qcd_ht %p : sf_qcd_1stVar %p : sf_qcd_nb %p\n",
+                     mu_qcd_ldp, sf_qcd, r_qcd_ht, sf_qcd_1stVar, sf_qcd_nb ) ;
               }
 
            }
@@ -946,7 +961,7 @@
            //+++++ 1 lepSig histograms:
 
            binLabel = "1 lep sig" ;
-           binLabel += sMbins[i]+sHbins[j]+sBbins[k] ;
+           binLabel += s1bins[i]+s2bins[j]+sBbins[k] ;
 
            TString EffSfSlSigString  = "eff_sf_slSig" ;
            TString MuSusySlSigString = "mu_susy_slSig" ;
@@ -1055,7 +1070,7 @@
            //+++++ 1 lep histograms:
 
            binLabel = "1 lep" ;
-           binLabel += sMbins[i]+sHbins[j]+sBbins[k] ;
+           binLabel += s1bins[i]+s2bins[j]+sBbins[k] ;
 
            TString EffSfSlString  = "eff_sf_sl" ;
            TString MuSusySlString = "mu_susy_sl" ;
@@ -1164,7 +1179,7 @@
            //+++++ ldp histograms:
 
            binLabel = "ldp" ;
-           binLabel += sMbins[i]+sHbins[j]+sBbins[k] ;
+           binLabel += s1bins[i]+s2bins[j]+sBbins[k] ;
 
            TString EffSfLdpString  = "eff_sf_ldp" ;
            TString MuSusyLdpString = "mu_susy_ldp" ;
@@ -1311,7 +1326,7 @@
            //+++++ Zee histogram:
 
               binLabel = "Zee" ;
-              binLabel += sMbins[i]+sHbins[j]+sBbins[k] ;
+              binLabel += s1bins[i]+s2bins[j]+sBbins[k] ;
              
 
               TString nZeeModelString = "n_ee" ;
@@ -1354,7 +1369,7 @@
            //+++++ Zmm histogram:
 
               binLabel = "Zmm" ;
-              binLabel += sMbins[i]+sHbins[j]+sBbins[k] ;
+              binLabel += s1bins[i]+s2bins[j]+sBbins[k] ;
              
 
               TString nZmmModelString = "n_mm" ;
@@ -1394,8 +1409,8 @@
            } // nbjet=1?
 
 	 } // k: btag
-       } // j: HT
-     } // i: MET
+       } // j: Var2
+     } // i: Var1
 
 
            printf(" here 6\n") ; cout << flush ;
@@ -1793,16 +1808,16 @@
 
         TH1F* hnp_prim_eff = new TH1F("hnp_prim_eff", "Nuisance parameters, Efficiency primary Gaussians, pull", 8, 0.5, 8.5 ) ;
 
-        TH1F* hnp_znn = new TH1F("hnp_znn", "Nuisance parameters, Znn, pull", 3*nBinsMET+2*nBinsHT+7, 0.5, 3*nBinsMET+2*nBinsHT+7+0.5 ) ;
+        TH1F* hnp_znn = new TH1F("hnp_znn", "Nuisance parameters, Znn, pull", 3*nBinsVar1+2*nBinsVar2+7, 0.5, 3*nBinsVar1+2*nBinsVar2+7+0.5 ) ;
 
-        TH1F* hnp_trig_0lep = new TH1F("hnp_trig_0lep", "Nuisance parameters, trigger (0lep), pull", 2+nBinsMET*nBinsHT-1, 0.5, 2+nBinsMET*nBinsHT-1+0.5 ) ;
-        TH1F* hnp_trig_1lep = new TH1F("hnp_trig_1lep", "Nuisance parameters, trigger (1lep), pull", 2+nBinsMET*nBinsHT-1, 0.5, 2+nBinsMET*nBinsHT-1+0.5 ) ;
-
-
+        TH1F* hnp_trig_0lep = new TH1F("hnp_trig_0lep", "Nuisance parameters, trigger (0lep), pull", 2+nBinsVar1*nBinsVar2-1, 0.5, 2+nBinsVar1*nBinsVar2-1+0.5 ) ;
+        TH1F* hnp_trig_1lep = new TH1F("hnp_trig_1lep", "Nuisance parameters, trigger (1lep), pull", 2+nBinsVar1*nBinsVar2-1, 0.5, 2+nBinsVar1*nBinsVar2-1+0.5 ) ;
 
 
-        for ( int mbi=0 ; mbi < nBinsMET; mbi ++ ) {
-           for ( int hbi=0 ; hbi < nBinsHT; hbi ++ ) {
+
+
+        for ( int mbi=0 ; mbi < nBinsVar1; mbi ++ ) {
+           for ( int hbi=0 ; hbi < nBinsVar2; hbi ++ ) {
               if ( ignoreBin[mbi][hbi] ) continue ;
               for ( int bbi=0 ; bbi < nBinsBtag; bbi ++ ) {
 
@@ -1837,7 +1852,7 @@
 
                  double pull = (npVal-mean)/sigma ;
                  printf("  %s : mean=%7.3f, sigma=%7.3f, val=%7.3f, pull=%7.3f\n", parName, mean, sigma, npVal, pull ) ;
-                 binIndex = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+                 binIndex = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
                  if ( bbi==0 ) hnp_qcd_1b_val->SetBinContent( binIndex, npVal ) ;
                  if ( bbi==1 ) hnp_qcd_2b_val->SetBinContent( binIndex, npVal ) ;
                  if ( bbi==2 ) hnp_qcd_3b_val->SetBinContent( binIndex, npVal ) ;
@@ -1852,7 +1867,7 @@
                  if ( bbi==3 ) hnp_qcd_4b_nom->SetBinContent( binIndex, mean ) ;
 
                  char label[1000] ;
-                 sprintf( label, "M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                 sprintf( label, "#alpha%d_#beta%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  if ( bbi==0 ) hnp_qcd_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_qcd_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_qcd_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
@@ -1873,8 +1888,8 @@
         printf("\n\n") ;
 
 
-        for ( int mbi=0 ; mbi < nBinsMET; mbi ++ ) {
-           for ( int hbi=0 ; hbi < nBinsHT; hbi ++ ) {
+        for ( int mbi=0 ; mbi < nBinsVar1; mbi ++ ) {
+           for ( int hbi=0 ; hbi < nBinsVar2; hbi ++ ) {
               if ( ignoreBin[mbi][hbi] ) continue ;
               for ( int bbi=0 ; bbi < nBinsBtag; bbi ++ ) {
 
@@ -1909,7 +1924,7 @@
 
                  double pull = (npVal-mean)/sigma ;
                  printf("  %s : mean=%7.3f, sigma=%7.3f, val=%7.3f, pull=%7.3f\n", parName, mean, sigma, npVal, pull ) ;
-                 binIndex = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+                 binIndex = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
                  if ( bbi==0 ) hnp_ttwj_1b_val->SetBinContent( binIndex, npVal ) ;
                  if ( bbi==1 ) hnp_ttwj_2b_val->SetBinContent( binIndex, npVal ) ;
                  if ( bbi==2 ) hnp_ttwj_3b_val->SetBinContent( binIndex, npVal ) ;
@@ -1924,7 +1939,7 @@
                  if ( bbi==3 ) hnp_ttwj_4b_nom->SetBinContent( binIndex, mean ) ;
 
                  char label[1000] ;
-                 sprintf( label, "M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                 sprintf( label, "#alpha%d_#beta%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  if ( bbi==0 ) hnp_ttwj_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_ttwj_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_ttwj_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
@@ -1966,74 +1981,74 @@
 
 
 
-	    //--- QCD SF_met3
+	    //--- QCD SF_1stVar3
 
-            sprintf( parName, "SFqcd_met3" ) ;
+            sprintf( parName, "SFqcd_1stVar3" ) ;
             np = (RooAbsReal*) ws->obj( parName ) ;
-            double SFqcd_met3_val = 0. ;
+            double SFqcd_1stVar3_val = 0. ;
             if ( np == 0x0 ) {
                printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
             } else {
-               SFqcd_met3_val =  np -> getVal() ;
+               SFqcd_1stVar3_val =  np -> getVal() ;
             }
 
-            sprintf( parName, "pdf_mean_SFqcd_met3" ) ;
+            sprintf( parName, "pdf_mean_SFqcd_1stVar3" ) ;
             np = (RooAbsReal*) ws->obj( parName ) ;
-            double SFqcd_met3_mean = 0. ;
+            double SFqcd_1stVar3_mean = 0. ;
             if ( np == 0x0 ) {
                printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
             } else {
-               SFqcd_met3_mean =  np -> getVal() ;
+               SFqcd_1stVar3_mean =  np -> getVal() ;
             }
 
-            sprintf( parName, "pdf_sigma_SFqcd_met3" ) ;
+            sprintf( parName, "pdf_sigma_SFqcd_1stVar3" ) ;
             np = (RooAbsReal*) ws->obj( parName ) ;
-            double SFqcd_met3_sigma = 1. ;
+            double SFqcd_1stVar3_sigma = 1. ;
             if ( np == 0x0 ) {
                printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
             } else {
-               SFqcd_met3_sigma =  np -> getVal() ;
+               SFqcd_1stVar3_sigma =  np -> getVal() ;
             }
-            double SFqcd_met3_pull = (SFqcd_met3_val-SFqcd_met3_mean) / SFqcd_met3_sigma ;
+            double SFqcd_1stVar3_pull = (SFqcd_1stVar3_val-SFqcd_1stVar3_mean) / SFqcd_1stVar3_sigma ;
 
-            printf("\n SFqcd_met3 : val = %6.3f, mean = %6.3f, sigma = %6.3f, pull = %6.3f\n",
-                 SFqcd_met3_val, SFqcd_met3_mean, SFqcd_met3_sigma, SFqcd_met3_pull ) ;
-
-
+            printf("\n SFqcd_1stVar3 : val = %6.3f, mean = %6.3f, sigma = %6.3f, pull = %6.3f\n",
+                 SFqcd_1stVar3_val, SFqcd_1stVar3_mean, SFqcd_1stVar3_sigma, SFqcd_1stVar3_pull ) ;
 
 
-           //--- QCD SF_met4
 
-            sprintf( parName, "SFqcd_met4" ) ;
+
+           //--- QCD SF_1stVar4
+
+            sprintf( parName, "SFqcd_1stVar4" ) ;
             np = (RooAbsReal*) ws->obj( parName ) ;
-            double SFqcd_met4_val = 0. ;
+            double SFqcd_1stVar4_val = 0. ;
             if ( np == 0x0 ) {
                printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
             } else {
-               SFqcd_met4_val =  np -> getVal() ;
+               SFqcd_1stVar4_val =  np -> getVal() ;
             }
 
-            sprintf( parName, "pdf_mean_SFqcd_met4" ) ;
+            sprintf( parName, "pdf_mean_SFqcd_1stVar4" ) ;
             np = (RooAbsReal*) ws->obj( parName ) ;
-            double SFqcd_met4_mean = 0. ;
+            double SFqcd_1stVar4_mean = 0. ;
             if ( np == 0x0 ) {
                printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
             } else {
-               SFqcd_met4_mean =  np -> getVal() ;
+               SFqcd_1stVar4_mean =  np -> getVal() ;
             }
 
-            sprintf( parName, "pdf_sigma_SFqcd_met4" ) ;
+            sprintf( parName, "pdf_sigma_SFqcd_1stVar4" ) ;
             np = (RooAbsReal*) ws->obj( parName ) ;
-            double SFqcd_met4_sigma = 1. ;
+            double SFqcd_1stVar4_sigma = 1. ;
             if ( np == 0x0 ) {
                printf("\n\n *** missing nuisance parameter? %s\n\n", parName ) ;
             } else {
-               SFqcd_met4_sigma =  np -> getVal() ;
+               SFqcd_1stVar4_sigma =  np -> getVal() ;
             }
-            double SFqcd_met4_pull = (SFqcd_met4_val-SFqcd_met4_mean) / SFqcd_met4_sigma ;
+            double SFqcd_1stVar4_pull = (SFqcd_1stVar4_val-SFqcd_1stVar4_mean) / SFqcd_1stVar4_sigma ;
 
-            printf("\n SFqcd_met4 : val = %6.3f, mean = %6.3f, sigma = %6.3f, pull = %6.3f\n",
-                 SFqcd_met4_val, SFqcd_met4_mean, SFqcd_met4_sigma, SFqcd_met4_pull ) ;
+            printf("\n SFqcd_1stVar4 : val = %6.3f, mean = %6.3f, sigma = %6.3f, pull = %6.3f\n",
+                 SFqcd_1stVar4_val, SFqcd_1stVar4_mean, SFqcd_1stVar4_sigma, SFqcd_1stVar4_pull ) ;
 
 
 
@@ -2197,12 +2212,12 @@
             int hbin = 2 ;
 
 
-            hnp_prim_eff -> SetBinContent( hbin, SFqcd_met3_pull ) ;
-            xaxis->SetBinLabel(hbin,"SF QCD, MET3") ;
+            hnp_prim_eff -> SetBinContent( hbin, SFqcd_1stVar3_pull ) ;
+            xaxis->SetBinLabel(hbin,"SF QCD, 1stVar3") ;
             hbin++ ;
 
-            hnp_prim_eff -> SetBinContent( hbin, SFqcd_met4_pull ) ;
-            xaxis->SetBinLabel(hbin,"SF QCD, MET4") ;
+            hnp_prim_eff -> SetBinContent( hbin, SFqcd_1stVar4_pull ) ;
+            xaxis->SetBinLabel(hbin,"SF QCD, 1stVar4") ;
             hbin++ ;
 
             hnp_prim_eff -> SetBinContent( hbin, SFqcd_nb3_pull ) ;
@@ -2304,7 +2319,7 @@
 	    sprintf( znnNP_beta_par[zbnpi++], "eff_Zee" ) ;
 	    sprintf( znnNP_beta_par[zbnpi++], "eff_Zmm" ) ;
 
-            for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+            for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
                sprintf( znnNP_beta_par[zbnpi++], "acc_Zee_M%d", mbi+1 ) ;
                sprintf( znnNP_beta_par[zbnpi++], "acc_Zmm_M%d", mbi+1 ) ;
             } // i
@@ -2362,8 +2377,8 @@
 
            int hbin = 2 ;
 
-           for ( int mbi=0 ; mbi < nBinsMET; mbi ++ ) {
-              for ( int hbi=0 ; hbi < nBinsHT; hbi ++ ) {
+           for ( int mbi=0 ; mbi < nBinsVar1; mbi ++ ) {
+              for ( int hbi=0 ; hbi < nBinsVar2; hbi ++ ) {
 
                  if ( ignoreBin[mbi][hbi] ) continue ;
 
@@ -2414,8 +2429,8 @@
 
            int hbin = 2 ;
 
-           for ( int mbi=0 ; mbi < nBinsMET; mbi ++ ) {
-              for ( int hbi=0 ; hbi < nBinsHT; hbi ++ ) {
+           for ( int mbi=0 ; mbi < nBinsVar1; mbi ++ ) {
+              for ( int hbi=0 ; hbi < nBinsVar2; hbi ++ ) {
 
                  if ( ignoreBin[mbi][hbi] ) continue ;
 
@@ -2457,8 +2472,8 @@
        //--- bin-by-bin efficiencies
 
 
-        for ( int mbi=0 ; mbi < nBinsMET; mbi ++ ) {
-           for ( int hbi=0 ; hbi < nBinsHT; hbi ++ ) {
+        for ( int mbi=0 ; mbi < nBinsVar1; mbi ++ ) {
+           for ( int hbi=0 ; hbi < nBinsVar2; hbi ++ ) {
 
               if ( ignoreBin[mbi][hbi] ) continue ;
 
@@ -2665,7 +2680,7 @@
 
 
 
-                 binIndex = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+                 binIndex = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
 
                  if ( bbi == 0 ) { hnp_eff_sf_1b_val -> SetBinContent( binIndex, bin_eff_sf ) ; }
                  if ( bbi == 1 ) { hnp_eff_sf_2b_val -> SetBinContent( binIndex, bin_eff_sf ) ; }
@@ -2741,7 +2756,7 @@
                  printf(" m,h,b %d,%d,%d : eff_sf_ldp   = %6.3f,  btageff_sf_ldp   = %6.3f,  prod = %6.3f\n", mbi, hbi, bbi, bin_eff_sf_ldp, btageff_sf_ldp, prod_ldp ) ;
 
                  char label[1000] ;
-                 sprintf( label, "M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+                 sprintf( label, "#alpha%d_#beta%d_%db", mbi+1, hbi+1, bbi+1 ) ;
                  if ( bbi==0 ) hnp_eff_sf_1b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==1 ) hnp_eff_sf_2b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
                  if ( bbi==2 ) hnp_eff_sf_3b_val-> GetXaxis() -> SetBinLabel( binIndex, label ) ;
