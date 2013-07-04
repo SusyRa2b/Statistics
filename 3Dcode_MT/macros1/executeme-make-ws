@@ -1,12 +1,16 @@
 #!/bin/tcsh -f
 
-  setenv nBinsMET   `grep nBinsMET   Binning.txt | awk '{print $2}'`
-  setenv nBinsHT    `grep nBinsHT    Binning.txt | awk '{print $2}'`
-  setenv nBinsBjets `grep nBinsBjets Binning.txt | awk '{print $2}'`
+  setenv Var1 `grep Var1: Binning.txt | awk '{print $2}'`
+  setenv Var2 `grep Var2: Binning.txt | awk '{print $2}'`
+
+  setenv nBinsVar1  `grep nBinsVar1  Binning.txt | awk '{print $2}'`
+  setenv nBinsVar2  `grep nBinsVar2  Binning.txt | awk '{print $2}'`
+  setenv nBinsBjets `grep nBinsVar3  Binning.txt | awk '{print $2}'`
   setenv my_version `grep version    Binning.txt | awk '{print $2}'`
+
     
   # make workspace
 
   echo ... making workspace ...
-  $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles/Input-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version-withSyst.dat\",\"datfiles/T2tt-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version.dat\",350,0,\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\",\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\",4,\"rootfiles/ws-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets-v$my_version.root\",\"null\",false,false,\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\",\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\",\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\",\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\",\"datfiles/DummySyst-met$nBinsMET-ht$nBinsHT-nB$nBinsBjets.dat\"\)
+  $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles/Input-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version-withSyst.dat\",\"datfiles/T2tt-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.dat\",350,0,\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",4,\"rootfiles/ws-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.root\",\"null\",false,false,\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\"\)
 

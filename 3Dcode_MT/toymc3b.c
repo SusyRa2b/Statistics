@@ -7,9 +7,9 @@
 
 
    // this has to be set by hand ...
-   static const int nBinsMET  = 3 ;
-   static const int nBinsHT   = 3 ;
-   static const int nBinsBjets = 4 ;   
+   static const int nBinsVar1  = 3 ;
+   static const int nBinsVar2   = 3 ;
+   static const int nBinsBjets = 3 ;   
 
 
    //-- Global variables.
@@ -50,27 +50,27 @@
    RooRealVar* rrv_ttwj_0lep1lep_ratio ;
    RooRealVar* rrv_ttwj_1lepSig1lep_ratio ;
 
-   float sf_ttwj[nBinsMET][nBinsHT][nBinsBjets] ;
-   float sf_qcd[nBinsMET][nBinsHT][nBinsBjets] ;
-   float ttwj_mc_ldpover0lep_ratio[nBinsMET][nBinsHT][nBinsBjets] ;
-   float  znn_mc_ldpover0lep_ratio[nBinsMET][nBinsHT][nBinsBjets] ;
+   float sf_ttwj[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float sf_qcd[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float ttwj_mc_ldpover0lep_ratio[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float  znn_mc_ldpover0lep_ratio[nBinsVar1][nBinsVar2][nBinsBjets] ;
 
 
    //--- Output ttree variables.
 
-   int   Nobs_0lep[nBinsMET][nBinsHT][nBinsBjets] ;
-   int   Nobs_1lepSig[nBinsMET][nBinsHT][nBinsBjets] ;
-   int   Nobs_1lep[nBinsMET][nBinsHT][nBinsBjets] ;
-   int   Nobs_ldp [nBinsMET][nBinsHT][nBinsBjets] ;
-   int   Nobs_Zee [nBinsMET][nBinsHT] ;
-   int   Nobs_Zmm [nBinsMET][nBinsHT] ;
+   int   Nobs_0lep[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   int   Nobs_1lepSig[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   int   Nobs_1lep[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   int   Nobs_ldp [nBinsVar1][nBinsVar2][nBinsBjets] ;
+   int   Nobs_Zee [nBinsVar1][nBinsVar2] ;
+   int   Nobs_Zmm [nBinsVar1][nBinsVar2] ;
 
-   float toy_mean_N_0lep[nBinsMET][nBinsHT][nBinsBjets] ;
-   float toy_mean_N_1lepSig[nBinsMET][nBinsHT][nBinsBjets] ;
-   float toy_mean_N_1lep[nBinsMET][nBinsHT][nBinsBjets] ;
-   float toy_mean_N_ldp [nBinsMET][nBinsHT][nBinsBjets] ;
-   float toy_mean_N_Zee [nBinsMET][nBinsHT] ;
-   float toy_mean_N_Zmm [nBinsMET][nBinsHT] ;
+   float toy_mean_N_0lep[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float toy_mean_N_1lepSig[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float toy_mean_N_1lep[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float toy_mean_N_ldp [nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float toy_mean_N_Zee [nBinsVar1][nBinsVar2] ;
+   float toy_mean_N_Zmm [nBinsVar1][nBinsVar2] ;
 
    float fit_susy_0lep_err ;
    float fit_susy_0lep_err_low ;
@@ -80,32 +80,32 @@
    float fit_susy_0lep_wsfs ;
    float true_susy_0lep ;
 
-   float fit_susy_0lep_3da[nBinsMET][nBinsHT][nBinsBjets] ;
-   float fit_ttwj_0lep_3da[nBinsMET][nBinsHT][nBinsBjets] ;
-   float fit_qcd_0lep_3da [nBinsMET][nBinsHT][nBinsBjets] ;
-   float fit_znn_0lep_3da [nBinsMET][nBinsHT][nBinsBjets] ;
+   float fit_susy_0lep_3da[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float fit_ttwj_0lep_3da[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float fit_qcd_0lep_3da [nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float fit_znn_0lep_3da [nBinsVar1][nBinsVar2][nBinsBjets] ;
 
-   float fit_sf_ttwj_0lep_3da[nBinsMET][nBinsHT][nBinsBjets] ;
-   float fit_sf_qcd_0lep_3da [nBinsMET][nBinsHT][nBinsBjets] ;
+   float fit_sf_ttwj_0lep_3da[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float fit_sf_qcd_0lep_3da [nBinsVar1][nBinsVar2][nBinsBjets] ;
 
-   float fit_susy_0lep_atUL_3da[nBinsMET][nBinsHT][nBinsBjets] ;
-   float fit_ttwj_0lep_atUL_3da[nBinsMET][nBinsHT][nBinsBjets] ;
-   float fit_qcd_0lep_atUL_3da [nBinsMET][nBinsHT][nBinsBjets] ;
-   float fit_znn_0lep_atUL_3da [nBinsMET][nBinsHT][nBinsBjets] ;
+   float fit_susy_0lep_atUL_3da[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float fit_ttwj_0lep_atUL_3da[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float fit_qcd_0lep_atUL_3da [nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float fit_znn_0lep_atUL_3da [nBinsVar1][nBinsVar2][nBinsBjets] ;
 
-   float fit_sf_ttwj_0lep_atUL_3da[nBinsMET][nBinsHT][nBinsBjets] ;
-   float fit_sf_qcd_0lep_atUL_3da [nBinsMET][nBinsHT][nBinsBjets] ;
+   float fit_sf_ttwj_0lep_atUL_3da[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float fit_sf_qcd_0lep_atUL_3da [nBinsVar1][nBinsVar2][nBinsBjets] ;
 
    float fit_ttwj_0lep1lep_ratio_atUL;
    float fit_ttwj_1lepSig1lep_ratio_atUL;
 
-   float fit_susy_0lep_at0susy_3da[nBinsMET][nBinsHT][nBinsBjets] ;
-   float fit_ttwj_0lep_at0susy_3da[nBinsMET][nBinsHT][nBinsBjets] ;
-   float fit_qcd_0lep_at0susy_3da [nBinsMET][nBinsHT][nBinsBjets] ;
-   float fit_znn_0lep_at0susy_3da [nBinsMET][nBinsHT][nBinsBjets] ;
+   float fit_susy_0lep_at0susy_3da[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float fit_ttwj_0lep_at0susy_3da[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float fit_qcd_0lep_at0susy_3da [nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float fit_znn_0lep_at0susy_3da [nBinsVar1][nBinsVar2][nBinsBjets] ;
 
-   float fit_sf_ttwj_0lep_at0susy_3da[nBinsMET][nBinsHT][nBinsBjets] ;
-   float fit_sf_qcd_0lep_at0susy_3da [nBinsMET][nBinsHT][nBinsBjets] ;
+   float fit_sf_ttwj_0lep_at0susy_3da[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float fit_sf_qcd_0lep_at0susy_3da [nBinsVar1][nBinsVar2][nBinsBjets] ;
 
    float fit_ttwj_0lep1lep_ratio_at0susy;
    float fit_ttwj_1lepSig1lep_ratio_at0susy;
@@ -134,14 +134,14 @@
    float fit_SFqcd_nb3_atUL ;
    float fit_SFqcd_nb4_atUL ;
 
-   float mcval_ttwj_0lep_3da[nBinsMET][nBinsHT][nBinsBjets] ;
-   float mcval_qcd_0lep_3da [nBinsMET][nBinsHT][nBinsBjets] ;
-   float mcval_znn_0lep_3da [nBinsMET][nBinsHT][nBinsBjets] ;
+   float mcval_ttwj_0lep_3da[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float mcval_qcd_0lep_3da [nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float mcval_znn_0lep_3da [nBinsVar1][nBinsVar2][nBinsBjets] ;
 
-   float susy_0lep   [nBinsMET][nBinsHT][nBinsBjets] ; // this is called mcval_susy_0lep_3da in the ttree.
-   float susy_1lepSig[nBinsMET][nBinsHT][nBinsBjets] ;
-   float susy_1lep   [nBinsMET][nBinsHT][nBinsBjets] ;
-   float susy_ldp    [nBinsMET][nBinsHT][nBinsBjets] ;
+   float susy_0lep   [nBinsVar1][nBinsVar2][nBinsBjets] ; // this is called mcval_susy_0lep_3da in the ttree.
+   float susy_1lepSig[nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float susy_1lep   [nBinsVar1][nBinsVar2][nBinsBjets] ;
+   float susy_ldp    [nBinsVar1][nBinsVar2][nBinsBjets] ;
 
    float fit_chi2_overall ;
    float fit_chi2_obs ;
@@ -209,12 +209,12 @@
 
    bool useExpected0lep ;
 
-   double trigeff_0lep[nBinsMET][nBinsHT] ;
-   double trigeff_1lep[nBinsMET][nBinsHT] ;
+   double trigeff_0lep[nBinsVar1][nBinsVar2] ;
+   double trigeff_1lep[nBinsVar1][nBinsVar2] ;
 
 
-   bool ignoreBin[nBinsMET][nBinsHT] ;
-   bool blind0lepBin[nBinsMET][nBinsHT][nBinsBjets] ;
+   bool ignoreBin[nBinsVar1][nBinsVar2] ;
+   bool blind0lepBin[nBinsVar1][nBinsVar2][nBinsBjets] ;
    int  num_ignoreBin(0) ;
    int  num_blind0lepBin(0) ;
 
@@ -283,20 +283,20 @@
        sprintf( blindBinsList, "%s", input_blindBinsList ) ;
 
 
-      //-- Hardwire in to ignore the highest MET bin in the lowest HT bin.
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      //-- Hardwire in to ignore the highest Var1 bin in the lowest Var2 bin.
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             ignoreBin[mbi][hbi] = false ;
          } // hbi
       } // mbi
-      ignoreBin[3][0] = true ; // ignore MET4, HT1
+      ignoreBin[3][0] = true ; 
 
       printf("\n\n *** Ignoring these bins in the analysis.\n\n") ;
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             if ( ignoreBin[mbi][hbi] ) {
                num_ignoreBin ++ ;
-               printf("  MET %d, HT %d\n", mbi+1, hbi+1 ) ;
+               printf("  Var1 %d, Var2 %d\n", mbi+1, hbi+1 ) ;
             }
          } // hbi
       } // mbi
@@ -305,8 +305,8 @@
 
      //--- read in blind bins, if file given.
 
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
                blind0lepBin[mbi][hbi][bbi] = false ;
             } // bbi.
@@ -339,13 +339,13 @@
                printf("\n\n *** bad bin label format: %s\n\n", binlabel ) ;
                return ;
             }
-            if ( bmb < 1 || bhb < 1 || bbb < 1 || bmb > nBinsMET || bhb > nBinsHT || bbb > nBinsBjets ) {
-               printf("\n\n *** bin index out of range: met=%d, ht=%d, nb=%d\n\n", bmb, bhb, bbb ) ;
+            if ( bmb < 1 || bhb < 1 || bbb < 1 || bmb > nBinsVar1 || bhb > nBinsVar2 || bbb > nBinsBjets ) {
+               printf("\n\n *** bin index out of range: Var1=%d, Var2=%d, nb=%d\n\n", bmb, bhb, bbb ) ;
                return ;
             }
             num_blind0lepBin++ ;
             blind0lepBin[bmb-1][bhb-1][bbb-1] = true ;
-            printf("   bin label %s : will blind met=%d, ht=%d, nb=%d 0lep bin.\n", binlabel, bmb, bhb, bbb ) ;
+            printf("   bin label %s : will blind Var1=%d, Var2=%d, nb=%d 0lep bin.\n", binlabel, bmb, bhb, bbb ) ;
          } // still reading?
       } // process blindBinsList file?
 
@@ -446,28 +446,28 @@
           return ;
        }
        if ( qcdModelIndex == 2 || qcdModelIndex == 4 || qcdModelIndex == 5 ) {
-          if ( nBinsHT >=1 ) {
+          if ( nBinsVar2 >=1 ) {
              rrv_qcd_0lepLDP_ratio_H1 = workspace -> var( "qcd_0lepLDP_ratio_H1" ) ;
              if ( rrv_qcd_0lepLDP_ratio_H1 == 0x0 ) {
                 printf("\n\n *** can't find qcd_0lepLDP_ratio_H1.\n\n") ; return ;
              }
           }
-          if ( nBinsHT >=2 ) {
+          if ( nBinsVar2 >=2 ) {
              rrv_qcd_0lepLDP_ratio_H2 = workspace -> var( "qcd_0lepLDP_ratio_H2" ) ;
              if ( rrv_qcd_0lepLDP_ratio_H2 == 0x0 ) {
                 printf("\n\n *** can't find qcd_0lepLDP_ratio_H2.\n\n") ; return ;
              }
           }
-          if ( nBinsHT >=3 ) {
+          if ( nBinsVar2 >=3 ) {
              rrv_qcd_0lepLDP_ratio_H3 = workspace -> var( "qcd_0lepLDP_ratio_H3" ) ;
              if ( rrv_qcd_0lepLDP_ratio_H3 == 0x0 ) {
                 printf("\n\n *** can't find qcd_0lepLDP_ratio_H3.\n\n") ; return ;
              }
           }
-          if ( nBinsHT >=4 ) {
+          if ( nBinsVar2 >=4 ) {
              rrv_qcd_0lepLDP_ratio_H4 = workspace -> var( "qcd_0lepLDP_ratio_H4" ) ;
              if ( rrv_qcd_0lepLDP_ratio_H4 == 0x0 ) {
-                printf("\n\n *** can't find qcd_0lepLDP_ratio_H4. nBinsHT=%d\n\n", nBinsHT) ; return ;
+                printf("\n\n *** can't find qcd_0lepLDP_ratio_H4. nBinsVar2=%d\n\n", nBinsVar2) ; return ;
              }
           }
        } 
@@ -478,7 +478,7 @@
           }
        }
        if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
-          if ( nBinsMET >=2 ) {
+          if ( nBinsVar1 >=2 ) {
              rrv_SFqcd_met2 = workspace -> var( "SFqcd_met2" ) ;
              if ( rrv_SFqcd_met2 == 0x0 ) {
 	       printf("\n\n *** can't find SFqcd_met2.\n\n") ; return ;
@@ -491,13 +491,13 @@
              }
           }
           if ( qcdModelIndex == 4 ) {
-             if ( nBinsMET >=3 ) {
+             if ( nBinsVar1 >=3 ) {
                 rrv_SFqcd_met3 = workspace -> var( "SFqcd_met3" ) ;
                 if ( rrv_SFqcd_met3 == 0x0 ) {
 		  printf("\n\n *** can't find SFqcd_met3.\n\n") ; //return ;
                 }
              }
-             if ( nBinsMET >=4 ) {
+             if ( nBinsVar1 >=4 ) {
                 rrv_SFqcd_met4 = workspace -> var( "SFqcd_met4" ) ;
                 if ( rrv_SFqcd_met4 == 0x0 ) {
 		  printf("\n\n *** can't find SFqcd_met4.\n\n") ; //return ;
@@ -704,28 +704,28 @@
              fit_ttwj_0lep1lep_ratio_at0susy = rrv_ttwj_0lep1lep_ratio->getVal();
 
              if ( qcdModelIndex == 2 || qcdModelIndex == 4 || qcdModelIndex == 5 ) {
-                if ( nBinsHT >= 1 ) { fit_qcd_0lepLDP_ratio_H1_at0susy     = rrv_qcd_0lepLDP_ratio_H1 -> getVal() ; }
-                if ( nBinsHT >= 2 ) { fit_qcd_0lepLDP_ratio_H2_at0susy     = rrv_qcd_0lepLDP_ratio_H2 -> getVal() ; }
-                if ( nBinsHT >= 3 ) { fit_qcd_0lepLDP_ratio_H3_at0susy     = rrv_qcd_0lepLDP_ratio_H3 -> getVal() ; }
-                if ( nBinsHT >= 4 ) { fit_qcd_0lepLDP_ratio_H4_at0susy     = rrv_qcd_0lepLDP_ratio_H4 -> getVal() ; }
+                if ( nBinsVar2 >= 1 ) { fit_qcd_0lepLDP_ratio_H1_at0susy     = rrv_qcd_0lepLDP_ratio_H1 -> getVal() ; }
+                if ( nBinsVar2 >= 2 ) { fit_qcd_0lepLDP_ratio_H2_at0susy     = rrv_qcd_0lepLDP_ratio_H2 -> getVal() ; }
+                if ( nBinsVar2 >= 3 ) { fit_qcd_0lepLDP_ratio_H3_at0susy     = rrv_qcd_0lepLDP_ratio_H3 -> getVal() ; }
+                if ( nBinsVar2 >= 4 ) { fit_qcd_0lepLDP_ratio_H4_at0susy     = rrv_qcd_0lepLDP_ratio_H4 -> getVal() ; }
              }
              if ( qcdModelIndex == 3 ) { fit_qcd_0lepLDP_ratio_at0susy     = rrv_qcd_0lepLDP_ratio -> getVal() ; }
              if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
-                if ( nBinsMET >=2 ) { fit_SFqcd_met2_at0susy     = rrv_SFqcd_met2 -> getVal() ; }
+                if ( nBinsVar1 >=2 ) { fit_SFqcd_met2_at0susy     = rrv_SFqcd_met2 -> getVal() ; }
                 if ( nBinsBjets >=2 ) { fit_SFqcd_nb2_at0susy     = rrv_SFqcd_nb2 -> getVal() ; }
                 if ( qcdModelIndex == 4 ) {
-		  //if ( nBinsMET >=3 ) { fit_SFqcd_met3_at0susy     = rrv_SFqcd_met3 -> getVal() ; }
-		  //if ( nBinsMET >=4 ) { fit_SFqcd_met4_at0susy     = rrv_SFqcd_met4 -> getVal() ; }
+		  //if ( nBinsVar1 >=3 ) { fit_SFqcd_met3_at0susy     = rrv_SFqcd_met3 -> getVal() ; }
+		  //if ( nBinsVar1 >=4 ) { fit_SFqcd_met4_at0susy     = rrv_SFqcd_met4 -> getVal() ; }
 		  //if ( nBinsBjets >=3 ) { fit_SFqcd_nb3_at0susy     = rrv_SFqcd_nb3 -> getVal() ; }
                    if ( nBinsBjets >=4 ) { fit_SFqcd_nb4_at0susy     = rrv_SFqcd_nb4 -> getVal() ; }
                 }
              }
 
 
-             for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-                for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+             for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+                for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
                    for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-		      //skip highest met, lowest ht bin, which is omitted from the analysis
+		      //skip highest Var1, lowest Var2 bin, which is omitted from the analysis
 		      if (mbi==3&&hbi==0) {
 	                 fit_susy_0lep_at0susy_3da[mbi][hbi][bbi] = 0.0;
 	                 fit_ttwj_0lep_at0susy_3da[mbi][hbi][bbi] = 0.0;
@@ -853,26 +853,26 @@
 
       //==== Data arrays.
 
-      float N_0lep_input [nBinsMET][nBinsHT][nBinsBjets] ;
-      float N_1lepSig    [nBinsMET][nBinsHT][nBinsBjets] ;
-      float N_1lep       [nBinsMET][nBinsHT][nBinsBjets] ;
-      float N_ldp        [nBinsMET][nBinsHT][nBinsBjets] ;
-      float N_mc_ldp     [nBinsMET][nBinsHT][nBinsBjets] ;
-      float N_Zee        [nBinsMET][nBinsHT] ;
-      float N_Zmm        [nBinsMET][nBinsHT] ;
+      float N_0lep_input [nBinsVar1][nBinsVar2][nBinsBjets] ;
+      float N_1lepSig    [nBinsVar1][nBinsVar2][nBinsBjets] ;
+      float N_1lep       [nBinsVar1][nBinsVar2][nBinsBjets] ;
+      float N_ldp        [nBinsVar1][nBinsVar2][nBinsBjets] ;
+      float N_mc_ldp     [nBinsVar1][nBinsVar2][nBinsBjets] ;
+      float N_Zee        [nBinsVar1][nBinsVar2] ;
+      float N_Zmm        [nBinsVar1][nBinsVar2] ;
 
-      float acc_Zee      [nBinsMET] ;
-      float acc_Zmm      [nBinsMET] ;
+      float acc_Zee      [nBinsVar1] ;
+      float acc_Zmm      [nBinsVar1] ;
 
       float Z_ee_eff ;
       float Z_mm_eff ;
 
-      float knn[nBinsMET][nBinsBjets] ;
+      float knn[nBinsVar1][nBinsBjets] ;
 
       float Z_ee_pur(0.) ;
       float Z_mm_pur(0.) ;
 
-      // float R_passfail[nBinsHT] ;
+      // float R_passfail[nBinsVar2] ;
 
 
       int nread ;
@@ -898,8 +898,8 @@
       while ( c!=10  ) { c = fgetc( infp ) ; printf("%c", c ) ; }
 
       //--- Read in N_0lep lines
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
                nread = fscanf( infp, "%s %g", pname, &pval ) ;
                ///// printf("  %d : %s %g\n", nread, pname, pval ) ;
@@ -921,8 +921,8 @@
       } // mbi.
 
       //--- Read in N_1lepSig lines
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
                nread = fscanf( infp, "%s %g", pname, &pval ) ;
                ///// printf("  %d : %s %g\n", nread, pname, pval ) ;
@@ -944,8 +944,8 @@
       } // mbi.
 
       //--- Read in N_1lep lines
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
                nread = fscanf( infp, "%s %g", pname, &pval ) ;
                ///// printf("  %d : %s %g\n", nread, pname, pval ) ;
@@ -967,8 +967,8 @@
       } // mbi.
 
       //--- Read in N_ldp lines
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
                nread = fscanf( infp, "%s %g", pname, &pval ) ;
                ///// printf("  %d : %s %g\n", nread, pname, pval ) ;
@@ -990,7 +990,7 @@
       } // mbi.
 
       //--- Read R_lsb lines
-      for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
          for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
             nread = fscanf( infp, "%s %g", pname, &pval ) ;
             nread = fscanf( infp, "%s %g", pname, &pval ) ;
@@ -998,8 +998,8 @@
       } // hbi
 
       //--- Read in Zee lines
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             nread = fscanf( infp, "%s %g", pname, &pval ) ;
             ///// printf("  %d : %s %g\n", nread, pname, pval ) ;
             int metbin, htbin ;
@@ -1016,8 +1016,8 @@
       } // mbi.
 
       //--- Read in Zmm lines
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             nread = fscanf( infp, "%s %g", pname, &pval ) ;
             ///// printf("  %d : %s %g\n", nread, pname, pval ) ;
             int metbin, htbin ;
@@ -1034,8 +1034,8 @@
       } // mbi.
 
       //--- Read in N_ttbarsingletopzjetsmc_ldp lines
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
                nread = fscanf( infp, "%s %g", pname, &pval ) ;
                ///// printf("  %d : %s %g\n", nread, pname, pval ) ;
@@ -1057,8 +1057,8 @@
       } // mbi.
 
       //--- Read in N_WJmc_ldp lines
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
                nread = fscanf( infp, "%s %g", pname, &pval ) ;
                ///// printf("  %d : %s %g\n", nread, pname, pval ) ;
@@ -1080,8 +1080,8 @@
       } // mbi.
 
       //--- Read in N_Znnmc_ldp lines
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
                nread = fscanf( infp, "%s %g", pname, &pval ) ;
                ///// printf("  %d : %s %g\n", nread, pname, pval ) ;
@@ -1104,7 +1104,7 @@
 
 
       //--- Read acc_Zee lines
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
          nread = fscanf( infp, "%s %g", pname, &pval ) ;
          int metbin ;
          int nmatch = sscanf( pname, "acc_Zee_M%d", &metbin ) ;
@@ -1119,7 +1119,7 @@
 
 
       //--- Read acc_Zmm lines
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
          nread = fscanf( infp, "%s %g", pname, &pval ) ;
          int metbin ;
          int nmatch = sscanf( pname, "acc_Zmm_M%d", &metbin ) ;
@@ -1155,7 +1155,7 @@
       //--- knn
       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
          if (bbi==0) {
-	    for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+	    for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
 	       nread = fscanf( infp, "%s %g", pname, &pval ) ;
                int nbbin ;
                int metbin ;
@@ -1230,16 +1230,16 @@
       float Zmm_factor[nBinsBjets] ;
 
       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-         Zee_factor[bbi] = ( 5.94 * Z_ee_pur * knn[0][bbi] ) / ( acc_Zee[0] * Z_ee_eff ) ; // ignoring MET dependence of acceptance, knn and HT dependence of eff
-         Zmm_factor[bbi] = ( 5.94 * Z_mm_pur * knn[0][bbi] ) / ( acc_Zmm[0] * Z_mm_eff ) ; // ignoring MET dependence of acceptance, knn and HT dependence of eff
+         Zee_factor[bbi] = ( 5.94 * Z_ee_pur * knn[0][bbi] ) / ( acc_Zee[0] * Z_ee_eff ) ; // ignoring Var1 dependence of acceptance, knn and Var2 dependence of eff
+         Zmm_factor[bbi] = ( 5.94 * Z_mm_pur * knn[0][bbi] ) / ( acc_Zmm[0] * Z_mm_eff ) ; // ignoring Var1 dependence of acceptance, knn and Var2 dependence of eff
          printf("  nB=%d Zll scale factors:  ee=%g, mm=%g\n", bbi, Zee_factor[bbi], Zmm_factor[bbi] ) ;
       } // bbi.
 
 
 
 
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
                float exp_0lep_ttwj(0.) ;
@@ -1343,7 +1343,7 @@
 
             int nGen ;
 
-            int ArraySize = 3 + 2*4*(nBinsMET*nBinsHT*nBinsBjets) ;
+            int ArraySize = 3 + 2*4*(nBinsVar1*nBinsVar2*nBinsBjets) ;
             double ArrayContent[ArraySize] ;
 
             for (int i = 0; i < ArraySize; ++ i) {
@@ -1357,19 +1357,19 @@
 
             nGen = (int)ArrayContent[2] ;
 
-            /// int nBins = nBinsMET*nBinsHT*nBinsBjets*3 ;
+            /// int nBins = nBinsVar1*nBinsVar2*nBinsBjets*3 ;
 
             float input0lepSusyTotal(0.) ;
 
-            for (int i = 0 ; i < nBinsMET ; i++) {
-              for (int j = 0 ; j < nBinsHT ; j++) {
+            for (int i = 0 ; i < nBinsVar1 ; i++) {
+              for (int j = 0 ; j < nBinsVar2 ; j++) {
                 for (int k = 0 ; k < nBinsBjets ; k++) {
 
 
-                  float n_0l_raw    =  ArrayContent[3 + i*(nBinsHT*nBinsBjets) + j*(nBinsBjets) + k] ;
-                  float n_1lSig_raw =  ArrayContent[3 + (nBinsMET*nBinsHT*nBinsBjets) + i*(nBinsHT*nBinsBjets) + j*(nBinsBjets) + k] ;
-                  float n_1l_raw    =  ArrayContent[3 + 2*(nBinsMET*nBinsHT*nBinsBjets) + i*(nBinsHT*nBinsBjets) + j*(nBinsBjets) + k] ;
-                  float n_ldp_raw   =  ArrayContent[3 + 3*(nBinsMET*nBinsHT*nBinsBjets) + i*(nBinsHT*nBinsBjets) + j*(nBinsBjets) + k] ;
+                  float n_0l_raw    =  ArrayContent[3 + i*(nBinsVar2*nBinsBjets) + j*(nBinsBjets) + k] ;
+                  float n_1lSig_raw =  ArrayContent[3 + (nBinsVar1*nBinsVar2*nBinsBjets) + i*(nBinsVar2*nBinsBjets) + j*(nBinsBjets) + k] ;
+                  float n_1l_raw    =  ArrayContent[3 + 2*(nBinsVar1*nBinsVar2*nBinsBjets) + i*(nBinsVar2*nBinsBjets) + j*(nBinsBjets) + k] ;
+                  float n_ldp_raw   =  ArrayContent[3 + 3*(nBinsVar1*nBinsVar2*nBinsBjets) + i*(nBinsVar2*nBinsBjets) + j*(nBinsBjets) + k] ;
 
                   float n_0l_correction    =  1. ;
                   float n_1lSig_correction =  1. ;
@@ -1384,10 +1384,10 @@
                   input0lepSusyTotal += n_0l_raw * n_0l_correction ;
 
                   /* here's how to read in the errors, but not sure what to do with them yet
-		  n_0l_error[i][j][k]    = ArrayContent[3 + 4*(nBinsMET*nBinsHT*nBinsBtag) + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
-		  n_1lSig_error[i][j][k] = ArrayContent[3 + 5*(nBinsMET*nBinsHT*nBinsBtag) + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
-		  n_1l_error[i][j][k]    = ArrayContent[3 + 6*(nBinsMET*nBinsHT*nBinsBtag) + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
-		  n_ldp_error[i][j][k]   = ArrayContent[3 + 7*(nBinsMET*nBinsHT*nBinsBtag) + i*(nBinsHT*nBinsBtag) + j*(nBinsBtag) + k] ;
+		  n_0l_error[i][j][k]    = ArrayContent[3 + 4*(nBinsVar1*nBinsVar2*nBinsBtag) + i*(nBinsVar2*nBinsBtag) + j*(nBinsBtag) + k] ;
+		  n_1lSig_error[i][j][k] = ArrayContent[3 + 5*(nBinsVar1*nBinsVar2*nBinsBtag) + i*(nBinsVar2*nBinsBtag) + j*(nBinsBtag) + k] ;
+		  n_1l_error[i][j][k]    = ArrayContent[3 + 6*(nBinsVar1*nBinsVar2*nBinsBtag) + i*(nBinsVar2*nBinsBtag) + j*(nBinsBtag) + k] ;
+		  n_ldp_error[i][j][k]   = ArrayContent[3 + 7*(nBinsVar1*nBinsVar2*nBinsBtag) + i*(nBinsVar2*nBinsBtag) + j*(nBinsBtag) + k] ;
 	    
 		  if ( n_0l_raw[i][j][k] > 0.00001 ) {
 		    n_0l_error[i][j][k] = 100 * n_0l_error[i][j][k] / n_0l_raw[i][j][k] ;
@@ -1419,8 +1419,8 @@
             printf("   reset susy 0lep total to %g\n\n", nSusy0lep ) ;
 
             float newTotal(0.) ;
-            for (int i = 0 ; i < nBinsMET ; i++) {
-              for (int j = 0 ; j < nBinsHT ; j++) {
+            for (int i = 0 ; i < nBinsVar1 ; i++) {
+              for (int j = 0 ; j < nBinsVar2 ; j++) {
                 for (int k = 0 ; k < nBinsBjets ; k++) {
                    susy_0lep[i][j][k]    = (nSusy0lep/input0lepSusyTotal) * susy_0lep[i][j][k] ;
                    susy_1lepSig[i][j][k] = (nSusy0lep/input0lepSusyTotal) * susy_1lepSig[i][j][k] ;
@@ -1452,8 +1452,8 @@
         true_susy_0lep = nSusy0lep ;
 
 
-        for (int i = 0 ; i < nBinsMET ; i++) {
-          for (int j = 0 ; j < nBinsHT ; j++) {
+        for (int i = 0 ; i < nBinsVar1 ; i++) {
+          for (int j = 0 ; j < nBinsVar2 ; j++) {
             for (int k = 0 ; k < nBinsBjets ; k++) {
                printf("  0lep (%d,%d,%d)    :  SM = %8.1f,  SUSY = %6.1f\n", i,j,k, toy_mean_N_0lep[i][j][k],    susy_0lep[i][j][k] ) ;
                printf("  1lepSig (%d,%d,%d) :  SM = %8.1f,  SUSY = %6.1f\n", i,j,k, toy_mean_N_1lepSig[i][j][k], susy_1lepSig[i][j][k] ) ;
@@ -1495,8 +1495,8 @@
       char selname[4][100] = { "0lep", "1lepSig", "1lep", "ldp" } ;
 
       for ( int si=0; si<nsel; si++ ) {
-         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-            for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+         for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+            for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
                for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
                   sprintf( oname, "N_%s_M%d_H%d_%db", selname[si], mbi+1, hbi+1, bbi+1 ) ;
@@ -1567,8 +1567,8 @@
          } // mbi.
       }
 
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             sprintf( oname, "N_Zee_M%d_H%d", mbi+1, hbi+1 ) ;
             RooRealVar* rrv = workspace -> var( oname ) ;
             if ( rrv == 0x0 ) {
@@ -1588,8 +1588,8 @@
          } // hbi.
       } // mbi.
 
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             sprintf( oname, "N_Zmm_M%d_H%d", mbi+1, hbi+1 ) ;
             RooRealVar* rrv = workspace -> var( oname ) ;
             if ( rrv == 0x0 ) {
@@ -1654,19 +1654,19 @@
       }
 
       if ( qcdModelIndex == 2 || qcdModelIndex == 4 || qcdModelIndex == 5 ) {
-         if ( nBinsHT >= 1 ) {
+         if ( nBinsVar2 >= 1 ) {
             fit_qcd_0lepLDP_ratio_H1     = rrv_qcd_0lepLDP_ratio_H1 -> getVal() ;
             fit_qcd_0lepLDP_ratio_H1_err = rrv_qcd_0lepLDP_ratio_H1 -> getError() ;
          }
-         if ( nBinsHT >= 2 ) {
+         if ( nBinsVar2 >= 2 ) {
             fit_qcd_0lepLDP_ratio_H2     = rrv_qcd_0lepLDP_ratio_H2 -> getVal() ;
             fit_qcd_0lepLDP_ratio_H2_err = rrv_qcd_0lepLDP_ratio_H2 -> getError() ;
          }
-         if ( nBinsHT >= 3 ) {
+         if ( nBinsVar2 >= 3 ) {
             fit_qcd_0lepLDP_ratio_H3     = rrv_qcd_0lepLDP_ratio_H3 -> getVal() ;
             fit_qcd_0lepLDP_ratio_H3_err = rrv_qcd_0lepLDP_ratio_H3 -> getError() ;
          }
-         if ( nBinsHT >= 4 ) {
+         if ( nBinsVar2 >= 4 ) {
             fit_qcd_0lepLDP_ratio_H4     = rrv_qcd_0lepLDP_ratio_H4 -> getVal() ;
             fit_qcd_0lepLDP_ratio_H4_err = rrv_qcd_0lepLDP_ratio_H4 -> getError() ;
          }
@@ -1676,7 +1676,7 @@
          fit_qcd_0lepLDP_ratio_err = rrv_qcd_0lepLDP_ratio -> getError() ;
       }
       if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
-         if ( nBinsMET >=2 ) {
+         if ( nBinsVar1 >=2 ) {
             fit_SFqcd_met2     = rrv_SFqcd_met2 -> getVal() ;
             fit_SFqcd_met2_err = rrv_SFqcd_met2 -> getError() ;
          }
@@ -1688,11 +1688,11 @@
 
       /*
       if ( qcdModelIndex == 4 ) {
-         if ( nBinsMET >=3 ) {
+         if ( nBinsVar1 >=3 ) {
             fit_SFqcd_met3     = rrv_SFqcd_met3 -> getVal() ;
             fit_SFqcd_met3_err = rrv_SFqcd_met3 -> getError() ;
          }
-         if ( nBinsMET >=4 ) {
+         if ( nBinsVar1 >=4 ) {
             fit_SFqcd_met4     = rrv_SFqcd_met4 -> getVal() ;
             fit_SFqcd_met4_err = rrv_SFqcd_met4 -> getError() ;
          }
@@ -1793,8 +1793,8 @@
       double fit_qcd__0lep_3b_hm2_hh2 = 0. ;
       double fit_znn__0lep_3b_hm2_hh2 = 0. ;
 
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             char vname[1000] ;
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
@@ -1826,19 +1826,19 @@
                if ( bbi==0 ) { fit_susy_0lep_1b += nsusy ; }
                if ( bbi==1 ) { fit_susy_0lep_2b += nsusy ; }
                if ( bbi==2 ) { fit_susy_0lep_3b += nsusy ; }
-               if ( mbi==(nBinsMET-1) ) {
+               if ( mbi==(nBinsVar1-1) ) {
                   fit_susy_0lep_nb_hm1 += nsusy ;
                   if ( bbi==0 ) { fit_susy_0lep_1b_hm1 += nsusy ; }
                   if ( bbi==1 ) { fit_susy_0lep_2b_hm1 += nsusy ; }
                   if ( bbi==2 ) { fit_susy_0lep_3b_hm1 += nsusy ; }
                }
-               if ( hbi==(nBinsHT-1) ) {
+               if ( hbi==(nBinsVar2-1) ) {
                   fit_susy_0lep_nb_hh1 += nsusy ;
                   if ( bbi==0 ) { fit_susy_0lep_1b_hh1 += nsusy ; }
                   if ( bbi==1 ) { fit_susy_0lep_2b_hh1 += nsusy ; }
                   if ( bbi==2 ) { fit_susy_0lep_3b_hh1 += nsusy ; }
                }
-               if ( mbi>=(nBinsMET-2) && hbi>=(nBinsHT-2) ) {
+               if ( mbi>=(nBinsVar1-2) && hbi>=(nBinsVar2-2) ) {
                   fit_susy_0lep_nb_hm2_hh2 += nsusy ;
                   if ( bbi==0 ) { fit_susy_0lep_1b_hm2_hh2 += nsusy ; }
                   if ( bbi==1 ) { fit_susy_0lep_2b_hm2_hh2 += nsusy ; }
@@ -1860,19 +1860,19 @@
                if ( bbi==0 ) { fit_ttwj_0lep_1b +=  nttwj  ; }
                if ( bbi==1 ) { fit_ttwj_0lep_2b +=  nttwj  ; }
                if ( bbi==2 ) { fit_ttwj_0lep_3b +=  nttwj  ; }
-               if ( mbi==(nBinsMET-1) ) {
+               if ( mbi==(nBinsVar1-1) ) {
                   fit_ttwj_0lep_nb_hm1 += nttwj ;
                   if ( bbi==0 ) { fit_ttwj_0lep_1b_hm1 += nttwj ; }
                   if ( bbi==1 ) { fit_ttwj_0lep_2b_hm1 += nttwj ; }
                   if ( bbi==2 ) { fit_ttwj_0lep_3b_hm1 += nttwj ; }
                }
-               if ( hbi==(nBinsHT-1) ) {
+               if ( hbi==(nBinsVar2-1) ) {
                   fit_ttwj_0lep_nb_hh1 += nttwj ;
                   if ( bbi==0 ) { fit_ttwj_0lep_1b_hh1 += nttwj ; }
                   if ( bbi==1 ) { fit_ttwj_0lep_2b_hh1 += nttwj ; }
                   if ( bbi==2 ) { fit_ttwj_0lep_3b_hh1 += nttwj ; }
                }
-               if ( mbi>=(nBinsMET-2) && hbi>=(nBinsHT-2) ) {
+               if ( mbi>=(nBinsVar1-2) && hbi>=(nBinsVar2-2) ) {
                   fit_ttwj_0lep_nb_hm2_hh2 += nttwj ;
                   if ( bbi==0 ) { fit_ttwj_0lep_1b_hm2_hh2 += nttwj ; }
                   if ( bbi==1 ) { fit_ttwj_0lep_2b_hm2_hh2 += nttwj ; }
@@ -1892,19 +1892,19 @@
                if ( bbi==0 ) { fit_qcd__0lep_1b +=  nqcd   ; }
                if ( bbi==1 ) { fit_qcd__0lep_2b +=  nqcd   ; }
                if ( bbi==2 ) { fit_qcd__0lep_3b +=  nqcd   ; }
-               if ( mbi==(nBinsMET-1) ) {
+               if ( mbi==(nBinsVar1-1) ) {
                   fit_qcd__0lep_nb_hm1 += nqcd ;
                   if ( bbi==0 ) { fit_qcd__0lep_1b_hm1 += nqcd ; }
                   if ( bbi==1 ) { fit_qcd__0lep_2b_hm1 += nqcd ; }
                   if ( bbi==2 ) { fit_qcd__0lep_3b_hm1 += nqcd ; }
                }
-               if ( hbi==(nBinsHT-1) ) {
+               if ( hbi==(nBinsVar2-1) ) {
                   fit_qcd__0lep_nb_hh1 += nqcd ;
                   if ( bbi==0 ) { fit_qcd__0lep_1b_hh1 += nqcd ; }
                   if ( bbi==1 ) { fit_qcd__0lep_2b_hh1 += nqcd ; }
                   if ( bbi==2 ) { fit_qcd__0lep_3b_hh1 += nqcd ; }
                }
-               if ( mbi>=(nBinsMET-2) && hbi>=(nBinsHT-2) ) {
+               if ( mbi>=(nBinsVar1-2) && hbi>=(nBinsVar2-2) ) {
                   fit_qcd__0lep_nb_hm2_hh2 += nqcd ;
                   if ( bbi==0 ) { fit_qcd__0lep_1b_hm2_hh2 += nqcd ; }
                   if ( bbi==1 ) { fit_qcd__0lep_2b_hm2_hh2 += nqcd ; }
@@ -1926,19 +1926,19 @@
                if ( bbi==0 ) { fit_znn__0lep_1b +=  nznn   ; }
                if ( bbi==1 ) { fit_znn__0lep_2b +=  nznn   ; }
                if ( bbi==2 ) { fit_znn__0lep_3b +=  nznn   ; }
-               if ( mbi==(nBinsMET-1) ) {
+               if ( mbi==(nBinsVar1-1) ) {
                   fit_znn__0lep_nb_hm1 += nznn ;
                   if ( bbi==0 ) { fit_znn__0lep_1b_hm1 += nznn ; }
                   if ( bbi==1 ) { fit_znn__0lep_2b_hm1 += nznn ; }
                   if ( bbi==2 ) { fit_znn__0lep_3b_hm1 += nznn ; }
                }
-               if ( hbi==(nBinsHT-1) ) {
+               if ( hbi==(nBinsVar2-1) ) {
                   fit_znn__0lep_nb_hh1 += nznn ;
                   if ( bbi==0 ) { fit_znn__0lep_1b_hh1 += nznn ; }
                   if ( bbi==1 ) { fit_znn__0lep_2b_hh1 += nznn ; }
                   if ( bbi==2 ) { fit_znn__0lep_3b_hh1 += nznn ; }
                }
-               if ( mbi>=(nBinsMET-2) && hbi>=(nBinsHT-2) ) {
+               if ( mbi>=(nBinsVar1-2) && hbi>=(nBinsVar2-2) ) {
                   fit_znn__0lep_nb_hm2_hh2 += nznn ;
                   if ( bbi==0 ) { fit_znn__0lep_1b_hm2_hh2 += nznn ; }
                   if ( bbi==1 ) { fit_znn__0lep_2b_hm2_hh2 += nznn ; }
@@ -2090,7 +2090,7 @@
       sprintf( npname, "sf_ll" ) ;
       fit_chi2_np += getChi2GausNP( npname ) ;
 
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
          sprintf( npname, "knn_1b_M%d", mbi+1 ) ;
          fit_chi2_np += getChi2GausNP( npname ) ;
       } // mbi
@@ -2113,7 +2113,7 @@
       sprintf( npname, "pur_Zmm" ) ;
       fit_chi2_np += getChi2BetaNP( npname ) ;
 
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
 
          sprintf( npname, "acc_Zee_M%d", mbi+1 ) ;
          fit_chi2_np += getChi2BetaNP( npname ) ;
@@ -2126,9 +2126,9 @@
       fit_chi2_overall = fit_chi2_obs + fit_chi2_np ;
 
       //-- 3 is ZL,SL,LDP, 2 is ee,mm.
-      int nobs = 3 * ( ( nBinsMET*nBinsHT - num_ignoreBin ) * nBinsBjets ) + 2 * ( nBinsMET*nBinsHT - num_ignoreBin ) - num_blind0lepBin ;
+      int nobs = 3 * ( ( nBinsVar1*nBinsVar2 - num_ignoreBin ) * nBinsBjets ) + 2 * ( nBinsVar1*nBinsVar2 - num_ignoreBin ) - num_blind0lepBin ;
       //-- 2 is ttwj,QCD, 8 at end is ttwj ZL/SL + 6 QCD model pars + signal yield.
-      int nfloat = 2 * ( ( nBinsMET*nBinsHT - num_ignoreBin ) * nBinsBjets) + (nBinsMET*nBinsHT - num_ignoreBin ) + 8 ;
+      int nfloat = 2 * ( ( nBinsVar1*nBinsVar2 - num_ignoreBin ) * nBinsBjets) + (nBinsVar1*nBinsVar2 - num_ignoreBin ) + 8 ;
 
       int ndof = nobs - nfloat ;
       printf(" Nobs = %d, Nfloat = %d\n", nobs, nfloat ) ;
@@ -2167,97 +2167,97 @@
 
 
       printf("\n\n") ;
-      printf(" toy %4d : Fit nb 0lep susy, highest HT bin  : %6.1f  \n", ti, fit_susy_0lep_nb_hh1 ) ;
-      printf(" toy %4d : Fit nb 0lep ttwj, highest HT bin  : %6.1f  \n", ti, fit_ttwj_0lep_nb_hh1 ) ;
-      printf(" toy %4d : Fit nb 0lep qcd,  highest HT bin  : %6.1f  \n", ti, fit_qcd__0lep_nb_hh1 ) ;
-      printf(" toy %4d : Fit nb 0lep znn,  highest HT bin  : %6.1f  \n", ti, fit_znn__0lep_nb_hh1 ) ;
+      printf(" toy %4d : Fit nb 0lep susy, highest Var2 bin  : %6.1f  \n", ti, fit_susy_0lep_nb_hh1 ) ;
+      printf(" toy %4d : Fit nb 0lep ttwj, highest Var2 bin  : %6.1f  \n", ti, fit_ttwj_0lep_nb_hh1 ) ;
+      printf(" toy %4d : Fit nb 0lep qcd,  highest Var2 bin  : %6.1f  \n", ti, fit_qcd__0lep_nb_hh1 ) ;
+      printf(" toy %4d : Fit nb 0lep znn,  highest Var2 bin  : %6.1f  \n", ti, fit_znn__0lep_nb_hh1 ) ;
 
       printf("\n") ;
-      printf(" toy %4d : Fit 1b 0lep susy, highest HT bin  : %6.1f  \n", ti, fit_susy_0lep_1b_hh1 ) ;
-      printf(" toy %4d : Fit 1b 0lep ttwj, highest HT bin  : %6.1f  \n", ti, fit_ttwj_0lep_1b_hh1 ) ;
-      printf(" toy %4d : Fit 1b 0lep qcd,  highest HT bin  : %6.1f  \n", ti, fit_qcd__0lep_1b_hh1 ) ;
-      printf(" toy %4d : Fit 1b 0lep znn,  highest HT bin  : %6.1f  \n", ti, fit_znn__0lep_1b_hh1 ) ;
+      printf(" toy %4d : Fit 1b 0lep susy, highest Var2 bin  : %6.1f  \n", ti, fit_susy_0lep_1b_hh1 ) ;
+      printf(" toy %4d : Fit 1b 0lep ttwj, highest Var2 bin  : %6.1f  \n", ti, fit_ttwj_0lep_1b_hh1 ) ;
+      printf(" toy %4d : Fit 1b 0lep qcd,  highest Var2 bin  : %6.1f  \n", ti, fit_qcd__0lep_1b_hh1 ) ;
+      printf(" toy %4d : Fit 1b 0lep znn,  highest Var2 bin  : %6.1f  \n", ti, fit_znn__0lep_1b_hh1 ) ;
 
       printf("\n") ;
-      printf(" toy %4d : Fit 2b 0lep susy, highest HT bin  : %6.1f  \n", ti, fit_susy_0lep_2b_hh1 ) ;
-      printf(" toy %4d : Fit 2b 0lep ttwj, highest HT bin  : %6.1f  \n", ti, fit_ttwj_0lep_2b_hh1 ) ;
-      printf(" toy %4d : Fit 2b 0lep qcd,  highest HT bin  : %6.1f  \n", ti, fit_qcd__0lep_2b_hh1 ) ;
-      printf(" toy %4d : Fit 2b 0lep znn,  highest HT bin  : %6.1f  \n", ti, fit_znn__0lep_2b_hh1 ) ;
+      printf(" toy %4d : Fit 2b 0lep susy, highest Var2 bin  : %6.1f  \n", ti, fit_susy_0lep_2b_hh1 ) ;
+      printf(" toy %4d : Fit 2b 0lep ttwj, highest Var2 bin  : %6.1f  \n", ti, fit_ttwj_0lep_2b_hh1 ) ;
+      printf(" toy %4d : Fit 2b 0lep qcd,  highest Var2 bin  : %6.1f  \n", ti, fit_qcd__0lep_2b_hh1 ) ;
+      printf(" toy %4d : Fit 2b 0lep znn,  highest Var2 bin  : %6.1f  \n", ti, fit_znn__0lep_2b_hh1 ) ;
 
       printf("\n") ;
-      printf(" toy %4d : Fit 3b 0lep susy, highest HT bin  : %6.1f  \n", ti, fit_susy_0lep_3b_hh1 ) ;
-      printf(" toy %4d : Fit 3b 0lep ttwj, highest HT bin  : %6.1f  \n", ti, fit_ttwj_0lep_3b_hh1 ) ;
-      printf(" toy %4d : Fit 3b 0lep qcd,  highest HT bin  : %6.1f  \n", ti, fit_qcd__0lep_3b_hh1 ) ;
-      printf(" toy %4d : Fit 3b 0lep znn,  highest HT bin  : %6.1f  \n", ti, fit_znn__0lep_3b_hh1 ) ;
+      printf(" toy %4d : Fit 3b 0lep susy, highest Var2 bin  : %6.1f  \n", ti, fit_susy_0lep_3b_hh1 ) ;
+      printf(" toy %4d : Fit 3b 0lep ttwj, highest Var2 bin  : %6.1f  \n", ti, fit_ttwj_0lep_3b_hh1 ) ;
+      printf(" toy %4d : Fit 3b 0lep qcd,  highest Var2 bin  : %6.1f  \n", ti, fit_qcd__0lep_3b_hh1 ) ;
+      printf(" toy %4d : Fit 3b 0lep znn,  highest Var2 bin  : %6.1f  \n", ti, fit_znn__0lep_3b_hh1 ) ;
 
 
       printf("\n\n") ;
-      printf(" toy %4d : Fit nb 0lep susy, highest MET bin : %6.1f  \n", ti, fit_susy_0lep_nb_hm1 ) ;
-      printf(" toy %4d : Fit nb 0lep ttwj, highest MET bin : %6.1f  \n", ti, fit_ttwj_0lep_nb_hm1 ) ;
-      printf(" toy %4d : Fit nb 0lep qcd,  highest MET bin : %6.1f  \n", ti, fit_qcd__0lep_nb_hm1 ) ;
-      printf(" toy %4d : Fit nb 0lep znn,  highest MET bin : %6.1f  \n", ti, fit_znn__0lep_nb_hm1 ) ;
+      printf(" toy %4d : Fit nb 0lep susy, highest Var1 bin : %6.1f  \n", ti, fit_susy_0lep_nb_hm1 ) ;
+      printf(" toy %4d : Fit nb 0lep ttwj, highest Var1 bin : %6.1f  \n", ti, fit_ttwj_0lep_nb_hm1 ) ;
+      printf(" toy %4d : Fit nb 0lep qcd,  highest Var1 bin : %6.1f  \n", ti, fit_qcd__0lep_nb_hm1 ) ;
+      printf(" toy %4d : Fit nb 0lep znn,  highest Var1 bin : %6.1f  \n", ti, fit_znn__0lep_nb_hm1 ) ;
 
       printf("\n") ;
-      printf(" toy %4d : Fit 1b 0lep susy, highest MET bin : %6.1f  \n", ti, fit_susy_0lep_1b_hm1 ) ;
-      printf(" toy %4d : Fit 1b 0lep ttwj, highest MET bin : %6.1f  \n", ti, fit_ttwj_0lep_1b_hm1 ) ;
-      printf(" toy %4d : Fit 1b 0lep qcd,  highest MET bin : %6.1f  \n", ti, fit_qcd__0lep_1b_hm1 ) ;
-      printf(" toy %4d : Fit 1b 0lep znn,  highest MET bin : %6.1f  \n", ti, fit_znn__0lep_1b_hm1 ) ;
+      printf(" toy %4d : Fit 1b 0lep susy, highest Var1 bin : %6.1f  \n", ti, fit_susy_0lep_1b_hm1 ) ;
+      printf(" toy %4d : Fit 1b 0lep ttwj, highest Var1 bin : %6.1f  \n", ti, fit_ttwj_0lep_1b_hm1 ) ;
+      printf(" toy %4d : Fit 1b 0lep qcd,  highest Var1 bin : %6.1f  \n", ti, fit_qcd__0lep_1b_hm1 ) ;
+      printf(" toy %4d : Fit 1b 0lep znn,  highest Var1 bin : %6.1f  \n", ti, fit_znn__0lep_1b_hm1 ) ;
 
       printf("\n") ;
-      printf(" toy %4d : Fit 2b 0lep susy, highest MET bin : %6.1f  \n", ti, fit_susy_0lep_2b_hm1 ) ;
-      printf(" toy %4d : Fit 2b 0lep ttwj, highest MET bin : %6.1f  \n", ti, fit_ttwj_0lep_2b_hm1 ) ;
-      printf(" toy %4d : Fit 2b 0lep qcd,  highest MET bin : %6.1f  \n", ti, fit_qcd__0lep_2b_hm1 ) ;
-      printf(" toy %4d : Fit 2b 0lep znn,  highest MET bin : %6.1f  \n", ti, fit_znn__0lep_2b_hm1 ) ;
+      printf(" toy %4d : Fit 2b 0lep susy, highest Var1 bin : %6.1f  \n", ti, fit_susy_0lep_2b_hm1 ) ;
+      printf(" toy %4d : Fit 2b 0lep ttwj, highest Var1 bin : %6.1f  \n", ti, fit_ttwj_0lep_2b_hm1 ) ;
+      printf(" toy %4d : Fit 2b 0lep qcd,  highest Var1 bin : %6.1f  \n", ti, fit_qcd__0lep_2b_hm1 ) ;
+      printf(" toy %4d : Fit 2b 0lep znn,  highest Var1 bin : %6.1f  \n", ti, fit_znn__0lep_2b_hm1 ) ;
 
       printf("\n") ;
-      printf(" toy %4d : Fit 3b 0lep susy, highest MET bin : %6.1f  \n", ti, fit_susy_0lep_3b_hm1 ) ;
-      printf(" toy %4d : Fit 3b 0lep ttwj, highest MET bin : %6.1f  \n", ti, fit_ttwj_0lep_3b_hm1 ) ;
-      printf(" toy %4d : Fit 3b 0lep qcd,  highest MET bin : %6.1f  \n", ti, fit_qcd__0lep_3b_hm1 ) ;
-      printf(" toy %4d : Fit 3b 0lep znn,  highest MET bin : %6.1f  \n", ti, fit_znn__0lep_3b_hm1 ) ;
+      printf(" toy %4d : Fit 3b 0lep susy, highest Var1 bin : %6.1f  \n", ti, fit_susy_0lep_3b_hm1 ) ;
+      printf(" toy %4d : Fit 3b 0lep ttwj, highest Var1 bin : %6.1f  \n", ti, fit_ttwj_0lep_3b_hm1 ) ;
+      printf(" toy %4d : Fit 3b 0lep qcd,  highest Var1 bin : %6.1f  \n", ti, fit_qcd__0lep_3b_hm1 ) ;
+      printf(" toy %4d : Fit 3b 0lep znn,  highest Var1 bin : %6.1f  \n", ti, fit_znn__0lep_3b_hm1 ) ;
 
 
       printf("\n\n") ;
-      printf(" toy %4d : Fit nb 0lep susy, highest two MET and HT bins : %6.1f  \n", ti, fit_susy_0lep_nb_hm2_hh2 ) ;
-      printf(" toy %4d : Fit nb 0lep ttwj, highest two MET and HT bins : %6.1f  \n", ti, fit_ttwj_0lep_nb_hm2_hh2 ) ;
-      printf(" toy %4d : Fit nb 0lep qcd,  highest two MET and HT bins : %6.1f  \n", ti, fit_qcd__0lep_nb_hm2_hh2 ) ;
-      printf(" toy %4d : Fit nb 0lep znn,  highest two MET and HT bins : %6.1f  \n", ti, fit_znn__0lep_nb_hm2_hh2 ) ;
+      printf(" toy %4d : Fit nb 0lep susy, highest two Var1 and Var2 bins : %6.1f  \n", ti, fit_susy_0lep_nb_hm2_hh2 ) ;
+      printf(" toy %4d : Fit nb 0lep ttwj, highest two Var1 and Var2 bins : %6.1f  \n", ti, fit_ttwj_0lep_nb_hm2_hh2 ) ;
+      printf(" toy %4d : Fit nb 0lep qcd,  highest two Var1 and Var2 bins : %6.1f  \n", ti, fit_qcd__0lep_nb_hm2_hh2 ) ;
+      printf(" toy %4d : Fit nb 0lep znn,  highest two Var1 and Var2 bins : %6.1f  \n", ti, fit_znn__0lep_nb_hm2_hh2 ) ;
 
       printf("\n") ;
-      printf(" toy %4d : Fit 1b 0lep susy, highest two MET and HT bins : %6.1f  \n", ti, fit_susy_0lep_1b_hm2_hh2 ) ;
-      printf(" toy %4d : Fit 1b 0lep ttwj, highest two MET and HT bins : %6.1f  \n", ti, fit_ttwj_0lep_1b_hm2_hh2 ) ;
-      printf(" toy %4d : Fit 1b 0lep qcd,  highest two MET and HT bins : %6.1f  \n", ti, fit_qcd__0lep_1b_hm2_hh2 ) ;
-      printf(" toy %4d : Fit 1b 0lep znn,  highest two MET and HT bins : %6.1f  \n", ti, fit_znn__0lep_1b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 1b 0lep susy, highest two Var1 and Var2 bins : %6.1f  \n", ti, fit_susy_0lep_1b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 1b 0lep ttwj, highest two Var1 and Var2 bins : %6.1f  \n", ti, fit_ttwj_0lep_1b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 1b 0lep qcd,  highest two Var1 and Var2 bins : %6.1f  \n", ti, fit_qcd__0lep_1b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 1b 0lep znn,  highest two Var1 and Var2 bins : %6.1f  \n", ti, fit_znn__0lep_1b_hm2_hh2 ) ;
 
       printf("\n") ;
-      printf(" toy %4d : Fit 2b 0lep susy, highest two MET and HT bins : %6.1f  \n", ti, fit_susy_0lep_2b_hm2_hh2 ) ;
-      printf(" toy %4d : Fit 2b 0lep ttwj, highest two MET and HT bins : %6.1f  \n", ti, fit_ttwj_0lep_2b_hm2_hh2 ) ;
-      printf(" toy %4d : Fit 2b 0lep qcd,  highest two MET and HT bins : %6.1f  \n", ti, fit_qcd__0lep_2b_hm2_hh2 ) ;
-      printf(" toy %4d : Fit 2b 0lep znn,  highest two MET and HT bins : %6.1f  \n", ti, fit_znn__0lep_2b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 2b 0lep susy, highest two Var1 and Var2 bins : %6.1f  \n", ti, fit_susy_0lep_2b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 2b 0lep ttwj, highest two Var1 and Var2 bins : %6.1f  \n", ti, fit_ttwj_0lep_2b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 2b 0lep qcd,  highest two Var1 and Var2 bins : %6.1f  \n", ti, fit_qcd__0lep_2b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 2b 0lep znn,  highest two Var1 and Var2 bins : %6.1f  \n", ti, fit_znn__0lep_2b_hm2_hh2 ) ;
 
       printf("\n") ;
-      printf(" toy %4d : Fit 3b 0lep susy, highest two MET and HT bins : %6.1f  \n", ti, fit_susy_0lep_3b_hm2_hh2 ) ;
-      printf(" toy %4d : Fit 3b 0lep ttwj, highest two MET and HT bins : %6.1f  \n", ti, fit_ttwj_0lep_3b_hm2_hh2 ) ;
-      printf(" toy %4d : Fit 3b 0lep qcd,  highest two MET and HT bins : %6.1f  \n", ti, fit_qcd__0lep_3b_hm2_hh2 ) ;
-      printf(" toy %4d : Fit 3b 0lep znn,  highest two MET and HT bins : %6.1f  \n", ti, fit_znn__0lep_3b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 3b 0lep susy, highest two Var1 and Var2 bins : %6.1f  \n", ti, fit_susy_0lep_3b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 3b 0lep ttwj, highest two Var1 and Var2 bins : %6.1f  \n", ti, fit_ttwj_0lep_3b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 3b 0lep qcd,  highest two Var1 and Var2 bins : %6.1f  \n", ti, fit_qcd__0lep_3b_hm2_hh2 ) ;
+      printf(" toy %4d : Fit 3b 0lep znn,  highest two Var1 and Var2 bins : %6.1f  \n", ti, fit_znn__0lep_3b_hm2_hh2 ) ;
 
 
       printf("\n") ;
       if ( qcdModelIndex == 2 || qcdModelIndex == 4 || qcdModelIndex == 5 ) {
-         if ( nBinsHT>=1 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H1 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H1, 100*fit_qcd_0lepLDP_ratio_H1_err) ; }
-         if ( nBinsHT>=2 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H2 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H2, 100*fit_qcd_0lepLDP_ratio_H2_err) ; }
-         if ( nBinsHT>=3 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H3 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H3, 100*fit_qcd_0lepLDP_ratio_H3_err) ; }
-         if ( nBinsHT>=4 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H4 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H4, 100*fit_qcd_0lepLDP_ratio_H4_err) ; }
+         if ( nBinsVar2>=1 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H1 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H1, 100*fit_qcd_0lepLDP_ratio_H1_err) ; }
+         if ( nBinsVar2>=2 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H2 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H2, 100*fit_qcd_0lepLDP_ratio_H2_err) ; }
+         if ( nBinsVar2>=3 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H3 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H3, 100*fit_qcd_0lepLDP_ratio_H3_err) ; }
+         if ( nBinsVar2>=4 ) { printf(" toy %4d : Fit QCD 0lep/LDP ratio, H4 : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio_H4, 100*fit_qcd_0lepLDP_ratio_H4_err) ; }
       }
       if ( qcdModelIndex == 3 ) {
          printf(" toy %4d : Fit QCD 0lep/LDP ratio : (%5.1f +/- %4.1f)%%\n", ti, 100*fit_qcd_0lepLDP_ratio, 100*fit_qcd_0lepLDP_ratio_err) ;
       }
       if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
-         if ( nBinsMET>=2 ) { printf(" toy %4d : Fit QCD SFqcd_met2 : %5.2f +/- %5.2f\n", ti, fit_SFqcd_met2, fit_SFqcd_met2_err) ; }
+         if ( nBinsVar1>=2 ) { printf(" toy %4d : Fit QCD SFqcd_met2 : %5.2f +/- %5.2f\n", ti, fit_SFqcd_met2, fit_SFqcd_met2_err) ; }
          if ( nBinsBjets>=2 ) { printf(" toy %4d : Fit QCD SFqcd_nb2 : %5.2f +/- %5.2f\n", ti, fit_SFqcd_nb2, fit_SFqcd_nb2_err) ; }
       }
       if ( qcdModelIndex == 4 ) {
-         if ( nBinsMET>=3 ) { printf(" toy %4d : Fit QCD SFqcd_met3 : %5.2f +/- %5.2f\n", ti, fit_SFqcd_met3, fit_SFqcd_met3_err) ; }
-         if ( nBinsMET>=4 ) { printf(" toy %4d : Fit QCD SFqcd_met4 : %5.2f +/- %5.2f\n", ti, fit_SFqcd_met4, fit_SFqcd_met4_err) ; }
+         if ( nBinsVar1>=3 ) { printf(" toy %4d : Fit QCD SFqcd_met3 : %5.2f +/- %5.2f\n", ti, fit_SFqcd_met3, fit_SFqcd_met3_err) ; }
+         if ( nBinsVar1>=4 ) { printf(" toy %4d : Fit QCD SFqcd_met4 : %5.2f +/- %5.2f\n", ti, fit_SFqcd_met4, fit_SFqcd_met4_err) ; }
          if ( nBinsBjets>=3 ) { printf(" toy %4d : Fit QCD SFqcd_nb3 : %5.2f +/- %5.2f\n", ti, fit_SFqcd_nb3, fit_SFqcd_nb3_err) ; }
          if ( nBinsBjets>=4 ) { printf(" toy %4d : Fit QCD SFqcd_nb4 : %5.2f +/- %5.2f\n", ti, fit_SFqcd_nb4, fit_SFqcd_nb4_err) ; }
       }
@@ -2295,67 +2295,67 @@
 
 
 
-      sprintf( branchstring, "fit_susy_0lep_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      sprintf( branchstring, "fit_susy_0lep_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       toytt -> Branch( "fit_susy_0lep_3da", &fit_susy_0lep_3da, branchstring ) ;
 
-      sprintf( branchstring, "fit_ttwj_0lep_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      sprintf( branchstring, "fit_ttwj_0lep_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       toytt -> Branch( "fit_ttwj_0lep_3da", &fit_ttwj_0lep_3da, branchstring ) ;
 
-      sprintf( branchstring, "fit_qcd_0lep_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      sprintf( branchstring, "fit_qcd_0lep_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       toytt -> Branch( "fit_qcd_0lep_3da" , &fit_qcd_0lep_3da , branchstring ) ;
 
-      sprintf( branchstring, "fit_znn_0lep_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      sprintf( branchstring, "fit_znn_0lep_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       toytt -> Branch( "fit_znn_0lep_3da" , &fit_znn_0lep_3da , branchstring ) ;
 
 
-      sprintf( branchstring, "fit_sf_ttwj_0lep_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      sprintf( branchstring, "fit_sf_ttwj_0lep_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       toytt -> Branch( "fit_sf_ttwj_0lep_3da", &fit_sf_ttwj_0lep_3da, branchstring ) ;
 
-      sprintf( branchstring, "fit_sf_qcd_0lep_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      sprintf( branchstring, "fit_sf_qcd_0lep_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       toytt -> Branch( "fit_sf_qcd_0lep_3da" , &fit_sf_qcd_0lep_3da , branchstring ) ;
 
 
 
-      sprintf( branchstring, "mcval_susy_0lep_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      sprintf( branchstring, "mcval_susy_0lep_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       toytt -> Branch( "mcval_susy_0lep_3da", &susy_0lep          , branchstring ) ;
 
-      sprintf( branchstring, "mcval_ttwj_0lep_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      sprintf( branchstring, "mcval_ttwj_0lep_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       toytt -> Branch( "mcval_ttwj_0lep_3da", &mcval_ttwj_0lep_3da, branchstring ) ;
 
-      sprintf( branchstring, "mcval_qcd_0lep_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      sprintf( branchstring, "mcval_qcd_0lep_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       toytt -> Branch( "mcval_qcd_0lep_3da" , &mcval_qcd_0lep_3da , branchstring ) ;
 
-      sprintf( branchstring, "mcval_znn_0lep_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      sprintf( branchstring, "mcval_znn_0lep_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       toytt -> Branch( "mcval_znn_0lep_3da" , &mcval_znn_0lep_3da , branchstring ) ;
 
 
 
       if ( qcdModelIndex == 2 || qcdModelIndex == 4 || qcdModelIndex == 5 ) {
-         if ( nBinsHT >=1 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H1", &fit_qcd_0lepLDP_ratio_H1, "fit_qcd_0lepLDP_ratio_H1/F" ) ; }
-         if ( nBinsHT >=2 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H2", &fit_qcd_0lepLDP_ratio_H2, "fit_qcd_0lepLDP_ratio_H2/F" ) ; }
-         if ( nBinsHT >=3 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H3", &fit_qcd_0lepLDP_ratio_H3, "fit_qcd_0lepLDP_ratio_H3/F" ) ; }
-         if ( nBinsHT >=4 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H4", &fit_qcd_0lepLDP_ratio_H4, "fit_qcd_0lepLDP_ratio_H4/F" ) ; }
+         if ( nBinsVar2 >=1 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H1", &fit_qcd_0lepLDP_ratio_H1, "fit_qcd_0lepLDP_ratio_H1/F" ) ; }
+         if ( nBinsVar2 >=2 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H2", &fit_qcd_0lepLDP_ratio_H2, "fit_qcd_0lepLDP_ratio_H2/F" ) ; }
+         if ( nBinsVar2 >=3 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H3", &fit_qcd_0lepLDP_ratio_H3, "fit_qcd_0lepLDP_ratio_H3/F" ) ; }
+         if ( nBinsVar2 >=4 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H4", &fit_qcd_0lepLDP_ratio_H4, "fit_qcd_0lepLDP_ratio_H4/F" ) ; }
 
-         if ( nBinsHT >=1 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H1_err", &fit_qcd_0lepLDP_ratio_H1_err, "fit_qcd_0lepLDP_ratio_H1_err/F" ) ; }
-         if ( nBinsHT >=2 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H2_err", &fit_qcd_0lepLDP_ratio_H2_err, "fit_qcd_0lepLDP_ratio_H2_err/F" ) ; }
-         if ( nBinsHT >=3 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H3_err", &fit_qcd_0lepLDP_ratio_H3_err, "fit_qcd_0lepLDP_ratio_H3_err/F" ) ; }
-         if ( nBinsHT >=4 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H4_err", &fit_qcd_0lepLDP_ratio_H4_err, "fit_qcd_0lepLDP_ratio_H4_err/F" ) ; }
+         if ( nBinsVar2 >=1 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H1_err", &fit_qcd_0lepLDP_ratio_H1_err, "fit_qcd_0lepLDP_ratio_H1_err/F" ) ; }
+         if ( nBinsVar2 >=2 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H2_err", &fit_qcd_0lepLDP_ratio_H2_err, "fit_qcd_0lepLDP_ratio_H2_err/F" ) ; }
+         if ( nBinsVar2 >=3 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H3_err", &fit_qcd_0lepLDP_ratio_H3_err, "fit_qcd_0lepLDP_ratio_H3_err/F" ) ; }
+         if ( nBinsVar2 >=4 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H4_err", &fit_qcd_0lepLDP_ratio_H4_err, "fit_qcd_0lepLDP_ratio_H4_err/F" ) ; }
       }
       if ( qcdModelIndex == 3 ) {
          toytt -> Branch( "fit_qcd_0lepLDP_ratio", &fit_qcd_0lepLDP_ratio, "fit_qcd_0lepLDP_ratio/F" ) ;
          toytt -> Branch( "fit_qcd_0lepLDP_ratio_err", &fit_qcd_0lepLDP_ratio_err, "fit_qcd_0lepLDP_ratio_err/F" ) ;
       }
       if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
-         if ( nBinsMET >=2 ) { toytt -> Branch( "fit_SFqcd_met2", &fit_SFqcd_met2, "fit_SFqcd_met2/F" ) ; }
-         if ( nBinsMET >=2 ) { toytt -> Branch( "fit_SFqcd_met2_err", &fit_SFqcd_met2_err, "fit_SFqcd_met2_err/F" ) ; }
+         if ( nBinsVar1 >=2 ) { toytt -> Branch( "fit_SFqcd_met2", &fit_SFqcd_met2, "fit_SFqcd_met2/F" ) ; }
+         if ( nBinsVar1 >=2 ) { toytt -> Branch( "fit_SFqcd_met2_err", &fit_SFqcd_met2_err, "fit_SFqcd_met2_err/F" ) ; }
          if ( nBinsBjets >=2 ) { toytt -> Branch( "fit_SFqcd_nb2", &fit_SFqcd_nb2, "fit_SFqcd_nb2/F" ) ; }
          if ( nBinsBjets >=2 ) { toytt -> Branch( "fit_SFqcd_nb2_err", &fit_SFqcd_nb2_err, "fit_SFqcd_nb2_err/F" ) ; }
       }
       if ( qcdModelIndex == 4 ) {
-         if ( nBinsMET >=3 ) { toytt -> Branch( "fit_SFqcd_met3", &fit_SFqcd_met3, "fit_SFqcd_met3/F" ) ; }
-         if ( nBinsMET >=4 ) { toytt -> Branch( "fit_SFqcd_met4", &fit_SFqcd_met4, "fit_SFqcd_met4/F" ) ; }
-         if ( nBinsMET >=3 ) { toytt -> Branch( "fit_SFqcd_met3_err", &fit_SFqcd_met3_err, "fit_SFqcd_met3_err/F" ) ; }
-         if ( nBinsMET >=4 ) { toytt -> Branch( "fit_SFqcd_met4_err", &fit_SFqcd_met4_err, "fit_SFqcd_met4_err/F" ) ; }
+         if ( nBinsVar1 >=3 ) { toytt -> Branch( "fit_SFqcd_met3", &fit_SFqcd_met3, "fit_SFqcd_met3/F" ) ; }
+         if ( nBinsVar1 >=4 ) { toytt -> Branch( "fit_SFqcd_met4", &fit_SFqcd_met4, "fit_SFqcd_met4/F" ) ; }
+         if ( nBinsVar1 >=3 ) { toytt -> Branch( "fit_SFqcd_met3_err", &fit_SFqcd_met3_err, "fit_SFqcd_met3_err/F" ) ; }
+         if ( nBinsVar1 >=4 ) { toytt -> Branch( "fit_SFqcd_met4_err", &fit_SFqcd_met4_err, "fit_SFqcd_met4_err/F" ) ; }
          if ( nBinsBjets >=3 ) { toytt -> Branch( "fit_SFqcd_nb3", &fit_SFqcd_nb3, "fit_SFqcd_nb3/F" ) ; }
          if ( nBinsBjets >=4 ) { toytt -> Branch( "fit_SFqcd_nb4", &fit_SFqcd_nb4, "fit_SFqcd_nb4/F" ) ; }
          if ( nBinsBjets >=3 ) { toytt -> Branch( "fit_SFqcd_nb3_err", &fit_SFqcd_nb3_err, "fit_SFqcd_nb3_err/F" ) ; }
@@ -2376,23 +2376,23 @@
       if ( doSignif ) {
          toytt -> Branch( "fit_susy_signif", &fit_susy_signif, "fit_susy_signif/F" ) ;
       
-      	 sprintf( branchstring, "fit_susy_0lep_at0susy_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      	 sprintf( branchstring, "fit_susy_0lep_at0susy_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       	 toytt -> Branch( "fit_susy_0lep_at0susy_3da", &fit_susy_0lep_at0susy_3da, branchstring ) ;
 
-      	 sprintf( branchstring, "fit_ttwj_0lep_at0susy_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      	 sprintf( branchstring, "fit_ttwj_0lep_at0susy_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       	 toytt -> Branch( "fit_ttwj_0lep_at0susy_3da", &fit_ttwj_0lep_at0susy_3da, branchstring ) ;
 
-      	 sprintf( branchstring, "fit_qcd_0lep_at0susy_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      	 sprintf( branchstring, "fit_qcd_0lep_at0susy_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       	 toytt -> Branch( "fit_qcd_0lep_at0susy_3da" , &fit_qcd_0lep_at0susy_3da , branchstring ) ;
 
-      	 sprintf( branchstring, "fit_znn_0lep_at0susy_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      	 sprintf( branchstring, "fit_znn_0lep_at0susy_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       	 toytt -> Branch( "fit_znn_0lep_at0susy_3da" , &fit_znn_0lep_at0susy_3da , branchstring ) ;
 
 
-      	 sprintf( branchstring, "fit_sf_ttwj_0lep_at0susy_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      	 sprintf( branchstring, "fit_sf_ttwj_0lep_at0susy_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       	 toytt -> Branch( "fit_sf_ttwj_0lep_at0susy_3da", &fit_sf_ttwj_0lep_at0susy_3da, branchstring ) ;
 
-      	 sprintf( branchstring, "fit_sf_qcd_0lep_at0susy_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      	 sprintf( branchstring, "fit_sf_qcd_0lep_at0susy_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       	 toytt -> Branch( "fit_sf_qcd_0lep_at0susy_3da" , &fit_sf_qcd_0lep_at0susy_3da , branchstring ) ;
 
          toytt -> Branch( "fit_ttwj_0lep1lep_ratio_at0susy", &fit_ttwj_0lep1lep_ratio_at0susy, "fit_ttwj_0lep1lep_ratio_at0susy/F" ) ;
@@ -2400,21 +2400,21 @@
          toytt -> Branch( "fit_ttwj_1lepSig1lep_ratio_at0susy", &fit_ttwj_1lepSig1lep_ratio_at0susy, "fit_ttwj_1lepSig1lep_ratio_at0susy/F" ) ;
 
          if ( qcdModelIndex == 2 || qcdModelIndex == 4 || qcdModelIndex == 5 ) {
-            if ( nBinsHT >=1 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H1_at0susy", &fit_qcd_0lepLDP_ratio_H1_at0susy, "fit_qcd_0lepLDP_ratio_H1_at0susy/F" ) ; }
-            if ( nBinsHT >=2 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H2_at0susy", &fit_qcd_0lepLDP_ratio_H2_at0susy, "fit_qcd_0lepLDP_ratio_H2_at0susy/F" ) ; }
-            if ( nBinsHT >=3 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H3_at0susy", &fit_qcd_0lepLDP_ratio_H3_at0susy, "fit_qcd_0lepLDP_ratio_H3_at0susy/F" ) ; }
-            if ( nBinsHT >=4 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H4_at0susy", &fit_qcd_0lepLDP_ratio_H4_at0susy, "fit_qcd_0lepLDP_ratio_H4_at0susy/F" ) ; }
+            if ( nBinsVar2 >=1 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H1_at0susy", &fit_qcd_0lepLDP_ratio_H1_at0susy, "fit_qcd_0lepLDP_ratio_H1_at0susy/F" ) ; }
+            if ( nBinsVar2 >=2 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H2_at0susy", &fit_qcd_0lepLDP_ratio_H2_at0susy, "fit_qcd_0lepLDP_ratio_H2_at0susy/F" ) ; }
+            if ( nBinsVar2 >=3 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H3_at0susy", &fit_qcd_0lepLDP_ratio_H3_at0susy, "fit_qcd_0lepLDP_ratio_H3_at0susy/F" ) ; }
+            if ( nBinsVar2 >=4 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H4_at0susy", &fit_qcd_0lepLDP_ratio_H4_at0susy, "fit_qcd_0lepLDP_ratio_H4_at0susy/F" ) ; }
          }
          if ( qcdModelIndex == 3 ) {
             toytt -> Branch( "fit_qcd_0lepLDP_ratio_at0susy", &fit_qcd_0lepLDP_ratio_at0susy, "fit_qcd_0lepLDP_ratio_at0susy/F" ) ;
          }
          if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
-            if ( nBinsMET >=2 ) { toytt -> Branch( "fit_SFqcd_met2_at0susy", &fit_SFqcd_met2_at0susy, "fit_SFqcd_met2_at0susy/F" ) ; }
+            if ( nBinsVar1 >=2 ) { toytt -> Branch( "fit_SFqcd_met2_at0susy", &fit_SFqcd_met2_at0susy, "fit_SFqcd_met2_at0susy/F" ) ; }
             if ( nBinsBjets >=2 ) { toytt -> Branch( "fit_SFqcd_nb2_at0susy", &fit_SFqcd_nb2_at0susy, "fit_SFqcd_nb2_at0susy/F" ) ; }
          }
          if ( qcdModelIndex == 4 ) {
-            if ( nBinsMET >=3 ) { toytt -> Branch( "fit_SFqcd_met3_at0susy", &fit_SFqcd_met3_at0susy, "fit_SFqcd_met3_at0susy/F" ) ; }
-            if ( nBinsMET >=4 ) { toytt -> Branch( "fit_SFqcd_met4_at0susy", &fit_SFqcd_met4_at0susy, "fit_SFqcd_met4_at0susy/F" ) ; }
+            if ( nBinsVar1 >=3 ) { toytt -> Branch( "fit_SFqcd_met3_at0susy", &fit_SFqcd_met3_at0susy, "fit_SFqcd_met3_at0susy/F" ) ; }
+            if ( nBinsVar1 >=4 ) { toytt -> Branch( "fit_SFqcd_met4_at0susy", &fit_SFqcd_met4_at0susy, "fit_SFqcd_met4_at0susy/F" ) ; }
             if ( nBinsBjets >=3 ) { toytt -> Branch( "fit_SFqcd_nb3_at0susy", &fit_SFqcd_nb3_at0susy, "fit_SFqcd_nb3_at0susy/F" ) ; }
             if ( nBinsBjets >=4 ) { toytt -> Branch( "fit_SFqcd_nb4_at0susy", &fit_SFqcd_nb4_at0susy, "fit_SFqcd_nb4_at0susy/F" ) ; }
          }
@@ -2425,86 +2425,86 @@
          toytt -> Branch( "fit_susy_ul", &fit_susy_ul, "fit_susy_ul/F" ) ;
          toytt -> Branch( "fit_susy_ts_at_ul", &fit_susy_ts_at_ul, "fit_susy_ts_at_ul/F" ) ;
 
-      	 sprintf( branchstring, "fit_susy_0lep_atUL_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      	 sprintf( branchstring, "fit_susy_0lep_atUL_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       	 toytt -> Branch( "fit_susy_0lep_atUL_3da", &fit_susy_0lep_atUL_3da, branchstring ) ;
 
-      	 sprintf( branchstring, "fit_ttwj_0lep_atUL_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      	 sprintf( branchstring, "fit_ttwj_0lep_atUL_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       	 toytt -> Branch( "fit_ttwj_0lep_atUL_3da", &fit_ttwj_0lep_atUL_3da, branchstring ) ;
 
-      	 sprintf( branchstring, "fit_qcd_0lep_atUL_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      	 sprintf( branchstring, "fit_qcd_0lep_atUL_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       	 toytt -> Branch( "fit_qcd_0lep_atUL_3da" , &fit_qcd_0lep_atUL_3da , branchstring ) ;
 
-      	 sprintf( branchstring, "fit_znn_0lep_atUL_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      	 sprintf( branchstring, "fit_znn_0lep_atUL_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       	 toytt -> Branch( "fit_znn_0lep_atUL_3da" , &fit_znn_0lep_atUL_3da , branchstring ) ;
 
 
-      	 sprintf( branchstring, "fit_sf_ttwj_0lep_atUL_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      	 sprintf( branchstring, "fit_sf_ttwj_0lep_atUL_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       	 toytt -> Branch( "fit_sf_ttwj_0lep_atUL_3da", &fit_sf_ttwj_0lep_atUL_3da, branchstring ) ;
 
-      	 sprintf( branchstring, "fit_sf_qcd_0lep_atUL_3da[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      	 sprintf( branchstring, "fit_sf_qcd_0lep_atUL_3da[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       	 toytt -> Branch( "fit_sf_qcd_0lep_atUL_3da" , &fit_sf_qcd_0lep_atUL_3da , branchstring ) ;
 
          toytt -> Branch( "fit_ttwj_0lep1lep_ratio_atUL", &fit_ttwj_0lep1lep_ratio_atUL, "fit_ttwj_0lep1lep_ratio_atUL/F" ) ;
          toytt -> Branch( "fit_ttwj_1lepSig1lep_ratio_atUL", &fit_ttwj_1lepSig1lep_ratio_atUL, "fit_ttwj_1lepSig1lep_ratio_atUL/F" ) ;
 
          if ( qcdModelIndex == 2 || qcdModelIndex == 4 || qcdModelIndex == 5 ) {
-            if ( nBinsHT >=1 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H1_atUL", &fit_qcd_0lepLDP_ratio_H1_atUL, "fit_qcd_0lepLDP_ratio_H1_atUL/F" ) ; }
-            if ( nBinsHT >=2 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H2_atUL", &fit_qcd_0lepLDP_ratio_H2_atUL, "fit_qcd_0lepLDP_ratio_H2_atUL/F" ) ; }
-            if ( nBinsHT >=3 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H3_atUL", &fit_qcd_0lepLDP_ratio_H3_atUL, "fit_qcd_0lepLDP_ratio_H3_atUL/F" ) ; }
-            if ( nBinsHT >=4 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H4_atUL", &fit_qcd_0lepLDP_ratio_H4_atUL, "fit_qcd_0lepLDP_ratio_H4_atUL/F" ) ; }
+            if ( nBinsVar2 >=1 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H1_atUL", &fit_qcd_0lepLDP_ratio_H1_atUL, "fit_qcd_0lepLDP_ratio_H1_atUL/F" ) ; }
+            if ( nBinsVar2 >=2 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H2_atUL", &fit_qcd_0lepLDP_ratio_H2_atUL, "fit_qcd_0lepLDP_ratio_H2_atUL/F" ) ; }
+            if ( nBinsVar2 >=3 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H3_atUL", &fit_qcd_0lepLDP_ratio_H3_atUL, "fit_qcd_0lepLDP_ratio_H3_atUL/F" ) ; }
+            if ( nBinsVar2 >=4 ) { toytt -> Branch( "fit_qcd_0lepLDP_ratio_H4_atUL", &fit_qcd_0lepLDP_ratio_H4_atUL, "fit_qcd_0lepLDP_ratio_H4_atUL/F" ) ; }
          }
          if ( qcdModelIndex == 3 ) {
             toytt -> Branch( "fit_qcd_0lepLDP_ratio_atUL", &fit_qcd_0lepLDP_ratio_atUL, "fit_qcd_0lepLDP_ratio_atUL/F" ) ;
          }
          if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
-            if ( nBinsMET >=2 ) { toytt -> Branch( "fit_SFqcd_met2_atUL", &fit_SFqcd_met2_atUL, "fit_SFqcd_met2_atUL/F" ) ; }
+            if ( nBinsVar1 >=2 ) { toytt -> Branch( "fit_SFqcd_met2_atUL", &fit_SFqcd_met2_atUL, "fit_SFqcd_met2_atUL/F" ) ; }
             if ( nBinsBjets >=2 ) { toytt -> Branch( "fit_SFqcd_nb2_atUL", &fit_SFqcd_nb2_atUL, "fit_SFqcd_nb2_atUL/F" ) ; }
          }
          if ( qcdModelIndex == 4 ) {
-            if ( nBinsMET >=3 ) { toytt -> Branch( "fit_SFqcd_met3_atUL", &fit_SFqcd_met3_atUL, "fit_SFqcd_met3_atUL/F" ) ; }
-            if ( nBinsMET >=4 ) { toytt -> Branch( "fit_SFqcd_met4_atUL", &fit_SFqcd_met4_atUL, "fit_SFqcd_met4_atUL/F" ) ; }
+            if ( nBinsVar1 >=3 ) { toytt -> Branch( "fit_SFqcd_met3_atUL", &fit_SFqcd_met3_atUL, "fit_SFqcd_met3_atUL/F" ) ; }
+            if ( nBinsVar1 >=4 ) { toytt -> Branch( "fit_SFqcd_met4_atUL", &fit_SFqcd_met4_atUL, "fit_SFqcd_met4_atUL/F" ) ; }
             if ( nBinsBjets >=3 ) { toytt -> Branch( "fit_SFqcd_nb3_atUL", &fit_SFqcd_nb3_atUL, "fit_SFqcd_nb3_atUL/F" ) ; }
             if ( nBinsBjets >=4 ) { toytt -> Branch( "fit_SFqcd_nb4_atUL", &fit_SFqcd_nb4_atUL, "fit_SFqcd_nb4_atUL/F" ) ; }
          }
       } // doUL?
 
 
-      sprintf( branchstring, "Nobs_0lep[%d][%d][%d]/I", nBinsMET, nBinsHT, nBinsBjets ) ;
+      sprintf( branchstring, "Nobs_0lep[%d][%d][%d]/I", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       toytt -> Branch( "Nobs_0lep", Nobs_0lep, branchstring ) ;
 
-      sprintf( branchstring, "Nobs_1lepSig[%d][%d][%d]/I", nBinsMET, nBinsHT, nBinsBjets ) ;
+      sprintf( branchstring, "Nobs_1lepSig[%d][%d][%d]/I", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       toytt -> Branch( "Nobs_1lepSig", Nobs_1lepSig, branchstring ) ;
 
-      sprintf( branchstring, "Nobs_1lep[%d][%d][%d]/I", nBinsMET, nBinsHT, nBinsBjets ) ;
+      sprintf( branchstring, "Nobs_1lep[%d][%d][%d]/I", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       toytt -> Branch( "Nobs_1lep", Nobs_1lep, branchstring ) ;
 
-      sprintf( branchstring, "Nobs_ldp[%d][%d][%d]/I", nBinsMET, nBinsHT, nBinsBjets ) ;
+      sprintf( branchstring, "Nobs_ldp[%d][%d][%d]/I", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       toytt -> Branch( "Nobs_ldp" , Nobs_ldp , branchstring ) ;
 
-      sprintf( branchstring, "Nobs_Zee[%d][%d]/I", nBinsMET, nBinsHT ) ;
+      sprintf( branchstring, "Nobs_Zee[%d][%d]/I", nBinsVar1, nBinsVar2 ) ;
       toytt -> Branch( "Nobs_Zee" , Nobs_Zee , branchstring ) ;
 
-      sprintf( branchstring, "Nobs_Zmm[%d][%d]/I", nBinsMET, nBinsHT ) ;
+      sprintf( branchstring, "Nobs_Zmm[%d][%d]/I", nBinsVar1, nBinsVar2 ) ;
       toytt -> Branch( "Nobs_Zmm" , Nobs_Zmm , branchstring ) ;
 
 
 
-      sprintf( branchstring, "toy_mean_N_0lep[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      sprintf( branchstring, "toy_mean_N_0lep[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       toytt -> Branch( "toy_mean_N_0lep", toy_mean_N_0lep, branchstring ) ;
 
-      sprintf( branchstring, "toy_mean_N_1lepSig[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      sprintf( branchstring, "toy_mean_N_1lepSig[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       toytt -> Branch( "toy_mean_N_1lepSig", toy_mean_N_1lepSig, branchstring ) ;
 
-      sprintf( branchstring, "toy_mean_N_1lep[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      sprintf( branchstring, "toy_mean_N_1lep[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       toytt -> Branch( "toy_mean_N_1lep", toy_mean_N_1lep, branchstring ) ;
 
-      sprintf( branchstring, "toy_mean_N_ldp[%d][%d][%d]/F", nBinsMET, nBinsHT, nBinsBjets ) ;
+      sprintf( branchstring, "toy_mean_N_ldp[%d][%d][%d]/F", nBinsVar1, nBinsVar2, nBinsBjets ) ;
       toytt -> Branch( "toy_mean_N_ldp", toy_mean_N_ldp, branchstring ) ;
 
-      sprintf( branchstring, "toy_mean_N_Zee[%d][%d]/F", nBinsMET, nBinsHT ) ;
+      sprintf( branchstring, "toy_mean_N_Zee[%d][%d]/F", nBinsVar1, nBinsVar2 ) ;
       toytt -> Branch( "toy_mean_N_Zee", toy_mean_N_Zee, branchstring ) ;
 
-      sprintf( branchstring, "toy_mean_N_Zmm[%d][%d]/F", nBinsMET, nBinsHT ) ;
+      sprintf( branchstring, "toy_mean_N_Zmm[%d][%d]/F", nBinsVar1, nBinsVar2 ) ;
       toytt -> Branch( "toy_mean_N_Zmm", toy_mean_N_Zmm, branchstring ) ;
 
 
@@ -2594,25 +2594,25 @@
       fit_ttwj_0lep1lep_ratio_atUL = rrv_ttwj_0lep1lep_ratio->getVal();
 
       if ( qcdModelIndex == 2 || qcdModelIndex == 4 || qcdModelIndex == 5 ) {
-         if ( nBinsHT >= 1 ) { fit_qcd_0lepLDP_ratio_H1_atUL     = rrv_qcd_0lepLDP_ratio_H1 -> getVal() ; }
-         if ( nBinsHT >= 2 ) { fit_qcd_0lepLDP_ratio_H2_atUL     = rrv_qcd_0lepLDP_ratio_H2 -> getVal() ; }
-         if ( nBinsHT >= 3 ) { fit_qcd_0lepLDP_ratio_H3_atUL     = rrv_qcd_0lepLDP_ratio_H3 -> getVal() ; }
-         if ( nBinsHT >= 4 ) { fit_qcd_0lepLDP_ratio_H4_atUL     = rrv_qcd_0lepLDP_ratio_H4 -> getVal() ; }
+         if ( nBinsVar2 >= 1 ) { fit_qcd_0lepLDP_ratio_H1_atUL     = rrv_qcd_0lepLDP_ratio_H1 -> getVal() ; }
+         if ( nBinsVar2 >= 2 ) { fit_qcd_0lepLDP_ratio_H2_atUL     = rrv_qcd_0lepLDP_ratio_H2 -> getVal() ; }
+         if ( nBinsVar2 >= 3 ) { fit_qcd_0lepLDP_ratio_H3_atUL     = rrv_qcd_0lepLDP_ratio_H3 -> getVal() ; }
+         if ( nBinsVar2 >= 4 ) { fit_qcd_0lepLDP_ratio_H4_atUL     = rrv_qcd_0lepLDP_ratio_H4 -> getVal() ; }
       }
       if ( qcdModelIndex == 3 ) { fit_qcd_0lepLDP_ratio_atUL     = rrv_qcd_0lepLDP_ratio -> getVal() ; }
       if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
-         if ( nBinsMET >=2 ) { fit_SFqcd_met2_atUL     = rrv_SFqcd_met2 -> getVal() ; }
+         if ( nBinsVar1 >=2 ) { fit_SFqcd_met2_atUL     = rrv_SFqcd_met2 -> getVal() ; }
          if ( nBinsBjets >=2 ) { fit_SFqcd_nb2_atUL     = rrv_SFqcd_nb2 -> getVal() ; }
       }
       if ( qcdModelIndex == 4 ) {
-         if ( nBinsMET >=3 ) { fit_SFqcd_met3_atUL     = rrv_SFqcd_met3 -> getVal() ; }
-         if ( nBinsMET >=4 ) { fit_SFqcd_met4_atUL     = rrv_SFqcd_met4 -> getVal() ; }
+         if ( nBinsVar1 >=3 ) { fit_SFqcd_met3_atUL     = rrv_SFqcd_met3 -> getVal() ; }
+         if ( nBinsVar1 >=4 ) { fit_SFqcd_met4_atUL     = rrv_SFqcd_met4 -> getVal() ; }
          if ( nBinsBjets >=3 ) { fit_SFqcd_nb3_atUL     = rrv_SFqcd_nb3 -> getVal() ; }
          if ( nBinsBjets >=4 ) { fit_SFqcd_nb4_atUL     = rrv_SFqcd_nb4 -> getVal() ; }
       }
 
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
 	    for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
                if (mbi==3 && hbi==0) {
 	          fit_susy_0lep_atUL_3da[mbi][hbi][bbi] = 0.0;
@@ -2695,10 +2695,10 @@
 
       initFit_R_ttwj_0lep_over_1lep = -1. ;
       initFit_qcd_0lepLDP_ratio = -1. ;
-      for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
          initFit_qcd_0lepLDP_ratio_HT[hbi] = -1. ;
       } // hbi.
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
          initFit_SFqcd_met[mbi] = 1. ;
       } // mbi.
       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
@@ -2725,7 +2725,7 @@
                initFit_qcd_0lepLDP_ratio = par->getVal() ;
             }
          } else if ( qcdModelIndex == 2 ) {
-            for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
                char pname[100] ;
                sprintf( pname, "qcd_0lepLDP_ratio_H%d", hbi+1 ) ;
                if ( strcmp( par->GetName(), pname ) == 0 ) {
@@ -2734,7 +2734,7 @@
                }
             } // hbi.
          } else if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
-            for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
                char pname[100] ;
                sprintf( pname, "qcd_0lepLDP_ratio_H%d", hbi+1 ) ;
                if ( strcmp( par->GetName(), pname ) == 0 ) {
@@ -2742,7 +2742,7 @@
                   initFit_qcd_0lepLDP_ratio_HT[hbi] = par->getVal() ;
                }
             } // hbi.
-            for ( int mbi=1; mbi<nBinsMET; mbi++ ) { //-- this is ok for model 5
+            for ( int mbi=1; mbi<nBinsVar1; mbi++ ) { //-- this is ok for model 5
                char pname[100] ;
                sprintf( pname, "SFqcd_met%d", mbi+1 ) ;
                if ( strcmp( par->GetName(), pname ) == 0 ) {
@@ -2785,20 +2785,20 @@
             return false ;
          }
       } else if ( qcdModelIndex == 2 ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             if ( initFit_qcd_0lepLDP_ratio_HT[hbi] < 0 ) {
                printf("\n\n *** Did not find floating parameter initFit_qcd_0lepLDP_ratio_H%d.  Can't continue.\n\n", hbi+1 ) ;
                return false ;
             }
          } // hbi.
       } else if ( qcdModelIndex == 4 || qcdModelIndex == 5 ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             if ( initFit_qcd_0lepLDP_ratio_HT[hbi] < 0 ) {
                printf("\n\n *** Did not find floating parameter initFit_qcd_0lepLDP_ratio_H%d.  Can't continue.\n\n", hbi+1 ) ;
                return false ;
             }
          } // hbi.
-         for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
+         for ( int mbi=1; mbi<nBinsVar1; mbi++ ) {
             if ( qcdModelIndex == 5 && mbi>1 ) continue ;
             if ( initFit_SFqcd_met[mbi] == 1 ) {
                printf("\n\n *** Did not find floating parameter SFqcd_met%d.  Can't continue.\n\n", mbi+1 ) ;
@@ -2908,25 +2908,25 @@
 
       } // bbi.
 
-      int mcnBinsMET(0), mcnBinsHT(0) ;
+      int mcnBinsVar1(0), mcnBinsVar2(0) ;
 
       char binlabel[1000] ;
       sprintf( binlabel, "%s", httwj[0] -> GetXaxis() -> GetBinLabel( httwj[0]->GetNbinsX() - 1 ) ) ;
-      sscanf( binlabel, "0lep_M%d_H%d_1b", &mcnBinsMET, &mcnBinsHT ) ;
-      if ( mcnBinsMET != nBinsMET || mcnBinsHT != nBinsHT ) {
-         printf("\n\n *** Incompatible MET,HT binning.\n") ;
-         printf("  toymc setting   : MET=%d, HT=%d\n", nBinsMET, nBinsHT) ;
-         printf("  mcvals rootfile : MET=%d, HT=%d\n", mcnBinsMET, mcnBinsHT) ;
+      sscanf( binlabel, "0lep_M%d_H%d_1b", &mcnBinsVar1, &mcnBinsVar2 ) ;
+      if ( mcnBinsVar1 != nBinsVar1 || mcnBinsVar2 != nBinsVar2 ) {
+         printf("\n\n *** Incompatible Var1,Var2 binning.\n") ;
+         printf("  toymc setting   : Var1=%d, Var2=%d\n", nBinsVar1, nBinsVar2) ;
+         printf("  mcvals rootfile : Var1=%d, Var2=%d\n", mcnBinsVar1, mcnBinsVar2) ;
          printf("\n\n") ;
          return false ;
       }
 
 
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
-               int hbin = 1 + hbi + mbi*(nBinsHT+1) + 1 ;
+               int hbin = 1 + hbi + mbi*(nBinsVar2+1) + 1 ;
 
                mcval_ttwj_0lep_3da[mbi][hbi][bbi] = httwj[bbi] -> GetBinContent( hbin ) ;
                mcval_qcd_0lep_3da [mbi][hbi][bbi] = hqcd[bbi]  -> GetBinContent( hbin ) ;
@@ -2951,8 +2951,8 @@
    bool setSFVals() {
 
 
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+	for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
 
             char ename[1000] ;
             float trigeff ;
