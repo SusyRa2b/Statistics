@@ -1056,19 +1056,19 @@
       float input_SFqcd_nb4_err(0.) ;
 
 
-      sprintf( target_label, "SFqcd_met3" ) ;
+      sprintf( target_label, "SFqcd_1stVar3" ) ;
       fscanf( infp, "%s %g", label, &input_SFqcd_met3 ) ;
       if ( strcmp( label, target_label ) != 0 ) { printf("\n\n *** expecting %s, found %s\n\n", target_label, label ) ; return false ; }
 
-      sprintf( target_label, "SFqcd_met3_err" ) ;
+      sprintf( target_label, "SFqcd_1stVar3_err" ) ;
       fscanf( infp, "%s %g", label, &input_SFqcd_met3_err ) ;
       if ( strcmp( label, target_label ) != 0 ) { printf("\n\n *** expecting %s, found %s\n\n", target_label, label ) ; return false ; }
 
-      sprintf( target_label, "SFqcd_met4" ) ;
+      sprintf( target_label, "SFqcd_1stVar4" ) ;
       fscanf( infp, "%s %g", label, &input_SFqcd_met4 ) ;
       if ( strcmp( label, target_label ) != 0 ) { printf("\n\n *** expecting %s, found %s\n\n", target_label, label ) ; return false ; }
 
-      sprintf( target_label, "SFqcd_met4_err" ) ;
+      sprintf( target_label, "SFqcd_1stVar4_err" ) ;
       fscanf( infp, "%s %g", label, &input_SFqcd_met4_err ) ;
       if ( strcmp( label, target_label ) != 0 ) { printf("\n\n *** expecting %s, found %s\n\n", target_label, label ) ; return false ; }
 

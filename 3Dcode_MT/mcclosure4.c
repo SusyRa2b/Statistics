@@ -29,17 +29,17 @@
 
    void loadHist(const char* filename="in.root", const char* pfx=0, const char* pat="*", Bool_t doAdd=kFALSE, Double_t scaleFactor=-1.0) ;
    TH1F* bookHist(const char* hname, const char* htitle, int sampleIndex ) ;
-   void resetBinLabels( TH1F* hp, bool eraseNb=false ) ;
+void resetBinLabels( TH1F* hp, bool eraseNb=false, TString sVar1="MET", TString sVar2="HT" ) ;
 
    double data_Rqcd[20][20][10] ;
    double data_Rqcd_err[20][20][10] ;
 
    double fit_Rqcd_HT[20] ;
-   double fit_SFqcd_MET[20] ;
+   double fit_SFqcd_Var1[20] ;
    double fit_SFqcd_nb[10] ;
 
-   int nBinsMET ;
-   int nBinsHT ;
+   int nBinsVar1 ;
+   int nBinsVar2 ;
    int nBinsBjets ;
    const int nQcdSamples(9) ;
 
@@ -63,15 +63,15 @@
 
       //--- unpack the stupid par vector.
       int parind(0) ;
-      for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
          fit_Rqcd_HT[hbi] = par[parind] ;
          parind ++ ;
       } // hbi.
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
          if ( mbi == 0 ) {
-            fit_SFqcd_MET[mbi] = 1.0 ;
+            fit_SFqcd_Var1[mbi] = 1.0 ;
          } else {
-            fit_SFqcd_MET[mbi] = par[parind] ;
+            fit_SFqcd_Var1[mbi] = par[parind] ;
             parind++ ;
          }
       } // mbi.
@@ -84,11 +84,11 @@
          }
       } // bbi.
 
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
                if ( !( data_Rqcd[mbi][hbi][bbi] > 0. && data_Rqcd_err[mbi][hbi][bbi] > 0. ) ) { continue ; }
-               double delta = data_Rqcd[mbi][hbi][bbi] - fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ;
+               double delta = data_Rqcd[mbi][hbi][bbi] - fit_Rqcd_HT[hbi] * fit_SFqcd_Var1[mbi] * fit_SFqcd_nb[bbi] ;
                f += delta*delta / (data_Rqcd_err[mbi][hbi][bbi] * data_Rqcd_err[mbi][hbi][bbi] ) ;
             } // bbi.
          } // hbi.
@@ -112,21 +112,26 @@
 
      int version ;
      TString label ;
+     TString sVar1, sVar2, sVar3 ;
      
      ifstream inBinning ;
      inBinning.open("Binning.txt") ;
+
+     inBinning >> label >> sVar1 ;
+     inBinning >> label >> sVar2 ;
+     inBinning >> label >> sVar3 ;
      
-     inBinning >> label >> nBinsMET ;
-     inBinning >> label >> nBinsHT ;
+     inBinning >> label >> nBinsVar1 ;
+     inBinning >> label >> nBinsVar2 ;
      inBinning >> label >> nBinsBjets ;
 
      float dummy ;
      
-     for ( int i = 0 ; i < nBinsMET ; i++ ) {
+     for ( int i = 0 ; i < nBinsVar1 ; i++ ) {
        inBinning >> label >> dummy ;
      }
      
-     for ( int i = 0 ; i < nBinsHT ; i++ ) {
+     for ( int i = 0 ; i < nBinsVar2 ; i++ ) {
        inBinning >> label >> dummy ;
      }
   
@@ -452,8 +457,8 @@
 
       char binlabel[1000] ;
       sprintf( binlabel, "%s", hmctruth_ttwj_0lep_1b -> GetXaxis() -> GetBinLabel( hmctruth_ttwj_0lep_1b->GetNbinsX() - 1 ) ) ;
-      //sscanf( binlabel, "0lep_M%d_H%d_1b", &nBinsMET, &nBinsHT ) ;
-      printf("\n\n Bin label: %s,  nmet=%d, nht=%d\n\n", binlabel, nBinsMET, nBinsHT ) ;
+      //sscanf( binlabel, "0lep_M%d_H%d_1b", &nBinsVar1, &nBinsVar2 ) ;
+      printf("\n\n Bin label: %s,  nVar1=%d, nVar2=%d\n\n", binlabel, nBinsVar1, nBinsVar2 ) ;
 
 
       //-- compute dumb ave ratio
@@ -1033,57 +1038,57 @@
 
       TH1F* hdummy1 = (TH1F*) hmctruth_ttwj_0over1ratio_1b->Clone( "hdummy1" ) ;
       hdummy1->Reset() ;
-      resetBinLabels( hdummy1, true ) ;
+      resetBinLabels( hdummy1, true, sVar1, sVar2 ) ;
       hdummy1->SetMinimum(0.) ;
       hdummy1->SetTitle("") ;
 
-      resetBinLabels( hmctruth_ttwj_0over1ratio_1b, usePublicStyle_ ) ;
-      resetBinLabels( hmctruth_ttwj_0over1ratio_2b, usePublicStyle_ ) ;
-      resetBinLabels( hscalefactor_ttwj_0over1ratio_1b, usePublicStyle_ ) ;
-      resetBinLabels( hscalefactor_ttwj_0over1ratio_2b, usePublicStyle_ ) ;
+      resetBinLabels( hmctruth_ttwj_0over1ratio_1b, usePublicStyle_, sVar1, sVar2 ) ;
+      resetBinLabels( hmctruth_ttwj_0over1ratio_2b, usePublicStyle_, sVar1, sVar2 ) ;
+      resetBinLabels( hscalefactor_ttwj_0over1ratio_1b, usePublicStyle_, sVar1, sVar2 ) ;
+      resetBinLabels( hscalefactor_ttwj_0over1ratio_2b, usePublicStyle_, sVar1, sVar2 ) ;
 
       if ( nBinsBjets > 2 ) {
-	resetBinLabels( hmctruth_ttwj_0over1ratio_3b, usePublicStyle_ ) ;
-	resetBinLabels( hscalefactor_ttwj_0over1ratio_3b, usePublicStyle_ ) ;
+	resetBinLabels( hmctruth_ttwj_0over1ratio_3b, usePublicStyle_, sVar1, sVar2 ) ;
+	resetBinLabels( hscalefactor_ttwj_0over1ratio_3b, usePublicStyle_, sVar1, sVar2 ) ;
 	if ( nBinsBjets > 3 ) {
-	  resetBinLabels( hmctruth_ttwj_0over1ratio_4b, usePublicStyle_ ) ;
-	  resetBinLabels( hscalefactor_ttwj_0over1ratio_4b, usePublicStyle_ ) ;
+	  resetBinLabels( hmctruth_ttwj_0over1ratio_4b, usePublicStyle_, sVar1, sVar2 ) ;
+	  resetBinLabels( hscalefactor_ttwj_0over1ratio_4b, usePublicStyle_, sVar1, sVar2 ) ;
 	}
       }
 
       if (usePublicStyle_) {
-	resetBinLabels( hscalefactor_ttwj_0over1ratio_1b_whalfcorr ,usePublicStyle_) ;
-	resetBinLabels( hscalefactor_ttwj_0over1ratio_2b_whalfcorr ,usePublicStyle_) ;
-	if ( nBinsBjets > 2 ) resetBinLabels( hscalefactor_ttwj_0over1ratio_3b_whalfcorr ,usePublicStyle_) ;
-	if ( nBinsBjets > 3 ) resetBinLabels( hscalefactor_ttwj_0over1ratio_4b_whalfcorr ,usePublicStyle_) ;
+	resetBinLabels( hscalefactor_ttwj_0over1ratio_1b_whalfcorr ,usePublicStyle_, sVar1, sVar2) ;
+	resetBinLabels( hscalefactor_ttwj_0over1ratio_2b_whalfcorr ,usePublicStyle_, sVar1, sVar2) ;
+	if ( nBinsBjets > 2 ) resetBinLabels( hscalefactor_ttwj_0over1ratio_3b_whalfcorr ,usePublicStyle_, sVar1, sVar2) ;
+	if ( nBinsBjets > 3 ) resetBinLabels( hscalefactor_ttwj_0over1ratio_4b_whalfcorr ,usePublicStyle_, sVar1, sVar2) ;
       }
 
 
       TH1F* hdummy1_slSig = (TH1F*) hmctruth_ttwj_1lSover1ratio_1b->Clone( "hdummy1_slSig" ) ;
       hdummy1_slSig->Reset() ;
-      resetBinLabels( hdummy1_slSig, true ) ;
+      resetBinLabels( hdummy1_slSig, true, sVar1, sVar2 ) ;
       hdummy1_slSig->SetMinimum(0.) ;
       hdummy1_slSig->SetTitle("") ;
 
-      resetBinLabels( hmctruth_ttwj_1lSover1ratio_1b, usePublicStyle_ ) ;
-      resetBinLabels( hmctruth_ttwj_1lSover1ratio_2b, usePublicStyle_ ) ;
-      resetBinLabels( hscalefactor_ttwj_1lSover1ratio_1b, usePublicStyle_ ) ;
-      resetBinLabels( hscalefactor_ttwj_1lSover1ratio_2b, usePublicStyle_ ) ;
+      resetBinLabels( hmctruth_ttwj_1lSover1ratio_1b, usePublicStyle_, sVar1, sVar2 ) ;
+      resetBinLabels( hmctruth_ttwj_1lSover1ratio_2b, usePublicStyle_, sVar1, sVar2 ) ;
+      resetBinLabels( hscalefactor_ttwj_1lSover1ratio_1b, usePublicStyle_, sVar1, sVar2 ) ;
+      resetBinLabels( hscalefactor_ttwj_1lSover1ratio_2b, usePublicStyle_, sVar1, sVar2 ) ;
 
       if ( nBinsBjets > 2 ) {
-	resetBinLabels( hmctruth_ttwj_1lSover1ratio_3b, usePublicStyle_ ) ;
-	resetBinLabels( hscalefactor_ttwj_1lSover1ratio_3b, usePublicStyle_ ) ;
+	resetBinLabels( hmctruth_ttwj_1lSover1ratio_3b, usePublicStyle_, sVar1, sVar2 ) ;
+	resetBinLabels( hscalefactor_ttwj_1lSover1ratio_3b, usePublicStyle_, sVar1, sVar2 ) ;
 	if ( nBinsBjets > 3 ) {
-	  resetBinLabels( hmctruth_ttwj_1lSover1ratio_4b, usePublicStyle_ ) ;
-	  resetBinLabels( hscalefactor_ttwj_1lSover1ratio_4b, usePublicStyle_ ) ;
+	  resetBinLabels( hmctruth_ttwj_1lSover1ratio_4b, usePublicStyle_, sVar1, sVar2 ) ;
+	  resetBinLabels( hscalefactor_ttwj_1lSover1ratio_4b, usePublicStyle_, sVar1, sVar2 ) ;
 	}
       }
 
       if (usePublicStyle_) {
-	resetBinLabels( hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr ,usePublicStyle_) ;
-	resetBinLabels( hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr ,usePublicStyle_) ;
-	if ( nBinsBjets > 2 ) resetBinLabels( hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr ,usePublicStyle_) ;
-	if ( nBinsBjets > 3 ) resetBinLabels( hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr ,usePublicStyle_) ;
+	resetBinLabels( hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr ,usePublicStyle_, sVar1, sVar2) ;
+	resetBinLabels( hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr ,usePublicStyle_, sVar1, sVar2) ;
+	if ( nBinsBjets > 2 ) resetBinLabels( hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr ,usePublicStyle_, sVar1, sVar2) ;
+	if ( nBinsBjets > 3 ) resetBinLabels( hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr ,usePublicStyle_, sVar1, sVar2) ;
       }
 
 
@@ -1415,7 +1420,7 @@
 
 
       char outfile[10000] ;
-      sprintf( outfile, "rootfiles/gi-plots-met%d-ht%d-nB%d-v%d-mcclosure-ttwj3.root", nBinsMET, nBinsHT, nBinsBjets, version ) ;
+      sprintf( outfile, "rootfiles/gi-plots-%s-%d-%s-%d-nB%d-v%d-mcclosure-ttwj3.root", sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
 
       TFile f(outfile,"recreate");
 
@@ -1638,16 +1643,16 @@
 
       //--- insert ttwj numbers into file.
 
-      for ( int mbi=0; mbi<nBinsMET ; mbi++ ) {
-	for ( int hbi=0; hbi<nBinsHT ; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1 ; mbi++ ) {
+	for ( int hbi=0; hbi<nBinsVar2 ; hbi++ ) {
 	  
-	  int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	  int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
 	  
 	  char parameterName[1000] ;
 	  double err, systValue, correction ;
 	  
 	  sprintf( parameterName, "sf_ttwj_M%d_H%d_1b_err", mbi+1, hbi+1 ) ;
-	  printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_0lep_1b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+	  printf( "Var1=%d, Var2=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_0lep_1b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
 	  err        = sqrt( hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinError(hbin)  )  ;
 	  correction = hscalefactor_ttwj_0over1ratio_1b_whalfcorr->GetBinContent(hbin)  ;
 
@@ -1666,7 +1671,7 @@
 
 	  
 	  sprintf( parameterName, "sf_ttwj_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
-	  printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_0lep_2b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+	  printf( "Var1=%d, Var2=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_0lep_2b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
 	  err        = sqrt( hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinError(hbin) )  ;
 	  correction = hscalefactor_ttwj_0over1ratio_2b_whalfcorr->GetBinContent(hbin)  ;
 
@@ -1688,7 +1693,7 @@
 	  if ( nBinsBjets > 2 ) {
 
 	    sprintf( parameterName, "sf_ttwj_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
-	    printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_0lep_3b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+	    printf( "Var1=%d, Var2=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_0lep_3b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
 	    err        = sqrt( hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinError(hbin)  )  ;
 	    correction = hscalefactor_ttwj_0over1ratio_3b_whalfcorr->GetBinContent(hbin)  ;
 	    
@@ -1708,7 +1713,7 @@
 	    if ( nBinsBjets > 3 ) {
 
 	      sprintf( parameterName, "sf_ttwj_M%d_H%d_4b_err", mbi+1, hbi+1 ) ;
-	      printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_0lep_4b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+	      printf( "Var1=%d, Var2=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_0lep_4b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
 	      err        = sqrt( hscalefactor_ttwj_0over1ratio_4b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_0over1ratio_4b_whalfcorr->GetBinError(hbin)  )  ;
 	      correction = hscalefactor_ttwj_0over1ratio_4b_whalfcorr->GetBinContent(hbin)  ;
 	      
@@ -1735,16 +1740,16 @@
 
       //--- insert ttwj_slSig numbers into file.
 
-      for ( int mbi=0; mbi<nBinsMET ; mbi++ ) {
-	for ( int hbi=0; hbi<nBinsHT ; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1 ; mbi++ ) {
+	for ( int hbi=0; hbi<nBinsVar2 ; hbi++ ) {
 	  
-	  int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	  int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
 	  
 	  char parameterName[1000] ;
 	  double err, systValue, correction ;
 	  
 	  sprintf( parameterName, "sf_ttwj_slSig_M%d_H%d_1b_err", mbi+1, hbi+1 ) ;
-	  printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_1lepSig_1b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+	  printf( "Var1=%d, Var2=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_1lepSig_1b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
 	  err        = sqrt( hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr->GetBinError(hbin)  )  ;
 	  correction = hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr->GetBinContent(hbin)  ;
 
@@ -1763,7 +1768,7 @@
 
 	  
 	  sprintf( parameterName, "sf_ttwj_slSig_M%d_H%d_2b_err", mbi+1, hbi+1 ) ;
-	  printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_1lepSig_2b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+	  printf( "Var1=%d, Var2=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_1lepSig_2b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
 	  err        = sqrt( hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr->GetBinError(hbin) )  ;
 	  correction = hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr->GetBinContent(hbin)  ;
 
@@ -1785,7 +1790,7 @@
 	  if ( nBinsBjets > 2 ) {
 
 	    sprintf( parameterName, "sf_ttwj_slSig_M%d_H%d_3b_err", mbi+1, hbi+1 ) ;
-	    printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_1lepSig_3b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+	    printf( "Var1=%d, Var2=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_1lepSig_3b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
 	    err        = sqrt( hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->GetBinError(hbin)  )  ;
 	    correction = hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr->GetBinContent(hbin)  ;
 	    
@@ -1805,7 +1810,7 @@
 	    if ( nBinsBjets > 3 ) {
 
 	      sprintf( parameterName, "sf_ttwj_slSig_M%d_H%d_4b_err", mbi+1, hbi+1 ) ;
-	      printf( "met=%d, ht=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_1lepSig_4b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
+	      printf( "Var1=%d, Var2=%d : %s %s\n", mbi+1, hbi+1, parameterName, hmctruth_ttwj_1lepSig_4b -> GetXaxis() -> GetBinLabel( hbin ) ) ;
 	      err        = sqrt( hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr->GetBinError(hbin)*hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr->GetBinError(hbin)  )  ;
 	      correction = hscalefactor_ttwj_1lSover1ratio_4b_whalfcorr->GetBinContent(hbin)  ;
 	      
@@ -1840,7 +1845,7 @@
 
      //---   Q C D  Part   --------------
 
-     double htbin_0lepldp_ratio[nBinsHT] ;
+     double htbin_0lepldp_ratio[nBinsVar2] ;
      double htbin_0lepldp_ratio_global(0.) ;
 
      { //-- scoping bracket for QCD part.
@@ -1904,7 +1909,7 @@
 
       //--- Flatten 2D histos and compute 0lep/LDP ratios for each sample
       
-      int nbins = nBinsMET*(nBinsHT+1) + 1 ;
+      int nbins = nBinsVar1*(nBinsVar2+1) + 1 ;
 
       TH1F* hflat_0lep[nQcdSamples][nBinsBjets] ;
       TH1F* hflat_ldp [nQcdSamples][nBinsBjets] ;
@@ -1936,10 +1941,10 @@
 	  sprintf( htitle, "QCD 0lep/LDP ratio, nb=%d, %s", bbi+1, samplename[si] ) ;
 	  hflat_0lepldp_ratio[si][bbi] = bookHist( hname, htitle, si ) ;
 	  
-	  for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-	    for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+	  for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+	    for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
 	      
-	      int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	      int histbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
 	      
 	      float n0lep     = h0lep[si][bbi] -> GetBinContent( mbi+1, hbi+1 ) ;
 	      float n0lep_err = h0lep[si][bbi] -> GetBinError( mbi+1, hbi+1 ) ;
@@ -2116,20 +2121,20 @@
 
       //--- compute average 0lep/LDP ratio globally and for each HT bin.
 
-      double all0lep_ht[nBinsHT] ;
-      double allldp_ht[nBinsHT] ;
+      double all0lep_ht[nBinsVar2] ;
+      double allldp_ht[nBinsVar2] ;
       double all0lep(0.) ;
       double allldp(0.) ;
-      for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
          all0lep_ht[hbi] = 0. ;
          allldp_ht[hbi] = 0. ;
       } // hbi.
       
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-	for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+	for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
 	  for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 	    
-	    int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	    int histbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
 
 	    all0lep_ht[hbi] += hflat_0lep_all -> GetBinContent( histbin ) ;
 	    allldp_ht[hbi]  += hflat_ldp_all  -> GetBinContent( histbin ) ;
@@ -2143,7 +2148,7 @@
 
 
       printf("\n\n") ;
-      for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
 	htbin_0lepldp_ratio[hbi] = 0. ;
 	if ( allldp_ht[hbi] > 0. ) {
 	  htbin_0lepldp_ratio[hbi] = all0lep_ht[hbi] / allldp_ht[hbi] ;
@@ -2158,11 +2163,11 @@
 
       //--- Calculations for QCD Model 4 --------------
 
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-	for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+	for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
 	  for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 	    
-	    int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	    int histbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
 	    
 	    double val, err ;
 	    
@@ -2177,7 +2182,7 @@
       } // mbi.
 
 
-      TMinuit *myMinuit = new TMinuit(nBinsHT+nBinsMET-1+nBinsBjets-1) ; // arg is # of parameters
+      TMinuit *myMinuit = new TMinuit(nBinsVar2+nBinsVar1-1+nBinsBjets-1) ; // arg is # of parameters
 
       myMinuit->SetFCN( minuit_fcn ) ;
       
@@ -2188,13 +2193,13 @@
       myMinuit->mnexcm("SET ERR", arglist ,1,ierflg); //--- do this for chi2 fit.
       
       int parind(0) ;
-      for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
 	char pname[1000] ;
 	sprintf( pname, "Rqcd_HT%d", hbi+1 ) ;
 	myMinuit->mnparm( parind, pname, htbin_0lepldp_ratio[hbi], 0.03, 0., 2., ierflg ) ;
 	parind++ ;
       } // hbi.
-      for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
+      for ( int mbi=1; mbi<nBinsVar1; mbi++ ) {
 	char pname[1000] ;
 	sprintf( pname, "SFqcd_MET%d", mbi+1 ) ;
 	myMinuit->mnparm( parind, pname, 1.0, 0.10, 0., 4., ierflg ) ;
@@ -2212,7 +2217,7 @@
       
       printf("\n\n") ;
       parind = 0 ;
-      for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
 	char pname[1000] ;
 	double val, err ;
 	sprintf( pname, "Rqcd_HT%d", hbi+1 ) ;
@@ -2221,13 +2226,13 @@
 	fit_Rqcd_HT[hbi] = val ;
 	parind++ ;
       } // hbi.
-      for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
+      for ( int mbi=1; mbi<nBinsVar1; mbi++ ) {
 	char pname[1000] ;
 	double val, err ;
 	sprintf( pname, "SFqcd_MET%d", mbi+1 ) ;
 	myMinuit->GetParameter( parind, val, err ) ;
 	printf(" %11s : %6.3f +/- %5.3f\n", pname, val, err ) ;
-	fit_SFqcd_MET[mbi] = val ;
+	fit_SFqcd_Var1[mbi] = val ;
          parind++ ;
       } // mbi.
       for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {
@@ -2250,13 +2255,13 @@
       } // bbi.
       
 
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-	for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+	for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
 	  for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 	    
-	    int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	    int histbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
 	    
-	    hflat_0lepldp_ratio_model[bbi] -> SetBinContent( histbin, fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ;
+	    hflat_0lepldp_ratio_model[bbi] -> SetBinContent( histbin, fit_Rqcd_HT[hbi] * fit_SFqcd_Var1[mbi] * fit_SFqcd_nb[bbi] ) ;
 	    
 	  } // bbi.
 	} // hbi.
@@ -2283,11 +2288,11 @@
 
       } // bbi.
       
-      for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-	for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+	for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
 	  for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 	    
-	    int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	    int histbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
 	    
 	    double val, err ;
 	    double valwrmse, errwrmse ;
@@ -2303,21 +2308,21 @@
 	      
 	      //-- QCD Model 4.  SF_ijk = (0lep/LDP)_ijk / (Rqcd_HTj * SF_METi * SF_nbk).
 	      
-	      hflat_scale_factor[bbi] -> SetBinContent( histbin, val / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ) ;
-	      hflat_scale_factor[bbi] -> SetBinError(   histbin, err / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ) ;
+	      hflat_scale_factor[bbi] -> SetBinContent( histbin, val / ( fit_Rqcd_HT[hbi] * fit_SFqcd_Var1[mbi] * fit_SFqcd_nb[bbi] ) ) ;
+	      hflat_scale_factor[bbi] -> SetBinError(   histbin, err / ( fit_Rqcd_HT[hbi] * fit_SFqcd_Var1[mbi] * fit_SFqcd_nb[bbi] ) ) ;
 	      
 	      //make this no correction, but include full lack of closure here, plus 10% for subtraction of non-QCD contributions
-	      //hflat_scale_factor_withRMSerror[bbi] -> SetBinContent( histbin, valwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ) ;
-	      //hflat_scale_factor_withRMSerror[bbi] -> SetBinError(   histbin, errwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) ) ;
-	      float closure_error = fabs( 1 - (valwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] )) );
-	      float stat_error = ( errwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ) );
+	      //hflat_scale_factor_withRMSerror[bbi] -> SetBinContent( histbin, valwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_Var1[mbi] * fit_SFqcd_nb[bbi] ) ) ;
+	      //hflat_scale_factor_withRMSerror[bbi] -> SetBinError(   histbin, errwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_Var1[mbi] * fit_SFqcd_nb[bbi] ) ) ;
+	      float closure_error = fabs( 1 - (valwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_Var1[mbi] * fit_SFqcd_nb[bbi] )) );
+	      float stat_error = ( errwrmse / ( fit_Rqcd_HT[hbi] * fit_SFqcd_Var1[mbi] * fit_SFqcd_nb[bbi] ) );
 	      float sub_error = 0.10; // 
 	      float total_error = sqrt( closure_error*closure_error + stat_error*stat_error + sub_error*sub_error ) ;
 	      //-- Owen, Jan 28, 2013: Put a cap on error to avoid crazy values.
 	      if ( total_error > 1.0 ) { total_error = 1.0 ; }
 	      hflat_scale_factor_withRMSerror[bbi] -> SetBinContent( histbin, 1.0 );
 	      hflat_scale_factor_withRMSerror[bbi] -> SetBinError(   histbin, total_error ) ;
-	      printf(" QCD SF: met=%d, ht=%d, nb=%d : closure_error=%5.3f,  stat_error=%5.3f,  sub_error=%5.3f,  total_error=%5.3f\n",
+	      printf(" QCD SF: Var1=%d, Var2=%d, nb=%d : closure_error=%5.3f,  stat_error=%5.3f,  sub_error=%5.3f,  total_error=%5.3f\n",
 		     mbi+1, hbi+1, bbi+1,
 		     closure_error, stat_error, sub_error, sqrt( closure_error*closure_error + stat_error*stat_error + sub_error*sub_error ) ) ;
 	      
@@ -2356,11 +2361,11 @@
 	
 	printf("\n\n\n Setting QCD scale factors in %s\n\n", datfile ) ;
 	
-	for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-	  for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+	for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+	  for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
 	    for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 	      char parname[1000] ;
-	      int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	      int histbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
 	      double val = hflat_scale_factor_withRMSerror[bbi]->GetBinContent( histbin ) ;
 	      double err = hflat_scale_factor_withRMSerror[bbi]->GetBinError( histbin ) ;
 	      if ( err <= 0 ) {
@@ -2564,7 +2569,7 @@
 	nblabel_y -= 0.01;
 
 	for (int ii=0;ii<nBinsBjets;ii++)   {
-	  resetBinLabels(hflat_0lepldp_ratio_ave[ii] , false ) ;
+	  resetBinLabels(hflat_0lepldp_ratio_ave[ii] , false, sVar1, sVar2 ) ;
 	  hflat_0lepldp_ratio_ave[ii]->SetYTitle("ZL/LDP ratio");
 	  hflat_0lepldp_ratio_ave_withRMSerror[ii]->SetYTitle("ZL/LDP ratio");
 
@@ -2729,7 +2734,7 @@
 
       if (usePublicStyle_)  {
 	for (int ii=0;ii<nBinsBjets;ii++)   {
-	  resetBinLabels(hflat_0lepldp_ratio_ave[ii] , false ) ;
+	  resetBinLabels(hflat_0lepldp_ratio_ave[ii] , false, sVar1, sVar2 ) ;
 	  
 	  hflat_0lepldp_ratio_ave[ii]->SetYTitle("Normalized ZL/LDP ratios S_{i,j,k}^{QCD}");
 	  
@@ -2866,7 +2871,7 @@
 	  hflat_scale_factor[ii] -> SetMaximum(2.5) ;
 	  hflat_scale_factor[ii] -> SetMinimum(0) ;
 	  hflat_scale_factor[ii]->SetYTitle("Normalized ZL/LDP ratios S_{i,j,k}^{QCD}");
-	  resetBinLabels(hflat_scale_factor[ii],false);
+	  resetBinLabels(hflat_scale_factor[ii],false, sVar1, sVar2);
 	}
 
       }
@@ -3101,10 +3106,10 @@
 
       //--- write to file
 
-     for ( int mbi=0; mbi<nBinsMET ; mbi++ ) {
-       for ( int hbi=0; hbi<nBinsHT ; hbi++ ) {
+     for ( int mbi=0; mbi<nBinsVar1 ; mbi++ ) {
+       for ( int hbi=0; hbi<nBinsVar2 ; hbi++ ) {
 	 
-	 int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+	 int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
 	 
 	 char parameterName[1000] ;
 	 double err, value ;
@@ -3112,7 +3117,7 @@
 	 err   = hmctruth_ttwj_ldpover0lep_ratio_1b->GetBinError(hbin)  ;
 	 value = hmctruth_ttwj_ldpover0lep_ratio_1b->GetBinContent(hbin)  ;
 	 sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_1b", mbi+1, hbi+1 ) ;
-	 printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
+	 printf( "Var1=%d, Var2=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
 		 parameterName,
 		 hmctruth_ttwj_ldpover0lep_ratio_1b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
 	 updateFileValue( datfile, parameterName, value ) ;
@@ -3123,7 +3128,7 @@
 	 err   = hmctruth_ttwj_ldpover0lep_ratio_2b->GetBinError(hbin)  ;
 	 value = hmctruth_ttwj_ldpover0lep_ratio_2b->GetBinContent(hbin)  ;
 	 sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_2b", mbi+1, hbi+1 ) ;
-	 printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
+	 printf( "Var1=%d, Var2=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
 		 parameterName,
 		 hmctruth_ttwj_ldpover0lep_ratio_2b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
 	 updateFileValue( datfile, parameterName, value ) ;
@@ -3136,7 +3141,7 @@
 	   err   = hmctruth_ttwj_ldpover0lep_ratio_3b->GetBinError(hbin)  ;
 	   value = hmctruth_ttwj_ldpover0lep_ratio_3b->GetBinContent(hbin)  ;
 	   sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_3b", mbi+1, hbi+1 ) ;
-	   printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
+	   printf( "Var1=%d, Var2=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
 		   parameterName,
 		   hmctruth_ttwj_ldpover0lep_ratio_3b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
 	   updateFileValue( datfile, parameterName, value ) ;
@@ -3148,7 +3153,7 @@
 	     err   = hmctruth_ttwj_ldpover0lep_ratio_4b->GetBinError(hbin)  ;
 	     value = hmctruth_ttwj_ldpover0lep_ratio_4b->GetBinContent(hbin)  ;
 	     sprintf( parameterName, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_4b", mbi+1, hbi+1 ) ;
-	     printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
+	     printf( "Var1=%d, Var2=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
 		     parameterName,
 		     hmctruth_ttwj_ldpover0lep_ratio_4b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
 	     updateFileValue( datfile, parameterName, value ) ;
@@ -3262,10 +3267,10 @@
 
       //--- write to file
 
-      for ( int mbi=0; mbi<nBinsMET ; mbi++ ) {
-         for ( int hbi=0; hbi<nBinsHT ; hbi++ ) {
+      for ( int mbi=0; mbi<nBinsVar1 ; mbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2 ; hbi++ ) {
 
-            int hbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+            int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
 
             char parameterName[1000] ;
             double err, value ;
@@ -3274,7 +3279,7 @@
             err   = hmctruth_znn_ldpover0lep_ratio_1b->GetBinError(hbin)  ;
             value = hmctruth_znn_ldpover0lep_ratio_1b->GetBinContent(hbin)  ;
             sprintf( parameterName, "znn_mc_ldpover0lep_ratio_M%d_H%d_1b", mbi+1, hbi+1 ) ;
-            printf( "met=%d, ht=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
+            printf( "Var1=%d, Var2=%d : %s %s  %6.3f +/- %5.3f\n", mbi+1, hbi+1,
                   parameterName,
                   hmctruth_znn_ldpover0lep_ratio_1b -> GetXaxis() -> GetBinLabel( hbin ), value, err ) ;
             updateFileValue( datfile, parameterName, value ) ;
@@ -3344,17 +3349,17 @@
       fprintf( mcval_file, "ttwj_0lep1lep_ratio  %5.3f\n", simpleAveR_0over1 ) ;
 
       if ( qcdModelIndex == 2 ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             fprintf( mcval_file, "qcd_0lepLDP_ratio_H%d  %5.3f\n", hbi+1, htbin_0lepldp_ratio[hbi] ) ;
          } // hbi.
       } else if ( qcdModelIndex == 3 ) {
          fprintf( mcval_file, "qcd_0lepLDP_ratio  %5.3f\n", htbin_0lepldp_ratio_global ) ;
       } else if ( qcdModelIndex == 4 ) {
-         for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+         for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             fprintf( mcval_file, "qcd_0lepLDP_ratio_H%d  %5.3f\n", hbi+1, htbin_0lepldp_ratio[hbi] ) ;
          } // hbi.
-         for ( int mbi=1; mbi<nBinsMET; mbi++ ) {
-            fprintf( mcval_file, "SFqcd_met%d  %5.3f\n", mbi+1, fit_SFqcd_MET[mbi] ) ;
+         for ( int mbi=1; mbi<nBinsVar1; mbi++ ) {
+            fprintf( mcval_file, "SFqcd_met%d  %5.3f\n", mbi+1, fit_SFqcd_Var1[mbi] ) ;
          } // mbi.
          for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {
             fprintf( mcval_file, "SFqcd_nb%d  %5.3f\n", bbi+1, fit_SFqcd_nb[bbi] ) ;
@@ -3387,8 +3392,8 @@
       if ( applyTriggerEfficiencyToNobs ) {
 
          //--- read in efficiencies from input dat file.
-         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-            for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+         for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+            for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
 
                char tpname[1000] ;
                float teffval ;
@@ -3406,9 +3411,9 @@
 
          printf("\n\n ---- Trigger efficiency, 0lep (fake met) ------------------------------\n") ;
          printf("           H1      H2      H3      H4\n") ;
-         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+         for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
             printf("  M%d : ", mbi+1 ) ;
-            for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
                printf(" %6.3f ", trig_eff_0lep[mbi][hbi] ) ;
             } // hbi.
             printf("\n") ;
@@ -3416,9 +3421,9 @@
 
          printf("\n\n ---- Trigger efficiency, 1lep (real met) ------------------------------\n") ;
          printf("           H1      H2      H3      H4\n") ;
-         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
+         for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
             printf("  M%d : ", mbi+1 ) ;
-            for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
                printf(" %6.3f ", trig_eff_1lep[mbi][hbi] ) ;
             } // hbi.
             printf("\n") ;
@@ -3447,11 +3452,11 @@
       printf("\n\n") ;
       for ( int csi=0; csi<nselections; csi++ ) {
          for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-            for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-               for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+            for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+               for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
 
 
-                  int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+                  int histbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
 
                   double fakemetsum_notrig(0.) ;
                   double realmetsum_notrig(0.) ;
@@ -3513,8 +3518,8 @@
 
          printf("\n\n\n ============== Resetting 0lep observables to expectations from model in %s ================\n\n", datfile ) ;
 
-         for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-            for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
+         for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+            for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
 
                char pname[1000] ;
 
@@ -3608,7 +3613,7 @@
                   } else if ( qcdModelIndex == 3 ) {
                      qcdratio = htbin_0lepldp_ratio_global ;
                   } else if ( qcdModelIndex == 4 ) {
-                     qcdratio = fit_Rqcd_HT[hbi] * fit_SFqcd_MET[mbi] * fit_SFqcd_nb[bbi] ;
+                     qcdratio = fit_Rqcd_HT[hbi] * fit_SFqcd_Var1[mbi] * fit_SFqcd_nb[bbi] ;
                   }
                   char mcthname[1000] ;
                   sprintf( mcthname, "hmctruth_qcd_ldp_%db", bbi+1 ) ;
@@ -3617,7 +3622,7 @@
                      printf("\n\n\n ***** Missing MCT hist: %s\n\n\n", mcthname ) ;
                      return ;
                   }
-                  int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+                  int histbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
                   double qcd_ldp = mcthist->GetBinContent( histbin ) ;
                   exp_0lep_qcd = sf_qcd * qcd_ldp * qcdratio * trig_eff_0lep[mbi][hbi] ;
 
@@ -3654,14 +3659,14 @@
   
     TH1F* bookHist(const char* hname, const char* htitle, int sampleIndex ) {
   
-       int nbins = nBinsMET*(nBinsHT+1) + 1 ;
+       int nbins = nBinsVar1*(nBinsVar2+1) + 1 ;
   
        TH1F* retVal = new TH1F( hname, htitle, nbins, 0.5+0.05*(sampleIndex-5), nbins+0.5+0.05*(sampleIndex-5) ) ;
        TAxis* xaxis = retVal->GetXaxis() ;
   
-       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
-          for ( int hbi=0; hbi<nBinsHT; hbi++ ) {
-             int histbin = 1 + (nBinsHT+1)*mbi + hbi + 1 ;
+       for ( int mbi=0; mbi<nBinsVar1; mbi++ ) {
+          for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
+             int histbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
              char binlabel[1000] ;
              sprintf( binlabel, "M%d_H%d", mbi+1, hbi+1 ) ;
              xaxis->SetBinLabel( histbin, binlabel ) ;
@@ -3772,7 +3777,7 @@ void loadHist(const char* filename, const char* pfx, const char* pat, Bool_t doA
 
   //--- this just erases 0lep_ and possibly the _xb part
 
-   void resetBinLabels( TH1F* hp, bool eraseNb ) {
+void resetBinLabels( TH1F* hp, bool eraseNb, TString sVar1, TString sVar2 ) {
 
       if ( hp == 0x0 ) return ;
 
@@ -3785,8 +3790,8 @@ void loadHist(const char* filename, const char* pfx, const char* pat, Bool_t doA
          if ( eraseNb &&label.Length()>4) { label.Resize( label.Sizeof()-4 ) ; }
 
 	 if (usePublicStyle_) { //a bit of a nasty hack to resort to using a global here
-	   label.ReplaceAll("M","MET");
-	   label.ReplaceAll("H","HT");
+	   label.ReplaceAll("M",sVar1);
+	   label.ReplaceAll("H",sVar2);
 	   label.ReplaceAll("_","-");
 	 }
          xaxis -> SetBinLabel( bi, label ) ;
