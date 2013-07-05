@@ -23,8 +23,8 @@
   # generate input file
 
   echo GenerateInputFile
-  #$ROOTSYS/bin/root -b -q GenerateInputFile.C+ >& logfiles/geninput-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.log
-  #mv Input-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.dat datfiles/
+  $ROOTSYS/bin/root -b -q GenerateInputFile.C+ >& logfiles/geninput-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.log
+  mv Input-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.dat datfiles/
 
 
   # mcclosure4
@@ -37,13 +37,13 @@
   # generate susy file 
 
   echo GenerateSusyFile
-  #$ROOTSYS/bin/root -b -q GenerateSusyFile.C >& logfiles/gensusy-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.log
+  $ROOTSYS/bin/root -b -q GenerateSusyFile.C >& logfiles/gensusy-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.log
 
 
   # generate dummy systamatics file
 
   echo GenerateDummySyst
-  #$ROOTSYS/bin/root -b -q GenerateDummySyst.C >& logfiles/genDummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.log
+  $ROOTSYS/bin/root -b -q GenerateDummySyst.C >& logfiles/genDummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.log
 
 
   # don't care about real data for now...
