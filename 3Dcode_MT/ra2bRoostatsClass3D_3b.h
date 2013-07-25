@@ -83,7 +83,7 @@
        // number of bins of the analysis
 
        static const int nBinsMET  = 3 ;
-       static const int nBinsHT   = 3 ;
+       static const int nBinsHT   = 4 ;
 
        static const int nBinsBtag = 3 ;
        

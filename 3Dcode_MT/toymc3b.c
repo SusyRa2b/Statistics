@@ -8,7 +8,7 @@
 
    // this has to be set by hand ...
    static const int nBinsVar1  = 3 ;
-   static const int nBinsVar2   = 3 ;
+   static const int nBinsVar2   = 4 ;
    static const int nBinsBjets = 3 ;   
 
 
