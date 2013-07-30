@@ -219,6 +219,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   const TString sVar1 = in_Var1 ;
   const TString sVar2 = in_Var2 ;
 
+  TString aVar1 = in_Var1 ;
+  TString aVar2 = in_Var2 ;
+  if ( aVar1 == "MET/sqrt(HT)" ) aVar1 = "MET_div_sqrtHT" ;
+  if ( aVar2 == "MET/sqrt(HT)" ) aVar2 = "MET_div_sqrtHT" ;
+
   TString s2DVars = sVar2;
   s2DVars += ":";
   s2DVars += sVar1;
@@ -304,12 +309,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   char outfile[10000] ;
   if ( mgl > 0. && mlsp > 0. ) {
      if ( target_susy_all0lep > 0. ) {
-       sprintf( outfile, "InputWT2tt-mgl%.0f-mlsp%.0f-%.0fevts-%s-%d-%s-%d-nB%d-v%d.dat", mgl, mlsp, target_susy_all0lep, sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version  ) ;
+       sprintf( outfile, "InputWT2tt-mgl%.0f-mlsp%.0f-%.0fevts-%s-%d-%s-%d-nB%d-v%d.dat", mgl, mlsp, target_susy_all0lep, aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version  ) ;
      } else {
-       sprintf( outfile, "InputWT2tt-mgl%.0f-mlsp%.0f-%s-%d-%s-%d-nB%d-v%d.dat", mgl, mlsp, sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version  ) ;
+       sprintf( outfile, "InputWT2tt-mgl%.0f-mlsp%.0f-%s-%d-%s-%d-nB%d-v%d.dat", mgl, mlsp, aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version  ) ;
      }
   } else {
-    sprintf( outfile, "Input-%s-%d-%s-%d-nB%d-v%d.dat", sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version  ) ;
+    sprintf( outfile, "Input-%s-%d-%s-%d-nB%d-v%d.dat", aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version  ) ;
   }
   inFile.open( outfile );
 
@@ -1559,9 +1564,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
    //                      (1-SFnb3)/2 added in quad with stat err from chi2 fit.
 
     inFile << "SFqcd_1stVar3       1.49" << endl ;
-    inFile << "SFqcd_1stVar3_err   0.15" << endl ;
+    inFile << "SFqcd_1stVar3_err   1.00" << endl ;
     inFile << "SFqcd_1stVar4       2.14" << endl ;
-    inFile << "SFqcd_1stVar4_err   0.48" << endl ;
+    inFile << "SFqcd_1stVar4_err   1.00" << endl ;
     inFile << "SFqcd_nb3        0.79" << endl ;
     inFile << "SFqcd_nb3_err    0.18" << endl ;
 
@@ -1605,12 +1610,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     char outHistName[1000] ;
     if ( mgl>0. && mlsp>0. ) {
        if ( target_susy_all0lep > 0 ) {
-	 sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%.0fevts-%s-%d-%s-%d-nB$d-v%d.root", mgl, mlsp, target_susy_all0lep, sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
+	 sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%.0fevts-%s-%d-%s-%d-nB$d-v%d.root", mgl, mlsp, target_susy_all0lep, aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
        } else {
-	 sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%s-%d-%s-%d-nB%d-v%d.root", mgl, mlsp, sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
+	 sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%s-%d-%s-%d-nB%d-v%d.root", mgl, mlsp, aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
        }
     } else {
-      sprintf( outHistName, "rootfiles/gi-plots-%s-%d-%s-%d-nB%d-v%d.root", sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
+      sprintf( outHistName, "rootfiles/gi-plots-%s-%d-%s-%d-nB%d-v%d.root", aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
     }
     saveHist( outHistName, "h*" ) ;
 

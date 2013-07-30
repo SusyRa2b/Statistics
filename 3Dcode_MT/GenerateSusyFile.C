@@ -70,6 +70,11 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
   const TString sVar1 = in_Var1 ;
   const TString sVar2 = in_Var2 ;
 
+  TString aVar1 = in_Var1 ;
+  TString aVar2 = in_Var2 ;
+  if ( aVar1 == "MET/sqrt(HT)" ) aVar1 = "MET_div_sqrtHT" ;
+  if ( aVar2 == "MET/sqrt(HT)" ) aVar2 = "MET_div_sqrtHT" ;
+
   TString s2DVars = sVar2;
   s2DVars += ":";
   s2DVars += sVar1;
@@ -126,7 +131,7 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
   ofstream inFile;
   char outfile[10000] ;
-  sprintf( outfile, "datfiles/T2tt-%s-%d-%s-%d-nB%d-v%d.dat", sVar1.Data(), nBinsVar1, sVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
+  sprintf( outfile, "datfiles/T2tt-%s-%d-%s-%d-nB%d-v%d.dat", aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
   inFile.open( outfile );
 
   // loop over gluino masses
@@ -169,10 +174,10 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
   float xsec8TeV = -1. ;
 
-  int mGls[4] = {350,500,600,700} ;
-  int mLsps[4] = {0,0,0,0} ;
+  int mGls[9] = {350,450,500,550,600,650,700,750,800};
+  int mLsps[9] = {0,0,0,0,0,0,0,0,0};
 
-  for ( int iGl = 0 ; iGl < 4 ; iGl++ ) {
+  for ( int iGl = 0 ; iGl < 9 ; iGl++ ) {
 
   int mGl = mGls[iGl] ;
   int mLsp = mLsps[iGl] ;

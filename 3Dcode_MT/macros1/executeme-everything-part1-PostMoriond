@@ -20,6 +20,17 @@
   setenv my_version `grep version    Binning.txt | awk '{print $2}'`
 
 
+  if ( $Var1 == "MET/sqrt(HT)" ) then
+    unsetenv Var1
+    setenv Var1 MET_div_sqrtHT
+  endif
+
+  if ( $Var2 == "MET/sqrt(HT)" ) then
+    unsetenv Var2
+    setenv Var2 MET_div_sqrtHT
+  endif
+
+
   # generate input file
 
   echo GenerateInputFile

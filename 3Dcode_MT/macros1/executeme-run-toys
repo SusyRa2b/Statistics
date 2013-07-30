@@ -13,5 +13,17 @@
   setenv nBinsBjets `grep nBinsVar3  Binning.txt | awk '{print $2}'`
   setenv my_version `grep version    Binning.txt | awk '{print $2}'`
 
+
+  if ( $Var1 == "MET/sqrt(HT)" ) then
+    unsetenv Var1
+    setenv Var1 MET_div_sqrtHT
+  endif
+
+  if ( $Var2 == "MET/sqrt(HT)" ) then
+    unsetenv Var2
+    setenv Var2 MET_div_sqrtHT
+  endif
+
+
   $ROOTSYS/bin/root -b -q toywrapper3b.c\(\"datfiles/Input-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version-withSyst.dat\",\"datfiles/T2tt-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.dat\",700,0,\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",$1,\"output-toys-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version-nSusy$1/\",$2,\"rootfiles/gi-plots-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.root\",true,4,false,false,\"null\",true,false,false,\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\"\)
 

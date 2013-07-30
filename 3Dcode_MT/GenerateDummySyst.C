@@ -35,11 +35,12 @@ void GenerateDummySyst() {
 
   inBinning.close() ;
 
+  TString aVar1 = in_Var1 ;
+  TString aVar2 = in_Var2 ;
+  if ( aVar1 == "MET/sqrt(HT)" ) aVar1 = "MET_div_sqrtHT" ;
+  if ( aVar2 == "MET/sqrt(HT)" ) aVar2 = "MET_div_sqrtHT" ;
 
   int nBins = nBinsVar1 * nBinsVar2 * nBinsBjets ;
-
-  // just generate one line, gluino mass, lsp mass (for the point 1000, 0),
-  // followed by 4*Nbins dummy numbers 
 
   double dummySig   = 0.01 ;
   double dummySLSig = 0.015 ;
@@ -47,7 +48,7 @@ void GenerateDummySyst() {
   double dummyLdp   = 0.02 ;
 
   char outfile[10000] ;
-  sprintf( outfile, "datfiles/DummySyst-%s-%d-%s-%d-nB%d.dat", in_Var1.Data(), nBinsVar1, in_Var2.Data(), nBinsVar2, nBinsBjets ) ;
+  sprintf( outfile, "datfiles/DummySyst-%s-%d-%s-%d-nB%d.dat", aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets ) ;
 
   ofstream outDummy;
   outDummy.open(outfile);
@@ -55,12 +56,37 @@ void GenerateDummySyst() {
 
   // generate dummy systematics for a bunch of points 
 
-  int mGls[5] = {-1,350,500,600,700} ;
-  int mLsps[5] = {-1,0,0,0,0} ;
+  int mGls[9] = {350,450,500,550,600,650,700,750,800};
+  int mLsps[9] = {0,0,0,0,0,0,0,0,0};
 
-  for ( int iGl = 0 ; iGl < 5 ; iGl++ ) {
 
-    outDummy << mGls[iGl] << " " << mLsps[iGl] << " " ;
+  outDummy << -1 << " " << -1 << " " ;
+
+  for ( int i = 0 ; i < nBins ; i++ ) {
+    outDummy << dummySig << " " ;
+  }
+    
+  for ( int i = 0 ; i < nBins ; i++ ) {
+    outDummy << dummySLSig << " " ;
+  }
+  
+  for ( int i = 0 ; i < nBins ; i++ ) {
+    outDummy << dummySL << " " ;
+  }
+    
+  for ( int i = 0 ; i < nBins ; i++ ) {
+    outDummy << dummyLdp << " " ;
+  }
+  
+  outDummy << endl ;
+
+
+  for ( int iGl = 0 ; iGl < 9 ; iGl++ ) {
+
+    int mGl  = mGls[iGl];
+    int mLsp = mLsps[iGl];
+
+    outDummy << mGl << " " << mLsp << " " ;
 
     for ( int i = 0 ; i < nBins ; i++ ) {
       outDummy << dummySig << " " ;
