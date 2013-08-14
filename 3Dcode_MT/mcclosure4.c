@@ -29,7 +29,7 @@
 
    void loadHist(const char* filename="in.root", const char* pfx=0, const char* pat="*", Bool_t doAdd=kFALSE, Double_t scaleFactor=-1.0) ;
    TH1F* bookHist(const char* hname, const char* htitle, int sampleIndex ) ;
-void resetBinLabels( TH1F* hp, bool eraseNb=false, TString sVar1="MET", TString sVar2="HT" ) ;
+   void resetBinLabels( TH1F* hp, bool eraseNb=false, TString sVar1="MET", TString sVar2="HT" ) ;
 
    double data_Rqcd[20][20][10] ;
    double data_Rqcd_err[20][20][10] ;
@@ -2233,7 +2233,7 @@ void resetBinLabels( TH1F* hp, bool eraseNb=false, TString sVar1="MET", TString 
 	myMinuit->GetParameter( parind, val, err ) ;
 	printf(" %11s : %6.3f +/- %5.3f\n", pname, val, err ) ;
 	fit_SFqcd_Var1[mbi] = val ;
-         parind++ ;
+	parind++ ;
       } // mbi.
       for ( int bbi=1; bbi<nBinsBjets; bbi++ ) {
 	char pname[1000] ;
@@ -2244,6 +2244,32 @@ void resetBinLabels( TH1F* hp, bool eraseNb=false, TString sVar1="MET", TString 
 	fit_SFqcd_nb[bbi] = val ;
 	parind++ ;
       } // mbi.
+      printf("\n\n") ;
+
+
+      // correct 1stVar and nB bins 3 and 4 hardcoded values
+
+      if ( nBinsVar1 > 2 ) {
+
+	updateFileValue( datfile, "SFqcd_1stVar3", fit_SFqcd_Var1[2] ) ;
+	updateFileValue( datfile, "SFqcd_1stVar3_err", fabs(fit_SFqcd_Var1[2]-fit_SFqcd_Var1[0]) ) ;
+
+	if ( nBinsVar1 > 3 ) {
+	  updateFileValue( datfile, "SFqcd_1stVar4", fit_SFqcd_Var1[3] ) ;
+	  updateFileValue( datfile, "SFqcd_1stVar4_err", fabs(fit_SFqcd_Var1[3]-fit_SFqcd_Var1[0]) ) ;
+	}
+      }
+
+      if ( nBinsBjets > 2 ) {
+
+	updateFileValue( datfile, "SFqcd_nb3", fit_SFqcd_nb[2] ) ;
+	updateFileValue( datfile, "SFqcd_nb3_err", fabs(1-fit_SFqcd_nb[2]) ) ;
+
+	if ( nBinsBjets > 3 ) {
+	  updateFileValue( datfile, "SFqcd_nb4", fit_SFqcd_nb[3] ) ;
+	  updateFileValue( datfile, "SFqcd_nb4_err", fabs(1-fit_SFqcd_nb[3]) ) ;
+	}
+      }
       printf("\n\n") ;
 
 
@@ -3367,9 +3393,6 @@ void resetBinLabels( TH1F* hp, bool eraseNb=false, TString sVar1="MET", TString 
       }
 
       fclose( mcval_file ) ;
-
-
-
 
 
 

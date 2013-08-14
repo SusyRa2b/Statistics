@@ -1558,20 +1558,20 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 
    //-- Nov 14, 2012 : add QCD model parameters to avoid hardwiring things in ra2bRoostatsClass3D_3b
-   //    see logfile of mcclosure4 for values.
+   //    These are set by mcclosure4.c
    //    Uncertainties are (SF_1stVar3-SF_1stVar2)/2
    //                      (SF_1stVar4-SF_1stVar2)/2
-   //                      (1-SFnb3)/2 added in quad with stat err from chi2 fit.
+   //                      (1-SFnb3)/2 
+   //                      (1-SFnb4)/2 
 
-    inFile << "SFqcd_1stVar3       1.49" << endl ;
-    inFile << "SFqcd_1stVar3_err   1.00" << endl ;
-    inFile << "SFqcd_1stVar4       2.14" << endl ;
-    inFile << "SFqcd_1stVar4_err   1.00" << endl ;
-    inFile << "SFqcd_nb3        0.79" << endl ;
-    inFile << "SFqcd_nb3_err    0.18" << endl ;
-
-    inFile << "SFqcd_nb4        1.00" << endl ;     // these are dummy values for now!!!
-    inFile << "SFqcd_nb4_err    0.10" << endl ;
+    inFile << "SFqcd_1stVar3       9.99" << endl ;
+    inFile << "SFqcd_1stVar3_err   9.99" << endl ;
+    inFile << "SFqcd_1stVar4       9.99" << endl ;
+    inFile << "SFqcd_1stVar4_err   9.99" << endl ;
+    inFile << "SFqcd_nb3        9.99" << endl ;
+    inFile << "SFqcd_nb3_err    9.99" << endl ;
+    inFile << "SFqcd_nb4        9.99" << endl ;     
+    inFile << "SFqcd_nb4_err    9.99" << endl ;
 
 
 
