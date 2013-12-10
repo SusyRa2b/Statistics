@@ -1,0 +1,66 @@
+#!/bin/tcsh -f
+
+  # edit Binning.txt in order to define number and boundaries of bins
+  # edit ra2bRoostatsClass3D_3b.h and set the number of bins correspondingly
+
+  mkdir -p logfiles
+  mkdir -p rootfiles
+  mkdir -p datfiles
+  mkdir -p outputfiles
+
+
+  # get variables, number of bins and version from Binning.txt
+
+  setenv Var1 `grep Var1: Binning.txt | awk '{print $2}'`
+  setenv Var2 `grep Var2: Binning.txt | awk '{print $2}'`
+
+  setenv nBinsVar1  `grep nBinsVar1  Binning.txt | awk '{print $2}'`
+  setenv nBinsVar2  `grep nBinsVar2  Binning.txt | awk '{print $2}'`
+  setenv nBinsBjets `grep nBinsVar3  Binning.txt | awk '{print $2}'`
+  setenv my_version `grep version    Binning.txt | awk '{print $2}'`
+
+
+  if ( $Var1 == "MET/sqrt(HT)" ) then
+    unsetenv Var1
+    setenv Var1 MET_div_sqrtHT
+  endif
+
+  if ( $Var2 == "MET/sqrt(HT)" ) then
+    unsetenv Var2
+    setenv Var2 MET_div_sqrtHT
+  endif
+
+
+  # generate input file
+
+  echo GenerateInputFile
+  $ROOTSYS/bin/root -b -q GenerateInputFile.C+ >& logfiles/geninput-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.log
+  mv Input-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.dat datfiles/
+
+
+  # mcclosure4
+
+  echo mcclosure4, qcd model 4, ttwj ave, exp0lep, wtrig
+  cp datfiles/Input-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.dat datfiles/Input-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version-withSyst.dat
+  $ROOTSYS/bin/root -b -q mcclosure4.c+\(\"rootfiles/gi-plots-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.root\",\"datfiles/Input-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version-withSyst.dat\",4,1,1,1\) >& logfiles/mcclosure4-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version-withSyst.log
+
+
+  # generate susy file 
+
+  echo GenerateSusyFile
+  $ROOTSYS/bin/root -b -q GenerateSusyFile.C >& logfiles/gensusy-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.log
+
+
+  # generate dummy systamatics file
+
+  echo GenerateDummySyst
+  $ROOTSYS/bin/root -b -q GenerateDummySyst.C >& logfiles/genDummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.log
+
+
+  # don't care about real data for now...
+
+  # make workspace
+
+  echo ... making workspace ...
+  $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles/Input-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version-withSyst.dat\",\"datfiles/T2tt-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.dat\",350,0,\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",4,\"rootfiles/ws-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.root\",\"null\",false,false,\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\"\)
+

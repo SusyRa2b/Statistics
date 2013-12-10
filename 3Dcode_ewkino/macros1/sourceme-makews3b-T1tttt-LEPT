@@ -1,0 +1,8 @@
+
+
+
+   echo met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave-wtrig
+   $ROOTSYS/bin/root -b -q make_ws_rootfile3b_LEPT.c\(\"datfiles/Input-met4-ht4-v15-newqcdsyst-model4-exp0lep-ttwjave-wtrig.dat\",\"datfiles/T1tttt-met4-ht4-v15-njets3.dat\",1175,75,\"datfiles_18fb/btagEff_T1tttt_SIG_SLSIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1tttt_SIG_SLSIG_SL_LDP.txt\",4,\"ws3b.root\",\"null\",false,false,\"datfiles_18fb/sigsystematics.T1tttt.JES.txt\",\"datfiles_18fb/sigsystematics.T1tttt.PDF.txt\"\) >& logfiles/makews-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave-wtrig.log
+   mv ws3b.root rootfiles/ws-met4-ht4-v15-newqcdsyst-model4-mgl1100-mlsp300-3b-ttwjave-wtrig.root
+
+

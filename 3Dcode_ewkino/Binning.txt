@@ -1,0 +1,13 @@
+Var1:           MET
+Var2:           HT
+Var3:           nB
+nBinsVar1	3
+nBinsVar2	3
+nBinsVar3	3
+Var1_lowBound1  125
+Var1_lowBound2	150
+Var1_lowBound3	250
+Var2_lowBound1	400
+Var2_lowBound2	500
+Var2_lowBound3	800
+version		5
