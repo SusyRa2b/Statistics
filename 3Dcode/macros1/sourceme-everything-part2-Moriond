@@ -4,18 +4,18 @@
   mkdir -p logfiles
 
    echo workspace
-   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles_19fb/data-vals-unblind.dat\",\"datfiles_18fb/sigcounts.T1bbbb.txt\",1200,300,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",4,\"rootfiles/ws-data-unblind-1200-300.root\",\"null\",\"datfiles_18fb/sigsystematics.T1bbbb.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbb.PDF.txt\",\"datfiles_18fb/wjets-xsec-shapesyst.txt\",\"datfiles_18fb/singletop-xsec-shapesyst.txt\"\) >&  logfiles/makews-data-unblind-1200-300.log
-   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles_19fb/data-vals-unblind.dat\",\"datfiles_18fb/sigcounts.T1bbbb.txt\",1200,600,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",4,\"rootfiles/ws-data-unblind-1200-600.root\",\"null\",\"datfiles_18fb/sigsystematics.T1bbbb.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbb.PDF.txt\",\"datfiles_18fb/wjets-xsec-shapesyst.txt\",\"datfiles_18fb/singletop-xsec-shapesyst.txt\"\) >&  logfiles/makews-data-unblind-1200-600.log
-   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles_19fb/data-vals-unblind.dat\",\"datfiles_18fb/sigcounts.T1bbbb.txt\",900,600,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",4,\"rootfiles/ws-data-unblind-900-600.root\",\"null\",\"datfiles_18fb/sigsystematics.T1bbbb.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbb.PDF.txt\",\"datfiles_18fb/wjets-xsec-shapesyst.txt\",\"datfiles_18fb/singletop-xsec-shapesyst.txt\"\) >&  logfiles/makews-data-unblind-900-600.log
-   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles_19fb/data-vals-unblind.dat\",\"datfiles_18fb/sigcounts.T1bbbb.txt\",1200,300,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",4,\"rootfiles/ws-data-halfblind-1200-300.root\",\"blind-bins-file.txt\",\"datfiles_18fb/sigsystematics.T1bbbb.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbb.PDF.txt\",\"datfiles_18fb/wjets-xsec-shapesyst.txt\",\"datfiles_18fb/singletop-xsec-shapesyst.txt\"\) >&  logfiles/makews-data-halfblind-1200-300.log
-   cp rootfiles/ws-data-unblind-1200-300.root rootfiles/ws-data-unblind.root
-   cp rootfiles/ws-data-halfblind-1200-300.root rootfiles/ws-data-halfblind.root
+   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles_19fb/data-vals-unblind.dat\",\"datfiles_18fb/sigcounts.T1bbbbMG.txt\",1175,300,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",4,\"rootfiles/ws-data-unblind-1175-300.root\",\"null\",\"datfiles_18fb/sigsystematics.T1bbbbMG.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbbMG.PDF.txt\",\"datfiles_18fb/sigsystematics.T1bbbbMG.ISR.txt\",\"datfiles_18fb/wjets-xsec-shapesyst.txt\",\"datfiles_18fb/singletop-xsec-shapesyst.txt\"\) >&  logfiles/makews-data-unblind-1175-300.log
+   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles_19fb/data-vals-unblind.dat\",\"datfiles_18fb/sigcounts.T1bbbbMG.txt\",1175,600,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",4,\"rootfiles/ws-data-unblind-1175-600.root\",\"null\",\"datfiles_18fb/sigsystematics.T1bbbbMG.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbbMG.PDF.txt\",\"datfiles_18fb/sigsystematics.T1bbbbMG.ISR.txt\",\"datfiles_18fb/wjets-xsec-shapesyst.txt\",\"datfiles_18fb/singletop-xsec-shapesyst.txt\"\) >&  logfiles/makews-data-unblind-1175-600.log
+   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles_19fb/data-vals-unblind.dat\",\"datfiles_18fb/sigcounts.T1bbbbMG.txt\",900,600,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",4,\"rootfiles/ws-data-unblind-900-600.root\",\"null\",\"datfiles_18fb/sigsystematics.T1bbbbMG.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbbMG.PDF.txt\",\"datfiles_18fb/sigsystematics.T1bbbbMG.ISR.txt\",\"datfiles_18fb/wjets-xsec-shapesyst.txt\",\"datfiles_18fb/singletop-xsec-shapesyst.txt\"\) >&  logfiles/makews-data-unblind-900-600.log
+   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles_19fb/data-vals-unblind.dat\",\"datfiles_18fb/sigcounts.T1bbbbMG.txt\",1175,300,\"datfiles_18fb/btagEff_T1bbbb_SIG_SL_LDP.txt\",\"datfiles_18fb/lightMistag_T1bbbb_SIG_SL_LDP.txt\",4,\"rootfiles/ws-data-halfblind-1175-300.root\",\"blind-bins-file.txt\",\"datfiles_18fb/sigsystematics.T1bbbbMG.JES.txt\"\,\"datfiles_18fb/sigsystematics.T1bbbbMG.PDF.txt\",\"datfiles_18fb/sigsystematics.T1bbbbMG.ISR.txt\",\"datfiles_18fb/wjets-xsec-shapesyst.txt\",\"datfiles_18fb/singletop-xsec-shapesyst.txt\"\) >&  logfiles/makews-data-halfblind-1175-300.log
+   cp rootfiles/ws-data-unblind-1175-300.root rootfiles/ws-data-unblind.root
+   cp rootfiles/ws-data-halfblind-1175-300.root rootfiles/ws-data-halfblind.root
 
    echo fitqual
-   $ROOTSYS/bin/root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-data-unblind-1200-300.root\",0\) > &! logfiles/fitqual-data-unblind-sm-only.log
-   $ROOTSYS/bin/root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-data-halfblind-1200-300.root\",0\) > &! logfiles/fitqual-data-halfblind-sm-only.log
-   $ROOTSYS/bin/root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-data-unblind-1200-300.root\",-1\) > &! logfiles/fitqual-data-unblind-1200-300.log
-   $ROOTSYS/bin/root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-data-unblind-1200-600.root\",-1\) > &! logfiles/fitqual-data-unblind-1200-600.log
+   $ROOTSYS/bin/root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-data-unblind-1175-300.root\",0\) > &! logfiles/fitqual-data-unblind-sm-only.log
+   $ROOTSYS/bin/root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-data-halfblind-1175-300.root\",0\) > &! logfiles/fitqual-data-halfblind-sm-only.log
+   $ROOTSYS/bin/root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-data-unblind-1175-300.root\",-1\) > &! logfiles/fitqual-data-unblind-1175-300.log
+   $ROOTSYS/bin/root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-data-unblind-1175-600.root\",-1\) > &! logfiles/fitqual-data-unblind-1175-600.log
    $ROOTSYS/bin/root -b -q ws_fitqual_plots3D_3b.c+\(\"rootfiles/ws-data-unblind-900-600.root\",-1\) > &! logfiles/fitqual-data-unblind-900-600.log
 
    echo fittables
@@ -23,8 +23,8 @@
    $ROOTSYS/bin/root -b -q ws_fittable.c+\(\"rootfiles/ws-data-unblind.root\",0.,true\) > &! logfiles/fittables-halfblind.log
 
    echo profile scans
-   echo 1200,300
-   $ROOTSYS/bin/root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-1200-300.root\",80.,0.,6.\) >&! logfiles/scan-1200-300.log
+   echo 1175,300
+   $ROOTSYS/bin/root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-1175-300.root\",80.,0.,6.\) >&! logfiles/scan-1175-300.log
    echo 900,600
    $ROOTSYS/bin/root -b -q ws_simple_PLscan_3b.c+\(\"rootfiles/ws-data-unblind-900-600.root\",200.,0.,6.\) >&! logfiles/scan-900-600.log
 
