@@ -2,7 +2,7 @@
 #include "TROOT.h"
 #include "TFile.h"
 #include "TGraph2D.h"
-#include "TH2.h"
+#include "TH2F.h"
 #include "TPad.h"
 #include "TObjArray.h"
 #include "TList.h"
@@ -11,10 +11,14 @@
 #include "TCanvas.h"
 #include "TDirectory.h"
 #include "TString.h"
+#include "TStyle.h"
 
 
    void draw_2dscan( const char* rootfile = "outputfiles/scans-ws-data-unblind/scan-hb-mu_bg_3b_msig_met3-vs-mu_bg_4b_msig_met3.root",
                      const char* gr_name = "scan_mu_bg_3b_msig_met3_vs_mu_bg_4b_msig_met3" ) {
+
+      gStyle -> SetPadLeftMargin(0.12) ;
+      gStyle -> SetPadBottomMargin(0.12) ;
 
       TCanvas* c_scan2d = (TCanvas*) gDirectory -> FindObject("c_scan2d") ;
       if ( c_scan2d == 0x0 ) {
@@ -27,6 +31,15 @@
 
       if ( gr2d == 0x0 ) {
          printf("\n\n *** can't find %s in %s.\n\n", gr_name, rootfile ) ;
+         return ;
+      }
+
+
+      TString hname( gr_name ) ;
+      hname.ReplaceAll( "scan_", "h2_" ) ;
+      TH2F* h2_titles = (TH2F*) rf->Get( hname ) ;
+      if ( h2_titles == 0x0 ) {
+         printf( "\n\n *** can't find titles histogram %s in %s.\n\n", hname.Data(), rootfile ) ;
          return ;
       }
 
@@ -77,10 +90,13 @@
       gr1->SetLineColor(1) ;
 
 
+      h2_titles -> SetTitleOffset( 1.2, "x" ) ;
+      h2_titles -> SetTitleOffset( 1.2, "y" ) ;
 
 
 
-      h2 -> Draw( "cont1" ) ;
+      h2_titles -> Draw() ;
+      h2 -> Draw( "cont1 same" ) ;
       gr1->Draw("c") ;
       gr_bestpoint -> Draw("p") ;
 

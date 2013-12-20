@@ -9,6 +9,7 @@
 #include "TTree.h"
 #include "TF1.h"
 #include "TH1F.h"
+#include "TH2F.h"
 #include "TString.h"
 #include "TStyle.h"
 #include "TText.h"
@@ -44,7 +45,6 @@
                                    double poiMinVal_y = 0.8,
                                    double poiMaxVal_y = 4.0,
                                    double constraintWidth = 50.,
-                                   double ymax = 5.,
                                    int verbLevel=0 ) {
 
      if ( npoiPoints_x%2 != 1 ) { printf("\n\n Try again with an odd value for npoiPoints_x.  You used %d\n\n", npoiPoints_x ) ; return ; }
@@ -785,6 +785,15 @@
        sprintf( gname, "scan_%s_vs_%s", new_poi_name_y, new_poi_name_x ) ;
        graph->SetName( gname ) ;
 
+       char hname[1000] ;
+       sprintf( hname, "h2_%s_vs_%s", new_poi_name_y, new_poi_name_x ) ;
+       char htitle[1000] ;
+       sprintf( htitle, "PL scan of %s vs %s", new_poi_name_y, new_poi_name_x ) ;
+       TH2F* h2 = new TH2F( hname, htitle, 2, poiMinVal_x, poiMaxVal_x, 2, poiMinVal_y, poiMaxVal_y ) ;
+       h2 -> SetXTitle( new_poi_name_x ) ;
+       h2 -> SetYTitle( new_poi_name_y ) ;
+
+
  //    double poiBest(-1.) ;
  //    double poiMinus1stdv(-1.) ;
  //    double poiPlus1stdv(-1.) ;
@@ -883,7 +892,7 @@
        printf("\n Saving %s\n", outrootfile ) ;
        TFile fout(outrootfile,"recreate") ;
        graph->Write() ;
-   //  hsout->Write() ;
+       h2 -> Write() ;
        fout.Close() ;
 
        delete ws ;
