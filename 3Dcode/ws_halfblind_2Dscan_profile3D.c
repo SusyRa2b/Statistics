@@ -45,6 +45,7 @@
                                    double poiMinVal_y = 0.8,
                                    double poiMaxVal_y = 4.0,
                                    double constraintWidth = 50.,
+                                   const char* output_dir = "outputfiles",
                                    int verbLevel=0 ) {
 
      if ( npoiPoints_x%2 != 1 ) { printf("\n\n Try again with an odd value for npoiPoints_x.  You used %d\n\n", npoiPoints_x ) ; return ; }
@@ -60,7 +61,8 @@
      TString wsfilenopath = gSystem->GetFromPipe( command ) ;
      wsfilenopath.ReplaceAll(".root","") ;
      char outputdirstr[1000] ;
-     sprintf( outputdirstr, "outputfiles/scans-%s", wsfilenopath.Data() ) ;
+     ////sprintf( outputdirstr, "outputfiles/scans-%s", wsfilenopath.Data() ) ;
+     sprintf( outputdirstr, "%s", output_dir ) ;
      TString outputdir( outputdirstr ) ;
 
 
