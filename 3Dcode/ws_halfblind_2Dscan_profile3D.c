@@ -44,7 +44,8 @@
                                    int npoiPoints_y = 9, // use odd values only
                                    double poiMinVal_y = 0.8,
                                    double poiMaxVal_y = 4.0,
-                                   double constraintWidth = 50.,
+                                   double constraintWidth_x = 5.,
+                                   double constraintWidth_y = 5.,
                                    const char* output_dir = "outputfiles",
                                    int verbLevel=0 ) {
 
@@ -208,10 +209,6 @@
    /// rrv_poiValue->setVal( poiMinVal ) ;
    /// rrv_poiValue->setConstant(kTRUE) ;
 
-       RooRealVar* rrv_constraintWidth = new RooRealVar("constraintWidth","constraintWidth", 0.1, 0.1, 1000. ) ;
-       rrv_constraintWidth -> setVal( constraintWidth ) ;
-       rrv_constraintWidth -> setConstant(kTRUE) ;
-
 
 
 
@@ -332,30 +329,42 @@
 
      //-------
 
+       double cw_x_val = constraintWidth_x  / pow( 0.5*(poiMaxVal_x-poiMinVal_x), 2. ) ;
+       double cw_y_val = constraintWidth_y  / pow( 0.5*(poiMaxVal_y-poiMinVal_y), 2. ) ;
+
+       RooRealVar* rrv_constraintWidth_x = new RooRealVar("constraintWidth_x","constraintWidth_x", 0.1, 0.1, 1000. ) ;
+       rrv_constraintWidth_x -> setVal( cw_x_val ) ;
+       rrv_constraintWidth_x -> setConstant(kTRUE) ;
+
+       RooRealVar* rrv_constraintWidth_y = new RooRealVar("constraintWidth_y","constraintWidth_y", 0.1, 0.1, 1000. ) ;
+       rrv_constraintWidth_y -> setVal( cw_y_val ) ;
+       rrv_constraintWidth_y -> setConstant(kTRUE) ;
+
+
 
        char constraint_x_formula[1000] ;
        sprintf( constraint_x_formula, "%s*(%s-%s)*(%s-%s)",
-          rrv_constraintWidth->GetName(),
+          rrv_constraintWidth_x->GetName(),
           new_poi_rar_x->GetName(),
           rrv_poiValue_x->GetName(),
           new_poi_rar_x->GetName(),
           rrv_poiValue_x->GetName() ) ;
        printf("\n\n poi_x constraint formula: %s\n\n", constraint_x_formula ) ;
        RooFormulaVar* rfv_constraint_x = new RooFormulaVar( "rfv_constraint_x", constraint_x_formula,
-            RooArgList( *rrv_constraintWidth,
+            RooArgList( *rrv_constraintWidth_x,
                         *new_poi_rar_x, *rrv_poiValue_x,
                         *new_poi_rar_x, *rrv_poiValue_x ) ) ;
 
        char constraint_y_formula[1000] ;
        sprintf( constraint_y_formula, "%s*(%s-%s)*(%s-%s)",
-          rrv_constraintWidth->GetName(),
+          rrv_constraintWidth_y->GetName(),
           new_poi_rar_y->GetName(),
           rrv_poiValue_y->GetName(),
           new_poi_rar_y->GetName(),
           rrv_poiValue_y->GetName() ) ;
        printf("\n\n poi_y constraint formula: %s\n\n", constraint_y_formula ) ;
        RooFormulaVar* rfv_constraint_y = new RooFormulaVar( "rfv_constraint_y", constraint_y_formula,
-            RooArgList( *rrv_constraintWidth,
+            RooArgList( *rrv_constraintWidth_y,
                         *new_poi_rar_y, *rrv_poiValue_y,
                         *new_poi_rar_y, *rrv_poiValue_y ) ) ;
 

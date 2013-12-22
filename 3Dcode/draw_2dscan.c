@@ -12,6 +12,7 @@
 #include "TDirectory.h"
 #include "TString.h"
 #include "TStyle.h"
+#include "TText.h"
 
 
    void draw_2dscan( const char* rootfile = "outputfiles/scans-ws-data-unblind/scan-hb-mu_bg_3b_msig_met3-vs-mu_bg_4b_msig_met3.root",
@@ -72,10 +73,11 @@
 
 
       TH2* h2 = gr2d -> GetHistogram() ;
-      h2 -> SetContour(3) ;
+      h2 -> SetContour(4) ;
       h2 -> SetContourLevel(0,0.5) ;
       h2 -> SetContourLevel(1,1.0) ;
       h2 -> SetContourLevel(2,2.0) ;
+      h2 -> SetContourLevel(3,4.0) ;
 
       h2 -> Draw( "cont list" ) ;
 
@@ -154,6 +156,13 @@
       line -> DrawLine( gr1_xmin, gr1_y_at_xmin, gr1_xmin + endbarsizex, gr1_y_at_xmin ) ;
       line -> DrawLine( gr1_xmax, gr1_y_at_xmax, gr1_xmax - endbarsizex, gr1_y_at_xmax ) ;
 
+
+      TText* text = new TText() ;
+      text -> SetTextSize( 0.035 ) ;
+      text -> SetTextAlign( 31 ) ;
+      char rhostring[100] ;
+      sprintf( rhostring, "rho = %.3f", ave_rho ) ;
+      text -> DrawTextNDC( 0.86, 0.83, rhostring ) ;
 
       TString savename( rootfile ) ;
       savename.ReplaceAll( ".root", "-nice.pdf" ) ;
