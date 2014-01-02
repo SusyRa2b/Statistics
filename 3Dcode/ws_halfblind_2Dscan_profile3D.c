@@ -30,6 +30,8 @@
 
 #include <string.h>
 
+#include "fixAllNPs.c"
+
   using namespace RooFit;
   using namespace RooStats;
 
@@ -47,6 +49,7 @@
                                    double constraintWidth_x = 5.,
                                    double constraintWidth_y = 5.,
                                    const char* output_dir = "outputfiles",
+                                   bool do_stat_only = false,
                                    int verbLevel=0 ) {
 
      if ( npoiPoints_x%2 != 1 ) { printf("\n\n Try again with an odd value for npoiPoints_x.  You used %d\n\n", npoiPoints_x ) ; return ; }
@@ -128,11 +131,24 @@
 
 
 
+
        //-- do a prefit.
 
        printf("\n\n\n ====== Pre fit with unmodified nll var.\n\n") ;
 
        RooFitResult* dataFitResultSusyFixed = likelihood->fitTo(*rds, Save(true),Hesse(false),Minos(false),Strategy(1),PrintLevel(verbLevel));
+       //-- If do_stat_only is true, fix all prim_* and trigeff_* parameters.
+       if ( do_stat_only ) {
+          printf("\n\n\n === Fitting again with all NPs fixed.\n\n") ;
+          if ( !fixAllNPs( dataFitResultSusyFixed->floatParsFinal(), ws, "unconstrained-pars.txt" ) ) {
+             printf("\n\n *** problem fixing NPs.\n\n") ;
+             return ;
+          }
+          delete dataFitResultSusyFixed ;
+          dataFitResultSusyFixed = likelihood->fitTo(*rds, Save(true),Hesse(false),Minos(false),Strategy(1),PrintLevel(verbLevel));
+       } // do_stat_only?
+
+
        int dataSusyFixedFitCovQual = dataFitResultSusyFixed->covQual() ;
        if ( dataSusyFixedFitCovQual < 2 ) { printf("\n\n\n *** Failed fit!  Cov qual %d.  Quitting.\n\n", dataSusyFixedFitCovQual ) ; return ; }
        double dataFitSusyFixedNll = dataFitResultSusyFixed->minNll() ;
@@ -886,10 +902,15 @@
  //    xaxis->SetBinLabel(4,"Model-1sd") ;
 
        char outrootfile[10000] ;
-       sprintf( outrootfile, "%s/scan-hb-%s-vs-%s.root", outputdir.Data(), new_poi_name_y, new_poi_name_x ) ;
-
        char outpdffile[10000] ;
-       sprintf( outpdffile, "%s/scan-hb-%s-vs-%s.pdf", outputdir.Data(), new_poi_name_y, new_poi_name_x ) ;
+
+       if ( do_stat_only ) {
+          sprintf( outrootfile, "%s/scan-hb-%s-vs-%s-statonly.root", outputdir.Data(), new_poi_name_y, new_poi_name_x ) ;
+          sprintf( outpdffile, "%s/scan-hb-%s-vs-%s-statonly.pdf", outputdir.Data(), new_poi_name_y, new_poi_name_x ) ;
+       } else {
+          sprintf( outrootfile, "%s/scan-hb-%s-vs-%s.root", outputdir.Data(), new_poi_name_y, new_poi_name_x ) ;
+          sprintf( outpdffile, "%s/scan-hb-%s-vs-%s.pdf", outputdir.Data(), new_poi_name_y, new_poi_name_x ) ;
+       }
 
        cscan->Update() ; cscan->Draw() ;
 
