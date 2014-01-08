@@ -24,6 +24,8 @@
 #include <iostream>
 #include <fstream>
 
+#include "TMath.h"
+
   using std::cout ;
   using std::endl ;
 
@@ -43,8 +45,8 @@
    int nBinsBjets ;
    const int nQcdSamples(9) ;
 
-   int ncomps(5) ;
-   char compname[5][100] = { "ttbar", "wjets", "qcd", "znn", "vv" } ;
+   int ncomps(3) ;
+   char compname[3][100] = { "ttbar", "wjets", "qzo" } ;
 
    bool usePublicStyle_=true;
    void setFormatting(TH1F* hh, const TString & ytitle="", const int ndiv=-1) ;
@@ -54,11 +56,11 @@
 
    void minuit_fcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag) {
 
-      int idummy = npar ;
-      double fdummy = gin[0] ;
-      fdummy = 0. ;
-      idummy = iflag ;
-
+     int idummy = npar ;
+     double fdummy = gin[0] ;
+     fdummy = 0. ;
+     idummy = iflag ;
+     
       f = 0. ;
 
       //--- unpack the stupid par vector.
@@ -221,56 +223,6 @@
       TH1F* hmctruth_ttwj_1lSover1ratio_4b ;
 
 
-      TH1F* hmctruth_ttwjpowheg_0lep_1b ;
-      TH1F* hmctruth_ttwjpowheg_1lep_1b ;
-      TH1F* hmctruth_ttwjpowheg_1lepSig_1b ;
-      TH1F* hmctruth_ttwjpowheg_0over1ratio_1b ;
-      TH1F* hmctruth_ttwjpowheg_1lSover1ratio_1b ;
-
-      TH1F* hmctruth_ttwjpowheg_0lep_2b ;
-      TH1F* hmctruth_ttwjpowheg_1lep_2b ;
-      TH1F* hmctruth_ttwjpowheg_1lepSig_2b ;
-      TH1F* hmctruth_ttwjpowheg_0over1ratio_2b ;
-      TH1F* hmctruth_ttwjpowheg_1lSover1ratio_2b ;
-
-      TH1F* hmctruth_ttwjpowheg_0lep_3b ;
-      TH1F* hmctruth_ttwjpowheg_1lep_3b ;
-      TH1F* hmctruth_ttwjpowheg_1lepSig_3b ;
-      TH1F* hmctruth_ttwjpowheg_0over1ratio_3b ;
-      TH1F* hmctruth_ttwjpowheg_1lSover1ratio_3b ;
-
-      TH1F* hmctruth_ttwjpowheg_0lep_4b ;
-      TH1F* hmctruth_ttwjpowheg_1lep_4b ;
-      TH1F* hmctruth_ttwjpowheg_1lepSig_4b ;
-      TH1F* hmctruth_ttwjpowheg_0over1ratio_4b ;
-      TH1F* hmctruth_ttwjpowheg_1lSover1ratio_4b ;
-
-
-      TH1F* hmctruth_ttwjmcanlo_0lep_1b ;
-      TH1F* hmctruth_ttwjmcanlo_1lep_1b ;
-      TH1F* hmctruth_ttwjmcanlo_1lepSig_1b ;
-      TH1F* hmctruth_ttwjmcanlo_0over1ratio_1b ;
-      TH1F* hmctruth_ttwjmcanlo_1lSover1ratio_1b ;
-
-      TH1F* hmctruth_ttwjmcanlo_0lep_2b ;
-      TH1F* hmctruth_ttwjmcanlo_1lep_2b ;
-      TH1F* hmctruth_ttwjmcanlo_1lepSig_2b ;
-      TH1F* hmctruth_ttwjmcanlo_0over1ratio_2b ;
-      TH1F* hmctruth_ttwjmcanlo_1lSover1ratio_2b ;
-
-      TH1F* hmctruth_ttwjmcanlo_0lep_3b ;
-      TH1F* hmctruth_ttwjmcanlo_1lep_3b ;
-      TH1F* hmctruth_ttwjmcanlo_1lepSig_3b ;
-      TH1F* hmctruth_ttwjmcanlo_0over1ratio_3b ;
-      TH1F* hmctruth_ttwjmcanlo_1lSover1ratio_3b ;
-
-      TH1F* hmctruth_ttwjmcanlo_0lep_4b ;
-      TH1F* hmctruth_ttwjmcanlo_1lep_4b ;
-      TH1F* hmctruth_ttwjmcanlo_1lepSig_4b ;
-      TH1F* hmctruth_ttwjmcanlo_0over1ratio_4b ;
-      TH1F* hmctruth_ttwjmcanlo_1lSover1ratio_4b ;
-
-
       hmctruth_ttwj_0lep_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_0lep_1b") ;
       if ( hmctruth_ttwj_0lep_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwj_0lep_1b.\n\n") ; return ; }
       hmctruth_ttwj_1lep_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_1lep_1b") ;
@@ -282,30 +234,6 @@
       hmctruth_ttwj_0over1ratio_1b->Divide( hmctruth_ttwj_1lep_1b ) ;
       hmctruth_ttwj_1lSover1ratio_1b = (TH1F*) hmctruth_ttwj_1lepSig_1b->Clone("hmctruth_ttwj_1lSover1ratio_1b") ;
       hmctruth_ttwj_1lSover1ratio_1b->Divide( hmctruth_ttwj_1lep_1b ) ;
-
-      hmctruth_ttwjpowheg_0lep_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_0lep_1b") ;
-      if ( hmctruth_ttwjpowheg_0lep_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_0lep_1b.\n\n") ; return ; }
-      hmctruth_ttwjpowheg_1lep_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_1lep_1b") ;
-      if ( hmctruth_ttwjpowheg_1lep_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_1lep_1b.\n\n") ; return ; }
-      hmctruth_ttwjpowheg_1lepSig_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_1lepSig_1b") ;
-      if ( hmctruth_ttwjpowheg_1lepSig_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_1lepSig_1b.\n\n") ; return ; }
-
-      hmctruth_ttwjpowheg_0over1ratio_1b = (TH1F*) hmctruth_ttwjpowheg_0lep_1b->Clone("hmctruth_ttwjpowheg_0over1ratio_1b") ;
-      hmctruth_ttwjpowheg_0over1ratio_1b->Divide( hmctruth_ttwjpowheg_1lep_1b ) ;
-      hmctruth_ttwjpowheg_1lSover1ratio_1b = (TH1F*) hmctruth_ttwjpowheg_1lepSig_1b->Clone("hmctruth_ttwjpowheg_1lSover1ratio_1b") ;
-      hmctruth_ttwjpowheg_1lSover1ratio_1b->Divide( hmctruth_ttwjpowheg_1lep_1b ) ;
-
-      hmctruth_ttwjmcanlo_0lep_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_0lep_1b") ;
-      if ( hmctruth_ttwjmcanlo_0lep_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_0lep_1b.\n\n") ; return ; }
-      hmctruth_ttwjmcanlo_1lep_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_1lep_1b") ;
-      if ( hmctruth_ttwjmcanlo_1lep_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_1lep_1b.\n\n") ; return ; }
-      hmctruth_ttwjmcanlo_1lepSig_1b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_1lepSig_1b") ;
-      if ( hmctruth_ttwjmcanlo_1lepSig_1b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_1lepSig_1b.\n\n") ; return ; }
-
-      hmctruth_ttwjmcanlo_0over1ratio_1b = (TH1F*) hmctruth_ttwjmcanlo_0lep_1b->Clone("hmctruth_ttwjmcanlo_0over1ratio_1b") ;
-      hmctruth_ttwjmcanlo_0over1ratio_1b->Divide( hmctruth_ttwjmcanlo_1lep_1b ) ;
-      hmctruth_ttwjmcanlo_1lSover1ratio_1b = (TH1F*) hmctruth_ttwjmcanlo_1lepSig_1b->Clone("hmctruth_ttwjmcanlo_1lSover1ratio_1b") ;
-      hmctruth_ttwjmcanlo_1lSover1ratio_1b->Divide( hmctruth_ttwjmcanlo_1lep_1b ) ;
 
 
       hmctruth_ttwj_0lep_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwj_0lep_2b") ;
@@ -319,30 +247,6 @@
       hmctruth_ttwj_0over1ratio_2b->Divide( hmctruth_ttwj_1lep_2b ) ;
       hmctruth_ttwj_1lSover1ratio_2b = (TH1F*) hmctruth_ttwj_1lepSig_2b->Clone("hmctruth_ttwj_1lSover1ratio_2b") ;
       hmctruth_ttwj_1lSover1ratio_2b->Divide( hmctruth_ttwj_1lep_2b ) ;
-
-      hmctruth_ttwjpowheg_0lep_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_0lep_2b") ;
-      if ( hmctruth_ttwjpowheg_0lep_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_0lep_2b.\n\n") ; return ; }
-      hmctruth_ttwjpowheg_1lep_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_1lep_2b") ;
-      if ( hmctruth_ttwjpowheg_1lep_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_1lep_2b.\n\n") ; return ; }
-      hmctruth_ttwjpowheg_1lepSig_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_1lepSig_2b") ;
-      if ( hmctruth_ttwjpowheg_1lepSig_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_1lepSig_2b.\n\n") ; return ; }
-
-      hmctruth_ttwjpowheg_0over1ratio_2b = (TH1F*) hmctruth_ttwjpowheg_0lep_2b->Clone("hmctruth_ttwjpowheg_0over1ratio_2b") ;
-      hmctruth_ttwjpowheg_0over1ratio_2b->Divide( hmctruth_ttwjpowheg_1lep_2b ) ;
-      hmctruth_ttwjpowheg_1lSover1ratio_2b = (TH1F*) hmctruth_ttwjpowheg_1lepSig_2b->Clone("hmctruth_ttwjpowheg_1lSover1ratio_2b") ;
-      hmctruth_ttwjpowheg_1lSover1ratio_2b->Divide( hmctruth_ttwjpowheg_1lep_2b ) ;
-
-      hmctruth_ttwjmcanlo_0lep_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_0lep_2b") ;
-      if ( hmctruth_ttwjmcanlo_0lep_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_0lep_2b.\n\n") ; return ; }
-      hmctruth_ttwjmcanlo_1lep_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_1lep_2b") ;
-      if ( hmctruth_ttwjmcanlo_1lep_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_1lep_2b.\n\n") ; return ; }
-      hmctruth_ttwjmcanlo_1lepSig_2b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_1lepSig_2b") ;
-      if ( hmctruth_ttwjmcanlo_1lepSig_2b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_1lepSig_2b.\n\n") ; return ; }
-
-      hmctruth_ttwjmcanlo_0over1ratio_2b = (TH1F*) hmctruth_ttwjmcanlo_0lep_2b->Clone("hmctruth_ttwjmcanlo_0over1ratio_2b") ;
-      hmctruth_ttwjmcanlo_0over1ratio_2b->Divide( hmctruth_ttwjmcanlo_1lep_2b ) ;
-      hmctruth_ttwjmcanlo_1lSover1ratio_2b = (TH1F*) hmctruth_ttwjmcanlo_1lepSig_2b->Clone("hmctruth_ttwjmcanlo_1lSover1ratio_2b") ;
-      hmctruth_ttwjmcanlo_1lSover1ratio_2b->Divide( hmctruth_ttwjmcanlo_1lep_2b ) ;
 
 
       if ( nBinsBjets > 2 ) {
@@ -358,30 +262,6 @@
 	hmctruth_ttwj_0over1ratio_3b->Divide( hmctruth_ttwj_1lep_3b ) ;
 	hmctruth_ttwj_1lSover1ratio_3b = (TH1F*) hmctruth_ttwj_1lepSig_3b->Clone("hmctruth_ttwj_1lSover1ratio_3b") ;
 	hmctruth_ttwj_1lSover1ratio_3b->Divide( hmctruth_ttwj_1lep_3b ) ;
-
-	hmctruth_ttwjpowheg_0lep_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_0lep_3b") ;
-	if ( hmctruth_ttwjpowheg_0lep_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_0lep_3b.\n\n") ; return ; }
-	hmctruth_ttwjpowheg_1lep_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_1lep_3b") ;
-	if ( hmctruth_ttwjpowheg_1lep_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_1lep_3b.\n\n") ; return ; }
-	hmctruth_ttwjpowheg_1lepSig_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_1lepSig_3b") ;
-	if ( hmctruth_ttwjpowheg_1lepSig_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_1lepSig_3b.\n\n") ; return ; }
-	
-	hmctruth_ttwjpowheg_0over1ratio_3b = (TH1F*) hmctruth_ttwjpowheg_0lep_3b->Clone("hmctruth_ttwjpowheg_0over1ratio_3b") ;
-	hmctruth_ttwjpowheg_0over1ratio_3b->Divide( hmctruth_ttwjpowheg_1lep_3b ) ;
-	hmctruth_ttwjpowheg_1lSover1ratio_3b = (TH1F*) hmctruth_ttwjpowheg_1lepSig_3b->Clone("hmctruth_ttwjpowheg_1lSover1ratio_3b") ;
-	hmctruth_ttwjpowheg_1lSover1ratio_3b->Divide( hmctruth_ttwjpowheg_1lep_3b ) ;
-
-	hmctruth_ttwjmcanlo_0lep_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_0lep_3b") ;
-	if ( hmctruth_ttwjmcanlo_0lep_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_0lep_3b.\n\n") ; return ; }
-	hmctruth_ttwjmcanlo_1lep_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_1lep_3b") ;
-	if ( hmctruth_ttwjmcanlo_1lep_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_1lep_3b.\n\n") ; return ; }
-	hmctruth_ttwjmcanlo_1lepSig_3b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_1lepSig_3b") ;
-	if ( hmctruth_ttwjmcanlo_1lepSig_3b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_1lepSig_3b.\n\n") ; return ; }
-	
-	hmctruth_ttwjmcanlo_0over1ratio_3b = (TH1F*) hmctruth_ttwjmcanlo_0lep_3b->Clone("hmctruth_ttwjmcanlo_0over1ratio_3b") ;
-	hmctruth_ttwjmcanlo_0over1ratio_3b->Divide( hmctruth_ttwjmcanlo_1lep_3b ) ;
-	hmctruth_ttwjmcanlo_1lSover1ratio_3b = (TH1F*) hmctruth_ttwjmcanlo_1lepSig_3b->Clone("hmctruth_ttwjmcanlo_1lSover1ratio_3b") ;
-	hmctruth_ttwjmcanlo_1lSover1ratio_3b->Divide( hmctruth_ttwjmcanlo_1lep_3b ) ;
 	
 	if ( nBinsBjets > 3 ) {
 
@@ -396,30 +276,6 @@
 	  hmctruth_ttwj_0over1ratio_4b->Divide( hmctruth_ttwj_1lep_4b ) ;
 	  hmctruth_ttwj_1lSover1ratio_4b = (TH1F*) hmctruth_ttwj_1lepSig_4b->Clone("hmctruth_ttwj_1lSover1ratio_4b") ;
 	  hmctruth_ttwj_1lSover1ratio_4b->Divide( hmctruth_ttwj_1lep_4b ) ;
-
-	  hmctruth_ttwjpowheg_0lep_4b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_0lep_4b") ;
-	  if ( hmctruth_ttwjpowheg_0lep_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_0lep_4b.\n\n") ; return ; }
-	  hmctruth_ttwjpowheg_1lep_4b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_1lep_4b") ;
-	  if ( hmctruth_ttwjpowheg_1lep_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_1lep_4b.\n\n") ; return ; }
-	  hmctruth_ttwjpowheg_1lepSig_4b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjpowheg_1lepSig_4b") ;
-	  if ( hmctruth_ttwjpowheg_1lepSig_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjpowheg_1lepSig_4b.\n\n") ; return ; }
-	  
-	  hmctruth_ttwjpowheg_0over1ratio_4b = (TH1F*) hmctruth_ttwjpowheg_0lep_4b->Clone("hmctruth_ttwjpowheg_0over1ratio_4b") ;
-	  hmctruth_ttwjpowheg_0over1ratio_4b->Divide( hmctruth_ttwjpowheg_1lep_4b ) ;
-	  hmctruth_ttwjpowheg_1lSover1ratio_4b = (TH1F*) hmctruth_ttwjpowheg_1lepSig_4b->Clone("hmctruth_ttwjpowheg_1lSover1ratio_4b") ;
-	  hmctruth_ttwjpowheg_1lSover1ratio_4b->Divide( hmctruth_ttwjpowheg_1lep_4b ) ;
-
-	  hmctruth_ttwjmcanlo_0lep_4b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_0lep_4b") ;
-	  if ( hmctruth_ttwjmcanlo_0lep_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_0lep_4b.\n\n") ; return ; }
-	  hmctruth_ttwjmcanlo_1lep_4b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_1lep_4b") ;
-	  if ( hmctruth_ttwjmcanlo_1lep_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_1lep_4b.\n\n") ; return ; }
-	  hmctruth_ttwjmcanlo_1lepSig_4b = (TH1F*) gDirectory->FindObject("hmctruth_ttwjmcanlo_1lepSig_4b") ;
-	  if ( hmctruth_ttwjmcanlo_1lepSig_4b == 0x0 ) { printf("\n\n\n *** can't find hmctruth_ttwjmcanlo_1lepSig_4b.\n\n") ; return ; }
-	  
-	  hmctruth_ttwjmcanlo_0over1ratio_4b = (TH1F*) hmctruth_ttwjmcanlo_0lep_4b->Clone("hmctruth_ttwjmcanlo_0over1ratio_4b") ;
-	  hmctruth_ttwjmcanlo_0over1ratio_4b->Divide( hmctruth_ttwjmcanlo_1lep_4b ) ;
-	  hmctruth_ttwjmcanlo_1lSover1ratio_4b = (TH1F*) hmctruth_ttwjmcanlo_1lepSig_4b->Clone("hmctruth_ttwjmcanlo_1lSover1ratio_4b") ;
-	  hmctruth_ttwjmcanlo_1lSover1ratio_4b->Divide( hmctruth_ttwjmcanlo_1lep_4b ) ;
 	
 	}
 
@@ -471,12 +327,6 @@
       double sumw20lep(0.) ;
       double sumw21lep(0.) ;
       double sumw21lepSig(0.) ;
-      double total0lep_powheg(0.) ;
-      double total1lep_powheg(0.) ;
-      double total1lepSig_powheg(0.) ;
-      double total0lep_mcanlo(0.) ;
-      double total1lep_mcanlo(0.) ;
-      double total1lepSig_mcanlo(0.) ;
 
       //-- also compute averages for (>)=2b, (>)=3b, and >=4b only.
       double total0lep_2b(0.) ;
@@ -579,49 +429,6 @@
 	   }
 	 }
 
-
-	 // also add up powheg and mc@nlo results
-
-         total0lep_powheg += hmctruth_ttwjpowheg_0lep_1b->GetBinContent( bi ) ;
-         total0lep_mcanlo += hmctruth_ttwjmcanlo_0lep_1b->GetBinContent( bi ) ;
-         total0lep_powheg += hmctruth_ttwjpowheg_0lep_2b->GetBinContent( bi ) ;
-         total0lep_mcanlo += hmctruth_ttwjmcanlo_0lep_2b->GetBinContent( bi ) ;
-	 if ( nBinsBjets > 2 ) {
-	   total0lep_powheg += hmctruth_ttwjpowheg_0lep_3b->GetBinContent( bi ) ;
-	   total0lep_mcanlo += hmctruth_ttwjmcanlo_0lep_3b->GetBinContent( bi ) ;
-	   if ( nBinsBjets > 3 ) {
-	     total0lep_powheg += hmctruth_ttwjpowheg_0lep_4b->GetBinContent( bi ) ;
-	     total0lep_mcanlo += hmctruth_ttwjmcanlo_0lep_4b->GetBinContent( bi ) ;
-	   }
-	 }
-
-         total1lep_powheg += hmctruth_ttwjpowheg_1lep_1b->GetBinContent( bi ) ;
-         total1lep_mcanlo += hmctruth_ttwjmcanlo_1lep_1b->GetBinContent( bi ) ;
-         total1lep_powheg += hmctruth_ttwjpowheg_1lep_2b->GetBinContent( bi ) ;
-         total1lep_mcanlo += hmctruth_ttwjmcanlo_1lep_2b->GetBinContent( bi ) ;
-	 if ( nBinsBjets > 2 ) {
-	   total1lep_powheg += hmctruth_ttwjpowheg_1lep_3b->GetBinContent( bi ) ;
-	   total1lep_mcanlo += hmctruth_ttwjmcanlo_1lep_3b->GetBinContent( bi ) ;
-	   if ( nBinsBjets > 3 ) {
-	     total1lep_powheg += hmctruth_ttwjpowheg_1lep_4b->GetBinContent( bi ) ;
-	     total1lep_mcanlo += hmctruth_ttwjmcanlo_1lep_4b->GetBinContent( bi ) ;
-	   }
-	 }
-
-         total1lepSig_powheg += hmctruth_ttwjpowheg_1lepSig_1b->GetBinContent( bi ) ;
-         total1lepSig_mcanlo += hmctruth_ttwjmcanlo_1lepSig_1b->GetBinContent( bi ) ;
-         total1lepSig_powheg += hmctruth_ttwjpowheg_1lepSig_2b->GetBinContent( bi ) ;
-         total1lepSig_mcanlo += hmctruth_ttwjmcanlo_1lepSig_2b->GetBinContent( bi ) ;
-	 if ( nBinsBjets > 2 ) {
-	   total1lepSig_powheg += hmctruth_ttwjpowheg_1lepSig_3b->GetBinContent( bi ) ;
-	   total1lepSig_mcanlo += hmctruth_ttwjmcanlo_1lepSig_3b->GetBinContent( bi ) ;
-	   if ( nBinsBjets > 3 ) {
-	     total1lepSig_powheg += hmctruth_ttwjpowheg_1lepSig_4b->GetBinContent( bi ) ;
-	     total1lepSig_mcanlo += hmctruth_ttwjmcanlo_1lepSig_4b->GetBinContent( bi ) ;
-	   }
-	 }
-
-
       } // bi.
 
       double simpleAveR_0over1 ;
@@ -651,8 +458,6 @@
 	}
       }
 
-      simpleAveR_0over1_powheg = total0lep_powheg / total1lep_powheg ;
-      simpleAveR_0over1_mcanlo = total0lep_mcanlo / total1lep_mcanlo ;
 
       printf("\n\n") ;
       printf(" Simple average 0lep/1lep,  all      = %5.3f +/- %5.3f\n", simpleAveR_0over1, simpleAveR_0over1_err ) ;
@@ -677,35 +482,6 @@
       if ( nBinsBjets > 3 ) hscalefactor_ttwj_0over1ratio_4b->Scale(1./simpleAveR_0over1) ;
 
 
-      // also get scaled versions powheg and mc@nlo
-
-      TH1F* hscalefactor_ttwjpowheg_0over1ratio_1b ;
-      TH1F* hscalefactor_ttwjpowheg_0over1ratio_2b ;
-      TH1F* hscalefactor_ttwjpowheg_0over1ratio_3b ;
-      TH1F* hscalefactor_ttwjpowheg_0over1ratio_4b ;
-      TH1F* hscalefactor_ttwjmcanlo_0over1ratio_1b ;
-      TH1F* hscalefactor_ttwjmcanlo_0over1ratio_2b ;
-      TH1F* hscalefactor_ttwjmcanlo_0over1ratio_3b ;
-      TH1F* hscalefactor_ttwjmcanlo_0over1ratio_4b ;
-
-      hscalefactor_ttwjpowheg_0over1ratio_1b = (TH1F*) hmctruth_ttwjpowheg_0over1ratio_1b->Clone("hscalefactor_ttwjpowheg_0lep_1b") ;
-      hscalefactor_ttwjpowheg_0over1ratio_2b = (TH1F*) hmctruth_ttwjpowheg_0over1ratio_2b->Clone("hscalefactor_ttwjpowheg_0lep_2b") ;
-      if ( nBinsBjets > 2 ) hscalefactor_ttwjpowheg_0over1ratio_3b = (TH1F*) hmctruth_ttwjpowheg_0over1ratio_3b->Clone("hscalefactor_ttwjpowheg_0lep_3b") ;
-      if ( nBinsBjets > 3 ) hscalefactor_ttwjpowheg_0over1ratio_4b = (TH1F*) hmctruth_ttwjpowheg_0over1ratio_4b->Clone("hscalefactor_ttwjpowheg_0lep_4b") ;
-      hscalefactor_ttwjmcanlo_0over1ratio_1b = (TH1F*) hmctruth_ttwjmcanlo_0over1ratio_1b->Clone("hscalefactor_ttwjmcanlo_0lep_1b") ;
-      hscalefactor_ttwjmcanlo_0over1ratio_2b = (TH1F*) hmctruth_ttwjmcanlo_0over1ratio_2b->Clone("hscalefactor_ttwjmcanlo_0lep_2b") ;
-      if ( nBinsBjets > 2 ) hscalefactor_ttwjmcanlo_0over1ratio_3b = (TH1F*) hmctruth_ttwjmcanlo_0over1ratio_3b->Clone("hscalefactor_ttwjmcanlo_0lep_3b") ;
-      if ( nBinsBjets > 3 ) hscalefactor_ttwjmcanlo_0over1ratio_4b = (TH1F*) hmctruth_ttwjmcanlo_0over1ratio_4b->Clone("hscalefactor_ttwjmcanlo_0lep_4b") ;
-
-      hscalefactor_ttwjpowheg_0over1ratio_1b->Scale(1./simpleAveR_0over1_powheg) ;
-      hscalefactor_ttwjpowheg_0over1ratio_2b->Scale(1./simpleAveR_0over1_powheg) ;
-      if ( nBinsBjets > 2 ) hscalefactor_ttwjpowheg_0over1ratio_3b->Scale((1./simpleAveR_0over1_powheg)) ;
-      if ( nBinsBjets > 3 ) hscalefactor_ttwjpowheg_0over1ratio_4b->Scale((1./simpleAveR_0over1_powheg)) ;
-      hscalefactor_ttwjmcanlo_0over1ratio_1b->Scale(1./simpleAveR_0over1_mcanlo) ;
-      hscalefactor_ttwjmcanlo_0over1ratio_2b->Scale(1./simpleAveR_0over1_mcanlo) ;
-      if ( nBinsBjets > 2 ) hscalefactor_ttwjmcanlo_0over1ratio_3b->Scale((1./simpleAveR_0over1_mcanlo)) ;
-      if ( nBinsBjets > 3 ) hscalefactor_ttwjmcanlo_0over1ratio_4b->Scale((1./simpleAveR_0over1_mcanlo)) ;
-
       TH1F *hscalefactor_ttwj_0over1ratio_1b_whalfcorr ;
       TH1F *hscalefactor_ttwj_0over1ratio_2b_whalfcorr ;
       TH1F *hscalefactor_ttwj_0over1ratio_3b_whalfcorr ;
@@ -718,9 +494,6 @@
 
       double simpleAveR_1lSover1 = total1lepSig / total1lep ;
       double simpleAveR_1lSover1_err = simpleAveR_1lSover1 * sqrt( sumw21lepSig/(total1lepSig*total1lepSig) + sumw21lep/(total1lep*total1lep)  ) ;
-
-      double simpleAveR_1lSover1_powheg = total1lepSig_powheg / total1lep_powheg ;
-      double simpleAveR_1lSover1_mcanlo = total1lepSig_mcanlo / total1lep_mcanlo ;
 
       double simpleAveR_1lSover1_2b ;
       double simpleAveR_1lSover1_2b_err ;
@@ -760,36 +533,6 @@
       if ( nBinsBjets > 3 ) hscalefactor_ttwj_1lSover1ratio_4b->Scale(1./simpleAveR_1lSover1) ;
 
 
-      // also get scaled versions powheg and mc@nlo
-
-      TH1F* hscalefactor_ttwjpowheg_1lSover1ratio_1b ;
-      TH1F* hscalefactor_ttwjpowheg_1lSover1ratio_2b ;
-      TH1F* hscalefactor_ttwjpowheg_1lSover1ratio_3b ;
-      TH1F* hscalefactor_ttwjpowheg_1lSover1ratio_4b ;
-      TH1F* hscalefactor_ttwjmcanlo_1lSover1ratio_1b ;
-      TH1F* hscalefactor_ttwjmcanlo_1lSover1ratio_2b ;
-      TH1F* hscalefactor_ttwjmcanlo_1lSover1ratio_3b ;
-      TH1F* hscalefactor_ttwjmcanlo_1lSover1ratio_4b ;
-
-      hscalefactor_ttwjpowheg_1lSover1ratio_1b = (TH1F*) hmctruth_ttwjpowheg_1lSover1ratio_1b->Clone("hscalefactor_ttwjpowheg_0lep_1b") ;
-      hscalefactor_ttwjpowheg_1lSover1ratio_2b = (TH1F*) hmctruth_ttwjpowheg_1lSover1ratio_2b->Clone("hscalefactor_ttwjpowheg_0lep_2b") ;
-      if ( nBinsBjets > 2 ) hscalefactor_ttwjpowheg_1lSover1ratio_3b = (TH1F*) hmctruth_ttwjpowheg_1lSover1ratio_3b->Clone("hscalefactor_ttwjpowheg_0lep_3b") ;
-      if ( nBinsBjets > 3 ) hscalefactor_ttwjpowheg_1lSover1ratio_4b = (TH1F*) hmctruth_ttwjpowheg_1lSover1ratio_4b->Clone("hscalefactor_ttwjpowheg_0lep_4b") ;
-      hscalefactor_ttwjmcanlo_1lSover1ratio_1b = (TH1F*) hmctruth_ttwjmcanlo_1lSover1ratio_1b->Clone("hscalefactor_ttwjmcanlo_0lep_1b") ;
-      hscalefactor_ttwjmcanlo_1lSover1ratio_2b = (TH1F*) hmctruth_ttwjmcanlo_1lSover1ratio_2b->Clone("hscalefactor_ttwjmcanlo_0lep_2b") ;
-      if ( nBinsBjets > 2 ) hscalefactor_ttwjmcanlo_1lSover1ratio_3b = (TH1F*) hmctruth_ttwjmcanlo_1lSover1ratio_3b->Clone("hscalefactor_ttwjmcanlo_0lep_3b") ;
-      if ( nBinsBjets > 3 ) hscalefactor_ttwjmcanlo_1lSover1ratio_4b = (TH1F*) hmctruth_ttwjmcanlo_1lSover1ratio_4b->Clone("hscalefactor_ttwjmcanlo_0lep_4b") ;
-
-      hscalefactor_ttwjpowheg_1lSover1ratio_1b->Scale(1./simpleAveR_1lSover1_powheg) ;
-      hscalefactor_ttwjpowheg_1lSover1ratio_2b->Scale(1./simpleAveR_1lSover1_powheg) ;
-      if ( nBinsBjets > 2 ) hscalefactor_ttwjpowheg_1lSover1ratio_3b->Scale((1./simpleAveR_1lSover1_powheg)) ;
-      if ( nBinsBjets > 3 ) hscalefactor_ttwjpowheg_1lSover1ratio_4b->Scale((1./simpleAveR_1lSover1_powheg)) ;
-      hscalefactor_ttwjmcanlo_1lSover1ratio_1b->Scale(1./simpleAveR_1lSover1_mcanlo) ;
-      hscalefactor_ttwjmcanlo_1lSover1ratio_2b->Scale(1./simpleAveR_1lSover1_mcanlo) ;
-      if ( nBinsBjets > 2 ) hscalefactor_ttwjmcanlo_1lSover1ratio_3b->Scale((1./simpleAveR_1lSover1_mcanlo)) ;
-      if ( nBinsBjets > 3 ) hscalefactor_ttwjmcanlo_1lSover1ratio_4b->Scale((1./simpleAveR_1lSover1_mcanlo)) ;
-
-
       TH1F *hscalefactor_ttwj_1lSover1ratio_1b_whalfcorr ;
       TH1F *hscalefactor_ttwj_1lSover1ratio_2b_whalfcorr ;
       TH1F *hscalefactor_ttwj_1lSover1ratio_3b_whalfcorr ;
@@ -806,7 +549,7 @@
 
       for ( int hbi=1; hbi<=nBins; hbi++ ) {
 
-         double val, err, halfdiff, errwhalfcorr, mean ;
+         double val, err, halfdiff, errwhalfcorr ;
 
          val = hscalefactor_ttwj_0over1ratio_1b -> GetBinContent( hbi ) ;
          err = hscalefactor_ttwj_0over1ratio_1b -> GetBinError( hbi ) ;
@@ -863,7 +606,7 @@
 
       for ( int hbi=1; hbi<=nBins; hbi++ ) {
 
-         double val, err, halfdiff, errwhalfcorr, mean ;
+         double val, err, halfdiff, errwhalfcorr ;
 
          val = hscalefactor_ttwj_1lSover1ratio_1b -> GetBinContent( hbi ) ;
          err = hscalefactor_ttwj_1lSover1ratio_1b -> GetBinError( hbi ) ;
@@ -1844,7 +1587,7 @@
 
 
      //---   Q C D  Part   --------------
-
+      /*
      double htbin_0lepldp_ratio[nBinsVar2] ;
      double htbin_0lepldp_ratio_global(0.) ;
 
@@ -3035,7 +2778,7 @@
 
 
 
-
+      */
 
 
 
@@ -3058,7 +2801,7 @@
 
 
      //--- ttwj MC LDP / 0lep ratios
-     
+     /*
      TH1F *hmctruth_ttwj_ldp_1b ;
      TH1F *hmctruth_ttwj_ldp_2b ;
      TH1F *hmctruth_ttwj_ldp_3b ;
@@ -3194,7 +2937,7 @@
 	 
        } // hbi.
      } // mbi.
-
+     */
 
 
 
@@ -3202,7 +2945,7 @@
 
 
      //--- znn MC LDP / 0lep ratios
-
+     /*
       TH1F *hmctruth_znn_0lep_1b ;
       TH1F *hmctruth_znn_0lep_2b ;
       TH1F *hmctruth_znn_0lep_3b ;
@@ -3350,7 +3093,7 @@
          } // hbi.
       } // mbi.
 
-
+     */
 
 
 
@@ -3374,6 +3117,7 @@
 
       fprintf( mcval_file, "ttwj_0lep1lep_ratio  %5.3f\n", simpleAveR_0over1 ) ;
 
+      /*
       if ( qcdModelIndex == 2 ) {
          for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
             fprintf( mcval_file, "qcd_0lepLDP_ratio_H%d  %5.3f\n", hbi+1, htbin_0lepldp_ratio[hbi] ) ;
@@ -3391,6 +3135,7 @@
             fprintf( mcval_file, "SFqcd_nb%d  %5.3f\n", bbi+1, fit_SFqcd_nb[bbi] ) ;
          } // bbi.
       }
+      */
 
       fclose( mcval_file ) ;
 
@@ -3464,12 +3209,12 @@
      //--- Compute new vals including trigger inefficiencies.
 
       int nselections ;
-      char sel_name[4][100] = { "1lepSig", "1lep", "ldp", "0lep" } ;
+      char sel_name[3][100] = { "1lepSig", "1lep", "0lep" } ;
 
       if ( setExpected0lepObs ) {
-         nselections = 3 ; // don't do 0lep (the 4th).
+         nselections = 2 ; // don't do 0lep (the 3rd).
       } else {
-         nselections = 4 ; // do all four.
+         nselections = 3 ; // do all three
       }
 
       printf("\n\n") ;
@@ -3546,131 +3291,61 @@
 
                char pname[1000] ;
 
-               sprintf( pname, "Z_ee_pur" ) ;
-               float Z_ee_pur ;
-               getFileValue( datfile, pname, Z_ee_pur ) ;
-
-               sprintf( pname, "Z_mm_pur" ) ;
-               float Z_mm_pur ;
-               getFileValue( datfile, pname, Z_mm_pur ) ;
-
-               sprintf( pname, "Z_ee_eff" ) ;
-               float Z_ee_eff ;
-               getFileValue( datfile, pname, Z_ee_eff ) ;
-
-               sprintf( pname, "Z_mm_eff" ) ;
-               float Z_mm_eff ;
-               getFileValue( datfile, pname, Z_mm_eff ) ;
-
-               sprintf( pname, "acc_Zee_M%d", mbi+1 ) ;
-               float acc_Zee ;
-               getFileValue( datfile, pname, acc_Zee ) ;
-
-               sprintf( pname, "acc_Zmm_M%d", mbi+1 ) ;
-               float acc_Zmm ;
-               getFileValue( datfile, pname, acc_Zmm ) ;
-
-
-               float Zee_factor[10] ;
-               float Zmm_factor[10] ;
                for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
-                  float knn ;
-                  if ( bbi==0 ) {
-                     sprintf( pname, "knn_%db_M%d", bbi+1, mbi+1 ) ;
-                     getFileValue( datfile, pname, knn ) ;
-                  } else {
-                     sprintf( pname, "knn_%db", bbi+1 ) ;
-                     getFileValue( datfile, pname, knn ) ;
-                  }
-
-                  Zee_factor[bbi] = (5.94 * Z_ee_pur * knn ) / ( acc_Zee * Z_ee_eff ) ;
-                  Zmm_factor[bbi] = (5.94 * Z_mm_pur * knn ) / ( acc_Zmm * Z_mm_eff ) ;
-
-               } // bbi.
-
-               sprintf( pname, "N_Zee_M%d_H%d", mbi+1, hbi+1 ) ;
-               float NZee ;
-               getFileValue( datfile, pname, NZee ) ;
-
-               sprintf( pname, "N_Zmm_M%d_H%d", mbi+1, hbi+1 ) ;
-               float NZmm ;
-               getFileValue( datfile, pname, NZmm ) ;
-
-               for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-
-                  double exp_0lep_ttwj, exp_0lep_znn, exp_0lep_qcd ;
+		 double exp_0lep_ttwj, exp_0lep_qzo ;
 
 
-                //--- Znn
+		 //--- ttwj
+		 
+		 sprintf( pname, "N_1lep_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+		 float N1lep ;
+		 getFileValue( datfile, pname, N1lep ) ;
+		 
+		 sprintf( pname, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+		 float sf_ttwj ;
+		 getFileValue( datfile, pname, sf_ttwj ) ;
+		 
+		 exp_0lep_ttwj = sf_ttwj * N1lep * simpleAveR_0over1 ;  //--- N1lep has already been lowered by trig eff, so no need
+		 //      to do it again here.
+		 
+		 
+		 
+		 //--- qzo
+		 
+		 char mcthname[1000] ;
+		 sprintf( mcthname, "hmctruth_qzo_0lep_%db", bbi+1 ) ;
+		 TH1F* mcthist = (TH1F*) gDirectory->FindObject( mcthname ) ;
+		 if ( mcthist == 0x0 ) {
+		   printf("\n\n\n ***** Missing MCT hist: %s\n\n\n", mcthname ) ;
+		   return ;
+		 }
+		 int histbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
+		 double qzo_0lep = mcthist->GetBinContent( histbin ) ;
+		 exp_0lep_qzo = qzo_0lep * trig_eff_0lep[mbi][hbi] ;
+		 
+		 
+		 
+		 
+		 double newN0lep = exp_0lep_ttwj + exp_0lep_qzo ;
+	       
+	       
+		 sprintf( pname, "N_0lep_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+		 float oldN0lep ;
+		 getFileValue( datfile, pname, oldN0lep ) ;
+		 
+		 updateFileValue( datfile, pname, newN0lep ) ;
+		 
+		 printf("\n M%d,H%d,b%d : ttwj = %7.1f, qzo = %7.1f, expected model total = %7.1f  (MC val %7.1f)\n\n",
+			mbi+1, hbi+1, bbi+1, exp_0lep_ttwj, exp_0lep_qzo, newN0lep, oldN0lep ) ;
+	       
 
-                  exp_0lep_znn = 0.5 * ( NZee * Zee_factor[bbi] + NZmm * Zmm_factor[bbi] ) ;
+	    } // bbi.
+	 } // hbi.
+      } // mbi.
+      
 
-
-
-                //--- ttwj
-
-                  sprintf( pname, "N_1lep_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                  float N1lep ;
-                  getFileValue( datfile, pname, N1lep ) ;
-
-                  sprintf( pname, "sf_ttwj_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                  float sf_ttwj ;
-                  getFileValue( datfile, pname, sf_ttwj ) ;
-
-                  exp_0lep_ttwj = sf_ttwj * N1lep * simpleAveR_0over1 ;  //--- N1lep has already been lowered by trig eff, so no need
-                                                                         //      to do it again here.
-
-
-
-                //--- qcd
-
-                  sprintf( pname, "sf_qcd_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                  float sf_qcd ;
-                  getFileValue( datfile, pname, sf_qcd ) ;
-
-                  double qcdratio(0.) ;
-
-                  if ( qcdModelIndex == 2 ) {
-                     qcdratio = htbin_0lepldp_ratio[hbi] ;
-                  } else if ( qcdModelIndex == 3 ) {
-                     qcdratio = htbin_0lepldp_ratio_global ;
-                  } else if ( qcdModelIndex == 4 ) {
-                     qcdratio = fit_Rqcd_HT[hbi] * fit_SFqcd_Var1[mbi] * fit_SFqcd_nb[bbi] ;
-                  }
-                  char mcthname[1000] ;
-                  sprintf( mcthname, "hmctruth_qcd_ldp_%db", bbi+1 ) ;
-                  TH1F* mcthist = (TH1F*) gDirectory->FindObject( mcthname ) ;
-                  if ( mcthist == 0x0 ) {
-                     printf("\n\n\n ***** Missing MCT hist: %s\n\n\n", mcthname ) ;
-                     return ;
-                  }
-                  int histbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
-                  double qcd_ldp = mcthist->GetBinContent( histbin ) ;
-                  exp_0lep_qcd = sf_qcd * qcd_ldp * qcdratio * trig_eff_0lep[mbi][hbi] ;
-
-
-
-
-                  double newN0lep = exp_0lep_ttwj + exp_0lep_znn + exp_0lep_qcd ;
-
-
-                  sprintf( pname, "N_0lep_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-                  float oldN0lep ;
-                  getFileValue( datfile, pname, oldN0lep ) ;
-
-                  updateFileValue( datfile, pname, newN0lep ) ;
-
-                  printf("\n M%d,H%d,b%d : ttwj = %7.1f, qcd = %7.1f, Znn = %7.1f, expected model total = %7.1f  (MC val %7.1f)\n\n",
-                     mbi+1, hbi+1, bbi+1, exp_0lep_ttwj, exp_0lep_qcd, exp_0lep_znn, newN0lep, oldN0lep ) ;
-
-
-               } // bbi.
-            } // hbi.
-         } // mbi.
-
-
-      } // setExpected0lepObs?
+   } // setExpected0lepObs?
 
 
 

@@ -27,7 +27,6 @@
                         double m0 = 1225., double m12 = 225., bool isT1bbbb = false, double t1bbbbXsec=0.,
                         const char* inputSusy_deff_dbtageff_file = "deff_dbtag_file.txt",
 			const char* inputSusy_deff_dbtageff_lightflavor_file = "deff_dbtag_file.txt",
-                        int   qcdModelIndex = 4,
                         const char* wsrootfilename = "ws.root",
                         const char* blindBinsList = "null",
 			bool constrainBjetShape = false,
@@ -99,9 +98,6 @@
        RooRealVar* rv_0lep[nBinsMET][nBinsHT][nBinsBtag] ;
        RooRealVar* rv_1lepSig[nBinsMET][nBinsHT][nBinsBtag] ;
        RooRealVar* rv_1lep[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooRealVar* rv_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooRealVar* rv_Zee[nBinsMET][nBinsHT] ;
-       RooRealVar* rv_Zmm[nBinsMET][nBinsHT] ;
 
 
        // likelihood parameters
@@ -112,35 +108,18 @@
        RooAbsArg*  rv_mu_ttwj[nBinsMET][nBinsHT][nBinsBtag] ;
        RooAbsArg*  rv_mu_ttwj_slSig[nBinsMET][nBinsHT][nBinsBtag] ;
        RooAbsArg*  rv_mu_ttwj_sl[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooAbsArg*  rv_mu_ttwj_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
        RooFormulaVar* rfv_mu_ttwj[nBinsMET][nBinsHT][nBinsBtag] ;
        RooFormulaVar* rfv_mu_ttwj_slSig[nBinsMET][nBinsHT][nBinsBtag] ;
        RooFormulaVar* rfv_mu_ttwj_sl[nBinsMET][nBinsHT][nBinsBtag] ;
 
-       RooRealVar* rrv_mu_qcd[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooAbsArg*  rv_mu_qcd[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooRealVar* rrv_mu_qcd_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooRealVar* rv_mu_qcd_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooFormulaVar* rfv_mu_qcd[nBinsMET][nBinsHT][nBinsBtag] ;
+       RooRealVar* rrv_mu_qzo[nBinsMET][nBinsHT][nBinsBtag] ;
+       RooAbsArg*  rv_mu_qzo[nBinsMET][nBinsHT][nBinsBtag] ;
+       RooFormulaVar* rfv_mu_qzo[nBinsMET][nBinsHT][nBinsBtag] ;
 
-       RooRealVar* rrv_mu_znn[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooAbsArg*  rv_mu_znn[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooFormulaVar* rfv_mu_znn[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooFormulaVar* rv_mu_znn_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooFormulaVar* rv_mu_zee[nBinsMET][nBinsHT] ;
-       RooFormulaVar* rv_mu_zmm[nBinsMET][nBinsHT] ;
-
-       ///// RooRealVar*  rv_mu_susy_M1_H1_1b ;
        RooRealVar*  rv_mu_susy_all0lep ;
        RooAbsArg*   rv_mu_susy[nBinsMET][nBinsHT][nBinsBtag] ;
        RooAbsArg*   rv_mu_susy_slSig[nBinsMET][nBinsHT][nBinsBtag] ;
        RooAbsArg*   rv_mu_susy_sl[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooAbsArg*   rv_mu_susy_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
-
-       RooFormulaVar* rv_mu_vv[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooFormulaVar* rv_mu_vv_slSig[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooFormulaVar* rv_mu_vv_sl[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooFormulaVar* rv_mu_vv_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
 
 
        // MC inputs
@@ -148,16 +127,6 @@
        RooRealVar* rv_mu_susymc[nBinsMET][nBinsHT][nBinsBtag] ;
        RooRealVar* rv_mu_susymc_slSig[nBinsMET][nBinsHT][nBinsBtag] ;
        RooRealVar* rv_mu_susymc_sl[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooRealVar* rv_mu_susymc_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
-
-       RooRealVar* rv_mu_ttbarsingletopzjetsmc_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooRealVar* rv_mu_WJmc_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooRealVar* rv_mu_Znnmc_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
-
-       RooRealVar* rv_mu_vvmc[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooRealVar* rv_mu_vvmc_slSig[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooRealVar* rv_mu_vvmc_sl[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooRealVar* rv_mu_vvmc_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
 
        
        // gaussian constraints
@@ -168,25 +137,17 @@
        RooRealVar* rv_width_eff_sf_slSig[nBinsMET][nBinsHT][nBinsBtag] ;
        RooRealVar* rv_mean_eff_sf_sl[nBinsMET][nBinsHT][nBinsBtag] ;
        RooRealVar* rv_width_eff_sf_sl[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooRealVar* rv_mean_eff_sf_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooRealVar* rv_width_eff_sf_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
 
-  //   RooFormulaVar* rv_eff_sf[nBinsMET][nBinsHT][nBinsBtag] ;
-  //   RooFormulaVar* rv_eff_sf_sl[nBinsMET][nBinsHT][nBinsBtag] ;
-  //   RooFormulaVar* rv_eff_sf_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
-
-       RooRealVar* rv_mean_vv_sf;
-       RooRealVar* rv_width_vv_sf;
+       RooRealVar* rv_mean_qzo_sf;
+       RooRealVar* rv_width_qzo_sf;
        
        // btag efficiency derivatives
 
        RooRealVar* rv_deff_dbtageff[nBinsMET][nBinsHT][nBinsBtag] ;
        RooRealVar* rv_deff_dbtageff_sl[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooRealVar* rv_deff_dbtageff_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
 
        RooFormulaVar* rv_btageff_sf[nBinsMET][nBinsHT][nBinsBtag] ;
        RooFormulaVar* rv_btageff_sf_sl[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooFormulaVar* rv_btageff_sf_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
 
        
        // expected event counts
@@ -194,22 +155,13 @@
        RooFormulaVar* rv_n[nBinsMET][nBinsHT][nBinsBtag] ;
        RooFormulaVar* rv_n_slSig[nBinsMET][nBinsHT][nBinsBtag] ;
        RooFormulaVar* rv_n_sl[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooFormulaVar* rv_n_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
-
-       RooFormulaVar* rv_n_ee[nBinsMET][nBinsHT] ;
-       RooFormulaVar* rv_n_mm[nBinsMET][nBinsHT] ;
 
 
        // pdf's
        
-       ///// RooPoisson* pdf_N_0lep[nBinsMET][nBinsHT][nBinsBtag] ;
        RooAbsReal* pdf_N_0lep[nBinsMET][nBinsHT][nBinsBtag] ;
        RooPoisson* pdf_N_1lepSig[nBinsMET][nBinsHT][nBinsBtag] ;
        RooPoisson* pdf_N_1lep[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooPoisson* pdf_N_ldp[nBinsMET][nBinsHT][nBinsBtag] ;
-
-       RooPoisson* pdf_N_Zee[nBinsMET][nBinsHT] ;
-       RooPoisson* pdf_N_Zmm[nBinsMET][nBinsHT] ;
 
        RooProdPdf* likelihood;
 

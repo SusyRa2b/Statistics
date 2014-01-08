@@ -56,7 +56,7 @@ void GenerateDummySyst() {
 
   // generate dummy systematics for a bunch of points 
 
-  int mGls[9] = {350,450,500,550,600,650,700,750,800};
+  int mGls[9] = {150,200,250,300,350,400,450,500,550};
   int mLsps[9] = {0,0,0,0,0,0,0,0,0};
 
 

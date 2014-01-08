@@ -32,7 +32,7 @@ float ComputeTestStat(TString wsfile, double mu_susy_sig_val) {
     rrv_mu_susy_sig->setConstant(kFALSE) ;
   }
 
-
+  /*
   // check the impact of varying the qcd normalization:
 
   RooRealVar *rrv_qcd_0lepLDP_ratioH1 = ws->var("qcd_0lepLDP_ratio_H1");
@@ -46,7 +46,7 @@ float ComputeTestStat(TString wsfile, double mu_susy_sig_val) {
   rrv_qcd_0lepLDP_ratioH1->setConstant(kTRUE);
   rrv_qcd_0lepLDP_ratioH2->setConstant(kTRUE);
   rrv_qcd_0lepLDP_ratioH3->setConstant(kTRUE);
-  
+  */
   
   printf("\n\n\n  ===== Doing a fit with SUSY component floating ====================\n\n") ;
 

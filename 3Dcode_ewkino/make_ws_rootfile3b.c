@@ -6,7 +6,6 @@
 			    double mgl=1100, double mlsp=700.,
 			    const char* input_deffdbtagfile = "datfiles/dummy_DeffDbtag-met3-ht3.dat",
 			    const char* input_lightmistagfile = "datfiles/dummy_DeffDbtag-met3-ht3.dat",
-			    int qcdModelIndex = 3,
 			    const char* wsrootfilename = "ws3b.root",
 			    const char* blindBinsList = "null",
 			    bool constrainBjetShape = false,
@@ -26,7 +25,7 @@
 
        ra2bRoostatsClass3D_3b ra2b ;
 
-       ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, input_lightmistagfile, qcdModelIndex, 
+       ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, input_lightmistagfile, 
 			wsrootfilename, blindBinsList, constrainBjetShape, floatSLSigRatios, systfilename, systfilename2, systfilename3,
 			wjets_xsec_shapesyst_file, singletop_xsec_shapesyst_file) ;
 

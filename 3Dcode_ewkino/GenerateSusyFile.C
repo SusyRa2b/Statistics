@@ -26,8 +26,8 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
   // so gluino mass = 75+nbin*25; or nbin = (gluinomass-75)/25.
 
   TChain chainTChiHH("tree");
-  chainTChiHH.Add("files_20fb_v71_small/TChiHH_1.root");
-  chainTChiHH.Add("files_20fb_v71_small/TChiHH_2.root");
+  chainTChiHH.Add("files_20fb_v71_wip/TChiHH_1.root");
+  chainTChiHH.Add("files_20fb_v71_wip/TChiHH_2.root");
 
   gROOT->Reset();
 
@@ -120,9 +120,10 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
   double minLeadJetPt = 70. ;
   double min3rdJetPt = 50. ;
 
-  bool ExcludeHiggs = false ;
-  TString sLooseHiggsSel = "looseHiggsSel5&&" ;
-  //TString sLooseHiggsSel = "" ;
+  bool ExcludeHiggs = true ;
+  //TString sLooseHiggsCuts = "";
+  TString sLooseHiggsCuts = "njets20<=7&&deltaRmax_hh<2.4&&((higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff==-1)||(higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff>95&&higgsMbb2MassDiff<145))&&CSVbest3>0.244&&METsig>30.&&deltaPhiStar>0.1&&pt_1st_leadJet<500&&" ;
+
 
   // dummy masses
   int minGlMass = 150 ;
@@ -163,10 +164,10 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
   cutsSL    += commoncuts ;
   cutsLDP   += commoncuts ;
 
-  cutsSig   += sLooseHiggsSel ;
-  cutsSLSig += sLooseHiggsSel ;
-  cutsSL    += sLooseHiggsSel ;
-  cutsLDP   += sLooseHiggsSel ;
+  cutsSig   += sLooseHiggsCuts ;
+  cutsSLSig += sLooseHiggsCuts ;
+  cutsSL    += sLooseHiggsCuts ;
+  cutsLDP   += sLooseHiggsCuts ;
 
 
   TH2F* h_susy_sig[10] ;
@@ -193,6 +194,10 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
   
   for ( int mGl = minGlMass ; mGl <= maxGlMass ; mGl += 25 ) {
+
+    // keep only the 200, 300, and 500 points
+    
+    if ( mGl != 200 && mGl != 300 && mGl != 500 ) continue ;
 
     mLsp = 1 ;
     xsec8TeV = 1. ;

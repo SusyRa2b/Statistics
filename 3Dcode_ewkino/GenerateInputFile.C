@@ -28,9 +28,9 @@
 void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0lep=-1. ) {
 
   TChain* dyTree = new TChain("treeZ") ;
-  int nAdded = dyTree->Add("files_20fb_v71_small/DY-400.root") ;
+  int nAdded = dyTree->Add("files_20fb_v71_wip/DY-400.root") ;
   if ( nAdded <= 0 ) {
-     printf("\n\n\n *** No treeZ in files_20fb_v71_small/DY.root\n\n\n") ;
+     printf("\n\n\n *** No treeZ in files_20fb_v71_wip/DY.root\n\n\n") ;
      return ;
   }
 
@@ -40,9 +40,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   sprintf( susycutstring, "&&mgluino==%.0f&&mlsp==%.0f", mgl, mlsp ) ;
   TString susycut( susycutstring ) ;
   if ( mgl>0. && mlsp>0. ) {
-     nAdded = chainT2tt.Add("files_20fb_v71_small/T2tt.root") ;
+     nAdded = chainT2tt.Add("files_20fb_v71_wip/T2tt.root") ;
      if ( nAdded <= 0 ) {
-        printf("\n\n\n *** No tree in files_20fb_v71_small/T2tt.root\n\n\n") ;
+        printf("\n\n\n *** No tree in files_20fb_v71_wip/T2tt.root\n\n\n") ;
         return ;
      }
      TFile f("referenceXSecs.root") ;
@@ -62,51 +62,40 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 
   TChain chainQCD("tree") ;
-  chainQCD.Add("files_20fb_v71_small/QCD-120to170.root");
-  chainQCD.Add("files_20fb_v71_small/QCD-170to300.root");
-  chainQCD.Add("files_20fb_v71_small/QCD-300to470.root");
-  chainQCD.Add("files_20fb_v71_small/QCD-470to600.root");
-  chainQCD.Add("files_20fb_v71_small/QCD-600to800.root");
-  chainQCD.Add("files_20fb_v71_small/QCD-800to1000.root");
-  chainQCD.Add("files_20fb_v71_small/QCD-1000to1400.root");
-  chainQCD.Add("files_20fb_v71_small/QCD-1400to1800.root");
-  chainQCD.Add("files_20fb_v71_small/QCD-1800.root");
+  chainQCD.Add("files_20fb_v71_wip/QCD-120to170.root");
+  chainQCD.Add("files_20fb_v71_wip/QCD-170to300.root");
+  chainQCD.Add("files_20fb_v71_wip/QCD-300to470.root");
+  chainQCD.Add("files_20fb_v71_wip/QCD-470to600.root");
+  chainQCD.Add("files_20fb_v71_wip/QCD-600to800.root");
+  chainQCD.Add("files_20fb_v71_wip/QCD-800to1000.root");
+  chainQCD.Add("files_20fb_v71_wip/QCD-1000to1400.root");
+  chainQCD.Add("files_20fb_v71_wip/QCD-1400to1800.root");
+  chainQCD.Add("files_20fb_v71_wip/QCD-1800.root");
   double kfactor_qcd = 1.8 ;
   printf("\n\n Rescaling QCD by %5.3f\n\n", kfactor_qcd ) ;
 
   TChain chainZnn("tree") ;
-  chainZnn.Add("files_20fb_v71_small/Zinv-100to200.root") ;
-  chainZnn.Add("files_20fb_v71_small/Zinv-200to400.root") ;
-  chainZnn.Add("files_20fb_v71_small/Zinv-400.root") ;
+  chainZnn.Add("files_20fb_v71_wip/Zinv-100to200.root") ;
+  chainZnn.Add("files_20fb_v71_wip/Zinv-200to400.root") ;
+  chainZnn.Add("files_20fb_v71_wip/Zinv-400.root") ;
 
   TChain chainTT("tree") ;
-  TChain chainTTPowheg("tree") ;
-  TChain chainTTMCaNLO("tree") ;
-
-  chainTT.Add("files_20fb_v71_small/TT_FullLept.root") ;
-  chainTT.Add("files_20fb_v71_small/TT_SemiLept.root") ;
-  chainTT.Add("files_20fb_v71_small/TT_FullHad.root") ;
-
-  //-------
-  chainTTPowheg.Add("files_20fb_v71_small/TT-powheg.root");
-  //-------
-  chainTTMCaNLO.Add("files_20fb_v71_small/TT-MCatNLO.root");
-  //-------
-
-
+  chainTT.Add("files_20fb_v71_wip/TT_FullLept.root") ;
+  chainTT.Add("files_20fb_v71_wip/TT_SemiLept.root") ;
+  chainTT.Add("files_20fb_v71_wip/TT_FullHad.root") ;
   double kfactor_tt = 0.90 ;
   printf("\n\n Rescaling ttbar by %5.3f\n\n", kfactor_tt ) ;
 
   TChain chainWJets("tree") ;
-  chainWJets.Add("files_20fb_v71_small/Wjets-250to300.root") ;
-  chainWJets.Add("files_20fb_v71_small/Wjets-300to400.root") ;
-  chainWJets.Add("files_20fb_v71_small/Wjets-400.root") ;
-  chainWJets.Add("files_20fb_v71_small/T-s.root") ;
-  chainWJets.Add("files_20fb_v71_small/T-t.root") ;
-  chainWJets.Add("files_20fb_v71_small/T-tW.root") ;
-  chainWJets.Add("files_20fb_v71_small/Tbar-s.root") ;
-  chainWJets.Add("files_20fb_v71_small/Tbar-t.root") ;
-  chainWJets.Add("files_20fb_v71_small/Tbar-tW.root") ;
+  chainWJets.Add("files_20fb_v71_wip/Wjets-250to300.root") ;
+  chainWJets.Add("files_20fb_v71_wip/Wjets-300to400.root") ;
+  chainWJets.Add("files_20fb_v71_wip/Wjets-400.root") ;
+  chainWJets.Add("files_20fb_v71_wip/T-s.root") ;
+  chainWJets.Add("files_20fb_v71_wip/T-t.root") ;
+  chainWJets.Add("files_20fb_v71_wip/T-tW.root") ;
+  chainWJets.Add("files_20fb_v71_wip/Tbar-s.root") ;
+  chainWJets.Add("files_20fb_v71_wip/Tbar-t.root") ;
+  chainWJets.Add("files_20fb_v71_wip/Tbar-tW.root") ;
   double kfactor_wjets = 0.90 ;
   printf("\n\n Rescaling wjets by %5.3f\n\n", kfactor_wjets ) ;
 
@@ -114,61 +103,56 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   //-- make chains of W+jets and single top separately.
 
   TChain chainWJetsOnly("tree") ;
-  chainWJetsOnly.Add("files_20fb_v71_small/Wjets-250to300.root") ;
-  chainWJetsOnly.Add("files_20fb_v71_small/Wjets-300to400.root") ;
-  chainWJetsOnly.Add("files_20fb_v71_small/Wjets-400.root") ;
+  chainWJetsOnly.Add("files_20fb_v71_wip/Wjets-250to300.root") ;
+  chainWJetsOnly.Add("files_20fb_v71_wip/Wjets-300to400.root") ;
+  chainWJetsOnly.Add("files_20fb_v71_wip/Wjets-400.root") ;
   double kfactor_wjetsonly = 0.90 ;
 
   TChain chainSingletop("tree") ;
-  chainSingletop.Add("files_20fb_v71_small/T-s.root") ;
-  chainSingletop.Add("files_20fb_v71_small/T-t.root") ;
-  chainSingletop.Add("files_20fb_v71_small/T-tW.root") ;
-  chainSingletop.Add("files_20fb_v71_small/Tbar-s.root") ;
-  chainSingletop.Add("files_20fb_v71_small/Tbar-t.root") ;
-  chainSingletop.Add("files_20fb_v71_small/Tbar-tW.root") ;
+  chainSingletop.Add("files_20fb_v71_wip/T-s.root") ;
+  chainSingletop.Add("files_20fb_v71_wip/T-t.root") ;
+  chainSingletop.Add("files_20fb_v71_wip/T-tW.root") ;
+  chainSingletop.Add("files_20fb_v71_wip/Tbar-s.root") ;
+  chainSingletop.Add("files_20fb_v71_wip/Tbar-t.root") ;
+  chainSingletop.Add("files_20fb_v71_wip/Tbar-tW.root") ;
   double kfactor_singletop = 0.90 ;
 
   TChain chainSingletop_s("tree") ;
-  chainSingletop_s.Add("files_20fb_v71_small/T-s.root") ;
-  chainSingletop_s.Add("files_20fb_v71_small/Tbar-s.root") ;
+  chainSingletop_s.Add("files_20fb_v71_wip/T-s.root") ;
+  chainSingletop_s.Add("files_20fb_v71_wip/Tbar-s.root") ;
   double kfactor_singletops = 0.90 ;
 
   TChain chainSingletop_t("tree") ;
-  chainSingletop_t.Add("files_20fb_v71_small/T-t.root") ;
-  chainSingletop_t.Add("files_20fb_v71_small/Tbar-t.root") ;
+  chainSingletop_t.Add("files_20fb_v71_wip/T-t.root") ;
+  chainSingletop_t.Add("files_20fb_v71_wip/Tbar-t.root") ;
   double kfactor_singletopt = 0.90 ;
 
   TChain chainSingletop_tw("tree") ;
-  chainSingletop_tw.Add("files_20fb_v71_small/T-tW.root") ;
-  chainSingletop_tw.Add("files_20fb_v71_small/Tbar-tW.root") ;
+  chainSingletop_tw.Add("files_20fb_v71_wip/T-tW.root") ;
+  chainSingletop_tw.Add("files_20fb_v71_wip/Tbar-tW.root") ;
   double kfactor_singletoptw = 0.90 ;
 
 
-
-
-
-//include Z->ll in VV contribution
+  //include Z->ll in VV contribution
   TChain chainVV("tree");
-  chainVV.Add("files_20fb_v71_small/WW.root"); 
-  chainVV.Add("files_20fb_v71_small/WZ.root");
-  chainVV.Add("files_20fb_v71_small/ZZ.root");
-  chainVV.Add("files_20fb_v71_small/DY-200to400.root");
-  chainVV.Add("files_20fb_v71_small/DY-400.root");
+  chainVV.Add("files_20fb_v71_wip/WW.root"); 
+  chainVV.Add("files_20fb_v71_wip/WZ.root");
+  chainVV.Add("files_20fb_v71_wip/ZZ.root");
+  chainVV.Add("files_20fb_v71_wip/DY-200to400.root");
+  chainVV.Add("files_20fb_v71_wip/DY-400.root");
 
 
-
-
-
+  /*
   char qcdinputfile[9][1000] = {
-    "files_20fb_v71_small/QCD-120to170.root"
-    ,"files_20fb_v71_small/QCD-170to300.root"
-    ,"files_20fb_v71_small/QCD-300to470.root"
-    ,"files_20fb_v71_small/QCD-470to600.root"
-    ,"files_20fb_v71_small/QCD-600to800.root"
-    ,"files_20fb_v71_small/QCD-800to1000.root"
-    ,"files_20fb_v71_small/QCD-1000to1400.root"
-    ,"files_20fb_v71_small/QCD-1400to1800.root"
-    ,"files_20fb_v71_small/QCD-1800.root"
+    "files_20fb_v71_wip/QCD-120to170.root"
+    ,"files_20fb_v71_wip/QCD-170to300.root"
+    ,"files_20fb_v71_wip/QCD-300to470.root"
+    ,"files_20fb_v71_wip/QCD-470to600.root"
+    ,"files_20fb_v71_wip/QCD-600to800.root"
+    ,"files_20fb_v71_wip/QCD-800to1000.root"
+    ,"files_20fb_v71_wip/QCD-1000to1400.root"
+    ,"files_20fb_v71_wip/QCD-1400to1800.root"
+    ,"files_20fb_v71_wip/QCD-1800.root"
   } ;
 
   char qcdsamplename[9][100] = {
@@ -182,7 +166,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     ,"qcd_1400_to_1800"
     ,"qcd_1800_to_9999"
   } ;
-
+  */
 
 
   gROOT->Reset();
@@ -190,9 +174,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   const int nJetsCut = 3 ;     // #jets >= nJetsCut
   const int MTbCut = 0 ;       // cut on MTb
 
-  bool ExcludeHiggs = false ;
-  TString sLooseHiggsSel = "looseHiggsSel5&&" ;
-  //TString sLooseHiggsSel = "" ;
+  bool ExcludeHiggs = true ;
+  //TString sLooseHiggsCuts = "";
+  TString sLooseHiggsCuts = "njets20<=7&&deltaRmax_hh<2.4&&((higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff==-1)||(higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff>95&&higgsMbb2MassDiff<145))&&CSVbest3>0.244&&METsig>30.&&deltaPhiStar>0.1&&pt_1st_leadJet<500&&" ;
 
   double minLeadJetPt = 70. ;
   double min3rdJetPt = 50. ;
@@ -296,18 +280,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     cHbins[j] = base;
   }
 
-//int dummyInt = 99;
-//float dummyFloat = 9.999;
-  float dummyZero = 0.;
   float dummyOne = 1.0;
-  ///  float dummyPoint999 = 0.999 ;
   float dummyErr = 0.1;
-
-  float sl_frac2b_val[nBinsVar1][nBinsVar2];
-  float sl_frac2b_err[nBinsVar1][nBinsVar2];
-  float sl_frac3b_val[nBinsVar1][nBinsVar2];
-  float sl_frac3b_err[nBinsVar1][nBinsVar2];
-
 
   ofstream inFile;
   char outfile[10000] ;
@@ -371,110 +345,98 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
   if ( ExcludeHiggs ) {
     sprintf( commoncuts, "%s!passHiggsSel&&maxChNMultDiff<40&&pfOcaloMET<2.0&&nJets>=%d&&MT_bestCSV>%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)",
-	     sLooseHiggsSel.Data(),nJetsCut, MTbCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
+	     sLooseHiggsCuts.Data(),nJetsCut, MTbCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
   }
   else {
     sprintf( commoncuts, "%smaxChNMultDiff<40&&pfOcaloMET<2.0&&nJets>=%d&&MT_bestCSV>%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)",
-	     sLooseHiggsSel.Data(),nJetsCut, MTbCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
+	     sLooseHiggsCuts.Data(),nJetsCut, MTbCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
   }
 
 
-   const int nSel(4) ;
-   char selname[4][100] = { "0lep", "1lepSig", "1lep", "ldp" } ;
-
-   char selcuts[4][10000] ;
-   sprintf( selcuts[0], "minDelPhiN>4&&nMu==0&&nEl==0&&nIsoTrk==0" ) ; //--- 0lep
-   sprintf( selcuts[1], "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&MT>100" ) ; //--- 1lepSig
-   sprintf( selcuts[2], "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&MT<100" ) ; //--- 1lep
-   sprintf( selcuts[3], "minDelPhiN<4&&nMu==0&&nEl==0&&nIsoTrk==0" ) ; //--- ldp
-
+  const int nSel(3) ;
+  char selname[3][100] = { "0lep", "1lepSig", "1lep" } ;
+  
+  char selcuts[3][10000] ;
+  sprintf( selcuts[0], "minDelPhiN>4&&nMu==0&&nEl==0&&nIsoTrk==0" ) ; //--- 0lep
+  sprintf( selcuts[1], "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&MT>100" ) ; //--- 1lepSig
+  sprintf( selcuts[2], "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&MT<100" ) ; //--- 1lep
 
 
-   //--- Output histograms.
-
-   TH1F* hmctruth_susy[nSel][nBinsBjets] ;
-   TH1F* hmctruth_ttwj[nSel][nBinsBjets] ;
-   TH1F* hmctruth_ttwjpowheg[nSel][nBinsBjets] ;
-   TH1F* hmctruth_ttwjmcanlo[nSel][nBinsBjets] ;
-   TH1F* hmctruth_ttbar[nSel][nBinsBjets] ;
-   TH1F* hmctruth_wjets[nSel][nBinsBjets] ;
-   TH1F* hmctruth_wjetsonly[nSel][nBinsBjets] ;
-   TH1F* hmctruth_singletop[nSel][nBinsBjets] ;
-   TH1F* hmctruth_singletops[nSel][nBinsBjets] ;
-   TH1F* hmctruth_singletopt[nSel][nBinsBjets] ;
-   TH1F* hmctruth_singletoptw[nSel][nBinsBjets] ;
-   TH1F* hmctruth_qcd[nSel][nBinsBjets] ;
-   TH1F* hmctruth_znn[nSel][nBinsBjets] ;
-   TH1F* hmctruth_vv[nSel][nBinsBjets] ;
-   TH1F* hmctruth_allsm[nSel][nBinsBjets] ;
-   TH1F* hmctruth_all[nSel][nBinsBjets] ;
+  //--- Output histograms.
+  
+  TH1F* hmctruth_susy[nSel][nBinsBjets] ;
+  TH1F* hmctruth_ttwj[nSel][nBinsBjets] ;
+  TH1F* hmctruth_ttbar[nSel][nBinsBjets] ;
+  TH1F* hmctruth_wjets[nSel][nBinsBjets] ;
+  TH1F* hmctruth_wjetsonly[nSel][nBinsBjets] ;
+  TH1F* hmctruth_singletop[nSel][nBinsBjets] ;
+  TH1F* hmctruth_singletops[nSel][nBinsBjets] ;
+  TH1F* hmctruth_singletopt[nSel][nBinsBjets] ;
+  TH1F* hmctruth_singletoptw[nSel][nBinsBjets] ;
+  TH1F* hmctruth_qcd[nSel][nBinsBjets] ;
+  TH1F* hmctruth_znn[nSel][nBinsBjets] ;
+  TH1F* hmctruth_qzo[nSel][nBinsBjets] ;
+  TH1F* hmctruth_allsm[nSel][nBinsBjets] ;
+  TH1F* hmctruth_all[nSel][nBinsBjets] ;
 
 
-   for ( int si=0; si<nSel; si++ ) {
-      for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-
-         char hname[1000] ;
-         char htitle[1000] ;
-         sprintf( htitle, "%s, %d btag", selname[si], bbi+1 ) ;
-
-         sprintf( hname, "hmctruth_susy_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_susy[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_ttwj_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_ttwj[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_ttwjpowheg_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_ttwjpowheg[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_ttwjmcanlo_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_ttwjmcanlo[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_ttbar_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_ttbar[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_wjets_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_wjets[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_wjetsonly_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_wjetsonly[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_singletop_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_singletop[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_singletops_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_singletops[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_singletopt_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_singletopt[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_singletoptw_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_singletoptw[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_qcd_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_qcd[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_znn_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_znn[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_vv_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_vv[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_allsm_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_allsm[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_all_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_all[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-
-      } // bbi.
-   } // si.
-
+  for ( int si=0; si<nSel; si++ ) {
+    for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+      
+      char hname[1000] ;
+      char htitle[1000] ;
+      sprintf( htitle, "%s, %d btag", selname[si], bbi+1 ) ;
+      
+      sprintf( hname, "hmctruth_susy_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_susy[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_ttwj_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_ttwj[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_ttbar_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_ttbar[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_wjets_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_wjets[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_wjetsonly_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_wjetsonly[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_singletop_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_singletop[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_singletops_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_singletops[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_singletopt_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_singletopt[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_singletoptw_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_singletoptw[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_qcd_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_qcd[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_znn_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_znn[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_qzo_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_qzo[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_allsm_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_allsm[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_all_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_all[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      
+    } // bbi.
+  } // si.
+  
 
    //--- histograms used in getting the observables.
 
    TH2F* h_tt[10] ;
-   TH2F* h_ttpowheg[10] ;
-   TH2F* h_ttmcanlo[10] ;
    TH2F* h_wjets[10] ;
    TH2F* h_wjetsonly[10] ;
    TH2F* h_singletop[10] ;
@@ -483,7 +445,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
    TH2F* h_singletoptw[10] ;
    TH2F* h_qcd[10] ;
    TH2F* h_znn[10] ;
-   TH2F* h_vv[10];
+   TH2F* h_qzo[10];
    TH2F* h_susy[10] ;
    TH2F* h_mc[10] ;
 
@@ -498,14 +460,6 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
      sprintf( hname, "h_tt_%db", bi+1 ) ;
      h_tt[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
      h_tt[bi] -> Sumw2() ;
-     
-     sprintf( hname, "h_ttpowheg_%db", bi+1 ) ;
-     h_ttpowheg[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-     h_ttpowheg[bi] -> Sumw2() ;
-     
-     sprintf( hname, "h_ttmcanlo_%db", bi+1 ) ;
-     h_ttmcanlo[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-     h_ttmcanlo[bi] -> Sumw2() ;
      
      sprintf( hname, "h_wjets_%db", bi+1 ) ;
      h_wjets[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
@@ -539,9 +493,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
      h_znn[bi]  = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
      h_znn[bi] -> Sumw2() ;
      
-     sprintf( hname, "h_vv_%db", bi+1 ) ;
-     h_vv[bi]  = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-     h_vv[bi] -> Sumw2() ;
+     sprintf( hname, "h_qzo_%db", bi+1 ) ;
+     h_qzo[bi]  = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
+     h_qzo[bi] -> Sumw2() ;
      
      sprintf( hname, "h_susy_%db", bi+1 ) ;
      h_susy[bi] = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
@@ -550,7 +504,6 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
      sprintf( hname, "h_mc_%db", bi+1 ) ;
      h_mc[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
      h_mc[bi] -> Sumw2() ;
-     
      
    }
 
@@ -587,16 +540,6 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
        
        h_tt[k] -> Scale( kfactor_tt ) ;
        printf("    %12s %7.1f events\n", hname, h_tt[k]->Integral() ) ; cout << flush ;
-       
-       sprintf( hname, "h_ttpowheg_%db", k+1 ) ;
-       chainTTPowheg.Project (hname,s2DVars,allcuts);
-       h_ttpowheg[k] -> Scale( kfactor_tt ) ;
-       printf("    %12s %7.1f events\n", hname, h_ttpowheg[k]->Integral() ) ; cout << flush ;
-       
-       sprintf( hname, "h_ttmcanlo_%db", k+1 ) ;
-       chainTTMCaNLO.Project (hname,s2DVars,allcuts);
-       h_ttmcanlo[k] -> Scale( kfactor_tt ) ;
-       printf("    %12s %7.1f events\n", hname, h_ttmcanlo[k]->Integral() ) ; cout << flush ;
        
        sprintf( hname, "h_wjets_%db", k+1 ) ;
        chainWJets.Project(hname,s2DVars,allcuts);
@@ -642,9 +585,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
        }
 
 
-       sprintf( hname, "h_vv_%db", k+1 ) ;
+       // this component includes QCD, Z -> inv. and all the other minor components
+       sprintf( hname, "h_qzo_%db", k+1 ) ;
        chainVV.Project(hname,s2DVars,allcuts);
-       printf("    %12s %7.1f events\n", hname, h_vv[k]->Integral() ) ; cout << flush ;
+       h_qzo[k]->Add(h_qcd[k],1.);
+       h_qzo[k]->Add(h_znn[k],1.);
+       printf("    %12s %7.1f events\n", hname, h_qzo[k]->Integral() ) ; cout << flush ;
 
        if ( mgl > 0. ) {
 	 sprintf( hname, "h_susy_%db", k+1 ) ;
@@ -658,15 +604,6 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
       printf("\n\n") ;
 
 
-  /// //--- Rescale W+jets component as a test variation -------------------------------
-  ///
-  /// for ( int bi=0; bi<nBinsBjets; bi++ ) {
-  ///   /// h_wjets[bi] -> Scale(1.5) ;
-  ///   h_wjets[bi] -> Scale(0.5) ;
-  /// } // bi
-  ///
-  /// //--------------------------------------------------------------------------------
-
       for (int i = 0 ; i < nBinsVar1 ; i++) {
         for (int j = 0 ; j < nBinsVar2 ; j++) {
           for (int k = 0 ; k < nBinsBjets ; k++) {
@@ -676,12 +613,6 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 	    
 	    double ttval = h_tt[k] -> GetBinContent( i+1, j+1 ) ;
 	    double tterr = h_tt[k] -> GetBinError(   i+1, j+1 ) ;
-	    
-	    double ttpowhegval = h_ttpowheg[k] -> GetBinContent( i+1, j+1 ) ;
-	    double ttpowhegerr = h_ttpowheg[k] -> GetBinError(   i+1, j+1 ) ;
-	    
-	    double ttmcanloval = h_ttmcanlo[k] -> GetBinContent( i+1, j+1 ) ;
-	    double ttmcanloerr = h_ttmcanlo[k] -> GetBinError(   i+1, j+1 ) ;
 	    
 	    double wjetsval = h_wjets[k] -> GetBinContent( i+1, j+1 ) ;
 	    double wjetserr = h_wjets[k] -> GetBinError(   i+1, j+1 ) ;
@@ -707,8 +638,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 	    double znnval = h_znn[k] -> GetBinContent( i+1, j+1 ) ;
 	    double znnerr = h_znn[k] -> GetBinError(   i+1, j+1 ) ;
 	    
-	    double vvval = h_vv[k] -> GetBinContent( i+1, j+1 ) ;
-	    double vverr = h_vv[k] -> GetBinError(   i+1, j+1 ) ;
+	    double qzoval = h_qzo[k] -> GetBinContent( i+1, j+1 ) ;
+	    double qzoerr = h_qzo[k] -> GetBinError(   i+1, j+1 ) ;
 	    
 	    double susyval = h_susy[k] -> GetBinContent( i+1, j+1 ) ;
 	    double susyerr = h_susy[k] -> GetBinError(   i+1, j+1 ) ;
@@ -723,7 +654,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 	    printf(" N_%s,((sng.t,tW)) var1,var2,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, singletoptwval,singletoptwerr) ; cout << flush ;
 	    printf(" N_%s, qcd         var1,var2,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, qcdval,qcderr) ; cout << flush ;
 	    printf(" N_%s, znn         var1,var2,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, znnval,znnerr) ; cout << flush ;
-	    printf(" N_%s, vv          var1,var2,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, vvval,vverr) ; cout << flush ;
+	    printf(" N_%s, qzo         var1,var2,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, qzoval,qzoerr) ; cout << flush ;
 	    if ( mgl>0. ) {
 	      if ( target_susy_all0lep > 0. ) {
 		susyval = susyval * (target_susy_all0lep/nSusyTotal);
@@ -733,19 +664,14 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 	    }
 	    printf("\n") ;
 
-	    double allval = ttval + wjetsval + qcdval + znnval + vvval + susyval ;
+	    double allval = ttval + wjetsval + qzoval + susyval ;
 
-	    //// inFile << obsname << "  \t" << (int)allval << endl;
-	    inFile << obsname << "  \t" << allval << endl;
+	    inFile << obsname << "  \t" << floor(allval+0.5) << endl;
 	    
 	    int histbin = 1 + (nBinsVar2+1)*i + j + 1 ;
 	    
 	    hmctruth_ttwj[si][k]  -> SetBinContent( histbin, ttval + wjetsval  ) ;
 	    hmctruth_ttwj[si][k]  -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(wjetserr,2) )  ) ;
-	    hmctruth_ttwjpowheg[si][k]  -> SetBinContent( histbin, ttpowhegval + wjetsval  ) ;
-	    hmctruth_ttwjpowheg[si][k]  -> SetBinError(   histbin, sqrt( pow(ttpowhegerr,2) + pow(wjetserr,2) )  ) ;
-	    hmctruth_ttwjmcanlo[si][k]  -> SetBinContent( histbin, ttmcanloval + wjetsval  ) ;
-	    hmctruth_ttwjmcanlo[si][k]  -> SetBinError(   histbin, sqrt( pow(ttmcanloerr,2) + pow(wjetserr,2) )  ) ;
 	    hmctruth_ttbar[si][k] -> SetBinContent( histbin, ttval ) ;
 	    hmctruth_ttbar[si][k] -> SetBinError(   histbin, tterr ) ;
 	    hmctruth_wjets[si][k] -> SetBinContent( histbin, wjetsval  ) ;
@@ -764,14 +690,14 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 	    hmctruth_qcd[si][k]   -> SetBinError(   histbin, qcderr ) ;
 	    hmctruth_znn[si][k]   -> SetBinContent( histbin, znnval ) ;
 	    hmctruth_znn[si][k]   -> SetBinError(   histbin, znnerr ) ;
-	    hmctruth_vv[si][k]    -> SetBinContent( histbin, vvval ) ;
-	    hmctruth_vv[si][k]    -> SetBinError(   histbin, vverr ) ;
+	    hmctruth_qzo[si][k]    -> SetBinContent( histbin, qzoval ) ;
+	    hmctruth_qzo[si][k]    -> SetBinError(   histbin, qzoerr ) ;
 	    hmctruth_susy[si][k]  -> SetBinContent( histbin, susyval  ) ;
 	    hmctruth_susy[si][k]  -> SetBinError(   histbin, susyerr  ) ;
-	    hmctruth_allsm[si][k] -> SetBinContent( histbin, ttval+wjetsval+qcdval+znnval+vvval ) ;
-	    hmctruth_allsm[si][k] -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(wjetserr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(vverr,2) ) ) ;
-	    hmctruth_all[si][k]   -> SetBinContent( histbin, ttval+wjetsval+qcdval+znnval+vvval+susyval ) ;
-	    hmctruth_all[si][k]   -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(wjetserr,2) + pow(qcderr,2) + pow(znnerr,2) + pow(vverr,2) + pow(susyerr,2) ) ) ;
+	    hmctruth_allsm[si][k] -> SetBinContent( histbin, ttval+wjetsval+qzoval ) ;
+	    hmctruth_allsm[si][k] -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(wjetserr,2) + pow(qzoerr,2) ) ) ;
+	    hmctruth_all[si][k]   -> SetBinContent( histbin, ttval+wjetsval+qzoval+susyval ) ;
+	    hmctruth_all[si][k]   -> SetBinError(   histbin, sqrt( pow(tterr,2) + pow(wjetserr,2) + pow(qzoerr,2) + pow(susyerr,2) ) ) ;
 
 
 	  }
@@ -789,7 +715,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 	h_singletoptw[k] -> Reset() ;
 	h_qcd[k] -> Reset() ;
 	h_znn[k] -> Reset() ;
-	h_vv[k] -> Reset() ;
+	h_qzo[k] -> Reset() ;
 	h_susy[k] -> Reset() ;
 	
       }
@@ -798,767 +724,253 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
    } // si.
 
 
-   // for systematics evaluation, print out fraction of events in 1L from non-ttwj sources					     
-   float totalttwj = 0.0;													     
-   float totalsm = 0.0;													     
-   for (int i = 0 ; i < nBinsVar1 ; i++) {											     
-     for (int j = 0 ; j < nBinsVar2 ; j++) {											     
-       for (int k = 0 ; k < nBinsBjets ; k++) {										     
-	 int histbin = 1 + (nBinsVar2+1)*i + j + 1 ;										     
-	 float ttwjcount = hmctruth_ttwj[2][k] -> GetBinContent( histbin );
-	 float smcount = hmctruth_allsm[2][k] -> GetBinContent( histbin );							     
-	 cout << "For bin M" << i+1 << "H" << j+1 << "b" << k+1 << " 1L non-ttwj fraction = " << (1-(ttwjcount/smcount)) << endl;  
-	 totalttwj += ttwjcount;												     
-	 totalsm += smcount;
-       }
-     }
-   }
-   cout << "Total 1L non-ttwj fraction = " << (1-(totalttwj/totalsm)) << endl;						     
-   
-   // for systematics evaluation, print out fraction of events in LDP from non-QCD sources					     
-   float totalqcd = 0.0;													     
-   totalsm = 0.0;														     
-   for (int i = 0 ; i < nBinsVar1 ; i++) {											     
-     for (int j = 0 ; j < nBinsVar2 ; j++) {											     
-       for (int k = 0 ; k < nBinsBjets ; k++) {										     
-	 int histbin = 1 + (nBinsVar2+1)*i + j + 1 ;										     
-	 float qcdcount = hmctruth_qcd[3][k] -> GetBinContent( histbin );
-	 float smcount = hmctruth_allsm[3][k] -> GetBinContent( histbin );							     
-	 cout << "For bin M" << i+1 << "H" << j+1 << "b" << k+1 << " LDP non-qcd fraction = " << (1-(qcdcount/smcount)) << endl;   
-	 totalqcd += qcdcount;												     
-	 totalsm += smcount;
-       }
-     }
-   }
-   cout << "Total LDP non-qcd fraction = " << (1-(totalqcd/totalsm)) << endl;						     
-
-
-
-   //--- Insert dummy R_lsb lines for backwards compatibility.
-   for ( int hbi=0; hbi<nBinsVar2; hbi++ ) {
-     for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-       char dummyline[1000] ;
-       sprintf( dummyline, "R_lsb_H%d_%db       0.1", hbi+1, bbi+1 ) ;
-       inFile << dummyline << endl ;
-       sprintf( dummyline, "R_lsb_H%d_%db_err   0.01", hbi+1, bbi+1 ) ;
-       inFile << dummyline << endl ;
-     } // bbi.
-   } // hbi.
-   
-
-
    printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
-   
-   { //--- scoping bracket for QCD chunk.
-     
-     //--- Fill histograms to be used in QCD analysis (done in mcclosure4.c).
-     
-     const int nQcdSamples(9) ;
-     
-     TCanvas* cqcd = new TCanvas("cqcd","QCD") ;
-     
-     TH2F*   h0lep[nQcdSamples][nBinsBjets] ;
-     TH2F*   hldp [nQcdSamples][nBinsBjets] ;
-     
-     TChain* qcdch[nQcdSamples] ;
-     
-     char hname[1000] ;
-     char htitle[1000] ;
-     
-     TH2F* hdummy = new TH2F("hdummy","",2, Mbins[0], 1500., 2, Hbins[0], 1500. ) ;
-     
-     printf("\n\n") ;
-     for ( int si=0; si<nQcdSamples; si++ ) {
-       
-       qcdch[si] = new TChain("tree") ;
-       printf(" %2d : connecting to %s\n", si, qcdinputfile[si] ) ;
-       qcdch[si] -> Add( qcdinputfile[si] ) ;
-       
-       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-	 
-	 sprintf( hname, "h_0lep_%db_%s", bbi+1, qcdsamplename[si] ) ;
-	 sprintf( htitle, "QCD 0lep yield, nb=%d, %s", bbi+1, qcdsamplename[si] ) ;
-	 printf("         booking hist %s : %s\n", hname, htitle ) ;
-	 h0lep[si][bbi] = new TH2F( hname, htitle, nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-	 h0lep[si][bbi] -> Sumw2() ;
-	 sprintf( hname, "h_ldp_%db_%s", bbi+1, qcdsamplename[si] ) ;
-	 sprintf( htitle, "QCD  LDP yield, nb=%d, %s", bbi+1, qcdsamplename[si] ) ;
-	 printf("         booking hist %s  : %s\n", hname, htitle ) ;
-	 hldp [si][bbi] = new TH2F( hname, htitle, nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-	 hldp [si][bbi] -> Sumw2() ;
-	 
-       } // bbi.
-       
-     } // si.
-     printf("\n\n") ;
-     
-     
-     //--- NOTE: Small PU weights can screw up the ZL/LDP ratio for the same reason
-     //          that the sample weights can, since the number of selected events
-     //          is small in each ratio.
-     //          Turning PU weighting off for QCD closure.
-     
-     
-     for ( int si=0; si<nQcdSamples; si++ ) {
-       
-       printf(" %2d : %s : 0lep\n", si, qcdsamplename[si] ) ; cout << flush ;
-       for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
-	 
-	 char arg1[1000] ;
-	 
-	 char cuts0lep[10000] ;
-	 sprintf( cuts0lep, "(%s&&%s&&%s)"    , commoncuts, selcuts[0], bcut[bbi] ) ;
-	 printf("     %db, 0lep cuts : %s\n", bbi+1, cuts0lep ) ;
-	 sprintf( arg1, "%s>>h_0lep_%db_%s", s2DVars.Data(), bbi+1, qcdsamplename[si] ) ;
-	 qcdch[si] -> Draw( arg1, cuts0lep ) ;
-	 hdummy->Draw() ;
-	 h0lep[si][bbi]->Draw("samecolz") ;
-	 cqcd->Update() ; cqcd->Draw() ;
 
-
-	 char cutsldp[10000] ;
-	 sprintf( cutsldp, "(%s&&%s&&%s)"    , commoncuts, selcuts[3], bcut[bbi] ) ;
-	 printf("     %db, ldp  cuts : %s\n", bbi+1, cutsldp  ) ;
-	 sprintf( arg1, "%s>>h_ldp_%db_%s", s2DVars.Data(), bbi+1, qcdsamplename[si] ) ;
-	 qcdch[si] -> Draw( arg1, cutsldp, "colz" ) ;
-	 hdummy->Draw() ;
-	 hldp[si][bbi]->Draw("samecolz") ;
-	 cqcd->Update() ; cqcd->Draw() ;
-	 
-       } // bbi.
-       
-     } // si.
-     
-   } //--- scoping bracket for QCD chunk.
-
-   printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
-  
-
-   // derive Z -> ee and Z -> mm observables from Z -> inv. 1b counts
-   // using the following dummy values for the other parameters:
-
-   float BfZnn = 5.95 ;
-
-   float dummy_AccEE = 0.75 ;
-   float dummy_AccMM = 0.80 ;
-
-   float dummy_EffEE = 0.50 ;
-   float dummy_EffMM = 0.55 ;
-
-   float dummy_PurEE = 0.80 ;
-   float dummy_PurMM = 0.80 ;
-
-   float dummy_Knn1b = 0.40 ;
-
-
-   for (int i = 0 ; i < nBinsVar1 ; i++) {
-     for (int j = 0 ; j < nBinsVar2 ; j++) {
-       
-       TString obs_Zee = "N_Zee" ;
-       obs_Zee = obs_Zee+sMbins[i]+sHbins[j] ;
-
-       double allval = h_znn_0lep_1b->GetBinContent( i+1, j+1 );
-       allval = allval * ( dummy_AccEE * dummy_EffEE )/( dummy_PurEE * BfZnn * dummy_Knn1b ) ;
-
-       inFile << obs_Zee << "  \t" << allval << endl;
-       
-     }
-   }
-
-
-   for (int i = 0 ; i < nBinsVar1 ; i++) {
-     for (int j = 0 ; j < nBinsVar2 ; j++) {
-       
-       TString obs_Zmm = "N_Zmm" ;
-       obs_Zmm = obs_Zmm+sMbins[i]+sHbins[j] ;
-
-       double allval = h_znn_0lep_1b->GetBinContent( i+1, j+1 );
-
-       allval = allval * ( dummy_AccMM * dummy_EffMM )/( dummy_PurMM * BfZnn * dummy_Knn1b ) ;
-
-       inFile << obs_Zmm << "  \t" << allval << endl;
-       
-     }
-   }
-
-    
-   printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
-  
-  
-   //inFile << "Why are all three of these MC categories separate? I've just put them together (only QCD, Zinv, tt)" << endl;
-   // Nttbarsingletopzjetsmc_ldp
    
   
-   printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
-    
-    //--- Owen : these MC inputs are no longer used.  Insert dummy values for backwards compatibility in format.
-
+   // sf_ttwj
+   
    for (int i = 0 ; i < nBinsVar1 ; i++) {
      for (int j = 0 ; j < nBinsVar2 ; j++) {
        for (int k = 0 ; k < nBinsBjets ; k++) {
 	 
-	 char obsname[1000] ;
-	 sprintf( obsname, "N_ttbarsingletopzjetsmc_ldp_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+	 TString sf_ttwj = "sf_ttwj" ;
+	 sf_ttwj = sf_ttwj+sMbins[i]+sHbins[j]+sBbins[k] ;
 	 
-	 double val, err ;
-	 val = 0. ;
-	 err = 0. ;
-	 
-	 printf(" %s : %7.1f +/- %7.1f\n", obsname, val, err ) ;
-	 
-	 inFile << obsname << "  \t" << val << endl ;
+	 inFile << sf_ttwj << "  \t" << dummyOne << endl;	
+	  
+	 sf_ttwj = sf_ttwj+"_err" ;
+	 inFile << sf_ttwj << "  \t" << dummyErr << endl;	
 	 
        }
-       printf("\n") ;
      }
-     printf("\n") ;
-    }
-   
-   // NWJmc_ldp
+   }
+    
+
+   // sf_ttwj_slSig
    
    for (int i = 0 ; i < nBinsVar1 ; i++) {
      for (int j = 0 ; j < nBinsVar2 ; j++) {
        for (int k = 0 ; k < nBinsBjets ; k++) {
-  
-	 TString obs_WJmc_ldp = "N_WJmc_ldp" ;
-	 obs_WJmc_ldp = obs_WJmc_ldp+sMbins[i]+sHbins[j]+sBbins[k] ;
-  	
-	 inFile << obs_WJmc_ldp << "  \t" << dummyZero << endl;
-	 // signal selection, but ldp, so MET>250, HT>400, >=1 b, mindelphi<4, 0L, nJets >= 3
-       }
-     }
-   }
-   
-  
-   // NZnnmc_ldp
-   
-   for (int i = 0 ; i < nBinsVar1 ; i++) {
-     for (int j = 0 ; j < nBinsVar2 ; j++) {
-       for (int k = 0 ; k < nBinsBjets ; k++) {
-  
-	 TString obs_Znnmc_ldp = "N_Znnmc_ldp" ;
-	 obs_Znnmc_ldp = obs_Znnmc_ldp+sMbins[i]+sHbins[j]+sBbins[k] ;
 	 
-	 inFile << obs_Znnmc_ldp << "  \t" << dummyZero << endl;
-	 // signal selection, but ldp, so MET>250, HT>400, >=1 b, mindelphi<4, 0L, nJets >= 3
+	 TString sf_ttwj_slSig = "sf_ttwj_slSig" ;
+	 sf_ttwj_slSig = sf_ttwj_slSig+sMbins[i]+sHbins[j]+sBbins[k] ;
+	 
+	 inFile << sf_ttwj_slSig << "  \t" << dummyOne << endl;	
+	  
+	 sf_ttwj_slSig = sf_ttwj_slSig+"_err" ;
+	 inFile << sf_ttwj_slSig << "  \t" << dummyErr << endl;	
+	 
        }
      }
    }
+    
+
+
+   //--- ttwj MC ZL 3b/2b ratios
    
-    printf("\n\n-----------------------------------------------------------------\n\n") ; cout << flush ;
-  
-    // various parameters needed for Z -> invis.
+   // 0-lep
+   
+   if ( nBinsBjets > 2 ) {
+     
+     for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
+       for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
+	 int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
+	 
+	 float zl2bval = hmctruth_ttwj[0][1] -> GetBinContent( hbin ) ;
+	 float zl2berr = hmctruth_ttwj[0][1] -> GetBinError(   hbin ) ;
+	 float zl3bval  = hmctruth_ttwj[0][2] -> GetBinContent( hbin ) ;
+	 float zl3berr  = hmctruth_ttwj[0][2] -> GetBinError(   hbin ) ;
+	 
+	 float bbboverbb = 0. ;
+	 float bbboverbberr = 0. ;
+	 
+	 if ( zl2bval > 0. && zl3bval > 0. ) {
+	   bbboverbb = zl3bval / zl2bval ;
+	   bbboverbberr = bbboverbb * sqrt( pow((zl2berr/zl2bval),2) + pow((zl3berr/zl3bval),2) ) ;
+	 }
+	 
+	 char parname[1000] ;
+	 
+	 sprintf( parname, "ttwj_mc_3bover2b_ratio_M%d_H%d", mbi+1, hbi+1 ) ;
+	 printf(" %s  :  %6.3f +/- %5.3f\n", parname, bbboverbb, bbboverbberr ) ;
+	 inFile << parname << "  \t" << bbboverbb << endl;
+	 
+	 sprintf( parname, "ttwj_mc_3bover2b_ratio_M%d_H%d_err", mbi+1, hbi+1 ) ;
+	 inFile << parname << "  \t" << bbboverbberr << endl;
+	 
+       } // hbi
+     } // mbi
+     
 
-    for (int i = 0 ; i < nBinsVar1 ; i++) {
-
-      TString acc_Zee = "acc_Zee" ;
-      acc_Zee = acc_Zee+sMbins[i] ;
-      
-      inFile << acc_Zee << "  \t" << 0.75 << endl ;
-      
-      acc_Zee = acc_Zee+"_err" ;
-      inFile << acc_Zee << "  \t" << 0.01 << endl ;	  
-      
-    }
-
-
-    for (int i = 0 ; i < nBinsVar1 ; i++) {
-
-      TString acc_Zmm = "acc_Zmm" ;
-      acc_Zmm = acc_Zmm+sMbins[i] ;
-      
-      inFile << acc_Zmm << "  \t" << 0.80 << endl ;
-      
-      acc_Zmm = acc_Zmm+"_err" ;
-      inFile << acc_Zmm << "  \t" << 0.01 << endl ;	  
-      
-    }
-  
-    // Z -> ll efficiencies (these are eff_reco**2 * eff_sel**2 * eff_trig
-    //                       or Z_ee_eff*Z_ee_eff*Z_ee_trg*Z_ee_rec*Z_ee_rec from Zinv_inputs.dat)
-    
-    inFile << "Z_ee_eff          \t" << 0.50 << endl; // 
-    inFile << "Z_ee_eff_err      \t" << 0.05 << endl; // 
-    inFile << "Z_mm_eff          \t" << 0.55 << endl; // 
-    inFile << "Z_mm_eff_err      \t" << 0.05 << endl; // 
-
-
-    for (int i = 0 ; i < nBinsVar1 ; i++) {
-
-      TString knn_1b = "knn_1b" ;
-      knn_1b = knn_1b+sMbins[i] ;
-      
-      inFile << knn_1b << "  \t" << 0.40 << endl ;
-      
-      knn_1b = knn_1b+"_err" ;
-      inFile << knn_1b << "  \t" << 0.05 << endl ;	  
-      
-    }
-
-
-    inFile << "knn_2b           \t" << 0.05 << endl;
-    inFile << "knn_2b_err       \t" << 0.02 << endl;
-
-    if ( nBinsBjets > 2 ) {
-      inFile << "knn_3b           \t" << 0.002<< endl;
-      inFile << "knn_3b_err       \t" << 0.001<< endl;
-    }
-
-    if ( nBinsBjets > 3 ) {
-      inFile << "knn_4b           \t" << 0.0002<< endl;
-      inFile << "knn_4b_err       \t" << 0.0001<< endl;
-    }
-
-    // Z -> ll purity
-  
-    inFile << "Z_ee_pur  \t" << 0.80 << endl;
-    inFile << "Z_ee_pur_err  \t" << 0.10 << endl;
-    inFile << "Z_mm_pur  \t" << 0.80 << endl;
-    inFile << "Z_mm_pur_err  \t" << 0.10 << endl;
-  
-    
-    // scale factors:
-    
-    inFile << "sf_mc  \t" << dummyOne << endl ; 
-    inFile << "sf_mc_err  \t" << dummyErr << endl; 
-    
-    
-    // sf_qcd
-    
-    for (int i = 0 ; i < nBinsVar1 ; i++) {
-      for (int j = 0 ; j < nBinsVar2 ; j++) {
-        for (int k = 0 ; k < nBinsBjets ; k++) {
-	  
-	  TString sf_qcd = "sf_qcd" ;
-	  sf_qcd = sf_qcd+sMbins[i]+sHbins[j]+sBbins[k] ;
-	  
-	  inFile << sf_qcd << "  \t" << dummyOne << endl;	
-	
-	  sf_qcd = sf_qcd+"_err" ;
-	  inFile << sf_qcd << "  \t" << dummyErr << endl;	
-	  
-        }
-      }
-    }
-    
-  
-    // sf_ttwj
-    
-    for (int i = 0 ; i < nBinsVar1 ; i++) {
-      for (int j = 0 ; j < nBinsVar2 ; j++) {
-        for (int k = 0 ; k < nBinsBjets ; k++) {
-  
-	  TString sf_ttwj = "sf_ttwj" ;
-	  sf_ttwj = sf_ttwj+sMbins[i]+sHbins[j]+sBbins[k] ;
-	  
-	  inFile << sf_ttwj << "  \t" << dummyOne << endl;	
-	  
-	  sf_ttwj = sf_ttwj+"_err" ;
-	  inFile << sf_ttwj << "  \t" << dummyErr << endl;	
-	  
-        }
-      }
-    }
-    
-
-    // sf_ttwj_slSig
-  
-    for (int i = 0 ; i < nBinsVar1 ; i++) {
-      for (int j = 0 ; j < nBinsVar2 ; j++) {
-        for (int k = 0 ; k < nBinsBjets ; k++) {
-  
-	  TString sf_ttwj_slSig = "sf_ttwj_slSig" ;
-	  sf_ttwj_slSig = sf_ttwj_slSig+sMbins[i]+sHbins[j]+sBbins[k] ;
-	  
-	  inFile << sf_ttwj_slSig << "  \t" << dummyOne << endl;	
-	  
-	  sf_ttwj_slSig = sf_ttwj_slSig+"_err" ;
-	  inFile << sf_ttwj_slSig << "  \t" << dummyErr << endl;	
-	  
-        }
-      }
-    }
-    
-  
-    // sf_ee
-    
-    inFile << "sf_ee \t" << 1.0 << endl;
-    inFile << "sf_ee_err \t" << 0.12 << endl;
-    
-    
-    // sf_mm
-  
-    inFile << "sf_mm \t" << 1.0 << endl;
-    inFile << "sf_mm_err \t" << 0.15 << endl;
-
-    
-    // btag eff err (Note: this was missing until Aug 3, 2012, but it's apparently not used.)
-    inFile << "btageff_err" << " \t" << dummyErr << endl ;
+     if ( nBinsBjets > 3 ) {
+       
+       //--- ttwj MC ZL 4b/2b ratios
+       
+       for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
+	 for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
+	   int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
+	   
+	   float zl2bval = hmctruth_ttwj[0][1] -> GetBinContent( hbin ) ;
+	   float zl2berr = hmctruth_ttwj[0][1] -> GetBinError(   hbin ) ;
+	   float zl4bval  = hmctruth_ttwj[0][3] -> GetBinContent( hbin ) ;
+	   float zl4berr  = hmctruth_ttwj[0][3] -> GetBinError(   hbin ) ;
+	   
+	   float bbbboverbb = 0. ;
+	   float bbbboverbberr = 0. ;
+	   
+	   if ( zl2bval > 0. && zl4bval > 0. ) {
+	     bbbboverbb = zl4bval / zl2bval ;
+	     bbbboverbberr = bbbboverbb * sqrt( pow((zl2berr/zl2bval),2) + pow((zl4berr/zl4bval),2) ) ;
+	   }
+	   
+	   char parname[1000] ;
+	   
+	   sprintf( parname, "ttwj_mc_4bover2b_ratio_M%d_H%d", mbi+1, hbi+1 ) ;
+	   printf(" %s  :  %6.3f +/- %5.3f\n", parname, bbbboverbb, bbbboverbberr ) ;
+	   inFile << parname << "  \t" << bbbboverbb << endl;
+	   
+	   sprintf( parname, "ttwj_mc_4bover2b_ratio_M%d_H%d_err", mbi+1, hbi+1 ) ;
+	   inFile << parname << "  \t" << bbbboverbberr << endl;
+	   
+	 } // hbi
+       } // mbi
+       
+     }
+   }
 
 
-
-    //--- Addding ttwj and znn LDP/ZL MC values
-
-    //--- ttwj MC LDP/ZL
-
-    for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
-      for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
-        int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
-        for (int bbi = 0 ; bbi < nBinsBjets ; bbi++) {
-	  
-	  float ldpval = hmctruth_ttwj[3][bbi] -> GetBinContent( hbin ) ;
-	  float ldperr = hmctruth_ttwj[3][bbi] -> GetBinError(   hbin ) ;
-	  float zlval  = hmctruth_ttwj[0][bbi] -> GetBinContent( hbin ) ;
-	  float zlerr  = hmctruth_ttwj[0][bbi] -> GetBinError(   hbin ) ;
-	  
-	  float ldpoverzl = 0. ;
-	  float ldpoverzlerr = 0. ;
-	  
-	  if ( zlval > 0. && ldpval > 0. ) {
-	    ldpoverzl = ldpval / zlval ;
-	    ldpoverzlerr = ldpoverzl * sqrt( pow((zlerr/zlval),2) + pow((ldperr/ldpval),2) ) ;
-	  }
-
-	  char parname[1000] ;
-	  
-	  sprintf( parname, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-	  printf(" %s  :  %6.3f +/- %5.3f\n", parname, ldpoverzl, ldpoverzlerr ) ;
-	  inFile << parname << "  \t" << ldpoverzl << endl;
-	  
-	  sprintf( parname, "ttwj_mc_ldpover0lep_ratio_M%d_H%d_%db_err", mbi+1, hbi+1, bbi+1 ) ;
-	  inFile << parname << "  \t" << ldpoverzlerr << endl;
-	  
-        } // bbi
-      } // hbi
-    } // mbi
-    
-
-    //--- Znn MC LDP/ZL
-    //--- Note: the 2b and >=3b MC stats are too low.  Use 1b values for all 3.
-    
-    for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
-      for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
-        int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
-	
-        float ldpval = hmctruth_znn[3][0] -> GetBinContent( hbin ) ;
-        float ldperr = hmctruth_znn[3][0] -> GetBinError(   hbin ) ;
-        float zlval  = hmctruth_znn[0][0] -> GetBinContent( hbin ) ;
-        float zlerr  = hmctruth_znn[0][0] -> GetBinError(   hbin ) ;
-	
-        float ldpoverzl = 0. ;
-        float ldpoverzlerr = 0. ;
-	
-        if ( zlval > 0. && ldpval > 0. ) {
-	  ldpoverzl = ldpval / zlval ;
-	  ldpoverzlerr = ldpoverzl * sqrt( pow((zlerr/zlval),2) + pow((ldperr/ldpval),2) ) ;
-        }
-	
-        char parname[1000] ;
-	
-        for (int bbi = 0 ; bbi < nBinsBjets ; bbi++) {
-	  sprintf( parname, "znn_mc_ldpover0lep_ratio_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
-	  printf(" %s  :  %6.3f +/- %5.3f\n", parname, ldpoverzl, ldpoverzlerr ) ;
-	  inFile << parname << "  \t" << ldpoverzl << endl;
-	  
-	  sprintf( parname, "znn_mc_ldpover0lep_ratio_M%d_H%d_%db_err", mbi+1, hbi+1, bbi+1 ) ;
-	  inFile << parname << "  \t" << ldpoverzlerr << endl;
-        } // bbi
-      } // hbi
-    } // mbi
-
-
-    //--- ttwj MC ZL 3b/2b ratios
-
-    // 0-lep
-
-    if ( nBinsBjets > 2 ) {
-
-      for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
-	for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
-	  int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
-	  
-	  float zl2bval = hmctruth_ttwj[0][1] -> GetBinContent( hbin ) ;
-	  float zl2berr = hmctruth_ttwj[0][1] -> GetBinError(   hbin ) ;
-	  float zl3bval  = hmctruth_ttwj[0][2] -> GetBinContent( hbin ) ;
-	  float zl3berr  = hmctruth_ttwj[0][2] -> GetBinError(   hbin ) ;
-	  
-	  float bbboverbb = 0. ;
-	  float bbboverbberr = 0. ;
-	  
-	  if ( zl2bval > 0. && zl3bval > 0. ) {
-	    bbboverbb = zl3bval / zl2bval ;
-	    bbboverbberr = bbboverbb * sqrt( pow((zl2berr/zl2bval),2) + pow((zl3berr/zl3bval),2) ) ;
-	  }
-	  
-	  char parname[1000] ;
-	  
-	  sprintf( parname, "ttwj_mc_3bover2b_ratio_M%d_H%d", mbi+1, hbi+1 ) ;
-	  printf(" %s  :  %6.3f +/- %5.3f\n", parname, bbboverbb, bbboverbberr ) ;
-	  inFile << parname << "  \t" << bbboverbb << endl;
-	  
-	  sprintf( parname, "ttwj_mc_3bover2b_ratio_M%d_H%d_err", mbi+1, hbi+1 ) ;
-	  inFile << parname << "  \t" << bbboverbberr << endl;
-	  
-	} // hbi
-      } // mbi
+   // 1-lepSig
+   
+   if ( nBinsBjets > 2 ) {
+     
+     for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
+       for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
+	 int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
+	 
+	 float zl2bval = hmctruth_ttwj[1][1] -> GetBinContent( hbin ) ;
+	 float zl2berr = hmctruth_ttwj[1][1] -> GetBinError(   hbin ) ;
+	 float zl3bval  = hmctruth_ttwj[1][2] -> GetBinContent( hbin ) ;
+	 float zl3berr  = hmctruth_ttwj[1][2] -> GetBinError(   hbin ) ;
+	 
+	 float bbboverbb = 0. ;
+	 float bbboverbberr = 0. ;
+	 
+	 if ( zl2bval > 0. && zl3bval > 0. ) {
+	   bbboverbb = zl3bval / zl2bval ;
+	   bbboverbberr = bbboverbb * sqrt( pow((zl2berr/zl2bval),2) + pow((zl3berr/zl3bval),2) ) ;
+	 }
+	 
+	 char parname[1000] ;
+	 
+	 sprintf( parname, "ttwjSlSig_mc_3bover2b_ratio_M%d_H%d", mbi+1, hbi+1 ) ;
+	 printf(" %s  :  %6.3f +/- %5.3f\n", parname, bbboverbb, bbboverbberr ) ;
+	 inFile << parname << "  \t" << bbboverbb << endl;
+	 
+	 sprintf( parname, "ttwjSlSig_mc_3bover2b_ratio_M%d_H%d_err", mbi+1, hbi+1 ) ;
+	 inFile << parname << "  \t" << bbboverbberr << endl;
+	 
+       } // hbi
+     } // mbi
       
 
-      if ( nBinsBjets > 3 ) {
+     if ( nBinsBjets > 3 ) {
+       
+       //--- ttwj MC ZL 4b/2b ratios
 	
-	//--- ttwj MC ZL 4b/2b ratios
-	
-	for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
-	  for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
-	    int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
-	    
-            float zl2bval = hmctruth_ttwj[0][1] -> GetBinContent( hbin ) ;
-            float zl2berr = hmctruth_ttwj[0][1] -> GetBinError(   hbin ) ;
-            float zl4bval  = hmctruth_ttwj[0][3] -> GetBinContent( hbin ) ;
-            float zl4berr  = hmctruth_ttwj[0][3] -> GetBinError(   hbin ) ;
-	    
-            float bbbboverbb = 0. ;
-            float bbbboverbberr = 0. ;
-
-            if ( zl2bval > 0. && zl4bval > 0. ) {
-	      bbbboverbb = zl4bval / zl2bval ;
-	      bbbboverbberr = bbbboverbb * sqrt( pow((zl2berr/zl2bval),2) + pow((zl4berr/zl4bval),2) ) ;
-            }
-
-            char parname[1000] ;
-	    
-            sprintf( parname, "ttwj_mc_4bover2b_ratio_M%d_H%d", mbi+1, hbi+1 ) ;
-            printf(" %s  :  %6.3f +/- %5.3f\n", parname, bbbboverbb, bbbboverbberr ) ;
-            inFile << parname << "  \t" << bbbboverbb << endl;
-	    
-            sprintf( parname, "ttwj_mc_4bover2b_ratio_M%d_H%d_err", mbi+1, hbi+1 ) ;
-            inFile << parname << "  \t" << bbbboverbberr << endl;
-
-	  } // hbi
-	} // mbi
-	
-      }
-    }
-
-
-    // 1-lepSig
-
-    if ( nBinsBjets > 2 ) {
-      
-      for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
-	for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
-	  int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
-	  
-	  float zl2bval = hmctruth_ttwj[1][1] -> GetBinContent( hbin ) ;
-	  float zl2berr = hmctruth_ttwj[1][1] -> GetBinError(   hbin ) ;
-	  float zl3bval  = hmctruth_ttwj[1][2] -> GetBinContent( hbin ) ;
-	  float zl3berr  = hmctruth_ttwj[1][2] -> GetBinError(   hbin ) ;
-	  
-	  float bbboverbb = 0. ;
-	  float bbboverbberr = 0. ;
-	  
-	  if ( zl2bval > 0. && zl3bval > 0. ) {
-	    bbboverbb = zl3bval / zl2bval ;
-	    bbboverbberr = bbboverbb * sqrt( pow((zl2berr/zl2bval),2) + pow((zl3berr/zl3bval),2) ) ;
-	  }
-	  
-	  char parname[1000] ;
-	  
-	  sprintf( parname, "ttwjSlSig_mc_3bover2b_ratio_M%d_H%d", mbi+1, hbi+1 ) ;
-	  printf(" %s  :  %6.3f +/- %5.3f\n", parname, bbboverbb, bbboverbberr ) ;
-	  inFile << parname << "  \t" << bbboverbb << endl;
-	  
-	  sprintf( parname, "ttwjSlSig_mc_3bover2b_ratio_M%d_H%d_err", mbi+1, hbi+1 ) ;
-	  inFile << parname << "  \t" << bbboverbberr << endl;
-	  
-	} // hbi
-      } // mbi
-      
-
-      if ( nBinsBjets > 3 ) {
-	
-	//--- ttwj MC ZL 4b/2b ratios
-	
-	for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
-	  for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
-	    int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
-	    
-            float zl2bval = hmctruth_ttwj[1][1] -> GetBinContent( hbin ) ;
-            float zl2berr = hmctruth_ttwj[1][1] -> GetBinError(   hbin ) ;
-            float zl4bval  = hmctruth_ttwj[1][3] -> GetBinContent( hbin ) ;
-            float zl4berr  = hmctruth_ttwj[1][3] -> GetBinError(   hbin ) ;
-	    
-            float bbbboverbb = 0. ;
-            float bbbboverbberr = 0. ;
-
-            if ( zl2bval > 0. && zl4bval > 0. ) {
-	      bbbboverbb = zl4bval / zl2bval ;
-	      bbbboverbberr = bbbboverbb * sqrt( pow((zl2berr/zl2bval),2) + pow((zl4berr/zl4bval),2) ) ;
-            }
-
-            char parname[1000] ;
-	    
-            sprintf( parname, "ttwjSlSig_mc_4bover2b_ratio_M%d_H%d", mbi+1, hbi+1 ) ;
-            printf(" %s  :  %6.3f +/- %5.3f\n", parname, bbbboverbb, bbbboverbberr ) ;
-            inFile << parname << "  \t" << bbbboverbb << endl;
-	    
-            sprintf( parname, "ttwjSlSig_mc_4bover2b_ratio_M%d_H%d_err", mbi+1, hbi+1 ) ;
-            inFile << parname << "  \t" << bbbboverbberr << endl;
-
-	  } // hbi
-	} // mbi
-	
-      }
-    }
-
-
-    //--- qcd MC ZL 3b/2b ratios
-
-    if ( nBinsBjets > 2 ) {
-      
-      for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
-	for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
-	  int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
-	  
-	  float zl2bval = hmctruth_qcd[0][1] -> GetBinContent( hbin ) ;
-	  float zl2berr = hmctruth_qcd[0][1] -> GetBinError(   hbin ) ;
-	  float zl3bval  = hmctruth_qcd[0][2] -> GetBinContent( hbin ) ;
-	  float zl3berr  = hmctruth_qcd[0][2] -> GetBinError(   hbin ) ;
-	  
-	  float bbboverbb = 0. ;
-	  float bbboverbberr = 0. ;
-	  
-	  if ( zl2bval > 0. && zl3bval > 0. ) {
-	    bbboverbb = zl3bval / zl2bval ;
-	    bbboverbberr = bbboverbb * sqrt( pow((zl2berr/zl2bval),2) + pow((zl3berr/zl3bval),2) ) ;
-	  }
-	  
-	  char parname[1000] ;
-	  
-	  sprintf( parname, "qcd_mc_3bover2b_ratio_M%d_H%d", mbi+1, hbi+1 ) ;
-	  printf(" %s  :  %6.3f +/- %5.3f\n", parname, bbboverbb, bbboverbberr ) ;
-	  inFile << parname << "  \t" << bbboverbb << endl;
-	  
-	  sprintf( parname, "qcd_mc_3bover2b_ratio_M%d_H%d_err", mbi+1, hbi+1 ) ;
-	  inFile << parname << "  \t" << bbboverbberr << endl;
-	  
-	} // hbi
-      } // mbi
-      
-      if ( nBinsBjets > 3 ) {
-	
-	
-	//--- qcd MC ZL 4b/2b ratios
-	
-	for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
-	  for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
-	    int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
-	    
-            float zl2bval = hmctruth_qcd[0][1] -> GetBinContent( hbin ) ;
-            float zl2berr = hmctruth_qcd[0][1] -> GetBinError(   hbin ) ;
-            float zl4bval  = hmctruth_qcd[0][3] -> GetBinContent( hbin ) ;
-            float zl4berr  = hmctruth_qcd[0][3] -> GetBinError(   hbin ) ;
-	    
-            float bbbboverbb = 0. ;
-            float bbbboverbberr = 0. ;
-	    
-            if ( zl2bval > 0. && zl4bval > 0. ) {
-	      bbbboverbb = zl4bval / zl2bval ;
-	      bbbboverbberr = bbbboverbb * sqrt( pow((zl2berr/zl2bval),2) + pow((zl4berr/zl4bval),2) ) ;
-            }
-	    
-            char parname[1000] ;
-	    
-            sprintf( parname, "qcd_mc_4bover2b_ratio_M%d_H%d", mbi+1, hbi+1 ) ;
-            printf(" %s  :  %6.3f +/- %5.3f\n", parname, bbbboverbb, bbbboverbberr ) ;
-            inFile << parname << "  \t" << bbbboverbb << endl;
-
-            sprintf( parname, "qcd_mc_4bover2b_ratio_M%d_H%d_err", mbi+1, hbi+1 ) ;
-            inFile << parname << "  \t" << bbbboverbberr << endl;
-
-	  } // hbi
-	} // mbi
-	
-      }
-    }
-
-    // qcd in 1-lepSig is ignored, no need to compute these fractions
+       for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
+	 for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
+	   int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
+	   
+	   float zl2bval = hmctruth_ttwj[1][1] -> GetBinContent( hbin ) ;
+	   float zl2berr = hmctruth_ttwj[1][1] -> GetBinError(   hbin ) ;
+	   float zl4bval  = hmctruth_ttwj[1][3] -> GetBinContent( hbin ) ;
+	   float zl4berr  = hmctruth_ttwj[1][3] -> GetBinError(   hbin ) ;
+	   
+	   float bbbboverbb = 0. ;
+	   float bbbboverbberr = 0. ;
+	   
+	   if ( zl2bval > 0. && zl4bval > 0. ) {
+	     bbbboverbb = zl4bval / zl2bval ;
+	     bbbboverbberr = bbbboverbb * sqrt( pow((zl2berr/zl2bval),2) + pow((zl4berr/zl4bval),2) ) ;
+	   }
+	   
+	   char parname[1000] ;
+	   
+	   sprintf( parname, "ttwjSlSig_mc_4bover2b_ratio_M%d_H%d", mbi+1, hbi+1 ) ;
+	   printf(" %s  :  %6.3f +/- %5.3f\n", parname, bbbboverbb, bbbboverbberr ) ;
+	   inFile << parname << "  \t" << bbbboverbb << endl;
+	   
+	   sprintf( parname, "ttwjSlSig_mc_4bover2b_ratio_M%d_H%d_err", mbi+1, hbi+1 ) ;
+	   inFile << parname << "  \t" << bbbboverbberr << endl;
+	   
+	 } // hbi
+       } // mbi
+       
+     }
+   }
 
     
-    // print out combined mc truth values for VV and DY (included in fit from MC)
-    for ( int si=0; si<nSel; si++ ) {
-      for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
-    	for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
-    	  int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
-    	  for (int bbi = 0 ; bbi < nBinsBjets ; bbi++) {
-
-	    float vvvalue = hmctruth_vv[si][bbi] -> GetBinContent( hbin ) ;
-	    char parname[1000] ;
+   // print out combined mc truth values for QCD + Z -> inv. + others
+   for ( int si=0; si<nSel; si++ ) {
+     for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
+       for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
+	 int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
+	 for (int bbi = 0 ; bbi < nBinsBjets ; bbi++) {
+	   
+	   float qzovalue = hmctruth_qzo[si][bbi] -> GetBinContent( hbin ) ;
+	   char parname[1000] ;
+	   
+	   sprintf( parname, "N_QZOmc_%s_M%d_H%d_%db", selname[si], mbi+1, hbi+1, bbi+1 ) ;
+	   printf(" %s  :  %6.3f \n", parname, qzovalue ) ;
+	   inFile << parname << "  \t" << qzovalue << endl;
 	    
-	    sprintf( parname, "N_VVmc_%s_M%d_H%d_%db", selname[si], mbi+1, hbi+1, bbi+1 ) ;
-	    printf(" %s  :  %6.3f \n", parname, vvvalue ) ;
-	    inFile << parname << "  \t" << vvvalue << endl;
-	    
 
-    	  } // bbi
-    	} // hbi
-      } // mbi
-    } // si
-
-    // next write out measured trigger efficiencies. Values from plotEMuFrac.C from averaging e/mu bin by bin.
-
-    /* cannot use hardcoded trigger efficiencies in optimizing binning choices...
-       go with dummy values
-
-    float trigeff1LVal[nBinsVar2][nBinsVar1] = {{0.90418,0.983407,0.999797,0.999801},{0.952519,0.996088,0.999794,0.999807},{1,1,1,1},{1,1,1,1}};
-    float trigeff1LErr[nBinsVar2][nBinsVar1] = {{0.0254576,0.0115725,0.0112111,0.0110318},{0.0153225,0.0101077,0.0101169,0.0102007},{0.0151531,0.0110547,0.013888,0.014495},{0.0108621,0.0108621,0.0108621,0.0108621}};
-    float trigeff0LVal[nBinsVar2][nBinsVar1] = {{0.8,0.833333,1,1},{0.666667,1,1,1},{1,1,1,1},{1,1,1,1}};
-    float trigeff0LErr[nBinsVar2][nBinsVar1] = {{0.136256,0.169997,0.0560853,0.0560853},{0.124213,0.0737418,0.0560853,0.0560853},{0.0207913,0.0207913,0.0207913,0.0207913},{0.0207913,0.0207913,0.0207913,0.0207913}};
-
-    */
-
-    float trigeff1LVal[nBinsVar2][nBinsVar1] ;
-    float trigeff1LErr[nBinsVar2][nBinsVar1] ;
-    float trigeff0LVal[nBinsVar2][nBinsVar1] ;
-    float trigeff0LErr[nBinsVar2][nBinsVar1] ;
-
-    for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
-      for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
-
-	trigeff1LVal[hbi][mbi] = 0.98 ;
-	trigeff1LErr[hbi][mbi] = 0.015 ;
-	trigeff0LVal[hbi][mbi] = 0.95 ;
-	trigeff0LErr[hbi][mbi] = 0.05 ;
-
-      }
-    }
+	 } // bbi
+       } // hbi
+     } // mbi
+   } // si
 
 
-    for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
-      for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
-    	char parname[1000] ;
-    	sprintf( parname, "trigeff_val_0L_M%d_H%d", mbi+1, hbi+1 ) ;
-    	printf(" %s  :  %6.3f \n", parname, trigeff0LVal[hbi][mbi] ) ;
-    	inFile << parname << "  \t" << trigeff0LVal[hbi][mbi] << endl;
-	sprintf( parname, "trigeff_err_0L_M%d_H%d", mbi+1, hbi+1 ) ;
-    	printf(" %s  :  %6.3f \n", parname, trigeff0LErr[hbi][mbi] ) ;
-    	inFile << parname << "  \t" << trigeff0LErr[hbi][mbi] << endl;
-      }
-    }
-    for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
-      for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
-    	char parname[1000] ;
-    	sprintf( parname, "trigeff_val_1L_M%d_H%d", mbi+1, hbi+1 ) ;
-    	printf(" %s  :  %6.3f \n", parname, trigeff1LVal[hbi][mbi] ) ;
-    	inFile << parname << "  \t" << trigeff1LVal[hbi][mbi] << endl;
-    	sprintf( parname, "trigeff_err_1L_M%d_H%d", mbi+1, hbi+1 ) ;
-    	printf(" %s  :  %6.3f \n", parname, trigeff1LErr[hbi][mbi] ) ;
-    	inFile << parname << "  \t" << trigeff1LErr[hbi][mbi] << endl;
-      }
-    }
+   float trigeff1LVal[nBinsVar2][nBinsVar1] ;
+   float trigeff1LErr[nBinsVar2][nBinsVar1] ;
+   float trigeff0LVal[nBinsVar2][nBinsVar1] ;
+   float trigeff0LErr[nBinsVar2][nBinsVar1] ;
+   
+   for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
+     for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
+       
+       trigeff1LVal[hbi][mbi] = 0.98 ;
+       trigeff1LErr[hbi][mbi] = 0.015 ;
+       trigeff0LVal[hbi][mbi] = 0.95 ;
+       trigeff0LErr[hbi][mbi] = 0.05 ;
+       
+     }
+   }
+   
 
-
-
-
+   for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
+     for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
+       char parname[1000] ;
+       sprintf( parname, "trigeff_val_0L_M%d_H%d", mbi+1, hbi+1 ) ;
+       printf(" %s  :  %6.3f \n", parname, trigeff0LVal[hbi][mbi] ) ;
+       inFile << parname << "  \t" << trigeff0LVal[hbi][mbi] << endl;
+       sprintf( parname, "trigeff_err_0L_M%d_H%d", mbi+1, hbi+1 ) ;
+       printf(" %s  :  %6.3f \n", parname, trigeff0LErr[hbi][mbi] ) ;
+       inFile << parname << "  \t" << trigeff0LErr[hbi][mbi] << endl;
+     }
+   }
+   for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
+     for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
+       char parname[1000] ;
+       sprintf( parname, "trigeff_val_1L_M%d_H%d", mbi+1, hbi+1 ) ;
+       printf(" %s  :  %6.3f \n", parname, trigeff1LVal[hbi][mbi] ) ;
+       inFile << parname << "  \t" << trigeff1LVal[hbi][mbi] << endl;
+       sprintf( parname, "trigeff_err_1L_M%d_H%d", mbi+1, hbi+1 ) ;
+       printf(" %s  :  %6.3f \n", parname, trigeff1LErr[hbi][mbi] ) ;
+       inFile << parname << "  \t" << trigeff1LErr[hbi][mbi] << endl;
+     }
+   }
 
 
    //-- Oct 31, 2012 : add global uncertainties here (e.g. lumi, met cleaning, ...)
@@ -1569,60 +981,12 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     inFile << "GU_unclMET      0.010" << endl ;
 
 
-   //-- Nov 14, 2012 : add QCD model parameters to avoid hardwiring things in ra2bRoostatsClass3D_3b
-   //    These are set by mcclosure4.c
-   //    Uncertainties are (SF_1stVar3-SF_1stVar2)/2
-   //                      (SF_1stVar4-SF_1stVar2)/2
-   //                      (1-SFnb3)/2 
-   //                      (1-SFnb4)/2 
-
-    inFile << "SFqcd_1stVar3       9.99" << endl ;
-    inFile << "SFqcd_1stVar3_err   9.99" << endl ;
-    inFile << "SFqcd_1stVar4       9.99" << endl ;
-    inFile << "SFqcd_1stVar4_err   9.99" << endl ;
-    inFile << "SFqcd_nb3        9.99" << endl ;
-    inFile << "SFqcd_nb3_err    9.99" << endl ;
-    inFile << "SFqcd_nb4        9.99" << endl ;     
-    inFile << "SFqcd_nb4_err    9.99" << endl ;
-
-
-
-
-    // add here the fractions (bin by bin) of 2b/1b and 3b/1b SL events (just for the MC for now)
-
-    for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
-      for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
-
-	TString Sl2bstring     = "sl_frac_2b_val";
-	TString Sl2bstring_err = "sl_frac_2b_err";
-	TString Sl3bstring     = "sl_frac_3b_val";
-	TString Sl3bstring_err = "sl_frac_3b_err";
-
-	Sl2bstring     += sMbins[mbi]+sHbins[hbi] ;
-	Sl2bstring_err += sMbins[mbi]+sHbins[hbi] ;
-	Sl3bstring     += sMbins[mbi]+sHbins[hbi] ;
-	Sl3bstring_err += sMbins[mbi]+sHbins[hbi] ;
-
-	inFile << Sl2bstring     << "   \t" << sl_frac2b_val[mbi][hbi] << endl ;
-	inFile << Sl2bstring_err << "   \t" << sl_frac2b_err[mbi][hbi] << endl ;
-	inFile << Sl3bstring     << "   \t" << sl_frac3b_val[mbi][hbi] << endl ;
-	inFile << Sl3bstring_err << "   \t" << sl_frac3b_err[mbi][hbi] << endl ;
-
-      }
-    }
-
-
-
-
-
-
-
 
     gSystem->Exec("mkdir -p rootfiles") ;
     char outHistName[1000] ;
     if ( mgl>0. && mlsp>0. ) {
        if ( target_susy_all0lep > 0 ) {
-	 sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%.0fevts-%s-%d-%s-%d-nB$d-v%d.root", mgl, mlsp, target_susy_all0lep, aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
+	 sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%.0fevts-%s-%d-%s-%d-nB%d-v%d.root", mgl, mlsp, target_susy_all0lep, aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
        } else {
 	 sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%s-%d-%s-%d-nB%d-v%d.root", mgl, mlsp, aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
        }
@@ -1687,25 +1051,3 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
        return retVal ;
   
     }
-  
-//  //==========================================================================================
-//
-//  void FillHTMET(TChain *chain, TH2F *histo, int si, int k) {
-//
-//     TObjArray *fileElements=chain->GetListOfFiles();
-//     TIter next(fileElements);
-//     TChainElement *chEl=0;
-//     while (( chEl=(TChainElement*)next() )) {
-//        TFile f(chEl->GetTitle());
-//        TTree *tree = (TTree*)f.Get("tree");
-//	SmallTree *t = new SmallTree(tree);
-//	t->Loop(histo, si, k);
-//     }
-//
-//     SmallTree *t = new SmallTree(chain);
-//     t->Loop(histo, si, k);
-//
-//    return;    
-//  }
-//
-//  //==========================================================================================

@@ -4,11 +4,11 @@
 #include <iostream>
 #include <fstream>
 
-void FindLimitPL(TString wsfile, TString outFile) {
+void FindLimitPL(TString wsfile, TString outFile, double startVal = 5.) {
 
   gROOT->LoadMacro("ComputeTestStat.C");
 
-  double startVal(10), curVal(-9);
+  double curVal(-9);
   double curTestStat(-9.), prevTestStat(-9);
   bool FoundIt(false);
   int iter(0);
