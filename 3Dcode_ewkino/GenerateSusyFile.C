@@ -122,7 +122,7 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
   bool ExcludeHiggs = true ;
   //TString sLooseHiggsCuts = "";
-  TString sLooseHiggsCuts = "njets20<=7&&deltaRmax_hh<2.4&&((higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff==-1)||(higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff>95&&higgsMbb2MassDiff<145))&&CSVbest3>0.244&&METsig>30.&&deltaPhiStar>0.1&&pt_1st_leadJet<500&&" ;
+  TString sLooseHiggsCuts = "njets20<=7&&deltaRmax_hh<2.4&&((higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff==-1)||(higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff>95&&higgsMbb2MassDiff<145))&&METsig>30.&&deltaPhiStar>0.1&&pt_1st_leadJet<500&&" ;
 
 
   // dummy masses

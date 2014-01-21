@@ -98,7 +98,7 @@
 
 
 
-      bool useBeta(true) ;
+      bool useBeta(false) ;
       bool useLognormal(true) ;
 
       
