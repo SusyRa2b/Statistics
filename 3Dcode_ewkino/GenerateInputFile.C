@@ -174,9 +174,10 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   const int nJetsCut = 3 ;     // #jets >= nJetsCut
   const int MTbCut = 0 ;       // cut on MTb
 
-  bool ExcludeHiggs = true ;
+  bool ExcludeHiggs = false ;
   //TString sLooseHiggsCuts = "";
-  TString sLooseHiggsCuts = "njets20<=7&&deltaRmax_hh<2.4&&((higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff==-1)||(higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff>95&&higgsMbb2MassDiff<145))&&METsig>30.&&deltaPhiStar>0.1&&pt_1st_leadJet<500&&" ;
+  //TString sLooseHiggsCuts = "njets20<=7&&deltaRmax_hh<2.4&&((higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff==-1)||(higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff>95&&higgsMbb2MassDiff<145))&&METsig>30.&&deltaPhiStar>0.1&&pt_1st_leadJet<500&&MET>125&&HT>300&&" ;
+  TString sLooseHiggsCuts = "njets20<=7&&deltaRmax_hh<2.4&&(higgsMbb1MassDiff>90&&higgsMbb1MassDiff<150&&higgsMbb2MassDiff>90&&higgsMbb2MassDiff<150)&&METsig>30.&&deltaPhiStar>0.1&&pt_1st_leadJet<500&&MET>125&&HT>300&&" ;
 
   double minLeadJetPt = 70. ;
   double min3rdJetPt = 50. ;

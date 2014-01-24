@@ -9,7 +9,7 @@
 #include "TString.h"
 #include "TROOT.h"
 
-void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %.  If negative, use MC stat err.
+void GenerateSusyFile( int Sample = 0, double flatDummyErr = 0.00001 ) {  //-- flat error in %.  If negative, use MC stat err.
 
 //gluino cross sections in pb.
 
@@ -26,8 +26,18 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
   // so gluino mass = 75+nbin*25; or nbin = (gluinomass-75)/25.
 
   TChain chainTChiHH("tree");
-  chainTChiHH.Add("files_20fb_v71_wip/TChiHH_1.root");
-  chainTChiHH.Add("files_20fb_v71_wip/TChiHH_2.root");
+  if ( Sample == 0 ) {
+    chainTChiHH.Add("files_20fb_v71_wip/TChiHH_1.root");
+    chainTChiHH.Add("files_20fb_v71_wip/TChiHH_2.root");
+  }
+  else if ( Sample == 1 ) {
+    chainTChiHH.Add("files_20fb_v71_wip/TChiHH_WWbb.root");
+  }
+  else if ( Sample == 2 ) {
+    chainTChiHH.Add("files_20fb_v71_wip/TChiHH_2taubb.root");
+  }
+  else { cout << "Unknown Sample ... exiting " << endl ; return ; }
+
 
   gROOT->Reset();
 
@@ -120,9 +130,10 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
   double minLeadJetPt = 70. ;
   double min3rdJetPt = 50. ;
 
-  bool ExcludeHiggs = true ;
+  bool ExcludeHiggs = false ;
   //TString sLooseHiggsCuts = "";
-  TString sLooseHiggsCuts = "njets20<=7&&deltaRmax_hh<2.4&&((higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff==-1)||(higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff>95&&higgsMbb2MassDiff<145))&&METsig>30.&&deltaPhiStar>0.1&&pt_1st_leadJet<500&&" ;
+  //TString sLooseHiggsCuts = "njets20<=7&&deltaRmax_hh<2.4&&((higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff==-1)||(higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff>95&&higgsMbb2MassDiff<145))&&METsig>30.&&deltaPhiStar>0.1&&pt_1st_leadJet<500&&MET>125&&HT>300&&" ;
+  TString sLooseHiggsCuts = "njets20<=7&&deltaRmax_hh<2.4&&(higgsMbb1MassDiff>90&&higgsMbb1MassDiff<150&&higgsMbb2MassDiff>90&&higgsMbb2MassDiff<150)&&METsig>30.&&deltaPhiStar>0.1&&pt_1st_leadJet<500&&MET>125&&HT>300&&" ;
 
 
   // dummy masses
@@ -136,7 +147,11 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
 
   ofstream inFile;
   char outfile[10000] ;
-  sprintf( outfile, "datfiles/TChiHH-%s-%d-%s-%d-nB%d-v%d.dat", aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
+
+  if ( Sample == 0 ) sprintf( outfile, "datfiles/TChiHH_bbbb-v%d.dat", version ) ;
+  if ( Sample == 1 ) sprintf( outfile, "datfiles/TChiHH_WWbb-v%d.dat", version ) ;
+  if ( Sample == 2 ) sprintf( outfile, "datfiles/TChiHH_2taubb-v%d.dat", version ) ;
+
   inFile.open( outfile );
 
   // loop over gluino masses
@@ -196,8 +211,7 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
   for ( int mGl = minGlMass ; mGl <= maxGlMass ; mGl += 25 ) {
 
     // keep only the 200, 300, and 500 points
-    
-    if ( mGl != 200 && mGl != 300 && mGl != 500 ) continue ;
+    //if ( mGl != 200 && mGl != 300 && mGl != 500 ) continue ;
 
     mLsp = 1 ;
     xsec8TeV = 1. ;
