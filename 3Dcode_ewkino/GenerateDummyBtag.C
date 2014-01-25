@@ -89,7 +89,7 @@ void GenerateDummyBtag() {
     outDummy << mGl << " " << mLsp << " " ;
 
     for ( int i = 0 ; i < nBins ; i++ ) {
-      outDummy << dummySig << " " ;
+      outDummy << dummySig[i%3] << " " ;
     }
     
     for ( int i = 0 ; i < nBins ; i++ ) {
