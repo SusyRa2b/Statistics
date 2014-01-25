@@ -141,6 +141,8 @@ void GenerateSusyCocktail(int version) {
   
   // loop on Mass points
   for ( int ChiMass = 150 ; ChiMass <= 500 ; ChiMass += 25 ) {
+
+    if ( ChiMass != 300 ) continue ;
       
     int bin = ChiMass/25 - 5 ;
     
@@ -159,7 +161,7 @@ void GenerateSusyCocktail(int version) {
       ArrayCocktail[i] = 0. ;
     }
     for (int i = 147; i < ArraySize; ++ i) {
-      ArrayCocktail[i] = 0.001 ;
+      ArrayCocktail[i] = 0.00001 ;
     }
     
     for ( int samp = 0 ; samp < nSamp ; samp++ ) {
@@ -193,11 +195,18 @@ void GenerateSusyCocktail(int version) {
 
 	// weight factor
 	weightFactor[samp] = ExpZlepTot[samp] / ZlepTot[samp] ;
+	cout << "\n\ndebugging: point (" << ChiMass << ",0) ; sample = " << Samples[samp] << " ; weightFactor = " << weightFactor[samp] << endl ;
 	
-	// rescale everything by the weight factor
-	for (int i = 3; i < (int)(ArraySize-3)/2; ++ i) {
+	// rescale yields by the weight factor (relative errors stay the same) 
+	for (int i = 3; i < 147; ++ i) {
 	  ArrayContent[samp][i] = ArrayContent[samp][i] * weightFactor[samp] ;
 	  ArrayCocktail[i] += ArrayContent[samp][i] ;
+	}
+
+	// fill the array of errors with the absolute errors
+	for (int i = 147; i < ArraySize; ++ i) {
+	  ArrayContent[samp][i] = ArrayContent[samp][i] * weightFactor[samp] ;
+	  ArrayCocktail[i] = sqrt( pow(ArrayCocktail[i],2) + pow(ArrayContent[samp][i],2) ) ;
 	}
 
 
@@ -236,6 +245,7 @@ void GenerateSusyCocktail(int version) {
 
     }  // loop on nSamp
 
+
     // dump to file new cocktail input file
 
     for (int i = 0; i < ArraySize; ++ i) {
@@ -249,7 +259,7 @@ void GenerateSusyCocktail(int version) {
 
 
   // draw "Owen style" histograms of the SUSY cocktail
-
+  /*
   for ( int ChiMass = 150 ; ChiMass <= 500 ; ChiMass += 25 ) {
 
     int bin = ChiMass/25 - 5 ;
@@ -418,7 +428,7 @@ void GenerateSusyCocktail(int version) {
     c0->SaveAs(outPlot) ;
 
   }
-
+  */
   return ;
 
 }

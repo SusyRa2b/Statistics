@@ -9,7 +9,7 @@
 #include "TString.h"
 #include "TROOT.h"
 
-void GenerateSusyFile( int Sample = 0, double flatDummyErr = 0.00001 ) {  //-- flat error in %.  If negative, use MC stat err.
+void GenerateSusyFile( int Sample = 0, double flatDummyErr = -1. ) {  //-- flat error in %.  If negative, use MC stat err.
 
 //gluino cross sections in pb.
 
@@ -27,8 +27,9 @@ void GenerateSusyFile( int Sample = 0, double flatDummyErr = 0.00001 ) {  //-- f
 
   TChain chainTChiHH("tree");
   if ( Sample == 0 ) {
-    chainTChiHH.Add("files_20fb_v71_wip/TChiHH_1.root");
-    chainTChiHH.Add("files_20fb_v71_wip/TChiHH_2.root");
+    //chainTChiHH.Add("files_20fb_v71_wip/TChiHH_1.root");
+    //chainTChiHH.Add("files_20fb_v71_wip/TChiHH_2.root");
+    chainTChiHH.Add("files_20fb_v71_wip/TChiHH_FS.root");
   }
   else if ( Sample == 1 ) {
     chainTChiHH.Add("files_20fb_v71_wip/TChiHH_WWbb.root");
@@ -132,9 +133,8 @@ void GenerateSusyFile( int Sample = 0, double flatDummyErr = 0.00001 ) {  //-- f
 
   bool ExcludeHiggs = false ;
   //TString sLooseHiggsCuts = "";
-  //TString sLooseHiggsCuts = "njets20<=7&&deltaRmax_hh<2.4&&((higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff==-1)||(higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff>95&&higgsMbb2MassDiff<145))&&METsig>30.&&deltaPhiStar>0.1&&pt_1st_leadJet<500&&MET>125&&HT>300&&" ;
-  TString sLooseHiggsCuts = "njets20<=7&&deltaRmax_hh<2.4&&(higgsMbb1MassDiff>90&&higgsMbb1MassDiff<150&&higgsMbb2MassDiff>90&&higgsMbb2MassDiff<150)&&METsig>30.&&deltaPhiStar>0.1&&pt_1st_leadJet<500&&MET>125&&HT>300&&" ;
-
+  TString sLooseHiggsCuts = "njets20<=7&&deltaRmax_hh<2.4&&(higgsMbb1MassDiff==-1||(higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff>95&&higgsMbb2MassDiff<145))&&METsig>30.&&deltaPhiStar>0.1&&pt_1st_leadJet<500&&MET>125&&HT>300&&" ;
+  
 
   // dummy masses
   int minGlMass = 150 ;
@@ -400,7 +400,7 @@ void GenerateSusyFile( int Sample = 0, double flatDummyErr = 0.00001 ) {  //-- f
                 if ( nsel_sl    > 0. ) { frerr_sl    = 100./sqrt(nsel_sl )    ; }
                 if ( nsel_ldp   > 0. ) { frerr_ldp   = 100./sqrt(nsel_ldp)    ; }
 
-                inFile << frerr_sig << " " << frerr_slsig << " " << frerr_sl << " " << frerr_ldp << " " ;
+                //inFile << frerr_sig << " " << frerr_slsig << " " << frerr_sl << " " << frerr_ldp << " " ;
 
                 printf ( " MC sig_eff/eff (%%): mGl=%d, mLsp=%d: Var1,Var2 (%d,%d) nb=%d   SIG = %5.1f,   SLSIG=%5.1f,   SL=%5.1f,   LDP=%5.1f\n",
 			 mGl, mLsp, i+1, j+1, k+1,
@@ -424,8 +424,14 @@ void GenerateSusyFile( int Sample = 0, double flatDummyErr = 0.00001 ) {  //-- f
 	    if ( flatDummyErr >= 0 ) {
 	      inFile << flatDummyErr << " " ;
 	    }
-	    else {
-	      inFile << frerr_sig << " " ;
+	    else {   // compute on the spot the relative statistical error (in %)
+	      if ( h_susy_sig[k]   -> GetBinContent( i+1, j+1 ) > 0 ) {
+		inFile << sqrt(xsec8TeV*(h_susy_sig[k]   -> GetBinContent( i+1, j+1 )/19399.)) << " " ;
+		cout << "debug: nSig = " << xsec8TeV*(h_susy_sig[k]   -> GetBinContent( i+1, j+1 )/19399.) << "     error = " << 100./sqrt(xsec8TeV*(h_susy_sig[k]   -> GetBinContent( i+1, j+1 )/19399.)) << endl ;
+	      }
+	      else {
+		inFile << 0.00001 << " " ;
+	      }
 	    }
 
 	  }
@@ -442,7 +448,12 @@ void GenerateSusyFile( int Sample = 0, double flatDummyErr = 0.00001 ) {  //-- f
 	      inFile << flatDummyErr << " " ;
 	    }
 	    else {
-	      inFile << frerr_slsig << " " ;
+	      if ( h_susy_slsig[k]-> GetBinContent( i+1, j+1 ) > 0 ) {
+		inFile << sqrt(xsec8TeV*(h_susy_slsig[k]   -> GetBinContent( i+1, j+1 )/19399.)) << " " ;
+	      }
+	      else {
+		inFile << 0.00001 << " " ;
+	      }
 	    }
 
 	  }
@@ -459,7 +470,12 @@ void GenerateSusyFile( int Sample = 0, double flatDummyErr = 0.00001 ) {  //-- f
 	      inFile << flatDummyErr << " " ;
 	    }
 	    else {
-	      inFile << frerr_sl << " " ;
+	      if ( h_susy_sl[k] -> GetBinContent( i+1, j+1 ) > 0 ) {
+		inFile << sqrt(xsec8TeV*(h_susy_sl[k]   -> GetBinContent( i+1, j+1 )/19399.)) << " " ;
+	      }
+	      else {
+		inFile << 0.00001 << " " ;
+	      }
 	    }
 
 	  }
@@ -476,7 +492,12 @@ void GenerateSusyFile( int Sample = 0, double flatDummyErr = 0.00001 ) {  //-- f
 	      inFile << flatDummyErr << " " ;
 	    }
 	    else {
-	      inFile << frerr_ldp << " " ;
+	      if ( h_susy_ldp[k]   -> GetBinContent( i+1, j+1 ) > 0 ) {
+		inFile << sqrt(xsec8TeV*(h_susy_ldp[k]   -> GetBinContent( i+1, j+1 )/19399.)) << " " ;
+	      }
+	      else {
+		inFile << 0.00001 << " " ;
+	      }
 	    }
 
 	  }
