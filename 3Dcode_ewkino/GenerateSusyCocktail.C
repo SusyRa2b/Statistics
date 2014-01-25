@@ -141,8 +141,6 @@ void GenerateSusyCocktail(int version) {
   
   // loop on Mass points
   for ( int ChiMass = 150 ; ChiMass <= 500 ; ChiMass += 25 ) {
-
-    if ( ChiMass != 300 ) continue ;
       
     int bin = ChiMass/25 - 5 ;
     
@@ -259,7 +257,7 @@ void GenerateSusyCocktail(int version) {
 
 
   // draw "Owen style" histograms of the SUSY cocktail
-  /*
+
   for ( int ChiMass = 150 ; ChiMass <= 500 ; ChiMass += 25 ) {
 
     int bin = ChiMass/25 - 5 ;
@@ -428,7 +426,7 @@ void GenerateSusyCocktail(int version) {
     c0->SaveAs(outPlot) ;
 
   }
-  */
+
   return ;
 
 }
