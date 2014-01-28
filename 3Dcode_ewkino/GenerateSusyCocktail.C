@@ -137,7 +137,8 @@ void GenerateSusyCocktail(int version) {
 
   ofstream outStream ;
   outStream.open(outFile) ;
-  
+
+  bool filledSamp[3] = {false, false, false} ;
   
   // loop on Mass points
   for ( int ChiMass = 150 ; ChiMass <= 500 ; ChiMass += 25 ) {
@@ -183,14 +184,14 @@ void GenerateSusyCocktail(int version) {
 	  infp >> ArrayContent[samp][i];
 	}
 	
-	if ( ArrayContent[samp][0] != ChiMass ) continue ;
+	if ( ArrayContent[samp][0] != ChiMass || filledSamp[samp] ) continue ;
 	
 	ZlepTot[samp] = 0. ;
-	
+	  
 	for (int i = 3; i < 39 ; i++ ) {
 	  ZlepTot[samp] += ArrayContent[samp][i] ;
 	}
-
+	
 	// weight factor
 	weightFactor[samp] = ExpZlepTot[samp] / ZlepTot[samp] ;
 	cout << "\n\ndebugging: point (" << ChiMass << ",0) ; sample = " << Samples[samp] << " ; weightFactor = " << weightFactor[samp] << endl ;
@@ -200,20 +201,24 @@ void GenerateSusyCocktail(int version) {
 	  ArrayContent[samp][i] = ArrayContent[samp][i] * weightFactor[samp] ;
 	  ArrayCocktail[i] += ArrayContent[samp][i] ;
 	}
-
+	
 	// fill the array of errors with the absolute errors
 	for (int i = 147; i < ArraySize; ++ i) {
 	  ArrayContent[samp][i] = ArrayContent[samp][i] * weightFactor[samp] ;
 	  ArrayCocktail[i] = sqrt( pow(ArrayCocktail[i],2) + pow(ArrayContent[samp][i],2) ) ;
 	}
-
-
+	
+	if ( ChiMass == 500 ) { 
+	  filledSamp[samp] = true ;
+	  cout << "Setting filledSamp to true!" << endl ;
+	}
+	
 	// fill Owen style histograms
 	for ( int i = 0 ; i < 3 ; i++ ) {
 	  for ( int j = 0 ; j < 4 ; j++ ) {
-
+	    
 	    int binIndex = 1 + 5*i + j + 1 ;
-
+	    
 	    TString binLabel_0lep    = "0 lep";
 	    TString binLabel_1lepSig = "1 lepSig";
 	    TString binLabel_1lep    = "1 lep";
@@ -221,8 +226,8 @@ void GenerateSusyCocktail(int version) {
 	    binLabel_0lep    += sMbins[i]+sHbins[j] ;
 	    binLabel_1lepSig += sMbins[i]+sHbins[j] ;
 	    binLabel_1lep    += sMbins[i]+sHbins[j] ;
-
-
+	    
+	    
 	    hOS_0lep_1b[samp][bin-1]->SetBinContent(binIndex,ArrayContent[samp][3+3*j+12*i]) ;
 	    hOS_0lep_2b[samp][bin-1]->SetBinContent(binIndex,ArrayContent[samp][4+3*j+12*i]) ;
 	    hOS_0lep_3b[samp][bin-1]->SetBinContent(binIndex,ArrayContent[samp][5+3*j+12*i]) ;
@@ -230,15 +235,14 @@ void GenerateSusyCocktail(int version) {
 	    hOS_1lepSig_1b[samp][bin-1]->SetBinContent(binIndex,ArrayContent[samp][39+3*j+12*i]) ;
 	    hOS_1lepSig_2b[samp][bin-1]->SetBinContent(binIndex,ArrayContent[samp][40+3*j+12*i]) ;
 	    hOS_1lepSig_3b[samp][bin-1]->SetBinContent(binIndex,ArrayContent[samp][41+3*j+12*i]) ;
-	    
+	      
 	    hOS_1lep_1b[samp][bin-1]->SetBinContent(binIndex,ArrayContent[samp][75+3*j+12*i]) ;
 	    hOS_1lep_2b[samp][bin-1]->SetBinContent(binIndex,ArrayContent[samp][76+3*j+12*i]) ;
 	    hOS_1lep_3b[samp][bin-1]->SetBinContent(binIndex,ArrayContent[samp][77+3*j+12*i]) ;
-
+	    
 	  }
 	}
-
-
+	
       }
 
     }  // loop on nSamp
