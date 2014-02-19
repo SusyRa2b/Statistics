@@ -3,12 +3,13 @@
 //
 //  Version for the ewkino inclusive analysis.
 //  
-//  Only three components are used:
+//  Four components are used:
 //
 //  1) signal
 //  2) ttwj
-//  3) a component whose shape is derived from MC, including QCD, Z -> inv., 
-//     and other minor components
+//  3) QCD (taken from MC)
+//  4) Z -> inv. (shapes taken from MC), but it's possible to 
+//     constrain normalization with VL counts
 //
 
 
@@ -88,6 +89,8 @@
 					     const char* blindBinsList,
 					     bool constrainBjetShape,
 					     bool floatSLSigRatios,
+					     int qcdModelIndex,
+					     int znnModelIndex,
 					     const char* systFile1,
 					     const char* pdf_syst_file,
 					     const char* isr_syst_file,
@@ -100,8 +103,24 @@
 
       bool useBeta(false) ;
       bool useLognormal(true) ;
-
       
+      
+      // check that the qcd and znnModelIndex make sense
+
+      if ( qcdModelIndex < 1 || qcdModelIndex > 2 ) {
+	cout << "qcdModelIndex = " << qcdModelIndex << " is not implemented. Exiting ... " << endl ;
+	return false ;
+      }
+
+      if ( znnModelIndex < 1 || znnModelIndex > 2 ) {
+	cout << "znnModelIndex = " << znnModelIndex << " is not implemented. Exiting ... " << endl ;
+	return false ;
+      }
+
+      // for now ... 
+      if ( nBinsBtag > 3 ) {
+	cout << "As of now nBinsBtag > 3 is not implemented. Exiting ... " << endl ;
+      }
 
 
       //-- add the possibility to ignore particular bins in the analysis
@@ -202,12 +221,14 @@
       int N_1lepSig[nBinsMET][nBinsHT][nBinsBtag] ;
       int N_1lep[nBinsMET][nBinsHT][nBinsBtag] ;
 
+      int N_ZeeVL[nBinsMET][nBinsHT] ;
+      int N_ZmmVL[nBinsMET][nBinsHT] ;
+
 
       // MC inputs:
 
-      float NQZOmc_0lep[nBinsMET][nBinsHT][nBinsBtag] ;
-      float NQZOmc_1lepSig[nBinsMET][nBinsHT][nBinsBtag] ;
-      float NQZOmc_1lep[nBinsMET][nBinsHT][nBinsBtag] ;
+      float NQCDmc_0lep[nBinsMET][nBinsHT][nBinsBtag] ;
+      float NZnnmc_0lep[nBinsMET][nBinsHT][nBinsBtag] ;
 
       
       // other parameters:
@@ -472,53 +493,103 @@
       }
 
 
-      // NQZOmc_0lep
+      // NQCDmc_0lep
 
       for (int i = 0 ; i < nBinsMET ; i++) {
 	for (int j = 0 ; j < nBinsHT ; j++) {
 	  for (int k = 0 ; k < nBinsBtag ; k++) {
 	    
-	    TString inPar = "N_QZOmc_0lep"+sMbins[i]+sHbins[j]+sBbins[k] ;
-	    fscanf( infp, "%s %g", label, &NQZOmc_0lep[i][j][k] ) ;
+	    TString inPar = "N_QCDmc_0lep"+sMbins[i]+sHbins[j]+sBbins[k] ;
+	    fscanf( infp, "%s %g", label, &NQCDmc_0lep[i][j][k] ) ;
 	    
 	    if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
-	    cout << inPar << " = " << NQZOmc_0lep[i][j][k] << endl ;	  
+	    cout << inPar << " = " << NQCDmc_0lep[i][j][k] << endl ;	  
 
 	  }
 	}
       }
       
-      // NQZOmc_1lepSig
+
+      // Next get 1b/2b and 3b/2b ratios for qcd
+
+      float qcd_2b1b_ratio ;
+      float qcd_2b1b_ratio_err ;
+      float qcd_3b1b_ratio ;
+      float qcd_3b1b_ratio_err ;
+      float QCD_SF ;
+      float QCD_SF_err ;
+
+      fscanf( infp, "%s %g", label, &qcd_2b1b_ratio ) ;     cout << "qcd_2b1b_ratio    " << " = " << qcd_2b1b_ratio << endl ;
+      fscanf( infp, "%s %g", label, &qcd_2b1b_ratio_err ) ; cout << "qcd_2b1b_ratio_err" << " = " << qcd_2b1b_ratio_err << endl ;
+      fscanf( infp, "%s %g", label, &qcd_3b1b_ratio ) ;     cout << "qcd_3b1b_ratio    " << " = " << qcd_3b1b_ratio << endl ;
+      fscanf( infp, "%s %g", label, &qcd_3b1b_ratio_err ) ; cout << "qcd_3b1b_ratio_err" << " = " << qcd_3b1b_ratio_err << endl ;
+      fscanf( infp, "%s %g", label, &QCD_SF ) ;     cout << "QCD_SF    " << " = " << QCD_SF << endl ;
+      fscanf( infp, "%s %g", label, &QCD_SF_err ) ; cout << "QCD_SF_err" << " = " << QCD_SF_err << endl ;
+
+
+      // NZnnmc_0lep
 
       for (int i = 0 ; i < nBinsMET ; i++) {
 	for (int j = 0 ; j < nBinsHT ; j++) {
 	  for (int k = 0 ; k < nBinsBtag ; k++) {
 	    
-	    TString inPar = "N_QZOmc_1lepSig"+sMbins[i]+sHbins[j]+sBbins[k] ;
-	    fscanf( infp, "%s %g", label, &NQZOmc_1lepSig[i][j][k] ) ;
+	    TString inPar = "N_ZNNmc_0lep"+sMbins[i]+sHbins[j]+sBbins[k] ;
+	    fscanf( infp, "%s %g", label, &NZnnmc_0lep[i][j][k] ) ;
 	    
 	    if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
-	    cout << inPar << " = " << NQZOmc_1lepSig[i][j][k] << endl ;	  
+	    cout << inPar << " = " << NZnnmc_0lep[i][j][k] << endl ;	  
 
 	  }
 	}
       }
+
       
-      // NQZOmc_1lep
+      // NZeeVL_0lep
 
       for (int i = 0 ; i < nBinsMET ; i++) {
 	for (int j = 0 ; j < nBinsHT ; j++) {
-	  for (int k = 0 ; k < nBinsBtag ; k++) {
 	    
-	    TString inPar = "N_QZOmc_1lep"+sMbins[i]+sHbins[j]+sBbins[k] ;
-	    fscanf( infp, "%s %g", label, &NQZOmc_1lep[i][j][k] ) ;
-	    
-	    if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
-	    cout << inPar << " = " << NQZOmc_1lep[i][j][k] << endl ;	  
-
-	  }
+	  TString inPar = "N_ZeeVL_0lep"+sMbins[i]+sHbins[j] ;
+	  fscanf( infp, "%s %d", label, &N_ZeeVL[i][j] ) ;
+	  
+	  if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
+	  cout << inPar << " = " << N_ZeeVL[i][j] << endl ;	  
+	  
 	}
       }
+
+      
+      // NZmmVL_0lep
+
+      for (int i = 0 ; i < nBinsMET ; i++) {
+	for (int j = 0 ; j < nBinsHT ; j++) {
+	    
+	  TString inPar = "N_ZmmVL_0lep"+sMbins[i]+sHbins[j] ;
+	  fscanf( infp, "%s %d", label, &N_ZmmVL[i][j] ) ;
+	  
+	  if ( label != inPar ) { mismatchErr(label,inPar) ; return false ; }
+	  cout << inPar << " = " << N_ZmmVL[i][j] << endl ;	  
+	  
+	}
+      }
+
+
+      // Next get 1b/2b and 3b/2b ratios for Znn
+
+      float Znn_2b1b_ratio ;
+      float Znn_2b1b_ratio_err ;
+      float Znn_3b1b_ratio ;
+      float Znn_3b1b_ratio_err ;
+      float Znn_SF ;
+      float Znn_SF_err ;
+
+      fscanf( infp, "%s %g", label, &Znn_2b1b_ratio ) ;     cout << "Znn_2b1b_ratio    " << " = " << Znn_2b1b_ratio << endl ;
+      fscanf( infp, "%s %g", label, &Znn_2b1b_ratio_err ) ; cout << "Znn_2b1b_ratio_err" << " = " << Znn_2b1b_ratio_err << endl ;
+      fscanf( infp, "%s %g", label, &Znn_3b1b_ratio ) ;     cout << "Znn_3b1b_ratio    " << " = " << Znn_3b1b_ratio << endl ;
+      fscanf( infp, "%s %g", label, &Znn_3b1b_ratio_err ) ; cout << "Znn_3b1b_ratio_err" << " = " << Znn_3b1b_ratio_err << endl ;
+      fscanf( infp, "%s %g", label, &Znn_SF ) ;     cout << "Znn_SF    " << " = " << Znn_SF << endl ;
+      fscanf( infp, "%s %g", label, &Znn_SF_err ) ; cout << "Znn_SF_err" << " = " << Znn_SF_err << endl ;
+
 
 
       // next get trigger efficiency values
@@ -595,7 +666,8 @@
 
       //---- calculations for determining initial values for floating parameters.
 
-      double initialval_qzo[nBinsMET][nBinsHT][nBinsBtag] ;
+      double initialval_qcd[nBinsMET][nBinsHT][nBinsBtag] ;
+      double initialval_znn[nBinsMET][nBinsHT][nBinsBtag] ;
 
       double initialval_ttwj_slSig[nBinsMET][nBinsHT][nBinsBtag] ;
       double initialval_ttwj_sl[nBinsMET][nBinsHT][nBinsBtag] ;
@@ -626,9 +698,10 @@
             initialval_ttwj[i][j][k] = sf_ttwj[i][j][k] * initialguess_ttwj_0lep1lep_ratio * initialval_ttwj_sl[i][j][k] ;
 	    initialval_ttwj_slSig[i][j][k] = sf_ttwj_slSig[i][j][k] * initialval_ttwj_sl[i][j][k] * ratio_slSigsl ;
 
-            // QZO stuff:
+            // QCD and ZNN stuff:
 
-            initialval_qzo[i][j][k] = NQZOmc_0lep[i][j][k] ;
+            initialval_qcd[i][j][k] = NQCDmc_0lep[i][j][k] ;
+            initialval_znn[i][j][k] = NZnnmc_0lep[i][j][k] ;
 
           }
         }
@@ -641,8 +714,8 @@
 
       printf("\n\n\n --------- Observables and floating parameter initial values. ------------\n\n") ;
 
-      printf("           |   Nobs   |  Model  |    PDF        ||   ttwj   |   QZO   |\n") ;
-      printf("-----------+----------+---------+---------------++----------+---------+\n") ;
+      printf("           |   Nobs   |  Model  |    PDF        ||   ttwj   |   QCD   |   Znn  |\n") ;
+      printf("-----------+----------+---------+---------------++----------+---------+--------+\n") ;
 
       for (int i = 0 ; i < nBinsMET ; i++) {
 	for (int j = 0 ; j < nBinsHT ; j++) {
@@ -651,7 +724,7 @@
 
 	  for (int k = 0 ; k < nBinsBtag ; k++) {     
 
-            double model_0lep = trigeff_0L[i][j] * initialval_qzo[i][j][k] + trigeff_1L[i][j] * initialval_ttwj[i][j][k] ;
+            double model_0lep = trigeff_0L[i][j] * initialval_qcd[i][j][k] + trigeff_1L[i][j] * (initialval_ttwj[i][j][k]+initialval_znn[i][j][k]) ;
             double pdf_0lep = TMath::PoissonI( N_0lep[i][j][k], model_0lep ) ;
             char warning0lep[4] ;
             sprintf( warning0lep,"   ") ;
@@ -659,9 +732,9 @@
             if ( pdf_0lep < 0.00001  ) { sprintf( warning0lep, "** ") ; }
             if ( pdf_0lep < 0.000001 ) { sprintf( warning0lep, "***") ; }
 	    cout << " MET bin " << i+1 << ", HT bin " << j+1 << ", Btag bin " << k+1 << endl;
-	    printf(" 0-lep     | %6d   | %7.1f | %8.6f %4s ||  %7.1f | %7.1f |\n", N_0lep[i][j][k], model_0lep, pdf_0lep, warning0lep,
-                            trigeff_1L[i][j] * initialval_ttwj[i][j][k], trigeff_0L[i][j] * initialval_qzo[i][j][k] ) ;
-            printf("-----------+----------+---------+---------------++----------+---------+\n") ;
+	    printf(" 0-lep     | %6d   | %7.1f | %8.6f %4s ||  %7.1f | %7.1f | %7.1f | \n", N_0lep[i][j][k], model_0lep, pdf_0lep, warning0lep,
+		   trigeff_1L[i][j] * initialval_ttwj[i][j][k], trigeff_0L[i][j] * initialval_qcd[i][j][k], trigeff_1L[i][j] * initialval_znn[i][j][k] ) ;
+            printf("-----------+----------+---------+---------------++----------+---------+---------+\n") ;
 
 	  }
 	}
@@ -698,12 +771,21 @@
       rv_mu_susy_all0lep->setConstant( kTRUE ) ;
 
 
-      rv_mean_qzo_sf = new RooRealVar( "mean_qzo_sf", "mean_qzo_sf", 0., 10. );			  
-      rv_mean_qzo_sf->setVal( 1.0 ) ;								  
-      rv_mean_qzo_sf->setConstant( kTRUE ) ;							  
-      rv_width_qzo_sf = new RooRealVar( "width_qzo_sf", "width_qzo_sf", 0., 10. );  		  
-      rv_width_qzo_sf->setVal( 1.00 ) ; 	   // arbitrarily set the uncertainty to 100%	  
-      rv_width_qzo_sf->setConstant( kTRUE ) ;							  
+      rv_mean_qcd_sf = new RooRealVar( "mean_qcd_sf", "mean_qcd_sf", 0., 10. );			  
+      rv_mean_qcd_sf->setVal( 1.0 ) ;		   // for now hardcode 1.0, this can be set on the input file						  
+      rv_mean_qcd_sf->setConstant( kTRUE ) ;							  
+      rv_width_qcd_sf = new RooRealVar( "width_qcd_sf", "width_qcd_sf", 0., 10. );  		  
+      rv_width_qcd_sf->setVal( 1.00 ) ; 	   // for now hardcode 1.0, this can be set on the input file						  
+      rv_width_qcd_sf->setConstant( kTRUE ) ;							  
+
+
+      rv_mean_znn_sf = new RooRealVar( "mean_znn_sf", "mean_znn_sf", 0., 10. );			  
+      rv_mean_znn_sf->setVal( 1.0 ) ;		   // for now hardcode 1.0, this can be set on the input file						  
+      rv_mean_znn_sf->setConstant( kTRUE ) ;							  
+      rv_width_znn_sf = new RooRealVar( "width_znn_sf", "width_znn_sf", 0., 10. );  		  
+      rv_width_znn_sf->setVal( 1.00 ) ; 	   // for now hardcode 1.0, this can be set on the input file						  
+      rv_width_znn_sf->setConstant( kTRUE ) ;							  
+
 
             
       for (int i = 0 ; i < nBinsMET ; i++) {
@@ -731,14 +813,15 @@
 	    rv_1lep[i][j][k]->setVal( N_1lep[i][j][k] );
 
 	    observedParametersList -> add( *rv_0lep[i][j][k] ) ;
-	    observedParametersList -> add( *rv_1lepSig[i][j][k] ) ;
+	    //observedParametersList -> add( *rv_1lepSig[i][j][k] ) ;
 	    observedParametersList -> add( *rv_1lep[i][j][k] ) ;
 	    
 	    // parameters of the likelihood:
 	    TString muTtString      = "mu_ttwj";
 	    TString muTtSlSigString = "mu_ttwj_slSig";
 	    TString muTtSlString    = "mu_ttwj_sl";
-	    TString muQzoString     = "mu_qzo";
+	    TString muQcdString     = "mu_qcd";
+	    TString muZnnString     = "mu_znn";
 
 	    TString muSusMcString      = "mu_susymc";
 	    TString muSusSlSigMcString = "mu_susymc_slSig";
@@ -757,7 +840,8 @@
 	    muTtString      += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    muTtSlSigString += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    muTtSlString    += sMbins[i]+sHbins[j]+sBbins[k] ;
-	    muQzoString     += sMbins[i]+sHbins[j]+sBbins[k] ;
+	    muQcdString     += sMbins[i]+sHbins[j]+sBbins[k] ;
+	    muZnnString     += sMbins[i]+sHbins[j]+sBbins[k] ;
 
 	    muSusMcString      += sMbins[i]+sHbins[j]+sBbins[k] ;
 	    muSusSlSigMcString += sMbins[i]+sHbins[j]+sBbins[k] ;
@@ -776,18 +860,22 @@
             rrv_mu_ttwj_slSig[i][j][k] = new RooRealVar( muTtSlSigString, muTtSlSigString, 0., 100000. ) ;
             rv_mu_ttwj_slSig[i][j][k] = rrv_mu_ttwj_slSig[i][j][k] ;
             rrv_mu_ttwj_slSig[i][j][k]->setVal( initialval_ttwj_slSig[i][j][k] ) ;    // this is a starting value only
-            if ( !(ignoreBin[i][j]) ) { allNuisances -> add( *rv_mu_ttwj_slSig[i][j][k] ) ; } //-- is this correct?
+            //if ( !(ignoreBin[i][j]) ) { allNuisances -> add( *rv_mu_ttwj_slSig[i][j][k] ) ; } //-- is this correct?
 
             rrv_mu_ttwj_sl[i][j][k] = new RooRealVar( muTtSlString, muTtSlString, 0., 100000. ) ;
             rv_mu_ttwj_sl[i][j][k] = rrv_mu_ttwj_sl[i][j][k] ;
             rrv_mu_ttwj_sl[i][j][k]->setVal( initialval_ttwj_sl[i][j][k] ) ;    // this is a starting value only
             if ( !(ignoreBin[i][j]) ) { allNuisances -> add( *rv_mu_ttwj_sl[i][j][k] ) ; } //-- is this correct?
 
-            //--- try allowing negative values.
-	    rrv_mu_qzo[i][j][k] = new RooRealVar( muQzoString, muQzoString, -1000., 100000. ) ;
-	    rv_mu_qzo[i][j][k] = rrv_mu_qzo[i][j][k];
-	    rrv_mu_qzo[i][j][k]->setVal( initialval_qzo[i][j][k] ) ;          
-	    rrv_mu_qzo[i][j][k]->setConstant(kTRUE);
+	    rrv_mu_qcd[i][j][k] = new RooRealVar( muQcdString, muQcdString, 0., 100000. ) ;
+	    rv_mu_qcd[i][j][k] = rrv_mu_qcd[i][j][k];
+	    rrv_mu_qcd[i][j][k]->setVal( initialval_qcd[i][j][k] ) ;          
+	    rrv_mu_qcd[i][j][k]->setConstant(kTRUE);
+
+	    rrv_mu_znn[i][j][k] = new RooRealVar( muZnnString, muZnnString, 0., 100000. ) ;
+	    rv_mu_znn[i][j][k] = rrv_mu_znn[i][j][k];
+	    rrv_mu_znn[i][j][k]->setVal( initialval_znn[i][j][k] ) ;          
+	    rrv_mu_znn[i][j][k]->setConstant(kTRUE);
 
 
 	    // MC inputs
@@ -854,7 +942,7 @@
       rv_ttwj_slSigsl_ratio -> setVal( ratio_slSigsl ) ; // initial guess
       rv_ttwj_slSigsl_ratio -> setConstant( kFALSE ) ;
 
-      allNuisances -> add( *rv_ttwj_slSigsl_ratio ) ;
+      //allNuisances -> add( *rv_ttwj_slSigsl_ratio ) ;
 
 
       RooRealVar* rv_ttwj_slSigDD_ratio[nBinsMET][nBinsHT] ;
@@ -870,7 +958,7 @@
 	    rv_ttwj_slSigDD_ratio[i][j] -> setVal( 1. ) ; // initial guess
 	    rv_ttwj_slSigDD_ratio[i][j] -> setConstant( kFALSE ) ;
 
-	    allNuisances -> add( *rv_ttwj_slSigDD_ratio[i][j] ) ;
+	    //allNuisances -> add( *rv_ttwj_slSigDD_ratio[i][j] ) ;
 
 	  }
 	}
@@ -1054,6 +1142,41 @@
 
 
 
+      printf("\n\n QCD nB ratio factors.\n\n") ; cout << flush ;
+
+      // QCD nB ratio 
+
+      RooAbsReal* rar_qcd_2b1b_ratio;      
+      RooAbsReal* rar_qcd_3b1b_ratio;      
+
+      if ( qcdModelIndex == 2 ) {
+	if ( useLognormal ) {
+	  rar_qcd_2b1b_ratio = makeLognormalConstraint( "qcd_2b1b_ratio", qcd_2b1b_ratio, qcd_2b1b_ratio_err ) ;
+	  rar_qcd_3b1b_ratio = makeLognormalConstraint( "qcd_231b_ratio", qcd_3b1b_ratio, qcd_3b1b_ratio_err ) ;
+	} else {
+	  rar_qcd_2b1b_ratio = makeGaussianConstraint( "qcd_2b1b_ratio", qcd_2b1b_ratio, qcd_2b1b_ratio_err ) ;
+	  rar_qcd_3b1b_ratio = makeGaussianConstraint( "qcd_3b1b_ratio", qcd_3b1b_ratio, qcd_3b1b_ratio_err ) ;
+	}
+      }
+      
+
+      printf("\n\n Znn nB ratio factors.\n\n") ; cout << flush ;
+
+      // Znn nB ratio 
+
+      RooAbsReal* rar_znn_2b1b_ratio;      
+      RooAbsReal* rar_znn_3b1b_ratio;      
+
+      if ( znnModelIndex == 2 ) {
+	if ( useLognormal ) {
+	  rar_znn_2b1b_ratio = makeLognormalConstraint( "znn_2b1b_ratio", Znn_2b1b_ratio, Znn_2b1b_ratio_err ) ;
+	  rar_znn_3b1b_ratio = makeLognormalConstraint( "znn_231b_ratio", Znn_3b1b_ratio, Znn_3b1b_ratio_err ) ;
+	} else {
+	  rar_znn_2b1b_ratio = makeGaussianConstraint( "znn_2b1b_ratio", Znn_2b1b_ratio, Znn_2b1b_ratio_err ) ;
+	  rar_znn_3b1b_ratio = makeGaussianConstraint( "znn_3b1b_ratio", Znn_3b1b_ratio, Znn_3b1b_ratio_err ) ;
+	}
+      }
+      
 
 
       RooAbsReal* rar_eff_sf[nBinsMET][nBinsHT][nBinsBtag] ;
@@ -1252,14 +1375,10 @@
 
 	  for (int k = 0 ; k < nBinsBtag ; k++) {     
 
-
-
-
-
-             printf(" met,ht,nb : %d, %d, %d : ", i+1, j+1, k+1 ) ; cout << flush ;
-
-             printf(" ttwj,") ; cout << flush ;
-
+	    printf(" met,ht,nb : %d, %d, %d : ", i+1, j+1, k+1 ) ; cout << flush ;
+	    
+	    printf(" ttwj,") ; cout << flush ;
+	    
 	    //---- TTWJ
 
 
@@ -1349,6 +1468,87 @@
             rv_mu_ttwj[i][j][k] = rfv_mu_ttwj[i][j][k] ;
 
 
+	  
+	    printf(" QCD,") ; cout << flush ;
+
+	    //---- QCD
+
+            TString qcdString    = "mu_qcd" ;
+            qcdString    += sMbins[i]+sHbins[j]+sBbins[k] ;
+
+	    if ( qcdModelIndex == 1 ) {
+	      // do nothing, keep the QCD shape from MC
+	    }
+
+	    if ( qcdModelIndex == 2 ) {
+
+	      // take the shape from 1B bins, then float 2B and 3B using loose constraints
+	      
+	      if ( k == 0 ) {
+		// nothing
+	      }
+	      else if ( k == 1 ) {
+
+               TString rfvQcdString = "@0 * @1" ;
+
+               rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
+                                                        RooArgSet( *rv_mu_qcd[i][j][0], *rar_qcd_2b1b_ratio ) ) ;
+	       rv_mu_qcd[i][j][k] = rfv_mu_qcd[i][j][k] ;
+
+	      }
+	      else if ( k == 2 ) {
+
+               TString rfvQcdString = "@0 * @1" ;
+
+               rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
+                                                        RooArgSet( *rv_mu_qcd[i][j][0], *rar_qcd_3b1b_ratio ) ) ;
+	       rv_mu_qcd[i][j][k] = rfv_mu_qcd[i][j][k] ;
+
+	      }
+
+	    }
+
+
+
+	  
+	    printf(" ZNN,") ; cout << flush ;
+
+	    //---- ZNN
+
+            TString znnString    = "mu_znn" ;
+            znnString    += sMbins[i]+sHbins[j]+sBbins[k] ;
+
+	    if ( znnModelIndex == 1 ) {
+	      // do nothing, keep the ZNN shape from MC
+	    }
+
+	    if ( znnModelIndex == 2 ) {
+
+	      // take the shape from 1B bins, then float 2B and 3B using loose constraints
+	      
+	      if ( k == 0 ) {
+		// nothing
+	      }
+	      else if ( k == 1 ) {
+
+               TString rfvZnnString = "@0 * @1" ;
+
+               rfv_mu_znn[i][j][k] = new RooFormulaVar( znnString, rfvZnnString, 
+                                                        RooArgSet( *rv_mu_znn[i][j][0], *rar_znn_2b1b_ratio ) ) ;
+	       rv_mu_znn[i][j][k] = rfv_mu_znn[i][j][k] ;
+
+	      }
+	      else if ( k == 2 ) {
+
+               TString rfvZnnString = "@0 * @1" ;
+
+               rfv_mu_znn[i][j][k] = new RooFormulaVar( znnString, rfvZnnString, 
+                                                        RooArgSet( *rv_mu_znn[i][j][0], *rar_znn_3b1b_ratio ) ) ;
+	       rv_mu_znn[i][j][k] = rfv_mu_znn[i][j][k] ;
+
+	      }
+
+	    }
 
 
 	    printf(" susy,") ; cout << flush ;
@@ -1381,7 +1581,7 @@
                                                         RooArgSet( *rv_mu_susymc_sl[i][j][k], *rv_mu_susy_all0lep, *rv_mu_susymc_all0lep ) ) ;
 
 
-
+	    
 
             //+++++++++++++ Expected counts for observables in terms of parameters ++++++++++++++++++
 
@@ -1422,11 +1622,11 @@
             RooFormulaVar* rfv_shapeSystProd_zl = new RooFormulaVar( shapesystprodname, systprodeqn, shapeSystProdSet_zl ) ;
 
 	    
-            TString rfvNString =  "@0 * @1 + (@2 + (@3 * @4 * @5 * @6)) * @7" ;
+            TString rfvNString =  "@0 * @1 + (@2 + @3 + (@4 * @5 * @6 * @7)) * @8" ;
 
             rv_n[i][j][k] = new RooFormulaVar( nString, rfvNString,
-                                               RooArgSet( *rv_mu_qzo[i][j][k], *rar_trigeff[i][j],
-                                                          *rv_mu_ttwj[i][j][k],
+                                               RooArgSet( *rv_mu_qcd[i][j][k], *rar_trigeff[i][j],
+                                                          *rv_mu_ttwj[i][j][k], *rv_mu_znn[i][j][k],
                                                           *rar_all_gu, *rfv_shapeSystProd_zl, *rar_eff_sf[i][j][k], *rv_mu_susy[i][j][k],
                                                           *rar_trigeff_sl[i][j] ) ) ;
 							  
@@ -1499,13 +1699,14 @@
 	    pdf_N_1lepSig[i][j][k] = new RooPoisson( pdfN1lepSigString, pdfN1lepSigString, *rv_1lepSig[i][j][k], *rv_n_slSig[i][j][k] ) ;
 	    pdf_N_1lep[i][j][k]    = new RooPoisson( pdfN1lepString,    pdfN1lepString,    *rv_1lep[i][j][k],    *rv_n_sl[i][j][k] ) ;
 
-	    pdflist.add( *pdf_N_1lepSig[i][j][k] ) ;
+	    //pdflist.add( *pdf_N_1lepSig[i][j][k] ) ;
 	    pdflist.add( *pdf_N_1lep[i][j][k] ) ;
 
 	  }
 
 	}
-      }      
+      } 
+     
 
       printf(" --- Constructing likelihood.\n" ) ; cout << flush ;
 
@@ -1667,7 +1868,6 @@
       workspace.Print() ;
       printf("\n\n Creating output root file: %s\n\n\n", wsrootfilename) ;
       workspace.writeToFile(wsrootfilename);
-
 
 
       return true;

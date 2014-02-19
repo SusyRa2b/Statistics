@@ -8,7 +8,7 @@ Var1_lowBound1  500
 Var1_lowBound2	650
 Var1_lowBound3	1000
 Var2_lowBound1	0
-Var2_lowBound2	80
+Var2_lowBound2	90
 Var2_lowBound3	120
 Var2_lowBound4	240
-version		41
+version		81

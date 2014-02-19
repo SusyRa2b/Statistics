@@ -31,6 +31,8 @@
                         const char* blindBinsList = "null",
 			bool constrainBjetShape = false,
 			bool floatSLSigRatios = false,
+			int qcdModelIndex = 1,
+			int znnModelIndex = 1,
 			const char* systFile1 = "systFile1.txt",
 			const char* pdf_syst_file = "foo",
 			const char* isr_syst_file = "foo2",
@@ -112,9 +114,13 @@
        RooFormulaVar* rfv_mu_ttwj_slSig[nBinsMET][nBinsHT][nBinsBtag] ;
        RooFormulaVar* rfv_mu_ttwj_sl[nBinsMET][nBinsHT][nBinsBtag] ;
 
-       RooRealVar* rrv_mu_qzo[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooAbsArg*  rv_mu_qzo[nBinsMET][nBinsHT][nBinsBtag] ;
-       RooFormulaVar* rfv_mu_qzo[nBinsMET][nBinsHT][nBinsBtag] ;
+       RooRealVar* rrv_mu_qcd[nBinsMET][nBinsHT][nBinsBtag] ;
+       RooAbsArg*  rv_mu_qcd[nBinsMET][nBinsHT][nBinsBtag] ;
+       RooFormulaVar* rfv_mu_qcd[nBinsMET][nBinsHT][nBinsBtag] ;
+
+       RooRealVar* rrv_mu_znn[nBinsMET][nBinsHT][nBinsBtag] ;
+       RooAbsArg*  rv_mu_znn[nBinsMET][nBinsHT][nBinsBtag] ;
+       RooFormulaVar* rfv_mu_znn[nBinsMET][nBinsHT][nBinsBtag] ;
 
        RooRealVar*  rv_mu_susy_all0lep ;
        RooAbsArg*   rv_mu_susy[nBinsMET][nBinsHT][nBinsBtag] ;
@@ -138,9 +144,12 @@
        RooRealVar* rv_mean_eff_sf_sl[nBinsMET][nBinsHT][nBinsBtag] ;
        RooRealVar* rv_width_eff_sf_sl[nBinsMET][nBinsHT][nBinsBtag] ;
 
-       RooRealVar* rv_mean_qzo_sf;
-       RooRealVar* rv_width_qzo_sf;
+       RooRealVar* rv_mean_qcd_sf;
+       RooRealVar* rv_width_qcd_sf;
+       RooRealVar* rv_mean_znn_sf;
+       RooRealVar* rv_width_znn_sf;
        
+
        // btag efficiency derivatives
 
        RooRealVar* rv_deff_dbtageff[nBinsMET][nBinsHT][nBinsBtag] ;

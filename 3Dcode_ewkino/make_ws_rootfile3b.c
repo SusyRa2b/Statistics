@@ -10,6 +10,8 @@
 			    const char* blindBinsList = "null",
 			    bool constrainBjetShape = false,
 			    bool floatSLSigRatios = false,
+			    int qcdModelIndex = 1,
+			    int znnModelIndex = 1,
 			    const char* systfilename = "datfiles/sigsystematics.T1bbbb.JES.txt",
 			    const char* systfilename2 = "datfiles/sigsystematics.T1bbbb.PDF.txt",
 			    const char* systfilename3 = "datfiles/sigsystematics.T1bbbb.ISR.txt",
@@ -26,8 +28,8 @@
        ra2bRoostatsClass3D_3b ra2b ;
 
        ra2b.initialize( input_datfile, input_susyfile, mgl, mlsp, false, 0., input_deffdbtagfile, input_lightmistagfile, 
-			wsrootfilename, blindBinsList, constrainBjetShape, floatSLSigRatios, systfilename, systfilename2, systfilename3,
-			wjets_xsec_shapesyst_file, singletop_xsec_shapesyst_file) ;
+			wsrootfilename, blindBinsList, constrainBjetShape, floatSLSigRatios, qcdModelIndex, znnModelIndex, systfilename, 
+			systfilename2, systfilename3, wjets_xsec_shapesyst_file, singletop_xsec_shapesyst_file) ;
 
    }
 

@@ -176,8 +176,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
   bool ExcludeHiggs = false ;
   //TString sLooseHiggsCuts = "";
-  //TString sLooseHiggsCuts = "njets20<=7&&deltaRmax_hh<2.4&&((higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff==-1)||(higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff>95&&higgsMbb2MassDiff<145))&&METsig>30.&&deltaPhiStar>0.1&&pt_1st_leadJet<500&&MET>125&&HT>300&&" ;
-  TString sLooseHiggsCuts = "njets20<=7&&deltaRmax_hh<2.4&&(higgsMbb1MassDiff>90&&higgsMbb1MassDiff<150&&higgsMbb2MassDiff>90&&higgsMbb2MassDiff<150)&&METsig>30.&&deltaPhiStar>0.1&&pt_1st_leadJet<500&&MET>125&&HT>300&&" ;
+  TString sLooseHiggsCuts = "njets20<=6&&deltaRmax_hh<2.8&&(higgsMbb1MassDiff==-1||(higgsMbb1MassDiff>95&&higgsMbb1MassDiff<145&&higgsMbb2MassDiff>95&&higgsMbb2MassDiff<145))&&METsig>30.&&deltaPhiStar>0.1&&pt_1st_leadJet<500&&MET>125&&HT>300&&" ;
+  
 
   double minLeadJetPt = 70. ;
   double min3rdJetPt = 50. ;
@@ -912,26 +912,141 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
    }
 
     
-   // print out combined mc truth values for QCD + Z -> inv. + others
-   for ( int si=0; si<nSel; si++ ) {
-     for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
-       for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
-	 int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
-	 for (int bbi = 0 ; bbi < nBinsBjets ; bbi++) {
-	   
-	   float qzovalue = hmctruth_qzo[si][bbi] -> GetBinContent( hbin ) ;
-	   char parname[1000] ;
-	   
-	   sprintf( parname, "N_QZOmc_%s_M%d_H%d_%db", selname[si], mbi+1, hbi+1, bbi+1 ) ;
-	   printf(" %s  :  %6.3f \n", parname, qzovalue ) ;
-	   inFile << parname << "  \t" << qzovalue << endl;
-	    
+   // print out mc truth values of QCD (only for the 0lep sample)
+   for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
+     for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
+       int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
+       for (int bbi = 0 ; bbi < nBinsBjets ; bbi++) {
+	 
+	 float qcdvalue = hmctruth_qcd[0][bbi] -> GetBinContent( hbin ) ;
+	 char parname[1000] ;
+	 
+	 sprintf( parname, "N_QCDmc_0lep_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+	 printf(" %s  :  %6.3f \n", parname, qcdvalue ) ;
+	 inFile << parname << "  \t" << qcdvalue << endl;
+	 
+	 
+       } // bbi
+     } // hbi
+   } // mbi
+   
 
-	 } // bbi
-       } // hbi
-     } // mbi
-   } // si
+   // print out the 2b/1b and 3b/1b ratios (integrated over all bins)
+	
+   float qcd_1b_integral = 0. ;
+   float qcd_2b_integral = 0. ;
+   float qcd_3b_integral = 0. ;
 
+   for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
+     for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
+
+       int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
+       
+       qcd_1b_integral += hmctruth_qcd[0][0]->GetBinContent(hbin);
+       qcd_2b_integral += hmctruth_qcd[0][1]->GetBinContent(hbin);
+       qcd_3b_integral += hmctruth_qcd[0][2]->GetBinContent(hbin);
+
+     }
+   }
+
+   float qcd_2bover1b_ratio     = qcd_2b_integral/qcd_1b_integral ;
+   float qcd_2bover1b_ratio_err = 0.5 ;
+   float qcd_3bover1b_ratio     = qcd_3b_integral/qcd_1b_integral ;
+   float qcd_3bover1b_ratio_err = 0.5 ;
+
+   inFile << "qcd_2bover1b_ratio"     << "  \t" << qcd_2bover1b_ratio << endl ;
+   inFile << "qcd_2bover1b_ratio_err" << "  \t" << qcd_2bover1b_ratio_err << endl ;
+   inFile << "qcd_3bover1b_ratio"     << "  \t" << qcd_3bover1b_ratio << endl ;
+   inFile << "qcd_3bover1b_ratio_err" << "  \t" << qcd_3bover1b_ratio_err << endl ;
+
+
+   // add one overall scale factor (not sure it will be used)
+
+   inFile << "QCDsf"     << "  \t" << 1.00 << endl;
+   inFile << "QCDsf_err" << "  \t" << 1.00 << endl;
+
+
+   
+   // Z -> nn entries from the MC
+    
+   for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
+     for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
+       int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
+       for (int bbi = 0 ; bbi < nBinsBjets ; bbi++) {
+	 
+	 float znnvalue = hmctruth_znn[0][bbi] -> GetBinContent( hbin ) ;
+	 char parname[1000] ;
+	 
+	 sprintf( parname, "N_ZNNmc_0lep_M%d_H%d_%db", mbi+1, hbi+1, bbi+1 ) ;
+	 printf(" %s  :  %6.3f \n", parname, znnvalue ) ;
+	 inFile << parname << "  \t" << znnvalue << endl;
+	 
+	 
+       } // bbi
+     } // hbi
+   } // mbi
+
+
+   // VL Z->ee and Z->mumu events (to be filled in by hand
+    
+   for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
+     for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
+       
+       char parname[1000] ;	 
+       sprintf( parname, "N_ZeeVL_0lep_M%d_H%d", mbi+1, hbi+1 ) ;
+       inFile << parname << "  \t" << 0 << endl;
+       
+     } // hbi
+   } // mbi
+
+    
+   for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
+     for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
+
+       char parname[1000] ;	 
+       sprintf( parname, "N_ZmmVL_0lep_M%d_H%d", mbi+1, hbi+1 ) ;
+       inFile << parname << "  \t" << 0 << endl;
+	 
+     } // hbi
+   } // mbi
+
+
+   // print out the 2b/1b and 3b/1b ratios (integrated over all bins)
+	
+   float znn_1b_integral = 0. ;
+   float znn_2b_integral = 0. ;
+   float znn_3b_integral = 0. ;
+
+   for (int mbi = 0 ; mbi < nBinsVar1 ; mbi++) {
+     for (int hbi = 0 ; hbi < nBinsVar2 ; hbi++) {
+
+       int hbin = 1 + (nBinsVar2+1)*mbi + hbi + 1 ;
+       
+       znn_1b_integral += hmctruth_znn[0][0]->GetBinContent(hbin);
+       znn_2b_integral += hmctruth_znn[0][1]->GetBinContent(hbin);
+       znn_3b_integral += hmctruth_znn[0][2]->GetBinContent(hbin);
+
+     }
+   }
+
+   float znn_2bover1b_ratio     = znn_2b_integral/znn_1b_integral ;
+   float znn_2bover1b_ratio_err = 0.5 ;
+   float znn_3bover1b_ratio     = znn_3b_integral/znn_1b_integral ;
+   float znn_3bover1b_ratio_err = 0.5 ;
+
+   inFile << "znn_2bover1b_ratio"     << "  \t" << znn_2bover1b_ratio << endl ;
+   inFile << "znn_2bover1b_ratio_err" << "  \t" << znn_2bover1b_ratio_err << endl ;
+   inFile << "znn_3bover1b_ratio"     << "  \t" << znn_3bover1b_ratio << endl ;
+   inFile << "znn_3bover1b_ratio_err" << "  \t" << znn_3bover1b_ratio_err << endl ;
+
+
+   // add one overall scale factor (not sure it will be used)
+
+   inFile << "ZNNsf"     << "  \t" << 1.00 << endl;
+   inFile << "ZNNsf_err" << "  \t" << 1.00 << endl;
+
+
+   // trigger efficiencies
 
    float trigeff1LVal[nBinsVar2][nBinsVar1] ;
    float trigeff1LErr[nBinsVar2][nBinsVar1] ;
@@ -976,31 +1091,30 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
    //-- Oct 31, 2012 : add global uncertainties here (e.g. lumi, met cleaning, ...)
 
-    inFile << "GU_luminosity   0.044" << endl ;
-    inFile << "GU_metcleaning  0.031" << endl ;
-    inFile << "GU_JER          0.020" << endl ;
-    inFile << "GU_unclMET      0.010" << endl ;
+   inFile << "GU_luminosity   0.044" << endl ;
+   inFile << "GU_metcleaning  0.031" << endl ;
+   inFile << "GU_JER          0.020" << endl ;
+   inFile << "GU_unclMET      0.010" << endl ;
 
+   
+   gSystem->Exec("mkdir -p rootfiles") ;
+   char outHistName[1000] ;
+   if ( mgl>0. && mlsp>0. ) {
+     if ( target_susy_all0lep > 0 ) {
+       sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%.0fevts-%s-%d-%s-%d-nB%d-v%d.root", mgl, mlsp, target_susy_all0lep, aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
+     } else {
+       sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%s-%d-%s-%d-nB%d-v%d.root", mgl, mlsp, aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
+     }
+   } else {
+     sprintf( outHistName, "rootfiles/gi-plots-%s-%d-%s-%d-nB%d-v%d.root", aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
+   }
+   saveHist( outHistName, "h*" ) ;
+   
 
-
-    gSystem->Exec("mkdir -p rootfiles") ;
-    char outHistName[1000] ;
-    if ( mgl>0. && mlsp>0. ) {
-       if ( target_susy_all0lep > 0 ) {
-	 sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%.0fevts-%s-%d-%s-%d-nB%d-v%d.root", mgl, mlsp, target_susy_all0lep, aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
-       } else {
-	 sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%s-%d-%s-%d-nB%d-v%d.root", mgl, mlsp, aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
-       }
-    } else {
-      sprintf( outHistName, "rootfiles/gi-plots-%s-%d-%s-%d-nB%d-v%d.root", aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
-    }
-    saveHist( outHistName, "h*" ) ;
-
-
-    inFile.close();
-    return;
-  
-  }
+   inFile.close();
+   return;
+   
+}
   //==========================================================================================
   
   void saveHist(const char* filename, const char* pat)
