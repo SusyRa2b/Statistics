@@ -32,6 +32,7 @@
 			bool constrainBjetShape = false,
 			bool floatSLSigRatios = false,
 			int qcdModelIndex = 1,
+			bool floatQcdShape = false,
 			int znnModelIndex = 1,
 			const char* systFile1 = "systFile1.txt",
 			const char* pdf_syst_file = "foo",

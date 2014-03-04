@@ -90,6 +90,7 @@
 					     bool constrainBjetShape,
 					     bool floatSLSigRatios,
 					     int qcdModelIndex,
+					     bool floatQcdShape,
 					     int znnModelIndex,
 					     const char* systFile1,
 					     const char* pdf_syst_file,
@@ -965,6 +966,33 @@
       }
 
 
+      // float QCD shape (if specified)
+
+      RooRealVar* rv_qcd_shape_ratio[nBinsMET][nBinsHT] ;
+
+      for (int i = 0 ; i < nBinsMET ; i++) {
+	for (int j = 0 ; j < nBinsHT ; j++) {
+	  
+	  TString qcdShape_ratioS = "qcdShape_ratio";
+	  qcdShape_ratioS += sMbins[i]+sHbins[j];
+	  
+	  rv_qcd_shape_ratio[i][j] = new RooRealVar( qcdShape_ratioS, qcdShape_ratioS, 0., 5. ) ;
+	  rv_qcd_shape_ratio[i][j] -> setVal( 1. ) ; 
+	  rv_qcd_shape_ratio[i][j] -> setConstant( kTRUE ) ;
+
+	  if ( floatQcdShape ) {
+
+	    if ( i == 0 && j == 0 ) continue ;    // set ratios wrt lowest (Var1,Var2) bin
+
+	    rv_qcd_shape_ratio[i][j] -> setConstant( kFALSE ) ;
+	    allNuisances -> add( *rv_qcd_shape_ratio[i][j] ) ;
+	    
+	  }
+
+	}
+      }
+
+      
 
       RooDataSet* dsObserved ;
       dsObserved = new RooDataSet("ra2b_observed_rds", "RA2b observed data values",
@@ -1485,7 +1513,13 @@
 	      // take the shape from 1B bins, then float 2B and 3B using loose constraints
 	      
 	      if ( k == 0 ) {
-		// nothing
+
+		TString rfvQcdString = "@0 * @1" ;
+
+		rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
+							 RooArgSet( *rv_mu_qcd[i][j][k], *rv_qcd_shape_ratio[i][j] ) ) ;
+		rv_mu_qcd[i][j][k] = rfv_mu_qcd[i][j][k] ;
+
 	      }
 	      else if ( k == 1 ) {
 
