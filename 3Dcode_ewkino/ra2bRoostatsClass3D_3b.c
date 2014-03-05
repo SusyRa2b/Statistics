@@ -970,26 +970,26 @@
 
       RooAbsReal* rar_qcd_shape_ratio[nBinsMET][nBinsHT] ;
 
-      if ( floatQcdShape ) {
-
-	for (int i = 0 ; i < nBinsMET ; i++) {
-	  for (int j = 0 ; j < nBinsHT ; j++) {
+      for (int i = 0 ; i < nBinsMET ; i++) {
+	for (int j = 0 ; j < nBinsHT ; j++) {
 	  
-	    TString qcdShape_ratioS = "qcdShape_ratio";
-	    qcdShape_ratioS += sMbins[i]+sHbins[j];
+	  double qcdS_err = 10. ;
 	  
-	    if ( useLognormal ) {
-	      rar_qcd_shape_ratio[i][j] = makeLognormalConstraint( qcdShape_ratioS, 1., 1.) ;
-	    }
-	    else {
-	      rar_qcd_shape_ratio[i][j] = makeGaussianConstraint( qcdShape_ratioS, 1., 1.) ;
-	    }
-
+	  if ( (i == 0 && j == 0) || !floatQcdShape ) qcdS_err = 0.00001 ; 
+	       
+	  TString qcdShape_ratioS = "qcdShape_ratio";
+	  qcdShape_ratioS += sMbins[i]+sHbins[j];
+	  
+	  if ( useLognormal ) {
+	    rar_qcd_shape_ratio[i][j] = makeLognormalConstraint( qcdShape_ratioS, 1., qcdS_err ) ;
 	  }
+	  else {
+	    rar_qcd_shape_ratio[i][j] = makeGaussianConstraint( qcdShape_ratioS, 1., qcdS_err ) ;
+	  }
+	  
 	}
       }
 
-      
 
       RooDataSet* dsObserved ;
       dsObserved = new RooDataSet("ra2b_observed_rds", "RA2b observed data values",
@@ -1177,7 +1177,7 @@
       if ( qcdModelIndex == 2 ) {
 	if ( useLognormal ) {
 	  rar_qcd_2b1b_ratio = makeLognormalConstraint( "qcd_2b1b_ratio", qcd_2b1b_ratio, qcd_2b1b_ratio_err ) ;
-	  rar_qcd_3b1b_ratio = makeLognormalConstraint( "qcd_231b_ratio", qcd_3b1b_ratio, qcd_3b1b_ratio_err ) ;
+	  rar_qcd_3b1b_ratio = makeLognormalConstraint( "qcd_3b1b_ratio", qcd_3b1b_ratio, qcd_3b1b_ratio_err ) ;
 	} else {
 	  rar_qcd_2b1b_ratio = makeGaussianConstraint( "qcd_2b1b_ratio", qcd_2b1b_ratio, qcd_2b1b_ratio_err ) ;
 	  rar_qcd_3b1b_ratio = makeGaussianConstraint( "qcd_3b1b_ratio", qcd_3b1b_ratio, qcd_3b1b_ratio_err ) ;
@@ -1195,7 +1195,7 @@
       if ( znnModelIndex == 2 ) {
 	if ( useLognormal ) {
 	  rar_znn_2b1b_ratio = makeLognormalConstraint( "znn_2b1b_ratio", Znn_2b1b_ratio, Znn_2b1b_ratio_err ) ;
-	  rar_znn_3b1b_ratio = makeLognormalConstraint( "znn_231b_ratio", Znn_3b1b_ratio, Znn_3b1b_ratio_err ) ;
+	  rar_znn_3b1b_ratio = makeLognormalConstraint( "znn_3b1b_ratio", Znn_3b1b_ratio, Znn_3b1b_ratio_err ) ;
 	} else {
 	  rar_znn_2b1b_ratio = makeGaussianConstraint( "znn_2b1b_ratio", Znn_2b1b_ratio, Znn_2b1b_ratio_err ) ;
 	  rar_znn_3b1b_ratio = makeGaussianConstraint( "znn_3b1b_ratio", Znn_3b1b_ratio, Znn_3b1b_ratio_err ) ;
@@ -1509,33 +1509,30 @@
 
 	      // take the shape from 1B bins, then float 2B and 3B using loose constraints
 	      
-	      if ( k == 0 && floatQcdShape ) {
+	      if ( k == 0 ) {
 
 		TString rfvQcdString = "@0 * @1" ;
 
 		rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
 							 RooArgSet( *rv_mu_qcd[i][j][k], *rar_qcd_shape_ratio[i][j] ) ) ;
-		rv_mu_qcd[i][j][k] = rfv_mu_qcd[i][j][k] ;
-
 	      }
 	      else if ( k == 1 ) {
 
-               TString rfvQcdString = "@0 * @1" ;
+               TString rfvQcdString = "@0 * @1 * @2" ;
 
                rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
-                                                        RooArgSet( *rv_mu_qcd[i][j][0], *rar_qcd_2b1b_ratio ) ) ;
-	       rv_mu_qcd[i][j][k] = rfv_mu_qcd[i][j][k] ;
-
+                                                        RooArgSet( *rv_mu_qcd[i][j][0], *rar_qcd_2b1b_ratio, *rar_qcd_shape_ratio[i][j] ) ) ;
 	      }
 	      else if ( k == 2 ) {
 
-               TString rfvQcdString = "@0 * @1" ;
+               TString rfvQcdString = "@0 * @1 * @2" ;
 
                rfv_mu_qcd[i][j][k] = new RooFormulaVar( qcdString, rfvQcdString, 
-                                                        RooArgSet( *rv_mu_qcd[i][j][0], *rar_qcd_3b1b_ratio ) ) ;
-	       rv_mu_qcd[i][j][k] = rfv_mu_qcd[i][j][k] ;
-
+                                                        RooArgSet( *rv_mu_qcd[i][j][0], *rar_qcd_3b1b_ratio, *rar_qcd_shape_ratio[i][j] ) ) ;
 	      }
+
+	      rv_mu_qcd[i][j][k] = rfv_mu_qcd[i][j][k] ;
+
 
 	    }
 
