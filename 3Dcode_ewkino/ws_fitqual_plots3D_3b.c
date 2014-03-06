@@ -230,7 +230,8 @@
 
 
      double AttwjVal[nBinsVar1][nBinsVar2][nBinsBtag] ;
-     double AqzoVal[nBinsVar1][nBinsVar2][nBinsBtag] ;
+     double AqcdVal[nBinsVar1][nBinsVar2][nBinsBtag] ;
+     double AznnVal[nBinsVar1][nBinsVar2][nBinsBtag] ;
 
      for ( int i = 0 ; i < nBinsVar1 ; i++ ) {
        for ( int j = 0 ; j < nBinsVar2 ; j++ ) {
@@ -260,13 +261,16 @@
          for ( int k = 0 ; k < nBinsBtag ; k++ ) {
 
            TString ttString  = "mu_ttwj" ;
-           TString qzoString = "mu_qzo" ;
+           TString qcdString = "mu_qcd" ;
+           TString znnString = "mu_znn" ;
 
            ttString  += sMbins[i]+sHbins[j]+sBbins[k] ;
-           qzoString += sMbins[i]+sHbins[j]+sBbins[k] ;
+           qcdString += sMbins[i]+sHbins[j]+sBbins[k] ;
+           znnString += sMbins[i]+sHbins[j]+sBbins[k] ;
 
            RooAbsReal* ttwj_obj = (RooAbsReal*) ws->obj(ttString) ;
-           RooAbsReal* qzo_obj  = (RooAbsReal*) ws->obj(qzoString) ;
+           RooAbsReal* qcd_obj  = (RooAbsReal*) ws->obj(qcdString) ;
+           RooAbsReal* znn_obj  = (RooAbsReal*) ws->obj(znnString) ;
 
            if ( ttwj_obj == 0x0 ) {
               printf(" * %s missing\n", ttString.Data() ) ;
@@ -275,11 +279,18 @@
               AttwjVal[i][j][k] = trigeff_sl * ( ttwj_obj->getVal() ) ;
            }
 
-           if ( qzo_obj == 0x0 ) {
-              printf(" * %s missing\n", qzoString.Data() ) ;
-              AqzoVal[i][j][k] = 0. ;
+           if ( qcd_obj == 0x0 ) {
+              printf(" * %s missing\n", qcdString.Data() ) ;
+              AqcdVal[i][j][k] = 0. ;
            } else {
-              AqzoVal[i][j][k]  = trigeff * ( qzo_obj->getVal() ) ;
+              AqcdVal[i][j][k]  = trigeff * ( qcd_obj->getVal() ) ;
+           }
+
+           if ( znn_obj == 0x0 ) {
+              printf(" * %s missing\n", znnString.Data() ) ;
+              AznnVal[i][j][k] = 0. ;
+           } else {
+              AznnVal[i][j][k]  = trigeff * ( znn_obj->getVal() ) ;
            }
 
          } // k
@@ -345,20 +356,23 @@
      TH1F *hfitqual_data_0lep_1b  , *hfitqual_data_0lep_2b  , *hfitqual_data_0lep_3b  , *hfitqual_data_0lep_4b ;
      TH1F *hfitqual_susy_0lep_1b  , *hfitqual_susy_0lep_2b  , *hfitqual_susy_0lep_3b  , *hfitqual_susy_0lep_4b ;
      TH1F *hfitqual_ttwj_0lep_1b  , *hfitqual_ttwj_0lep_2b  , *hfitqual_ttwj_0lep_3b  , *hfitqual_ttwj_0lep_4b ;
-     TH1F *hfitqual_qzo_0lep_1b   , *hfitqual_qzo_0lep_2b   , *hfitqual_qzo_0lep_3b   , *hfitqual_qzo_0lep_4b ;
+     TH1F *hfitqual_qcd_0lep_1b   , *hfitqual_qcd_0lep_2b   , *hfitqual_qcd_0lep_3b   , *hfitqual_qcd_0lep_4b ;
+     TH1F *hfitqual_znn_0lep_1b   , *hfitqual_znn_0lep_2b   , *hfitqual_znn_0lep_3b   , *hfitqual_znn_0lep_4b ;
      TH1F *hfitqual_model_0lep_1b , *hfitqual_model_0lep_2b , *hfitqual_model_0lep_3b , *hfitqual_model_0lep_4b ;
 
 
      hfitqual_data_0lep_1b = new TH1F("hfitqual_data_0lep_1b", "0 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
      hfitqual_susy_0lep_1b = new TH1F("hfitqual_susy_0lep_1b", "0 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
      hfitqual_ttwj_0lep_1b = new TH1F("hfitqual_ttwj_0lep_1b", "0 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     hfitqual_qzo_0lep_1b  = new TH1F("hfitqual_qzo_0lep_1b" , "0 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_qcd_0lep_1b  = new TH1F("hfitqual_qcd_0lep_1b" , "0 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_znn_0lep_1b  = new TH1F("hfitqual_znn_0lep_1b" , "0 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
      hfitqual_model_0lep_1b  = new TH1F("hfitqual_model_0lep_1b" , "0 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
 
      hfitqual_data_0lep_2b = new TH1F("hfitqual_data_0lep_2b", "0 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
      hfitqual_susy_0lep_2b = new TH1F("hfitqual_susy_0lep_2b", "0 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
      hfitqual_ttwj_0lep_2b = new TH1F("hfitqual_ttwj_0lep_2b", "0 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     hfitqual_qzo_0lep_2b  = new TH1F("hfitqual_qzo_0lep_2b" , "0 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_qcd_0lep_2b  = new TH1F("hfitqual_qcd_0lep_2b" , "0 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_znn_0lep_2b  = new TH1F("hfitqual_znn_0lep_2b" , "0 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
      hfitqual_model_0lep_2b  = new TH1F("hfitqual_model_0lep_2b" , "0 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
 
      if ( nBinsBtag > 2 ) {
@@ -366,7 +380,8 @@
        hfitqual_data_0lep_3b = new TH1F("hfitqual_data_0lep_3b", "0 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
        hfitqual_susy_0lep_3b = new TH1F("hfitqual_susy_0lep_3b", "0 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
        hfitqual_ttwj_0lep_3b = new TH1F("hfitqual_ttwj_0lep_3b", "0 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-       hfitqual_qzo_0lep_3b  = new TH1F("hfitqual_qzo_0lep_3b" , "0 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_qcd_0lep_3b  = new TH1F("hfitqual_qcd_0lep_3b" , "0 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_znn_0lep_3b  = new TH1F("hfitqual_znn_0lep_3b" , "0 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
        hfitqual_model_0lep_3b  = new TH1F("hfitqual_model_0lep_3b" , "0 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
 
        if ( nBinsBtag > 3 ) {
@@ -374,7 +389,8 @@
 	 hfitqual_data_0lep_4b = new TH1F("hfitqual_data_0lep_4b", "0 Lep, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
 	 hfitqual_susy_0lep_4b = new TH1F("hfitqual_susy_0lep_4b", "0 Lep, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
 	 hfitqual_ttwj_0lep_4b = new TH1F("hfitqual_ttwj_0lep_4b", "0 Lep, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
-	 hfitqual_qzo_0lep_4b  = new TH1F("hfitqual_qzo_0lep_4b" , "0 Lep, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_qcd_0lep_4b  = new TH1F("hfitqual_qcd_0lep_4b" , "0 Lep, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_znn_0lep_4b  = new TH1F("hfitqual_znn_0lep_4b" , "0 Lep, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
 	 hfitqual_model_0lep_4b  = new TH1F("hfitqual_model_0lep_4b" , "0 Lep, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
 	 
        }
@@ -384,20 +400,23 @@
      TH1F *hfitqual_data_1lepSig_1b  , *hfitqual_data_1lepSig_2b  , *hfitqual_data_1lepSig_3b  , *hfitqual_data_1lepSig_4b ;
      TH1F *hfitqual_susy_1lepSig_1b  , *hfitqual_susy_1lepSig_2b  , *hfitqual_susy_1lepSig_3b  , *hfitqual_susy_1lepSig_4b ;
      TH1F *hfitqual_ttwj_1lepSig_1b  , *hfitqual_ttwj_1lepSig_2b  , *hfitqual_ttwj_1lepSig_3b  , *hfitqual_ttwj_1lepSig_4b ;
-     TH1F *hfitqual_qzo_1lepSig_1b   , *hfitqual_qzo_1lepSig_2b   , *hfitqual_qzo_1lepSig_3b   , *hfitqual_qzo_1lepSig_4b ;
+     TH1F *hfitqual_qcd_1lepSig_1b   , *hfitqual_qcd_1lepSig_2b   , *hfitqual_qcd_1lepSig_3b   , *hfitqual_qcd_1lepSig_4b ;
+     TH1F *hfitqual_znn_1lepSig_1b   , *hfitqual_znn_1lepSig_2b   , *hfitqual_znn_1lepSig_3b   , *hfitqual_znn_1lepSig_4b ;
      TH1F *hfitqual_model_1lepSig_1b , *hfitqual_model_1lepSig_2b , *hfitqual_model_1lepSig_3b , *hfitqual_model_1lepSig_4b ;
 
 
      hfitqual_data_1lepSig_1b = new TH1F("hfitqual_data_1lepSig_1b", "1 Lep Sig, 1 btag", nbins, 0.5, nbins+0.5 ) ;
      hfitqual_susy_1lepSig_1b = new TH1F("hfitqual_susy_1lepSig_1b", "1 Lep Sig, 1 btag", nbins, 0.5, nbins+0.5 ) ;
      hfitqual_ttwj_1lepSig_1b = new TH1F("hfitqual_ttwj_1lepSig_1b", "1 Lep Sig, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     hfitqual_qzo_1lepSig_1b  = new TH1F("hfitqual_qzo_1lepSig_1b" , "1 Lep Sig, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_qcd_1lepSig_1b  = new TH1F("hfitqual_qcd_1lepSig_1b" , "1 Lep Sig, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_znn_1lepSig_1b  = new TH1F("hfitqual_znn_1lepSig_1b" , "1 Lep Sig, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
      hfitqual_model_1lepSig_1b  = new TH1F("hfitqual_model_1lepSig_1b" , "1 Lep Sig, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
 
      hfitqual_data_1lepSig_2b = new TH1F("hfitqual_data_1lepSig_2b", "1 Lep Sig, 2 btag", nbins, 0.5, nbins+0.5 ) ;
      hfitqual_susy_1lepSig_2b = new TH1F("hfitqual_susy_1lepSig_2b", "1 Lep Sig, 2 btag", nbins, 0.5, nbins+0.5 ) ;
      hfitqual_ttwj_1lepSig_2b = new TH1F("hfitqual_ttwj_1lepSig_2b", "1 Lep Sig, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     hfitqual_qzo_1lepSig_2b  = new TH1F("hfitqual_qzo_1lepSig_2b" , "1 Lep Sig, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_qcd_1lepSig_2b  = new TH1F("hfitqual_qcd_1lepSig_2b" , "1 Lep Sig, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_znn_1lepSig_2b  = new TH1F("hfitqual_znn_1lepSig_2b" , "1 Lep Sig, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
      hfitqual_model_1lepSig_2b  = new TH1F("hfitqual_model_1lepSig_2b" , "1 Lep Sig, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
 
      if ( nBinsBtag > 2 ) {
@@ -405,7 +424,8 @@
        hfitqual_data_1lepSig_3b = new TH1F("hfitqual_data_1lepSig_3b", "1 Lep Sig, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
        hfitqual_susy_1lepSig_3b = new TH1F("hfitqual_susy_1lepSig_3b", "1 Lep Sig, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
        hfitqual_ttwj_1lepSig_3b = new TH1F("hfitqual_ttwj_1lepSig_3b", "1 Lep Sig, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-       hfitqual_qzo_1lepSig_3b  = new TH1F("hfitqual_qzo_1lepSig_3b" , "1 Lep Sig, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_qcd_1lepSig_3b  = new TH1F("hfitqual_qcd_1lepSig_3b" , "1 Lep Sig, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_znn_1lepSig_3b  = new TH1F("hfitqual_znn_1lepSig_3b" , "1 Lep Sig, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
        hfitqual_model_1lepSig_3b  = new TH1F("hfitqual_model_1lepSig_3b" , "1 Lep Sig, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
        
        if ( nBinsBtag > 3 ) {
@@ -413,7 +433,8 @@
 	 hfitqual_data_1lepSig_4b = new TH1F("hfitqual_data_1lepSig_4b", "1 Lep Sig, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
 	 hfitqual_susy_1lepSig_4b = new TH1F("hfitqual_susy_1lepSig_4b", "1 Lep Sig, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
 	 hfitqual_ttwj_1lepSig_4b = new TH1F("hfitqual_ttwj_1lepSig_4b", "1 Lep Sig, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
-	 hfitqual_qzo_1lepSig_4b  = new TH1F("hfitqual_qzo_1lepSig_4b" , "1 Lep Sig, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_qcd_1lepSig_4b  = new TH1F("hfitqual_qcd_1lepSig_4b" , "1 Lep Sig, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_znn_1lepSig_4b  = new TH1F("hfitqual_znn_1lepSig_4b" , "1 Lep Sig, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
 	 hfitqual_model_1lepSig_4b  = new TH1F("hfitqual_model_1lepSig_4b" , "1 Lep Sig, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
 	 
        }
@@ -423,20 +444,23 @@
      TH1F *hfitqual_data_1lep_1b  , *hfitqual_data_1lep_2b  , *hfitqual_data_1lep_3b  , *hfitqual_data_1lep_4b ;
      TH1F *hfitqual_susy_1lep_1b  , *hfitqual_susy_1lep_2b  , *hfitqual_susy_1lep_3b  , *hfitqual_susy_1lep_4b ;
      TH1F *hfitqual_ttwj_1lep_1b  , *hfitqual_ttwj_1lep_2b  , *hfitqual_ttwj_1lep_3b  , *hfitqual_ttwj_1lep_4b ;
-     TH1F *hfitqual_qzo_1lep_1b   , *hfitqual_qzo_1lep_2b   , *hfitqual_qzo_1lep_3b   , *hfitqual_qzo_1lep_4b ;
+     TH1F *hfitqual_qcd_1lep_1b   , *hfitqual_qcd_1lep_2b   , *hfitqual_qcd_1lep_3b   , *hfitqual_qcd_1lep_4b ;
+     TH1F *hfitqual_znn_1lep_1b   , *hfitqual_znn_1lep_2b   , *hfitqual_znn_1lep_3b   , *hfitqual_znn_1lep_4b ;
      TH1F *hfitqual_model_1lep_1b , *hfitqual_model_1lep_2b , *hfitqual_model_1lep_3b , *hfitqual_model_1lep_4b ;
 
 
      hfitqual_data_1lep_1b = new TH1F("hfitqual_data_1lep_1b", "1 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
      hfitqual_susy_1lep_1b = new TH1F("hfitqual_susy_1lep_1b", "1 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
      hfitqual_ttwj_1lep_1b = new TH1F("hfitqual_ttwj_1lep_1b", "1 Lep, 1 btag", nbins, 0.5, nbins+0.5 ) ;
-     hfitqual_qzo_1lep_1b  = new TH1F("hfitqual_qzo_1lep_1b" , "1 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_qcd_1lep_1b  = new TH1F("hfitqual_qcd_1lep_1b" , "1 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_znn_1lep_1b  = new TH1F("hfitqual_znn_1lep_1b" , "1 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
      hfitqual_model_1lep_1b  = new TH1F("hfitqual_model_1lep_1b" , "1 Lep, 1 btag" , nbins, 0.5, nbins+0.5 ) ;
 
      hfitqual_data_1lep_2b = new TH1F("hfitqual_data_1lep_2b", "1 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
      hfitqual_susy_1lep_2b = new TH1F("hfitqual_susy_1lep_2b", "1 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
      hfitqual_ttwj_1lep_2b = new TH1F("hfitqual_ttwj_1lep_2b", "1 Lep, 2 btag", nbins, 0.5, nbins+0.5 ) ;
-     hfitqual_qzo_1lep_2b  = new TH1F("hfitqual_qzo_1lep_2b" , "1 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_qcd_1lep_2b  = new TH1F("hfitqual_qcd_1lep_2b" , "1 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
+     hfitqual_znn_1lep_2b  = new TH1F("hfitqual_znn_1lep_2b" , "1 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
      hfitqual_model_1lep_2b  = new TH1F("hfitqual_model_1lep_2b" , "1 Lep, 2 btag" , nbins, 0.5, nbins+0.5 ) ;
 
      if ( nBinsBtag > 2 ) {
@@ -444,7 +468,8 @@
        hfitqual_data_1lep_3b = new TH1F("hfitqual_data_1lep_3b", "1 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
        hfitqual_susy_1lep_3b = new TH1F("hfitqual_susy_1lep_3b", "1 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
        hfitqual_ttwj_1lep_3b = new TH1F("hfitqual_ttwj_1lep_3b", "1 Lep, >=3 btag", nbins, 0.5, nbins+0.5 ) ;
-       hfitqual_qzo_1lep_3b  = new TH1F("hfitqual_qzo_1lep_3b" , "1 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_qcd_1lep_3b  = new TH1F("hfitqual_qcd_1lep_3b" , "1 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
+       hfitqual_znn_1lep_3b  = new TH1F("hfitqual_znn_1lep_3b" , "1 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
        hfitqual_model_1lep_3b  = new TH1F("hfitqual_model_1lep_3b" , "1 Lep, >=3 btag" , nbins, 0.5, nbins+0.5 ) ;
        
        if ( nBinsBtag > 3 ) {
@@ -452,7 +477,8 @@
 	 hfitqual_data_1lep_4b = new TH1F("hfitqual_data_1lep_4b", "1 Lep, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
 	 hfitqual_susy_1lep_4b = new TH1F("hfitqual_susy_1lep_4b", "1 Lep, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
 	 hfitqual_ttwj_1lep_4b = new TH1F("hfitqual_ttwj_1lep_4b", "1 Lep, >=4 btag", nbins, 0.5, nbins+0.5 ) ;
-	 hfitqual_qzo_1lep_4b  = new TH1F("hfitqual_qzo_1lep_4b" , "1 Lep, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_qcd_1lep_4b  = new TH1F("hfitqual_qcd_1lep_4b" , "1 Lep, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
+	 hfitqual_znn_1lep_4b  = new TH1F("hfitqual_znn_1lep_4b" , "1 Lep, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
 	 hfitqual_model_1lep_4b  = new TH1F("hfitqual_model_1lep_4b" , "1 Lep, >=4 btag" , nbins, 0.5, nbins+0.5 ) ;
 	 
        }
@@ -460,13 +486,15 @@
 
 
      hfitqual_ttwj_0lep_1b  -> SetFillColor(kBlue-9) ;
-     hfitqual_qzo_0lep_1b   -> SetFillColor(2) ;
+     hfitqual_qcd_0lep_1b   -> SetFillColor(2) ;
+     hfitqual_znn_0lep_1b   -> SetFillColor(kGreen-3) ;
      hfitqual_susy_0lep_1b  -> SetFillColor(6) ;
      hfitqual_data_0lep_1b->SetMarkerStyle(20) ;
      hfitqual_data_0lep_1b->SetLineWidth(2) ;
      
      hfitqual_ttwj_0lep_2b  -> SetFillColor(kBlue-9) ;
-     hfitqual_qzo_0lep_2b   -> SetFillColor(2) ;
+     hfitqual_qcd_0lep_2b   -> SetFillColor(2) ;
+     hfitqual_znn_0lep_2b   -> SetFillColor(kGreen-3) ;
      hfitqual_susy_0lep_2b  -> SetFillColor(6) ;
      hfitqual_data_0lep_2b->SetMarkerStyle(20) ;
      hfitqual_data_0lep_2b->SetLineWidth(2) ;
@@ -474,7 +502,8 @@
      if ( nBinsBtag > 2 ) {
        
        hfitqual_ttwj_0lep_3b  -> SetFillColor(kBlue-9) ;
-       hfitqual_qzo_0lep_3b   -> SetFillColor(2) ;
+       hfitqual_qcd_0lep_3b   -> SetFillColor(2) ;
+       hfitqual_znn_0lep_3b   -> SetFillColor(kGreen-3) ;
        hfitqual_susy_0lep_3b  -> SetFillColor(6) ;
        hfitqual_data_0lep_3b->SetMarkerStyle(20) ;
        hfitqual_data_0lep_3b->SetLineWidth(2) ;
@@ -482,7 +511,8 @@
        if ( nBinsBtag > 3 ) {
 	 
 	 hfitqual_ttwj_0lep_4b  -> SetFillColor(kBlue-9) ;
-	 hfitqual_qzo_0lep_4b   -> SetFillColor(2) ;
+	 hfitqual_qcd_0lep_4b   -> SetFillColor(2) ;
+	 hfitqual_znn_0lep_4b   -> SetFillColor(kGreen-3) ;
 	 hfitqual_susy_0lep_4b  -> SetFillColor(6) ;
 	 hfitqual_data_0lep_4b->SetMarkerStyle(20) ;
 	 hfitqual_data_0lep_4b->SetLineWidth(2) ;
@@ -492,13 +522,15 @@
      
      
      hfitqual_ttwj_1lepSig_1b  -> SetFillColor(kBlue-9) ;
-     hfitqual_qzo_1lepSig_1b   -> SetFillColor(2) ;
+     hfitqual_qcd_1lepSig_1b   -> SetFillColor(2) ;
+     hfitqual_znn_1lepSig_1b   -> SetFillColor(kGreen-3) ;
      hfitqual_susy_1lepSig_1b  -> SetFillColor(6) ;
      hfitqual_data_1lepSig_1b->SetMarkerStyle(20) ;
      hfitqual_data_1lepSig_1b->SetLineWidth(2) ;
 
      hfitqual_ttwj_1lepSig_2b  -> SetFillColor(kBlue-9) ;
-     hfitqual_qzo_1lepSig_2b   -> SetFillColor(2) ;
+     hfitqual_qcd_1lepSig_2b   -> SetFillColor(2) ;
+     hfitqual_znn_1lepSig_2b   -> SetFillColor(kGreen-3) ;
      hfitqual_susy_1lepSig_2b  -> SetFillColor(6) ;
      hfitqual_data_1lepSig_2b->SetMarkerStyle(20) ;
      hfitqual_data_1lepSig_2b->SetLineWidth(2) ;
@@ -506,7 +538,8 @@
      if ( nBinsBtag > 2 ) {
 
        hfitqual_ttwj_1lepSig_3b  -> SetFillColor(kBlue-9) ;
-       hfitqual_qzo_1lepSig_3b   -> SetFillColor(2) ;
+       hfitqual_qcd_1lepSig_3b   -> SetFillColor(2) ;
+       hfitqual_znn_1lepSig_3b   -> SetFillColor(kGreen-3) ;
        hfitqual_susy_1lepSig_3b  -> SetFillColor(6) ;
        hfitqual_data_1lepSig_3b->SetMarkerStyle(20) ;
        hfitqual_data_1lepSig_3b->SetLineWidth(2) ;
@@ -514,7 +547,8 @@
        if ( nBinsBtag > 3 ) {
 	 
 	 hfitqual_ttwj_1lepSig_4b  -> SetFillColor(kBlue-9) ;
-	 hfitqual_qzo_1lepSig_4b   -> SetFillColor(2) ;
+	 hfitqual_qcd_1lepSig_4b   -> SetFillColor(2) ;
+	 hfitqual_znn_1lepSig_4b   -> SetFillColor(kGreen-3) ;
 	 hfitqual_susy_1lepSig_4b  -> SetFillColor(6) ;
 	 hfitqual_data_1lepSig_4b->SetMarkerStyle(20) ;
 	 hfitqual_data_1lepSig_4b->SetLineWidth(2) ;
@@ -524,13 +558,15 @@
 
 
      hfitqual_ttwj_1lep_1b  -> SetFillColor(kBlue-9) ;
-     hfitqual_qzo_1lep_1b   -> SetFillColor(2) ;
+     hfitqual_qcd_1lep_1b   -> SetFillColor(2) ;
+     hfitqual_znn_1lep_1b   -> SetFillColor(kGreen-3) ;
      hfitqual_susy_1lep_1b  -> SetFillColor(6) ;
      hfitqual_data_1lep_1b->SetMarkerStyle(20) ;
      hfitqual_data_1lep_1b->SetLineWidth(2) ;
 
      hfitqual_ttwj_1lep_2b  -> SetFillColor(kBlue-9) ;
-     hfitqual_qzo_1lep_2b   -> SetFillColor(2) ;
+     hfitqual_qcd_1lep_2b   -> SetFillColor(2) ;
+     hfitqual_znn_1lep_2b   -> SetFillColor(kGreen-3) ;
      hfitqual_susy_1lep_2b  -> SetFillColor(6) ;
      hfitqual_data_1lep_2b->SetMarkerStyle(20) ;
      hfitqual_data_1lep_2b->SetLineWidth(2) ;
@@ -538,7 +574,8 @@
      if ( nBinsBtag > 2 ) {
 
        hfitqual_ttwj_1lep_3b  -> SetFillColor(kBlue-9) ;
-       hfitqual_qzo_1lep_3b   -> SetFillColor(2) ;
+       hfitqual_qcd_1lep_3b   -> SetFillColor(2) ;
+       hfitqual_znn_1lep_3b   -> SetFillColor(kGreen-3) ;
        hfitqual_susy_1lep_3b  -> SetFillColor(6) ;
        hfitqual_data_1lep_3b->SetMarkerStyle(20) ;
        hfitqual_data_1lep_3b->SetLineWidth(2) ;
@@ -546,7 +583,8 @@
        if ( nBinsBtag > 3 ) {
 
 	 hfitqual_ttwj_1lep_4b  -> SetFillColor(kBlue-9) ;
-	 hfitqual_qzo_1lep_4b   -> SetFillColor(2) ;
+	 hfitqual_qcd_1lep_4b   -> SetFillColor(2) ;
+	 hfitqual_znn_1lep_4b   -> SetFillColor(kGreen-3) ;
 	 hfitqual_susy_1lep_4b  -> SetFillColor(6) ;
 	 hfitqual_data_1lep_4b->SetMarkerStyle(20) ;
 	 hfitqual_data_1lep_4b->SetLineWidth(2) ;
@@ -622,7 +660,8 @@
      double dataVal(0.) ;
      double dataErr(0.) ;
      double ttwjVal(0.) ;
-     double qzoVal(0.) ;
+     double qcdVal(0.) ;
+     double znnVal(0.) ;
      double susyVal(0.) ;
      double lhtotalVal(0.) ;
      double trigeff(1.) ;
@@ -656,9 +695,11 @@
 
            TString EffSfString  = "eff_sf" ;
            TString MuSusyString = "mu_susy" ;
+	   TString ZnnString    = "mu_znn" ;
 
            EffSfString  += sMbins[i]+sHbins[j]+sBbins[k] ;
            MuSusyString += sMbins[i]+sHbins[j]+sBbins[k] ;
+           ZnnString    += sMbins[i]+sHbins[j]+sBbins[k] ;
 
            printf(" here t2\n") ; cout << flush ;
 
@@ -693,17 +734,24 @@
               printf(" * %s missing.\n", MuSusyString.Data() ) ;
               susyVal = 0. ;
            }
+          if ( ws->obj(ZnnString) != 0 ) {
+              znnVal = trigeff_sl * ( ((RooRealVar*) ws->obj(ZnnString))  -> getVal() ) ;
+           } else {
+              printf(" * %s missing.\n", ZnnString.Data() ) ;
+              znnVal = 0. ;
+           }
 
            ttwjVal = AttwjVal[i][j][k] ;
            char pname[1000] ;
-           sprintf( pname, "mu_qzo_M%d_H%d_%db", i+1, j+1, k+1 ) ;
+
+           sprintf( pname, "mu_qcd_M%d_H%d_%db", i+1, j+1, k+1 ) ;
            if ( ws->obj(pname) != 0 ) {
-              qzoVal = trigeff * ( ((RooAbsReal*) ws->obj(pname)) -> getVal() ) ;
+              qcdVal = trigeff * ( ((RooAbsReal*) ws->obj(pname)) -> getVal() ) ;
            } else {
               printf(" * %s missing. \n", pname ) ;
            }
 
-           lhtotalVal = ttwjVal + qzoVal + susyVal ;
+           lhtotalVal = ttwjVal + qcdVal + znnVal + susyVal ;
 
            dataErr = sqrt(dataVal) ;
 
@@ -712,7 +760,8 @@
            cout << "binIndex = " << binIndex << endl ;
            cout << binLabel << "       susy : " << susyVal << endl ;
            cout << binLabel << "       ttwj : " << ttwjVal << endl ;
-           cout << binLabel << "        qzo : " << qzoVal << endl ;
+           cout << binLabel << "        qcd : " << qcdVal << endl ;
+           cout << binLabel << "        znn : " << znnVal << endl ;
            cout << binLabel << "   LH total : " << lhtotalVal << endl ;
            cout << binLabel << "       data : " << dataVal << endl ;
            cout << flush ;
@@ -721,7 +770,8 @@
              dataErr = dataErr / dataVal ;
              susyVal = susyVal / dataVal ;
              ttwjVal = ttwjVal / dataVal ;
-             qzoVal  = qzoVal / dataVal ;
+             qcdVal  = qcdVal / dataVal ;
+             znnVal  = znnVal / dataVal ;
              dataVal = 1. ;
            }
 
@@ -731,32 +781,36 @@
               hfitqual_data_0lep_1b -> SetBinError( binIndex, dataErr ) ;
               hfitqual_susy_0lep_1b -> SetBinContent( binIndex, susyVal ) ;
               hfitqual_ttwj_0lep_1b -> SetBinContent( binIndex, ttwjVal ) ;
-              hfitqual_qzo_0lep_1b  -> SetBinContent( binIndex, qzoVal ) ;
-              hfitqual_model_0lep_1b  -> SetBinContent( binIndex, susyVal+ttwjVal+qzoVal ) ;
+              hfitqual_qcd_0lep_1b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_znn_0lep_1b  -> SetBinContent( binIndex, znnVal ) ;
+              hfitqual_model_0lep_1b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            } else if ( k == 1 ) {
               xaxis_0lep_2b->SetBinLabel(binIndex, binLabel ) ;
               hfitqual_data_0lep_2b -> SetBinContent( binIndex, dataVal ) ;
               hfitqual_data_0lep_2b -> SetBinError( binIndex, dataErr ) ;
               hfitqual_susy_0lep_2b -> SetBinContent( binIndex, susyVal ) ;
               hfitqual_ttwj_0lep_2b -> SetBinContent( binIndex, ttwjVal ) ;
-              hfitqual_qzo_0lep_2b  -> SetBinContent( binIndex, qzoVal ) ;
-              hfitqual_model_0lep_2b  -> SetBinContent( binIndex, susyVal+ttwjVal+qzoVal ) ;
+              hfitqual_qcd_0lep_2b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_znn_0lep_2b  -> SetBinContent( binIndex, znnVal ) ;
+              hfitqual_model_0lep_2b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            } else if ( k == 2 ) {
               xaxis_0lep_3b->SetBinLabel(binIndex, binLabel ) ;
               hfitqual_data_0lep_3b -> SetBinContent( binIndex, dataVal ) ;
               hfitqual_data_0lep_3b -> SetBinError( binIndex, dataErr ) ;
               hfitqual_susy_0lep_3b -> SetBinContent( binIndex, susyVal ) ;
               hfitqual_ttwj_0lep_3b -> SetBinContent( binIndex, ttwjVal ) ;
-              hfitqual_qzo_0lep_3b  -> SetBinContent( binIndex, qzoVal ) ;
-              hfitqual_model_0lep_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qzoVal ) ;
+              hfitqual_qcd_0lep_3b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_znn_0lep_3b  -> SetBinContent( binIndex, znnVal ) ;
+              hfitqual_model_0lep_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            } else if ( k == 3 ) {
               xaxis_0lep_4b->SetBinLabel(binIndex, binLabel ) ;
               hfitqual_data_0lep_4b -> SetBinContent( binIndex, dataVal ) ;
               hfitqual_data_0lep_4b -> SetBinError( binIndex, dataErr ) ;
               hfitqual_susy_0lep_4b -> SetBinContent( binIndex, susyVal ) ;
               hfitqual_ttwj_0lep_4b -> SetBinContent( binIndex, ttwjVal ) ;
-              hfitqual_qzo_0lep_4b  -> SetBinContent( binIndex, qzoVal ) ;
-              hfitqual_model_0lep_4b  -> SetBinContent( binIndex, susyVal+ttwjVal+qzoVal ) ;
+              hfitqual_qcd_0lep_4b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_znn_0lep_4b  -> SetBinContent( binIndex, znnVal ) ;
+              hfitqual_model_0lep_4b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal+znnVal ) ;
            }
 
 
@@ -807,8 +861,8 @@
               printf(" * %s missing.\n", MuTtwjSlSigString.Data() ) ;
               ttwjVal = 0. ;
            }
-           qzoVal  = 0. ;
-           lhtotalVal = ttwjVal + qzoVal + susyVal ;
+           qcdVal  = 0. ;
+           lhtotalVal = ttwjVal + qcdVal + susyVal ;
 
            dataErr = sqrt(dataVal) ;
 
@@ -816,7 +870,7 @@
            cout << "\n" << endl ;
            cout << binLabel << "       susy : " << susyVal << endl ;
            cout << binLabel << "       ttwj : " << ttwjVal << endl ;
-           cout << binLabel << "        qzo : " << qzoVal << endl ;
+           cout << binLabel << "        qcd : " << qcdVal << endl ;
            cout << binLabel << "   LH total : " << lhtotalVal << endl ;
            cout << binLabel << "       data : " << dataVal << endl ;
 
@@ -824,7 +878,7 @@
              dataErr = dataErr / dataVal ;
              susyVal = susyVal / dataVal ;
              ttwjVal = ttwjVal / dataVal ;
-             qzoVal  = qzoVal / dataVal ;
+             qcdVal  = qcdVal / dataVal ;
              dataVal = 1. ;
            }
 
@@ -834,32 +888,32 @@
               hfitqual_data_1lepSig_1b -> SetBinError( binIndex, dataErr ) ;
               hfitqual_susy_1lepSig_1b -> SetBinContent( binIndex, susyVal ) ;
               hfitqual_ttwj_1lepSig_1b -> SetBinContent( binIndex, ttwjVal ) ;
-              hfitqual_qzo_1lepSig_1b  -> SetBinContent( binIndex, qzoVal ) ;
-              hfitqual_model_1lepSig_1b  -> SetBinContent( binIndex, susyVal+ttwjVal+qzoVal ) ;
+              hfitqual_qcd_1lepSig_1b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_model_1lepSig_1b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal ) ;
            } else if ( k == 1 ) {
               xaxis_1lepSig_2b->SetBinLabel(binIndex, binLabel ) ;
               hfitqual_data_1lepSig_2b -> SetBinContent( binIndex, dataVal ) ;
               hfitqual_data_1lepSig_2b -> SetBinError( binIndex, dataErr ) ;
               hfitqual_susy_1lepSig_2b -> SetBinContent( binIndex, susyVal ) ;
               hfitqual_ttwj_1lepSig_2b -> SetBinContent( binIndex, ttwjVal ) ;
-              hfitqual_qzo_1lepSig_2b  -> SetBinContent( binIndex, qzoVal ) ;
-              hfitqual_model_1lepSig_2b  -> SetBinContent( binIndex, susyVal+ttwjVal+qzoVal ) ;
+              hfitqual_qcd_1lepSig_2b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_model_1lepSig_2b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal ) ;
            } else if ( k == 2 ) {
               xaxis_1lepSig_3b->SetBinLabel(binIndex, binLabel ) ;
               hfitqual_data_1lepSig_3b -> SetBinContent( binIndex, dataVal ) ;
               hfitqual_data_1lepSig_3b -> SetBinError( binIndex, dataErr ) ;
               hfitqual_susy_1lepSig_3b -> SetBinContent( binIndex, susyVal ) ;
               hfitqual_ttwj_1lepSig_3b -> SetBinContent( binIndex, ttwjVal ) ;
-              hfitqual_qzo_1lepSig_3b  -> SetBinContent( binIndex, qzoVal ) ;
-              hfitqual_model_1lepSig_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qzoVal ) ;
+              hfitqual_qcd_1lepSig_3b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_model_1lepSig_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal ) ;
            } else if ( k == 3 ) {
               xaxis_1lepSig_4b->SetBinLabel(binIndex, binLabel ) ;
               hfitqual_data_1lepSig_4b -> SetBinContent( binIndex, dataVal ) ;
               hfitqual_data_1lepSig_4b -> SetBinError( binIndex, dataErr ) ;
               hfitqual_susy_1lepSig_4b -> SetBinContent( binIndex, susyVal ) ;
               hfitqual_ttwj_1lepSig_4b -> SetBinContent( binIndex, ttwjVal ) ;
-              hfitqual_qzo_1lepSig_4b  -> SetBinContent( binIndex, qzoVal ) ;
-              hfitqual_model_1lepSig_4b  -> SetBinContent( binIndex, susyVal+ttwjVal+qzoVal ) ;
+              hfitqual_qcd_1lepSig_4b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_model_1lepSig_4b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal ) ;
            }
 
 
@@ -909,8 +963,8 @@
               printf(" * %s missing.\n", MuTtwjSlString.Data() ) ;
               ttwjVal = 0. ;
            }
-           qzoVal  = 0. ;
-           lhtotalVal = ttwjVal + qzoVal + susyVal ;
+           qcdVal  = 0. ;
+           lhtotalVal = ttwjVal + qcdVal + susyVal ;
 
            dataErr = sqrt(dataVal) ;
 
@@ -918,7 +972,7 @@
            cout << "\n" << endl ;
            cout << binLabel << "       susy : " << susyVal << endl ;
            cout << binLabel << "       ttwj : " << ttwjVal << endl ;
-           cout << binLabel << "        qzo : " << qzoVal << endl ;
+           cout << binLabel << "        qcd : " << qcdVal << endl ;
            cout << binLabel << "   LH total : " << lhtotalVal << endl ;
            cout << binLabel << "       data : " << dataVal << endl ;
 
@@ -926,7 +980,7 @@
              dataErr = dataErr / dataVal ;
              susyVal = susyVal / dataVal ;
              ttwjVal = ttwjVal / dataVal ;
-             qzoVal  = qzoVal / dataVal ;
+             qcdVal  = qcdVal / dataVal ;
              dataVal = 1. ;
            }
 
@@ -936,32 +990,32 @@
               hfitqual_data_1lep_1b -> SetBinError( binIndex, dataErr ) ;
               hfitqual_susy_1lep_1b -> SetBinContent( binIndex, susyVal ) ;
               hfitqual_ttwj_1lep_1b -> SetBinContent( binIndex, ttwjVal ) ;
-              hfitqual_qzo_1lep_1b  -> SetBinContent( binIndex, qzoVal ) ;
-              hfitqual_model_1lep_1b  -> SetBinContent( binIndex, susyVal+ttwjVal+qzoVal ) ;
+              hfitqual_qcd_1lep_1b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_model_1lep_1b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal ) ;
            } else if ( k == 1 ) {
               xaxis_1lep_2b->SetBinLabel(binIndex, binLabel ) ;
               hfitqual_data_1lep_2b -> SetBinContent( binIndex, dataVal ) ;
               hfitqual_data_1lep_2b -> SetBinError( binIndex, dataErr ) ;
               hfitqual_susy_1lep_2b -> SetBinContent( binIndex, susyVal ) ;
               hfitqual_ttwj_1lep_2b -> SetBinContent( binIndex, ttwjVal ) ;
-              hfitqual_qzo_1lep_2b  -> SetBinContent( binIndex, qzoVal ) ;
-              hfitqual_model_1lep_2b  -> SetBinContent( binIndex, susyVal+ttwjVal+qzoVal ) ;
+              hfitqual_qcd_1lep_2b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_model_1lep_2b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal ) ;
            } else if ( k == 2 ) {
               xaxis_1lep_3b->SetBinLabel(binIndex, binLabel ) ;
               hfitqual_data_1lep_3b -> SetBinContent( binIndex, dataVal ) ;
               hfitqual_data_1lep_3b -> SetBinError( binIndex, dataErr ) ;
               hfitqual_susy_1lep_3b -> SetBinContent( binIndex, susyVal ) ;
               hfitqual_ttwj_1lep_3b -> SetBinContent( binIndex, ttwjVal ) ;
-              hfitqual_qzo_1lep_3b  -> SetBinContent( binIndex, qzoVal ) ;
-              hfitqual_model_1lep_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qzoVal ) ;
+              hfitqual_qcd_1lep_3b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_model_1lep_3b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal ) ;
            } else if ( k == 3 ) {
               xaxis_1lep_4b->SetBinLabel(binIndex, binLabel ) ;
               hfitqual_data_1lep_4b -> SetBinContent( binIndex, dataVal ) ;
               hfitqual_data_1lep_4b -> SetBinError( binIndex, dataErr ) ;
               hfitqual_susy_1lep_4b -> SetBinContent( binIndex, susyVal ) ;
               hfitqual_ttwj_1lep_4b -> SetBinContent( binIndex, ttwjVal ) ;
-              hfitqual_qzo_1lep_4b  -> SetBinContent( binIndex, qzoVal ) ;
-              hfitqual_model_1lep_4b  -> SetBinContent( binIndex, susyVal+ttwjVal+qzoVal ) ;
+              hfitqual_qcd_1lep_4b  -> SetBinContent( binIndex, qcdVal ) ;
+              hfitqual_model_1lep_4b  -> SetBinContent( binIndex, susyVal+ttwjVal+qcdVal ) ;
            }
 
 	   // ????
@@ -996,23 +1050,27 @@
      
      
      
-     hfitqual_fit_0lep_1b->Add( hfitqual_qzo_0lep_1b ) ;
+     hfitqual_fit_0lep_1b->Add( hfitqual_qcd_0lep_1b ) ;
+     hfitqual_fit_0lep_1b->Add( hfitqual_znn_0lep_1b ) ;
      hfitqual_fit_0lep_1b->Add( hfitqual_ttwj_0lep_1b ) ;
      hfitqual_fit_0lep_1b->Add( hfitqual_susy_0lep_1b ) ;
      
-     hfitqual_fit_0lep_2b->Add( hfitqual_qzo_0lep_2b ) ;
+     hfitqual_fit_0lep_2b->Add( hfitqual_qcd_0lep_2b ) ;
+     hfitqual_fit_0lep_2b->Add( hfitqual_znn_0lep_2b ) ;
      hfitqual_fit_0lep_2b->Add( hfitqual_ttwj_0lep_2b ) ;
      hfitqual_fit_0lep_2b->Add( hfitqual_susy_0lep_2b ) ;
      
      if ( nBinsBtag > 2 ) {
        
-       hfitqual_fit_0lep_3b->Add( hfitqual_qzo_0lep_3b ) ;
+       hfitqual_fit_0lep_3b->Add( hfitqual_qcd_0lep_3b ) ;
+       hfitqual_fit_0lep_3b->Add( hfitqual_znn_0lep_3b ) ;
        hfitqual_fit_0lep_3b->Add( hfitqual_ttwj_0lep_3b ) ;
        hfitqual_fit_0lep_3b->Add( hfitqual_susy_0lep_3b ) ;
        
        if ( nBinsBtag > 3 ) {
 	 
-	 hfitqual_fit_0lep_4b->Add( hfitqual_qzo_0lep_4b ) ;
+	 hfitqual_fit_0lep_4b->Add( hfitqual_qcd_0lep_4b ) ;
+	 hfitqual_fit_0lep_4b->Add( hfitqual_znn_0lep_4b ) ;
 	 hfitqual_fit_0lep_4b->Add( hfitqual_ttwj_0lep_4b ) ;
 	 hfitqual_fit_0lep_4b->Add( hfitqual_susy_0lep_4b ) ;
 	 
@@ -1020,23 +1078,27 @@
      }
      
 
-     hfitqual_fit_1lepSig_1b->Add( hfitqual_qzo_1lepSig_1b ) ;
+     hfitqual_fit_1lepSig_1b->Add( hfitqual_qcd_1lepSig_1b ) ;
+     hfitqual_fit_1lepSig_1b->Add( hfitqual_znn_1lepSig_1b ) ;
      hfitqual_fit_1lepSig_1b->Add( hfitqual_ttwj_1lepSig_1b ) ;
      hfitqual_fit_1lepSig_1b->Add( hfitqual_susy_1lepSig_1b ) ;
 	   
-     hfitqual_fit_1lepSig_2b->Add( hfitqual_qzo_1lepSig_2b ) ;
+     hfitqual_fit_1lepSig_2b->Add( hfitqual_qcd_1lepSig_2b ) ;
+     hfitqual_fit_1lepSig_2b->Add( hfitqual_znn_1lepSig_2b ) ;
      hfitqual_fit_1lepSig_2b->Add( hfitqual_ttwj_1lepSig_2b ) ;
      hfitqual_fit_1lepSig_2b->Add( hfitqual_susy_1lepSig_2b ) ;
      
      if ( nBinsBtag > 2 ) {
        
-       hfitqual_fit_1lepSig_3b->Add( hfitqual_qzo_1lepSig_3b ) ;
+       hfitqual_fit_1lepSig_3b->Add( hfitqual_qcd_1lepSig_3b ) ;
+       hfitqual_fit_1lepSig_3b->Add( hfitqual_znn_1lepSig_3b ) ;
        hfitqual_fit_1lepSig_3b->Add( hfitqual_ttwj_1lepSig_3b ) ;
        hfitqual_fit_1lepSig_3b->Add( hfitqual_susy_1lepSig_3b ) ;
        
        if ( nBinsBtag > 3 ) {
 	 
-	 hfitqual_fit_1lepSig_4b->Add( hfitqual_qzo_1lepSig_4b ) ;
+	 hfitqual_fit_1lepSig_4b->Add( hfitqual_qcd_1lepSig_4b ) ;
+	 hfitqual_fit_1lepSig_4b->Add( hfitqual_znn_1lepSig_4b ) ;
 	 hfitqual_fit_1lepSig_4b->Add( hfitqual_ttwj_1lepSig_4b ) ;
 	 hfitqual_fit_1lepSig_4b->Add( hfitqual_susy_1lepSig_4b ) ;
 	 
@@ -1044,23 +1106,27 @@
      }
      
 
-     hfitqual_fit_1lep_1b->Add( hfitqual_qzo_1lep_1b ) ;
+     hfitqual_fit_1lep_1b->Add( hfitqual_qcd_1lep_1b ) ;
+     hfitqual_fit_1lep_1b->Add( hfitqual_znn_1lep_1b ) ;
      hfitqual_fit_1lep_1b->Add( hfitqual_ttwj_1lep_1b ) ;
      hfitqual_fit_1lep_1b->Add( hfitqual_susy_1lep_1b ) ;
      
-     hfitqual_fit_1lep_2b->Add( hfitqual_qzo_1lep_2b ) ;
+     hfitqual_fit_1lep_2b->Add( hfitqual_qcd_1lep_2b ) ;
+     hfitqual_fit_1lep_2b->Add( hfitqual_znn_1lep_2b ) ;
      hfitqual_fit_1lep_2b->Add( hfitqual_ttwj_1lep_2b ) ;
      hfitqual_fit_1lep_2b->Add( hfitqual_susy_1lep_2b ) ;
      
      if ( nBinsBtag > 2 ) {
        
-       hfitqual_fit_1lep_3b->Add( hfitqual_qzo_1lep_3b ) ;
+       hfitqual_fit_1lep_3b->Add( hfitqual_qcd_1lep_3b ) ;
+       hfitqual_fit_1lep_3b->Add( hfitqual_znn_1lep_3b ) ;
        hfitqual_fit_1lep_3b->Add( hfitqual_ttwj_1lep_3b ) ;
        hfitqual_fit_1lep_3b->Add( hfitqual_susy_1lep_3b ) ;
        
        if ( nBinsBtag > 3 ) {
 	 
-	 hfitqual_fit_1lep_4b->Add( hfitqual_qzo_1lep_4b ) ;
+	 hfitqual_fit_1lep_4b->Add( hfitqual_qcd_1lep_4b ) ;
+	 hfitqual_fit_1lep_4b->Add( hfitqual_znn_1lep_4b ) ;
 	 hfitqual_fit_1lep_4b->Add( hfitqual_ttwj_1lep_4b ) ;
 	 hfitqual_fit_1lep_4b->Add( hfitqual_susy_1lep_4b ) ;
 	 
@@ -1073,7 +1139,8 @@
      legend->AddEntry( hfitqual_data_0lep_1b, "data" ) ;
      legend->AddEntry( hfitqual_susy_0lep_1b, "SUSY" ) ;
      legend->AddEntry( hfitqual_ttwj_0lep_1b, "ttwj" ) ;
-     legend->AddEntry( hfitqual_qzo_0lep_1b,  "QZO" ) ;
+     legend->AddEntry( hfitqual_qcd_0lep_1b,  "QCD" ) ;
+     legend->AddEntry( hfitqual_znn_0lep_1b,  "Zinv" ) ;
      
 
      if ( doNorm ) {
@@ -1135,12 +1202,12 @@
 
      TCanvas* cfitqual = (TCanvas*) gDirectory->FindObject("cfitqual") ;
      if ( cfitqual == 0x0 ) {
-       cfitqual = new TCanvas("cfitqual","RA2b fit quality", 850, 1000 ) ;
+       cfitqual = new TCanvas("cfitqual","RA2b fit quality", 900, 900 ) ;
      }
      
      Int_t nColumns = max(3,nBinsBtag);
      
-     cfitqual->Divide(nColumns,4);
+     cfitqual->Divide(nColumns,3);
      
      gPad->SetTicks(1,0) ;
      
@@ -1224,7 +1291,7 @@
      }
      
      
-     
+     /*
      cfitqual->cd(nColumns+1);
      hfitqual_data_1lepSig_1b->Draw("histpe") ;
      hfitqual_fit_1lepSig_1b->Draw("same") ;
@@ -1267,10 +1334,10 @@
 	       
        }
      }
-     
+     */     
 
 
-     cfitqual->cd(2*nColumns+1);
+     cfitqual->cd(nColumns+1);
      hfitqual_data_1lep_1b->Draw("histpe") ;
      hfitqual_fit_1lep_1b->Draw("same") ;
      hfitqual_data_1lep_1b->Draw("same") ;
@@ -1279,7 +1346,7 @@
      globalChi2 += chi2 ;
      obsChi2 += chi2 ;
      
-     cfitqual->cd(2*nColumns+2);
+     cfitqual->cd(nColumns+2);
      hfitqual_data_1lep_2b->Draw("histpe") ;
      hfitqual_fit_1lep_2b->Draw("same") ;
      hfitqual_data_1lep_2b->Draw("same") ;
@@ -1290,7 +1357,7 @@
 	   
      if ( nBinsBtag > 2 ) {
 	     
-       cfitqual->cd(2*nColumns+3);
+       cfitqual->cd(nColumns+3);
        hfitqual_data_1lep_3b->Draw("histpe") ;
        hfitqual_fit_1lep_3b->Draw("same") ;
        hfitqual_data_1lep_3b->Draw("same") ;
@@ -1301,7 +1368,7 @@
        
        if ( nBinsBtag > 3 ) {
 	 
-	 cfitqual->cd(2*nColumns+4);
+	 cfitqual->cd(nColumns+4);
 	 hfitqual_data_1lep_4b->Draw("histpe") ;
 	 hfitqual_fit_1lep_4b->Draw("same") ;
 	 hfitqual_data_1lep_4b->Draw("same") ;
@@ -1316,14 +1383,14 @@
 
 
      
-     cfitqual->cd(nColumns*4);
+     cfitqual->cd(nColumns*3);
      legend->Draw() ;
      
      cfitqual->Update() ;
      
 
 
-     cfitqual->cd(nColumns*4) ;
+     cfitqual->cd(nColumns*3) ;
      TText* chi2text = new TText() ;
      chi2text->SetTextSize(0.055) ;
      chi2text->SetTextAlign(32) ;
