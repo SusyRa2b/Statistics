@@ -1111,7 +1111,7 @@
 
 
       //// double initialguess_ttwj_0lep1lep_ratio = 1.59 ;
-      double initialguess_ttwj_0lep1lep_ratio = 1.40 ;
+      double initialguess_ttwj_0lep1lep_ratio = 1.0 ;
 
 
       // set initial values of 1lepSig just by rescaling 1lep
