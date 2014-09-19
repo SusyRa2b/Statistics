@@ -28,9 +28,9 @@
 void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0lep=-1. ) {
 
   TChain* dyTree = new TChain("treeZ") ;
-  int nAdded = dyTree->Add("filesMoriond_v3/DY-400.root") ;
+  int nAdded = dyTree->Add("tinyTrees/DY-400.root") ;
   if ( nAdded <= 0 ) {
-     printf("\n\n\n *** No treeZ in filesMoriond_v3/DY.root\n\n\n") ;
+     printf("\n\n\n *** No treeZ in tinyTrees/DY.root\n\n\n") ;
      return ;
   }
 
@@ -40,9 +40,9 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   sprintf( susycutstring, "&&mgluino==%.0f&&mlsp==%.0f", mgl, mlsp ) ;
   TString susycut( susycutstring ) ;
   if ( mgl>0. && mlsp>0. ) {
-     nAdded = chainT2tt.Add("filesMoriond_v3/T2tt.root") ;
+     nAdded = chainT2tt.Add("tinyTrees/T2tt.root") ;
      if ( nAdded <= 0 ) {
-        printf("\n\n\n *** No tree in filesMoriond_v3/T2tt.root\n\n\n") ;
+        printf("\n\n\n *** No tree in tinyTrees/T2tt.root\n\n\n") ;
         return ;
      }
      TFile f("referenceXSecs.root") ;
@@ -62,35 +62,35 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 
   TChain chainQCD("tree") ;
-  chainQCD.Add("filesPostMoriond_v2/QCD-120to170.root");
-  chainQCD.Add("filesPostMoriond_v2/QCD-170to300.root");
-  chainQCD.Add("filesPostMoriond_v2/QCD-300to470.root");
-  chainQCD.Add("filesPostMoriond_v2/QCD-470to600.root");
-  chainQCD.Add("filesPostMoriond_v2/QCD-600to800.root");
-  chainQCD.Add("filesPostMoriond_v2/QCD-800to1000.root");
-  chainQCD.Add("filesPostMoriond_v2/QCD-1000to1400.root");
-  chainQCD.Add("filesPostMoriond_v2/QCD-1400to1800.root");
-  chainQCD.Add("filesPostMoriond_v2/QCD-1800.root");
+  chainQCD.Add("tinyTrees/QCD-120to170.root");
+  chainQCD.Add("tinyTrees/QCD-170to300.root");
+  chainQCD.Add("tinyTrees/QCD-300to470.root");
+  chainQCD.Add("tinyTrees/QCD-470to600.root");
+  chainQCD.Add("tinyTrees/QCD-600to800.root");
+  chainQCD.Add("tinyTrees/QCD-800to1000.root");
+  chainQCD.Add("tinyTrees/QCD-1000to1400.root");
+  chainQCD.Add("tinyTrees/QCD-1400to1800.root");
+  chainQCD.Add("tinyTrees/QCD-1800.root");
   double kfactor_qcd = 1.8 ;
   printf("\n\n Rescaling QCD by %5.3f\n\n", kfactor_qcd ) ;
 
   TChain chainZnn("tree") ;
-  chainZnn.Add("filesPostMoriond_v2/Zinv-100to200.root") ;
-  chainZnn.Add("filesPostMoriond_v2/Zinv-200to400.root") ;
-  chainZnn.Add("filesPostMoriond_v2/Zinv-400.root") ;
+  chainZnn.Add("tinyTrees/Zinv-100to200.root") ;
+  chainZnn.Add("tinyTrees/Zinv-200to400.root") ;
+  chainZnn.Add("tinyTrees/Zinv-400.root") ;
 
   TChain chainTT("tree") ;
   TChain chainTTPowheg("tree") ;
   TChain chainTTMCaNLO("tree") ;
 
-  chainTT.Add("filesPostMoriond_v2/TT_FullLept.root") ;
-  chainTT.Add("filesPostMoriond_v2/TT_SemiLept.root") ;
-  chainTT.Add("filesPostMoriond_v2/TT_FullHad.root") ;
+  chainTT.Add("tinyTrees/TT_FullLept.root") ;
+  chainTT.Add("tinyTrees/TT_SemiLept.root") ;
+  chainTT.Add("tinyTrees/TT_FullHad.root") ;
 
   //-------
-  chainTTPowheg.Add("filesPostMoriond_v2/TT-powheg.root");
+  chainTTPowheg.Add("tinyTrees/TT-powheg.root");
   //-------
-  chainTTMCaNLO.Add("filesPostMoriond_v2/TT-MCatNLO.root");
+  chainTTMCaNLO.Add("tinyTrees/TT-MCatNLO.root");
   //-------
 
 
@@ -98,15 +98,15 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   printf("\n\n Rescaling ttbar by %5.3f\n\n", kfactor_tt ) ;
 
   TChain chainWJets("tree") ;
-  chainWJets.Add("filesPostMoriond_v2/WJets-250to300.root") ;
-  chainWJets.Add("filesPostMoriond_v2/WJets-300to400.root") ;
-  chainWJets.Add("filesPostMoriond_v2/WJets-400.root") ;
-  chainWJets.Add("filesPostMoriond_v2/T-s.root") ;
-  chainWJets.Add("filesPostMoriond_v2/T-t.root") ;
-  chainWJets.Add("filesPostMoriond_v2/T-tW.root") ;
-  chainWJets.Add("filesPostMoriond_v2/Tbar-s.root") ;
-  chainWJets.Add("filesPostMoriond_v2/Tbar-t.root") ;
-  chainWJets.Add("filesPostMoriond_v2/Tbar-tW.root") ;
+  chainWJets.Add("tinyTrees/WJets-250to300.root") ;
+  chainWJets.Add("tinyTrees/WJets-300to400.root") ;
+  chainWJets.Add("tinyTrees/WJets-400.root") ;
+  chainWJets.Add("tinyTrees/T-s.root") ;
+  chainWJets.Add("tinyTrees/T-t.root") ;
+  chainWJets.Add("tinyTrees/T-tW.root") ;
+  chainWJets.Add("tinyTrees/Tbar-s.root") ;
+  chainWJets.Add("tinyTrees/Tbar-t.root") ;
+  chainWJets.Add("tinyTrees/Tbar-tW.root") ;
   double kfactor_wjets = 0.90 ;
   printf("\n\n Rescaling wjets by %5.3f\n\n", kfactor_wjets ) ;
 
@@ -114,33 +114,33 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   //-- make chains of W+jets and single top separately.
 
   TChain chainWJetsOnly("tree") ;
-  chainWJetsOnly.Add("filesPostMoriond_v2/WJets-250to300.root") ;
-  chainWJetsOnly.Add("filesPostMoriond_v2/WJets-300to400.root") ;
-  chainWJetsOnly.Add("filesPostMoriond_v2/WJets-400.root") ;
+  chainWJetsOnly.Add("tinyTrees/WJets-250to300.root") ;
+  chainWJetsOnly.Add("tinyTrees/WJets-300to400.root") ;
+  chainWJetsOnly.Add("tinyTrees/WJets-400.root") ;
   double kfactor_wjetsonly = 0.90 ;
 
   TChain chainSingletop("tree") ;
-  chainSingletop.Add("filesPostMoriond_v2/T-s.root") ;
-  chainSingletop.Add("filesPostMoriond_v2/T-t.root") ;
-  chainSingletop.Add("filesPostMoriond_v2/T-tW.root") ;
-  chainSingletop.Add("filesPostMoriond_v2/Tbar-s.root") ;
-  chainSingletop.Add("filesPostMoriond_v2/Tbar-t.root") ;
-  chainSingletop.Add("filesPostMoriond_v2/Tbar-tW.root") ;
+  chainSingletop.Add("tinyTrees/T-s.root") ;
+  chainSingletop.Add("tinyTrees/T-t.root") ;
+  chainSingletop.Add("tinyTrees/T-tW.root") ;
+  chainSingletop.Add("tinyTrees/Tbar-s.root") ;
+  chainSingletop.Add("tinyTrees/Tbar-t.root") ;
+  chainSingletop.Add("tinyTrees/Tbar-tW.root") ;
   double kfactor_singletop = 0.90 ;
 
   TChain chainSingletop_s("tree") ;
-  chainSingletop_s.Add("filesPostMoriond_v2/T-s.root") ;
-  chainSingletop_s.Add("filesPostMoriond_v2/Tbar-s.root") ;
+  chainSingletop_s.Add("tinyTrees/T-s.root") ;
+  chainSingletop_s.Add("tinyTrees/Tbar-s.root") ;
   double kfactor_singletops = 0.90 ;
 
   TChain chainSingletop_t("tree") ;
-  chainSingletop_t.Add("filesPostMoriond_v2/T-t.root") ;
-  chainSingletop_t.Add("filesPostMoriond_v2/Tbar-t.root") ;
+  chainSingletop_t.Add("tinyTrees/T-t.root") ;
+  chainSingletop_t.Add("tinyTrees/Tbar-t.root") ;
   double kfactor_singletopt = 0.90 ;
 
   TChain chainSingletop_tw("tree") ;
-  chainSingletop_tw.Add("filesPostMoriond_v2/T-tW.root") ;
-  chainSingletop_tw.Add("filesPostMoriond_v2/Tbar-tW.root") ;
+  chainSingletop_tw.Add("tinyTrees/T-tW.root") ;
+  chainSingletop_tw.Add("tinyTrees/Tbar-tW.root") ;
   double kfactor_singletoptw = 0.90 ;
 
 
@@ -149,26 +149,26 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 //include Z->ll in VV contribution
   TChain chainVV("tree");
-  chainVV.Add("filesPostMoriond_v2/WW.root"); 
-  chainVV.Add("filesPostMoriond_v2/WZ.root");
-  chainVV.Add("filesPostMoriond_v2/ZZ.root");
-  chainVV.Add("filesPostMoriond_v2/DY-200to400.root");
-  chainVV.Add("filesPostMoriond_v2/DY-400.root");
+  chainVV.Add("tinyTrees/WW.root"); 
+  chainVV.Add("tinyTrees/WZ.root");
+  chainVV.Add("tinyTrees/ZZ.root");
+  chainVV.Add("tinyTrees/DY-200to400.root");
+  chainVV.Add("tinyTrees/DY-400.root");
 
 
 
 
 
   char qcdinputfile[9][1000] = {
-    "filesPostMoriond_v2/QCD-120to170.root"
-    ,"filesPostMoriond_v2/QCD-170to300.root"
-    ,"filesPostMoriond_v2/QCD-300to470.root"
-    ,"filesPostMoriond_v2/QCD-470to600.root"
-    ,"filesPostMoriond_v2/QCD-600to800.root"
-    ,"filesPostMoriond_v2/QCD-800to1000.root"
-    ,"filesPostMoriond_v2/QCD-1000to1400.root"
-    ,"filesPostMoriond_v2/QCD-1400to1800.root"
-    ,"filesPostMoriond_v2/QCD-1800.root"
+    "tinyTrees/QCD-120to170.root"
+    ,"tinyTrees/QCD-170to300.root"
+    ,"tinyTrees/QCD-300to470.root"
+    ,"tinyTrees/QCD-470to600.root"
+    ,"tinyTrees/QCD-600to800.root"
+    ,"tinyTrees/QCD-800to1000.root"
+    ,"tinyTrees/QCD-1000to1400.root"
+    ,"tinyTrees/QCD-1400to1800.root"
+    ,"tinyTrees/QCD-1800.root"
   } ;
 
   char qcdsamplename[9][100] = {

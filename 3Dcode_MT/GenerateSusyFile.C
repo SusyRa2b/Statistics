@@ -26,7 +26,7 @@ void GenerateSusyFile( double flatDummyErr = 0.00001 ) {  //-- flat error in %. 
   // so gluino mass = 75+nbin*25; or nbin = (gluinomass-75)/25.
 
   TChain chainT2tt("tree");
-  chainT2tt.Add("filesMoriond_v4/T2tt.root");
+  chainT2tt.Add("tinyTrees/T2tt.root");
 
   gROOT->Reset();
 
