@@ -64,7 +64,7 @@
 
   echo ... making workspace ...
 
-  setenv mgluino 350
+  setenv mgluino 500
   setenv mlsp    0
 
   $ROOTSYS/bin/root -b -q make_ws_rootfile3b.c\(\"datfiles/Input-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version-withSyst.dat\",\"datfiles/T2tt-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.dat\",$mgluino,$mlsp,\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",4,\"workspaces/ws-T2tt-$mgluino-$mlsp-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets-v$my_version.root\",\"null\",false,false,\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\",\"datfiles/DummySyst-$Var1-$nBinsVar1-$Var2-$nBinsVar2-nB$nBinsBjets.dat\"\)
