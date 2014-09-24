@@ -25,41 +25,9 @@
   TH1F* bookHist(const char* hname, const char* htitle, const char* selstring, int nbjet, int nBinsVar1, int nBinsVar2 ) ;
 
 
-void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0lep=-1. ) {
+void GenerateInputFile() {
 
-  TChain* dyTree = new TChain("treeZ") ;
-  int nAdded = dyTree->Add("tinyTrees/DY-400.root") ;
-  if ( nAdded <= 0 ) {
-     printf("\n\n\n *** No treeZ in tinyTrees/DY.root\n\n\n") ;
-     return ;
-  }
-
-  double t2ttWeight(0.) ;
-  TChain chainT2tt("tree") ;
-  char susycutstring[1000] ;
-  sprintf( susycutstring, "&&mgluino==%.0f&&mlsp==%.0f", mgl, mlsp ) ;
-  TString susycut( susycutstring ) ;
-  if ( mgl>0. && mlsp>0. ) {
-     nAdded = chainT2tt.Add("tinyTrees/T2tt.root") ;
-     if ( nAdded <= 0 ) {
-        printf("\n\n\n *** No tree in tinyTrees/T2tt.root\n\n\n") ;
-        return ;
-     }
-     TFile f("referenceXSecs.root") ;
-     TH1F* xsechist = (TH1F*) f.Get("gluino8TeV_NLONLL") ;
-     if ( xsechist==0x0 ) { printf("\n\n *** can't find reference Xsec histogram in referenceXSecs.root.\n\n") ; return ; }
-     int theBin = xsechist->FindBin( mgl ) ;
-     if ( theBin <=0 || theBin > xsechist->GetNbinsX() ) {
-        printf("\n\n *** can't find bin for mgl=%g.  Returned %d\n\n", mgl, theBin ) ;
-        return ;
-     }
-     double xsec = xsechist->GetBinContent( theBin ) ;
-     printf("\n\n T2tt xsec for mgl=%g is %g\n\n", mgl, xsec ) ;
-     t2ttWeight = 1.5*xsec ;  //in pb. scan has 10k events, so nScan*1.5*xsec = events in 15fb-1
-     //////  t2ttWeight = 0.1*xsec ;  //in pb. T2tt scan has 50k events, so nScan*0.1*xsec = events in 5fb-1
-     printf("\n\n Susy ttree cut: %s\n\n", susycutstring ) ;
-  }
-
+  // define chains for all SM background components
 
   TChain chainQCD("tree") ;
   chainQCD.Add("tinyTrees/QCD-120to170.root");
@@ -145,9 +113,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
 
 
-
-
-//include Z->ll in VV contribution
+  //include Z->ll in VV contribution
   TChain chainVV("tree");
   chainVV.Add("tinyTrees/WW.root"); 
   chainVV.Add("tinyTrees/WZ.root");
@@ -187,9 +153,11 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
   gROOT->Reset();
 
+
+  // global cuts (to be applied to all samples)
+
   const int nJetsCut = 3 ;     // #jets >= nJetsCut
   const int MTbCut = 0 ;       // cut on MTb
-
   double minLeadJetPt = 70. ;
   double min3rdJetPt = 50. ;
 
@@ -292,11 +260,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
     cHbins[j] = base;
   }
 
-//int dummyInt = 99;
-//float dummyFloat = 9.999;
   float dummyZero = 0.;
   float dummyOne = 1.0;
-  ///  float dummyPoint999 = 0.999 ;
   float dummyErr = 0.1;
 
   float sl_frac2b_val[nBinsVar1][nBinsVar2];
@@ -307,15 +272,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
   ofstream inFile;
   char outfile[10000] ;
-  if ( mgl > 0. && mlsp > 0. ) {
-     if ( target_susy_all0lep > 0. ) {
-       sprintf( outfile, "InputWT2tt-mgl%.0f-mlsp%.0f-%.0fevts-%s-%d-%s-%d-nB%d-v%d.dat", mgl, mlsp, target_susy_all0lep, aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version  ) ;
-     } else {
-       sprintf( outfile, "InputWT2tt-mgl%.0f-mlsp%.0f-%s-%d-%s-%d-nB%d-v%d.dat", mgl, mlsp, aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version  ) ;
-     }
-  } else {
-    sprintf( outfile, "Input-%s-%d-%s-%d-nB%d-v%d.dat", aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version  ) ;
-  }
+  sprintf( outfile, "Input-%s-%d-%s-%d-nB%d-v%d.dat", aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version  ) ;
+
   inFile.open( outfile );
 
   // print out header line:
@@ -367,283 +325,273 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
   sprintf( commoncuts, "maxChNMultDiff<40&&pfOcaloMET<2.0&&nJets>=%d&&MT_bestCSV>%d&&(pt_1st_leadJet>%.0f&&pt_2nd_leadJet>%.0f&&pt_3rd_leadJet>%.0f)",
 	   nJetsCut, MTbCut, minLeadJetPt, minLeadJetPt, min3rdJetPt ) ;
 
-   const int nSel(4) ;
-   char selname[4][100] = { "0lep", "1lepSig", "1lep", "ldp" } ;
 
-   char selcuts[4][10000] ;
-   sprintf( selcuts[0], "minDelPhiN>4&&nMu==0&&nEl==0&&nIsoTrk==0" ) ; //--- 0lep
-   sprintf( selcuts[1], "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&MT>100" ) ; //--- 1lepSig
-   sprintf( selcuts[2], "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&MT<100" ) ; //--- 1lep
-   sprintf( selcuts[3], "minDelPhiN<4&&nMu==0&&nEl==0&&nIsoTrk==0" ) ; //--- ldp
+  // definition of the four main samples
 
+  const int nSel(4) ;
+  char selname[4][100] = { "0lep", "1lepSig", "1lep", "ldp" } ;
 
-
-   //--- Output histograms.
-
-   TH1F* hmctruth_susy[nSel][nBinsBjets] ;
-   TH1F* hmctruth_ttwj[nSel][nBinsBjets] ;
-   TH1F* hmctruth_ttwjpowheg[nSel][nBinsBjets] ;
-   TH1F* hmctruth_ttwjmcanlo[nSel][nBinsBjets] ;
-   TH1F* hmctruth_ttbar[nSel][nBinsBjets] ;
-   TH1F* hmctruth_wjets[nSel][nBinsBjets] ;
-   TH1F* hmctruth_wjetsonly[nSel][nBinsBjets] ;
-   TH1F* hmctruth_singletop[nSel][nBinsBjets] ;
-   TH1F* hmctruth_singletops[nSel][nBinsBjets] ;
-   TH1F* hmctruth_singletopt[nSel][nBinsBjets] ;
-   TH1F* hmctruth_singletoptw[nSel][nBinsBjets] ;
-   TH1F* hmctruth_qcd[nSel][nBinsBjets] ;
-   TH1F* hmctruth_znn[nSel][nBinsBjets] ;
-   TH1F* hmctruth_vv[nSel][nBinsBjets] ;
-   TH1F* hmctruth_allsm[nSel][nBinsBjets] ;
-   TH1F* hmctruth_all[nSel][nBinsBjets] ;
+  char selcuts[4][10000] ;
+  sprintf( selcuts[0], "minDelPhiN>4&&nMu==0&&nEl==0&&nIsoTrk==0" ) ; //--- 0lep
+  sprintf( selcuts[1], "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&MT>100" ) ; //--- 1lepSig
+  sprintf( selcuts[2], "minDelPhiN>4&&( (nMu==1&&nEl==0) || (nMu==0&&nEl==1) )&&MT<100" ) ; //--- 1lep
+  sprintf( selcuts[3], "minDelPhiN<4&&nMu==0&&nEl==0&&nIsoTrk==0" ) ; //--- ldp
 
 
-   for ( int si=0; si<nSel; si++ ) {
-      for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
 
-         char hname[1000] ;
-         char htitle[1000] ;
-         sprintf( htitle, "%s, %d btag", selname[si], bbi+1 ) ;
+  //--- Output histograms.
+  
+  TH1F* hmctruth_susy[nSel][nBinsBjets] ;
+  TH1F* hmctruth_ttwj[nSel][nBinsBjets] ;
+  TH1F* hmctruth_ttwjpowheg[nSel][nBinsBjets] ;
+  TH1F* hmctruth_ttwjmcanlo[nSel][nBinsBjets] ;
+  TH1F* hmctruth_ttbar[nSel][nBinsBjets] ;
+  TH1F* hmctruth_wjets[nSel][nBinsBjets] ;
+  TH1F* hmctruth_wjetsonly[nSel][nBinsBjets] ;
+  TH1F* hmctruth_singletop[nSel][nBinsBjets] ;
+  TH1F* hmctruth_singletops[nSel][nBinsBjets] ;
+  TH1F* hmctruth_singletopt[nSel][nBinsBjets] ;
+  TH1F* hmctruth_singletoptw[nSel][nBinsBjets] ;
+  TH1F* hmctruth_qcd[nSel][nBinsBjets] ;
+  TH1F* hmctruth_znn[nSel][nBinsBjets] ;
+  TH1F* hmctruth_vv[nSel][nBinsBjets] ;
+  TH1F* hmctruth_allsm[nSel][nBinsBjets] ;
+  TH1F* hmctruth_all[nSel][nBinsBjets] ;
+  
 
-         sprintf( hname, "hmctruth_susy_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_susy[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_ttwj_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_ttwj[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_ttwjpowheg_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_ttwjpowheg[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_ttwjmcanlo_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_ttwjmcanlo[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_ttbar_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_ttbar[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_wjets_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_wjets[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_wjetsonly_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_wjetsonly[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_singletop_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_singletop[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_singletops_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_singletops[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_singletopt_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_singletopt[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_singletoptw_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_singletoptw[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_qcd_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_qcd[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_znn_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_znn[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_vv_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_vv[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_allsm_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_allsm[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
-         sprintf( hname, "hmctruth_all_%s_%db", selname[si], bbi+1 ) ;
-         hmctruth_all[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
-
+  for ( int si=0; si<nSel; si++ ) {
+    for ( int bbi=0; bbi<nBinsBjets; bbi++ ) {
+      
+      char hname[1000] ;
+      char htitle[1000] ;
+      sprintf( htitle, "%s, %d btag", selname[si], bbi+1 ) ;
+      
+      sprintf( hname, "hmctruth_susy_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_susy[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_ttwj_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_ttwj[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_ttwjpowheg_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_ttwjpowheg[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_ttwjmcanlo_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_ttwjmcanlo[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_ttbar_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_ttbar[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_wjets_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_wjets[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_wjetsonly_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_wjetsonly[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_singletop_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_singletop[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_singletops_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_singletops[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_singletopt_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_singletopt[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_singletoptw_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_singletoptw[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_qcd_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_qcd[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_znn_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_znn[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_vv_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_vv[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_allsm_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_allsm[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
+      sprintf( hname, "hmctruth_all_%s_%db", selname[si], bbi+1 ) ;
+      hmctruth_all[si][bbi] = bookHist( hname, htitle, selname[si], bbi+1, nBinsVar1, nBinsVar2 ) ;
+      
 
       } // bbi.
-   } // si.
+  } // si.
+  
 
-
-   //--- histograms used in getting the observables.
-
-   TH2F* h_tt[10] ;
-   TH2F* h_ttpowheg[10] ;
-   TH2F* h_ttmcanlo[10] ;
-   TH2F* h_wjets[10] ;
-   TH2F* h_wjetsonly[10] ;
-   TH2F* h_singletop[10] ;
-   TH2F* h_singletops[10] ;
-   TH2F* h_singletopt[10] ;
-   TH2F* h_singletoptw[10] ;
-   TH2F* h_qcd[10] ;
-   TH2F* h_znn[10] ;
-   TH2F* h_vv[10];
-   TH2F* h_susy[10] ;
-   TH2F* h_mc[10] ;
-
-   TH2F *h_znn_0lep_1b;
-   h_znn_0lep_1b  = new TH2F( "h_znn_0lep_1b", "h_znn_0lep_1b", nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-   h_znn_0lep_1b->Sumw2() ;
-
-   for ( int bi=0; bi<nBinsBjets; bi++ ) {
-
-     char hname[100] ;
-     
-     sprintf( hname, "h_tt_%db", bi+1 ) ;
-     h_tt[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-     h_tt[bi] -> Sumw2() ;
-     
-     sprintf( hname, "h_ttpowheg_%db", bi+1 ) ;
-     h_ttpowheg[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-     h_ttpowheg[bi] -> Sumw2() ;
-     
-     sprintf( hname, "h_ttmcanlo_%db", bi+1 ) ;
-     h_ttmcanlo[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-     h_ttmcanlo[bi] -> Sumw2() ;
-     
-     sprintf( hname, "h_wjets_%db", bi+1 ) ;
-     h_wjets[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-     h_wjets[bi] -> Sumw2() ;
-     
-     sprintf( hname, "h_wjetsonly_%db", bi+1 ) ;
-     h_wjetsonly[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-     h_wjetsonly[bi] -> Sumw2() ;
-     
-     sprintf( hname, "h_singletop_%db", bi+1 ) ;
-     h_singletop[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-     h_singletop[bi] -> Sumw2() ;
-     
-     sprintf( hname, "h_singletops_%db", bi+1 ) ;
-     h_singletops[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-     h_singletops[bi] -> Sumw2() ;
-     
-     sprintf( hname, "h_singletopt_%db", bi+1 ) ;
-     h_singletopt[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-     h_singletopt[bi] -> Sumw2() ;
-     
-     sprintf( hname, "h_singletoptw_%db", bi+1 ) ;
-     h_singletoptw[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-     h_singletoptw[bi] -> Sumw2() ;
-
-     sprintf( hname, "h_qcd_%db", bi+1 ) ;
-     h_qcd[bi]  = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-     h_qcd[bi] -> Sumw2() ;
-
-     sprintf( hname, "h_znn_%db", bi+1 ) ;
-     h_znn[bi]  = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-     h_znn[bi] -> Sumw2() ;
-     
-     sprintf( hname, "h_vv_%db", bi+1 ) ;
-     h_vv[bi]  = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-     h_vv[bi] -> Sumw2() ;
-     
-     sprintf( hname, "h_susy_%db", bi+1 ) ;
-     h_susy[bi] = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-     h_susy[bi] -> Sumw2() ;
-
-     sprintf( hname, "h_mc_%db", bi+1 ) ;
-     h_mc[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
-     h_mc[bi] -> Sumw2() ;
-     
-     
-   }
-
-   float nSusyTotal = 0;
-
-
-   for ( int si=0 ; si<nSel ; si++ ) {
-     
+  //--- histograms used in getting the observables.
+  
+  TH2F* h_tt[10] ;
+  TH2F* h_ttpowheg[10] ;
+  TH2F* h_ttmcanlo[10] ;
+  TH2F* h_wjets[10] ;
+  TH2F* h_wjetsonly[10] ;
+  TH2F* h_singletop[10] ;
+  TH2F* h_singletops[10] ;
+  TH2F* h_singletopt[10] ;
+  TH2F* h_singletoptw[10] ;
+  TH2F* h_qcd[10] ;
+  TH2F* h_znn[10] ;
+  TH2F* h_vv[10];
+  TH2F* h_susy[10] ;
+  TH2F* h_mc[10] ;
+  
+  TH2F *h_znn_0lep_1b;
+  h_znn_0lep_1b  = new TH2F( "h_znn_0lep_1b", "h_znn_0lep_1b", nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
+  h_znn_0lep_1b->Sumw2() ;
+  
+  for ( int bi=0; bi<nBinsBjets; bi++ ) {
     
-     printf("\n\n-----------------------------------------------------------------\n\n") ;
+    char hname[100] ;
+    
+    sprintf( hname, "h_tt_%db", bi+1 ) ;
+    h_tt[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
+    h_tt[bi] -> Sumw2() ;
+    
+    sprintf( hname, "h_ttpowheg_%db", bi+1 ) ;
+    h_ttpowheg[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
+    h_ttpowheg[bi] -> Sumw2() ;
+    
+    sprintf( hname, "h_ttmcanlo_%db", bi+1 ) ;
+    h_ttmcanlo[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
+    h_ttmcanlo[bi] -> Sumw2() ;
+    
+    sprintf( hname, "h_wjets_%db", bi+1 ) ;
+    h_wjets[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
+    h_wjets[bi] -> Sumw2() ;
+    
+    sprintf( hname, "h_wjetsonly_%db", bi+1 ) ;
+    h_wjetsonly[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
+    h_wjetsonly[bi] -> Sumw2() ;
+    
+    sprintf( hname, "h_singletop_%db", bi+1 ) ;
+    h_singletop[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
+    h_singletop[bi] -> Sumw2() ;
+    
+    sprintf( hname, "h_singletops_%db", bi+1 ) ;
+    h_singletops[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
+    h_singletops[bi] -> Sumw2() ;
+    
+    sprintf( hname, "h_singletopt_%db", bi+1 ) ;
+    h_singletopt[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
+    h_singletopt[bi] -> Sumw2() ;
+    
+    sprintf( hname, "h_singletoptw_%db", bi+1 ) ;
+    h_singletoptw[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
+    h_singletoptw[bi] -> Sumw2() ;
+    
+    sprintf( hname, "h_qcd_%db", bi+1 ) ;
+    h_qcd[bi]  = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
+    h_qcd[bi] -> Sumw2() ;
+    
+    sprintf( hname, "h_znn_%db", bi+1 ) ;
+    h_znn[bi]  = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
+    h_znn[bi] -> Sumw2() ;
+    
+    sprintf( hname, "h_vv_%db", bi+1 ) ;
+    h_vv[bi]  = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
+    h_vv[bi] -> Sumw2() ;
+    
+    sprintf( hname, "h_susy_%db", bi+1 ) ;
+    h_susy[bi] = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
+    h_susy[bi] -> Sumw2() ;
+    
+    sprintf( hname, "h_mc_%db", bi+1 ) ;
+    h_mc[bi]   = new TH2F( hname, hname , nBinsVar1, Mbins, nBinsVar2, Hbins ) ;
+    h_mc[bi] -> Sumw2() ;
+    
+    
+  }
+  
 
-     for (int k = 0 ; k < nBinsBjets ; k++) {
+  for ( int si=0 ; si<nSel ; si++ ) {
+    
+    
+    printf("\n\n-----------------------------------------------------------------\n\n") ;
+    
+    for (int k = 0 ; k < nBinsBjets ; k++) {
+      
+      char allcuts[10000] ;
+      
+      if(useBtagSF) {
+	sprintf( allcuts,     "%s*weightPU*(%s&&%s)"    , bcutSF[k], commoncuts, selcuts[si] ) ;
+      }
+      else {
+	sprintf( allcuts,     "weightPU*(%s&&%s&&%s)"    , commoncuts, selcuts[si], bcut[k] ) ;
+      }
+      
+      
+      printf("\n\n N_%s -- nbjet bin (%d): cuts=%s\n\n", selname[si], k, allcuts) ; cout << flush ;
+      
+      
+      char hname[100] ;
+      sprintf( hname, "h_tt_%db", k+1 ) ;
+      chainTT.Project (hname,s2DVars,allcuts);
+      
+      h_tt[k] -> Scale( kfactor_tt ) ;
+      printf("    %12s %7.1f events\n", hname, h_tt[k]->Integral() ) ; cout << flush ;
+      
+      sprintf( hname, "h_ttpowheg_%db", k+1 ) ;
+      chainTTPowheg.Project (hname,s2DVars,allcuts);
+      h_ttpowheg[k] -> Scale( kfactor_tt ) ;
+      printf("    %12s %7.1f events\n", hname, h_ttpowheg[k]->Integral() ) ; cout << flush ;
+      
+      sprintf( hname, "h_ttmcanlo_%db", k+1 ) ;
+      chainTTMCaNLO.Project (hname,s2DVars,allcuts);
+      h_ttmcanlo[k] -> Scale( kfactor_tt ) ;
+      printf("    %12s %7.1f events\n", hname, h_ttmcanlo[k]->Integral() ) ; cout << flush ;
+      
+      sprintf( hname, "h_wjets_%db", k+1 ) ;
+      chainWJets.Project(hname,s2DVars,allcuts);
+      h_wjets[k] -> Scale( kfactor_wjets ) ;
+      printf("    %12s %7.1f events\n", hname, h_wjets[k]->Integral() ) ; cout << flush ;
        
-       char allcuts[10000] ;
-       char allsusycuts[10000] ;
+      sprintf( hname, "h_wjetsonly_%db", k+1 ) ;
+      chainWJetsOnly.Project(hname,s2DVars,allcuts);
+      h_wjetsonly[k] -> Scale( kfactor_wjetsonly ) ;
+      printf("    %12s %7.1f events\n", hname, h_wjetsonly[k]->Integral() ) ; cout << flush ;
+      
+      sprintf( hname, "h_singletop_%db", k+1 ) ;
+      chainSingletop.Project(hname,s2DVars,allcuts);
+      h_singletop[k] -> Scale( kfactor_singletop ) ;
+      printf("    %12s %7.1f events\n", hname, h_singletop[k]->Integral() ) ; cout << flush ;
+      
+      sprintf( hname, "h_singletops_%db", k+1 ) ;
+      chainSingletop_s.Project(hname,s2DVars,allcuts);
+      h_singletops[k] -> Scale( kfactor_singletops ) ;
+      printf("    %12s %7.1f events\n", hname, h_singletops[k]->Integral() ) ; cout << flush ;
+      
+      sprintf( hname, "h_singletopt_%db", k+1 ) ;
+      chainSingletop_t.Project(hname,s2DVars,allcuts);
+      h_singletopt[k] -> Scale( kfactor_singletopt ) ;
+      printf("    %12s %7.1f events\n", hname, h_singletopt[k]->Integral() ) ; cout << flush ;
+      
+      sprintf( hname, "h_singletoptw_%db", k+1 ) ;
+      chainSingletop_tw.Project(hname,s2DVars,allcuts);
+      h_singletoptw[k] -> Scale( kfactor_singletoptw ) ;
+      printf("    %12s %7.1f events\n", hname, h_singletoptw[k]->Integral() ) ; cout << flush ;
+      
+      sprintf( hname, "h_qcd_%db", k+1 ) ;
+      chainQCD.Project(hname,s2DVars,allcuts);
+      h_qcd[k] -> Scale( kfactor_qcd ) ;
+      printf("    %12s %7.1f events\n", hname, h_qcd[k]->Integral() ) ; cout << flush ;
+       
+      sprintf( hname, "h_znn_%db", k+1 ) ;
+      chainZnn.Project(hname,s2DVars,allcuts);
+      printf("    %12s %7.1f events\n", hname, h_znn[k]->Integral() ) ; cout << flush ;
+      
+      if ( si == 0 && k == 0 ) {
+	chainZnn.Project("h_znn_0lep_1b",s2DVars,allcuts);
+      }
+      
+      
+      sprintf( hname, "h_vv_%db", k+1 ) ;
+      chainVV.Project(hname,s2DVars,allcuts);
+      printf("    %12s %7.1f events\n", hname, h_vv[k]->Integral() ) ; cout << flush ;
 
-       if(useBtagSF) {
-	 sprintf( allcuts,     "%s*weightPU*(%s&&%s)"    , bcutSF[k], commoncuts, selcuts[si] ) ;
-	 sprintf( allsusycuts, "%s*weightPU*(%s&&%s&&%s)", bcutSF[k], commoncuts, selcuts[si], susycut.Data() ) ;
-       }
-       else {
-	 sprintf( allcuts,     "weightPU*(%s&&%s&&%s)"    , commoncuts, selcuts[si], bcut[k] ) ;
-	 sprintf( allsusycuts, "weightPU*(%s&&%s&&%s&&%s)", commoncuts, selcuts[si], bcut[k], susycut.Data() ) ;
-       }
+    } // k
 
-
-       printf("\n\n N_%s -- nbjet bin (%d): cuts=%s\n\n", selname[si], k, allcuts) ; cout << flush ;
-       if (mgl > 0 ) printf("\n\n N_%s -- nbjet bin (%d): cuts=%s\n\n", selname[si], k, allsusycuts) ; cout << flush ;
-       
-
-       char hname[100] ;
-       sprintf( hname, "h_tt_%db", k+1 ) ;
-       chainTT.Project (hname,s2DVars,allcuts);
-       
-       h_tt[k] -> Scale( kfactor_tt ) ;
-       printf("    %12s %7.1f events\n", hname, h_tt[k]->Integral() ) ; cout << flush ;
-       
-       sprintf( hname, "h_ttpowheg_%db", k+1 ) ;
-       chainTTPowheg.Project (hname,s2DVars,allcuts);
-       h_ttpowheg[k] -> Scale( kfactor_tt ) ;
-       printf("    %12s %7.1f events\n", hname, h_ttpowheg[k]->Integral() ) ; cout << flush ;
-       
-       sprintf( hname, "h_ttmcanlo_%db", k+1 ) ;
-       chainTTMCaNLO.Project (hname,s2DVars,allcuts);
-       h_ttmcanlo[k] -> Scale( kfactor_tt ) ;
-       printf("    %12s %7.1f events\n", hname, h_ttmcanlo[k]->Integral() ) ; cout << flush ;
-       
-       sprintf( hname, "h_wjets_%db", k+1 ) ;
-       chainWJets.Project(hname,s2DVars,allcuts);
-       h_wjets[k] -> Scale( kfactor_wjets ) ;
-       printf("    %12s %7.1f events\n", hname, h_wjets[k]->Integral() ) ; cout << flush ;
-       
-       sprintf( hname, "h_wjetsonly_%db", k+1 ) ;
-       chainWJetsOnly.Project(hname,s2DVars,allcuts);
-       h_wjetsonly[k] -> Scale( kfactor_wjetsonly ) ;
-       printf("    %12s %7.1f events\n", hname, h_wjetsonly[k]->Integral() ) ; cout << flush ;
-       
-       sprintf( hname, "h_singletop_%db", k+1 ) ;
-       chainSingletop.Project(hname,s2DVars,allcuts);
-       h_singletop[k] -> Scale( kfactor_singletop ) ;
-       printf("    %12s %7.1f events\n", hname, h_singletop[k]->Integral() ) ; cout << flush ;
-       
-       sprintf( hname, "h_singletops_%db", k+1 ) ;
-       chainSingletop_s.Project(hname,s2DVars,allcuts);
-       h_singletops[k] -> Scale( kfactor_singletops ) ;
-       printf("    %12s %7.1f events\n", hname, h_singletops[k]->Integral() ) ; cout << flush ;
-       
-       sprintf( hname, "h_singletopt_%db", k+1 ) ;
-       chainSingletop_t.Project(hname,s2DVars,allcuts);
-       h_singletopt[k] -> Scale( kfactor_singletopt ) ;
-       printf("    %12s %7.1f events\n", hname, h_singletopt[k]->Integral() ) ; cout << flush ;
-       
-       sprintf( hname, "h_singletoptw_%db", k+1 ) ;
-       chainSingletop_tw.Project(hname,s2DVars,allcuts);
-       h_singletoptw[k] -> Scale( kfactor_singletoptw ) ;
-       printf("    %12s %7.1f events\n", hname, h_singletoptw[k]->Integral() ) ; cout << flush ;
-       
-       sprintf( hname, "h_qcd_%db", k+1 ) ;
-       chainQCD.Project(hname,s2DVars,allcuts);
-       h_qcd[k] -> Scale( kfactor_qcd ) ;
-       printf("    %12s %7.1f events\n", hname, h_qcd[k]->Integral() ) ; cout << flush ;
-       
-       sprintf( hname, "h_znn_%db", k+1 ) ;
-       chainZnn.Project(hname,s2DVars,allcuts);
-       printf("    %12s %7.1f events\n", hname, h_znn[k]->Integral() ) ; cout << flush ;
-       
-       if ( si == 0 && k == 0 ) {
-	 chainZnn.Project("h_znn_0lep_1b",s2DVars,allcuts);
-       }
-
-
-       sprintf( hname, "h_vv_%db", k+1 ) ;
-       chainVV.Project(hname,s2DVars,allcuts);
-       printf("    %12s %7.1f events\n", hname, h_vv[k]->Integral() ) ; cout << flush ;
-
-       if ( mgl > 0. ) {
-	 sprintf( hname, "h_susy_%db", k+1 ) ;
-	 chainT2tt.Project(hname,s2DVars,allsusycuts);
-	 h_susy[k]->Scale( t2ttWeight ) ;
-	 printf("    %12s %7.1f events\n", hname, h_susy[k]->Integral() ) ; cout << flush ;
-	 if (si==0) nSusyTotal += h_susy[k]->Integral();
-       }
-      } // k
-      if (si==0) printf("N_Susy_Total = %7.1f events", nSusyTotal); cout << flush;
-      printf("\n\n") ;
+    printf("\n\n") ;
 
 
   /// //--- Rescale W+jets component as a test variation -------------------------------
@@ -712,13 +660,7 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 	    printf(" N_%s, qcd         var1,var2,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, qcdval,qcderr) ; cout << flush ;
 	    printf(" N_%s, znn         var1,var2,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, znnval,znnerr) ; cout << flush ;
 	    printf(" N_%s, vv          var1,var2,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, vvval,vverr) ; cout << flush ;
-	    if ( mgl>0. ) {
-	      if ( target_susy_all0lep > 0. ) {
-		susyval = susyval * (target_susy_all0lep/nSusyTotal);
-		susyerr = susyerr * (target_susy_all0lep/nSusyTotal);
-	      }
-	      printf(" N_%s, susy   var1,var2,nbjet bin (%d,%d,%d)  --  npass=%7.1f +/- %6.1f\n", selname[si], i,j,k, susyval,susyerr) ; cout << flush ;
-	    }
+
 	    printf("\n") ;
 
 	    double allval = ttval + wjetsval + qcdval + znnval + vvval + susyval ;
@@ -1608,15 +1550,8 @@ void GenerateInputFile( double mgl=-1., double mlsp=-1., double target_susy_all0
 
     gSystem->Exec("mkdir -p rootfiles") ;
     char outHistName[1000] ;
-    if ( mgl>0. && mlsp>0. ) {
-       if ( target_susy_all0lep > 0 ) {
-	 sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%.0fevts-%s-%d-%s-%d-nB$d-v%d.root", mgl, mlsp, target_susy_all0lep, aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
-       } else {
-	 sprintf( outHistName, "rootfiles/gi-plots-wsusy-mgl%.0f-mlsp%.0f-%s-%d-%s-%d-nB%d-v%d.root", mgl, mlsp, aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
-       }
-    } else {
-      sprintf( outHistName, "rootfiles/gi-plots-%s-%d-%s-%d-nB%d-v%d.root", aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
-    }
+    sprintf( outHistName, "rootfiles/gi-plots-%s-%d-%s-%d-nB%d-v%d.root", aVar1.Data(), nBinsVar1, aVar2.Data(), nBinsVar2, nBinsBjets, version ) ;
+
     saveHist( outHistName, "h*" ) ;
 
 

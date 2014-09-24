@@ -79,9 +79,9 @@ void RunSimpleAsyScan(TString fileName, int nPoints, double startVal, double sto
   outStream << nPoints << " points asymptotic scan from " << startVal << " to " << stopVal << ".\n" << endl ;
   outStream << "Results: " << endl ;
   outStream << "CLs = " << res_toysCLs_calculator->UpperLimit() 
-	    << "   CLs_exp = " << res_toysCLs_calculator->GetExpectedUpperLimit(0) 
-	    << "   CLs_exp(-1s) = " << res_toysCLs_calculator->GetExpectedUpperLimit(-1) 
-	    << "   CLs_exp(+1s) = " << res_toysCLs_calculator->GetExpectedUpperLimit(1) << endl ;
+	    << "\nCLs_exp = " << res_toysCLs_calculator->GetExpectedUpperLimit(0) 
+	    << "\nCLs_exp(-1s) = " << res_toysCLs_calculator->GetExpectedUpperLimit(-1) 
+	    << "\nCLs_exp(+1s) = " << res_toysCLs_calculator->GetExpectedUpperLimit(1) << endl ;
   
   outStream.close() ;
 
