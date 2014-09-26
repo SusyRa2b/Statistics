@@ -134,7 +134,7 @@
             ignoreBin[mbi][hbi] = false ;
          } // hbi
       } // mbi
-      ignoreBin[nBinsMET-1][0] = true ;
+      //ignoreBin[nBinsMET-1][0] = true ;
 
       printf("\n\n *** Ignoring these bins in the analysis.\n\n") ;
       for ( int mbi=0; mbi<nBinsMET; mbi++ ) {
