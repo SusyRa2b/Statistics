@@ -1517,12 +1517,12 @@
             rrv_mu_ttwj_slSig[i][j][k] = new RooRealVar( muTtSlSigString, muTtSlSigString, 0., 100000. ) ;
             rv_mu_ttwj_slSig[i][j][k] = rrv_mu_ttwj_slSig[i][j][k] ;
             rrv_mu_ttwj_slSig[i][j][k]->setVal( initialval_ttwj_slSig[i][j][k] ) ;    // this is a starting value only
-            if ( !(ignoreBin[i][j]) ) { allNuisances -> add( *rv_mu_ttwj_slSig[i][j][k] ) ; } //-- is this correct?
+            if ( !(ignoreBin[i][j]) ) { allNuisances -> add( *rv_mu_ttwj_slSig[i][j][k] ) ; } 
 
             rrv_mu_ttwj_sl[i][j][k] = new RooRealVar( muTtSlString, muTtSlString, 0., 100000. ) ;
             rv_mu_ttwj_sl[i][j][k] = rrv_mu_ttwj_sl[i][j][k] ;
             rrv_mu_ttwj_sl[i][j][k]->setVal( initialval_ttwj_sl[i][j][k] ) ;    // this is a starting value only
-            if ( !(ignoreBin[i][j]) ) { allNuisances -> add( *rv_mu_ttwj_sl[i][j][k] ) ; } //-- is this correct?
+            if ( !(ignoreBin[i][j]) ) { allNuisances -> add( *rv_mu_ttwj_sl[i][j][k] ) ; } 
 
             //--- try allowing negative values.
 	    ////// rrv_mu_qcd[i][j][k] = new RooRealVar( muQcdString, muQcdString, 0., 100000. ) ;
@@ -1532,7 +1532,7 @@
 
 	    rrv_mu_qcd_ldp[i][j][k] = new RooRealVar( muQcdLdpString, muQcdLdpString, 0., 100000. ) ;
 	    rv_mu_qcd_ldp[i][j][k] = rrv_mu_qcd_ldp[i][j][k];
-            if ( !(ignoreBin[i][j]) ) { allNuisances -> add( *rv_mu_qcd_ldp[i][j][k] ) ; } //-- is this correct?
+            if ( !(ignoreBin[i][j]) ) { allNuisances -> add( *rv_mu_qcd_ldp[i][j][k] ) ; } 
 	    rrv_mu_qcd_ldp[i][j][k]->setVal( initialval_qcd_ldp[i][j][k] ) ;   // this is a starting value only
 
             //-- owen: sept 23, 2012 : do not create these for >1 btag.
@@ -1540,7 +1540,7 @@
 	       rrv_mu_znn[i][j][k] = new RooRealVar( muZnnString, muZnnString, 0., 100000. ) ;
 	       rv_mu_znn[i][j][k] = rrv_mu_znn[i][j][k];
 	       rrv_mu_znn[i][j][k]->setVal( initialval_znn[i][j][k] ) ;           // this is a starting value only
-               if ( !(ignoreBin[i][j]) ) { allNuisances -> add( *rrv_mu_znn[i][j][k] ) ; } //-- is this correct?
+               if ( !(ignoreBin[i][j]) ) { allNuisances -> add( *rrv_mu_znn[i][j][k] ) ; } 
             }
 
 
@@ -1664,7 +1664,7 @@
       rv_ttwj_0lep1lep_ratio -> setVal( initialguess_ttwj_0lep1lep_ratio ) ; // initial guess
       rv_ttwj_0lep1lep_ratio -> setConstant( kFALSE ) ;
 
-      allNuisances -> add( *rv_ttwj_0lep1lep_ratio ) ; //-- is this correct?
+      allNuisances -> add( *rv_ttwj_0lep1lep_ratio ) ; 
 
       
       //--- New for T1tttt : slSig/sl ratio
@@ -1799,7 +1799,7 @@
             char vname[1000] ;
             sprintf( vname, "qcd_0lepLDP_ratio_H%d", htbi+1 ) ;
             rv_qcd_0lepLDP_ratio[htbi] = new RooRealVar( vname, vname, initialguess_model24_qcd_0lepLDP_ratio[htbi], 0., 10. ) ;
-            allNuisances -> add( *rv_qcd_0lepLDP_ratio[htbi] ) ; //-- is this correct?
+            allNuisances -> add( *rv_qcd_0lepLDP_ratio[htbi] ) ; 
          }
 
       } else if ( qcdModelIndex == 3 ) {
@@ -1819,7 +1819,7 @@
             sprintf( vname, "qcd_0lepLDP_ratio_H%d", htbi+1 ) ;
             printf("  HT bin %d : %s\n", htbi+1, vname ) ; cout << flush ;
             rv_qcd_0lepLDP_ratio[htbi] = new RooRealVar( vname, vname, initialguess_model24_qcd_0lepLDP_ratio[htbi], 0., 10. ) ;
-            allNuisances -> add( *rv_qcd_0lepLDP_ratio[htbi] ) ; //-- is this correct?
+            allNuisances -> add( *rv_qcd_0lepLDP_ratio[htbi] ) ; 
          }
 
          for ( int mbi=0; mbi<2; mbi++ ) {
@@ -1831,7 +1831,7 @@
                ((RooRealVar*)rv_SFqcd_met[mbi]) -> setConstant(kTRUE) ;
             } else {
                ((RooRealVar*)rv_SFqcd_met[mbi]) -> setConstant(kFALSE) ;
-               allNuisances -> add( *rv_SFqcd_met[mbi] ) ; //-- is this correct?
+               allNuisances -> add( *rv_SFqcd_met[mbi] ) ; 
             }
          }
 
@@ -1844,7 +1844,7 @@
                ((RooRealVar*)rv_SFqcd_nb[bbi]) -> setConstant(kTRUE) ;
             } else {
                ((RooRealVar*)rv_SFqcd_nb[bbi]) -> setConstant(kFALSE) ;
-               allNuisances -> add( *rv_SFqcd_nb[bbi] ) ; //-- is this correct?
+               allNuisances -> add( *rv_SFqcd_nb[bbi] ) ; 
             }
          }
 
