@@ -2555,7 +2555,6 @@
 
             rv_mu_ttwj_slSig[i][j][k] = rfv_mu_ttwj_slSig[i][j][k] ;
 
-
 	    // 0lep
 
 	    TString ttwjString   = "mu_ttwj";
