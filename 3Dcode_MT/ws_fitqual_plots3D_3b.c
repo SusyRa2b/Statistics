@@ -3504,7 +3504,7 @@
 	  }
 	}
 
-
+	cnp2->SaveAs("outputfiles/cnp2.pdf");
 
 
 
@@ -3637,6 +3637,8 @@
 	  }
 	}
 
+	cnp->SaveAs("outputfiles/cnp.pdf");
+
 
 
       //--- general, Znn, and trigger
@@ -3676,6 +3678,7 @@
         npChi2 += chi2 ;
 
 
+	cnp3->SaveAs("outputfiles/cnp3.pdf");
 
 
      } else {
@@ -4002,7 +4005,7 @@
      }
      hfit_results -> GetXaxis() -> SetBinLabel( 2, "Fit total 0lep SUSY events error") ;
 
-
+     cfitqual->SaveAs("outputfiles/cfitqual.pdf");
 
 
 
